@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import CameraStream  from '../../components/CameraStream'
+import { ButtonToolbar, ToggleButton, ToggleButtonGroup} from 'react-bootstrap'
 
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
+import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
 
 
 
@@ -70,15 +71,37 @@ class Analysis extends Component {
                 id:8,
                 webSocket:'ws://18.222.106.238:1008'
             }
-        ]
+        ],
+        displayTipe:2,
     }
   
   render() {
     return (
-        <div>
-            Hola analisis
+        <div className="d-flex flex-column">
+            <ButtonToolbar>
+                <ToggleButtonGroup type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
+                    <ToggleButton value={1} variant='outline-secondary'>Cuadricula</ToggleButton>
+                    <ToggleButton value={2} variant='outline-secondary'>Loop</ToggleButton>
+                    <ToggleButton value={3} variant='outline-secondary'>Lista</ToggleButton>
+                </ToggleButtonGroup>
+            </ButtonToolbar>
+            {
+                this._showDisplay()
+            }
         </div>
     );
+  }
+  _showDisplay = () =>{
+    switch(this.state.displayTipe){
+        case 2:
+            return (<LoopCamerasDisplay places = {this.state.places}/>)
+        default:
+           return null
+    }
+  }
+
+  _changeDisplay = (value) => {
+      this.setState({displayTipe:value})      
   }
 }
 

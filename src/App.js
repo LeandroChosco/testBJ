@@ -8,10 +8,12 @@ import Analysis from './pages/Analysis';
 import SideBar from './components/SideBar';
 
 class App extends Component {
+  
   state = {
     isAuthenticated: true,
     sideMenu:false
   }
+  
   componentDidMount(){
     this._checkAuth()
   }

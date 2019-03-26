@@ -4,4 +4,7 @@
     width: 100%;
     background-position: center;
     background-repeat: no-repeat, repeat;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }

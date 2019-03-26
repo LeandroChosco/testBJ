@@ -17,7 +17,7 @@ class CameraStream extends Component {
             <Card>                    
                 <Card.Body>
                     <div className="camHolder">  
-                        <canvas ref="camRef" style={{width:'100%',height:'100%'}}></canvas>                      
+                        <canvas ref="camRef" style={{width:this.props.height?'50%':'100%',height:this.props.height?this.props.height:'100%'}}></canvas>                      
                     </div>
                     <Card.Title>Camara {this.state.cameraID}</Card.Title>
                     <Card.Text>
