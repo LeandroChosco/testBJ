@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
-import './App.css';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+
 import Login from './pages/Login'
 import Map from './pages/Map'
-import Header from './components/Header';
-import { BrowserRouter as Router, Route } from "react-router-dom";
 import Analysis from './pages/Analysis';
+
+import Header from './components/Header';
 import SideBar from './components/SideBar';
+import CameraInfoSide from './components/CameraInfoSide';
+
+import './App.css';
 
 class App extends Component {
-  
+
   state = {
     isAuthenticated: true,
-    sideMenu:false
+    sideMenu:false,
+    cameraInfoSide:false,
+    cameraInfo: null
   }
   
   componentDidMount(){
@@ -28,9 +34,14 @@ class App extends Component {
     this.setState({isAuthenticated:true})
   }
 
-  _toggleSideMenu = () => {
-    console.log('tooglle')
+  _toggleSideMenu = () => {    
     this.setState({sideMenu: !this.state.sideMenu})
+  }
+
+  _cameraSideInfo = (cameraInfo) => {  
+    console.log(cameraInfo)  
+    console.log(this.state.cameraInfoSide)
+    this.setState({cameraInfoSide: !this.state.cameraInfoSide, cameraInfo:cameraInfo})
   }
 
   render() {
@@ -39,8 +50,9 @@ class App extends Component {
       <div className="fullcontainer">        
         {this.state.isAuthenticated?<Header toggleSideMenu = {this._toggleSideMenu} />:null}     
         <SideBar toggleSideMenu = {this._toggleSideMenu} active={this.state.sideMenu}/>
+        <CameraInfoSide toggleSideMenu = {this._cameraSideInfo} active={this.state.cameraInfoSide} cameraInfo={this.state.cameraInfo}/>
         <Route path="/" exact render={(props) => this.state.isAuthenticated?<Map />:<Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/>} />
-        <Route path="/analisis" exact render={(props) => <Analysis {...props}/>} />
+        <Route path="/analisis" exact render={(props) => <Analysis {...props} toggleSideMenu = {this._cameraSideInfo}/>} />
       </div>
     </Router>  
     );

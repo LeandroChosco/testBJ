@@ -599,9 +599,6 @@ iframe {
   .sidenav a {font-size: 18px;}
 }
 
-.active-side{
-  width: 400px;
-}
 
 .sidenav-right {
   height: 100%;
@@ -641,6 +638,11 @@ iframe {
   .sidenav-right {padding-top: 15px;}
   .sidenav-right a {font-size: 18px;}
 }
+
+.active-side{
+  width: 400px;
+}
+
 
 .no-hover:hover{
   background: transparent;

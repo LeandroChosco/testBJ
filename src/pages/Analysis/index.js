@@ -74,7 +74,7 @@ class Analysis extends Component {
                 webSocket:'ws://18.222.106.238:1008'
             }
         ],
-        displayTipe:2,
+        displayTipe:1,
     }
   
   render() {
@@ -96,15 +96,20 @@ class Analysis extends Component {
   _showDisplay = () =>{
     switch(this.state.displayTipe){
         case 1:
-            return (<GridCameraDisplay places = {this.state.places}/>)
+            return (<GridCameraDisplay places = {this.state.places} toggleSideMenu = {this._openCameraInfo}/>)
         case 2:
-            return (<LoopCamerasDisplay places = {this.state.places}/>)
+            return (<LoopCamerasDisplay places = {this.state.places} toggleSideMenu = {this._openCameraInfo}/>)
         case 3:
-            return (<ListCameraDisplay places = {this.state.places}/>)
+            return (<ListCameraDisplay places = {this.state.places} toggleSideMenu = {this._openCameraInfo}/>)
         default:
            return null
     }
   }
+
+  
+    _openCameraInfo = (marker) => {        
+        this.props.toggleSideMenu(marker)
+    }
 
   _changeDisplay = (value) => {
       this.setState({displayTipe:value})      
