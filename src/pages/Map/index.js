@@ -108,6 +108,7 @@ class Map extends Component {
                   createInfoWindow(marker,map)
                 }
               })(marker[index], map,this.createInfoWindow))
+            return true
         })
         
     }

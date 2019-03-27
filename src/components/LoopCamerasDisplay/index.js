@@ -42,6 +42,7 @@ class LoopCamerasDisplay extends Component {
                 title:value.name,
                 extraData:value
             })
+            return true
         })
         this.setState({markers:markersForLoop})
     }

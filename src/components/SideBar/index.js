@@ -82,6 +82,7 @@ class SideBar extends Component {
                 value: value.id,
                 label: 'Camara '+value.id,
             })
+            return true
         })
         this.setState({options:options})
     }
@@ -90,13 +91,15 @@ class SideBar extends Component {
         var cameras= []
         selectedOption.map((value)=>{
             this.state.places.map((place)=>{
-                if (place.id == value.value) {
+                if (place.id === value.value) {
                     cameras.push({
                         title:place.name,
                         extraData:place
                     })
                 }
+                return true
             })
+            return true
         })
         this.setState({ selectedOption:cameras });
         console.log(`Option selected:`, cameras);

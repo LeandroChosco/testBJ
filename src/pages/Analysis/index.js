@@ -6,6 +6,8 @@ import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
 import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
+import GridCameraDisplay from '../../components/GridCameraDisplay';
+import ListCameraDisplay from '../../components/ListCameraDisplay';
 
 
 
@@ -93,8 +95,12 @@ class Analysis extends Component {
   }
   _showDisplay = () =>{
     switch(this.state.displayTipe){
+        case 1:
+            return (<GridCameraDisplay places = {this.state.places}/>)
         case 2:
             return (<LoopCamerasDisplay places = {this.state.places}/>)
+        case 3:
+            return (<ListCameraDisplay places = {this.state.places}/>)
         default:
            return null
     }
