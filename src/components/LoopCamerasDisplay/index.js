@@ -9,6 +9,11 @@ class LoopCamerasDisplay extends Component {
         markers : [],
         height:'auto',
         fullHeight:10,
+        slideIndex: 0,
+    }
+
+    _showCameraInfo(){
+        this.props.toggleControlsBottom()
     }
 
   render() {
@@ -20,9 +25,11 @@ class LoopCamerasDisplay extends Component {
             cellAlign="center"
             heightMode="max"
             initialSlideHeight={this.state.fullHeight}  
-            disableAnimation={true}          
+            disableAnimation={true} 
+            withoutControls={true}               
+            afterSlide={slideIndex => this.setState({ slideIndex })}     
         >
-            {this.state.markers.map(value => <CameraStream key={value.extraData.id} marker={value} height={this.state.height} />)}
+            {this.state.markers.map((value,index) => (index==this.state.slideIndex||index==this.state.slideIndex+1)?<CameraStream key={value.extraData.id} marker={value} height={this.state.height} />:<div>Hola</div>)}
         </Carousel>
     </div>
     );

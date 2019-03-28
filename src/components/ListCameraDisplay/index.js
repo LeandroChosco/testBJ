@@ -13,11 +13,13 @@ class ListCameraDisplay extends Component {
   render() {
     return (
     <div className="carouselContainer">           
-            {this.state.markers.map(value => <Col  lg={12} sm = {12}  key={value.extraData.id}><CameraStream key={value.extraData.id} marker={value} horizontal/></Col>)}                
+            {this.state.markers.map(value => <Col  lg={12} sm = {12}  key={value.extraData.id} onClick = {() => this._openCameraInfo(value)}><CameraStream key={value.extraData.id} marker={value} horizontal/></Col>)}                
     </div>
     );
   }
-
+    _openCameraInfo = (marker) => {                
+        this.props.toggleSideMenu(marker.extraData)
+    }
     componentDidMount(){       
         let markersForLoop = []
         this.props.places.map((value)=>{

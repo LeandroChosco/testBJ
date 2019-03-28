@@ -14,14 +14,14 @@ class GridCameraDisplay extends Component {
     return (
     <div className="carouselContainer">   
         <Row >     
-            {this.state.markers.map(value => <Col  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value)} marker={value.id}><CameraStream key={value.extraData.id} marker={value} /></Col>)}        
+            {this.state.markers.map(value => <Col className='p-l-0 p-r-0'  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value)} marker={value.id}><CameraStream key={value.extraData.id} marker={value} /></Col>)}        
         </Row>
     </div>
     );
   }
 
     _openCameraInfo = (marker) => {                
-        this.props.toggleSideMenu(marker.extraData)
+        this.props.toggleControlsBottom(marker.extraData)
     }
 
     componentDidMount(){       

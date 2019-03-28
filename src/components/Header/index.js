@@ -22,6 +22,11 @@ class Header extends Component {
 
     }
 
+    _logOut = () => {
+        this.props.history.push('/')
+        this.props.logOut()
+    }
+
   render() {
     return (
         <Navbar sticky="top" expand="lg" variant="light" bg="mh">                       
@@ -43,7 +48,7 @@ class Header extends Component {
                 </Nav>
                 <Nav>
                     <NavDropdown className="light" title="Alejandro Chico">
-                        <NavDropdown.Item>Cerrar sesion</NavDropdown.Item>
+                        <NavDropdown.Item onClick={this._logOut}>Cerrar sesion</NavDropdown.Item>
                     </NavDropdown>
                 </Nav>
                 

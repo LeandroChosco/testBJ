@@ -75,6 +75,7 @@ class Analysis extends Component {
             }
         ],
         displayTipe:1,
+        cameraID:null
     }
   
   render() {
@@ -84,7 +85,7 @@ class Analysis extends Component {
                 <ToggleButtonGroup type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
                     <ToggleButton value={1} variant='outline-secondary'>Cuadricula</ToggleButton>
                     <ToggleButton value={2} variant='outline-secondary'>Loop</ToggleButton>
-                    <ToggleButton value={3} variant='outline-secondary'>Lista</ToggleButton>
+                    <ToggleButton value={3} variant='outline-secondary'>Unica</ToggleButton>
                 </ToggleButtonGroup>
             </ButtonToolbar>
             {
@@ -96,24 +97,31 @@ class Analysis extends Component {
   _showDisplay = () =>{
     switch(this.state.displayTipe){
         case 1:
-            return (<GridCameraDisplay places = {this.state.places} toggleSideMenu = {this._openCameraInfo}/>)
+            return (<GridCameraDisplay places = {this.state.places} toggleControlsBottom = {this._toggleControlsBottom}/>)
         case 2:
-            return (<LoopCamerasDisplay places = {this.state.places} toggleSideMenu = {this._openCameraInfo}/>)
+            return (<LoopCamerasDisplay places = {this.state.places} toggleControlsBottom = {this._toggleControlsBottom}/>)
         case 3:
-            return (<ListCameraDisplay places = {this.state.places} toggleSideMenu = {this._openCameraInfo}/>)
+            return null
         default:
            return null
     }
   }
 
   
-    _openCameraInfo = (marker) => {        
-        this.props.toggleSideMenu(marker)
+    _toggleControlsBottom = (marker) => {        
+        this.props.toggleControls(marker)
     }
 
   _changeDisplay = (value) => {
       this.setState({displayTipe:value})      
   }
+    componentDidMount(){
+        console.log(this.props)
+        if(this.props.match.params.id){
+            this.setState({cameraID:this.props.match.params.id, displayTipe:3})
+
+        }
+    }
 }
 
 export default Analysis;
