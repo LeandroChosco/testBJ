@@ -29,3 +29,12 @@
 .iconArroWMagic{
     opacity: 0.5;
 }
+
+.btn-outline-danger:not(.active){
+    background-color: white;
+}
+
+.btn-outline-danger:not(.active):hover{
+    background-color: white;
+    color: brown;
+}
