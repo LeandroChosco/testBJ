@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Header, Button, Image, Icon } from 'semantic-ui-react'
-
+import Match from '../Match'
 import './style.css'
 class CameraControls extends Component {
     
@@ -8,21 +8,41 @@ class CameraControls extends Component {
         markers : [],
         photos:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
         videos:[1,2,3,4,5,6,7,8],
-        active:false
+        active:false,
+        isSlide:false
     }
 
   render() {
     return (
     <div className="bottomMenu">   
-        {this.props.active?<div className="row p10 headerBottomMenu">
+        {this.props.active?<div className="row p10 headerBottomMenu m-b-4">
             <div className="col-3">
                 <Header size="large">Camara {this.props.camera.id}</Header>
+                 {this.props.camera.name}
             </div>
-            <div className="col-7">
-                <Header size="small"> {this.props.camera.name}</Header>
+            <div className="col-7">  
+            <div>
+                    <Button>
+                        <Icon name='record' />
+                        Grabar
+                    </Button>
+                    <Button>
+                        <Icon name='camera' />
+                        Tomar foto
+                    </Button>
+                    <Button>
+                        <Icon name='pause' />
+                        Pausa
+                    </Button>
+                    <Button>
+                        <Icon name='stop' />
+                        Parar
+                    </Button>
+
+                </div>              
             </div>
             <div className="col" align="right">
-                <Button basic onClick={this._closeControl}>&times;</Button>
+                {!this.state.isSlide?<Button basic onClick={this._closeControl}>&times;</Button>:null}
             </div>
         </div>  : null  } 
         <div className="row fullHeight p10">
@@ -42,30 +62,32 @@ class CameraControls extends Component {
                     </div>)}
                 </div>
             </div>
-            <div className="col">
-                Controles
-                <div>
-                    <Button>
-                        <Icon name='record' />
-                        Grabar
-                    </Button>
-                    <Button>
-                        <Icon name='camera' />
-                        Tomar foto
-                    </Button>
-                </div>
+            <div className="col" align="center">
+                Historial
+                <Match />
             </div>
         </div>       
     </div>
-    );
-  }
+    ); 
+}
 
     _closeControl = () =>{
         const bottomMenu = document.getElementsByClassName('bottomMenu')[0]
         bottomMenu.classList.remove('active-bottom')
         document.getElementsByClassName('fullcontainer')[0].style.overflow = 'auto'
         document.getElementsByClassName('fullcontainer')[0].style.pointerEvents = 'auto'
-        document.getElementsByClassName('fullcontainer')[0].style.opacity = 1     
+        document.getElementsByClassName('fullcontainer')[0].style.opacity = 1 
+        document.getElementsByClassName('gridCameraContainer')[0].style.overflowY = 'auto'  
+        document.getElementsByClassName('gridCameraContainer')[0].style.pointerEvents = 'auto'             
+        if(this.state.isSlide){
+            const carouselContainer = document.getElementsByClassName('carouselContainer')[0]             
+            const fullcontainer = document.getElementsByClassName('fullcontainer')[0] 
+            fullcontainer.style.height = '100%'            
+            carouselContainer.style.height = '100%'   
+            bottomMenu.style.position = 'fixed'
+            bottomMenu.style.height = 'auto'         
+            
+        } 
         setTimeout(this.closeDefinitely,500)     
     }   
 
@@ -84,13 +106,26 @@ class CameraControls extends Component {
         //bottomMenu.style.height = documentHeight - navHeight - buttonBar + 'px'
         //bottomMenu.style.marginTop =  navHeight + buttonBar + 'px'
         */
-        const bottomMenu = document.getElementsByClassName('bottomMenu')[0]  
-        document.getElementsByClassName('fullcontainer')[0].style.overflow = 'hidden'  
-        document.getElementsByClassName('fullcontainer')[0].style.pointerEvents = 'none'  
-        document.getElementsByClassName('fullcontainer')[0].style.opacity = 0.5   
-        bottomMenu.style.opacity = 1         
-        bottomMenu.scrollTop = 0
-        bottomMenu.classList.add('active-bottom')        
+       const bottomMenu = document.getElementsByClassName('bottomMenu')[0] 
+       const carouselContainer = document.getElementsByClassName('carouselContainer')[0] 
+        if(carouselContainer){
+            this.setState({isSlide:true})
+            const fullcontainer = document.getElementsByClassName('fullcontainer')[0] 
+            fullcontainer.style.height = 'auto'            
+            carouselContainer.style.height = 'auto'  
+            bottomMenu.style.position = 'relative'  
+            bottomMenu.style.height = 'auto'            
+        } else {
+            document.getElementsByClassName('fullcontainer')[0].style.overflowY = 'hidden'  
+            document.getElementsByClassName('fullcontainer')[0].style.pointerEvents = 'none'  
+            document.getElementsByClassName('fullcontainer')[0].style.opacity = 0.5
+            document.getElementsByClassName('gridCameraContainer')[0].style.overflowY = 'hidden'  
+            document.getElementsByClassName('gridCameraContainer')[0].style.pointerEvents = 'none'              
+            bottomMenu.style.position = 'fixed'            
+            bottomMenu.scrollTop = 0
+            bottomMenu.classList.add('active-bottom')      
+              
+        }                                      
     }
 
 }

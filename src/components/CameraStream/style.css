@@ -1,10 +1,21 @@
 .camHolder{
     background-image: url(../../assets/images/giphy.gif);
-    height: 300px;
+    height: 400px;
     width: 100%;
     background-position: center;
     background-repeat: no-repeat, repeat;
     align-items: center;
     justify-content: center;
     display: flex;
+    padding: 5px;
+}
+
+.hideCamHolder{
+    height: 0;
+    padding: 0;
+}
+
+.dataHolder{
+    height: 400px;
+    overflow-y: scroll;
 }

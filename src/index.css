@@ -20,3 +20,20 @@ code {
 .fullcontainer{
   height: 100%;
 }
+
+.matchesMagicButtom{
+  position: fixed;
+  top: 15%;
+  right: -15px;
+  padding: 10px !important;
+  opacity: 0.7;
+}
+
+.matchesMagicButtom:hover{
+  opacity: 1;
+}
+
+.imageMatchesMagicButtom{
+  height: 35px;
+  width: 35px;  
+}

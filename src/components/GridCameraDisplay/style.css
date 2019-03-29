@@ -1,0 +1,8 @@
+.gridCameraContainer{
+    overflow-x: hidden;
+}
+
+
+.card>.card-body>.camHolder{
+    height: 350px;
+}

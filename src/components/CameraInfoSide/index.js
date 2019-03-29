@@ -86,12 +86,12 @@ class CameraInfoSide extends Component {
     render() {
         const { activeIndex } = this.state
         return (
-            <div ref='camInfoSideMenu' className="sidenav-right active-side">
-                <button className="closebtn"  onClick={this.props.toggleSideMenu}>&times;</button>                
+            <div ref='camInfoSideMenu' className="sidenav-right">
+                <button className="closebtn"  onClick={this._toggle}>&times;</button>                
                 <div align = 'center'> 
                     <Header>Matches</Header>
                 </div>
-                {this.state.places.map(value=><Accordion className ="p-r-3 p-l-8">
+                {this.state.places.map(value=><Accordion key={value.id} className ="p-r-3 p-l-8">
                     
                     <Accordion.Title active={activeIndex === value.id} index={value.id} onClick={this.handleClick}>                        
                         <Header size="medium">
@@ -115,6 +115,11 @@ class CameraInfoSide extends Component {
         );
     }
 
+    _toggle = () => {
+        this.refs.camInfoSideMenu.classList.remove('active-side')        
+        setTimeout(this.props.toggleSideMenu,1000)
+    }
+
     componentDidMount() {
         //$('#mySidenavLeft').css('margin-top',navHeight-2);
         //$('#mySidenavLeft').css('height',$(document).height() - navHeight);
@@ -125,7 +130,9 @@ class CameraInfoSide extends Component {
         element.style.height  = documentHeight - navHeight + "px"   
         element.style.maxHeight  = documentHeight - navHeight + "px"      
         element.style.marginTop  =   navHeight  + "px"   
-        this.setState({activeIndex:this.props.cameraID})           
+        this.setState({activeIndex:this.props.cameraID}) 
+        console.log(this.props)  
+        this.refs.camInfoSideMenu.classList.add('active-side')        
     }
 }
 

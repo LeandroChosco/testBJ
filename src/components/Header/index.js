@@ -10,11 +10,16 @@ import './style.css'
 
 class Header extends Component {
     _goAnalitics = () => {
+        if(this.props.isSidemenuShow){
+            this.props.toggleSideMenu()
+        }
+        document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')
         this.props.history.push('/analisis')
     }
 
-    _cameraAction = () => {        
-        if(this.props.location.pathname === "/analisis"){
+    _cameraAction = () => {    
+        document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')    
+        if(this.props.location.pathname.includes("/analisis")){
             this.props.history.push('/')
         } else {
             this.props.toggleSideMenu()
@@ -23,6 +28,7 @@ class Header extends Component {
     }
 
     _logOut = () => {
+        document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')
         this.props.history.push('/')
         this.props.logOut()
     }

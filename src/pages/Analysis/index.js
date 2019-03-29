@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { ButtonToolbar, ToggleButton, ToggleButtonGroup} from 'react-bootstrap'
-
+import { ToggleButton, ToggleButtonGroup} from 'react-bootstrap'
+import { Icon } from 'semantic-ui-react'
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
@@ -8,6 +8,8 @@ import './style.css'
 import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
 import GridCameraDisplay from '../../components/GridCameraDisplay';
 import ListCameraDisplay from '../../components/ListCameraDisplay';
+import CameraStream from '../../components/CameraStream';
+import CameraControls from '../../components/CameraControls';
 
 
 
@@ -74,20 +76,25 @@ class Analysis extends Component {
                 webSocket:'ws://18.222.106.238:1008'
             }
         ],
+        actualCamera:{
+            title:'',
+            extraData:{}
+        },
         displayTipe:1,
         cameraID:null
     }
   
   render() {
     return (
-        <div className="d-flex flex-column">
-            <ButtonToolbar>
-                <ToggleButtonGroup type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
-                    <ToggleButton value={1} variant='outline-secondary'>Cuadricula</ToggleButton>
-                    <ToggleButton value={2} variant='outline-secondary'>Loop</ToggleButton>
-                    <ToggleButton value={3} variant='outline-secondary'>Unica</ToggleButton>
+        <div >
+            <div className="toggleViewButton row bg-mh">
+                <Icon className='col iconArroWMagic' size="big" name='angle left'/>
+                <ToggleButtonGroup className='col-10' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
+                    <ToggleButton value={1} variant='outline-danger' ><Icon name="grid layout"/></ToggleButton>
+                    <ToggleButton value={2} variant='outline-danger' ><Icon name="clone"/></ToggleButton>
+                    {this.state.cameraID?<ToggleButton value={3} variant='outline-danger' ><Icon name="squere"/></ToggleButton>:null}
                 </ToggleButtonGroup>
-            </ButtonToolbar>
+            </div>            
             {
                 this._showDisplay()
             }
@@ -101,7 +108,7 @@ class Analysis extends Component {
         case 2:
             return (<LoopCamerasDisplay places = {this.state.places} toggleControlsBottom = {this._toggleControlsBottom}/>)
         case 3:
-            return null
+            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons /></div>)
         default:
            return null
     }
@@ -118,8 +125,8 @@ class Analysis extends Component {
     componentDidMount(){
         console.log(this.props)
         if(this.props.match.params.id){
-            this.setState({cameraID:this.props.match.params.id, displayTipe:3})
-
+            this.setState({cameraID:this.props.match.params.id,actualCamera:{title:this.state.places[this.props.match.params.id-1].name,extraData:this.state.places[this.props.match.params.id-1]}})
+            this.setState({displayTipe:3})             
         }
     }
 }

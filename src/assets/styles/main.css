@@ -564,7 +564,7 @@ iframe {
   height: 100%;
   width: 0;
   position: fixed;
-  z-index: 1;  
+  z-index: 2;  
   left: 0;
   background-color: #fff;
   overflow-x: hidden;
@@ -604,7 +604,7 @@ iframe {
   height: 100%;
   width: 0;
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   top: 0;
   right: 0;
   background-color: #fff;
@@ -637,6 +637,12 @@ iframe {
 @media screen and (max-height: 450px) {
   .sidenav-right {padding-top: 15px;}
   .sidenav-right a {font-size: 18px;}
+}
+
+@media only screen and (max-width: 400px) {
+  .active-side{
+    width: 100% !important;
+  }
 }
 
 .active-side{

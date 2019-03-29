@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Button, Row, Col } from 'react-bootstrap'
-
+import {  Image } from 'semantic-ui-react'
 import './style.css'
 
 class CameraStream extends Component {
@@ -9,7 +9,10 @@ class CameraStream extends Component {
         cameraName:'',
         data:{},
         webSocket: null,
-        player: null
+        player: null,
+        showData:false,
+        photos:[0,1,2,3,4,5,6,7,8],
+        videos:[0,1,2,3,4,5]
     }
 
     render() {
@@ -41,20 +44,42 @@ class CameraStream extends Component {
                             </Card.Footer>:
                         null}
                     </Card.Body>:
-                    <Card.Body>
-                        <div className="camHolder">  
+                    <Card.Body>                        
+                        <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"}>  
                             <canvas ref="camRef" style={{width:this.props.height?'50%':'100%',height:this.props.height?this.props.height:'100%'}}></canvas>                      
-                        </div>
+                        </div> 
+                         
+                              
+                        {this.state.showData?
+                        <div className="row dataHolder p10">
+                            <div className="col snapshots">
+                                Fotos
+                                <div className="row">
+                                    {this.state.photos.map(value=><div key={value} className="col-6 p10">
+                                        <Image src="https://via.placeholder.com/150"/>
+                                    </div>)}
+                                </div>
+                            </div>
+                            <div className="col videos">
+                                Videos
+                                <div className="row">
+                                    {this.state.videos.map(value=><div key={value} className="col-6 p10">
+                                        <Image src="https://via.placeholder.com/150"/>
+                                    </div>)}
+                                </div>
+                            </div>
+                        </div>:null}   
                         <Card.Title>Camara {this.state.cameraID}</Card.Title>
                         <Card.Text>
                             {this.state.cameraName}
-                        </Card.Text>
+                        </Card.Text>             
                         {this.props.showButtons?
                             <Card.Footer>
                                 <Button variant="outline-secondary"><i className='fa fa-camera'></i></Button>
                                 <Button variant="outline-secondary"><i className='fa fa-pause'></i></Button>
                                 <Button variant="outline-secondary"><i className='fa fa-square'></i></Button>
                                 <Button variant="outline-secondary"><i className='fa fa-repeat'></i></Button>
+                                <Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>
                             </Card.Footer>:
                         null}
                     </Card.Body>                    

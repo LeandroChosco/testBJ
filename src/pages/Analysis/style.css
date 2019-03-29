@@ -1,3 +1,31 @@
 .btn-group, .btn-group-toggle{
     width: 100%;
 }
+
+.camUniqueHolder>.card{        
+    height: 100%;
+}
+
+.camUniqueHolder{        
+    height: 100%;
+}
+
+
+.toggleViewButton{
+    width: 250px;
+    position: fixed;
+    top:25%;
+    right: -200px;
+    z-index: 1;
+    transition: right 500ms; 
+    opacity: 0.5;   
+}
+
+.toggleViewButton:hover{
+    right: 0;  
+    opacity: 1;  
+}
+
+.iconArroWMagic{
+    opacity: 0.5;
+}
