@@ -2,7 +2,22 @@
     vertical-align: middle;
     margin: auto;
 }
+.imageContainer,.suspectPhoto,.limitlines{
+    height: 100%;
+}
 
+.cardmatchComtainer>.content{
+    height: 100px;
+    padding: 2px !important;
+}
+
+.cardmatchComtainer>.content>.description{
+    height: 100%;    
+}
+
+.ui.card .content img, .ui.cards>.card .content img{
+    height: 100%;
+}
 .limitlines{
     height: 100px;
     text-overflow: ellipsis;
@@ -12,5 +27,25 @@
 }
 
 b{
-    font-weight: bold;
+    font-weight: bold !important;
+}
+
+.textcontainerdescription{
+    height: 60%;
+}
+
+.textcontainerdescription>p{
+    height: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;    
+}
+
+.cardmatchComtainer{
+    width: 100% !important;
+    margin-left: 2px !important;
+    margin-right: 2px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    max-height: 100px !important;
+    height: 100px !important;
 }

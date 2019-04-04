@@ -44,10 +44,7 @@ class CameraStream extends Component {
                             </Card.Footer>:
                         null}
                     </Card.Body>:
-                    <Card.Body>                        
-                        <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"}>  
-                            <canvas ref="camRef" style={{width:'100%',height:'100%'}}></canvas>                      
-                        </div> 
+                    <Card.Body>                                                
                          
                               
                         {this.state.showData?
@@ -69,10 +66,13 @@ class CameraStream extends Component {
                                 </div>
                             </div>
                         </div>:null}   
-                        <Card.Title>Camara {this.state.cameraID}</Card.Title>
+                        <Card.Title><i className='fa fa-video-camera'></i> Camara {this.state.cameraID}</Card.Title>
                         <Card.Text>
-                            {this.state.cameraName}
+                            {this.state.cameraName}                            
                         </Card.Text>             
+                        <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"}>  
+                                <canvas ref="camRef" style={{width:'100%',height:'100%'}}></canvas>                      
+                            </div> 
                         {this.props.showButtons?
                             <Card.Footer>
                                 <Button variant="outline-secondary"><i className='fa fa-camera'></i></Button>
@@ -99,7 +99,12 @@ class CameraStream extends Component {
 
       console.log(this.refs.camRef.getBoundingClientRect().width)
       if (this.props.height) {
-        this.refs.camRef.style.height = this.refs.camRef.getBoundingClientRect().width * this.props.height+'px'
+          if (this.refs.camRef.getBoundingClientRect().width === 0) {
+              console.log('ehre i am')
+            this.refs.camRef.style.height = (window.visualViewport.width - 50 ) * this.props.height+'px'  
+          } else {
+            this.refs.camRef.style.height = this.refs.camRef.getBoundingClientRect().width * this.props.height+'px'   
+          }        
       }
 
       console.log()

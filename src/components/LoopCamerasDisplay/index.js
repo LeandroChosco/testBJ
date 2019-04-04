@@ -16,7 +16,8 @@ class LoopCamerasDisplay extends Component {
         photos:[1,2,3,4,5,6,7,8,9],
         videos:[1,3,5,4,6],
         isplaying:[],
-        matches: []
+        matches: [],
+        height:'50%'
     }
 
     _showCameraInfo(){
@@ -106,13 +107,14 @@ class LoopCamerasDisplay extends Component {
         })    
         this.setState({isplaying:playing})
         const navHeight = document.getElementsByTagName('nav')[0].scrollHeight
+        const viewBar = document.getElementsByClassName('toggleViewButton')[0].scrollHeight
+        const bottomBar = document.getElementsByClassName('camControl')[0].scrollHeight
         const documentHeight = window.innerHeight 
         let map = document.getElementsByClassName('holderOfSlides')[0]//.style.height = documentHeight - navHeight       
-        map.style.height  = (documentHeight - navHeight) + "px"   
-        map.style.maxHeight  = (documentHeight - navHeight) + "px"      
-        this.setState({markers:markersForLoop})
+        map.style.height  = (documentHeight - navHeight - bottomBar - viewBar) + "px"   
+        map.style.maxHeight  = (documentHeight - navHeight - bottomBar - viewBar) + "px"                      
         const time =  setInterval(this.changeSlide,15000)
-        this.setState({interval: time})
+        this.setState({interval: time,markers:markersForLoop, height:.4})
         let cameras = []
           for(let item in responseJson.items){
             let suspect = responseJson.items[item]            

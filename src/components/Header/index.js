@@ -55,15 +55,14 @@ class Header extends Component {
                             </Button>                                             
                     </Navbar.Text>
                 </Nav>
-                <Nav>
-                <Navbar.Text >                       
-                            <Button variant="outline-light"  onClick={this._cameraSideInfo}>
-                                <i className="fa fa-bell"></i>
-                            </Button>                                           
-                    </Navbar.Text>
+                <Nav>                                            
                     <NavDropdown className="light" title="Alejandro Chico">
                         <NavDropdown.Item onClick={this._logOut}>Cerrar sesion</NavDropdown.Item>
                     </NavDropdown>
+                    <Button variant="outline-light"  onClick={this._cameraSideInfo}>
+                        <i className="fa fa-bell"></i>
+                    </Button>                                           
+                    
                 </Nav>
                 
             </Navbar.Collapse>

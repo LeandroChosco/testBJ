@@ -114,7 +114,7 @@ class Map extends Component {
     }
     createInfoWindow = (e, map) => {        
         const infoWindow = new window.google.maps.InfoWindow({
-            content: '<div id="infoWindow'+e.extraData.id+'" />',
+            content: '<div id="infoWindow'+e.extraData.id+'" class="windowpopinfo"/>',
             position: { lat: e.position.lat(), lng: e.position.lng() }
         })
         infoWindow.addListener('domready', (function(marker, render) {

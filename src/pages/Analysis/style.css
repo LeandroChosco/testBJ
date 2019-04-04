@@ -12,10 +12,10 @@
 
 
 .toggleViewButton{    
-    position: fixed;
+    
     top:10;
     right: 0;
-    width: 50%;
+    left: 0;
     z-index: 1;
     transition: right 500ms; 
     opacity: 0.95;       

@@ -2,10 +2,6 @@
     height: 90% !important;
 }
 
-.holderOfSlides>div>.card>.card-body>.camHolder>canvas {
-    height: 95% !important;
-    width: 100% !important;
-}
 
 .holderOfSlides>div>.card{
     height: 100% !important;    

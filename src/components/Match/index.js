@@ -20,8 +20,7 @@ class Match extends Component {
     }
     render() {        
         return (
-            <Card onClick={this._godetails}>
-                
+            <Card className='cardmatchComtainer' onClick={this._godetails}>
                 <Card.Content>                
                     {/* <Card.Meta>
                         <span className='date'>{this.state.match}% de coincidencia</span>
@@ -29,7 +28,20 @@ class Match extends Component {
                     <Card.Description>
                         <div className =" imageContainer row">
                             <div className = 'col-4 suspectPhoto' align="center"><Image src={this.state.imageCamera} /></div>
-                            <div className = 'col-8 limitlines'> <b>{this.state.name}</b>, {this.state.description}{/* <Image src={this.state.imageDB} /> */}</div>
+                            <div className = 'col-8 limitlines' align='left'> 
+                                <div align='right'>
+                                    25-03-2019 14:35
+                                </div>
+                                <div className="textcontainerdescription">
+                                    <p>
+                                        <b>{this.state.name}</b>, 
+                                        {this.state.description}
+                                    </p>
+                                </div>
+                                <div align='right'>
+                                    <span className="badge badge-danger">Cerrado</span>
+                                </div>
+                            </div>
                         </div>                    
                     </Card.Description>
                 </Card.Content>
