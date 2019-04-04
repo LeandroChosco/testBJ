@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Card, Icon, Image, Divider } from 'semantic-ui-react'
-
+import { Card, Image, Divider } from 'semantic-ui-react'
+import { withRouter } from "react-router-dom";
+import './style.css'
 
 class Match extends Component {   
     state = {
@@ -15,137 +16,34 @@ class Match extends Component {
         }
     }
     _changeSeeMore = () => {
-        this.setState({seeMore: !this.state.seeMore})
+        //this.setState({seeMore: !this.state.seeMore})
     }
     render() {        
         return (
-            <Card>
-                <div className =" imageContainer row">
-                    <div className = 'col'><Image src={this.state.imageCamera} /></div>
-                    <div className = 'col'><Image src={this.state.imageDB} /></div>
-                </div>
-                <Card.Content>
-                <Card.Header>{this.state.name}</Card.Header>
-                <Card.Meta>
-                    <span className='date'>{this.state.match}% de coincidencia</span>
-                </Card.Meta>
-                <Card.Description>{this.state.description}</Card.Description>
-                </Card.Content>
-                <Card.Content extra>
-                    {this.state.seeMore?
-                        <div align ='justify'>                            
-                            <div className='row'>
-                                <div className='col-4'>
-                                    <p>Name:</p>
-                                </div>
-                                <div className='col-8'>
-                                    <p>John Doe</p>
-                                </div>                
-                            </div>
-
-                            <div className='row'>
-                                <div className='col-4'>
-                                    <p>Aliases:</p>
-                                </div>
-                                <div className='col-8'>
-                                    <p> "John Roe", "Richard Roe", "Jane Roe" and "Baby Doe", "Janie Doe" or "Johnny Doe"</p>
-                                </div>                
-                            </div>
-
-                            <div className='row'>
-                                <div className='col-4'>
-                                    <p>Details:</p>
-                                </div>
-                                <div className='col-8'>
-                                    <p>{this.state.extraData?this.state.extraData.description:''}</p>
-                                </div>                
-                            </div>
-
-                            <div className='row'>
-                                <div className='col-4'>
-                                    <p>Place of birth:</p>
-                                </div>
-                                <div className='col-8'>
-                                    <p>PASADENA, CALIFORNIA, United States</p>
-                                </div>                
-                            </div>
-
-                            <div className='row'>
-                                <div className='col-4'>
-                                    <p>Date of birth:</p>
-                                </div>
-                                <div className='col-8'>
-                                    <p>March 28, 1979</p>
-                                </div>                
-                            </div>
-
-                            <div className='row'>
-                                <div className='col-4'>
-                                    <p>Nationality:</p>
-                                </div>
-                                <div className='col-8'>
-                                <p>American</p>
-                                </div>                
-                            </div>                            
-                            <div>
-                                <p> Physical description</p>  
-                            </div>
-                            <Divider/>            
-
-                            <div className='row'>
-                                <div className='col-4'>
-                                <p>Height:</p>
-                                </div>
-                                <div className='col-8'>
-                                <p>1.85 metres</p>
-                                </div>                
-                            </div>
-
-                            <div className='row'>
-                                <div className='col-4'>
-                                <p>Weight:</p>
-                                </div>
-                                <div className='col-8'>
-                                <p>82 kilograms</p>
-                                </div>                
-                            </div>
-
-                            <div className='row'>
-                                <div className='col-4'>
-                                <p>Colour of hair:</p>
-                                </div>
-                                <div className='col-8'>
-                                <p>Grey</p>
-                                </div>                
-                            </div>
-
-                            <div className='row'>
-                                <div className='col-4'>
-                                <p>Colour of eyes:</p>
-                                </div>
-                                <div className='col-8'>
-                                <p>Brown</p>
-                                </div>                
-                            </div>
-
-                            <div className='row'>
-                                <div className='col-4'>
-                                <p>Scars and Marks:</p>
-                                </div>
-                                <div className='col-8'>
-                                <p>John Doe has a cleft chin and a surgical scar on his lower back.</p>
-                                </div>                
-                            </div>
-
-                        </div>
-                        :null}
-                    <div onClick= {this._changeSeeMore}>{this.state.seeMore?'Leer menos':'Leer mas'}</div>                    
+            <Card onClick={this._godetails}>
                 
+                <Card.Content>                
+                    {/* <Card.Meta>
+                        <span className='date'>{this.state.match}% de coincidencia</span>
+                    </Card.Meta> */}
+                    <Card.Description>
+                        <div className =" imageContainer row">
+                            <div className = 'col-4 suspectPhoto' align="center"><Image src={this.state.imageCamera} /></div>
+                            <div className = 'col-8 limitlines'> <b>{this.state.name}</b>, {this.state.description}{/* <Image src={this.state.imageDB} /> */}</div>
+                        </div>                    
+                    </Card.Description>
                 </Card.Content>
             </Card>
         );
     }
 
+
+    _godetails = () => {
+        if(this.props.toggleControls){
+            this.props.toggleControls() 
+        }
+        this.props.history.push('/detalles/'+this.state.extraData.id)
+    }
     componentDidMount(){
         if(this.props.info){
             this.setState({
@@ -160,4 +58,4 @@ class Match extends Component {
        
 }
 
-export default Match;
+export default withRouter(Match);

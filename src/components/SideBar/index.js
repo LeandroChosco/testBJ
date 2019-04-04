@@ -102,7 +102,6 @@ class SideBar extends Component {
             return true
         })
         this.setState({ selectedOption:cameras });
-        console.log(`Option selected:`, cameras);
     }
 
     render() {
@@ -117,7 +116,7 @@ class SideBar extends Component {
                 />
                 <div id="selection">
                 {
-                    this.state.selectedOption.map( value => <CameraStream  marker={value}/>) 
+                    this.state.selectedOption.map( value => <CameraStream key={value.extraData.id} marker={value} height={.6}/>) 
                 }
                 </div>
             </div>

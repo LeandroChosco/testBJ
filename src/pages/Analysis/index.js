@@ -7,9 +7,9 @@ import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
 import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
 import GridCameraDisplay from '../../components/GridCameraDisplay';
-import ListCameraDisplay from '../../components/ListCameraDisplay';
+//import ListCameraDisplay from '../../components/ListCameraDisplay';
 import CameraStream from '../../components/CameraStream';
-import CameraControls from '../../components/CameraControls';
+//import CameraControls from '../../components/CameraControls';
 
 
 
@@ -80,16 +80,15 @@ class Analysis extends Component {
             title:'',
             extraData:{}
         },
-        displayTipe:1,
+        displayTipe:2,
         cameraID:null
     }
   
   render() {
     return (
         <div >
-            <div className="toggleViewButton row bg-mh">
-                <Icon className='col iconArroWMagic' size="big" name='angle left'/>
-                <ToggleButtonGroup className='col-10' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
+            <div className="toggleViewButton row">            
+                <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
                     <ToggleButton value={1} variant='outline-danger' ><Icon name="grid layout"/></ToggleButton>
                     <ToggleButton value={2} variant='outline-danger' ><Icon name="clone"/></ToggleButton>
                     {this.state.cameraID?<ToggleButton value={3} variant='outline-danger' ><Icon name="squere"/></ToggleButton>:null}

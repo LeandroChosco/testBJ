@@ -1,15 +1,22 @@
 import React, { Component } from 'react';
-import Carousel from 'nuka-carousel';
+//import Carousel from 'nuka-carousel';
 import CameraStream from '../CameraStream';
-import {  Button } from 'semantic-ui-react'
-
+import {  Button, Image } from 'semantic-ui-react'
+import responseJson from '../../assets/json/suspects.json'
 import './style.css'
+import Match from '../Match';
 class LoopCamerasDisplay extends Component {
     
     state = {
         markers : [],
         slideIndex: 0,
-        autoplay: true
+        autoplay: true,
+        interval:null,
+        isRecording:false,
+        photos:[1,2,3,4,5,6,7,8,9],
+        videos:[1,3,5,4,6],
+        isplaying:[],
+        matches: []
     }
 
     _showCameraInfo(){
@@ -18,53 +25,109 @@ class LoopCamerasDisplay extends Component {
 
   render() {
     return (
-    <div className="carouselContainer">
-        <Carousel
-            wrapAround = {true}
-            autoplay = {this.state.autoplay}
-            cellAlign="center"
-            disableAnimation={true} 
-            withoutControls={true}  
-            heightMode="max"       
-            autoplayInterval = {2000}      
-            afterSlide={slideIndex => this.setState({ slideIndex })}     
-        >
-            {this.state.markers.map((value,index) => (index==this.state.slideIndex||index==this.state.slideIndex+1||index === 0 )?<CameraStream key={value.extraData.id} marker={value} height={this.state.height} />:<div key={index}>Hola</div>)}
-        </Carousel>
-        <div align="center">
-            <Button className="buttonDetails" onClick={this._openCameraInfo}> {this.state.autoplay?'Ver detalles de camara':'Ocultar detalles'}</Button>
+    <div className="holderOfSlides">
+        
+            {this.state.markers.map((value,index) => <div key={value.extraData.id} style={{height:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}><CameraStream ref={'camstreamloopref'+index} marker={value} height={this.state.height} /></div>)}        
+        <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
+            <div className='row stiky-top'>
+                <div className='col-8'>
+                    
+                        <Button basic circular><i className='fa fa-camera'></i></Button>
+                        <Button basic circular onClick={this._playPause}><i className={this.state.isplaying[this.state.slideIndex]?'fa fa-pause':'fa fa-play'}></i></Button>
+                        <Button basic circular><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
+                    
+                </div>
+                <div className='col-4'>
+                    <Button onClick={this._openCameraInfo} className='pull-right' primary><i className={ this.state.autoplay?'fa fa-square':'fa fa-play'}></i> { this.state.autoplay?'Parar loop':'Continuar loop'} <i className={ this.state.autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}></i></Button>                
+                </div>
+            </div>
+            <div className={!this.state.autoplay?'row showfilesinfocamera':'row hidefiles'}>
+                <div className="col snapshots">
+                    Fotos
+                    <div className="row">
+                        {this.state.photos.map(value=><div key={value} className="col-6 p10">
+                            <Image src="https://via.placeholder.com/150"/>
+                        </div>)}
+                    </div>
+                </div>
+                <div className="col videos">
+                    Videos
+                    <div className="row">
+                        {this.state.videos.map(value=><div key={value} className="col-6 p10">
+                            <Image src="https://via.placeholder.com/150"/>
+                        </div>)}
+                    </div>
+                </div>
+                <div className="col" align="center">
+                    Historial
+                    {this.state.matches.map((value, index)=><Match key={index} info={value} toggleControls={this._closeControl} />)}
+                </div>
+            </div>            
         </div>
+        <div className='gridCameraContainer carouselContainer'></div>        
     </div>
     );
   }
 
-
-    _openCameraInfo = () => {                
-        this.state.autoplay?this.props.toggleControlsBottom(this.state.markers[this.state.slideIndex].extraData):this.props.toggleControlsBottom(null)
-        this.setState({autoplay: !this.state.autoplay})
+    _playPause = () =>{
+        const index = 'camstreamloopref'+this.state.slideIndex        
+        console.log(this.state.isplaying[this.state.slideIndex])
+        this.setState({isplaying:{[this.state.slideIndex]:!this.state.isplaying[this.state.slideIndex]}})
+        if (this.state.isplaying[this.state.slideIndex]) {            
+            this.refs[index].state.player.pause()
+        } else {            
+            this.refs[index].state.player.play()
+        }
+    } 
+    _openCameraInfo = () => { 
+        const index = 'camstreamloopref'+this.state.slideIndex
+        console.log(index)               
+        console.log(this.refs[index].state.player.playing)
+        if(this.state.autoplay){
+            clearInterval(this.state.interval)
+            this.setState({autoplay: false})
+        }  else {
+            const time =  setInterval(this.changeSlide,15000)
+            this.setState({interval: time})
+            this.setState({autoplay: true})
+        }     
     }
 
     componentDidMount(){
         let markersForLoop = []
+        let playing=[]
         this.props.places.map((value)=>{
             markersForLoop.push({
                 title:value.name,
                 extraData:value
             })
+            playing.push(true)        
             return true
-        })
-    setTimeout(this.updateHeight,100)
+        })    
+        this.setState({isplaying:playing})
+        const navHeight = document.getElementsByTagName('nav')[0].scrollHeight
+        const documentHeight = window.innerHeight 
+        let map = document.getElementsByClassName('holderOfSlides')[0]//.style.height = documentHeight - navHeight       
+        map.style.height  = (documentHeight - navHeight) + "px"   
+        map.style.maxHeight  = (documentHeight - navHeight) + "px"      
         this.setState({markers:markersForLoop})
+        const time =  setInterval(this.changeSlide,15000)
+        this.setState({interval: time})
+        let cameras = []
+          for(let item in responseJson.items){
+            let suspect = responseJson.items[item]            
+            //if(suspect.person_classification !== "Victim"){
+              suspect.description = suspect.description.replace(/<p>/g,'').replace(/<\/p>/g,'')                            
+              cameras.push(suspect)
+            //}
+          }       
+        this.setState({matches:cameras})    
     }
 
-    updateHeight = () => {
-        const slider = document.getElementsByClassName('slider')[0]
-        const visible = document.getElementsByClassName('slide-visible')[0]        
-        if(visible){
-            slider.style.height = visible.scrollHeight + 'px'
-            this.setState({height:visible.scrollHeight-30})
-        }
+    changeSlide = () => {
+        this.setState({slideIndex: this.state.slideIndex === this.state.markers.length - 1 ? 0 : this.state.slideIndex + 1 })
     }
+
 }
 
 export default LoopCamerasDisplay;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Header, Button, Image, Icon } from 'semantic-ui-react'
 import Match from '../Match'
+import responseJson from '../../assets/json/suspects.json'
 import './style.css'
 class CameraControls extends Component {
     
@@ -64,14 +65,14 @@ class CameraControls extends Component {
             </div>
             <div className="col" align="center">
                 Historial
-                <Match />
+                {this.state.markers.map((value, index)=><Match key={index} info={value} toggleControls={this._closeControl} />)}
             </div>
         </div>       
     </div>
     ); 
 }
 
-    _closeControl = () =>{
+    _closeControl = () =>{        
         const bottomMenu = document.getElementsByClassName('bottomMenu')[0]
         bottomMenu.classList.remove('active-bottom')
         document.getElementsByClassName('fullcontainer')[0].style.overflow = 'auto'
@@ -125,7 +126,16 @@ class CameraControls extends Component {
             bottomMenu.scrollTop = 0
             bottomMenu.classList.add('active-bottom')      
               
-        }                                      
+        }  
+        let cameras = []
+          for(let item in responseJson.items){
+            let suspect = responseJson.items[item]            
+            //if(suspect.person_classification !== "Victim"){
+              suspect.description = suspect.description.replace(/<p>/g,'').replace(/<\/p>/g,'')                            
+              cameras.push(suspect)
+            //}
+          }       
+        this.setState({markers:cameras})                                     
     }
 
 }

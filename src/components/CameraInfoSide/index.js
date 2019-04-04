@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Accordion, Icon, Header, Divider } from 'semantic-ui-react'
+import { Header } from 'semantic-ui-react'
 import Match from '../Match';
 import responseJson from '../../assets/json/suspects.json'
 
@@ -81,7 +81,8 @@ class CameraInfoSide extends Component {
                 webSocket:'ws://18.222.106.238:1008',
                 match:[]
             }
-        ]
+        ],
+        matchs:[]
     }
 
     handleClick = (e, titleProps) => {
@@ -93,33 +94,15 @@ class CameraInfoSide extends Component {
     }
 
     render() {
-        const { activeIndex } = this.state
         return (
             <div ref='camInfoSideMenu' className="sidenav-right">
                 <button className="closebtn"  onClick={this._toggle}>&times;</button>                
                 <div align = 'center'> 
                     <Header>Matches</Header>
                 </div>
-                {this.state.places.map(value=><Accordion key={value.id} className ="p-r-3 p-l-8">
-                    
-                    <Accordion.Title active={activeIndex === value.id} index={value.id} onClick={this.handleClick}>                        
-                        <Header size="medium">
-                            <Icon name='dropdown' />
-                            Camara {value.id}
-                        </Header>
-                    </Accordion.Title>
-                    <Accordion.Content active={activeIndex === value.id}>
-                        <div>
-                            <Header size="tiny">{value.name}</Header>
-                        </div>
-                        <Divider/>
-                        <div align="center">
-                            {value.match.map((obj,key)=><Match key={key} info={obj}/>)}
-                        </div>
-                    </Accordion.Content>
-               
-
-                </Accordion>)}
+                <div align='center'>
+                    {this.state.matchs.map((value, index)=><Match key={index} info={value}/>)}
+                </div>
             </div>
         );
     }
@@ -130,8 +113,6 @@ class CameraInfoSide extends Component {
     }
 
     componentDidMount() {
-        //$('#mySidenavLeft').css('margin-top',navHeight-2);
-        //$('#mySidenavLeft').css('height',$(document).height() - navHeight);
         const element  = this.refs.camInfoSideMenu
         this.refs.camInfoSideMenu.classList.add('active-side') 
         const navHeight = document.getElementsByTagName('nav')[0].scrollHeight
@@ -141,14 +122,15 @@ class CameraInfoSide extends Component {
         element.style.maxHeight  = documentHeight - navHeight + "px"      
         element.style.marginTop  =   navHeight  + "px"   
         this.setState({activeIndex:this.props.cameraID}) 
-        let cameras = this.state.places
+        let cameras = []
           for(let item in responseJson.items){
             let suspect = responseJson.items[item]            
-            if(suspect.person_classification != "Victim"){
+            //if(suspect.person_classification !== "Victim"){
               suspect.description = suspect.description.replace(/<p>/g,'').replace(/<\/p>/g,'')                            
-              cameras[item%8].match.push(suspect)
-            }
-          }                 
+              cameras.push(suspect)
+            //}
+          }       
+        this.setState({matchs:cameras})          
     }
 }
 

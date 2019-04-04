@@ -1,0 +1,16 @@
+.suspectPhoto{
+    vertical-align: middle;
+    margin: auto;
+}
+
+.limitlines{
+    height: 100px;
+    text-overflow: ellipsis;
+    overflow-y: hidden;
+    font-size: 0.8rem;
+
+}
+
+b{
+    font-weight: bold;
+}

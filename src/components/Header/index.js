@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {Navbar, NavDropdown, Button, Nav} from 'react-bootstrap'
 import { withRouter } from "react-router-dom";
-
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
@@ -19,7 +18,7 @@ class Header extends Component {
 
     _cameraAction = () => {    
         document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')    
-        if(this.props.location.pathname.includes("/analisis")){
+        if(this.props.location.pathname.includes("/analisis")||this.props.location.pathname.includes("/detalles")){
             this.props.history.push('/')
         } else {
             this.props.toggleSideMenu()
@@ -31,6 +30,10 @@ class Header extends Component {
         document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')
         this.props.history.push('/')
         this.props.logOut()
+    }
+
+    _cameraSideInfo = () => {
+        this.props.cameraSideInfo()
     }
 
   render() {
@@ -53,6 +56,11 @@ class Header extends Component {
                     </Navbar.Text>
                 </Nav>
                 <Nav>
+                <Navbar.Text >                       
+                            <Button variant="outline-light"  onClick={this._cameraSideInfo}>
+                                <i className="fa fa-bell"></i>
+                            </Button>                                           
+                    </Navbar.Text>
                     <NavDropdown className="light" title="Alejandro Chico">
                         <NavDropdown.Item onClick={this._logOut}>Cerrar sesion</NavDropdown.Item>
                     </NavDropdown>

@@ -27,7 +27,7 @@ class CameraStream extends Component {
                             <Row>
                                 <Col lg={6}>
                                     <div className="camHolder">  
-                                        <canvas ref="camRef" style={{width:this.props.height?'50%':'100%',height:this.props.height?this.props.height:'100%'}}></canvas>                      
+                                        <canvas ref="camRef" style={{width:'100%',height:this.props.height?this.props.height:'100%'}}></canvas>                      
                                     </div>
                                 </Col>
                                 <Col lg={6}>
@@ -46,7 +46,7 @@ class CameraStream extends Component {
                     </Card.Body>:
                     <Card.Body>                        
                         <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"}>  
-                            <canvas ref="camRef" style={{width:this.props.height?'50%':'100%',height:this.props.height?this.props.height:'100%'}}></canvas>                      
+                            <canvas ref="camRef" style={{width:'100%',height:'100%'}}></canvas>                      
                         </div> 
                          
                               
@@ -96,6 +96,13 @@ class CameraStream extends Component {
           webSocket: ws,
           player: p
       })
+
+      console.log(this.refs.camRef.getBoundingClientRect().width)
+      if (this.props.height) {
+        this.refs.camRef.style.height = this.refs.camRef.getBoundingClientRect().width * this.props.height+'px'
+      }
+
+      console.log()
   }
 
     componentWillUnmount(){

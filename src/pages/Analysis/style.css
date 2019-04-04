@@ -11,18 +11,17 @@
 }
 
 
-.toggleViewButton{
-    width: 250px;
+.toggleViewButton{    
     position: fixed;
-    top:25%;
-    right: -200px;
+    top:10;
+    right: 0;
+    width: 50%;
     z-index: 1;
     transition: right 500ms; 
-    opacity: 0.5;   
+    opacity: 0.95;       
 }
 
-.toggleViewButton:hover{
-    right: 0;  
+.toggleViewButton:hover{    
     opacity: 1;  
 }
 

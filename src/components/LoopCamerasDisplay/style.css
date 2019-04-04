@@ -1,3 +1,63 @@
-.slider-list {
+.holderOfSlides>div>.card>.card-body>.camHolder {
+    height: 90% !important;
+}
+
+.holderOfSlides>div>.card>.card-body>.camHolder>canvas {
+    height: 95% !important;
+    width: 100% !important;
+}
+
+.holderOfSlides>div>.card{
+    height: 100% !important;    
+}
+.holderOfSlides>div>.card>.card-body {
+    height: 100% !important;    
+}
+
+.camControl{
+    position: fixed;
+    bottom: 0;
+    background-color: lightgray;
+    width: 100vw;
+}
+.showfiles{
+    height: 50%;
+    overflow-y: hidden;
+}
+.hidefiles{
+    height: 0;
+}
+
+.hiddenCameraNotshow{
+    display: none;
+}
+.ui.card{
+    height: auto !important;
+}
+.stiky-top{
+    position: sticky;
+}
+.recording{
+    animation: opacityOnAndOff;
+    animation-duration: 1s;
+    animation-delay: 17.7s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+}
+
+.showfilesinfocamera{
+    background-color: white;
     height: 100%;
+    overflow-y: auto;
+}
+@keyframes opacityOnAndOff {
+    0% {
+        opacity: 0;
+    }
+    50%{
+      opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
