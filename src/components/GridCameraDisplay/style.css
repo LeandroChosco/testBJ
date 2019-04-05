@@ -3,3 +3,56 @@
 }
 
 
+.camGridControl{
+    position: fixed;
+    bottom: 0;
+    height: 0;
+    background-color: lightgray;
+    width: 100vw;
+    display: none;
+}
+.showfiles{
+    height: 30%;
+    overflow-y: hidden;
+    display: block;
+}
+.hidefiles{
+    height: 0;
+}
+
+.hiddenCameraNotshow{
+    display: none;
+}
+.ui.card{
+    height: auto !important;
+}
+.stiky-top{
+    position: sticky;
+}
+.recording{
+    animation: opacityOnAndOff;
+    animation-duration: 1s;
+    animation-delay: 17.7s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+}
+
+.showfilesinfocameragrid{
+    background-color: white;
+    height: 100%;
+}
+.snapshotsgrid,.videosgrid,.matchesgrid{
+    height: 100%;
+    overflow-y: auto;
+}
+@keyframes opacityOnAndOff {
+    0% {
+        opacity: 0;
+    }
+    50%{
+      opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

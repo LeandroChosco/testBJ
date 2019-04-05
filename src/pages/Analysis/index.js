@@ -80,7 +80,7 @@ class Analysis extends Component {
             title:'',
             extraData:{}
         },
-        displayTipe:2,
+        displayTipe:1,
         cameraID:null
     }
   

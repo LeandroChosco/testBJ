@@ -44,6 +44,9 @@
 .showfilesinfocamera{
     background-color: white;
     height: 100%;
+}
+.snapshots,.videos,.matches{
+    height: 100%;
     overflow-y: auto;
 }
 @keyframes opacityOnAndOff {

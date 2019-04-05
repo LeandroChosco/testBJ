@@ -59,13 +59,12 @@ class LoopCamerasDisplay extends Component {
                         </div>)}
                     </div>
                 </div>
-                <div className="col" align="center">
+                <div className="col matches" align="center">
                     Historial
                     {this.state.matches.map((value, index)=><Match key={index} info={value} toggleControls={this._closeControl} />)}
                 </div>
             </div>            
-        </div>
-        <div className='gridCameraContainer carouselContainer'></div>        
+        </div>        
     </div>
     );
   }

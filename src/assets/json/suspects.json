@@ -55,7 +55,7 @@
           "build":null,
           "sex":null,
           "remarks":null,
-          "details":"<p>Cynthia Carver was reported missing on February 22, 2019, to the Southampton County Sheriff's Office. She was last seen on Thomaston Road in Newsoms, Virginia, at approximately 9:00 p.m., on February 21st. She was also seen running various errands in the Norfolk area earlier in the day. Evidence at her home on Everett Street in Newsoms suggested she may have been abducted, and her body was recovered on March 19, 2019, in the southern area of Suffolk, Virginia.</p>\r\n<p>The case is being investigated jointly by the FBI and Southampton County Sheriff's Office.</p>",
+          "details":"Cynthia Carver was reported missing on February 22, 2019, to the Southampton County Sheriff's Office. She was last seen on Thomaston Road in Newsoms, Virginia, at approximately 9:00 p.m., on February 21st. She was also seen running various errands in the Norfolk area earlier in the day. Evidence at her home on Everett Street in Newsoms suggested she may have been abducted, and her body was recovered on March 19, 2019, in the southern area of Suffolk, Virginia.\r\nThe case is being investigated jointly by the FBI and Southampton County Sheriff's Office.",
           "age_min":null,
           "possible_states":null,
           "uid":"81983db801a34294993895d213b5b448",
@@ -98,7 +98,7 @@
           "status":"na",
           "hair":null,
           "eyes_raw":"Dark",
-          "caution":"<p>Abdullah Ahmed Abdullah has been indicted for his alleged involvement in the August 7, 1998, bombings of the United States Embassies in Dar es Salaam, Tanzania, and Nairobi, Kenya.</p>",
+          "caution":"Abdullah Ahmed Abdullah has been indicted for his alleged involvement in the August 7, 1998, bombings of the United States Embassies in Dar es Salaam, Tanzania, and Nairobi, Kenya.",
           "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
           "coordinates":[  
  
@@ -136,7 +136,7 @@
           "ncic":null,
           "build":"Medium",
           "sex":"Male",
-          "remarks":"<p>Abdullah fled Nairobi, Kenya, on August 6, 1998, and went to Karachi, Pakistan. He may wear a moustache.</p>",
+          "remarks":"Abdullah fled Nairobi, Kenya, on August 6, 1998, and went to Karachi, Pakistan. He may wear a moustache.",
           "details":null,
           "age_min":null,
           "possible_states":null,
@@ -184,7 +184,7 @@
           "status":"na",
           "hair":"black",
           "eyes_raw":"Brown",
-          "caution":"<p>Andres Zambrano, a known gang member and convicted felon, is wanted for his alleged involvement in the murder of the mother of his (then) two-year-old child.</p>\r\n<p>\u00a0</p>\r\n<p>On March 16, 2017, Zambrano allegedly shot the woman in the street in front of their home in Los Angeles, California. Zambrano later stated that he would flee to Mexico or Chicago, Illinois, where he has ties.</p>\r\n<p>\u00a0</p>\r\n<p>Zambrano was charged with one count of murder by the Superior Court of California, County of Los Angeles, and a state warrant was issued for his arrest on March 20, 2017. A federal arrest warrant was issued by the United States District Court, Central District of California, Los Angeles, California, on March 31, 2017, after Zambrano was charged federally with unlawful flight to avoid prosecution.</p>",
+          "caution":"Andres Zambrano, a known gang member and convicted felon, is wanted for his alleged involvement in the murder of the mother of his (then) two-year-old child.\r\n\u00a0\r\nOn March 16, 2017, Zambrano allegedly shot the woman in the street in front of their home in Los Angeles, California. Zambrano later stated that he would flee to Mexico or Chicago, Illinois, where he has ties.\r\n\u00a0\r\nZambrano was charged with one count of murder by the Superior Court of California, County of Los Angeles, and a state warrant was issued for his arrest on March 20, 2017. A federal arrest warrant was issued by the United States District Court, Central District of California, Los Angeles, California, on March 31, 2017, after Zambrano was charged federally with unlawful flight to avoid prosecution.",
           "warning_message":"SHOULD BE CONSIDERED ARMED, DANGEROUS, AND SUICIDAL",
           "coordinates":[  
  
@@ -221,7 +221,7 @@
           "ncic":"W610647029",
           "build":null,
           "sex":"Male",
-          "remarks":"<p>Zambrano is known to wear glasses. He was known to regularly drive a silver, four-door, 1994 Toyota Camry with California license plates 6JBC731.</p>\r\n<p>\u00a0</p>\r\n<p>It is believed that Zambrano is residing in Mexico.</p>",
+          "remarks":"Zambrano is known to wear glasses. He was known to regularly drive a silver, four-door, 1994 Toyota Camry with California license plates 6JBC731.\r\n\u00a0\r\nIt is believed that Zambrano is residing in Mexico.",
           "details":null,
           "age_min":null,
           "possible_states":null,
@@ -318,8 +318,8 @@
           "ncic":null,
           "build":null,
           "sex":"Male",
-          "remarks":"<p>Levinson wears eyeglasses. He is believed to have lost a significant amount of weight, possibly 50 to 60 pounds.</p>",
-          "details":"<p>Information is being sought regarding a United States citizen Robert A. Levinson, a retired FBI Special Agent, who went missing during a business trip to Kish Island, Iran, on March 9, 2007. Levinson retired from the FBI in 1998 and worked as a private investigator following his retirement. Levinson traveled to Kish Island, Iran, on March 8, 2007, working on behalf of several large corporations, and his whereabouts, well-being and the circumstances surrounding his disappearance have been unknown since that time.</p>",
+          "remarks":"Levinson wears eyeglasses. He is believed to have lost a significant amount of weight, possibly 50 to 60 pounds.",
+          "details":"Information is being sought regarding a United States citizen Robert A. Levinson, a retired FBI Special Agent, who went missing during a business trip to Kish Island, Iran, on March 9, 2007. Levinson retired from the FBI in 1998 and worked as a private investigator following his retirement. Levinson traveled to Kish Island, Iran, on March 8, 2007, working on behalf of several large corporations, and his whereabouts, well-being and the circumstances surrounding his disappearance have been unknown since that time.",
           "age_min":null,
           "possible_states":null,
           "uid":"99ffed7830acba90db8a7198b9c53afd",
@@ -407,7 +407,7 @@
           "build":null,
           "sex":null,
           "remarks":null,
-          "details":"<p>Investigators assigned to the FBI Richmond Division\u2019s South Piedmont Violent Gang Task Force seek the public\u2019s assistance in identifying the person(s) responsible for an armed robbery which resulted in a homicide in Danville, Virginia, in 2017.</p>\r\n<p>On September 12, 2017, officers of the Danville Police Department responded to a call for service at the Joy Food Store located in the 500 block of Riverside Drive, Danville, Virginia. Upon arrival officers located the victim, Mr. Tahir Mahmud, who was deceased, and the officers determined the store had been robbed.</p>\r\n<p>Information provided to investigators indicates a male was seen running from the direction of the store around the time of the robbery and homicide. The unknown individual was described as a black male, slender, and wearing Unique jeans.</p>",
+          "details":"Investigators assigned to the FBI Richmond Division\u2019s South Piedmont Violent Gang Task Force seek the public\u2019s assistance in identifying the person(s) responsible for an armed robbery which resulted in a homicide in Danville, Virginia, in 2017.\r\nOn September 12, 2017, officers of the Danville Police Department responded to a call for service at the Joy Food Store located in the 500 block of Riverside Drive, Danville, Virginia. Upon arrival officers located the victim, Mr. Tahir Mahmud, who was deceased, and the officers determined the store had been robbed.\r\nInformation provided to investigators indicates a male was seen running from the direction of the store around the time of the robbery and homicide. The unknown individual was described as a black male, slender, and wearing Unique jeans.",
           "age_min":null,
           "possible_states":null,
           "uid":"c6ab669db87a476bbaa53e9c65dd6208",
@@ -450,7 +450,7 @@
           "status":"na",
           "hair":"brown",
           "eyes_raw":"Brown",
-          "caution":"<p>The FBI's Los Angeles Field Office is assisting the Los Angeles Police Department in California with their search for Carlos Vasquez Serrano, a convicted felon.</p>\r\n<p>\u00a0</p>\r\n<p>On February 1, 2006, Serrano allegedly murdered a man in a bar in Los Angeles, California. After the alleged murder, Serrano allegedly broke into the bar's office and stole the bar's video recording equipment. Then, Serrano allegedly kidnapped a woman and fled to Mexico with her against her will.</p>\r\n<p>\u00a0</p>\r\n<p>Serrano was charged with murder, kidnapping, assault with a firearm, and second degree commercial burglary by the Superior Court of California, County of Los Angeles, and a state warrant was issued for his arrest on October 10, 2012.</p>",
+          "caution":"The FBI's Los Angeles Field Office is assisting the Los Angeles Police Department in California with their search for Carlos Vasquez Serrano, a convicted felon.\r\n\u00a0\r\nOn February 1, 2006, Serrano allegedly murdered a man in a bar in Los Angeles, California. After the alleged murder, Serrano allegedly broke into the bar's office and stole the bar's video recording equipment. Then, Serrano allegedly kidnapped a woman and fled to Mexico with her against her will.\r\n\u00a0\r\nSerrano was charged with murder, kidnapping, assault with a firearm, and second degree commercial burglary by the Superior Court of California, County of Los Angeles, and a state warrant was issued for his arrest on October 10, 2012.",
           "warning_message":null,
           "coordinates":[  
  
@@ -484,7 +484,7 @@
           "ncic":null,
           "build":null,
           "sex":"Male",
-          "remarks":"<p>Serrano may be residing in Mexico. He has previously resided in Bellflower, California.</p>",
+          "remarks":"Serrano may be residing in Mexico. He has previously resided in Bellflower, California.",
           "details":null,
           "age_min":null,
           "possible_states":null,
@@ -530,7 +530,7 @@
           "status":"na",
           "hair":"brown",
           "eyes_raw":"Brown",
-          "caution":"<p>The FBI's Los Angeles Field Office is assisting the Los Angeles Police Department in California with their search for Xochitl Aurora Delatorre. Delatorre is wanted for her alleged involvement in the murder of a man on September 10, 2004, in Los Angeles, California.</p>\r\n<p>\u00a0</p>\r\n<p>On November 16, 2004, Delatorre was charged with murder and robbery by the Superior Court of California, County of Los Angeles, and a state warrant was issued for her arrest.</p>",
+          "caution":"The FBI's Los Angeles Field Office is assisting the Los Angeles Police Department in California with their search for Xochitl Aurora Delatorre. Delatorre is wanted for her alleged involvement in the murder of a man on September 10, 2004, in Los Angeles, California.\r\n\u00a0\r\nOn November 16, 2004, Delatorre was charged with murder and robbery by the Superior Court of California, County of Los Angeles, and a state warrant was issued for her arrest.",
           "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
           "coordinates":[  
  
@@ -567,7 +567,7 @@
           "ncic":null,
           "build":null,
           "sex":"Female",
-          "remarks":"<p>Delatorre may be residing in, and has ties to, Mexico. She also has ties to Murrieta, California.</p>",
+          "remarks":"Delatorre may be residing in, and has ties to, Mexico. She also has ties to Murrieta, California.",
           "details":null,
           "age_min":null,
           "possible_states":null,
@@ -613,7 +613,7 @@
           "status":"captured",
           "hair":"black",
           "eyes_raw":"Brown",
-          "caution":"<p>Arthur Berry Jr. is wanted for allegedly conspiring with others to conduct smash-and-grab robberies in the following locations: Jared the Galleria of Jewelry in Toledo, Ohio, September 2014; Fink\u2019s Jewelers in Sterling, Virginia, November 2014; and RF Moeller Jeweler in St. Paul, Minnesota, November 2014.</p>\r\n<p>On May 7, 2015, a federal arrest warrant was issued, by the United States District Court for the Eastern District of Michigan, after Berry was charged with conspiracy to interfere with commerce by robbery.</p>",
+          "caution":"Arthur Berry Jr. is wanted for allegedly conspiring with others to conduct smash-and-grab robberies in the following locations: Jared the Galleria of Jewelry in Toledo, Ohio, September 2014; Fink\u2019s Jewelers in Sterling, Virginia, November 2014; and RF Moeller Jeweler in St. Paul, Minnesota, November 2014.\r\nOn May 7, 2015, a federal arrest warrant was issued, by the United States District Court for the Eastern District of Michigan, after Berry was charged with conspiracy to interfere with commerce by robbery.",
           "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
           "coordinates":[  
  
@@ -696,7 +696,7 @@
           "status":"na",
           "hair":"black",
           "eyes_raw":"Brown",
-          "caution":"<p>Cesar Soltero Herrera is wanted for his alleged involvement in a murder and attempted murder in 2007.</p>\r\n<p>\u00a0</p>\r\n<p>On February 19, 2007, in North Hollywood, California, Herrera became involved in a physical altercation with a male victim when the victim struck Herrera and caused him to bleed from the nose. Herrera then allegedly left the scene but returned a short time later with a semi-automatic handgun and fired multiple shots at the male victim and others, killing the victim.</p>\r\n<p>\u00a0</p>\r\n<p>Herrera was charged with one count of murder and two counts of attempted murder by the Superior Court of California, County of Los Angeles, and a state warrant was issued for his arrest on February 21, 2007. A federal arrest warrant was issued by the United States District Court, Central District of California, Los Angeles, California, on April 26, 2007, after Herrera was charged federally with unlawful flight to avoid prosecution.</p>",
+          "caution":"Cesar Soltero Herrera is wanted for his alleged involvement in a murder and attempted murder in 2007.\r\n\u00a0\r\nOn February 19, 2007, in North Hollywood, California, Herrera became involved in a physical altercation with a male victim when the victim struck Herrera and caused him to bleed from the nose. Herrera then allegedly left the scene but returned a short time later with a semi-automatic handgun and fired multiple shots at the male victim and others, killing the victim.\r\n\u00a0\r\nHerrera was charged with one count of murder and two counts of attempted murder by the Superior Court of California, County of Los Angeles, and a state warrant was issued for his arrest on February 21, 2007. A federal arrest warrant was issued by the United States District Court, Central District of California, Los Angeles, California, on April 26, 2007, after Herrera was charged federally with unlawful flight to avoid prosecution.",
           "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
           "coordinates":[  
  
@@ -734,7 +734,7 @@
           "ncic":"W252087737",
           "build":null,
           "sex":"Male",
-          "remarks":"<p>Herrera may be residing in, and has ties to, Mexico. He has previously resided in North Hollywood, California.</p>",
+          "remarks":"Herrera may be residing in, and has ties to, Mexico. He has previously resided in North Hollywood, California.",
           "details":null,
           "age_min":null,
           "possible_states":null,
@@ -780,7 +780,7 @@
           "status":"captured",
           "hair":"black",
           "eyes_raw":null,
-          "caution":"<p>Robert Earl Brumfield III is wanted for his alleged involvement in an armored car robbery and murder of a Loomis employee at Chase Bank located at 2331 South Carrollton Avenue., on December 18, 2013, in New Orleans, Louisiana. On November 2, 2017, a warrant was issued for the arrest of Brumfield III after the United States District Court, Eastern District of Louisiana, charged Brumfield III with conspiracy to obstruct and obstruction of commerce by robbery, aiding and abetting to obstruct, delay and affect commerce by robbery; aiding and abetting to knowingly use firearms during and in relation to crimes of violence, murder.</p>\r\n<p>\u00a0</p>",
+          "caution":"Robert Earl Brumfield III is wanted for his alleged involvement in an armored car robbery and murder of a Loomis employee at Chase Bank located at 2331 South Carrollton Avenue., on December 18, 2013, in New Orleans, Louisiana. On November 2, 2017, a warrant was issued for the arrest of Brumfield III after the United States District Court, Eastern District of Louisiana, charged Brumfield III with conspiracy to obstruct and obstruction of commerce by robbery, aiding and abetting to obstruct, delay and affect commerce by robbery; aiding and abetting to knowingly use firearms during and in relation to crimes of violence, murder.\r\n\u00a0",
           "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
           "coordinates":[  
  
@@ -817,7 +817,7 @@
           "ncic":"W722352642",
           "build":null,
           "sex":"Male",
-          "remarks":"<p>Brumfield III is known to abuse drugs and use alcohol in excess.</p>",
+          "remarks":"Brumfield III is known to abuse drugs and use alcohol in excess.",
           "details":null,
           "age_min":null,
           "possible_states":null,
@@ -861,7 +861,7 @@
           "status":"na",
           "hair":"black",
           "eyes_raw":"Brown",
-          "caution":"<p>Alexis Flores is wanted for his alleged involvement in the kidnapping and murder of a five-year-old girl in Philadelphia, Pennsylvania. The girl was reported missing in late July of 2000, and was later found strangled to death in a nearby apartment in early August of 2000.</p>",
+          "caution":"Alexis Flores is wanted for his alleged involvement in the kidnapping and murder of a five-year-old girl in Philadelphia, Pennsylvania. The girl was reported missing in late July of 2000, and was later found strangled to death in a nearby apartment in early August of 2000.",
           "warning_message":"SHOULD BE CONSIDERED ARMED AND EXTREMELY DANGEROUS",
           "coordinates":[  
  
@@ -933,7 +933,7 @@
           "ncic":null,
           "build":"Slim",
           "sex":"Male",
-          "remarks":"<p>Flores has ties to Honduras.</p>",
+          "remarks":"Flores has ties to Honduras.",
           "details":null,
           "age_min":null,
           "possible_states":[  
@@ -988,7 +988,7 @@
           "status":"na",
           "hair":"blond",
           "eyes_raw":"Green",
-          "caution":"<p>Jason Derek Brown is wanted for murder and armed robbery in Phoenix, Arizona. During November of 2004, Brown allegedly shot and killed an armored car guard outside a movie theater and then fled with the money.</p>",
+          "caution":"Jason Derek Brown is wanted for murder and armed robbery in Phoenix, Arizona. During November of 2004, Brown allegedly shot and killed an armored car guard outside a movie theater and then fled with the money.",
           "warning_message":"SHOULD BE CONSIDERED ARMED AND EXTREMELY DANGEROUS",
           "coordinates":[  
  
@@ -1051,7 +1051,7 @@
           "ncic":null,
           "build":"Medium",
           "sex":"Male",
-          "remarks":"<p>Brown speaks fluent French and has a master's degree in International Business. He is an avid golfer, snowboarder, skier, and dirt biker. Brown enjoys being the center of attention and has been known to frequent nightclubs where he enjoys showing off his high-priced vehicles, boats, and other toys. Brown was a member of The Church of Jesus Christ of Latter-Day Saints, and completed his Mormon mission near Paris, France.</p>\r\n<p>\u00a0</p>\r\n<p>Brown has ties to California, Arizona, and Utah. In the past, he has traveled to France and Mexico. Additionally, he may be in the possession of a Glock 9mm and a .45 caliber handgun.</p>",
+          "remarks":"Brown speaks fluent French and has a master's degree in International Business. He is an avid golfer, snowboarder, skier, and dirt biker. Brown enjoys being the center of attention and has been known to frequent nightclubs where he enjoys showing off his high-priced vehicles, boats, and other toys. Brown was a member of The Church of Jesus Christ of Latter-Day Saints, and completed his Mormon mission near Paris, France.\r\n\u00a0\r\nBrown has ties to California, Arizona, and Utah. In the past, he has traveled to France and Mexico. Additionally, he may be in the possession of a Glock 9mm and a .45 caliber handgun.",
           "details":null,
           "age_min":null,
           "possible_states":[  
@@ -1106,7 +1106,7 @@
           "status":"na",
           "hair":"black",
           "eyes_raw":"Brown",
-          "caution":"<p>Jean Leonard Faure is wanted for failing to appear for trial on charges of rape, sodomy, and burglary.\u00a0 On January 5, 1998, Faure allegedly went to the residence of his ex-wife in Roseburg, Oregon, in violation of a restraining order, and, at gunpoint, allegedly raped and sodomized her.\u00a0\u00a0He also removed property from the residence.\u00a0 Faure was arrested and charged with the aforementioned crimes on January 6, 1998.\u00a0 He was then released on bail.\u00a0 When Faure did not appear for his trial on March 3, 1998, the Douglas County Circuit Court in Oregon, issued an arrest warrant for Faure and charged\u00a0him with failure to appear.\u00a0 On April 29, 1998, a federal arrest warrant was issued for Faure in the United States District Court, District of Oregon, Eugene, Oregon, after he was charged with unlawful flight to avoid prosecution.</p>\r\n<p>\u00a0</p>",
+          "caution":"Jean Leonard Faure is wanted for failing to appear for trial on charges of rape, sodomy, and burglary.\u00a0 On January 5, 1998, Faure allegedly went to the residence of his ex-wife in Roseburg, Oregon, in violation of a restraining order, and, at gunpoint, allegedly raped and sodomized her.\u00a0\u00a0He also removed property from the residence.\u00a0 Faure was arrested and charged with the aforementioned crimes on January 6, 1998.\u00a0 He was then released on bail.\u00a0 When Faure did not appear for his trial on March 3, 1998, the Douglas County Circuit Court in Oregon, issued an arrest warrant for Faure and charged\u00a0him with failure to appear.\u00a0 On April 29, 1998, a federal arrest warrant was issued for Faure in the United States District Court, District of Oregon, Eugene, Oregon, after he was charged with unlawful flight to avoid prosecution.\r\n\u00a0",
           "warning_message":null,
           "coordinates":[  
  
@@ -1141,7 +1141,7 @@
           "ncic":null,
           "build":null,
           "sex":"Male",
-          "remarks":"<p>Faure was born in the Seychelles Islands, off the coast of Africa in the Indian Ocean.\u00a0 While in the United States, he lived in Oregon and Hawaii.\u00a0 He has family throughout the United States, Canada, and the Seychelles.\u00a0 He may also travel to Singapore and the United Arab Emirates.\u00a0 Faure is known to enjoy soccer and gambling.</p>",
+          "remarks":"Faure was born in the Seychelles Islands, off the coast of Africa in the Indian Ocean.\u00a0 While in the United States, he lived in Oregon and Hawaii.\u00a0 He has family throughout the United States, Canada, and the Seychelles.\u00a0 He may also travel to Singapore and the United Arab Emirates.\u00a0 Faure is known to enjoy soccer and gambling.",
           "details":null,
           "age_min":null,
           "possible_states":null,
@@ -1235,7 +1235,7 @@
           "build":null,
           "sex":"Male",
           "remarks":null,
-          "details":"<p>John T. Weisbecker was last seen on March 11, 2009, at his home in Ocean City, New Jersey. The circumstances of his disappearance have led law enforcement officials to believe that Weisbecker may not have left his home voluntarily. His whereabouts remain unknown.</p>",
+          "details":"John T. Weisbecker was last seen on March 11, 2009, at his home in Ocean City, New Jersey. The circumstances of his disappearance have led law enforcement officials to believe that Weisbecker may not have left his home voluntarily. His whereabouts remain unknown.",
           "age_min":null,
           "possible_states":null,
           "uid":"e4dae77caf838e784bc94fd87d9f3a3a",
@@ -1330,7 +1330,7 @@
           "build":null,
           "sex":"Female",
           "remarks":null,
-          "details":"<p>Ashley Summers was last seen near a family member's residence in Cleveland, Ohio, on July 7 or 8, 2007. She was 14 years old at the time of her disappearance.</p>",
+          "details":"Ashley Summers was last seen near a family member's residence in Cleveland, Ohio, on July 7 or 8, 2007. She was 14 years old at the time of her disappearance.",
           "age_min":null,
           "possible_states":[  
              "US-OH"
@@ -1377,7 +1377,7 @@
           "status":"captured",
           "hair":"black",
           "eyes_raw":"Brown",
-          "caution":"<p>Lamont Stephenson is wanted for his alleged involvement in the\u00a0murder of a woman and her dog in their Newark, New Jersey, apartment, on October 17, 2014.\u00a0 On November 3, 2014, Stephenson was charged with homicide by the State of New Jersey in Essex County, New Jersey.\u00a0\u00a0On\u00a0September\u00a08, 2017, a\u00a0federal arrest warrant was issued for Stephenson in the United States District Court, District of New Jersey, Essex County, after he was charged with unlawful flight to avoid prosecution.</p>\r\n<p>\u00a0</p>",
+          "caution":"Lamont Stephenson is wanted for his alleged involvement in the\u00a0murder of a woman and her dog in their Newark, New Jersey, apartment, on October 17, 2014.\u00a0 On November 3, 2014, Stephenson was charged with homicide by the State of New Jersey in Essex County, New Jersey.\u00a0\u00a0On\u00a0September\u00a08, 2017, a\u00a0federal arrest warrant was issued for Stephenson in the United States District Court, District of New Jersey, Essex County, after he was charged with unlawful flight to avoid prosecution.\r\n\u00a0",
           "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
           "coordinates":[  
  
@@ -1454,7 +1454,7 @@
           "status":"na",
           "hair":"brown",
           "eyes_raw":"Green",
-          "caution":"<p>Marysol Pena is wanted for her alleged involvement in a drug trafficking organization that operated in the state of New Mexico, and elsewhere, from approximately January 1, 2019, to approximately January 24, 2019.</p>\r\n<p>\u00a0</p>\r\n<p>On February 13, 2019, a federal arrest warrant was issued for Pena in the United States District Court for the District of New Mexico, Albuquerque, New Mexico, after she was charged with conspiracy, distribution of 50 grams and more of methamphetamine, aiding and abetting, distribution of 40 grams and more of a mixture or substance containing a detectable amount of Fentanyl, and aiding and abetting.</p>",
+          "caution":"Marysol Pena is wanted for her alleged involvement in a drug trafficking organization that operated in the state of New Mexico, and elsewhere, from approximately January 1, 2019, to approximately January 24, 2019.\r\n\u00a0\r\nOn February 13, 2019, a federal arrest warrant was issued for Pena in the United States District Court for the District of New Mexico, Albuquerque, New Mexico, after she was charged with conspiracy, distribution of 50 grams and more of methamphetamine, aiding and abetting, distribution of 40 grams and more of a mixture or substance containing a detectable amount of Fentanyl, and aiding and abetting.",
           "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
           "coordinates":[  
  
@@ -1485,7 +1485,7 @@
           "ncic":"W785895550",
           "build":null,
           "sex":"Female",
-          "remarks":"<p>Pena is known to frequent Phoenix, Arizona; Atlanta, Georgia; and Sonora, Mexico.</p>",
+          "remarks":"Pena is known to frequent Phoenix, Arizona; Atlanta, Georgia; and Sonora, Mexico.",
           "details":null,
           "age_min":null,
           "possible_states":null,
@@ -1611,7 +1611,7 @@
           "build":null,
           "sex":null,
           "remarks":null,
-          "details":"<p>On January 19, 2019, an unknown subject entered the BP Gas Station located in the 600 block of East Laburnum Avenue in Henrico County, Virginia. This subject, armed with a semi-automatic handgun, approached the victim clerk, handed them a bag and demanded money. After the clerk complied with the demands, the subject exited the business. On January 24, 2019, investigators believe the same armed subject entered the Raceway Gas Station located in the 6300 block of Midlothian Turnpike in Richmond, Virginia, and robbed that business in the same manner. On February 12, 2019, again investigators believe this same armed subject entered the Speedway Gas Station located in the 6800 block of Hull Street Road in North Chesterfield, Virginia. The subject approached the victim clerk and demanded money, however was unsuccessful in his attempts and fled the business. The clerk followed the armed subject into the parking lot, at which time the subject fired a shot in the employee's direction.</p>\r\n<p>The subject is described as a black male, approximately 5'7\", 160 to 180 pounds, and 20 to 30 years of age.</p>\r\n<p>In all three robberies the subject wore a black sweatshirt, dark pants, blue latex-style gloves, and a \"scream\" mask.</p>",
+          "details":"On January 19, 2019, an unknown subject entered the BP Gas Station located in the 600 block of East Laburnum Avenue in Henrico County, Virginia. This subject, armed with a semi-automatic handgun, approached the victim clerk, handed them a bag and demanded money. After the clerk complied with the demands, the subject exited the business. On January 24, 2019, investigators believe the same armed subject entered the Raceway Gas Station located in the 6300 block of Midlothian Turnpike in Richmond, Virginia, and robbed that business in the same manner. On February 12, 2019, again investigators believe this same armed subject entered the Speedway Gas Station located in the 6800 block of Hull Street Road in North Chesterfield, Virginia. The subject approached the victim clerk and demanded money, however was unsuccessful in his attempts and fled the business. The clerk followed the armed subject into the parking lot, at which time the subject fired a shot in the employee's direction.\r\nThe subject is described as a black male, approximately 5'7\", 160 to 180 pounds, and 20 to 30 years of age.\r\nIn all three robberies the subject wore a black sweatshirt, dark pants, blue latex-style gloves, and a \"scream\" mask.",
           "age_min":null,
           "possible_states":null,
           "uid":"0a3795ab7b0046c68a758a49bc26b731",
@@ -1701,7 +1701,7 @@
           "build":null,
           "sex":"Male",
           "remarks":null,
-          "details":"<p>On July 16, 2018, at approximately 7:30 p.m., Ruochen \"Tony\" Liao was kidnapped in San Gabriel, California, by three men. He was last seen entering a dark-colored minivan in San Gabriel.</p>\r\n<p>\u00a0</p>\r\n<p>Liao was last seen wearing a dark-colored t-shirt with two camouflage horizontal stripes and a camouflage star across the front (pictured above).</p>\r\n<p>\u00a0</p>",
+          "details":"On July 16, 2018, at approximately 7:30 p.m., Ruochen \"Tony\" Liao was kidnapped in San Gabriel, California, by three men. He was last seen entering a dark-colored minivan in San Gabriel.\r\n\u00a0\r\nLiao was last seen wearing a dark-colored t-shirt with two camouflage horizontal stripes and a camouflage star across the front (pictured above).\r\n\u00a0",
           "age_min":null,
           "possible_states":null,
           "uid":"a74dc6bfbfa54ef78699b9e2846661eb",
@@ -1746,7 +1746,7 @@
           "status":"na",
           "hair":"black",
           "eyes_raw":"Black",
-          "caution":"<p>Guangyao Yang and his accomplice, <a href=\"https://www.fbi.gov/wanted/additional/peicheng-shen\" data-linktype=\"external\" data-val=\"https://www.fbi.gov/wanted/additional/peicheng-shen\" data-urltype=\"/view\">Peicheng Shen</a>, are wanted for their alleged involvement in the kidnapping of a man in San Gabriel, California, in July of 2018.</p>\r\n<p>\u00a0</p>\r\n<p>On February 22, 2019, a federal arrest warrant was issued for Yang by the United States District Court, Central District of California, Los Angeles, California, charging him with conspiracy to kidnap, kidnapping, attempted Hobbs Act extortion, foreign communication with intent to extort, and aiding and abetting and causing and act to be done.</p>",
+          "caution":"Guangyao Yang and his accomplice, <a href=\"https://www.fbi.gov/wanted/additional/peicheng-shen\" data-linktype=\"external\" data-val=\"https://www.fbi.gov/wanted/additional/peicheng-shen\" data-urltype=\"/view\">Peicheng Shen</a>, are wanted for their alleged involvement in the kidnapping of a man in San Gabriel, California, in July of 2018.\r\n\u00a0\r\nOn February 22, 2019, a federal arrest warrant was issued for Yang by the United States District Court, Central District of California, Los Angeles, California, charging him with conspiracy to kidnap, kidnapping, attempted Hobbs Act extortion, foreign communication with intent to extort, and aiding and abetting and causing and act to be done.",
           "warning_message":null,
           "coordinates":[  
  
@@ -1783,7 +1783,7 @@
           "ncic":null,
           "build":null,
           "sex":"Male",
-          "remarks":"<p>Yang has previously resided in Pomona, California.</p>",
+          "remarks":"Yang has previously resided in Pomona, California.",
           "details":null,
           "age_min":null,
           "possible_states":null,
