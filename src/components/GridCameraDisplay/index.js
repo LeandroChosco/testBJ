@@ -101,6 +101,20 @@ class GridCameraDisplay extends Component {
           }               
         this.setState({markers:markersForLoop, matches:cameras})
     }
+
+    static getDerivedStateFromProps(props, state){
+        let markersForLoop = []
+        props.places.map((value)=>{
+            markersForLoop.push({
+                title:value.name,
+                extraData:value
+            })
+            return true
+        })
+        let aux = state
+        aux.markers= markersForLoop
+        return aux        
+    }
 }
 
 export default GridCameraDisplay;

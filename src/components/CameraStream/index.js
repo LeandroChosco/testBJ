@@ -67,16 +67,13 @@ class CameraStream extends Component {
                             </div>
                         </div>:null}   
                         <Card.Title>
-                            <div align='left'><i className='fa fa-video-camera'></i> 
-                            Camara {this.state.cameraID}</div>
+                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam}</div>
                         </Card.Title>
                                     
                         <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"}>  
                                 <canvas ref="camRef" style={{width:'100%',height:'100%'}}></canvas>                      
                         </div> 
-                        <Card.Text>
-                            <div align='left'>{this.state.cameraName}</div>
-                        </Card.Text> 
+                        <div align='left'>{this.state.cameraName}</div>                        
                         {this.props.showButtons?
                             <Card.Footer>
                                 <Button variant="outline-secondary"><i className='fa fa-camera'></i></Button>
@@ -93,7 +90,7 @@ class CameraStream extends Component {
     } 
 
   componentDidMount(){      
-      this.setState({cameraName:this.props.marker.title,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})
+      this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})
       var ws = new WebSocket(this.props.marker.extraData.webSocket)
       var p = new window.jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true});
       this.setState({

@@ -12,79 +12,41 @@ class SideBar extends Component {
     state = {
         selectedOption: [],
         places : [
-            {
-                name:'Carrilo Puerto , 413 ,Tacuba Miguel Hidalgo CDMX', 
-                lat:19.452546, 
-                lng:-99.187447,
-                id:1,
-                webSocket:'ws://18.222.106.238:1001'
-            },
-            {
-                name:'Rio Napo, 46, Argentina Poniente Miguel Hidalgo CDMX', 
-                lat:19.459430, 
-                lng:-99.208588,
-                id:2,
-                webSocket:'ws://18.222.106.238:1002'
-            },
-            {
-                name:'Río Juruá ,45, Argenttina Poniente Miguel Hidalgo CDMX', 
-                lat:19.4600672, 
-                lng:-99.2117091,
-                id:3,
-                webSocket:'ws://18.222.106.238:1003'
-            },
-
-            {
-                name:'Mexico ,Tacuba, 1 ,Argenttina Poniente / Nueva Argentina Miguel Hidalgo CDMX', 
-                lat:19.456858, 
-                lng:-99.205938,
-                id:4,
-                webSocket:'ws://18.222.106.238:1004'
-            },
-            {
-                name:'Calzada Santa Barbara Naucalapn ,210, Argenttina Poniente Miguel Hidalgo CDMX', 
-                lat:19.4601350, 
-                lng:-99.2082958,
-                id:5,
-                webSocket:'ws://18.222.106.238:1005'
-            },
-            {
-                name:'Río Tlacotalpan ,89 ,Argenttina Poniente Miguel Hidalgo CDMX', 
-                lat:19.457746, 
-                lng:-99.208690,
-                id:6,
-                webSocket:'ws://18.222.106.238:1006'
-            },
-
-            {
-                name:'Río Juruá  ,13, Argenttina Poniente Miguel Hidalgo CDMX', 
-                lat:19.459800, 
-                lng:-99.208318,
-                id:7,
-                webSocket:'ws://18.222.106.238:1007'
-            },
-            {
-                name:'Rio Napo, 42 ,Argenttina Poniente Miguel Hidalgo CDMX', 
-                lat:19.459396, 
-                lng:-99.208482,
-                id:8,
-                webSocket:'ws://18.222.106.238:1008'
-            }
         ],
-        options:[]
+        options:[],
+        webSocket:'ws://18.222.106.238'
     }
 
     componentDidMount(){
-        const  places = this.state.places
-        var options = []
-        places.map((value)=>{
-            options.push({
-                value: value.id,
-                label: 'Camara '+value.id,
+        fetch('http://18.222.106.238:3000/register-cams/all-cams')
+            .then((response) => {
+                return response.json();
             })
-            return true
-        })
-        this.setState({options:options})
+            .then((camaras) => {
+                let auxCamaras = []
+                let options = []
+                camaras.map(value=>{
+                    if (value.active === 1) {
+                        auxCamaras.push({
+                            id:value.id,
+                            num_cam:value.num_cam,
+                            lat:parseFloat(value.google_cordenate.split(',')[0]), 
+                            lng:parseFloat(value.google_cordenate.split(',')[1]),                            
+                            webSocket:this.state.webSocket + ':' +(value.num_cam>=10?'10':'100') + value.num_cam,
+                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                        })
+                    }
+                })                                
+                auxCamaras.map((value)=>{
+                    options.push({
+                        value: value.id,
+                        label: 'Camara '+value.num_cam,
+                    })
+                    return true
+                })
+                this.setState({places:auxCamaras,options:options})
+            });
+        
     }
 
     handleChange = (selectedOption) => {
@@ -100,7 +62,7 @@ class SideBar extends Component {
                 return true
             })
             return true
-        })
+        })        
         this.setState({ selectedOption:cameras });
     }
 

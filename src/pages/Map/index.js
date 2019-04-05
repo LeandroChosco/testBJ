@@ -15,72 +15,16 @@ const mapOptions= {
     zoomControl: false,
     mapTypeControl: false,
     streetViewControl: false,
-    fullscreenControl: false
+    fullscreenControl: false,
+    map: null,    
 }
 
 class Map extends Component {
 
     state = {
         places : [
-            {
-                name:'Carrilo Puerto , 413 ,Tacuba Miguel Hidalgo CDMX', 
-                lat:19.452546, 
-                lng:-99.187447,
-                id:1,
-                webSocket:'ws://18.222.106.238:1001'
-            },
-            {
-                name:'Rio Napo, 46, Argentina Poniente Miguel Hidalgo CDMX', 
-                lat:19.459430, 
-                lng:-99.208588,
-                id:2,
-                webSocket:'ws://18.222.106.238:1002'
-            },
-            {
-                name:'Río Juruá ,45, Argenttina Poniente Miguel Hidalgo CDMX', 
-                lat:19.4600672, 
-                lng:-99.2117091,
-                id:3,
-                webSocket:'ws://18.222.106.238:1003'
-            },
-
-            {
-                name:'Mexico ,Tacuba, 1 ,Argenttina Poniente / Nueva Argentina Miguel Hidalgo CDMX', 
-                lat:19.456858, 
-                lng:-99.205938,
-                id:4,
-                webSocket:'ws://18.222.106.238:1004'
-            },
-            {
-                name:'Calzada Santa Barbara Naucalapn ,210, Argenttina Poniente Miguel Hidalgo CDMX', 
-                lat:19.4601350, 
-                lng:-99.2082958,
-                id:5,
-                webSocket:'ws://18.222.106.238:1005'
-            },
-            {
-                name:'Río Tlacotalpan ,89 ,Argenttina Poniente Miguel Hidalgo CDMX', 
-                lat:19.457746, 
-                lng:-99.208690,
-                id:6,
-                webSocket:'ws://18.222.106.238:1006'
-            },
-
-            {
-                name:'Río Juruá  ,13, Argenttina Poniente Miguel Hidalgo CDMX', 
-                lat:19.459800, 
-                lng:-99.208318,
-                id:7,
-                webSocket:'ws://18.222.106.238:1007'
-            },
-            {
-                name:'Rio Napo, 42 ,Argenttina Poniente Miguel Hidalgo CDMX', 
-                lat:19.459396, 
-                lng:-99.208482,
-                id:8,
-                webSocket:'ws://18.222.106.238:1008'
-            }
-        ]
+        ],
+        webSocket:'ws://18.222.106.238'
     }
 
   render() {
@@ -95,11 +39,13 @@ class Map extends Component {
   }
 
     _onMapLoad = map => {
+        
+        this.setState({map:map})        
         const marker = []
         this.state.places.map((value,index)=>{
              marker[index]= new window.google.maps.Marker({
                 position: { lat:value.lat, lng:value.lng },
-                map: map,
+                map: map | this.state.map,
                 title: value.name,
                 extraData:value
             });
@@ -107,16 +53,18 @@ class Map extends Component {
                 return function() {                  
                   createInfoWindow(marker,map)
                 }
-              })(marker[index], map,this.createInfoWindow))
+              })(marker[index], map | this.state.map,this.createInfoWindow))
             return true
         })
         
     }
-    createInfoWindow = (e, map) => {        
+    createInfoWindow = (e, map) => {   
+        console.log(map)     
         const infoWindow = new window.google.maps.InfoWindow({
             content: '<div id="infoWindow'+e.extraData.id+'" class="windowpopinfo"/>',
             position: { lat: e.position.lat(), lng: e.position.lng() }
         })
+        console.log(e)
         infoWindow.addListener('domready', (function(marker, render) {
             return function() {                  
                 render(<CameraStream marker={marker} showButtons height={.75}/>, document.getElementById('infoWindow'+e.extraData.id))
@@ -125,7 +73,43 @@ class Map extends Component {
         infoWindow.open(map)
     }
 
-  componentDidMount(){
+    componentDidMount(){
+        fetch('http://18.222.106.238:3000/register-cams/all-cams')
+        .then((response) => {
+            return response.json();
+        })
+        .then((camaras) => {
+            let auxCamaras = []
+            camaras.map(value=>{
+                if (value.active === 1) {
+                    auxCamaras.push({
+                        id:value.id,
+                        num_cam:value.num_cam,
+                        lat:parseFloat(value.google_cordenate.split(',')[0]), 
+                        lng:parseFloat(value.google_cordenate.split(',')[1]),                            
+                        webSocket:this.state.webSocket + ':' +(value.num_cam>=10?'10':'100') + value.num_cam,
+                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                    })
+                }
+            })
+            console.log(auxCamaras);
+            this.setState({places:auxCamaras})
+            const marker = []
+            this.state.places.map((value,index)=>{
+                marker[index]= new window.google.maps.Marker({
+                    position: { lat:value.lat, lng:value.lng },
+                    map:  this.state.map,
+                    title: value.name,
+                    extraData:value
+                });
+                window.google.maps.event.addListener(marker[index],'click', (function(marker, map, createInfoWindow) {
+                    return function() {                  
+                    createInfoWindow(marker,map)
+                    }
+                })(marker[index], this.state.map,this.createInfoWindow))
+                return true
+            })
+        });
       const navHeight = document.getElementsByTagName('nav')[0].scrollHeight
       const documentHeight = window.innerHeight
       let map = document.getElementsByClassName('map')[0]//.style.height = documentHeight - navHeight
