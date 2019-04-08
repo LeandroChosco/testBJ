@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Image, Divider } from 'semantic-ui-react'
+import { Card, Image } from 'semantic-ui-react'
 import { withRouter } from "react-router-dom";
 import './style.css'
 
@@ -45,6 +45,9 @@ class Match extends Component {
                         </div>                    
                     </Card.Description>
                 </Card.Content>
+                {/*<Card.Content extra onClick={this._godetails}>
+                    Ver Detalles
+                </Card.Content>*/}
             </Card>
         );
     }

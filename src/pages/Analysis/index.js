@@ -7,11 +7,9 @@ import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
 import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
 import GridCameraDisplay from '../../components/GridCameraDisplay';
-//import ListCameraDisplay from '../../components/ListCameraDisplay';
 import CameraStream from '../../components/CameraStream';
-//import CameraControls from '../../components/CameraControls';
 
-
+import { JellyfishSpinner } from "react-spinners-kit";
 
 class Analysis extends Component {
 
@@ -25,7 +23,9 @@ class Analysis extends Component {
         },
         displayTipe:1,
         cameraID:null,
-        webSocket:'ws://18.222.106.238'
+        webSocket:'ws://18.222.106.238',
+        loading:true,
+        error:null
     }
   
   render() {
@@ -37,7 +37,14 @@ class Analysis extends Component {
                     <ToggleButton value={2} variant='outline-danger' ><Icon name="clone"/></ToggleButton>
                     {this.state.cameraID?<ToggleButton value={3} variant='outline-danger' ><Icon name="squere"/></ToggleButton>:null}
                 </ToggleButtonGroup>
-            </div>            
+            </div>     
+            <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
+         <JellyfishSpinner
+                size={250}
+                color="#686769"
+                loading={this.props.loading}                
+            />
+         </div>       
             {
                 this._showDisplay()
             }
@@ -47,9 +54,9 @@ class Analysis extends Component {
   _showDisplay = () =>{
     switch(this.state.displayTipe){
         case 1:
-            return (<GridCameraDisplay places = {this.state.places} toggleControlsBottom = {this._toggleControlsBottom}/>)
+            return (<GridCameraDisplay error={this.state.error} loading={this.state.loading} places = {this.state.places} toggleControlsBottom = {this._toggleControlsBottom}/>)
         case 2:
-            return (<LoopCamerasDisplay places = {this.state.places} toggleControlsBottom = {this._toggleControlsBottom}/>)
+            return (<LoopCamerasDisplay error={this.state.error} loading={this.state.loading} places = {this.state.places} toggleControlsBottom = {this._toggleControlsBottom}/>)
         case 3:
             return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons /></div>)
         default:
@@ -70,6 +77,7 @@ class Analysis extends Component {
             
 
     componentDidMount(){
+
         fetch('http://18.222.106.238:3000/register-cams/all-cams')       
             .then((response) => {
                 return response.json();
@@ -87,9 +95,13 @@ class Analysis extends Component {
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                         })
                     }
+                    return true;
                 })
-                this.setState({places:auxCamaras})
-            });
+                this.setState({places:auxCamaras,loading: false})
+            }).catch(error=>{
+                this.setState({error:error,loading: false})
+                console.log('eeeeeeeeeeeerrrrrooooooor',error)
+            })
         if(this.props.match.params.id){
             this.setState({cameraID:this.props.match.params.id,actualCamera:{title:this.state.places[this.props.match.params.id-1].name,extraData:this.state.places[this.props.match.params.id-1]}})
             this.setState({displayTipe:3})             

@@ -8,4 +8,5 @@
 
 .app-container>.navbar > .navbar-text{
     color: #fff !important;
+    font-weight: bold;
 }

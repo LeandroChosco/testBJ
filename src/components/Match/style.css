@@ -46,6 +46,12 @@ b{
     margin-right: 2px !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    max-height: 100px !important;
-    height: 100px !important;
+    max-height: 130px !important;
+    height: 130px !important;
+}
+
+.extra{
+    font-size: 0.8rem!important;
+    font-weight: 500;
+    cursor: pointer;
 }

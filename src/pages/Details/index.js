@@ -213,7 +213,7 @@ const mapOptions= {
                 <div>
                     <Radio
                         label="Sospechoso se encuentra en libertad condicional"
-                        onChange={()=>{this.setState({checked:'similar'})}}                        
+                        onChange={()=>{this.setState({checked:'conditional'})}}                        
                         checked={this.state.checked==='conditional'}
                     />
                     <Radio
@@ -279,7 +279,8 @@ const mapOptions= {
   saveChange = () => {
     this.setState({openSelection:false})
     console.log(this.props.history)
-    this.props.history.push('/analisis')
+    //this.props.history.push('/analisis')
+    window.close()
   }
 
   _onMapLoad = map => {
@@ -291,13 +292,14 @@ const mapOptions= {
                 title: value.name,
                 extraData:value
             });
+            return true;
         })
   }
 
     componentDidMount(){
         var data = {}; 
         responseJson.items.map(el=> {
-        if(el.id == this.props.match.params.id) 
+        if(el.id.toString() === this.props.match.params.id) 
             data = el
             return true
         })
@@ -307,7 +309,7 @@ const mapOptions= {
     changeInfo = (props) => {
         var data = {}; 
         responseJson.items.map(el=> {
-        if(el.id == props.match.params.id) 
+        if(el.id.toString() === props.match.params.id) 
             data = el
             return true
         })
@@ -316,7 +318,7 @@ const mapOptions= {
 
     static getDerivedStateFromProps(props, state) {        
         if (props.match.params.id !== state.id) {
-            return (responseJson.items.filter(el => el.id == props.match.params.id)[0])
+            return (responseJson.items.filter(el => el.id.toString() === props.match.params.id)[0])
         }
         return null;
     }

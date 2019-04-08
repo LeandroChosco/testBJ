@@ -56,12 +56,24 @@ class CameraStream extends Component {
                                 <div className="row">
                                     {this.state.photos.map(value=><MediaContainer src={'http://18.222.106.238:4000/'+value} IMAGE key={value} />)}
                                 </div>
+                                {this.state.photos.length === 0 ?
+                                    <div align='center'>
+                                    <p className="big-letter">No hay archivos que mostrar</p>
+                                    <i className='fa fa-image fa-5x'></i>
+                                    </div>
+                                    :null}
                             </div>
                             <div className="col videos">
                                 Videos
                                 <div className="row">
                                     {this.state.videos.map(value=><MediaContainer src={'http://18.222.106.238:4000/'+value} video key={value} />)}
                                 </div>
+                                {this.state.videos.length === 0 ?
+                                    <div align='center'>
+                                    <p className="big-letter">No hay archivos que mostrar</p>
+                                    <i className='fa fa-image fa-5x'></i>
+                                    </div>
+                                    :null}
                             </div>
                         </div>:null} 
                         <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"}>  
@@ -94,11 +106,13 @@ class CameraStream extends Component {
                 if (value.includes(check)) {
                     images.push(value)
                 }
+                return true
             })
             filesJson.videos.map(value=>{
                 if (value.includes(check)) {
                     videos.push(value)
                 }
+                return true
             })        
       this.setState({
           webSocket: ws,

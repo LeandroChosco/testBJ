@@ -49,6 +49,23 @@
     height: 100%;
     overflow-y: auto;
 }
+
+.errorContainer{
+    position: absolute;
+    top:40%;
+    font-size: 1.5em;
+    color: red;
+    height: 100%;
+    margin: auto;
+}
+.big-letter{
+    font-size: 1.5rem;
+    font-weight: 100;
+}
+
+.fa-5x{
+    font-weight: 100 !important;    
+}
 @keyframes opacityOnAndOff {
     0% {
         opacity: 0;

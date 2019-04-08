@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MapContainer from '../../components/MapContainer'
 import CameraStream  from '../../components/CameraStream'
 import { render } from 'react-dom';
-
+import { JellyfishSpinner } from "react-spinners-kit";
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
@@ -16,7 +16,8 @@ const mapOptions= {
     mapTypeControl: false,
     streetViewControl: false,
     fullscreenControl: false,
-    map: null,    
+    map: null, 
+    loading: true   
 }
 
 class Map extends Component {
@@ -30,6 +31,13 @@ class Map extends Component {
   render() {
     return (
         <div className="map">
+         <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
+         <JellyfishSpinner
+                size={250}
+                color="#686769"
+                loading={this.state.loading}                
+            />
+         </div>
             <MapContainer                 
                 options={mapOptions}
                 places={this.state.places} 
@@ -38,10 +46,9 @@ class Map extends Component {
     );
   }
 
-    _onMapLoad = map => {
-        
+    _onMapLoad = map => {        
         this.setState({map:map})        
-        const marker = []
+        const marker = []        
         this.state.places.map((value,index)=>{
              marker[index]= new window.google.maps.Marker({
                 position: { lat:value.lat, lng:value.lng },
@@ -91,9 +98,10 @@ class Map extends Component {
                         name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                     })
                 }
+                return true
             })
             console.log(auxCamaras);
-            this.setState({places:auxCamaras})
+            this.setState({loading:false,places:auxCamaras})
             const marker = []
             this.state.places.map((value,index)=>{
                 marker[index]= new window.google.maps.Marker({

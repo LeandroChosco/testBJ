@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 //import Carousel from 'nuka-carousel';
 import CameraStream from '../CameraStream';
-import {  Button, Image } from 'semantic-ui-react'
+import {  Button } from 'semantic-ui-react'
 import responseJson from '../../assets/json/suspects.json'
 import filesJson from '../../assets/json/files.json'
 import './style.css'
 import Match from '../Match';
 import MediaContainer from '../MediaContainer';
+
 class LoopCamerasDisplay extends Component {
     
     state = {
@@ -29,7 +30,9 @@ class LoopCamerasDisplay extends Component {
   render() {
     return (
     <div className="holderOfSlides">
-        
+            {this.props.error?<div className="errorContainer">
+                Error al cargar informacion: {JSON.stringify(this.props.error)}
+            </div>:null}
             {this.state.markers.map((value,index) => <div key={value.extraData.id} style={{height:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}><CameraStream ref={'camstreamloopref'+index} marker={value} height={this.state.height} /></div>)}        
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
             <div className='row stiky-top'>
@@ -50,25 +53,36 @@ class LoopCamerasDisplay extends Component {
                     <div className="row">
                         {this.state.photos.map(value=><MediaContainer src={'http://18.222.106.238:4000/'+value} image key={value} />)}
                     </div>
+                     {this.state.photos.length === 0 ?
+                            <div align='center'>
+                             <p className="big-letter">No hay archivos que mostrar</p>
+                             <i className='fa fa-image fa-5x'></i>
+                            </div>
+                            :null}
                 </div>
                 <div className="col videos">
                     Videos
                     <div className="row">
                         {this.state.videos.map(value=><MediaContainer src={'http://18.222.106.238:4000/'+value} video key={value} />)}
                     </div>
+                     {this.state.videos.length === 0 ?
+                            <div align='center'>
+                             <p className="big-letter">No hay archivos que mostrar</p>
+                             <i className='fa fa-image fa-5x'></i>
+                            </div>
+                            :null}
                 </div>
                 <div className="col matches" align="center">
                     Historial
                     {this.state.matches.map((value, index)=><Match key={index} info={value} toggleControls={this._closeControl} />)}
                 </div>
             </div>            
-        </div>        
+        </div>   
     </div>
     );
   }
 
     _playPause = () =>{
-        const index = 'camstreamloopref'+this.state.slideIndex 
         let isplaying = this.state.isplaying
         isplaying[this.state.slideIndex] =!isplaying[this.state.slideIndex]
         console.log(isplaying)
@@ -80,29 +94,33 @@ class LoopCamerasDisplay extends Component {
         }
     } 
     _openCameraInfo = () => { 
-        const index = 'camstreamloopref'+this.state.slideIndex
-        console.log(index)               
-        if(this.state.autoplay){    
-            let images = []
-            let videos = []
-            let  check = 'cam'+(this.state.markers[this.state.slideIndex].extraData.num_cam>=10?'00':'000') + this.state.markers[this.state.slideIndex].extraData.num_cam + '/'
-            filesJson.images.map(value=>{
-                if (value.includes(check)) {
-                    images.push(value)
-                }
-            })
-            filesJson.videos.map(value=>{
-                if (value.includes(check)) {
-                    videos.push(value)
-                }
-            })            
-            clearInterval(this.state.interval)
-            this.setState({autoplay: false,videos:videos,photos:images})
-        }  else {
-                 
-            const time =  setInterval(this.changeSlide,5000)
-            this.setState({autoplay: true,interval: time,videos:[],photos:[]})            
-        }     
+        if (this.props.error === null) {
+            const index = 'camstreamloopref'+this.state.slideIndex
+            console.log(index)               
+            if(this.state.autoplay){    
+                let images = []
+                let videos = []
+                let  check = 'cam'+(this.state.markers[this.state.slideIndex].extraData.num_cam>=10?'00':'000') + this.state.markers[this.state.slideIndex].extraData.num_cam + '/'
+                filesJson.images.map(value=>{
+                    if (value.includes(check)) {
+                        images.push(value)
+                    }
+                    return true;
+                })
+                filesJson.videos.map(value=>{
+                    if (value.includes(check)) {
+                        videos.push(value)
+                    }
+                    return true;
+                })            
+                clearInterval(this.state.interval)
+                this.setState({autoplay: false,videos:videos,photos:images})
+            }  else {
+                    
+                const time =  setInterval(this.changeSlide,5000)
+                this.setState({autoplay: true,interval: time,videos:[],photos:[]})            
+            }   
+        }  
     }
 
     componentDidMount(){

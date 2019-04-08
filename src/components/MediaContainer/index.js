@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image } from 'semantic-ui-react';
+import { Image, Card } from 'semantic-ui-react';
 import { Modal } from 'react-bootstrap';
 
 class MediaContainer extends Component {
@@ -10,9 +10,11 @@ class MediaContainer extends Component {
 
   render() {
     return (
-    <div className='mediaContainer' className="col-6 p10">   
-        {this.props.video?<video src={this.props.src} onClick={()=>this.setState({modal:true})} style={{width:'100%'}}/>:null}
-        {this.props.image?<Image src={this.props.src} onClick={()=>this.setState({modal:true})} style={{width:'100%'}}/>:null}
+    <div className='mediaContainer col-6 p10'>   
+        <Card onClick={()=>this.setState({modal:true})}>
+            {this.props.video?<video src={this.props.src} style={{width:'100%'}}/>:null}
+            {this.props.image?<Image src={this.props.src} style={{width:'100%'}}/>:null}
+        </Card>
         <Modal size="lg" show={this.state.modal} onHide={()=>this.setState({modal:false})}>
             <Modal.Header closeButton>
                 

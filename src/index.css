@@ -37,3 +37,7 @@ code {
   height: 35px;
   width: 35px;  
 }
+
+.showfilesinfocameragrid,.showfilesinfocamera{
+  background-color: #fafafa !important;
+}

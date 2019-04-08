@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CameraStream from '../CameraStream';
 import { Row,Col} from 'react-bootstrap'
-import {  Button, Image } from 'semantic-ui-react'
+import {  Button } from 'semantic-ui-react'
 import responseJson from '../../assets/json/suspects.json'
 import filesJson from '../../assets/json/files.json'
 import './style.css'
@@ -24,10 +24,13 @@ class GridCameraDisplay extends Component {
 
   render() {
     return (
-    <div className='gridCameraContainer'>   
+    <div className='gridCameraContainer' align='center'>   
         <Row >     
             {this.state.markers.map(value => <Col className='p-l-0 p-r-0'  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value)} marker={value.id}><CameraStream key={value.extraData.id} marker={value} height={.7}/></Col>)}        
-        </Row>
+        </Row>        
+            {this.props.error?<div className="errorContainer">
+                Error al cargar informacion: {JSON.stringify(this.props.error)}
+            </div>:null}
         <div className={!this.state.autoplay?'camGridControl showfiles':'camGridControl'}>
             <div className='row stiky-top'>
                 <div className='col-4'>
@@ -50,12 +53,24 @@ class GridCameraDisplay extends Component {
                     <div className="row">
                         {this.state.photos.map(value=><MediaContainer image key={value} src={'http://18.222.106.238:4000/'+value}/>)}
                     </div>
+                    {this.state.videos.length === 0 ?
+                            <div align='center'>
+                             <p className="big-letter">No hay archivos que mostrar</p>
+                             <i className='fa fa-image fa-5x'></i>
+                            </div>
+                            :null}
                 </div>
                 <div className="col videosgrid">
                     Videos
                     <div className="row">
-                        {this.state.videos.map(value=><MediaContainer video key={value} src={'http://18.222.106.238:4000/'+value}/>)}
+                        {this.state.videos.map(value=><MediaContainer video key={value} src={'http://18.222.106.238:4000/'+value}/>)}                        
                     </div>
+                    {this.state.videos.length === 0 ?
+                            <div align='center'>
+                             <p className="big-letter">No hay archivos que mostrar</p>
+                             <i className='fa fa-image fa-5x'></i>
+                            </div>
+                            :null}
                 </div>
                 <div className="col matchesgrid" align="center">
                     Historial
@@ -66,6 +81,8 @@ class GridCameraDisplay extends Component {
     </div>
     );
   }
+
+  
 
   _playPause =() => {
 
@@ -81,11 +98,13 @@ class GridCameraDisplay extends Component {
                 if (value.includes(check)) {
                     images.push(value)
                 }
+                return true;
             })
             filesJson.videos.map(value=>{
                 if (value.includes(check)) {
                     videos.push(value)
                 }
+                return true;
             })
             console.log(this.state.isplaying)            
             this.setState({selectedCamera: marker.extraData, autoplay:false,videos:videos,photos:images, slideIndex: index})

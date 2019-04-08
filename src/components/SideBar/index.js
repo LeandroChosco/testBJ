@@ -36,6 +36,7 @@ class SideBar extends Component {
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                         })
                     }
+                    return true;
                 })                                
                 auxCamaras.map((value)=>{
                     options.push({
