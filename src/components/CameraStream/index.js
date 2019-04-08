@@ -54,7 +54,7 @@ class CameraStream extends Component {
                             <div className="col snapshots">
                                 Fotos
                                 <div className="row">
-                                    {this.state.photos.map(value=><MediaContainer src={'http://18.222.106.238:4000/'+value} IMAGE key={value} />)}
+                                    {this.state.photos.map(value=><MediaContainer src={'http://18.222.106.238:4000/'+value} image key={value} />)}
                                 </div>
                                 {this.state.photos.length === 0 ?
                                     <div align='center'>
