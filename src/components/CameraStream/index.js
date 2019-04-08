@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Card, Button, Row, Col } from 'react-bootstrap'
-import {  Image } from 'semantic-ui-react'
+import filesJson from '../../assets/json/files.json'
 import './style.css'
+import MediaContainer from '../MediaContainer';
 
 class CameraStream extends Component {
     state= {
@@ -11,8 +12,8 @@ class CameraStream extends Component {
         webSocket: null,
         player: null,
         showData:false,
-        photos:[0,1,2,3,4,5,6,7,8],
-        videos:[0,1,2,3,4,5]
+        photos:[],
+        videos:[]
     }
 
     render() {
@@ -22,12 +23,12 @@ class CameraStream extends Component {
                 {this.props.horizontal?
                     <Card.Body>
                                 
-                        <Card.Title>Camara {this.state.cameraID}</Card.Title>
+                        <Card.Title>Camara {this.state.num_cam}</Card.Title>
                         <Card.Text>
                             <Row>
                                 <Col lg={6}>
                                     <div className="camHolder">  
-                                        <canvas ref="camRef" style={{width:'100%',height:this.props.height?this.props.height:'100%'}}></canvas>                      
+                                        <canvas id={'camcanvasstreamer'+this.state.cameraID} ref="camRef" style={{width:'100%',height:this.props.height?this.props.height:'100%'}}></canvas>                      
                                     </div>
                                 </Col>
                                 <Col lg={6}>
@@ -44,32 +45,25 @@ class CameraStream extends Component {
                             </Card.Footer>:
                         null}
                     </Card.Body>:
-                    <Card.Body>                                                
-                         
-                              
+                    <Card.Body>                                                                          
+                        <Card.Title>
+                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam}</div>
+                        </Card.Title>
                         {this.state.showData?
                         <div className="row dataHolder p10">
                             <div className="col snapshots">
                                 Fotos
                                 <div className="row">
-                                    {this.state.photos.map(value=><div key={value} className="col-6 p10">
-                                        <Image src="https://via.placeholder.com/150"/>
-                                    </div>)}
+                                    {this.state.photos.map(value=><MediaContainer src={'http://18.222.106.238:4000/'+value} IMAGE key={value} />)}
                                 </div>
                             </div>
                             <div className="col videos">
                                 Videos
                                 <div className="row">
-                                    {this.state.videos.map(value=><div key={value} className="col-6 p10">
-                                        <Image src="https://via.placeholder.com/150"/>
-                                    </div>)}
+                                    {this.state.videos.map(value=><MediaContainer src={'http://18.222.106.238:4000/'+value} video key={value} />)}
                                 </div>
                             </div>
-                        </div>:null}   
-                        <Card.Title>
-                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam}</div>
-                        </Card.Title>
-                                    
+                        </div>:null} 
                         <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"}>  
                                 <canvas ref="camRef" style={{width:'100%',height:'100%'}}></canvas>                      
                         </div> 
@@ -93,9 +87,24 @@ class CameraStream extends Component {
       this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})
       var ws = new WebSocket(this.props.marker.extraData.webSocket)
       var p = new window.jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true});
+      let images = []
+            let videos = []
+            let  check = 'cam'+(this.props.marker.extraData.num_cam>=10?'00':'000') + this.props.marker.extraData.num_cam + '/'
+            filesJson.images.map(value=>{
+                if (value.includes(check)) {
+                    images.push(value)
+                }
+            })
+            filesJson.videos.map(value=>{
+                if (value.includes(check)) {
+                    videos.push(value)
+                }
+            })        
       this.setState({
           webSocket: ws,
-          player: p
+          player: p,
+          videos:videos,
+          photos: images
       })
       if (this.props.height) {
           if (this.refs.camRef.getBoundingClientRect().width === 0) {

@@ -4,3 +4,8 @@
 .mapContainerForDetail{
     height: 40vh;
 }
+
+
+.app-container>.navbar > .navbar-text{
+    color: #fff !important;
+}

@@ -24,15 +24,20 @@ class App extends Component {
     cameraInfoSide:false,
     cameraInfo: null,
     cameraID:null,
-    cameraControl: false
+    cameraControl: false,
+    showHeader:true
   }
   
 
 
 
   componentDidMount(){
-    this._checkAuth()
-    setTimeout(this.showNot,10000)
+    this._checkAuth()    
+    if (!window.location.pathname.includes('detalles')) {      
+      setTimeout(this.showNot,10000)
+    }  else {
+      this.setState({showHeader:false})
+    }
   }
 
 
@@ -86,11 +91,12 @@ class App extends Component {
     }
       
   }
+  
   render() {
     return (
     <Router>      
       <div className="fullcontainer">                
-        {this.state.isAuthenticated?<Header toggleSideMenu = {this._toggleSideMenu} logOut = {this._logOut} isSidemenuShow={this.state.sideMenu} cameraSideInfo={this._cameraSideInfo}/>:null}     
+        {this.state.isAuthenticated&&this.state.showHeader?<Header toggleSideMenu = {this._toggleSideMenu} logOut = {this._logOut} isSidemenuShow={this.state.sideMenu} cameraSideInfo={this._cameraSideInfo}/>:null}     
         <SideBar toggleSideMenu = {this._toggleSideMenu} active={this.state.sideMenu}/>
         {this.state.cameraInfoSide?<CameraInfoSide toggleSideMenu = {this._cameraSideInfo}  cameraID={this.state.cameraID}/>:null}
         <Route path="/" exact render={(props) => this.state.isAuthenticated?<Map />:<Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/>} />

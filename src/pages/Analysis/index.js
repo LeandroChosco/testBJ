@@ -65,8 +65,12 @@ class Analysis extends Component {
   _changeDisplay = (value) => {
       this.setState({displayTipe:value})      
   }
+
+
+            
+
     componentDidMount(){
-        fetch('http://18.222.106.238:3000/register-cams/all-cams')
+        fetch('http://18.222.106.238:3000/register-cams/all-cams')       
             .then((response) => {
                 return response.json();
             })
@@ -84,10 +88,8 @@ class Analysis extends Component {
                         })
                     }
                 })
-                console.log(auxCamaras);
                 this.setState({places:auxCamaras})
             });
-        console.log(this.props)
         if(this.props.match.params.id){
             this.setState({cameraID:this.props.match.params.id,actualCamera:{title:this.state.places[this.props.match.params.id-1].name,extraData:this.state.places[this.props.match.params.id-1]}})
             this.setState({displayTipe:3})             

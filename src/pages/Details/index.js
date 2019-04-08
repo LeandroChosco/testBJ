@@ -4,7 +4,7 @@ import { Image, Header, Button, Radio } from 'semantic-ui-react';
 
 import './style.css'
 import MapContainer from '../../components/MapContainer/index.js';
-import { Modal } from 'react-bootstrap';
+import { Modal, Navbar } from 'react-bootstrap';
 const mapOptions= {
     center: {lat: 19.459430, lng: -99.208588},
     zoom: 15,
@@ -30,12 +30,24 @@ const mapOptions= {
                 webSocket:'ws://18.222.106.238:1001'
             }
         ],    
-        images: [{},{}]
+        images: [{},{}],
+        idCamera:Math.floor(Math.random() * 10) + 1,
     }
 
   render() {
     return (
-        <div  className="app-container container-fluid" >        
+        <div  className="app-container" >   
+            <Navbar sticky="top" expand="lg" variant="light" bg="mh">                       
+                <Navbar.Text >
+                   Camara {this.state.idCamera}
+                </Navbar.Text>                
+            </Navbar>     
+            <div  className="mapContainerForDetail" >    
+                <MapContainer                 
+                    options={mapOptions}
+                    places={this.state.places} 
+                    onMapLoad={this._onMapLoad} />            
+            </div>
             <div  className="row">
                 &nbsp;
             </div>	
@@ -177,12 +189,7 @@ const mapOptions= {
             <div  className="row">
                 &nbsp;
             </div>
-            <div  className="mapContainerForDetail" >    
-                <MapContainer                 
-                    options={mapOptions}
-                    places={this.state.places} 
-                    onMapLoad={this._onMapLoad} />            
-            </div>
+            
             <Modal show={this.state.openConfirm} onHide={()=>this.setState({openConfirm:false})}>
                 <Modal.Header closeButton>
                     

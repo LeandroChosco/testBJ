@@ -3,8 +3,10 @@ import CameraStream from '../CameraStream';
 import { Row,Col} from 'react-bootstrap'
 import {  Button, Image } from 'semantic-ui-react'
 import responseJson from '../../assets/json/suspects.json'
+import filesJson from '../../assets/json/files.json'
 import './style.css'
 import Match from '../Match';
+import MediaContainer from '../MediaContainer';
 class GridCameraDisplay extends Component {
     
     state = {
@@ -14,8 +16,8 @@ class GridCameraDisplay extends Component {
         isplaying:[],
         slideIndex:0,
         matches:[],
-        photos:[1,2,3,4,5,6,7,8],
-        videos:[1,2,3,4,5,6,7,8,9,0],
+        photos:[],
+        videos:[],
         autoplay: true,
         selectedCamera:{}
     }
@@ -36,7 +38,7 @@ class GridCameraDisplay extends Component {
                     
                 </div>
                 <div className='col-5'>
-                    <b>Camara {this.state.selectedCamera.id}</b> {this.state.selectedCamera.name} 
+                    <b>Camara {this.state.selectedCamera.num_cam}</b> {this.state.selectedCamera.name} 
                 </div>
                 <div className='col-3'>
                     <Button onClick={()=>this._openCameraInfo(false)} className='pull-right' primary> { this.state.autoplay?'':'Ocultar controles'} <i className={ this.state.autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}></i></Button>                
@@ -46,17 +48,13 @@ class GridCameraDisplay extends Component {
                 <div className="col snapshotsgrid">
                     Fotos
                     <div className="row">
-                        {this.state.photos.map(value=><div key={value} className="col-6 p10">
-                            <Image src="https://via.placeholder.com/150"/>
-                        </div>)}
+                        {this.state.photos.map(value=><MediaContainer image key={value} src={'http://18.222.106.238:4000/'+value}/>)}
                     </div>
                 </div>
                 <div className="col videosgrid">
                     Videos
                     <div className="row">
-                        {this.state.videos.map(value=><div key={value} className="col-6 p10">
-                            <Image src="https://via.placeholder.com/150"/>
-                        </div>)}
+                        {this.state.videos.map(value=><MediaContainer video key={value} src={'http://18.222.106.238:4000/'+value}/>)}
                     </div>
                 </div>
                 <div className="col matchesgrid" align="center">
@@ -75,11 +73,26 @@ class GridCameraDisplay extends Component {
 
     _openCameraInfo = (marker) => {   
         if (marker) {
-            this.setState({selectedCamera: marker.extraData, autoplay:false})
+            let index = this.state.markers.indexOf(marker)
+            let images = []
+            let videos = []
+            let  check = 'cam'+(marker.extraData.num_cam>=10?'00':'000') + marker.extraData.num_cam + '/'
+            filesJson.images.map(value=>{
+                if (value.includes(check)) {
+                    images.push(value)
+                }
+            })
+            filesJson.videos.map(value=>{
+                if (value.includes(check)) {
+                    videos.push(value)
+                }
+            })
+            console.log(this.state.isplaying)            
+            this.setState({selectedCamera: marker.extraData, autoplay:false,videos:videos,photos:images, slideIndex: index})
         } else {
-            this.setState({selectedCamera: {}, autoplay:true})
+            this.setState({selectedCamera: {}, autoplay:true, videos:[],photos:[]})
         }             
-        //this.props.toggleControlsBottom(marker.extraData)
+        
     }
 
     componentDidMount(){       
@@ -104,15 +117,18 @@ class GridCameraDisplay extends Component {
 
     static getDerivedStateFromProps(props, state){
         let markersForLoop = []
-        props.places.map((value)=>{
+        let isplaying = {}
+        props.places.map((value,index)=>{
             markersForLoop.push({
                 title:value.name,
                 extraData:value
             })
+            isplaying[index]=true
             return true
         })
         let aux = state
         aux.markers= markersForLoop
+        aux.isplaying= isplaying
         return aux        
     }
 }
