@@ -43,15 +43,17 @@ class App extends Component {
 
   showNot = () => {
     const notification = this.refs.notificationSystem;
-    notification.addNotification({
-      title:'Match',
-      message: 'Nuevo match detectado, Camara 1',
-      level: 'error',
-      action: {
-        label: 'Ver match',
-        callback: ()=> this.seeMatch(1)
-      }
-    });
+    if(notification){
+      notification.addNotification({
+        title:'Match',
+        message: 'Nuevo match detectado, Camara 1',
+        level: 'error',
+        action: {
+          label: 'Ver match',
+          callback: ()=> this.seeMatch(1)
+        }
+      });
+    }
   }
 
   seeMatch = (id) => {

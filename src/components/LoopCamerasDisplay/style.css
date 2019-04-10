@@ -36,7 +36,7 @@
 .recording{
     animation: opacityOnAndOff;
     animation-duration: 1s;
-    animation-delay: 17.7s;
+    animation-delay: 0s;
     animation-fill-mode: forwards;
     animation-iteration-count: infinite;
 }

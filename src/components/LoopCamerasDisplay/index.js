@@ -7,6 +7,8 @@ import filesJson from '../../assets/json/files.json'
 import './style.css'
 import Match from '../Match';
 import MediaContainer from '../MediaContainer';
+import Axios from 'axios';
+import constants from '../../constants/constants';
 
 class LoopCamerasDisplay extends Component {
     
@@ -20,7 +22,7 @@ class LoopCamerasDisplay extends Component {
         videos:[],
         isplaying:[],
         matches: [],
-        height:'50%'
+        height:'50%',
     }
 
     _showCameraInfo(){
@@ -40,7 +42,7 @@ class LoopCamerasDisplay extends Component {
                     
                         <Button basic circular><i className='fa fa-camera'></i></Button>
                         <Button basic circular onClick={this._playPause}><i className={this.state.isplaying[this.state.slideIndex]?'fa fa-pause':'fa fa-play'}></i></Button>
-                        <Button basic circular><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
+                        <Button basic circular onClick={() => this.props.recordignToggle(this.state.markers[this.state.slideIndex].extraData)}><i className={ this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                     
                 </div>
                 <div className='col-4'>
@@ -51,7 +53,7 @@ class LoopCamerasDisplay extends Component {
                 <div className="col snapshots">
                     Fotos
                     <div className="row">
-                        {this.state.photos.map(value=><MediaContainer src={'http://18.222.106.238:4000/'+value} image key={value} />)}
+                        {this.state.photos.map((value,index)=><MediaContainer src={'http://18.222.106.238:4000/'+value.relative_url} image key={index} />)}
                     </div>
                      {this.state.photos.length === 0 ?
                             <div align='center'>
@@ -63,7 +65,7 @@ class LoopCamerasDisplay extends Component {
                 <div className="col videos">
                     Videos
                     <div className="row">
-                        {this.state.videos.map(value=><MediaContainer src={'http://18.222.106.238:4000/'+value} video key={value} />)}
+                        {this.state.videos.map((value,index)=><MediaContainer src={'http://18.222.106.238:4000/'+value.relative_url} video key={index} />)}
                     </div>
                      {this.state.videos.length === 0 ?
                             <div align='center'>
@@ -82,6 +84,12 @@ class LoopCamerasDisplay extends Component {
     );
   }
 
+
+    _recordToggle = () => {
+        console.log(this.state.markers)
+        console.log(this.state.slideIndex)
+        //this.props.recordignToggle(this.state.markers[this.state.slideIndex])
+    }
     _playPause = () =>{
         let isplaying = this.state.isplaying
         isplaying[this.state.slideIndex] =!isplaying[this.state.slideIndex]
@@ -97,24 +105,10 @@ class LoopCamerasDisplay extends Component {
         if (this.props.error === null) {
             const index = 'camstreamloopref'+this.state.slideIndex
             console.log(index)               
-            if(this.state.autoplay){    
-                let images = []
-                let videos = []
-                let  check = 'cam'+(this.state.markers[this.state.slideIndex].extraData.num_cam>=10?'00':'000') + this.state.markers[this.state.slideIndex].extraData.num_cam + '/'
-                filesJson.images.map(value=>{
-                    if (value.includes(check)) {
-                        images.push(value)
-                    }
-                    return true;
-                })
-                filesJson.videos.map(value=>{
-                    if (value.includes(check)) {
-                        videos.push(value)
-                    }
-                    return true;
-                })            
+            if(this.state.autoplay){                           
                 clearInterval(this.state.interval)
-                this.setState({autoplay: false,videos:videos,photos:images})
+                this.setState({autoplay: false})
+                this._loadFiles()
             }  else {
                     
                 const time =  setInterval(this.changeSlide,5000)
@@ -122,6 +116,16 @@ class LoopCamerasDisplay extends Component {
             }   
         }  
     }
+
+    _loadFiles = () =>{                           
+        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[this.state.slideIndex].extraData.id + '/data')
+        .then(response => {
+            const data = response.data
+            console.log(data)
+            this.setState({videos:data.data.videos,photos:data.data.photos})
+        })       
+    }
+
 
     componentDidMount(){
         let markersForLoop = []

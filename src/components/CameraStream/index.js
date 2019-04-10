@@ -13,13 +13,15 @@ class CameraStream extends Component {
         player: null,
         showData:false,
         photos:[],
-        videos:[]
+        videos:[],
+        display:'auto',
+        interval: null
     }
 
     render() {
 
         return (
-            <Card>                    
+            <Card style={{display:this.state.display}}>                    
                 {this.props.horizontal?
                     <Card.Body>
                                 
@@ -96,9 +98,18 @@ class CameraStream extends Component {
     } 
 
   componentDidMount(){      
-      this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})
-      var ws = new WebSocket(this.props.marker.extraData.webSocket)
-      var p = new window.jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true});
+      this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData, onEnded:this._playerError})
+      
+      try{
+          var ws = new WebSocket(this.props.marker.extraData.webSocket)          
+      } catch (err) {
+        this._wsError(err)
+      }
+      try {
+        var p = new window.jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true});
+      } catch (err) {
+          this._playerError(err)
+      }
       let images = []
             let videos = []
             let  check = 'cam'+(this.props.marker.extraData.num_cam>=10?'00':'000') + this.props.marker.extraData.num_cam + '/'
@@ -119,7 +130,7 @@ class CameraStream extends Component {
           player: p,
           videos:videos,
           photos: images
-      })
+      })      
       if (this.props.height) {
           if (this.refs.camRef.getBoundingClientRect().width === 0) {
             this.refs.camRef.style.height = (window.visualViewport.width - 50 ) * this.props.height+'px'  
@@ -127,6 +138,34 @@ class CameraStream extends Component {
             this.refs.camRef.style.height = this.refs.camRef.getBoundingClientRect().width * this.props.height+'px'   
           }        
       }
+  }
+
+  _wsError = (err) => {
+    console.log('websocket error',err)
+    this.setState({display:'none'})
+    setTimeout(this.tryRconection,1000)
+  }
+
+  
+  tryRconection = () => {
+    try{
+        var ws = new WebSocket(this.props.marker.extraData.webSocket)          
+        var p = new window.jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true});       
+        this.setState({
+            webSocket: ws,
+            player: p
+        })          
+    } catch (err) {
+      this._wsError(err)
+    }           
+  }
+
+  _wsMessage = (msg) => {
+    console.log('websock message',msg)
+  }
+
+  _playerError = (err) => {
+    console.log('player error',err)
   }
 
     componentWillUnmount(){

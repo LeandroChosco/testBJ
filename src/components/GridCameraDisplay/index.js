@@ -7,6 +7,8 @@ import filesJson from '../../assets/json/files.json'
 import './style.css'
 import Match from '../Match';
 import MediaContainer from '../MediaContainer';
+import Axios from 'axios';
+import constants from '../../constants/constants';
 class GridCameraDisplay extends Component {
     
     state = {
@@ -19,14 +21,18 @@ class GridCameraDisplay extends Component {
         photos:[],
         videos:[],
         autoplay: true,
-        selectedCamera:{}
+        selectedCamera:{},
+        isRecording:false,
+        recordingCams:[],
+        recordingProcess:[],
+        loadingRcord: false
     }
 
   render() {
     return (
     <div className='gridCameraContainer' align='center'>   
         <Row >     
-            {this.state.markers.map(value => <Col className='p-l-0 p-r-0'  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value)} marker={value.id}><CameraStream key={value.extraData.id} marker={value} height={.7}/></Col>)}        
+            {this.state.markers.map(value => <Col className={this.state.selectedCamera === value.extraData?'p-l-0 p-r-0 activeselectedcameragrid':'p-l-0 p-r-0'}  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value)} marker={value.id}><CameraStream key={value.extraData.id} marker={value} height={.7}/></Col>)}        
         </Row>        
             {this.props.error?<div className="errorContainer">
                 Error al cargar informacion: {JSON.stringify(this.props.error)}
@@ -37,7 +43,7 @@ class GridCameraDisplay extends Component {
                     
                         <Button basic circular><i className='fa fa-camera'></i></Button>
                         <Button basic circular onClick={this._playPause}><i className={this.state.isplaying[this.state.slideIndex]?'fa fa-pause':'fa fa-play'}></i></Button>
-                        <Button basic circular><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
+                        <Button basic circular loading={this.props.loadingRcord} onClick={()=>this.props.recordignToggle(this.state.selectedCamera)}><i className={ this.props.recordingCams.indexOf(this.state.selectedCamera)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                     
                 </div>
                 <div className='col-5'>
@@ -51,9 +57,9 @@ class GridCameraDisplay extends Component {
                 <div className="col snapshotsgrid">
                     Fotos
                     <div className="row">
-                        {this.state.photos.map(value=><MediaContainer image key={value} src={'http://18.222.106.238:4000/'+value}/>)}
+                        {this.state.photos.map((value,index)=><MediaContainer image key={index} src={'http://18.222.106.238:4000/'+value.relative_url}/>)}
                     </div>
-                    {this.state.videos.length === 0 ?
+                    {this.state.photos.length === 0 ?
                             <div align='center'>
                              <p className="big-letter">No hay archivos que mostrar</p>
                              <i className='fa fa-image fa-5x'></i>
@@ -63,7 +69,7 @@ class GridCameraDisplay extends Component {
                 <div className="col videosgrid">
                     Videos
                     <div className="row">
-                        {this.state.videos.map(value=><MediaContainer video key={value} src={'http://18.222.106.238:4000/'+value}/>)}                        
+                        {this.state.videos.map((value,index)=><MediaContainer video key={index} src={'http://18.222.106.238:4000/'+value.relative_url}/>)}                        
                     </div>
                     {this.state.videos.length === 0 ?
                             <div align='center'>
@@ -82,32 +88,43 @@ class GridCameraDisplay extends Component {
     );
   }
 
-  
+    
 
-  _playPause =() => {
+    _playPause =() => {
 
-  }
+    }
+
+
+    _loadFiles = (cam) =>{
+        if (cam) {
+            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + cam.id + '/data')
+            .then(response => {
+                const data = response.data
+                console.log(data)
+                this.setState({videos:data.data.videos,photos:data.data.photos})
+            })
+        } else {
+            if (this.state.selectedCamera!== undefined) {
+                Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.selectedCamera.id + '/data')
+                .then(response => {
+                    const data = response.data
+                    console.log(data)
+                    this.setState({videos:data.data.videos,photos:data.data.photos})
+                })
+            }
+        }        
+    }
+
 
     _openCameraInfo = (marker) => {   
         if (marker) {
-            let index = this.state.markers.indexOf(marker)
-            let images = []
-            let videos = []
-            let  check = 'cam'+(marker.extraData.num_cam>=10?'00':'000') + marker.extraData.num_cam + '/'
-            filesJson.images.map(value=>{
-                if (value.includes(check)) {
-                    images.push(value)
-                }
-                return true;
-            })
-            filesJson.videos.map(value=>{
-                if (value.includes(check)) {
-                    videos.push(value)
-                }
-                return true;
-            })
-            console.log(this.state.isplaying)            
-            this.setState({selectedCamera: marker.extraData, autoplay:false,videos:videos,photos:images, slideIndex: index})
+            let index = this.state.markers.indexOf(marker)            
+            let recording = false       
+            if(this.props.recordingCams.indexOf(marker.extraData)>-1){
+                recording = true
+            }
+            this.setState({selectedCamera: marker.extraData, autoplay:false, slideIndex: index, isRecording: recording})
+            this._loadFiles(marker.extraData)
         } else {
             this.setState({selectedCamera: {}, autoplay:true, videos:[],photos:[]})
         }             
@@ -132,6 +149,10 @@ class GridCameraDisplay extends Component {
             //}
           }               
         this.setState({markers:markersForLoop, matches:cameras})
+    }
+
+    componentWillUnmount(){
+
     }
 
     static getDerivedStateFromProps(props, state){

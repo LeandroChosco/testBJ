@@ -33,7 +33,7 @@
 .recording{
     animation: opacityOnAndOff;
     animation-duration: 1s;
-    animation-delay: 17.7s;
+    animation-delay: 0s;
     animation-fill-mode: forwards;
     animation-iteration-count: infinite;
 }
@@ -71,6 +71,11 @@
 
 .fa-5x{
     font-weight: 100 !important;    
+}
+
+.activeselectedcameragrid{
+    border: 1px red solid !important;
+    border-radius: 2px;
 }
 @keyframes opacityOnAndOff {
     0% {
