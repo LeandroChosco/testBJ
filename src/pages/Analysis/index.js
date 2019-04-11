@@ -38,13 +38,13 @@ class Analysis extends Component {
   render() {
     return (
         <div >
-            <div className="toggleViewButton row">            
+            {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">            
                 <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
                     <ToggleButton value={1} variant='outline-danger' ><Icon name="grid layout"/></ToggleButton>
                     <ToggleButton value={2} variant='outline-danger' ><Icon name="clone"/></ToggleButton>
                     {this.state.cameraID?<ToggleButton value={3} variant='outline-danger' ><Icon name="squere"/></ToggleButton>:null}
                 </ToggleButtonGroup>
-            </div>     
+            </div> :null}    
             <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
          <JellyfishSpinner
                 size={250}
@@ -180,7 +180,7 @@ class Analysis extends Component {
                         loadingSnap={this.state.loadingSnap}
                         snapShot={this._snapShot}/>)
         case 3:
-            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons /></div>)
+            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} /></div>)
         default:
            return null
     }
@@ -206,6 +206,9 @@ class Analysis extends Component {
             })
             .then((camaras) => {
                 let auxCamaras = []
+                let actualCamera = {}
+                let title = ''
+                let idCamera = null
                 camaras.map(value=>{
                     if (value.active === 1) {
                         auxCamaras.push({
@@ -216,18 +219,35 @@ class Analysis extends Component {
                             webSocket:this.state.webSocket + ':' +(value.num_cam>=10?'10':'100') + value.num_cam,
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                         })
+                        if(this.props.match.params.id){
+                           if (parseInt(this.props.match.params.id) === value.id) {
+                                title= value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                                actualCamera = {
+                                    id:value.id,
+                                    num_cam:value.num_cam,
+                                    lat:value.google_cordenate.split(',')[0], 
+                                    lng:value.google_cordenate.split(',')[1],                            
+                                    webSocket:this.state.webSocket + ':' +(value.num_cam>=10?'10':'100') + value.num_cam,
+                                    name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                                }
+                                idCamera = value.id
+                           }                                          
+                        }
+                        
                     }
                     return true;
-                })
-                this.setState({places:auxCamaras,loading: false})
+                })        
+                if(idCamera== null){
+                    this.setState({places:auxCamaras,loading: false})
+                } else {
+                    this.setState({laces:auxCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera}})
+                    this.setState({displayTipe:3})
+                }                
             }).catch(error=>{
                 this.setState({loading: false,error:error})
                 console.log('eeeeeeeeeeeerrrrrooooooor',error)
             })
-        if(this.props.match.params.id){
-            this.setState({cameraID:this.props.match.params.id,actualCamera:{title:this.state.places[this.props.match.params.id-1].name,extraData:this.state.places[this.props.match.params.id-1]}})
-            this.setState({displayTipe:3})             
-        }
+        
     }
 
     componentWillUnmount(){

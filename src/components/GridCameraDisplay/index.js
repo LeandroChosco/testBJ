@@ -49,6 +49,7 @@ class GridCameraDisplay extends Component {
                     <b>Camara {this.state.selectedCamera.num_cam}</b> {this.state.selectedCamera.name} 
                 </div>
                 <div className='col-3'>
+                    <Button basic circular onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.selectedCamera.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i class="fa fa-external-link"></i></Button>
                     <Button onClick={()=>this._openCameraInfo(false)} className='pull-right' primary> { this.state.autoplay?'':'Ocultar controles'} <i className={ this.state.autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}></i></Button>                
                 </div>
             </div>

@@ -126,14 +126,15 @@ class Map extends Component {
       window.addEventListener('resize', this._resizeMap);     
   }
 
-  _resizeMap = () => {
-    const navHeight = document.getElementsByTagName('nav')[0].scrollHeight
-      const documentHeight = window.innerHeight
-      let map = document.getElementsByClassName('map')[0]//.style.height = documentHeight - navHeight
-      if (map) {
-        map.style.height  = documentHeight - navHeight + "px"   
-        map.style.maxHeight  = documentHeight - navHeight + "px" 
-      }
+    _resizeMap = () => {
+        let navHeight;
+        if(document.getElementsByTagName('nav')[0]){navHeight = document.getElementsByTagName('nav')[0].scrollHeight}
+        const documentHeight = window.innerHeight
+        let map = document.getElementsByClassName('map')[0]//.style.height = documentHeight - navHeight
+        if (map) {
+            map.style.height  = documentHeight - navHeight + "px"   
+            map.style.maxHeight  = documentHeight - navHeight + "px" 
+        }
   }
 }
 
