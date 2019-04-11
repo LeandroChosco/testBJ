@@ -74,7 +74,7 @@ class Map extends Component {
         console.log(e)
         infoWindow.addListener('domready', (function(marker, render) {
             return function() {                  
-                render(<CameraStream marker={marker} showButtons height={.75}/>, document.getElementById('infoWindow'+e.extraData.id))
+                render(<CameraStream marker={marker} showButtons height={.75} showExternal/>, document.getElementById('infoWindow'+e.extraData.id))
             }
           })(e,render))
         infoWindow.open(map)
