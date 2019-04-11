@@ -31,7 +31,8 @@ class Analysis extends Component {
         recordingProcess:[],  
         loadingRcord:false,
         isRecording:false,
-        interval:null      
+        interval:null    ,
+        loadingSnap:false  
     }
   
   render() {
@@ -57,6 +58,19 @@ class Analysis extends Component {
         </div>
     );
   }
+  _snapShot = (camera) => {
+    this.setState({loadingSnap:true})
+
+      Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshot/' + camera.id)
+          .then(response => {
+              this.setState({loadingSnap:false})
+              const data = response.data
+              console.log(data)
+              if (data.success) {
+                this.refs.myChild._loadFiles()
+              }
+          }) 
+}
 
   _recordignToggle = (selectedCamera) => {
     if(this.state.recordingCams.indexOf(selectedCamera)>-1){
@@ -148,7 +162,9 @@ class Analysis extends Component {
                         loadingRcord={this.state.loadingRcord} 
                         isRecording={this.state.isRecording}
                         recordingCams={this.state.recordingCams}
-                        recordingProcess={this.state.recordingProcess}/>)
+                        recordingProcess={this.state.recordingProcess}
+                        loadingSnap={this.state.loadingSnap}
+                        snapShot={this._snapShot}/>)
         case 2:
             return (<LoopCamerasDisplay 
                         ref='myChild'
@@ -160,7 +176,9 @@ class Analysis extends Component {
                         loadingRcord={this.state.loadingRcord} 
                         isRecording={this.state.isRecording}
                         recordingCams={this.state.recordingCams}
-                        recordingProcess={this.state.recordingProcess}/>)
+                        recordingProcess={this.state.recordingProcess}
+                        loadingSnap={this.state.loadingSnap}
+                        snapShot={this._snapShot}/>)
         case 3:
             return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons /></div>)
         default:

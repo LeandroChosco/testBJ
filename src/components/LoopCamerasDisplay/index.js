@@ -38,8 +38,7 @@ class LoopCamerasDisplay extends Component {
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
             <div className='row stiky-top'>
                 <div className='col-8'>
-                    
-                        <Button basic circular><i className='fa fa-camera'></i></Button>
+                        <Button basic circular loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.markers[this.state.slideIndex].extraData)}><i className='fa fa-camera'></i></Button>                
                         <Button basic circular onClick={this._playPause}><i className={this.state.isplaying[this.state.slideIndex]?'fa fa-pause':'fa fa-play'}></i></Button>
                         <Button basic circular onClick={() => this.props.recordignToggle(this.state.markers[this.state.slideIndex].extraData)}><i className={ this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                     

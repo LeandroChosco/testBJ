@@ -40,7 +40,7 @@ class GridCameraDisplay extends Component {
             <div className='row stiky-top'>
                 <div className='col-4'>
                     
-                        <Button basic circular><i className='fa fa-camera'></i></Button>
+                        <Button basic circular loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.selectedCamera)}><i className='fa fa-camera'></i></Button>
                         <Button basic circular onClick={this._playPause}><i className={this.state.isplaying[this.state.slideIndex]?'fa fa-pause':'fa fa-play'}></i></Button>
                         <Button basic circular loading={this.props.loadingRcord} onClick={()=>this.props.recordignToggle(this.state.selectedCamera)}><i className={ this.props.recordingCams.indexOf(this.state.selectedCamera)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                     

@@ -19,7 +19,8 @@ class CameraStream extends Component {
         interval: null,
         isLoading:false,
         isRecording:false,
-        process_id: 0
+        process_id: 0,
+        loadingSnap:false
     }
 
     render() {
@@ -60,7 +61,7 @@ class CameraStream extends Component {
                             <div className="col snapshots">
                                 Fotos
                                 <div className="row">
-                                    {this.state.photos.map((value,index)=><MediaContainer src={'http://18.222.106.238:4000/'+value.relative_url} image key={index} />)}
+                                    {this.state.photos.map((value,index)=><MediaContainer src={'http://18.222.106.238:4000'+value.relative_url} image key={index} />)}
                                 </div>
                                 {this.state.photos.length === 0 ?
                                     <div align='center'>
@@ -72,7 +73,7 @@ class CameraStream extends Component {
                             <div className="col videos">
                                 Videos
                                 <div className="row">
-                                    {this.state.videos.map((value,index)=><MediaContainer src={'http://18.222.106.238:4000/'+value.relative_url} video key={index} />)}
+                                    {this.state.videos.map((value,index)=><MediaContainer src={'http://18.222.106.238:4000'+value.relative_url} video key={index} />)}
                                 </div>
                                 {this.state.videos.length === 0 ?
                                     <div align='center'>
@@ -88,7 +89,7 @@ class CameraStream extends Component {
                         <div align='left'>{this.state.cameraName}</div>                        
                         {this.props.showButtons?
                             <Card.Footer>
-                                <Button basic><i className='fa fa-camera'></i></Button>
+                                <Button basic loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>
                                 <Button basic><i className='fa fa-pause'></i></Button>
                                 <Button basic loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                                 <Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>
@@ -158,14 +159,48 @@ class CameraStream extends Component {
       }
   }
 
+  _snapShot = () => {
+      this.setState({loadingSnap:true})
+    if (this.state.data.id) {
+        Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshot/' + this.state.data.id)
+            .then(response => {
+                this.setState({loadingSnap:false})
+                const data = response.data
+                console.log(data)
+                if (data.success) {
+                    this._loadFiles()
+                }
+            }) 
+    } else {
+        Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshot/' + this.props.marker.extraData.id)
+            .then(response => {
+                this.setState({loadingSnap:false})
+                const data = response.data
+                console.log(data)
+                if (data.success) {
+                    this._loadFiles()
+                }
+            })         
+    } 
+  }
+
   _loadFiles = () =>{            
-                     
-    Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.data.id + '/data')
-    .then(response => {
-        const data = response.data
-        console.log(data)
-        this.setState({videos:data.data.videos,photos:data.data.photos})
-    })       
+    if (this.state.data.id) {
+        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.data.id + '/data')
+            .then(response => {
+                const data = response.data
+                console.log(data)
+                this.setState({videos:data.data.videos,photos:data.data.photos})
+            }) 
+    } else {
+        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.props.marker.extraData.id + '/data')
+            .then(response => {
+                const data = response.data
+                console.log(data)
+                this.setState({videos:data.data.videos,photos:data.data.photos})
+            })         
+    }     
+          
 }
 
   _wsError = (err) => {
