@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Card, Row, Col } from 'react-bootstrap'
-import filesJson from '../../assets/json/files.json'
 import './style.css'
 import MediaContainer from '../MediaContainer';
 import Axios from 'axios'

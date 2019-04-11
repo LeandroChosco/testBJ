@@ -127,6 +127,7 @@ class Analysis extends Component {
                         this.refs.myChild._loadFiles()                     
                     })                    
                 }
+                return value
             })
         } else {
             clearInterval(this.interval)
@@ -221,6 +222,7 @@ class Analysis extends Component {
                 const response = r.data
                 console.log(response)
             })
+            return value;
         })
     }
 }

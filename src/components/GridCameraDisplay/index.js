@@ -3,7 +3,6 @@ import CameraStream from '../CameraStream';
 import { Row,Col} from 'react-bootstrap'
 import {  Button } from 'semantic-ui-react'
 import responseJson from '../../assets/json/suspects.json'
-import filesJson from '../../assets/json/files.json'
 import './style.css'
 import Match from '../Match';
 import MediaContainer from '../MediaContainer';
