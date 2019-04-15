@@ -5,6 +5,11 @@ import MediaContainer from '../MediaContainer';
 import Axios from 'axios'
 import constants from '../../constants/constants'
 import { Button } from 'semantic-ui-react';
+
+import JSZipUtils from 'jszip-utils'
+import JSZip from 'jszip'
+import saveAs from 'file-saver'
+
 class CameraStream extends Component {
     state= {
         cameraID:'',
@@ -20,7 +25,8 @@ class CameraStream extends Component {
         isLoading:false,
         isRecording:false,
         process_id: 0,
-        loadingSnap:false
+        loadingSnap:false,
+        loadingFiles:false
     }
 
     render() {
@@ -92,6 +98,7 @@ class CameraStream extends Component {
                                 <Button basic loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>
                                 <Button basic><i className='fa fa-pause'></i></Button>
                                 <Button basic loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
+                                <Button basic loading={this.state.loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>            
                                 <Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>
                                 {this.props.showExternal?<Button basic onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.data.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i class="fa fa-external-link"></i></Button>:null}
                             </Card.Footer>:
@@ -242,5 +249,41 @@ class CameraStream extends Component {
                 })
         }
     }
+
+    urlToPromise = (url) => {
+        return new Promise(function(resolve, reject) 
+        {
+            JSZipUtils.getBinaryContent(url, function (err, data) 
+            {
+                if(err) 
+                {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    _downloadFiles = () => {
+        this.setState({loadingFiles:true})        
+        var zip = new JSZip();
+        var imgs = zip.folder('images')
+        this.state.photos.forEach((url)=>{
+            var filename = url.name;
+            imgs.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+        });
+        var vds = zip.folder('videos')
+        this.state.videos.forEach((url)=>{
+            var filename = url.name;
+            vds.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+        });
+        zip.generateAsync({type:"blob"}).then((content) => {
+            // see FileSaver.js
+            this.setState({loadingFiles:false})
+            saveAs(content, "cam_"+this.state.data.num_cam+".zip");  
+                      
+        });
+    } 
 }
 export default CameraStream;

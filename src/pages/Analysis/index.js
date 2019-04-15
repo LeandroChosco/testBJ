@@ -12,6 +12,9 @@ import constants from '../../constants/constants'
 import { JellyfishSpinner } from "react-spinners-kit";
 import Axios from 'axios';
 import moment from 'moment'
+import JSZipUtils from 'jszip-utils'
+import JSZip from 'jszip'
+import saveAs from 'file-saver'
 class Analysis extends Component {
 
     state = {
@@ -32,7 +35,8 @@ class Analysis extends Component {
         loadingRcord:false,
         isRecording:false,
         interval:null    ,
-        loadingSnap:false  
+        loadingSnap:false ,
+        loadingFiles: false 
     }
   
   render() {
@@ -164,6 +168,8 @@ class Analysis extends Component {
                         recordingCams={this.state.recordingCams}
                         recordingProcess={this.state.recordingProcess}
                         loadingSnap={this.state.loadingSnap}
+                        downloadFiles={this._downloadFiles}
+                        loadingFiles={this.state.loadingFiles}
                         snapShot={this._snapShot}/>)
         case 2:
             return (<LoopCamerasDisplay 
@@ -178,6 +184,8 @@ class Analysis extends Component {
                         recordingCams={this.state.recordingCams}
                         recordingProcess={this.state.recordingProcess}
                         loadingSnap={this.state.loadingSnap}
+                        downloadFiles={this._downloadFiles}
+                        loadingFiles={this.state.loadingFiles}
                         snapShot={this._snapShot}/>)
         case 3:
             return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} /></div>)
@@ -186,6 +194,42 @@ class Analysis extends Component {
     }
   }
 
+
+    urlToPromise = (url) => {
+        return new Promise(function(resolve, reject) 
+        {
+            JSZipUtils.getBinaryContent(url, function (err, data) 
+            {
+                if(err) 
+                {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    _downloadFiles = (camera,{videos,images}) => {
+        this.setState({loadingFiles:true})        
+        var zip = new JSZip();
+        var imgs = zip.folder('images')
+        images.forEach((url)=>{
+            var filename = url.name;
+            imgs.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+        });
+        var vds = zip.folder('videos')
+        videos.forEach((url)=>{
+            var filename = url.name;
+            vds.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+        });
+        zip.generateAsync({type:"blob"}).then((content) => {
+            // see FileSaver.js
+            this.setState({loadingFiles:false})
+            saveAs(content, "cam_"+camera.num_cam+".zip");  
+                      
+        });
+    } 
   
     _toggleControlsBottom = (marker) => {        
         this.props.toggleControls(marker)
