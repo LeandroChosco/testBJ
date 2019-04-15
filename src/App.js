@@ -25,7 +25,10 @@ class App extends Component {
     cameraInfo: null,
     cameraID:null,
     cameraControl: false,
-    showHeader:true
+    showHeader:true,
+    userInfo:{
+      name:''
+    }
   }
   
 
@@ -33,7 +36,7 @@ class App extends Component {
 
   componentDidMount(){
     this._checkAuth()    
-    if (!window.location.pathname.includes('detalles')) {      
+    if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
       setTimeout(this.showNot,10000)
     }  else {
       this.setState({showHeader:false})
@@ -62,13 +65,21 @@ class App extends Component {
   } 
 
   _checkAuth(){
-    const isAuth = sessionStorage.getItem('isAuthenticated')
-    this.setState({isAuthenticated:isAuth})
+    const isAuth = sessionStorage.getItem('isAuthenticated')    
+    if (isAuth) {
+      console.log(isAuth)
+      this.setState({isAuthenticated:isAuth}) 
+    } else {
+      this.setState({isAuthenticated:false}) 
+      if(window.location.pathname!=='/'){        
+        window.location.href = window.location.href.replace(window.location.pathname,'')
+      }
+    }
   }
 
-  _makeAuth = () => {
+  _makeAuth = (name = 'Alejandro Chico') => {
     sessionStorage.setItem('isAuthenticated',true)
-    this.setState({isAuthenticated:true})
+    this.setState({isAuthenticated:true,userInfo:{name:name}})
   }
 
   _toggleSideMenu = () => {    
@@ -83,6 +94,7 @@ class App extends Component {
 
   _logOut = () => {
     this.setState({isAuthenticated: false})
+    sessionStorage.removeItem('isAuthenticated')
   } 
 
   _toggleControls = (camera) =>{
@@ -98,7 +110,7 @@ class App extends Component {
     return (
     <Router>      
       <div className="fullcontainer">                
-        {this.state.isAuthenticated&&this.state.showHeader?<Header toggleSideMenu = {this._toggleSideMenu} logOut = {this._logOut} isSidemenuShow={this.state.sideMenu} cameraSideInfo={this._cameraSideInfo}/>:null}     
+        {this.state.isAuthenticated&&this.state.showHeader?<Header toggleSideMenu = {this._toggleSideMenu} logOut = {this._logOut} isSidemenuShow={this.state.sideMenu} cameraSideInfo={this._cameraSideInfo} userInfo={this.state.userInfo}/>:null}     
         <SideBar toggleSideMenu = {this._toggleSideMenu} active={this.state.sideMenu}/>
         {this.state.cameraInfoSide?<CameraInfoSide toggleSideMenu = {this._cameraSideInfo}  cameraID={this.state.cameraID}/>:null}
         <Route path="/" exact render={(props) => this.state.isAuthenticated?<Map />:<Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/>} />

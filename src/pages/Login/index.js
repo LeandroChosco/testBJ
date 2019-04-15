@@ -22,11 +22,13 @@ class Login extends Component {
             if (username === 'admin' && pass === 'admin') {
                 this.props.makeAuth()
             } else {
-                //$("#wrongPass").show()
+                if (username === 'lpriego' && pass === 'lpriego') {
+					this.props.makeAuth('Luis Priego')
+				}
             }	
         }
         else {
-            //$("#missData").show()
+            
         }
     }
 

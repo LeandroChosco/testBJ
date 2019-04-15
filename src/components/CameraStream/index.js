@@ -99,12 +99,40 @@ class CameraStream extends Component {
                                 <Button basic><i className='fa fa-pause'></i></Button>
                                 <Button basic loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                                 <Button basic loading={this.state.loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>            
-                                <Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>
+                                {this.props.hideFileButton?null:<Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>}
                                 {this.props.showExternal?<Button basic onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.data.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i class="fa fa-external-link"></i></Button>:null}
                             </Card.Footer>:
                         null}
-                    </Card.Body>                    
+                    </Card.Body>   
+
                 }
+                {this.props.showFilesBelow?
+                        <div className="row dataHolder p10">
+                            <div className="col snapshots">
+                                Fotos
+                                <div className="row">
+                                    {this.state.photos.map((value,index)=><MediaContainer src={'http://18.222.106.238:4000/'+value.relative_url} image key={index} />)}
+                                </div>
+                                {this.state.photos.length === 0 ?
+                                    <div align='center'>
+                                    <p className="big-letter">No hay archivos que mostrar</p>
+                                    <i className='fa fa-image fa-5x'></i>
+                                    </div>
+                                    :null}
+                            </div>
+                            <div className="col videos">
+                                Videos
+                                <div className="row">
+                                    {this.state.videos.map((value,index)=><MediaContainer src={'http://18.222.106.238:4000/'+value.relative_url} video key={index} />)}
+                                </div>
+                                {this.state.videos.length === 0 ?
+                                    <div align='center'>
+                                    <p className="big-letter">No hay archivos que mostrar</p>
+                                    <i className='fa fa-image fa-5x'></i>
+                                    </div>
+                                    :null}
+                            </div>
+                        </div>:null} 
             </Card>
         );
     } 
@@ -146,7 +174,7 @@ class CameraStream extends Component {
         this._wsError(err)
       }
       try {
-        var p = new window.jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true});
+        var p = new window.jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true, onEnded:this._endedPlay, onStalled:this._playerError});
       } catch (err) {
           this._playerError(err)
       }
@@ -165,6 +193,11 @@ class CameraStream extends Component {
       if(this.props.showButtons){
           this._loadFiles()
       }
+  }
+
+
+  _endedPlay = (data) => {
+      console.log('play ended', data)
   }
 
   _snapShot = () => {

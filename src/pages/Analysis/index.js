@@ -188,7 +188,7 @@ class Analysis extends Component {
                         loadingFiles={this.state.loadingFiles}
                         snapShot={this._snapShot}/>)
         case 3:
-            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} /></div>)
+            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} hideFileButton showFilesBelow /></div>)
         default:
            return null
     }
@@ -214,21 +214,51 @@ class Analysis extends Component {
         this.setState({loadingFiles:true})        
         var zip = new JSZip();
         var imgs = zip.folder('images')
-        images.forEach((url)=>{
-            var filename = url.name;
-            imgs.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
-        });
-        var vds = zip.folder('videos')
-        videos.forEach((url)=>{
-            var filename = url.name;
-            vds.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
-        });
-        zip.generateAsync({type:"blob"}).then((content) => {
-            // see FileSaver.js
-            this.setState({loadingFiles:false})
-            saveAs(content, "cam_"+camera.num_cam+".zip");  
-                      
-        });
+        if(images.length !== 0 && videos.length !== 0){
+            images.forEach((url)=>{
+                var filename = url.name;
+                imgs.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+            });
+            var vds = zip.folder('videos')
+            videos.forEach((url)=>{
+                var filename = url.name;
+                vds.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+            });
+            zip.generateAsync({type:"blob"}).then((content) => {
+                // see FileSaver.js
+                this.setState({loadingFiles:false})
+                saveAs(content, "cam_"+camera.num_cam+".zip");  
+                        
+            });
+        } else {
+            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + camera.id + '/data')
+            .then(response => {
+                const data = response.data
+                console.log(data)
+                images = data.data.photos
+                videos = data.data.videos  
+                if(images.length !== 0 && videos.length !== 0){              
+                    images.forEach((url)=>{
+                        var filename = url.name;
+                        imgs.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+                    });
+                    var vds = zip.folder('videos')
+                    videos.forEach((url)=>{
+                        var filename = url.name;
+                        vds.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+                    });
+                    zip.generateAsync({type:"blob"}).then((content) => {
+                        // see FileSaver.js
+                        this.setState({loadingFiles:false})
+                        saveAs(content, "cam_"+camera.num_cam+".zip");  
+                                
+                    });
+                } else {
+
+                }
+
+            })    
+        }
     } 
   
     _toggleControlsBottom = (marker) => {        

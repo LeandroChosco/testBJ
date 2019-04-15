@@ -56,7 +56,7 @@ class Header extends Component {
                     </Navbar.Text>
                 </Nav>
                 <Nav>                                            
-                    <NavDropdown className="light" title="Alejandro Chico">
+                    <NavDropdown className="light" title={this.props.userInfo.name}>
                         <NavDropdown.Item onClick={this._logOut}>Cerrar sesion</NavDropdown.Item>
                     </NavDropdown>
                     <Button variant="outline-light"  onClick={this._cameraSideInfo}>
