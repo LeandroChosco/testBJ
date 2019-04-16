@@ -95,7 +95,7 @@ class Map extends Component {
                         num_cam:value.num_cam,
                         lat:parseFloat(value.google_cordenate.split(',')[0]), 
                         lng:parseFloat(value.google_cordenate.split(',')[1]),                            
-                        webSocket:this.state.webSocket + ':' +(value.num_cam>=10?'10':'100') + value.num_cam,
+                        webSocket:this.state.webSocket + ':' +(value.num_cam>=10?'20':'200') + value.num_cam,
                         name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                     })
                 }
