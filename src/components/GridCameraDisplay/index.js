@@ -115,7 +115,7 @@ class GridCameraDisplay extends Component {
                 <div className="col snapshotsgrid">
                     Fotos
                     <div className="row">
-                        {this.state.photos.map((value,index)=><MediaContainer image key={index} src={'http://18.222.106.238:4000/'+value.relative_url}/>)}
+                        {this.state.photos.map((value,index)=><MediaContainer image key={index} src={value.relative_url}/>)}
                     </div>
                     {this.state.photos.length === 0 ?
                             <div align='center'>
@@ -127,7 +127,7 @@ class GridCameraDisplay extends Component {
                 <div className="col videosgrid">
                     Videos
                     <div className="row">
-                        {this.state.videos.map((value,index)=><MediaContainer video key={index} src={'http://18.222.106.238:4000/'+value.relative_url}/>)}                        
+                        {this.state.videos.map((value,index)=><MediaContainer video key={index} src={value.relative_url}/>)}                        
                     </div>
                     {this.state.videos.length === 0 ?
                             <div align='center'>
