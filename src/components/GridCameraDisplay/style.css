@@ -88,3 +88,29 @@
         opacity: 0;
     }
 }
+
+
+.pagination {    
+    justify-content: space-around;
+}
+
+.pagination >li {    
+    background-color: #fafafa;
+    border: 1px solid #fafafa;
+    border-radius: 5px;
+    width: 100%;
+}
+.pagination >li>a {    
+
+    width: 100%;
+    display: block;
+    cursor: pointer;
+    color: black;
+}
+.pagination >.active {    
+    background-color: #bfbfbf;
+    border: 1px solid #fbfbfb;
+    border-radius: 5px;
+    width: 100%;
+}
+

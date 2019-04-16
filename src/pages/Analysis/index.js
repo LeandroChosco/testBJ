@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ToggleButton, ToggleButtonGroup} from 'react-bootstrap'
+import { ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap'
 import { Icon } from 'semantic-ui-react'
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
@@ -36,7 +36,9 @@ class Analysis extends Component {
         isRecording:false,
         interval:null    ,
         loadingSnap:false ,
-        loadingFiles: false 
+        loadingFiles: false ,
+        modal: false,
+        recordMessage:''
     }
   
   render() {
@@ -46,7 +48,7 @@ class Analysis extends Component {
                 <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
                     <ToggleButton value={1} variant='outline-danger' ><Icon name="grid layout"/></ToggleButton>
                     <ToggleButton value={2} variant='outline-danger' ><Icon name="clone"/></ToggleButton>
-                    {this.state.cameraID?<ToggleButton value={3} variant='outline-danger' ><Icon name="squere"/></ToggleButton>:null}
+                    {this.state.cameraID?<ToggleButton value={3} variant='outline-danger' ><Icon name="square"/></ToggleButton>:null}
                 </ToggleButtonGroup>
             </div> :null}    
             <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
@@ -59,6 +61,14 @@ class Analysis extends Component {
             {
                 this._showDisplay()
             }
+            <Modal size="lg" show={this.state.modal} onHide={()=>this.setState({modal:false})}>
+                            <Modal.Header closeButton>                      
+                                
+                            </Modal.Header>
+                            <Modal.Body>
+                                {this.state.recordMessage}
+                            </Modal.Body>
+                        </Modal>
         </div>
     );
   }
@@ -98,8 +108,14 @@ class Analysis extends Component {
                     let stateRecordingCams = this.state.recordingCams                    
                     stateRecordingCams = stateRecordingCams.filter(el => el !== selectedCamera) 
                     stateRecordingProcess = stateRecordingProcess.filter(el => el.cam_id !== selectedCamera.id)                     
-                    this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false,loadingRcord:false})                        
+                    this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false,loadingRcord:false,modal:true,recordMessage:response.msg})                        
                     this.refs.myChild._loadFiles()
+                } else {
+                    let stateRecordingProcess = this.state.recordingProcess
+                    let stateRecordingCams = this.state.recordingCams                    
+                    stateRecordingCams = stateRecordingCams.filter(el => el !== selectedCamera) 
+                    stateRecordingProcess = stateRecordingProcess.filter(el => el.cam_id !== selectedCamera.id)                     
+                    this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false,loadingRcord:false,modal:true,recordMessage:response.msg})                                            
                 }
             })
     } else {

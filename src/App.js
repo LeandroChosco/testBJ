@@ -14,6 +14,8 @@ import CameraControls from './components/CameraControls';
 
 import './App.css';
 import Details from './pages/Details';
+import Axios from 'axios';
+import constants from './constants/constants';
 
 
 class App extends Component {
@@ -37,7 +39,7 @@ class App extends Component {
   componentDidMount(){
     this._checkAuth()    
     if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
-      setTimeout(this.showNot,10000)
+
     }  else {
       this.setState({showHeader:false})
     }
@@ -64,11 +66,20 @@ class App extends Component {
     this._cameraSideInfo(id)
   } 
 
+
+  _reloadCams = () => {
+    Axios.put(constants.base_url+':'+constants.apiPort+'/control-cams/restart-streaming/all')
+  } 
+
+
   _checkAuth(){
     const isAuth = sessionStorage.getItem('isAuthenticated')    
     if (isAuth) {
-      console.log(isAuth)
-      this.setState({isAuthenticated:isAuth}) 
+      const data = JSON.parse(isAuth)
+      this.setState({isAuthenticated:data.logged,userInfo:data.userInfo}) 
+      if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
+        setTimeout(this.showNot,10000)
+      }  
     } else {
       this.setState({isAuthenticated:false}) 
       if(window.location.pathname!=='/'){        
@@ -78,8 +89,11 @@ class App extends Component {
   }
 
   _makeAuth = (name = 'Alejandro Chico') => {
-    sessionStorage.setItem('isAuthenticated',true)
+    sessionStorage.setItem('isAuthenticated',JSON.stringify({logged:true,userInfo:{name:name}}))
     this.setState({isAuthenticated:true,userInfo:{name:name}})
+    if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
+      setTimeout(this.showNot,10000)
+    }  
   }
 
   _toggleSideMenu = () => {    
@@ -110,7 +124,7 @@ class App extends Component {
     return (
     <Router>      
       <div className="fullcontainer">                
-        {this.state.isAuthenticated&&this.state.showHeader?<Header toggleSideMenu = {this._toggleSideMenu} logOut = {this._logOut} isSidemenuShow={this.state.sideMenu} cameraSideInfo={this._cameraSideInfo} userInfo={this.state.userInfo}/>:null}     
+        {this.state.isAuthenticated&&this.state.showHeader?<Header toggleSideMenu = {this._toggleSideMenu} logOut = {this._logOut} isSidemenuShow={this.state.sideMenu} cameraSideInfo={this._cameraSideInfo} userInfo={this.state.userInfo} _reloadCams={this._reloadCams}/>:null}     
         <SideBar toggleSideMenu = {this._toggleSideMenu} active={this.state.sideMenu}/>
         {this.state.cameraInfoSide?<CameraInfoSide toggleSideMenu = {this._cameraSideInfo}  cameraID={this.state.cameraID}/>:null}
         <Route path="/" exact render={(props) => this.state.isAuthenticated?<Map />:<Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/>} />

@@ -55,7 +55,10 @@ class Header extends Component {
                             </Button>                                             
                     </Navbar.Text>
                 </Nav>
-                <Nav>                                            
+                <Nav>     
+                    {/* <Button variant="outline-light"  onClick={this.props._reloadCams}>
+                        <i className="fa fa-repeat"></i>
+                    </Button>                                                             */}
                     <NavDropdown className="light" title={this.props.userInfo.name}>
                         <NavDropdown.Item onClick={this._logOut}>Cerrar sesion</NavDropdown.Item>
                     </NavDropdown>
@@ -68,6 +71,8 @@ class Header extends Component {
             </Navbar.Collapse>
         </Navbar>
     );
+  }
+  componentDidMount(){
   }
 }
 
