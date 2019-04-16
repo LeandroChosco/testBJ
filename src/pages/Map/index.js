@@ -7,6 +7,7 @@ import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
+import constants from '../../constants/constants';
 
 const mapOptions= {
     center: {lat: 19.459430, lng: -99.208588},
@@ -81,7 +82,7 @@ class Map extends Component {
     }
 
     componentDidMount(){
-        fetch('http://18.222.106.238:3000/register-cams/all-cams')
+        fetch(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams')
         .then((response) => {
             return response.json();
         })

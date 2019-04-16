@@ -290,7 +290,7 @@ class Analysis extends Component {
 
     componentDidMount(){
 
-        fetch(constants.base_url+':3000/register-cams/all-cams')       
+        fetch(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams')       
             .then((response) => {
                 return response.json();
             })
