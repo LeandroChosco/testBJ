@@ -74,7 +74,7 @@ class CameraStream extends Component {
                             <div className="col snapshots">
                                 Fotos
                                 <div className="row">
-                                    {this.state.photos.map((value,index)=><MediaContainer src={'http://18.222.106.238:4000/'+value.relative_url} image key={index} />)}
+                                    {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} image key={index} />)}
                                 </div>
                                 {this.state.photos.length === 0 ?
                                     <div align='center'>
@@ -86,7 +86,7 @@ class CameraStream extends Component {
                             <div className="col videos">
                                 Videos
                                 <div className="row">
-                                    {this.state.videos.map((value,index)=><MediaContainer src={'http://18.222.106.238:4000/'+value.relative_url} video key={index} />)}
+                                    {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} video key={index} />)}
                                 </div>
                                 {this.state.videos.length === 0 ?
                                     <div align='center'>
