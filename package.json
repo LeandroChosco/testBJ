@@ -30,8 +30,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "CB": "git pull && react-scripts build",
-    "CIB": "git pull && npm install && react-scripts build"
+    "PB": "git pull && react-scripts build",
+    "PIB": "git pull && npm install && react-scripts build",
+    "BP": "react-scripts build && git commit -am'build para despliege' && git push"
   },
   "eslintConfig": {
     "extends": "react-app"
