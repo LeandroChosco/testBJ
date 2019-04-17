@@ -10,8 +10,26 @@ import JSZipUtils from 'jszip-utils'
 import JSZip from 'jszip'
 import saveAs from 'file-saver'
 import jsmpeg from 'jsmpeg';
-import moment from'moment';
 
+
+var vis = (function(){
+    var stateKey, eventKey, keys = {
+        hidden: "visibilitychange",
+        webkitHidden: "webkitvisibilitychange",
+        mozHidden: "mozvisibilitychange",
+        msHidden: "msvisibilitychange"
+    };
+    for (stateKey in keys) {
+        if (stateKey in document) {
+            eventKey = keys[stateKey];
+            break;
+        }
+    }
+    return function(c) {
+        if (c) document.addEventListener(eventKey, c);
+        return !document[stateKey];
+    }
+})();
 class CameraStream extends Component {
     state= {
         cameraID:'',
@@ -31,7 +49,12 @@ class CameraStream extends Component {
         loadingFiles:false,
         tryReconect: false,
         recordMessage:'',
-        modal:false
+        modal:false,
+        lastCurrentTime:0,
+        lastCurrentFrame:0,
+        isVisible: true,
+        isPlay:true,
+        worker:null
     }
 
     lastDecode= null
@@ -97,14 +120,14 @@ class CameraStream extends Component {
                             </div>
                         </div>:null} 
                         <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"}>  
-                                <canvas ref="camRef" style={{width:'100%',height:'100%'}}></canvas>                      
+                                <canvas ref="camRef" id={'canvasCamaraStream'+this.state.data.id} style={{width:'100%',height:'100%'}}></canvas>                      
                                 {this.state.tryReconect?'Reconectando...':null}
                         </div> 
                         <div align='left'>{this.state.cameraName}</div>                        
                         {this.props.showButtons?
                             <Card.Footer>
                                 <Button basic disabled={this.state.photos.length>=5&&false} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>
-                                <Button basic><i className='fa fa-pause'></i></Button>
+                                <Button basic onClick={this._togglePlayPause}><i className={this.state.isPlay?'fa fa-pause':'fa fa-play'}></i></Button>
                                 <Button basic disabled={this.state.videos.length>=5&&false} loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                                 <Button basic loading={this.state.loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>            
                                 {this.props.hideFileButton?null:<Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>}
@@ -153,6 +176,18 @@ class CameraStream extends Component {
         );
     } 
 
+    _togglePlayPause = () => {
+        if (this.state.isPlay) {
+            this.state.player.stop()
+        } else {
+            this.state.player.stop()                            
+            if (this.state.webSocket) {
+                this.state.webSocket.close()
+            }
+            this.tryRconection()
+        }
+        this.setState({isPlay:!this.state.isPlay})
+    }
 
     recordignToggle = () => {
         if(this.state.isRecording){
@@ -185,17 +220,18 @@ class CameraStream extends Component {
         }
     }
   componentDidMount(){      
-      this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})      
+      this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})               
       try{
           var ws = new WebSocket(this.props.marker.extraData.webSocket)
-          ws.onerror = this._wsError    
-          this.lastDecode = moment()
-          //setTimeout(this._checkIsUp,15000)      
+          ws.onerror = this._wsError
+          ws.onclose = function() {}                 
       } catch (err) {
         this._wsError(err)
       }
       try {
         var p = new jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true, onload:this._endedPlay, /*ondecodeframe:this._decode,*/onfinished:this._endedPlay,disableGl:true,forceCanvas2D: true});
+        let interval = setInterval(this._checkIsUp,60000)  
+        this.setState({interval: interval})
       } catch (err) {
           this._playerError(err)
       }
@@ -214,55 +250,35 @@ class CameraStream extends Component {
       if(this.props.showButtons){
           this._loadFiles()
       }
+      vis(this._isVisisbleChange)
   }
 
+
+  _isVisisbleChange = () => {    
+      this.setState({isVisible:vis()})
+  }
 
   _endedPlay = (data) => {
       console.log('play ended', data)
   }
 
-  _decode = (data) => {
-      /*if(data.currentFrame%10 === 0){          
-        this.lastDecode = moment()
-        setTimeout(this._checkIsUp,15000)
-      }*/
-     
-      
-  }
-
-  _checkIsUp = () => {
-    var vis = (function(){
-        var stateKey, eventKey, keys = {
-            hidden: "visibilitychange",
-            webkitHidden: "webkitvisibilitychange",
-            mozHidden: "mozvisibilitychange",
-            msHidden: "msvisibilitychange"
-        };
-        for (stateKey in keys) {
-            if (stateKey in document) {
-                eventKey = keys[stateKey];
-                break;
+  _checkIsUp = () => {            
+    if (this.state.lastCurrentTime === this.state.player.currentTime || this.state.lastCurrentFrame===this.state.player.currentFrame) {
+        if (!this.tryReconect&&this.state.isVisible) {
+            this.setState({tryReconect:true})
+            this.tryReconect = true
+            console.log('is delay, cam' + this.state.data.num_cam)                
+            this.state.player.stop()                            
+            if (this.state.webSocket) {
+                this.state.webSocket.close()
             }
-        }
-        return function(c) {
-            if (c) document.addEventListener(eventKey, c);
-            return !document[stateKey];
-        }
-    })();
-    if (this.lastDecode) {
-        const now = moment()
-        if (now.diff(this.lastDecode,'seconds')>10) {
-            if (!this.tryReconect&&vis()) {
-                this.setState({tryReconect:true})
-                this.tryReconect = true
-                console.log('is delay, cam' + this.state.data.num_cam)                
-                this.state.player.stop()                
-                this.state.webSocket.close()                
-                setTimeout(this.tryRconection,5000)
+            this.tryRconection()
 
-            }
         }
     }
+    this.setState({lastCurrentTime:this.state.player.currentTime,lastCurrentFrame:this.state.player.currentFrame})
+    
+
   }
 
   _snapShot = () => {
@@ -310,23 +326,22 @@ class CameraStream extends Component {
 }
 
   _wsError = (err) => {
-    console.log('websocket error',err)
+    //console.log('websocket error',err)
     //this.setState({display:'none'})
-    setTimeout(this.tryRconection,30000)
+    //setTimeout(this.tryRconection,30000)
   }
 
   
   tryRconection = () => {
     try{
         var ws = new WebSocket(this.props.marker.extraData.webSocket)          
-        ws.onerror = this._wsError          
+        ws.onerror = this._wsError  
+        ws.onclose = function() {}                         
         var p = new jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true, onload:this._endedPlay/*, ondecodeframe:this._decode*/,onfinished:this._endedPlay,disableGl:true,forceCanvas2D: true});
         this.setState({
             webSocket: ws,
             player: p
         })   
-        this.lastDecode = moment()
-        setTimeout(this._checkIsUp,15000)     
         this.setState({tryReconect:false})  
         this.tryReconect = false
     } catch (err) {
@@ -351,6 +366,7 @@ class CameraStream extends Component {
                     record_proccess_id:this.state.process_id 
                 })
         }
+        clearInterval(this.interval)
     }
 
     urlToPromise = (url) => {

@@ -96,7 +96,6 @@
 
 .pagination >li {    
     background-color: #fafafa;
-    border: 1px solid #fafafa;
     border-radius: 5px;
     width: 100%;
 }
@@ -108,9 +107,19 @@
     color: black;
 }
 .pagination >.active {    
-    background-color: #bfbfbf;
+    background-color: #afafaf;
     border: 1px solid #fbfbfb;
     border-radius: 5px;
     width: 100%;
 }
 
+
+.paginatorContainerOnGrid{
+    margin-top: 10px;
+    border-top: 2px solid;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #fbfbfb;
+    margin: 0;
+}

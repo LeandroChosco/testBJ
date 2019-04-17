@@ -22,6 +22,7 @@ class LoopCamerasDisplay extends Component {
         isplaying:[],
         matches: [],
         height:'50%',
+        isplay: true
     }
 
     _showCameraInfo(){
@@ -34,12 +35,12 @@ class LoopCamerasDisplay extends Component {
             {this.props.error?<div className="errorContainer">
                 Error al cargar informacion: {JSON.stringify(this.props.error)}
             </div>:null}
-            {this.state.markers.map((value,index) => <div key={value.extraData.id} style={{height:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}><CameraStream ref={'camstreamloopref'+index} marker={value} height={this.state.height} /></div>)}        
+            {this.state.markers.map((value,index) => <div key={value.extraData.id} style={{height:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}><CameraStream ref={'camstreamloopref'+value.id} marker={value} height={this.state.height} /></div>)}        
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
             <div className='row stiky-top'>
                 <div className='col-8'>
                         <Button basic circular loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.markers[this.state.slideIndex].extraData)}><i className='fa fa-camera'></i></Button>                
-                        <Button basic circular onClick={this._playPause}><i className={this.state.isplaying[this.state.slideIndex]?'fa fa-pause':'fa fa-play'}></i></Button>
+                        <Button basic circular onClick={this._playPause}><i className={this.state.isplay?'fa fa-pause':'fa fa-play'}></i></Button>
                         <Button basic circular onClick={() => this.props.recordignToggle(this.state.markers[this.state.slideIndex].extraData)}><i className={ this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                         <Button basic circular onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.markers[this.state.slideIndex].extraData.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>
                         <Button basic circular onClick={()=>this.props.downloadFiles(this.state.markers[this.state.slideIndex].extraData, {videos:this.state.videos,images:this.state.photos})} loading={this.props.loadingFiles}> <i className="fa fa-download"></i></Button>
@@ -90,15 +91,19 @@ class LoopCamerasDisplay extends Component {
         //this.props.recordignToggle(this.state.markers[this.state.slideIndex])
     }
     _playPause = () =>{
+
         let isplaying = this.state.isplaying
-        isplaying[this.state.slideIndex] =!isplaying[this.state.slideIndex]
-        console.log(isplaying)
-        this.setState({isplaying:isplaying})
-        if (this.state.isplaying[this.state.slideIndex]) {            
-            //this.refs[index].state.player.pause()
-        } else {            
-            //this.refs[index].state.player.play()
+        if(this.state.isplaying.length === 0){
+            isplaying = {}
+            this.state.markers.map((value,index)=>{
+                isplaying[index] = true
+            })            
         }
+        console.log(isplaying)
+        isplaying[this.state.slideIndex] = !isplaying[this.state.slideIndex]                
+        console.log(isplaying)
+        this.setState({isplaying:isplaying,isplay:isplaying[this.state.slideIndex]})
+        this.refs['camstreamloopref'+this.state.markers[this.state.slideIndex].id]._togglePlayPause()
     } 
     _openCameraInfo = () => { 
         if (this.props.error === null) {
@@ -158,7 +163,16 @@ class LoopCamerasDisplay extends Component {
     }
 
     changeSlide = () => {
-        this.setState({slideIndex: this.state.slideIndex === this.state.markers.length - 1 ? 0 : this.state.slideIndex + 1 })
+        let isp = {}
+        if(this.state.isplaying.length === 0){            
+            this.state.markers.map((value,index)=>{
+                isp[index] = true
+            })            
+        } else {
+            isp = this.state.isplaying;
+        }
+        let si = this.state.slideIndex === this.state.markers.length - 1 ? 0 : this.state.slideIndex + 1
+        this.setState({slideIndex: si,isplaying:isp,isplay:this.state.isplaying[si]===undefined?true:this.state.isplaying[si] })
     }
 
     componentDidUpdate(){
@@ -183,19 +197,16 @@ class LoopCamerasDisplay extends Component {
 
 
     static getDerivedStateFromProps(props, state){
-        let markersForLoop = []
-        let isplaying = {}
+        let markersForLoop = []        
         props.places.map((value,index)=>{
             markersForLoop.push({
                 title:value.name,
                 extraData:value
-            })
-            isplaying[index] = true
+            })            
             return true
         })
         let aux = state
-        aux.markers= markersForLoop
-        aux.isplaying = isplaying
+        aux.markers= markersForLoop        
         return aux        
     }
 

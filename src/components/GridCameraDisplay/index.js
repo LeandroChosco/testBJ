@@ -58,16 +58,18 @@ class GridCameraDisplay extends Component {
         loadingRcord: false,
         limit:20,
         start:0,
-        pageCount:1
+        pageCount:1,
+        isplay:true
     }
 
   render() {
     return (
     <div className='gridCameraContainer' align='center'>                
         <Row >     
-            {this.state.markers.map((value,index) => (index<this.state.start+this.state.limit)&&index>=this.state.start?<Col className={this.state.selectedCamera === value.extraData?'p-l-0 p-r-0 activeselectedcameragrid':'p-l-0 p-r-0'}  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value)} marker={value.id}><CameraStream key={value.extraData.id} marker={value} height={.7}/></Col>:null)}        
+            {this.state.markers.map((value,index) => (index<this.state.start+this.state.limit)&&index>=this.state.start?<Col className={this.state.selectedCamera === value.extraData?'p-l-0 p-r-0 activeselectedcameragrid':'p-l-0 p-r-0'}  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value,index)} marker={value.id}><CameraStream ref={'camrefgrid'+value.extraData.id} key={value.extraData.id} marker={value} height={.7}/></Col>:null)}        
         </Row>               
-        {this.props.loading?null:<Row>
+        {this.props.loading?null:
+        <Row className='paginatorContainerOnGrid'>
             <Col>
              Camaras por pagina <Select placeholder='Camaras por pagina' options={countryOptions}  value={this.state.limit} onChange={(e,value)=>{                
                 const pageCount = Math.ceil(this.state.markers.length / value.value)
@@ -99,7 +101,7 @@ class GridCameraDisplay extends Component {
                 <div className='col-4'>
                     
                         <Button basic circular  disabled={this.state.photos.length>=5&&false}  loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.selectedCamera)}><i className='fa fa-camera'></i></Button>
-                        <Button basic circular onClick={this._playPause}><i className={this.state.isplaying[this.state.slideIndex]?'fa fa-pause':'fa fa-play'}></i></Button>
+                        <Button basic circular onClick={this._playPause}><i className={this.state.isplay?'fa fa-pause':'fa fa-play'}></i></Button>
                         <Button basic circular  disabled={this.state.videos.length>=5&&false}  loading={this.props.loadingRcord} onClick={()=>this.props.recordignToggle(this.state.selectedCamera)}><i className={ this.props.recordingCams.indexOf(this.state.selectedCamera)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                         <Button basic circular onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.selectedCamera.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>
                         <Button basic circular onClick={()=>this.props.downloadFiles(this.state.selectedCamera, {videos:this.state.videos,images:this.state.photos})} loading={this.props.loadingFiles}> <i className="fa fa-download"></i></Button>
@@ -148,8 +150,13 @@ class GridCameraDisplay extends Component {
 
     
 
-    _playPause =() => {
-        
+    _playPause =() => {          
+        let isplaying = this.state.isplaying
+        console.log(isplaying)
+        isplaying[this.state.slideIndex] = !isplaying[this.state.slideIndex]                
+        console.log(isplaying)
+        this.setState({isplaying:isplaying,isplay:isplaying[this.state.slideIndex]})
+        this.refs['camrefgrid'+this.state.selectedCamera.id]._togglePlayPause()
     }
 
 
@@ -186,7 +193,14 @@ class GridCameraDisplay extends Component {
             if(this.props.recordingCams.indexOf(marker.extraData)>-1){
                 recording = true
             }
-            this.setState({selectedCamera: marker.extraData, autoplay:false, slideIndex: index, isRecording: recording})
+            if(this.state.isplaying.length === 0){
+                let isp = {}
+                this.state.markers.map((value,index)=>{
+                    isp[index] = true
+                })
+                this.setState({isplaying:isp})
+            }
+            this.setState({selectedCamera: marker.extraData, autoplay:false, slideIndex: index, isRecording: recording,isplay:this.state.isplaying[this.state.slideIndex]===undefined?true:this.state.isplaying[this.state.slideIndex]})
             this._loadFiles(marker.extraData)
         } else {
             this.setState({selectedCamera: {}, autoplay:true, videos:[],photos:[]})
@@ -211,8 +225,7 @@ class GridCameraDisplay extends Component {
               cameras.push(suspect)
             //}
           }               
-        const pageCount = Math.ceil(cameras.length /this.state.limit)
-        console.log(pageCount)
+        const pageCount = Math.ceil(cameras.length /this.state.limit)        
         this.setState({markers:markersForLoop, matches:cameras,pageCount:pageCount})
     }
 
@@ -222,18 +235,15 @@ class GridCameraDisplay extends Component {
 
     static getDerivedStateFromProps(props, state){
         let markersForLoop = []
-        let isplaying = {}
         props.places.map((value,index)=>{
             markersForLoop.push({
                 title:value.name,
                 extraData:value
-            })
-            isplaying[index]=true
+            })            
             return true
         })
         let aux = state
         aux.markers= markersForLoop
-        aux.isplaying= isplaying
         return aux        
     }
 }

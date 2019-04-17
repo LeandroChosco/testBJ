@@ -7,6 +7,7 @@ import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import '../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css'
 import './style.css'
+import constants from '../../constants/constants';
 
 class SideBar extends Component {   
     state = {
@@ -14,11 +15,11 @@ class SideBar extends Component {
         places : [
         ],
         options:[],
-        webSocket:'ws://18.222.106.238'
+        webSocket:constants.webSocket
     }
 
     componentDidMount(){
-        fetch('http://18.222.106.238:3000/register-cams/all-cams')
+        fetch(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams')
             .then((response) => {
                 return response.json();
             })
@@ -79,7 +80,7 @@ class SideBar extends Component {
                 />
                 <div id="selection">
                 {
-                    this.state.selectedOption.map( value => <CameraStream key={value.extraData.id} marker={value} height={.6}/>) 
+                    this.state.selectedOption.map( value => <CameraStream key={value.extraData.id} marker={value} height={.6} showButtons/>) 
                 }
                 </div>
             </div>
