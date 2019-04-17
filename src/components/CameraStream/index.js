@@ -103,9 +103,9 @@ class CameraStream extends Component {
                         <div align='left'>{this.state.cameraName}</div>                        
                         {this.props.showButtons?
                             <Card.Footer>
-                                <Button basic disabled={this.state.photos.length>=5} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>
+                                <Button basic disabled={this.state.photos.length>=5&&false} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>
                                 <Button basic><i className='fa fa-pause'></i></Button>
-                                <Button basic disabled={this.state.videos.length>=5} loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
+                                <Button basic disabled={this.state.videos.length>=5&&false} loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                                 <Button basic loading={this.state.loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>            
                                 {this.props.hideFileButton?null:<Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>}
                                 {this.props.showExternal?<Button basic onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.data.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>:null}
@@ -195,7 +195,7 @@ class CameraStream extends Component {
         this._wsError(err)
       }
       try {
-        var p = new jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true, onload:this._endedPlay, ondecodeframe:this._decode,onfinished:this._endedPlay,disableGl:true,forceCanvas2D: true});
+        var p = new jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true, onload:this._endedPlay, /*ondecodeframe:this._decode,*/onfinished:this._endedPlay,disableGl:true,forceCanvas2D: true});
       } catch (err) {
           this._playerError(err)
       }
@@ -222,10 +222,10 @@ class CameraStream extends Component {
   }
 
   _decode = (data) => {
-      if(data.currentFrame%10 === 0){          
+      /*if(data.currentFrame%10 === 0){          
         this.lastDecode = moment()
         setTimeout(this._checkIsUp,15000)
-      }
+      }*/
      
       
   }
@@ -320,7 +320,7 @@ class CameraStream extends Component {
     try{
         var ws = new WebSocket(this.props.marker.extraData.webSocket)          
         ws.onerror = this._wsError          
-        var p = new jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true, onload:this._endedPlay, ondecodeframe:this._decode,onfinished:this._endedPlay,disableGl:true,forceCanvas2D: true});
+        var p = new jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true, onload:this._endedPlay/*, ondecodeframe:this._decode*/,onfinished:this._endedPlay,disableGl:true,forceCanvas2D: true});
         this.setState({
             webSocket: ws,
             player: p
