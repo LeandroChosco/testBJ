@@ -190,7 +190,7 @@ class CameraStream extends Component {
           var ws = new WebSocket(this.props.marker.extraData.webSocket)
           ws.onerror = this._wsError    
           this.lastDecode = moment()
-          setTimeout(this._checkIsUp,15000)      
+          //setTimeout(this._checkIsUp,15000)      
       } catch (err) {
         this._wsError(err)
       }
