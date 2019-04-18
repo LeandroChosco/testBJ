@@ -39,9 +39,9 @@ class LoopCamerasDisplay extends Component {
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
             <div className='row stiky-top'>
                 <div className='col-8'>
-                        <Button basic circular loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.markers[this.state.slideIndex].extraData)}><i className='fa fa-camera'></i></Button>                
+                        <Button basic circular disabled={this.state.photos.length>=5} loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.markers[this.state.slideIndex].extraData)}><i className='fa fa-camera'></i></Button>                
                         <Button basic circular onClick={this._playPause}><i className={this.state.isplay?'fa fa-pause':'fa fa-play'}></i></Button>
-                        <Button basic circular onClick={() => this.props.recordignToggle(this.state.markers[this.state.slideIndex].extraData)}><i className={ this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
+                        <Button basic circular disabled={this.state.videos.length>=5} onClick={() => this.props.recordignToggle(this.state.markers[this.state.slideIndex].extraData)}><i className={ this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                         <Button basic circular onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.markers[this.state.slideIndex].extraData.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>
                         <Button basic circular onClick={()=>this.props.downloadFiles(this.state.markers[this.state.slideIndex].extraData, {videos:this.state.videos,images:this.state.photos})} loading={this.props.loadingFiles}> <i className="fa fa-download"></i></Button>
                 </div>
@@ -53,7 +53,7 @@ class LoopCamerasDisplay extends Component {
                 <div className="col snapshots">
                     Fotos
                     <div className="row">
-                        {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} image key={index} />)}
+                        {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex]} reloadData={this._loadFiles} image key={index} />)}
                     </div>
                      {this.state.photos.length === 0 ?
                             <div align='center'>
@@ -65,7 +65,7 @@ class LoopCamerasDisplay extends Component {
                 <div className="col videos">
                     Videos
                     <div className="row">
-                        {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} video key={index} />)}
+                        {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex]} reloadData={this._loadFiles} video key={index} />)}
                     </div>
                      {this.state.videos.length === 0 ?
                             <div align='center'>
@@ -159,6 +159,13 @@ class LoopCamerasDisplay extends Component {
               cameras.push(suspect)
             //}
           }       
+          if (this.state.markers[0]) {
+            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[0].extraData.id + '/data')
+            .then(response => {
+                const data = response.data                
+                this.setState({videos:data.data.videos,photos:data.data.photos})
+            })
+          }
           this.setState({interval: time,markers:markersForLoop, height:.4,matches:cameras})
     }
 
@@ -171,7 +178,13 @@ class LoopCamerasDisplay extends Component {
         } else {
             isp = this.state.isplaying;
         }
+        this.setState({videos:[],photos:[]})
         let si = this.state.slideIndex === this.state.markers.length - 1 ? 0 : this.state.slideIndex + 1
+        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[si].extraData.id + '/data')
+            .then(response => {
+                const data = response.data                
+                this.setState({videos:data.data.videos,photos:data.data.photos})
+            })
         this.setState({slideIndex: si,isplaying:isp,isplay:this.state.isplaying[si]===undefined?true:this.state.isplaying[si] })
     }
 

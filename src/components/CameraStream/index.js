@@ -97,7 +97,7 @@ class CameraStream extends Component {
                             <div className="col snapshots">
                                 Fotos
                                 <div className="row">
-                                    {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} image key={index} />)}
+                                    {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} image key={index} />)}
                                 </div>
                                 {this.state.photos.length === 0 ?
                                     <div align='center'>
@@ -109,7 +109,7 @@ class CameraStream extends Component {
                             <div className="col videos">
                                 Videos
                                 <div className="row">
-                                    {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} video key={index} />)}
+                                    {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
                                 </div>
                                 {this.state.videos.length === 0 ?
                                     <div align='center'>
@@ -126,9 +126,9 @@ class CameraStream extends Component {
                         <div align='left'>{this.state.cameraName}</div>                        
                         {this.props.showButtons?
                             <Card.Footer>
-                                <Button basic disabled={this.state.photos.length>=5&&false} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>
+                                <Button basic disabled={this.state.photos.length>=5} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>
                                 <Button basic onClick={this._togglePlayPause}><i className={this.state.isPlay?'fa fa-pause':'fa fa-play'}></i></Button>
-                                <Button basic disabled={this.state.videos.length>=5&&false} loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
+                                <Button basic disabled={this.state.videos.length>=5} loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                                 <Button basic loading={this.state.loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>            
                                 {this.props.hideFileButton?null:<Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>}
                                 {this.props.showExternal?<Button basic onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.data.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>:null}
@@ -142,7 +142,7 @@ class CameraStream extends Component {
                             <div className="col snapshots">
                                 Fotos
                                 <div className="row">
-                                    {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} image key={index} />)}
+                                    {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} image key={index} />)}
                                 </div>
                                 {this.state.photos.length === 0 ?
                                     <div align='center'>
@@ -154,7 +154,7 @@ class CameraStream extends Component {
                             <div className="col videos">
                                 Videos
                                 <div className="row">
-                                    {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} video key={index} />)}
+                                    {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
                                 </div>
                                 {this.state.videos.length === 0 ?
                                     <div align='center'>
@@ -329,6 +329,8 @@ class CameraStream extends Component {
     //console.log('websocket error',err)
     //this.setState({display:'none'})
     //setTimeout(this.tryRconection,30000)
+    this.setState({tryReconect:false})  
+    this.tryReconect = false
   }
 
   
@@ -359,7 +361,10 @@ class CameraStream extends Component {
 
     componentWillUnmount(){
         this.state.player.stop()
-        this.state.webSocket.close()
+        if(this.state.webSocket)
+        {
+            this.state.webSocket.close()
+        }
         if (this.state.isRecording) {
             Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + this.state.data.id,
                 {
