@@ -17,7 +17,7 @@ class MediaContainer extends Component {
             {this.props.video?<video src={constants.base_url+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}}/>:null}
             {this.props.image?<img src={constants.base_url+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}} alt='img'/>:null}
         </Card>
-        <Modal size="lg" show={this.state.modal} onHide={()=>this.setState({modal:false})}>
+        <Modal show={this.state.modal} onHide={()=>this.setState({modal:false})}>
             <Modal.Header closeButton>                      
                 <Button basic onClick={this._saveFile}><i className='fa fa-download'></i> Descargar </Button>
                 <Button basic negative onClick={this._deleteFile}><i className='fa fa-trash'></i> Eliminar</Button>
