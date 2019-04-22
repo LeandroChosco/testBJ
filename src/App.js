@@ -30,7 +30,8 @@ class App extends Component {
     showHeader:true,
     userInfo:{
       name:''
-    }
+    },
+    loadingRestart: false
   }
   
 
@@ -68,7 +69,16 @@ class App extends Component {
 
 
   _reloadCams = () => {
-    Axios.put(constants.base_url+':'+constants.apiPort+'/control-cams/restart-streaming/all')
+    this.setState({loadingRestart:true})
+    Axios.put(constants.base_url+':'+constants.apiPort+'/control-cams/restart-streaming2/all').then(data=>{
+      this.setState({loadingRestart:false})
+      if (data.data.success) {
+        const event = new Event('restartCamEvent')
+        window.dispatchEvent(event)
+      } else {
+        alert('Error reiniciando las camaras')
+      }
+    })
   } 
 
 
@@ -124,13 +134,13 @@ class App extends Component {
     return (
     <Router>      
       <div className="fullcontainer">                
-        {this.state.isAuthenticated&&this.state.showHeader?<Header toggleSideMenu = {this._toggleSideMenu} logOut = {this._logOut} isSidemenuShow={this.state.sideMenu} cameraSideInfo={this._cameraSideInfo} userInfo={this.state.userInfo} _reloadCams={this._reloadCams}/>:null}     
+        {this.state.isAuthenticated&&this.state.showHeader?<Header loadingRestart={this.state.loadingRestart} toggleSideMenu = {this._toggleSideMenu} logOut = {this._logOut} isSidemenuShow={this.state.sideMenu} cameraSideInfo={this._cameraSideInfo} userInfo={this.state.userInfo} _reloadCams={this._reloadCams}/>:null}     
         <SideBar toggleSideMenu = {this._toggleSideMenu} active={this.state.sideMenu}/>
         {this.state.cameraInfoSide?<CameraInfoSide toggleSideMenu = {this._cameraSideInfo}  cameraID={this.state.cameraID}/>:null}
-        <Route path="/" exact render={(props) => this.state.isAuthenticated?<Map />:<Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/>} />
-        <Route path="/analisis" exact render={(props) => <Analysis {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
-        <Route path="/analisis/:id" exact render={(props) => <Analysis {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/detalles/:id" exact render={(props) => <Details {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        <Route path="/" exact render={(props) => this.state.isAuthenticated?<Map  />:<Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/>} />
+        <Route path="/analisis" exact render={(props) => <Analysis  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/analisis/:id" exact render={(props) => <Analysis  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />
