@@ -251,7 +251,10 @@ class CameraStream extends Component {
           this._loadFiles()
       }
       vis(this._isVisisbleChange)
+      window.addEventListener('restartCamEvent', this._restartCam, false)
   }
+
+
 
 
   _isVisisbleChange = () => {    
@@ -351,6 +354,23 @@ class CameraStream extends Component {
     }           
   }
 
+    _restartCam = () => {
+        if (!this.tryReconect&&this.state.isVisible) {
+            this.setState({tryReconect:true})
+            this.tryReconect = true
+            console.log('reconnecting, cam ' + this.state.data.num_cam)                
+            this.state.player.stop()  
+            if(this.state.player.destroy){
+                this.state.player.destroy()  
+            }                          
+            if (this.state.webSocket) {
+                this.state.webSocket.close()
+            }
+            setTimeout(this.tryRconection,2000)            
+
+        }
+    }
+
   _wsMessage = (msg) => {
     console.log('websock message',msg)
   }
@@ -372,6 +392,7 @@ class CameraStream extends Component {
                 })
         }
         clearInterval(this.interval)
+        window.removeEventListener('restartCamEvent', this._restartCam, false)
     }
 
     urlToPromise = (url) => {
