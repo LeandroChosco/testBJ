@@ -366,7 +366,7 @@ class CameraStream extends Component {
             if (this.state.webSocket) {
                 this.state.webSocket.close()
             }
-            setTimeout(this.tryRconection,2000)            
+            setTimeout(this.tryRconection,5000)            
 
         }
     }
