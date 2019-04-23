@@ -53,7 +53,7 @@ class LoopCamerasDisplay extends Component {
                 <div className="col snapshots">
                     Fotos
                     <div className="row">
-                        {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex]} reloadData={this._loadFiles} image key={index} />)}
+                        {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} image key={index} />)}
                     </div>
                      {this.state.photos.length === 0 ?
                             <div align='center'>
@@ -65,7 +65,7 @@ class LoopCamerasDisplay extends Component {
                 <div className="col videos">
                     Videos
                     <div className="row">
-                        {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex]} reloadData={this._loadFiles} video key={index} />)}
+                        {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
                     </div>
                      {this.state.videos.length === 0 ?
                             <div align='center'>

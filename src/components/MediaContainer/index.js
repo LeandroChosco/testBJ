@@ -38,7 +38,7 @@ class MediaContainer extends Component {
     }
 
     _deleteFile = () => {
-        console.log(this.props.value)
+        console.log(this.props.cam)
         Axios.delete(constants.base_url + ':' + constants.apiPort + '/cams/'+this.props.cam.id+'/'+this.props.value.id+'/1')
             .then(response=>{                
                 if (response.data.success ) {
