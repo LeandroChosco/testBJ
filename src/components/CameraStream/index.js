@@ -181,7 +181,7 @@ class CameraStream extends Component {
                             </Modal.Header>
                             <Modal.Body>
                                 <Form>
-                                    <Label>Se lo mas claro posible, indique si ha realizado alguna accion ara intentar resolver el problema.</Label>
+                                    <Label>Se lo mas claro posible, indique si ha realizado alguna accion para intentar resolver el problema.</Label>
                                     <TextArea value={this.state.problemDescription} onChange={this.handleChangeTextArea} rows={10} placeholder='Redacte aqui su problema' />                                    
                                 </Form>
                                 <Button className='pull-right' primary onClick={this._sendReport}>Enviar</Button>
