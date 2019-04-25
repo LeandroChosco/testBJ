@@ -4,7 +4,7 @@ import './style.css'
 import MediaContainer from '../MediaContainer';
 import Axios from 'axios'
 import constants from '../../constants/constants'
-import { Button } from 'semantic-ui-react';
+import { Button, Form, Label, TextArea } from 'semantic-ui-react';
 
 import JSZipUtils from 'jszip-utils'
 import JSZip from 'jszip'
@@ -54,7 +54,9 @@ class CameraStream extends Component {
         lastCurrentFrame:0,
         isVisible: true,
         isPlay:true,
-        worker:null
+        worker:null,
+        modalProblem:false,
+        problemDescription:''
     }
 
     lastDecode= null
@@ -132,6 +134,7 @@ class CameraStream extends Component {
                                 <Button basic loading={this.state.loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>            
                                 {this.props.hideFileButton?null:<Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>}
                                 {this.props.showExternal?<Button basic onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.data.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>:null}
+                                <Button basic onClick={()=>this.setState({modalProblem:true})}> <i className="fa fa-warning"></i></Button>
                             </Card.Footer>:
                         null}
                     </Card.Body>   
@@ -172,9 +175,43 @@ class CameraStream extends Component {
                                 {this.state.recordMessage}
                             </Modal.Body>
                         </Modal>
+                        <Modal size="lg" show={this.state.modalProblem} onHide={()=>this.setState({modalProblem:false,problemDescription:''})}>
+                            <Modal.Header closeButton>                      
+                                Reportar problema en camara {this.state.data.num_cam}
+                            </Modal.Header>
+                            <Modal.Body>
+                                <Form>
+                                    <Label>Se lo mas claro posible, indique si ha realizado alguna accion ara intentar resolver el problema.</Label>
+                                    <TextArea value={this.state.problemDescription} onChange={this.handleChangeTextArea} rows={10} placeholder='Redacte aqui su problema' />                                    
+                                </Form>
+                                <Button className='pull-right' primary onClick={this._sendReport}>Enviar</Button>
+                            </Modal.Body>
+                        </Modal>
             </Card>
         );
     } 
+
+    handleChangeTextArea = (e, { name, value }) => this.setState({ problemDescription: value })
+
+    _sendReport = () => {
+        console.log(this.state.cameraProblem)
+        this.setState({modalProblem:false})
+        Axios.post(constants.base_url + ':' + constants.apiPort + '/tickets',{
+          "camera_id": this.state.data.id,
+          "problem": this.state.problemDescription,
+          "user_id": 1
+        })
+            .then(response => {              
+                const data = response.data              
+                this.setState({problemDescription:''})
+                if (data.success) {
+                  alert('Ticket creado correctamente')
+                } else {
+                  alert('Error al crear ticket')
+                  console.log(data.error)
+                }
+            }) 
+    }
 
     _togglePlayPause = () => {
         if (this.state.isPlay) {

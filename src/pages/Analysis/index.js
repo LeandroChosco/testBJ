@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap'
-import { Icon } from 'semantic-ui-react'
+import { Icon, TextArea, Form, Label, Button } from 'semantic-ui-react'
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
@@ -38,7 +38,9 @@ class Analysis extends Component {
         loadingSnap:false ,
         loadingFiles: false ,
         modal: false,
-        recordMessage:''
+        recordMessage:'', 
+        cameraProblem:{},
+        problemDescription:''
     }
   
   render() {
@@ -61,9 +63,22 @@ class Analysis extends Component {
             {
                 this._showDisplay()
             }
-            <Modal size="lg" show={this.state.modal} onHide={()=>this.setState({modal:false})}>
+            <Modal size="lg" show={this.state.modalProblem} onHide={()=>this.setState({modalProblem:false, cameraProblem:{},problemDescription:''})}>
                             <Modal.Header closeButton>                      
-                                
+                                Reportar problema en camara {this.state.cameraProblem.num_cam}
+                            </Modal.Header>
+                            <Modal.Body>
+                                <Form>
+                                    <Label>Se lo mas claro posible, indique si ha realizado alguna accion ara intentar resolver el problema.</Label>
+                                    <TextArea value={this.state.problemDescription} onChange={this.handleChangeTextArea} rows={10} placeholder='Redacte aqui su problema' />                                    
+                                </Form>
+                                <Button className='pull-right' primary onClick={this._sendReport}>Enviar</Button>
+                            </Modal.Body>
+                        </Modal>
+
+                        <Modal size="lg" show={this.state.modal} onHide={()=>this.setState({modal:false})}>
+                            <Modal.Header closeButton>                      
+                                Grabacion terminada
                             </Modal.Header>
                             <Modal.Body>
                                 {this.state.recordMessage}
@@ -71,6 +86,28 @@ class Analysis extends Component {
                         </Modal>
         </div>
     );
+  }
+
+  handleChangeTextArea = (e, { name, value }) => this.setState({ problemDescription: value })
+
+  _sendReport = () => {
+      console.log(this.state.cameraProblem)
+      this.setState({modalProblem:false})
+      Axios.post(constants.base_url + ':' + constants.apiPort + '/tickets',{
+        "camera_id": this.state.cameraProblem.id,
+        "problem": this.state.problemDescription,
+        "user_id": 1
+      })
+          .then(response => {              
+              const data = response.data              
+              this.setState({cameraProblem:{},problemDescription:''})
+              if (data.success) {
+                alert('Ticket creado correctamente')
+              } else {
+                alert('Error al crear ticket')
+                console.log(data.error)
+              }
+          }) 
   }
   _snapShot = (camera) => {
     this.setState({loadingSnap:true})
@@ -172,6 +209,7 @@ class Analysis extends Component {
 
     _makeReport = (camera) => {
         console.log(camera)
+        this.setState({modalProblem:true, cameraProblem:camera})
     }
   _showDisplay = () =>{
     switch(this.state.displayTipe){
