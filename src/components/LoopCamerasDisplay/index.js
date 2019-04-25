@@ -44,6 +44,7 @@ class LoopCamerasDisplay extends Component {
                         <Button basic circular disabled={this.state.videos.length>=5} onClick={() => this.props.recordignToggle(this.state.markers[this.state.slideIndex].extraData)}><i className={ this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
                         <Button basic circular onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.markers[this.state.slideIndex].extraData.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>
                         <Button basic circular onClick={()=>this.props.downloadFiles(this.state.markers[this.state.slideIndex].extraData, {videos:this.state.videos,images:this.state.photos})} loading={this.props.loadingFiles}> <i className="fa fa-download"></i></Button>
+                        <Button basic circular onClick={()=>this.props.makeReport(this.state.markers[this.state.slideIndex].extraData)}> <i className="fa fa-warning"></i></Button>
                 </div>
                 <div className='col-4'>
                     <Button onClick={this._openCameraInfo} className='pull-right' primary><i className={ this.state.autoplay?'fa fa-square':'fa fa-play'}></i> { this.state.autoplay?'Parar loop':'Continuar loop'} <i className={ this.state.autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}></i></Button>                
@@ -53,7 +54,7 @@ class LoopCamerasDisplay extends Component {
                 <div className="col snapshots">
                     Fotos
                     <div className="row">
-                        {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex]} reloadData={this._loadFiles} image key={index} />)}
+                        {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} image key={index} />)}
                     </div>
                      {this.state.photos.length === 0 ?
                             <div align='center'>
@@ -65,7 +66,7 @@ class LoopCamerasDisplay extends Component {
                 <div className="col videos">
                     Videos
                     <div className="row">
-                        {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex]} reloadData={this._loadFiles} video key={index} />)}
+                        {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
                     </div>
                      {this.state.videos.length === 0 ?
                             <div align='center'>

@@ -169,6 +169,10 @@ class Analysis extends Component {
         }
     }
 
+
+    _makeReport = (camera) => {
+        console.log(camera)
+    }
   _showDisplay = () =>{
     switch(this.state.displayTipe){
         case 1:
@@ -186,6 +190,7 @@ class Analysis extends Component {
                         loadingSnap={this.state.loadingSnap}
                         downloadFiles={this._downloadFiles}
                         loadingFiles={this.state.loadingFiles}
+                        makeReport={this._makeReport}
                         snapShot={this._snapShot}/>)
         case 2:
             return (<LoopCamerasDisplay 
@@ -202,6 +207,7 @@ class Analysis extends Component {
                         loadingSnap={this.state.loadingSnap}
                         downloadFiles={this._downloadFiles}
                         loadingFiles={this.state.loadingFiles}
+                        makeReport={this._makeReport}
                         snapShot={this._snapShot}/>)
         case 3:
             return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} hideFileButton showFilesBelow /></div>)
