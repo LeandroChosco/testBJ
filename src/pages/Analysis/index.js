@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap'
-import { Icon, TextArea, Form, Label, Button } from 'semantic-ui-react'
+import { Icon, TextArea, Form, Label, Button, Radio } from 'semantic-ui-react'
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
@@ -15,6 +15,7 @@ import moment from 'moment'
 import JSZipUtils from 'jszip-utils'
 import JSZip from 'jszip'
 import saveAs from 'file-saver'
+import Chips from 'react-chips'
 class Analysis extends Component {
 
     state = {
@@ -40,7 +41,10 @@ class Analysis extends Component {
         modal: false,
         recordMessage:'', 
         cameraProblem:{},
-        problemDescription:''
+        problemDescription:'',
+        typeReport:1,
+        phones:[],
+        mails:[]
     }
   
   render() {
@@ -63,14 +67,70 @@ class Analysis extends Component {
             {
                 this._showDisplay()
             }
-            <Modal size="lg" show={this.state.modalProblem} onHide={()=>this.setState({modalProblem:false, cameraProblem:{},problemDescription:''})}>
+            <Modal size="lg" show={this.state.modalProblem} onHide={()=>this.setState({modalProblem:false, cameraProblem:{},problemDescription:'',phones:[],mails:[]})}>
                             <Modal.Header closeButton>                      
                                 Reportar problema en camara {this.state.cameraProblem.num_cam}
                             </Modal.Header>
                             <Modal.Body>
                                 <Form>
-                                    <Label>Se lo mas claro posible, indique si ha realizado alguna accion para intentar resolver el problema.</Label>
-                                    <TextArea value={this.state.problemDescription} onChange={this.handleChangeTextArea} rows={10} placeholder='Redacte aqui su problema' />                                    
+                                    <Form.Field>
+
+                                        <Form.Field>
+                                            <Radio
+                                                label='Reportar emergencia'
+                                                name='typeReport'
+                                                value={1}
+                                                checked={this.state.typeReport === 1} 
+                                                onChange={this.handleChange}
+                                            />
+                                        </Form.Field>
+                                        <Form.Field>
+                                            <Radio
+                                                label='Mantenimiento de camara'
+                                                name='typeReport'
+                                                value={2}
+                                                checked={this.state.typeReport === 2}
+                                                onChange={this.handleChange}
+                                            />
+                                        </Form.Field>                                  
+                                    </Form.Field>
+                                    {this.state.typeReport === 2?null:<Form.Field>
+                                        <Label>
+                                            Se notificara a los numeros de emergencia registrados. Si se desea agregar un telefono extra ingreselo aqui indicando la lada del mismo(+525512345678).                                
+                                        </Label>
+                                        <Chips
+                                            value={this.state.phones}
+                                            onChange={this.onChange}
+                                            fromSuggestionsOnly={false}   
+                                            createChipKeys={[' ',13,32]}                                 
+                                        />
+                                    </Form.Field>}
+                                    {this.state.typeReport === 2?null:<Form.Field>
+                                        <Label>
+                                            Se notificara a los emails de emergencia registrados. Si se desea agregar un email extra ingreselo aqui.                                
+                                        </Label>
+                                        <Chips
+                                            value={this.state.mails}
+                                            onChange={this.onChangeMail}
+                                            fromSuggestionsOnly={false}   
+                                            createChipKeys={[' ',13,32]}                                 
+                                        />
+                                    </Form.Field>}
+                                    <Form.Field>
+                                        {this.state.typeReport === 2?<Label>
+                                            Se lo mas claro posible, indique si ha realizado 
+                                            alguna accion para intentar resolver el problema.
+                                        </Label>:<Label>
+                                           Indique la emergencia que se presento en la camara.
+                                        </Label>}
+                                        <TextArea 
+                                            value={this.state.problemDescription} 
+                                            onChange={this.handleChange} 
+                                            rows={10} 
+                                            name = 'problemDescription'
+                                            placeholder='Redacte aqui su problema' 
+                                        />                                    
+                                    </Form.Field>
                                 </Form>
                                 <Button className='pull-right' primary onClick={this._sendReport}>Enviar</Button>
                             </Modal.Body>
@@ -88,14 +148,26 @@ class Analysis extends Component {
     );
   }
 
-  handleChangeTextArea = (e, { name, value }) => this.setState({ problemDescription: value })
+  onChange = chips => {
+    this.setState({ phones:chips });
+  }
+  onChangeMail = chips => {
+    this.setState({ mails:chips });
+  }
+
+  handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   _sendReport = () => {
       console.log(this.state.cameraProblem)
       this.setState({modalProblem:false})
+      console.log(this.state.phones.join())
+      console.log(this.state.mails.join())
       Axios.post(constants.base_url + ':' + constants.apiPort + '/tickets',{
         "camera_id": this.state.cameraProblem.id,
         "problem": this.state.problemDescription,
+        "phones":this.state.phones.join(),
+        "mails":this.state.mails.join(),
+        "type_report":this.state.typeReport,
         "user_id": 1
       })
           .then(response => {              
