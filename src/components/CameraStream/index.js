@@ -4,7 +4,7 @@ import './style.css'
 import MediaContainer from '../MediaContainer';
 import Axios from 'axios'
 import constants from '../../constants/constants'
-import { Button, Form, Label, TextArea, Radio } from 'semantic-ui-react';
+import { Button, Form, Label, TextArea, Radio, Tab } from 'semantic-ui-react';
 import Chips from 'react-chips'
 
 import JSZipUtils from 'jszip-utils'
@@ -41,6 +41,7 @@ class CameraStream extends Component {
         showData:false,
         photos:[],
         videos:[],
+        video_history:[],
         display:'auto',
         interval: null,
         isLoading:false,
@@ -114,15 +115,32 @@ class CameraStream extends Component {
                             </div>
                             <div className="col videos">
                                 Videos
-                                <div className="row">
-                                    {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
-                                </div>
-                                {this.state.videos.length === 0 ?
-                                    <div align='center'>
-                                    <p className="big-letter">No hay archivos que mostrar</p>
-                                    <i className='fa fa-image fa-5x'></i>
-                                    </div>
-                                    :null}
+                                <Tab menu={{ secondary: true, pointing: true }} panes={[
+                                    { menuItem: 'Actuales', render: () => <Tab.Pane attached={false}><div>
+                                        <div className="row">
+                                            {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                        </div>
+                                        {this.state.videos.length === 0 ?
+                                            <div align='center'>
+                                                <p className="big-letter">No hay archivos que mostrar</p>
+                                                <i className='fa fa-image fa-5x'></i>
+                                            </div>
+                                        :null}
+                                        </div>
+                                    </Tab.Pane> },
+
+                                    { menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
+                                        <div className="row">
+                                            {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                        </div>
+                                        {this.state.video_history.length === 0 ?
+                                            <div align='center'>
+                                                <p className="big-letter">No hay archivos que mostrar</p>
+                                                <i className='fa fa-image fa-5x'></i>
+                                            </div>
+                                        :null}
+                                    </Tab.Pane> },
+                                ]} />
                             </div>
                         </div>:null} 
                         <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"}>  
@@ -160,15 +178,32 @@ class CameraStream extends Component {
                             </div>
                             <div className="col videos">
                                 Videos
-                                <div className="row">
-                                    {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
-                                </div>
-                                {this.state.videos.length === 0 ?
-                                    <div align='center'>
-                                    <p className="big-letter">No hay archivos que mostrar</p>
-                                    <i className='fa fa-image fa-5x'></i>
-                                    </div>
-                                    :null}
+                                <Tab menu={{ secondary: true, pointing: true }} panes={[
+                                    { menuItem: 'Actuales', render: () => <Tab.Pane attached={false}><div>
+                                        <div className="row">
+                                            {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                        </div>
+                                        {this.state.videos.length === 0 ?
+                                            <div align='center'>
+                                                <p className="big-letter">No hay archivos que mostrar</p>
+                                                <i className='fa fa-image fa-5x'></i>
+                                            </div>
+                                        :null}
+                                        </div>
+                                    </Tab.Pane> },
+
+                                    { menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
+                                        <div className="row">
+                                            {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                        </div>
+                                        {this.state.video_history.length === 0 ?
+                                            <div align='center'>
+                                                <p className="big-letter">No hay archivos que mostrar</p>
+                                                <i className='fa fa-image fa-5x'></i>
+                                            </div>
+                                        :null}
+                                    </Tab.Pane> },
+                                ]} />
                             </div>
                         </div>:null} 
                         <Modal size="lg" show={this.state.modal} onHide={()=>this.setState({modal:false})}>
@@ -423,14 +458,14 @@ class CameraStream extends Component {
             .then(response => {
                 const data = response.data
                 console.log(data)
-                this.setState({videos:data.data.videos,photos:data.data.photos})
+                this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
             }) 
     } else {
         Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.props.marker.extraData.id + '/data')
             .then(response => {
                 const data = response.data
                 console.log(data)
-                this.setState({videos:data.data.videos,photos:data.data.photos})
+                this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
             })         
     }     
           

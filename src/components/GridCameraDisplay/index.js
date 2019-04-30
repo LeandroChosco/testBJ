@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CameraStream from '../CameraStream';
 import { Row,Col} from 'react-bootstrap'
-import {  Button, Select } from 'semantic-ui-react'
+import {  Button, Select, Tab } from 'semantic-ui-react'
 import responseJson from '../../assets/json/suspects.json'
 import './style.css'
 import Match from '../Match';
@@ -50,6 +50,7 @@ class GridCameraDisplay extends Component {
         matches:[],
         photos:[],
         videos:[],
+        video_history:[],
         autoplay: true,
         selectedCamera:{},
         isRecording:false,
@@ -129,15 +130,32 @@ class GridCameraDisplay extends Component {
                 </div>
                 <div className="col videosgrid">
                     Videos
-                    <div className="row">
-                        {this.state.videos.map((value,index)=><MediaContainer video value={value} cam={this.state.selectedCamera} reloadData={this._loadFiles} key={index} src={value.relative_url}/>)}                        
-                    </div>
-                    {this.state.videos.length === 0 ?
-                            <div align='center'>
-                             <p className="big-letter">No hay archivos que mostrar</p>
-                             <i className='fa fa-image fa-5x'></i>
+                    <Tab menu={{ secondary: true, pointing: true }} panes={[
+                        { menuItem: 'Actuales', render: () => <Tab.Pane attached={false}><div>
+                            <div className="row">
+                                {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
                             </div>
+                            {this.state.videos.length === 0 ?
+                                <div align='center'>
+                                    <p className="big-letter">No hay archivos que mostrar</p>
+                                    <i className='fa fa-image fa-5x'></i>
+                                </div>
                             :null}
+                            </div>
+                        </Tab.Pane> },
+
+                        { menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
+                            <div className="row">
+                                {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
+                            </div>
+                            {this.state.video_history.length === 0 ?
+                                <div align='center'>
+                                    <p className="big-letter">No hay archivos que mostrar</p>
+                                    <i className='fa fa-image fa-5x'></i>
+                                </div>
+                            :null}
+                        </Tab.Pane> },
+                    ]} />    
                 </div>
                 <div className="col matchesgrid" align="center">
                     Historial
@@ -172,7 +190,7 @@ class GridCameraDisplay extends Component {
             .then(response => {
                 const data = response.data
                 console.log(data)
-                this.setState({videos:data.data.videos,photos:data.data.photos})
+                this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
             })
         } else {
             if (this.state.selectedCamera!== undefined) {
@@ -198,13 +216,14 @@ class GridCameraDisplay extends Component {
                 let isp = {}
                 this.state.markers.map((value,index)=>{
                     isp[index] = true
+                    return true;
                 })
                 this.setState({isplaying:isp})
             }
             this.setState({selectedCamera: marker.extraData, autoplay:false, slideIndex: index, isRecording: recording,isplay:this.state.isplaying[this.state.slideIndex]===undefined?true:this.state.isplaying[this.state.slideIndex]})
             this._loadFiles(marker.extraData)
         } else {
-            this.setState({selectedCamera: {}, autoplay:true, videos:[],photos:[]})
+            this.setState({selectedCamera: {}, autoplay:true, videos:[],photos:[], video_history:[]})
         }             
         
     }

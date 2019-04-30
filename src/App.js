@@ -33,8 +33,6 @@ class App extends Component {
     },
     loadingRestart: false
   }
-  
-
 
 
   componentDidMount(){

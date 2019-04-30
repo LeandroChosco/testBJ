@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 //import Carousel from 'nuka-carousel';
 import CameraStream from '../CameraStream';
-import {  Button } from 'semantic-ui-react'
+import {  Button, Tab } from 'semantic-ui-react'
 import responseJson from '../../assets/json/suspects.json'
 import './style.css'
 import Match from '../Match';
@@ -19,6 +19,7 @@ class LoopCamerasDisplay extends Component {
         isRecording:false,
         photos:[],
         videos:[],
+        video_history:[],
         isplaying:[],
         matches: [],
         height:'50%',
@@ -65,15 +66,32 @@ class LoopCamerasDisplay extends Component {
                 </div>
                 <div className="col videos">
                     Videos
-                    <div className="row">
-                        {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
-                    </div>
-                     {this.state.videos.length === 0 ?
-                            <div align='center'>
-                             <p className="big-letter">No hay archivos que mostrar</p>
-                             <i className='fa fa-image fa-5x'></i>
+                    <Tab menu={{ secondary: true, pointing: true }} panes={[
+                        { menuItem: 'Actuales', render: () => <Tab.Pane attached={false}><div>
+                            <div className="row">
+                                {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
                             </div>
+                            {this.state.videos.length === 0 ?
+                                <div align='center'>
+                                    <p className="big-letter">No hay archivos que mostrar</p>
+                                    <i className='fa fa-image fa-5x'></i>
+                                </div>
                             :null}
+                            </div>
+                        </Tab.Pane> },
+
+                        { menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
+                            <div className="row">
+                                {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
+                            </div>
+                            {this.state.video_history.length === 0 ?
+                                <div align='center'>
+                                    <p className="big-letter">No hay archivos que mostrar</p>
+                                    <i className='fa fa-image fa-5x'></i>
+                                </div>
+                            :null}
+                        </Tab.Pane> },
+                    ]} />                    
                 </div>
                 <div className="col matches" align="center">
                     Historial
@@ -98,6 +116,7 @@ class LoopCamerasDisplay extends Component {
             isplaying = {}
             this.state.markers.map((value,index)=>{
                 isplaying[index] = true
+                return true;
             })            
         }
         console.log(isplaying)
@@ -117,7 +136,7 @@ class LoopCamerasDisplay extends Component {
             }  else {
                     
                 const time =  setInterval(this.changeSlide,5000)
-                this.setState({autoplay: true,interval: time,videos:[],photos:[]})            
+                this.setState({autoplay: true,interval: time,videos:[],photos:[],video_history:[]})            
             }   
         }  
     }
@@ -127,7 +146,7 @@ class LoopCamerasDisplay extends Component {
         .then(response => {
             const data = response.data
             console.log(data)
-            this.setState({videos:data.data.videos,photos:data.data.photos})
+            this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
         })       
     }
 
@@ -175,6 +194,7 @@ class LoopCamerasDisplay extends Component {
         if(this.state.isplaying.length === 0){            
             this.state.markers.map((value,index)=>{
                 isp[index] = true
+                return true;
             })            
         } else {
             isp = this.state.isplaying;
