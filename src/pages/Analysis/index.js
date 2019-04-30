@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap'
-import { Icon } from 'semantic-ui-react'
+import { Icon, TextArea, Form, Label, Button, Radio } from 'semantic-ui-react'
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
@@ -15,6 +15,7 @@ import moment from 'moment'
 import JSZipUtils from 'jszip-utils'
 import JSZip from 'jszip'
 import saveAs from 'file-saver'
+import Chips from 'react-chips'
 class Analysis extends Component {
 
     state = {
@@ -38,7 +39,12 @@ class Analysis extends Component {
         loadingSnap:false ,
         loadingFiles: false ,
         modal: false,
-        recordMessage:''
+        recordMessage:'', 
+        cameraProblem:{},
+        problemDescription:'',
+        typeReport:1,
+        phones:[],
+        mails:[]
     }
   
   render() {
@@ -61,9 +67,78 @@ class Analysis extends Component {
             {
                 this._showDisplay()
             }
-            <Modal size="lg" show={this.state.modal} onHide={()=>this.setState({modal:false})}>
+            <Modal size="lg" show={this.state.modalProblem} onHide={()=>this.setState({modalProblem:false, cameraProblem:{},problemDescription:'',phones:[],mails:[]})}>
                             <Modal.Header closeButton>                      
-                                
+                                Reportar problema en camara {this.state.cameraProblem.num_cam}
+                            </Modal.Header>
+                            <Modal.Body>
+                                <Form>
+                                    <Form.Field>
+
+                                        <Form.Field>
+                                            <Radio
+                                                label='Reportar emergencia'
+                                                name='typeReport'
+                                                value={1}
+                                                checked={this.state.typeReport === 1} 
+                                                onChange={this.handleChange}
+                                            />
+                                        </Form.Field>
+                                        <Form.Field>
+                                            <Radio
+                                                label='Mantenimiento de camara'
+                                                name='typeReport'
+                                                value={2}
+                                                checked={this.state.typeReport === 2}
+                                                onChange={this.handleChange}
+                                            />
+                                        </Form.Field>                                  
+                                    </Form.Field>
+                                    {this.state.typeReport === 2?null:<Form.Field>
+                                        <Label>
+                                            Se notificara a los numeros de emergencia registrados. Si se desea agregar un telefono extra ingreselo aqui indicando la lada del mismo(+525512345678).                                
+                                        </Label>
+                                        <Chips
+                                            value={this.state.phones}
+                                            onChange={this.onChange}
+                                            fromSuggestionsOnly={false}   
+                                            createChipKeys={[' ',13,32]}                                 
+                                        />
+                                    </Form.Field>}
+                                    {this.state.typeReport === 2?null:<Form.Field>
+                                        <Label>
+                                            Se notificara a los emails de emergencia registrados. Si se desea agregar un email extra ingreselo aqui.                                
+                                        </Label>
+                                        <Chips
+                                            value={this.state.mails}
+                                            onChange={this.onChangeMail}
+                                            fromSuggestionsOnly={false}   
+                                            createChipKeys={[' ',13,32]}                                 
+                                        />
+                                    </Form.Field>}
+                                    <Form.Field>
+                                        {this.state.typeReport === 2?<Label>
+                                            Se lo mas claro posible, indique si ha realizado 
+                                            alguna accion para intentar resolver el problema.
+                                        </Label>:<Label>
+                                           Indique la emergencia que se presento en la camara.
+                                        </Label>}
+                                        <TextArea 
+                                            value={this.state.problemDescription} 
+                                            onChange={this.handleChange} 
+                                            rows={10} 
+                                            name = 'problemDescription'
+                                            placeholder='Redacte aqui su problema' 
+                                        />                                    
+                                    </Form.Field>
+                                </Form>
+                                <Button className='pull-right' primary onClick={this._sendReport}>Enviar</Button>
+                            </Modal.Body>
+                        </Modal>
+
+                        <Modal size="lg" show={this.state.modal} onHide={()=>this.setState({modal:false})}>
+                            <Modal.Header closeButton>                      
+                                Grabacion terminada
                             </Modal.Header>
                             <Modal.Body>
                                 {this.state.recordMessage}
@@ -71,6 +146,40 @@ class Analysis extends Component {
                         </Modal>
         </div>
     );
+  }
+
+  onChange = chips => {
+    this.setState({ phones:chips });
+  }
+  onChangeMail = chips => {
+    this.setState({ mails:chips });
+  }
+
+  handleChange = (e, { name, value }) => this.setState({ [name]: value })
+
+  _sendReport = () => {
+      console.log(this.state.cameraProblem)
+      this.setState({modalProblem:false})
+      console.log(this.state.phones.join())
+      console.log(this.state.mails.join())
+      Axios.post(constants.base_url + ':' + constants.apiPort + '/tickets',{
+        "camera_id": this.state.cameraProblem.id,
+        "problem": this.state.problemDescription,
+        "phones":this.state.phones.join(),
+        "mails":this.state.mails.join(),
+        "type_report":this.state.typeReport,
+        "user_id": 1
+      })
+          .then(response => {              
+              const data = response.data              
+              this.setState({cameraProblem:{},problemDescription:''})
+              if (data.success) {
+                alert('Ticket creado correctamente')
+              } else {
+                alert('Error al crear ticket')
+                console.log(data.error)
+              }
+          }) 
   }
   _snapShot = (camera) => {
     this.setState({loadingSnap:true})
@@ -169,6 +278,11 @@ class Analysis extends Component {
         }
     }
 
+
+    _makeReport = (camera) => {
+        console.log(camera)
+        this.setState({modalProblem:true, cameraProblem:camera})
+    }
   _showDisplay = () =>{
     switch(this.state.displayTipe){
         case 1:
@@ -186,6 +300,7 @@ class Analysis extends Component {
                         loadingSnap={this.state.loadingSnap}
                         downloadFiles={this._downloadFiles}
                         loadingFiles={this.state.loadingFiles}
+                        makeReport={this._makeReport}
                         snapShot={this._snapShot}/>)
         case 2:
             return (<LoopCamerasDisplay 
@@ -202,6 +317,7 @@ class Analysis extends Component {
                         loadingSnap={this.state.loadingSnap}
                         downloadFiles={this._downloadFiles}
                         loadingFiles={this.state.loadingFiles}
+                        makeReport={this._makeReport}
                         snapShot={this._snapShot}/>)
         case 3:
             return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} hideFileButton showFilesBelow /></div>)
