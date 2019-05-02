@@ -20,7 +20,7 @@ class MediaContainer extends Component {
         <Modal show={this.state.modal} onHide={()=>this.setState({modal:false})}>
             <Modal.Header closeButton>                      
                 <Button basic onClick={this._saveFile}><i className='fa fa-download'></i> Descargar </Button>
-                <Button basic negative onClick={this._deleteFile}><i className='fa fa-trash'></i> Eliminar</Button>
+                {this.props.hideDelete?null:<Button basic negative onClick={this._deleteFile}><i className='fa fa-trash'></i> Eliminar</Button>}
             </Modal.Header>
             <Modal.Body>
                 {this.props.video?<video ref='element' autoPlay controls src={constants.base_url+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}}/>:null}
