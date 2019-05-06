@@ -96,9 +96,9 @@ class CameraStream extends Component {
                         null}
                     </Card.Body>:
                     <Card.Body>                                                                          
-                        <Card.Title>
+                        {this.props.hideTitle?null:<Card.Title>
                             <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam}</div>
-                        </Card.Title>
+                        </Card.Title>}
                         {this.state.showData?
                         <div className="row dataHolder p10">
                             <div className="col snapshots">
@@ -147,7 +147,7 @@ class CameraStream extends Component {
                                 <canvas ref="camRef" id={'canvasCamaraStream'+this.state.data.id} style={{width:'100%',height:'100%'}}></canvas>                      
                                 {this.state.tryReconect?'Reconectando...':null}
                         </div> 
-                        <div align='left'>{this.state.cameraName}</div>                        
+                        {this.props.hideText?null:<div align='left'>{this.state.cameraName}</div>}
                         {this.props.showButtons?
                             <Card.Footer>
                                 <Button basic disabled={this.state.photos.length>=5} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>

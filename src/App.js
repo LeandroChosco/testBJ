@@ -16,6 +16,7 @@ import './App.css';
 import Details from './pages/Details';
 import Axios from 'axios';
 import constants from './constants/constants';
+import MobileHelp from './pages/CamaraForMobile';
 
 
 class App extends Component {
@@ -36,6 +37,10 @@ class App extends Component {
 
 
   componentDidMount(){
+    if(window.location.pathname.includes('mobile_help')){
+      this.setState({showHeader:false})
+      return true;
+    }
     this._checkAuth()    
     if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
 
@@ -138,7 +143,8 @@ class App extends Component {
         <Route path="/" exact render={(props) => this.state.isAuthenticated?<Map  />:<Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/>} />
         <Route path="/analisis" exact render={(props) => <Analysis  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/analisis/:id" exact render={(props) => <Analysis  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />
