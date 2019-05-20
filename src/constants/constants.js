@@ -1,17 +1,8 @@
-<<<<<<< Updated upstream
-const base_url = 'http://3.19.108.94'
-const webSocket = 'ws://3.19.108.94'
-const webSocketPort = '40'
-const apiPort = '4000'
-=======
-var base_url = 'http://localhost'
-var base_url = 'http://3.19.108.94'
-var webSocket = 'ws://localhost'
-var webSocket = 'ws://3.19.108.94'
-var webSocketPort = '20'
-var apiPort = '4000'
-var apiPort = '3000'
->>>>>>> Stashed changes
+
+const base_url = 'http://18.222.106.238'
+const webSocket = 'ws://dev.streaming.energetikadevelepment.com'
+const webSocketPort = '20'
+const apiPort = '3000'
  export default {
      base_url,
      webSocket,
