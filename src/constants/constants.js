@@ -1,7 +1,7 @@
-const base_url = 'http://3.19.108.94'
-const webSocket = 'ws://3.19.108.94'
-const webSocketPort = '40'
-const apiPort = '4000'
+const base_url = 'http://18.222.106.238'
+const webSocket = 'ws://dev.streaming.energetikadevelepment.com'
+const webSocketPort = '20'
+const apiPort = '3000'
  export default {
      base_url,
      webSocket,
