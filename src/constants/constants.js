@@ -7,6 +7,7 @@ const apiPort = '3000'
  export default {
      base_url,
      webSocket,
+     apiStream,
      apiPort,
      webSocketPort
  }
