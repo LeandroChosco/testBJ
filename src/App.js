@@ -73,7 +73,7 @@ class App extends Component {
 
   _reloadCams = () => {
     this.setState({loadingRestart:true})
-    Axios.put(constants.base_url+':'+constants.apiPort+'/control-cams/restart-streaming2/all').then(data=>{
+    Axios.put(constants.webSocket+':'+constants.apiPort+'/control-cams/restart-streaming2/all').then(data=>{
       this.setState({loadingRestart:false})
       if (data.data.success) {
         const event = new Event('restartCamEvent')
