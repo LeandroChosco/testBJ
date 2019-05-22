@@ -15,7 +15,7 @@ class MobileHelp extends Component {
   
   render() {      
     return (
-        <div style={{width:'100vw',height:'100vh',overflowY: 'hidden',borderRadius:5}}>
+        <div className='camHolder' style={{width:'100vw',height:'100vh',overflowY: 'hidden',borderRadius:5,backgroundImage: require('../../assets/images/giphy.gif')}}>
             <canvas ref="canvas" style={{width:'100%',height:'100%'}}>                        
             </canvas>
             <div style={{position:'absolute',top:0,left:0}}              >
