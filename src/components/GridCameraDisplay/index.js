@@ -186,7 +186,7 @@ class GridCameraDisplay extends Component {
 
     _loadFiles = (cam) =>{
         if (cam) {
-            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + cam.id + '/data')
+            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + cam.id + '/data?user_id=1')
             .then(response => {
                 const data = response.data
                 console.log(data)
@@ -194,7 +194,7 @@ class GridCameraDisplay extends Component {
             })
         } else {
             if (this.state.selectedCamera!== undefined) {
-                Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.selectedCamera.id + '/data')
+                Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.selectedCamera.id + '/data?user_id=1')
                 .then(response => {
                     const data = response.data
                     console.log(data)

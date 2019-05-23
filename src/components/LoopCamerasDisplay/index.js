@@ -142,7 +142,7 @@ class LoopCamerasDisplay extends Component {
     }
 
     _loadFiles = () =>{                           
-        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[this.state.slideIndex].extraData.id + '/data')
+        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[this.state.slideIndex].extraData.id + '/data?user_id=1')
         .then(response => {
             const data = response.data
             console.log(data)
@@ -180,7 +180,7 @@ class LoopCamerasDisplay extends Component {
             //}
           }       
           if (this.state.markers[0]) {
-            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[0].extraData.id + '/data')
+            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[0].extraData.id + '/data?user_id=1')
             .then(response => {
                 const data = response.data                
                 this.setState({videos:data.data.videos,photos:data.data.photos})
@@ -201,7 +201,7 @@ class LoopCamerasDisplay extends Component {
         }
         this.setState({videos:[],photos:[]})
         let si = this.state.slideIndex === this.state.markers.length - 1 ? 0 : this.state.slideIndex + 1
-        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[si].extraData.id + '/data')
+        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[si].extraData.id + '/data?user_id=1')
             .then(response => {
                 const data = response.data                
                 this.setState({videos:data.data.videos,photos:data.data.photos})

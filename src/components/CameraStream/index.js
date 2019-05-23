@@ -336,7 +336,7 @@ class CameraStream extends Component {
         if(this.state.isRecording){
             
             this.setState({isLoading:true})
-            Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + this.state.data.id,
+            Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + this.state.data.id+'?user_id=1',
                 {
                     record_proccess_id:this.state.process_id 
                 })
@@ -351,7 +351,7 @@ class CameraStream extends Component {
                     }
                 })
         } else {
-           Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/start-record/' + this.state.data.id,{                                       
+           Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/start-record/' + this.state.data.id+'?user_id=1',{                                       
             })
                 .then((r) => { 
                     const response = r.data
@@ -430,7 +430,7 @@ class CameraStream extends Component {
   _snapShot = () => {
       this.setState({loadingSnap:true})
     if (this.state.data.id) {
-        Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshot/' + this.state.data.id)
+        Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshot/' + this.state.data.id+'?user_id=1')
             .then(response => {
                 this.setState({loadingSnap:false})
                 const data = response.data
@@ -440,7 +440,7 @@ class CameraStream extends Component {
                 }
             }) 
     } else {
-        Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshot/' + this.props.marker.extraData.id)
+        Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshot/' + this.props.marker.extraData.id+'?user_id=1')
             .then(response => {
                 this.setState({loadingSnap:false})
                 const data = response.data
@@ -454,14 +454,14 @@ class CameraStream extends Component {
 
   _loadFiles = () =>{            
     if (this.state.data.id) {
-        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.data.id + '/data')
+        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.data.id + '/data?user_id=1')
             .then(response => {
                 const data = response.data
                 console.log(data)
                 this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
             }) 
     } else {
-        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.props.marker.extraData.id + '/data')
+        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.props.marker.extraData.id + '/data?user_id=1')
             .then(response => {
                 const data = response.data
                 console.log(data)
@@ -529,7 +529,7 @@ class CameraStream extends Component {
             this.state.webSocket.close()
         }
         if (this.state.isRecording) {
-            Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + this.state.data.id,
+            Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + this.state.data.id+'?user_id=1',
                 {
                     record_proccess_id:this.state.process_id 
                 })

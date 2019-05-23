@@ -184,7 +184,7 @@ class Analysis extends Component {
   _snapShot = (camera) => {
     this.setState({loadingSnap:true})
 
-      Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshot/' + camera.id)
+      Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshot/' + camera.id+'?user_id=1')
           .then(response => {
               this.setState({loadingSnap:false})
               const data = response.data
@@ -205,7 +205,7 @@ class Analysis extends Component {
             return true 
         })
         this.setState({loadingRcord:true})
-        Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + selectedCamera.id,
+        Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + selectedCamera.id+'?user_id=1',
             {
                 record_proccess_id:process_id 
             })
@@ -228,7 +228,7 @@ class Analysis extends Component {
                 }
             })
     } else {
-       Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/start-record/' + selectedCamera.id,{                                       
+       Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/start-record/' + selectedCamera.id+'?user_id=1',{                                       
         })
             .then((r) => { 
                 const response = r.data
@@ -257,7 +257,7 @@ class Analysis extends Component {
             let now = moment()
             this.state.recordingProcess.map(value=>{
                 if (now.diff(value.creation_time,'minutes')>10) {
-                    Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + value.cam_id,
+                    Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + value.cam_id+'?user_id=1',
                     {
                         record_proccess_id:value.process_id 
                     }).then(response=>{
@@ -363,7 +363,7 @@ class Analysis extends Component {
                         
             });
         } else {
-            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + camera.id + '/data')
+            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + camera.id + '/data?user_id=1')
             .then(response => {
                 const data = response.data
                 console.log(data)
@@ -406,7 +406,7 @@ class Analysis extends Component {
 
     componentDidMount(){
 
-        fetch(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams')       
+        fetch(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams?user_id=1')       
             .then((response) => {
                 return response.json();
             })
@@ -458,7 +458,7 @@ class Analysis extends Component {
 
     componentWillUnmount(){
         this.state.recordingProcess.map(value=>{
-            Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + value.cam_id,
+            Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + value.cam_id+'?user_id=1',
             {
                 record_proccess_id:value.process_id 
             })

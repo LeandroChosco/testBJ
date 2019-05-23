@@ -82,7 +82,7 @@ class Map extends Component {
     }
 
     componentDidMount(){
-        fetch(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams')
+        fetch(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams?user_id=1')
         .then((response) => {
             return response.json();
         })
