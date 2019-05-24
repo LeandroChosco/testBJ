@@ -27,7 +27,8 @@ class Map extends Component {
     state = {
         places : [
         ],
-        webSocket:'ws://18.222.106.238'
+        webSocket:'ws://18.222.106.238',
+        moduleActions:{}
     }
 
   render() {
@@ -74,15 +75,22 @@ class Map extends Component {
             position: { lat: e.position.lat(), lng: e.position.lng() }
         })
         console.log(e)
-        infoWindow.addListener('domready', (function(marker, render) {
+        infoWindow.addListener('domready', (function(marker, render,moduleActions) {
             return function() {                  
-                render(<CameraStream marker={marker} showButtons height={.65} showExternal/>, document.getElementById('infoWindow'+e.extraData.id))
+                render(<CameraStream moduleActions={moduleActions} marker={marker} showButtons height={.65} showExternal/>, document.getElementById('infoWindow'+e.extraData.id))
             }
-          })(e,render))
+          })(e,render, this.state.moduleActions))
         infoWindow.open(map)
     }
 
+   
+
     componentDidMount(){
+        const isValid = this.props.canAccess(1)
+        if (!isValid) {
+            this.props.history.push('/welcome')
+        }        
+        this.setState({moduleActions:JSON.parse(isValid.UserToModules[0].actions)})
         conections.getAllCams().then((data) => {
             const camaras = data.data
             let auxCamaras = []

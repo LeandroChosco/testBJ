@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
 
 import Login from './pages/Login'
@@ -16,6 +16,7 @@ import './App.css';
 import Details from './pages/Details';
 import MobileHelp from './pages/CamaraForMobile';
 import conections from './conections';
+import Welcome from './pages/Welcome';
 
 
 class App extends Component {
@@ -94,18 +95,20 @@ class App extends Component {
       }  
     } else {
       this.setState({isAuthenticated:false}) 
-      if(window.location.pathname!=='/'){        
-        window.location.href = window.location.href.replace(window.location.pathname,'')
+      if(window.location.pathname!=='/'&&window.location.pathname!=='/login'){        
+        window.location.href = window.location.href.replace(window.location.pathname,'/login')
       }
     }
   }
 
   _makeAuth = (userInfo) => {
-    sessionStorage.setItem('isAuthenticated',JSON.stringify({logged:true,userInfo:userInfo}))
-    this.setState({isAuthenticated:true,userInfo:userInfo})
+    sessionStorage.setItem('isAuthenticated',JSON.stringify({logged:true,userInfo:userInfo}))    
+    this.setState({userInfo:userInfo})
+    window.location.href = window.location.href.replace(window.location.pathname,'/')         
     if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
       setTimeout(this.showNot,10000)
-    }  
+    }          
+    setTimeout(this.setState({isAuthenticated:true}),500)
   }
 
   _toggleSideMenu = () => {    
@@ -119,7 +122,7 @@ class App extends Component {
   }
 
   _logOut = () => {
-    this.setState({isAuthenticated: false})
+    this.setState({isAuthenticated: false, userInfo:{}})
     sessionStorage.removeItem('isAuthenticated')
   } 
 
@@ -131,17 +134,65 @@ class App extends Component {
     }
       
   }
+
+  canAccess=(module_id)=>{
+    let isValid = false
+    const isAuth = JSON.parse(sessionStorage.getItem('isAuthenticated'))    
+    if (isAuth) {
+        if (isAuth.userInfo.modules) {
+            isAuth.userInfo.modules.map(value=>{
+                if (value.id===module_id) {
+                    isValid = value
+                    console.log(value)
+                }
+                return value;
+            })            
+        }
+    } 
+    return isValid
+}
   
   render() {
     return (
     <Router>      
       <div className="fullcontainer">                
-        {this.state.isAuthenticated&&this.state.showHeader?<Header loadingRestart={this.state.loadingRestart} toggleSideMenu = {this._toggleSideMenu} logOut = {this._logOut} isSidemenuShow={this.state.sideMenu} cameraSideInfo={this._cameraSideInfo} userInfo={this.state.userInfo} _reloadCams={this._reloadCams}/>:null}     
+        {this.state.isAuthenticated&&this.state.showHeader?
+          <Header 
+            loadingRestart={this.state.loadingRestart} 
+            toggleSideMenu = {this._toggleSideMenu} 
+            logOut = {this._logOut} 
+            isSidemenuShow={this.state.sideMenu} 
+            cameraSideInfo={this._cameraSideInfo} 
+            userInfo={this.state.userInfo} 
+            _reloadCams={this._reloadCams}/>
+          :null
+        }     
         <SideBar toggleSideMenu = {this._toggleSideMenu} active={this.state.sideMenu}/>
-        {this.state.cameraInfoSide?<CameraInfoSide toggleSideMenu = {this._cameraSideInfo}  cameraID={this.state.cameraID}/>:null}
-        <Route path="/" exact render={(props) => this.state.isAuthenticated?<Map  />:<Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/>} />
-        <Route path="/analisis" exact render={(props) => <Analysis  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
-        <Route path="/analisis/:id" exact render={(props) => <Analysis  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        {this.state.cameraInfoSide?
+          <CameraInfoSide 
+            toggleSideMenu = {this._cameraSideInfo}  
+            cameraID={this.state.cameraID}/>
+          :null
+        }
+        <Route path="/" exact render={(props) => 
+          this.state.isAuthenticated? 
+            <Redirect
+            to={{
+              pathname:this.state.userInfo.modules?this.state.userInfo.modules[0].id === 1 ? '/map':this.state.userInfo.modules[0].id === 2 ? '/analisis':'/welcome':'/welcome',
+              state: { from: props.location }
+            }}/>: 
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: { from: props.location }
+              }}/>
+          }
+        />
+        <Route path="/map" exact render={(props) =><Map canAccess={this.canAccess}  {...props} />} />
+        <Route path="/welcome" exact render={(props) =><Welcome {...props}/>} />
+        <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/> }/>
+        <Route path="/analisis" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/analisis/:id" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
       </div>

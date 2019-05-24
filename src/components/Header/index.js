@@ -18,8 +18,8 @@ class Header extends Component {
 
     _cameraAction = () => {    
         document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')    
-        if(this.props.location.pathname.includes("/analisis")||this.props.location.pathname.includes("/detalles")){
-            this.props.history.push('/')
+        if(!this.props.location.pathname.includes("/map")){
+            this.props.history.push('/map')
         } else {
             this.props.toggleSideMenu()
         }
@@ -28,7 +28,7 @@ class Header extends Component {
 
     _logOut = () => {
         document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')
-        this.props.history.push('/')
+        this.props.history.push('/login')
         this.props.logOut()
     }
 
@@ -42,29 +42,27 @@ class Header extends Component {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse className="justify-content-end">
                 <Nav className="mr-auto">
-                    <Navbar.Text >
-                        <Button variant="outline-light" onClick = {this._cameraAction}>
-                            <i className="fa fa-video-camera"></i>
-                            Camaras
-                        </Button>
-                    </Navbar.Text>
-                    <Navbar.Text >                       
-                            <Button variant="outline-light" onClick = {this._goAnalitics}>
-                                <i className="fa fa-simplybuilt"></i>
-                                Analisis
-                            </Button>                                             
-                    </Navbar.Text>
+                   {this.props.userInfo.modules?
+                        this.props.userInfo.modules.map(value=>
+                            <Navbar.Text key={value.id} >
+                                <Button variant="outline-light" onClick = {value.id===1?this._cameraAction:value.id===2?this._goAnalitics:null}>
+                                    <i className={value.id===1?'fa fa-video-camera':value.id===2?'fa fa-simplybuilt':null}></i>
+                                    {value.name}
+                                </Button>
+                            </Navbar.Text>
+                        ):null 
+                    }                    
                 </Nav>
                 <Nav>     
-                    <Button variant="outline-light"  onClick={this.props._reloadCams}>
+                    {this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this.props._reloadCams}>
                         <i className={this.props.loadingRestart?'fa fa-repeat fa-spin':"fa fa-repeat"}></i>
-                    </Button>                                                            
+                    </Button>:null}                                                            
                     <NavDropdown className="light" title={this.props.userInfo.user_nicename}>
                         <NavDropdown.Item onClick={this._logOut}>Cerrar sesion</NavDropdown.Item>
                     </NavDropdown>
-                    <Button variant="outline-light"  onClick={this._cameraSideInfo}>
+                    {this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this._cameraSideInfo}>
                         <i className="fa fa-bell"></i>
-                    </Button>                                           
+                    </Button>:null}                                           
                     
                 </Nav>
                 

@@ -100,9 +100,9 @@ class GridCameraDisplay extends Component {
             <div className='row stiky-top'>
                 <div className='col-4'>
                     
-                        <Button basic circular  disabled={this.state.photos.length>=5}  loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.selectedCamera)}><i className='fa fa-camera'></i></Button>
+                        {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic circular  disabled={this.state.photos.length>=5}  loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.selectedCamera)}><i className='fa fa-camera'></i></Button>:null:null}
                         <Button basic circular onClick={this._playPause}><i className={this.state.isplay?'fa fa-pause':'fa fa-play'}></i></Button>
-                        <Button basic circular  disabled={this.state.videos.length>=5}  loading={this.props.loadingRcord} onClick={()=>this.props.recordignToggle(this.state.selectedCamera)}><i className={ this.props.recordingCams.indexOf(this.state.selectedCamera)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
+                        {this.props.moduleActions?this.props.moduleActions.btnrecord?<Button basic circular  disabled={this.state.videos.length>=5}  loading={this.props.loadingRcord} onClick={()=>this.props.recordignToggle(this.state.selectedCamera)}><i className={ this.props.recordingCams.indexOf(this.state.selectedCamera)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>:null:null}
                         <Button basic circular onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.selectedCamera.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>
                         <Button basic circular onClick={()=>this.props.downloadFiles(this.state.selectedCamera, {videos:this.state.videos,images:this.state.photos})} loading={this.props.loadingFiles}> <i className="fa fa-download"></i></Button>
                         <Button basic circular onClick={()=>this.props.makeReport(this.state.selectedCamera)}> <i className="fa fa-warning"></i></Button>
@@ -142,8 +142,7 @@ class GridCameraDisplay extends Component {
                             :null}
                             </div>
                         </Tab.Pane> },
-
-                        { menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
+this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                             <div className="row">
                                 {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
                             </div>
@@ -153,7 +152,7 @@ class GridCameraDisplay extends Component {
                                     <i className='fa fa-image fa-5x'></i>
                                 </div>
                             :null}
-                        </Tab.Pane> },
+                        </Tab.Pane> }:{}:{},
                     ]} />    
                 </div>
                 <div className="col matchesgrid" align="center">

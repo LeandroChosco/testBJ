@@ -54,7 +54,7 @@ class Login extends Component {
     return (
         <div className="limiter">	
 			<ToastsContainer store={ToastsStore}/>		
-		    <div className="container-login100 cityBackground">
+		    {!this.props.isAuthenticated?<div className="container-login100 cityBackground">
 			    <div className="wrap-login100">															
 					<form className="login100-form validate-form" id="loginForm" data-toggle="validator">
 					    <span className="login100-form-logo">
@@ -90,7 +90,7 @@ class Login extends Component {
 					    </div>
 				    </form>
 			    </div>
-		    </div>
+		    </div>:null}
 	    </div>    
     );
   }

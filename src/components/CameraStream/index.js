@@ -129,7 +129,7 @@ class CameraStream extends Component {
                                         </div>
                                     </Tab.Pane> },
 
-                                    { menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
+this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
                                             {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
                                         </div>
@@ -139,7 +139,7 @@ class CameraStream extends Component {
                                                 <i className='fa fa-image fa-5x'></i>
                                             </div>
                                         :null}
-                                    </Tab.Pane> },
+                                    </Tab.Pane> }:{}:{},
                                 ]} />
                             </div>
                         </div>:null} 
@@ -150,9 +150,9 @@ class CameraStream extends Component {
                         {this.props.hideText?null:<div align='left'>{this.state.cameraName}</div>}
                         {this.props.showButtons?
                             <Card.Footer>
-                                <Button basic disabled={this.state.photos.length>=5} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>
+                                {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic disabled={this.state.photos.length>=5} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>:null:null}
                                 <Button basic onClick={this._togglePlayPause}><i className={this.state.isPlay?'fa fa-pause':'fa fa-play'}></i></Button>
-                                <Button basic disabled={this.state.videos.length>=5} loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>            
+                                {this.props.moduleActions?this.props.moduleActions.btnrecord?<Button basic disabled={this.state.videos.length>=5} loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>:null:null}
                                 <Button basic loading={this.state.loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>            
                                 {this.props.hideFileButton?null:<Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>}
                                 {this.props.showExternal?<Button basic onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.data.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>:null}
@@ -192,7 +192,7 @@ class CameraStream extends Component {
                                         </div>
                                     </Tab.Pane> },
 
-                                    { menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
+                            this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
                                             {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
                                         </div>
@@ -202,7 +202,7 @@ class CameraStream extends Component {
                                                 <i className='fa fa-image fa-5x'></i>
                                             </div>
                                         :null}
-                                    </Tab.Pane> },
+                                    </Tab.Pane>}:{}:{},
                                 ]} />
                             </div>
                         </div>:null} 

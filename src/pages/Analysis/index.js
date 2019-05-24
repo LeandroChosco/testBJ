@@ -46,7 +46,8 @@ class Analysis extends Component {
         phones:[],
         mails:[],
         user_id:0,
-        userInfo:{}
+        userInfo:{},
+        moduleActions:{}
     }
   
   render() {
@@ -298,6 +299,7 @@ class Analysis extends Component {
                         downloadFiles={this._downloadFiles}
                         loadingFiles={this.state.loadingFiles}
                         makeReport={this._makeReport}
+                        moduleActions={this.state.moduleActions}
                         snapShot={this._snapShot}/>)
         case 2:
             return (<LoopCamerasDisplay 
@@ -315,9 +317,10 @@ class Analysis extends Component {
                         downloadFiles={this._downloadFiles}
                         loadingFiles={this.state.loadingFiles}
                         makeReport={this._makeReport}
+                        moduleActions={this.state.moduleActions}
                         snapShot={this._snapShot}/>)
         case 3:
-            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} hideFileButton showFilesBelow /></div>)
+            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
         default:
            return null
     }
@@ -402,7 +405,16 @@ class Analysis extends Component {
             
 
     componentDidMount(){
-
+        if (!this.props.match.params.id) {
+            const isValid = this.props.canAccess(2)
+            if (!isValid) {
+                this.props.history.push('/welcome')
+            }   
+            console.log(isValid.UserToModules[0].actions)
+            this.setState({moduleActions:JSON.parse(isValid.UserToModules[0].actions)})
+        } else {
+            this.setState({moduleActions:{btnrecord:true,btnsnap:true,viewHistorial:true}}) 
+        }        
         conections.getAllCams()
             .then((response) => {
                 const camaras = response.data
