@@ -95,7 +95,7 @@ class Map extends Component {
             const camaras = data.data
             let auxCamaras = []
             camaras.map(value=>{
-                if (value.active === 1) {
+                if (value.active === 1&& value.flag_streaming === 1) {
                     auxCamaras.push({
                         id:value.id,
                         num_cam:value.num_cam,
