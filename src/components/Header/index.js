@@ -59,7 +59,7 @@ class Header extends Component {
                     <Button variant="outline-light"  onClick={this.props._reloadCams}>
                         <i className={this.props.loadingRestart?'fa fa-repeat fa-spin':"fa fa-repeat"}></i>
                     </Button>                                                            
-                    <NavDropdown className="light" title={this.props.userInfo.name}>
+                    <NavDropdown className="light" title={this.props.userInfo.user_nicename}>
                         <NavDropdown.Item onClick={this._logOut}>Cerrar sesion</NavDropdown.Item>
                     </NavDropdown>
                     <Button variant="outline-light"  onClick={this._cameraSideInfo}>

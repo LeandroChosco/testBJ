@@ -10,12 +10,12 @@ import GridCameraDisplay from '../../components/GridCameraDisplay';
 import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants'
 import { JellyfishSpinner } from "react-spinners-kit";
-import Axios from 'axios';
 import moment from 'moment'
 import JSZipUtils from 'jszip-utils'
 import JSZip from 'jszip'
 import saveAs from 'file-saver'
 import Chips from 'react-chips'
+import conections from '../../conections';
 class Analysis extends Component {
 
     state = {
@@ -44,7 +44,9 @@ class Analysis extends Component {
         problemDescription:'',
         typeReport:1,
         phones:[],
-        mails:[]
+        mails:[],
+        user_id:0,
+        userInfo:{}
     }
   
   render() {
@@ -162,7 +164,7 @@ class Analysis extends Component {
       this.setState({modalProblem:false})
       console.log(this.state.phones.join())
       console.log(this.state.mails.join())
-      Axios.post(constants.base_url + ':' + constants.apiPort + '/tickets',{
+     conections.sendTicket({
         "camera_id": this.state.cameraProblem.id,
         "problem": this.state.problemDescription,
         "phones":this.state.phones.join(),
@@ -184,7 +186,7 @@ class Analysis extends Component {
   _snapShot = (camera) => {
     this.setState({loadingSnap:true})
 
-      Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshot/' + camera.id+'?user_id=1')
+      conections.snapShot(camera.id,this.state.user_id)
           .then(response => {
               this.setState({loadingSnap:false})
               const data = response.data
@@ -205,10 +207,8 @@ class Analysis extends Component {
             return true 
         })
         this.setState({loadingRcord:true})
-        Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + selectedCamera.id+'?user_id=1',
-            {
-                record_proccess_id:process_id 
-            })
+        
+            conections.stopRecord({record_proccess_id:process_id},selectedCamera.id)
             .then((r) => { 
                 const response = r.data
                 if (response.success === true) {
@@ -228,8 +228,7 @@ class Analysis extends Component {
                 }
             })
     } else {
-       Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/start-record/' + selectedCamera.id+'?user_id=1',{                                       
-        })
+       conections.startRecord({},selectedCamera.id)
             .then((r) => { 
                 const response = r.data
                 if (response.success === true) {
@@ -257,10 +256,8 @@ class Analysis extends Component {
             let now = moment()
             this.state.recordingProcess.map(value=>{
                 if (now.diff(value.creation_time,'minutes')>10) {
-                    Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + value.cam_id+'?user_id=1',
-                    {
-                        record_proccess_id:value.process_id 
-                    }).then(response=>{
+                    
+                    conections.stopRecord({record_proccess_id:value.process_id }).then(response=>{
                         console.log('response camid'+value.cam_id,response.data)
                         let stateRecordingProcess = this.state.recordingProcess                        
                         let stateRecordingCams = this.state.recordingCams                    
@@ -363,7 +360,7 @@ class Analysis extends Component {
                         
             });
         } else {
-            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + camera.id + '/data?user_id=1')
+            conections.getCamData(camera.id)
             .then(response => {
                 const data = response.data
                 console.log(data)
@@ -406,11 +403,9 @@ class Analysis extends Component {
 
     componentDidMount(){
 
-        fetch(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams?user_id=1')       
+        conections.getAllCams()
             .then((response) => {
-                return response.json();
-            })
-            .then((camaras) => {
+                const camaras = response.data
                 let auxCamaras = []
                 let actualCamera = {}
                 let title = ''
@@ -458,10 +453,10 @@ class Analysis extends Component {
 
     componentWillUnmount(){
         this.state.recordingProcess.map(value=>{
-            Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + value.cam_id+'?user_id=1',
-            {
+            
+            conections.stopRecord({
                 record_proccess_id:value.process_id 
-            })
+            },value.cam_id)
             .then((r) => { 
                 const response = r.data
                 console.log(response)

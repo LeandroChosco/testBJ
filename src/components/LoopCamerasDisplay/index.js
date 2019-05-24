@@ -6,8 +6,7 @@ import responseJson from '../../assets/json/suspects.json'
 import './style.css'
 import Match from '../Match';
 import MediaContainer from '../MediaContainer';
-import Axios from 'axios';
-import constants from '../../constants/constants';
+import conections from '../../conections';
 
 class LoopCamerasDisplay extends Component {
     
@@ -141,8 +140,8 @@ class LoopCamerasDisplay extends Component {
         }  
     }
 
-    _loadFiles = () =>{                           
-        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[this.state.slideIndex].extraData.id + '/data?user_id=1')
+    _loadFiles = () =>{ 
+        conections.getCamData(this.state.markers[this.state.slideIndex].extraData.id)                                  
         .then(response => {
             const data = response.data
             console.log(data)
@@ -180,7 +179,7 @@ class LoopCamerasDisplay extends Component {
             //}
           }       
           if (this.state.markers[0]) {
-            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[0].extraData.id + '/data?user_id=1')
+              conections.getCamData(this.state.markers[this.state.slideIndex].extraData.id)            
             .then(response => {
                 const data = response.data                
                 this.setState({videos:data.data.videos,photos:data.data.photos})
@@ -201,7 +200,7 @@ class LoopCamerasDisplay extends Component {
         }
         this.setState({videos:[],photos:[]})
         let si = this.state.slideIndex === this.state.markers.length - 1 ? 0 : this.state.slideIndex + 1
-        Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.markers[si].extraData.id + '/data?user_id=1')
+        conections.getCamData(this.state.markers[si].extraData.id)        
             .then(response => {
                 const data = response.data                
                 this.setState({videos:data.data.videos,photos:data.data.photos})

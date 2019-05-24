@@ -14,9 +14,8 @@ import CameraControls from './components/CameraControls';
 
 import './App.css';
 import Details from './pages/Details';
-import Axios from 'axios';
-import constants from './constants/constants';
 import MobileHelp from './pages/CamaraForMobile';
+import conections from './conections';
 
 
 class App extends Component {
@@ -73,7 +72,7 @@ class App extends Component {
 
   _reloadCams = () => {
     this.setState({loadingRestart:true})
-    Axios.put(constants.apiStream+':'+constants.apiPort+'/control-cams/restart-streaming2/all').then(data=>{
+    conections.restartStream().then(data=>{
       this.setState({loadingRestart:false})
       if (data.data.success) {
         const event = new Event('restartCamEvent')
@@ -101,9 +100,9 @@ class App extends Component {
     }
   }
 
-  _makeAuth = (name = 'Alejandro Chico') => {
-    sessionStorage.setItem('isAuthenticated',JSON.stringify({logged:true,userInfo:{name:name}}))
-    this.setState({isAuthenticated:true,userInfo:{name:name}})
+  _makeAuth = (userInfo) => {
+    sessionStorage.setItem('isAuthenticated',JSON.stringify({logged:true,userInfo:userInfo}))
+    this.setState({isAuthenticated:true,userInfo:userInfo})
     if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
       setTimeout(this.showNot,10000)
     }  

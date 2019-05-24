@@ -6,9 +6,8 @@ import responseJson from '../../assets/json/suspects.json'
 import './style.css'
 import Match from '../Match';
 import MediaContainer from '../MediaContainer';
-import Axios from 'axios';
-import constants from '../../constants/constants';
 import ReactPaginate from 'react-paginate';
+import conections from '../../conections';
 
 const countryOptions = [{
     key: 5,
@@ -185,23 +184,12 @@ class GridCameraDisplay extends Component {
       };
 
     _loadFiles = (cam) =>{
-        if (cam) {
-            Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + cam.id + '/data?user_id=1')
-            .then(response => {
-                const data = response.data
-                console.log(data)
-                this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
-            })
-        } else {
-            if (this.state.selectedCamera!== undefined) {
-                Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + this.state.selectedCamera.id + '/data?user_id=1')
-                .then(response => {
-                    const data = response.data
-                    console.log(data)
-                    this.setState({videos:data.data.videos,photos:data.data.photos})
-                })
-            }
-        }        
+        conections.getCamData(cam?cam.id:this.state.selectedCamera?this.state.selectedCamera.id:0)
+        .then(response => {
+            const data = response.data
+            console.log(data)
+            this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
+        })       
     }
 
 
