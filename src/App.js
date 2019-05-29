@@ -18,6 +18,7 @@ import MobileHelp from './pages/CamaraForMobile';
 import conections from './conections';
 import Welcome from './pages/Welcome';
 
+import firebase from './constants/config';
 
 class App extends Component {
 
@@ -32,9 +33,12 @@ class App extends Component {
     userInfo:{
       name:''
     },
-    loadingRestart: false
+    loadingRestart: false, 
+    matches: [],
+    showNotification:false,
+    fisrtTime: true, 
+    firebase:{}
   }
-
 
   componentDidMount(){
     if(window.location.pathname.includes('mobile_help')){
@@ -46,7 +50,20 @@ class App extends Component {
 
     }  else {
       this.setState({showHeader:false})
-    }
+    }    
+    
+    firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
+      if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
+        this.showNot()
+      }
+      if(this.state.fisrtTime)
+        this.setState({fisrtTime:false})
+      this.setState({matches:docs.docs.map(v=>{
+        let value = v.data()
+        value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+        return value
+      })})
+    })
   }
 
 
@@ -55,7 +72,7 @@ class App extends Component {
     if(notification){
       notification.addNotification({
         title:'Match',
-        message: 'Nuevo match detectado, Camara 1',
+        message: 'Nuevo match detectado',
         level: 'error',
         action: {
           label: 'Ver match',
@@ -89,9 +106,9 @@ class App extends Component {
     const isAuth = sessionStorage.getItem('isAuthenticated')    
     if (isAuth) {
       const data = JSON.parse(isAuth)
-      this.setState({isAuthenticated:data.logged,userInfo:data.userInfo}) 
+      this.setState({isAuthenticated:data.logged,userInfo:data.userInfo,showNotification:true}) 
       if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
-        setTimeout(this.showNot,10000)
+        //setTimeout(this.showNot,10000)
       }  
     } else {
       this.setState({isAuthenticated:false}) 
@@ -103,10 +120,10 @@ class App extends Component {
 
   _makeAuth = (userInfo) => {
     sessionStorage.setItem('isAuthenticated',JSON.stringify({logged:true,userInfo:userInfo}))    
-    this.setState({userInfo:userInfo})
+    this.setState({userInfo:userInfo,showNotification:true})
     window.location.href = window.location.href.replace(window.location.pathname,'/')         
     if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
-      setTimeout(this.showNot,10000)
+      //setTimeout(this.showNot,10000)
     }          
     setTimeout(this.setState({isAuthenticated:true}),500)
   }
@@ -171,7 +188,8 @@ class App extends Component {
         {this.state.cameraInfoSide?
           <CameraInfoSide 
             toggleSideMenu = {this._cameraSideInfo}  
-            cameraID={this.state.cameraID}/>
+            cameraID={this.state.cameraID}
+            matchs={this.state.matches}/>
           :null
         }
         <Route path="/" exact render={(props) => 
@@ -193,7 +211,7 @@ class App extends Component {
         <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/> }/>
         <Route path="/analisis" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/analisis/:id" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/detalles/:id" exact render={(props) => <Details  {...props} firebase={this.state.firebase} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}

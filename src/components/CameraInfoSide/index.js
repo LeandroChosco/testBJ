@@ -101,7 +101,7 @@ class CameraInfoSide extends Component {
                     <Header>Matches</Header>
                 </div>
                 <div align='center'>
-                    {this.state.matchs.map((value, index)=><Match key={index} info={value}/>)}
+                    {this.props.matchs.map((value, index)=><Match key={index} info={value}/>)}
                 </div>
             </div>
         );
