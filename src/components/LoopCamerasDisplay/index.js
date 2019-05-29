@@ -35,7 +35,15 @@ class LoopCamerasDisplay extends Component {
             {this.props.error?<div className="errorContainer">
                 Error al cargar informacion: {JSON.stringify(this.props.error)}
             </div>:null}
-            {this.state.markers.map((value,index) => <div key={value.extraData.id} style={{height:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}><CameraStream ref={'camstreamloopref'+value.id} marker={value} height={this.state.height} /></div>)}        
+            {this.state.markers.map((value,index) =>
+                <div key={value.extraData.id} style={{height:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}>
+                    <CameraStream 
+                        ref={'camstreamloopref'+value.id} 
+                        marker={value} 
+                        height={this.state.height}
+                        width={.5} />
+                </div>
+            )}        
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
             <div className='row stiky-top'>
                 <div className='col-8'>
@@ -185,7 +193,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorical?{ menuItem: 'Hi
                 this.setState({videos:data.data.videos,photos:data.data.photos})
             })
           }
-          this.setState({interval: time,markers:markersForLoop, height:.4,matches:cameras})
+          this.setState({interval: time,markers:markersForLoop, height:.1,matches:cameras})
     }
 
     changeSlide = () => {

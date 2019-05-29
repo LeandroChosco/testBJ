@@ -143,10 +143,12 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                 ]} />
                             </div>
                         </div>:null} 
-                        <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"}>  
-                                <canvas ref="camRef" id={'canvasCamaraStream'+this.state.data.id} style={{width:'100%',height:'100%'}}></canvas>                      
-                                {this.state.tryReconect?'Reconectando...':null}
-                        </div> 
+                        <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"} style={{width:'100%'}} align='center'>
+                            <div ref="camHolder" style={{width:'100%', height:'100%'}}>  
+                                    <canvas ref="camRef" id={'canvasCamaraStream'+this.state.data.id} style={{width:'100%',height:'100%'}}></canvas>                      
+                                    {this.state.tryReconect?'Reconectando...':null}
+                            </div> 
+                        </div>
                         {this.props.hideText?null:<div align='left'>{this.state.cameraName}</div>}
                         {this.props.showButtons?
                             <Card.Footer>
@@ -380,14 +382,21 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
       this.setState({
           webSocket: ws,
           player: p,
-      })      
-      if (this.props.height) {
-          if (this.refs.camRef.getBoundingClientRect().width === 0) {
-            this.refs.camRef.style.height = (window.visualViewport.width - 50 ) * this.props.height+'px'  
-          } else {
-            this.refs.camRef.style.height = this.refs.camRef.getBoundingClientRect().width * this.props.height+'px'   
-          }        
-      }
+      })     
+      if (this.props.width) {
+        if (this.refs.camRef.getBoundingClientRect().width === 0) {
+          this.refs.camHolder.style.width = window.visualViewport.width  * this.props.width+'px'  
+        } else {
+          this.refs.camHolder.style.width = this.refs.camRef.getBoundingClientRect().width * this.props.width+'px'   
+        }        
+    }
+    if (this.props.height) {
+        if (this.refs.camRef.getBoundingClientRect().width === 0) {
+          this.refs.camRef.style.height = (window.visualViewport.width - 50 ) * this.props.height+'px'  
+        } else {
+          this.refs.camRef.style.height = this.refs.camRef.getBoundingClientRect().width * this.props.height+'px'   
+        }        
+    }
       if(this.props.showButtons){
           this._loadFiles()
       }

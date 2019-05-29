@@ -320,7 +320,7 @@ class Analysis extends Component {
                         moduleActions={this.state.moduleActions}
                         snapShot={this._snapShot}/>)
         case 3:
-            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
+            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} width={.5} hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
         default:
            return null
     }
