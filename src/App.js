@@ -19,6 +19,7 @@ import conections from './conections';
 import Welcome from './pages/Welcome';
 
 import firebase from './constants/config';
+import firebaseC5 from './constants/configC5';
 
 class App extends Component {
 
@@ -35,8 +36,12 @@ class App extends Component {
     },
     loadingRestart: false, 
     matches: [],
+    sos:[],
+    support:[],
     showNotification:false,
     fisrtTime: true, 
+    fisrtTimeHelp:true,
+    fisrtTimeSupport:true,
     firebase:{}
   }
 
@@ -54,7 +59,7 @@ class App extends Component {
     
     firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
       if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
-        this.showNot()
+        this.showNot('Match','Nuevo match detectado','warning','Ver match',0)
       }
       if(this.state.fisrtTime)
         this.setState({fisrtTime:false})
@@ -64,19 +69,45 @@ class App extends Component {
         return value
       })})
     })
+
+    /*firebaseC5.firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{
+      if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
+        this.showNot('SOS','Nueva alerta de ayuda generada','error','Ver detalles',1)
+      }
+      if(this.state.fisrtTime)
+        this.setState({fisrtTime:false})
+      this.setState({sos:docs.docs.map(v=>{
+        let value = v.data()
+        value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+        return value
+      })})
+    })
+
+    firebaseC5.firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{
+      if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
+        this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',2)
+      }
+      if(this.state.fisrtTime)
+        this.setState({fisrtTime:false})
+      this.setState({support:docs.docs.map(v=>{
+        let value = v.data()
+        value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+        return value
+      })})
+    })*/
   }
 
 
-  showNot = () => {
+  showNot = (title,message,type,label,action) => {
     const notification = this.refs.notificationSystem;
     if(notification){
       notification.addNotification({
-        title:'Match',
-        message: 'Nuevo match detectado',
-        level: 'error',
+        title:title,
+        message: message,
+        level: type,
         action: {
-          label: 'Ver match',
-          callback: ()=> this.seeMatch(1)
+          label: label,
+          callback: ()=> this.seeMatch(action)
         }
       });
     }
