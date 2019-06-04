@@ -90,7 +90,11 @@ class Map extends Component {
         if (!isValid) {
             this.props.history.push('/welcome')
         }        
-        this.setState({moduleActions:JSON.parse(isValid.UserToModules[0].actions)})
+        try{
+            this.setState({moduleActions:JSON.parse(isValid.UserToModules[0].actions)})
+        } catch (e){
+            console.log(e)
+        }
         conections.getAllCams().then((data) => {
             const camaras = data.data
             let auxCamaras = []
