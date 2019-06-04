@@ -18,7 +18,15 @@ class Match extends Component {
     _changeSeeMore = () => {
         //this.setState({seeMore: !this.state.seeMore})
     }
-    render() {        
+    render() {  
+        if (this.props.isSmall) {
+            return (
+                <div style={{height:'50px',width:'50px', padding:5, position:'relative'}} onClick={this.props._toggleSmallBig}>
+                    {this.props.info.status!==0?<div className='notificationDot'></div>:null}
+                    <Image style={{height:'100%',width:'100%', borderRadius:25}} src={'http://95.216.37.253:3000/images/'+this.props.info.name.replace(/ /g,'')+'/'+this.props.info.messageId+'-face.jpeg'} />
+                </div>
+            )
+        }      
         return (
             <Card className='cardmatchComtainer' onClick={this._godetails}>
                 <Card.Content>                

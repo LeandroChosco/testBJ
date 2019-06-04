@@ -12,6 +12,6 @@ var firebaseConfig = {
 
 var firebaseC5 = firebase
 
-firebaseC5.initializeApp(firebaseConfig)
+firebaseC5.initializeApp(firebaseConfig,'c5virtual')
 
 export default firebaseC5

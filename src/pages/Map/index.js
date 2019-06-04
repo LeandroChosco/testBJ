@@ -107,7 +107,6 @@ class Map extends Component {
                 }
                 return true
             })
-            console.log(auxCamaras);
             this.setState({loading:false,places:auxCamaras})
             const marker = []
             this.state.places.map((value,index)=>{

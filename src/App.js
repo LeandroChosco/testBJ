@@ -9,7 +9,7 @@ import NotificationSystem from 'react-notification-system';
 
 import Header from './components/Header';
 import SideBar from './components/SideBar';
-import CameraInfoSide from './components/CameraInfoSide';
+import Notifications from './components/Notifications';
 import CameraControls from './components/CameraControls';
 
 import './App.css';
@@ -20,6 +20,7 @@ import Welcome from './pages/Welcome';
 
 import firebase from './constants/config';
 import firebaseC5 from './constants/configC5';
+import Matches from './components/Matches';
 
 class App extends Component {
 
@@ -70,8 +71,8 @@ class App extends Component {
       })})
     })
 
-    /*firebaseC5.firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{
-      if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
+    firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
+      if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
         this.showNot('SOS','Nueva alerta de ayuda generada','error','Ver detalles',1)
       }
       if(this.state.fisrtTime)
@@ -82,9 +83,8 @@ class App extends Component {
         return value
       })})
     })
-
-    firebaseC5.firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{
-      if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
+    firebaseC5.app('c5virtual').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
+      if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
         this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',2)
       }
       if(this.state.fisrtTime)
@@ -94,7 +94,7 @@ class App extends Component {
         value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
         return value
       })})
-    })*/
+    })  
   }
 
 
@@ -164,7 +164,6 @@ class App extends Component {
   }
 
   _cameraSideInfo = (cameraInfo) => {  
-    console.log(cameraInfo)  
     console.log(this.state.cameraInfoSide)
     this.setState({cameraInfoSide: !this.state.cameraInfoSide, cameraID:cameraInfo})
   }
@@ -191,7 +190,6 @@ class App extends Component {
             isAuth.userInfo.modules.map(value=>{
                 if (value.id===module_id) {
                     isValid = value
-                    console.log(value)
                 }
                 return value;
             })            
@@ -214,13 +212,21 @@ class App extends Component {
             userInfo={this.state.userInfo} 
             _reloadCams={this._reloadCams}/>
           :null
-        }     
+        } 
+        {this.state.isAuthenticated&&this.state.showHeader?
+          <Matches 
+          toggleSideMenu = {this._cameraSideInfo}  
+          cameraID={this.state.cameraID}
+          matchs={this.state.matches}/>  
+          :null
+        }           
         <SideBar toggleSideMenu = {this._toggleSideMenu} active={this.state.sideMenu}/>
         {this.state.cameraInfoSide?
-          <CameraInfoSide 
+          <Notifications 
             toggleSideMenu = {this._cameraSideInfo}  
             cameraID={this.state.cameraID}
-            matchs={this.state.matches}/>
+            help={this.state.sos}
+            support={this.state.support}/>
           :null
         }
         <Route path="/" exact render={(props) => 
