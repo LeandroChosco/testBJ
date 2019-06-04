@@ -75,7 +75,7 @@ class App extends Component {
       if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
         this.showNot('SOS','Nueva alerta de ayuda generada','error','Ver detalles',1)
       }
-      if(this.state.fisrtTime)
+      if(this.state.fisrtTimeHelp)
         this.setState({fisrtTime:false})
       this.setState({sos:docs.docs.map(v=>{
         let value = v.data()
@@ -87,7 +87,7 @@ class App extends Component {
       if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
         this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',2)
       }
-      if(this.state.fisrtTime)
+      if(this.state.fisrtTimeSupport)
         this.setState({fisrtTime:false})
       this.setState({support:docs.docs.map(v=>{
         let value = v.data()
