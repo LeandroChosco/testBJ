@@ -21,6 +21,7 @@ import Welcome from './pages/Welcome';
 import firebase from './constants/config';
 import firebaseC5 from './constants/configC5';
 import Matches from './components/Matches';
+import DetailsEmergency from './pages/DetailsEmergency';
 
 class App extends Component {
 
@@ -76,10 +77,11 @@ class App extends Component {
         this.showNot('SOS','Nueva alerta de ayuda generada','error','Ver detalles',1)
       }
       if(this.state.fisrtTimeHelp)
-        this.setState({fisrtTime:false})
+        this.setState({fisrtTimeHelp:false})
       this.setState({sos:docs.docs.map(v=>{
         let value = v.data()
         value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+        value.id = v.id
         return value
       })})
     })
@@ -88,10 +90,11 @@ class App extends Component {
         this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',2)
       }
       if(this.state.fisrtTimeSupport)
-        this.setState({fisrtTime:false})
+        this.setState({fisrtTimeSupport:false})
       this.setState({support:docs.docs.map(v=>{
         let value = v.data()
         value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+        value.id = v.id
         return value
       })})
     })  
@@ -197,6 +200,7 @@ class App extends Component {
     } 
     return isValid
 }
+
   
   render() {
     return (
@@ -248,7 +252,8 @@ class App extends Component {
         <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/> }/>
         <Route path="/analisis" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/analisis/:id" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/detalles/:id" exact render={(props) => <Details  {...props} firebase={this.state.firebase} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/detalles/emergency/:id" exact render={(props) => <DetailsEmergency  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}

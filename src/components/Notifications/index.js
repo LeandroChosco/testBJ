@@ -25,33 +25,34 @@ class Notifications extends Component {
         this.setState({ activeIndex: newIndex })
     }
 
+
     render() {
         const { activeIndex } = this.state
         return (
             <div ref='camInfoSideMenu' className="sidenav-right" style={{overflow:'hidden'}}>
                 <button className="closebtn"  onClick={this._toggle}>&times;</button>   
-                <Accordion styled>
+                <Accordion styled style={{height:'100%', paddingBottom:'100px'}}>
                     <Accordion.Title active={activeIndex === 0} index={0} onClick={this.handleClick}>
                         <Icon name='dropdown' />
                         Emergencia
                     </Accordion.Title>
-                    <Accordion.Content active={activeIndex === 0}>
+                    <Accordion.Content active={activeIndex === 0}  style={{overflowY:'auto', overflowX:'hidden', height:'100%'}}>
                         <div align='center'>
                             {this.props.help.map((value, index)=><SOSItem key={index} info={value}/>)}
                             {this.props.help.length===0?'No hay emergencias reportadas':null}
                         </div>
                     </Accordion.Content>
 
-                    <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
+                    {/* <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
                         <Icon name='dropdown' />
                         Soporte
                     </Accordion.Title>
-                    <Accordion.Content active={activeIndex === 1}>
+                    <Accordion.Content active={activeIndex === 1}  style={{overflowY:'auto', overflowX:'hidden', height:'100%'}}>
                         <div align='center'>
                             {this.props.support.map((value, index)=><SupportItem key={index} info={value}/>)}
                             {this.props.support.length===0?'No hay solicitudes de soporte reportadas':null}
                         </div>
-                    </Accordion.Content>
+                    </Accordion.Content> */}
                 </Accordion>             
                 {/* <div align = 'center'>
                     <Header>Emergencia</Header>
