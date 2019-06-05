@@ -411,7 +411,9 @@ class Analysis extends Component {
                 this.props.history.push('/welcome')
             }   
             console.log(isValid.UserToModules[0].actions)
-            this.setState({moduleActions:JSON.parse(isValid.UserToModules[0].actions)})
+            if(isValid.UserToModules[0]){
+                this.setState({moduleActions:JSON.parse(isValid.UserToModules[0].actions)})
+            }
         } else {
             this.setState({moduleActions:{btnrecord:true,btnsnap:true,viewHistorial:true}}) 
         }        
