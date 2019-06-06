@@ -43,7 +43,7 @@ class Notifications extends Component {
                         </div>
                     </Accordion.Content>
 
-                    {/* <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
+                    <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
                         <Icon name='dropdown' />
                         Soporte
                     </Accordion.Title>
@@ -52,7 +52,7 @@ class Notifications extends Component {
                             {this.props.support.map((value, index)=><SupportItem key={index} info={value}/>)}
                             {this.props.support.length===0?'No hay solicitudes de soporte reportadas':null}
                         </div>
-                    </Accordion.Content> */}
+                    </Accordion.Content>
                 </Accordion>             
                 {/* <div align = 'center'>
                     <Header>Emergencia</Header>
