@@ -4,12 +4,17 @@ import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
+import { JellyfishSpinner } from "react-spinners-kit";
+import {ToastsContainer, ToastsStore} from 'react-toasts';
+import Conections from '../../conections'
 
 class Login extends Component {
 
     state = {
         username:'',
-        pass:''
+		pass:'',
+		error: null,
+		loading:false
     }
 
     _handleChange = (e) => {
@@ -19,25 +24,39 @@ class Login extends Component {
     _makeLogin = () => {
         const {username, pass} = this.state
         if (username !== '' && pass !== '') {
-            if (username === 'admin' && pass === 'admin') {
-                this.props.makeAuth()
-            } else {
-                if (username === 'lpriego' && pass === 'lpriego') {
-					this.props.makeAuth('Luis Priego')
+			let userInfo ={
+				user_login: username,
+  				user_password:btoa(pass)
+			}			
+			this.setState({loading:true})
+			console.log(Conections)
+            Conections.makeLogin(userInfo)
+			.then(response =>{
+				const userResponse = response.data
+				console.log(userResponse)
+				if (userResponse.success && userResponse.data.login) {
+					this.props.makeAuth(userResponse.data.info_user)	
+				} else {
+					ToastsStore.error(userResponse.msg);
+					this.setState({loading:false, error:userResponse.msg})	
 				}
-            }	
+				this.setState({loading:false})
+			}).catch(error=>{
+				this.setState({loading:false, error:error})
+			})
         }
         else {
-            
+            ToastsStore.error('Los campos no pueden estar vacios');
         }
     }
 
   render() {
     return (
-        <div className="limiter">
-		    <div className="container-login100 cityBackground">
-			    <div className="wrap-login100">				
-				    <form className="login100-form validate-form" id="loginForm" data-toggle="validator">
+        <div className="limiter">	
+			<ToastsContainer store={ToastsStore}/>		
+		    {!this.props.isAuthenticated?<div className="container-login100 cityBackground">
+			    <div className="wrap-login100">															
+					<form className="login100-form validate-form" id="loginForm" data-toggle="validator">
 					    <span className="login100-form-logo">
 						    <img src={favicon} style={{width: "60%"}} alt="mhlogo"/>						
 					    </span>
@@ -52,16 +71,17 @@ class Login extends Component {
 						    <input className="input100" type="password" name="pass" placeholder="Contraseña" onChange={this._handleChange} required="required" id="password"/>
 						    <span className="focus-input100" data-placeholder="&#xf191;"></span>
 					    </div>
-					    <div className="contact100-form-checkbox">
+					    {/* <div className="contact100-form-checkbox">
 						    <input className="input-checkbox100" id="ckb1" type="checkbox" name="remember-me" />
 						    <label className="label-checkbox100" htmlFor="ckb1">
 							    Recordarme
 						    </label>
-					    </div>
+					    </div> */}
 					    <div className="container-login100-form-btn">
+							<JellyfishSpinner loading={this.state.loading} size={38} color='white'/>
 						    <button className="login100-form-btn" type="button" onClick={this._makeLogin}>
 							    Iniciar Sesión
-						    </button>
+						    </button>							
 					    </div>
 					    <div className="text-center p-t-90">
 						    <a className="txt1" href="#div">
@@ -70,7 +90,7 @@ class Login extends Component {
 					    </div>
 				    </form>
 			    </div>
-		    </div>
+		    </div>:null}
 	    </div>    
     );
   }

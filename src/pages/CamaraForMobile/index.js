@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import jsmpeg from 'jsmpeg';
 import constants from '../../constants/constants'
 import { JellyfishSpinner } from "react-spinners-kit";
+import conections from '../../conections';
 
 class MobileHelp extends Component {
 
@@ -53,11 +54,9 @@ class MobileHelp extends Component {
                 } 
             }
         } else {
-            fetch(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams')       
-                .then((response) => {
-                    return response.json();
-                })
-                .then((camaras) => {
+           conections.getAllCams()
+                .then((data) => {
+                    const camaras= data.data
                     let actualCamera = {}
                     let title = ''
                     const camera_id = parseInt(this.props.match.params.id)

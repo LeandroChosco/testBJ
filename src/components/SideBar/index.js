@@ -8,6 +8,7 @@ import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import '../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css'
 import './style.css'
 import constants from '../../constants/constants';
+import conections from '../../conections';
 
 class SideBar extends Component {   
     state = {
@@ -19,11 +20,9 @@ class SideBar extends Component {
     }
 
     componentDidMount(){
-        fetch(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams')
-            .then((response) => {
-                return response.json();
-            })
-            .then((camaras) => {
+        conections.getAllCams()        
+            .then((data) => {
+                const camaras = data.data
                 let auxCamaras = []
                 let options = []
                 camaras.map(value=>{

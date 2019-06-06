@@ -8,6 +8,7 @@ import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
 import constants from '../../constants/constants';
+import conections from '../../conections';
 
 const mapOptions= {
     center: {lat: 19.459430, lng: -99.208588},
@@ -26,7 +27,8 @@ class Map extends Component {
     state = {
         places : [
         ],
-        webSocket:'ws://18.222.106.238'
+        webSocket:'ws://18.222.106.238',
+        moduleActions:{}
     }
 
   render() {
@@ -73,23 +75,31 @@ class Map extends Component {
             position: { lat: e.position.lat(), lng: e.position.lng() }
         })
         console.log(e)
-        infoWindow.addListener('domready', (function(marker, render) {
+        infoWindow.addListener('domready', (function(marker, render,moduleActions) {
             return function() {                  
-                render(<CameraStream marker={marker} showButtons height={.65} showExternal/>, document.getElementById('infoWindow'+e.extraData.id))
+                render(<CameraStream moduleActions={moduleActions} marker={marker} showButtons height={.65} showExternal/>, document.getElementById('infoWindow'+e.extraData.id))
             }
-          })(e,render))
+          })(e,render, this.state.moduleActions))
         infoWindow.open(map)
     }
 
+   
+
     componentDidMount(){
-        fetch(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams?user_id=1')
-        .then((response) => {
-            return response.json();
-        })
-        .then((camaras) => {
+        const isValid = this.props.canAccess(1)
+        if (!isValid) {
+            this.props.history.push('/welcome')
+        }        
+        try{
+            this.setState({moduleActions:JSON.parse(isValid.UserToModules[0].actions)})
+        } catch (e){
+            console.log(e)
+        }
+        conections.getAllCams().then((data) => {
+            const camaras = data.data
             let auxCamaras = []
             camaras.map(value=>{
-                if (value.active === 1) {
+                if (value.active === 1&& value.flag_streaming === 1) {
                     auxCamaras.push({
                         id:value.id,
                         num_cam:value.num_cam,
@@ -101,7 +111,6 @@ class Map extends Component {
                 }
                 return true
             })
-            console.log(auxCamaras);
             this.setState({loading:false,places:auxCamaras})
             const marker = []
             this.state.places.map((value,index)=>{

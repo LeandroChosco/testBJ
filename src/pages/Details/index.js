@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import responseJson from '../../assets/json/suspects.json'
 import { Image, Header, Button, Radio } from 'semantic-ui-react';
 
 import './style.css'
 import MapContainer from '../../components/MapContainer/index.js';
+import firebase from '../../constants/config';
 import { Modal, Navbar } from 'react-bootstrap';
+import confirmMatch from '../../constants/confirmMatch';
 const mapOptions= {
     center: {lat: 19.459430, lng: -99.208588},
     zoom: 15,
@@ -32,6 +33,7 @@ const mapOptions= {
         ],    
         images: [{},{}],
         idCamera:Math.floor(Math.random() * 10) + 1,
+        match:{}
     }
 
   render() {
@@ -59,7 +61,7 @@ const mapOptions= {
                             <div  className="col imageContainer" align='center'>
                                 <h4>Imagen de camara</h4>
                                 <div  className="card-image">
-                                    <Image wrapped size="small" src={this.state.images[0].original}/>
+                                    <Image wrapped size="small" src={this.state.match?this.state.match.name?'http://95.216.37.253:3000/images/'+this.state.match.name.replace(/ /g,'')+'/'+this.state.match.messageId+'-face.jpeg':'':''}/>
                                 </div>
                             </div>
                         </div>
@@ -67,7 +69,7 @@ const mapOptions= {
                     <div  className="col-2 center imageContainer" >
                         <div  className="row" >
                             <div  className="col" align='center'>  
-                                <Header size='huge' color="brown">95%</Header>
+                                <Header size='huge' color="brown">{this.state.match?this.state.match.confidence:''}</Header>
                             </div>
                         </div>
                         <div  className="row" >
@@ -81,7 +83,7 @@ const mapOptions= {
                             <div  className="col imageContainer" align='center'>
                                 <h4>Imagen registrada</h4>
                                 <div  className="card-image">
-                                    <Image wrapped size="small" src={this.state.images[1]?this.state.images[1].original:this.state.images[0].original}/>
+                                <Image wrapped size="small" src={this.state.match?this.state.match.name?'http://95.216.37.253:3000/images/'+this.state.match.name.replace(/ /g,'')+'/databaseImage.jpeg':'':''}/>
                                 </div>
                             </div>
                         </div>
@@ -90,9 +92,23 @@ const mapOptions= {
                     </div>
                 </div>
             </div>
-            <div  className="row">
-                &nbsp;
+            <div  className="row"  style={{width:'100%'}}>
+                <div className='col' align='center'>
+                    <b>Localizado en: </b> {this.state.match.location}
+                </div>
             </div>
+            {this.state.match.typeConfirm?<div  className="row"  style={{width:'100%'}}>
+                <div className='col' align='center'>
+                    <b>Respuesta a evento: </b> {confirmMatch[this.state.match.typeConfirm].map(value=>{
+                        if (value.type===this.state.match.messageConfirm) {
+                            return(
+                                <i>{value.msg}</i>
+                            )
+                        }
+                        return null
+                    })}
+                </div>
+            </div>:null}
             <div  className="card">
                 <div  className="row"  >
                     
@@ -103,13 +119,13 @@ const mapOptions= {
                                 <b>Nombre:</b>
                             </div>
                             <div  className="col-8">
-                                 {this.state.title}
+                                 {this.state.match.name}
                             </div>
                             <div  className="col-4">
                                 <b>Aliases:</b>
                             </div>
                             <div  className="col-8">
-                                {this.state.aliases}
+                                {this.state.match.name}
                             </div>
                             <div  className="col-4">
                                 <b>Detalles:</b>
@@ -179,11 +195,11 @@ const mapOptions= {
                 &nbsp;
             </div>
             <div  className="row">
-                <div  className="col center" align='center'>
+                {this.state.match.status===false||this.state.match.status===undefined?<div  className="col center" align='center'>
                     <Button positive onClick={()=>this.setState({openConfirm:true})}>
                     Confirmar evento
                     </Button>		    
-                </div>
+                </div>:null}
                 
             </div>
             <div  className="row">
@@ -209,56 +225,14 @@ const mapOptions= {
                     
                 </Modal.Header>
                 <Modal.Body>
-                {this.state.typeConfirm?
-                <div>
-                    <Radio
-                        label="Sospechoso se encuentra en libertad condicional"
-                        onChange={()=>{this.setState({checked:'conditional'})}}                        
-                        checked={this.state.checked==='conditional'}
+                {this.state.typeConfirm!==undefined?                
+                    confirmMatch[this.state.typeConfirm].map(value=>
+                        <Radio
+                        label={value.msg}
+                        onChange={()=>{this.setState({checked:value.type})}}                        
+                        checked={this.state.checked===value.type}
                     />
-                    <Radio
-                        label="Sospechoso arrestado y puesto a disposición de las autoridades"
-                        onChange={()=>{this.setState({checked:'to_authorities'})}}                        
-                        checked={this.state.checked==='to_authorities'}
-                    />
-                    <Radio
-                        label='Arrestadó y solicitadó refuerzo federal'
-                        onChange={()=>{this.setState({checked:'federal_reinforcement'})}}                        
-                        checked={this.state.checked==='federal_reinforcement'}
-                    />
-                    <Radio
-                        label='Arrestadó y solicitadó refuerzo estatal'
-                        onChange={()=>{this.setState({checked:'statal_reinforcement'})}}                        
-                        checked={this.state.checked==='statal_reinforcement'}
-                    />
-                    </div>:
-                    <div>
-                    <Radio
-                        label="Match similar pero el sospechoso no era el"
-                        onChange={()=>{this.setState({checked:'similar'})}}                        
-                        checked={this.state.checked==='similar'}
-                    />
-                    <Radio
-                        label="Match no era nada similar al sospechoso"
-                        onChange={()=>{this.setState({checked:'no_similar'})}}                        
-                        checked={this.state.checked==='no_similar'}
-                    />
-                    <Radio
-                        label='Match con una mujer, el sospechoso es hombre'
-                        onChange={()=>{this.setState({checked:'female_on_male'})}}                        
-                        checked={this.state.checked==='female_on_male'}
-                    />
-                    <Radio
-                        label='Match con un hombre, sospechosa es mujer'
-                        onChange={()=>{this.setState({checked:'male_on_female'})}}                        
-                        checked={this.state.checked==='male_on_female'}
-                    />
-                    <Radio
-                        label='Match en objeto y no en persona'
-                        onChange={()=>{this.setState({checked:'object'})}}                        
-                        checked={this.state.checked==='object'}
-                    />
-                </div>}
+                    ):null}
 
                 </Modal.Body>
                 <Modal.Footer>                    
@@ -277,10 +251,18 @@ const mapOptions= {
   }
 
   saveChange = () => {
-    this.setState({openSelection:false})
-    console.log(this.props.history)
-    //this.props.history.push('/analisis')
-    window.close()
+    this.setState({openSelection:false}) 
+    firebase.firestore().collection('matches').doc(this.props.match.params.id).get()
+        .then(async data=>{
+            if (data.exists) {
+                let value = data.data()
+                value.status = 0
+                value.typeConfirm = this.state.typeConfirm
+                value.messageConfirm = this.state.checked
+                await firebase.firestore().collection('matches').doc(this.props.match.params.id).set(value)
+                window.close()
+            }
+        })       
   }
 
   _onMapLoad = map => {
@@ -297,31 +279,17 @@ const mapOptions= {
   }
 
     componentDidMount(){
-        var data = {}; 
-        responseJson.items.map(el=> {
-        if(el.id.toString() === this.props.match.params.id) 
-            data = el
-            return true
+
+        firebase.firestore().collection('matches').doc(this.props.match.params.id).get().then(doc=>{
+            console.log(doc)
+            if(doc.exists){
+                let value = doc.data()
+                value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+                this.setState({match:value})
+            }
         })
-        this.setState(data)
     }
 
-    changeInfo = (props) => {
-        var data = {}; 
-        responseJson.items.map(el=> {
-        if(el.id.toString() === props.match.params.id) 
-            data = el
-            return true
-        })
-        this.setState(data)
-    }
-
-    static getDerivedStateFromProps(props, state) {        
-        if (props.match.params.id !== state.id) {
-            return (responseJson.items.filter(el => el.id.toString() === props.match.params.id)[0])
-        }
-        return null;
-    }
     
 
 }
