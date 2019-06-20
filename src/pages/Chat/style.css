@@ -1,0 +1,140 @@
+.userList{
+    height: 100%;
+    background-color: #dadada;
+    padding: 25px;        
+}
+
+.userList > .card{
+    width: 100%;
+}
+
+.fullHeight{
+    bottom: 0;
+    right: 0;
+    left: 0;
+    position: absolute;
+    background-color: #fafafa;
+}
+
+
+
+.messagesContainer{
+    position: absolute;
+    top:400px;
+    left: 0;
+    right: 0;
+    bottom: 10vh;
+    padding: 15px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.cameraView{
+    height: 300px;
+}
+
+.cameraView >.card{
+    height: 100% !important;
+}
+
+.cameraView >.card>.card-body{
+    height: 100% !important;
+}
+
+.cameraView >.card>.card-body>.dataHolder{
+    height: 100% !important;
+}
+.app-container{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top:51px;
+}
+
+
+.user {
+    position: relative;
+    background: #afafaf;
+    border-radius: .4em;
+    width: 85%;
+    padding: 5px;
+    color: white;
+    margin-top:10px;
+}
+
+.user >p {
+    color: white;
+}
+
+/*.user:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-right-color: #8A2908;
+    border-left: 0;
+    border-bottom: 0;
+    margin-top: -10px;
+    margin-left: -20px;
+}*/
+
+.support {
+    position: relative;
+    background: #8A2908;
+    border-radius: .4em;
+    padding: 5px;
+    margin-top:10px;
+    width: 85%;
+    margin-left: 15%;
+}
+
+.support > p{
+    color: white;
+}
+
+/*.support:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-left-color: #afafaf;
+    border-right: 0;
+    border-bottom: 0;
+    margin-top: -10px;
+    margin-right: -20px;
+}*/
+
+.messages_send_box{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    height: 10vh;
+    background-color: #c0c0c0;   
+    padding:5px;     
+}
+
+#messsageTextarea{
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;    
+    width: 100%;
+    height: 8vh;
+    resize: none;
+}
+
+#sendbutton{
+    position: absolute;
+    right: 0;
+    top: 0;    
+    bottom:0;  
+    margin:auto;  
+    font-size: 2rem;
+}

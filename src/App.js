@@ -49,6 +49,7 @@ class App extends Component {
     fisrtTimeSupport:true,
     firebase:{}
   }
+  
 
   componentDidMount(){
     if(window.location.pathname.includes('mobile_help')){
@@ -104,17 +105,17 @@ class App extends Component {
     
     firebaseC5.app('c5virtual').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot(docs=>{     
       if (this.state.showNotification&&!this.state.fisrtTimeChat) {
-        this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',2)
+        this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',3,0)
       }
       if(this.state.fisrtTimeChat)
-        this.setState({fisrtTimeChat:false})
+        this.setState({fisrtTimeChat:false})      
       this.setState({chats:docs.docs.map(v=>{
         let value = v.data()
-        value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
-        value.messages = value.messages.map(message =>{
+        value.lastModification = new Date(value.lastModification.toDate()).toLocaleString()
+        /*value.messages = value.messages.map(message =>{
           message.dateTime = new Date(message.dateTime.toDate()).toLocaleString()
           return message
-        })
+        })*/
         value.id = v.id
         return value
       })})
@@ -122,7 +123,7 @@ class App extends Component {
   }
 
 
-  showNot = (title,message,type,label,action) => {
+  showNot = (title,message,type,label,action,id) => {
     const notification = this.refs.notificationSystem;
     if(notification){
       notification.addNotification({
@@ -131,7 +132,7 @@ class App extends Component {
         level: type,
         action: {
           label: label,
-          callback: ()=> this.seeMatch(action)
+          callback: ()=> action===3?window.location.href = window.location.href.replace(window.location.pathname,'/chat#message'):this.seeMatch(action)
         }
       });
     }
