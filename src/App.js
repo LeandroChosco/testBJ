@@ -22,6 +22,7 @@ import firebase from './constants/config';
 import firebaseC5 from './constants/configC5';
 import Matches from './components/Matches';
 import DetailsEmergency from './pages/DetailsEmergency';
+import Chat from './pages/Chat';
 
 class App extends Component {
 
@@ -40,6 +41,8 @@ class App extends Component {
     matches: [],
     sos:[],
     support:[],
+    fisrtTimeChat:true,
+    chats:[],
     showNotification:false,
     fisrtTime: true, 
     fisrtTimeHelp:true,
@@ -97,7 +100,25 @@ class App extends Component {
         value.id = v.id
         return value
       })})
-    })  
+    }) 
+    
+    firebaseC5.app('c5virtual').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot(docs=>{     
+      if (this.state.showNotification&&!this.state.fisrtTimeChat) {
+        this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',2)
+      }
+      if(this.state.fisrtTimeChat)
+        this.setState({fisrtTimeChat:false})
+      this.setState({chats:docs.docs.map(v=>{
+        let value = v.data()
+        value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+        value.messages = value.messages.map(message =>{
+          message.dateTime = new Date(message.dateTime.toDate()).toLocaleString()
+          return message
+        })
+        value.id = v.id
+        return value
+      })})
+    }) 
   }
 
 
@@ -255,6 +276,7 @@ class App extends Component {
         <Route path="/detalles/emergency/:id" exact render={(props) => <DetailsEmergency  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        <Route path="/chat" exact render={(props) => <Chat chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />
