@@ -14,8 +14,9 @@ class MediaContainer extends Component {
     return (
     <div className='mediaContainer col-6 p10'>   
         <Card onClick={()=>this.setState({modal:true})}>
-            {this.props.video?<video src={constants.base_url+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}}/>:null}
+            {this.props.video?<video poster={this.props.value.RecordProccessImage?constants.base_url+':'+constants.apiPort+'/'+this.props.value.RecordProccessImage.relative_path_file :''} src={constants.base_url+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}}/>:null}
             {this.props.image?<img src={constants.base_url+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}} alt='img'/>:null}
+            {this.props.value.fecha?this.props.value.fecha:null}
         </Card>
         <Modal show={this.state.modal} onHide={()=>this.setState({modal:false})}>
             <Modal.Header closeButton>                      
