@@ -36,3 +36,40 @@
 .buttonmodal{
   padding: 5px;
 }
+
+.callholder{
+  position: absolute !important;
+  z-index: 1021;
+  width: 80vw !important;
+  border: 3px solid black !important;
+  font-size: 1.8rem;
+  font-stretch: expanded;
+}
+
+.callholder>div>div>div>.card{
+  height: 100% !important;
+}
+
+.callholder>div>div>div>.card >.card-body{
+  height: 100% !important;
+}
+
+#root>.overlayed{
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1020;
+    pointer-events: unset;
+}
+
+.rowCallInfo{
+  width: 50%;
+  height: 30vh;
+}
+
+.textContainer{
+  padding: 15px;
+}

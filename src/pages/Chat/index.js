@@ -4,6 +4,7 @@ import { Card, Icon } from 'semantic-ui-react';
 import './style.css'
 import firebaseC5 from '../../constants/configC5';
 import CameraStream from '../../components/CameraStream';
+import constants from '../../constants/constants';
 const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
  class Chat extends Component {
     state = {
@@ -36,7 +37,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
               <div className="col-8 messages">
                     {chatId!==''&&chats[index]?
                     <div className="cameraView">
-                      <CameraStream hideTitle marker={{title:chats[index].user_name,extraData:{num_cam:chats[index].user_cam.num_cam,cameraID:chats[index].user_cam.id}}}/>
+                      <CameraStream hideTitle marker={{title:chats[index].user_name,extraData:{num_cam:chats[index].user_cam.num_cam,cameraID:chats[index].user_cam.id,webSocket:constants.webSocket+':'+(2000+chats[index].user_cam.num_cam)}}}/>
                     </div>:null}
                     <div className="messagesContainer" id='messagesContainer'>
                       {chatId!==''&&chats[index]?chats[index].messages?

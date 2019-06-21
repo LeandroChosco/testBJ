@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
+import socketIOClient from "socket.io-client";
 
 import Login from './pages/Login'
 import Map from './pages/Map'
@@ -23,6 +24,43 @@ import firebaseC5 from './constants/configC5';
 import Matches from './components/Matches';
 import DetailsEmergency from './pages/DetailsEmergency';
 import Chat from './pages/Chat';
+import ModalCall from './components/ModalCall';
+
+const fakeCall={
+  active: 0,
+  cam_id: 4,  
+  cat_carrier_id: 1,  
+  cell_phone: 0,  
+  cellphone: "+525539700952", 
+  comment: "",  
+  date_creation: null,  
+  date_update: null,  
+  display_name: "Evangelina  Shanchez Guadarrama",  
+  dns: "172.30.23.217", 
+  flag_record_movie: 1, 
+  flag_streaming: 0,  
+  google_cordenate: "19.4594683,-99.2085305", 
+  id: 4,  
+  keep_video_days: 1, 
+  num_cam: 2, 
+  number: 46, 
+  password: "371CF5E046", 
+  path_photo: "/",  
+  personal_name: "Elsa aldrade mendez", 
+  phone: 55276520,  
+  port_output_streaming: 2002,  
+  ssid_name: "INFINITUM641E69", 
+  state: "Ciudad de México",  
+  street: "Río Napo", 
+  town: "Argentina Poniente", 
+  township: "Miguel hidalgo", 
+  type_camare_id: 1,  
+  user_creation: 28,  
+  user_id: 30,  
+  user_login: "labeba090354@gmail.com", 
+  user_nicename: "Evangelina  Shanchez Guadarrama", 
+  user_update: 0
+}
 
 class App extends Component {
 
@@ -47,7 +85,12 @@ class App extends Component {
     fisrtTime: true, 
     fisrtTimeHelp:true,
     fisrtTimeSupport:true,
-    firebase:{}
+    firebase:{},
+    ws:null,
+    fisrtTimecomplaiments:true,
+    complaiments:[],
+    modalCall:false,
+    callInfo:{}
   }
   
 
@@ -103,6 +146,19 @@ class App extends Component {
       })})
     }) 
     
+
+    firebaseC5.app('c5virtual').firestore().collection('complaiments').orderBy('dateTime','desc').onSnapshot(docs=>{     
+      if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimcomplaiments) {
+        this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2)
+      }
+      if(this.state.fisrtTimecomplaiments)
+        this.setState({fisrtTimecomplaiments:false})
+      this.setState({complaiments:docs.docs.map(v=>{
+        let value = v.data()        
+        return value
+      })})
+    }) 
+    
     firebaseC5.app('c5virtual').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot(docs=>{     
       if (this.state.showNotification&&!this.state.fisrtTimeChat) {
         this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',3,0)
@@ -120,8 +176,37 @@ class App extends Component {
         return value
       })})
     }) 
+    const socket = socketIOClient('http://95.216.37.253:3011');
+    socket.on("messages", this.checkCall);
+    //setTimeout(()=>this.checkCall(fakeCall),5000)
+
   }
 
+  openSocket = (data) =>{
+    console.log('socket open', data)
+  }
+
+  checkCall = (data) =>{
+    console.log(data)
+    console.log(this.state.showNotification)
+    if (this.state.showNotification) {
+      console.log('wewbsoket data',data)
+      const notification = this.refs.notificationSystem;
+      if(notification){
+        notification.addNotification({
+          title:'Llama entrante de '+data.user_nicename,
+          message: 'Se registro una llamada entrante',
+          level: 'error',
+          action: {
+            label: 'Ver detalles',
+            callback: ()=> {
+              this.setState({modalCall:true, callInfo:data})
+            }
+          }
+        });
+      }
+    }    
+  }
 
   showNot = (title,message,type,label,action,id) => {
     const notification = this.refs.notificationSystem;
@@ -223,10 +308,10 @@ class App extends Component {
     return isValid
 }
 
-  
   render() {
     return (
-    <Router>      
+    <Router>    
+      {this.state.modalCall?<ModalCall data={this.state.callInfo} modal={this.state.modalCall} hideModal={()=>this.setState({modalCall:false, callInfo:{}})} />:null  }
       <div className="fullcontainer">                
         {this.state.isAuthenticated&&this.state.showHeader?
           <Header 
@@ -281,7 +366,7 @@ class App extends Component {
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />
-        
+      <div className="fullcontainerLayer"></div>
     </Router>  
     );
   }
