@@ -150,7 +150,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                     <h4>{row.fecha}</h4>
                                 </div>
 
-                                        {row.videos.map((value,index)=><MediaContainer hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}                                        
+                                        {row.videos.map((value,index)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}                                        
                                     </div>
                                 ):null}
                             

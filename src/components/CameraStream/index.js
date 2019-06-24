@@ -131,7 +131,7 @@ class CameraStream extends Component {
 
 this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
-                                            {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                            {this.state.video_history.map((value,index)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
                                         </div>
                                         {this.state.video_history.length === 0 ?
                                             <div align='center'>
@@ -196,7 +196,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
 
                             this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
-                                            {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                            {this.state.video_history.map((value,index)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
                                         </div>
                                         {this.state.video_history.length === 0 ?
                                             <div align='center'>

@@ -11,10 +11,11 @@ class MediaContainer extends Component {
     }
 
   render() {
+      console.log(this.props)
     return (
     <div className='mediaContainer col-6 p10'>   
         <Card onClick={()=>this.setState({modal:true})}>
-            {this.props.video?<video poster={this.props.value.RecordProccessImage?constants.base_url+':'+constants.apiPort+'/'+this.props.value.RecordProccessImage.relative_path_file :''} src={constants.base_url+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}}/>:null}
+            {this.props.video?<video poster={this.props.value.RecordProccessImage?this.props.dns_ip+':'+constants.apiPort+'/'+this.props.value.RecordProccessImage.relative_path_file :''} src={(this.props.dns_ip?this.props.dns_ip:constants.base_url)+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}}/>:null}
             {this.props.image?<img src={constants.base_url+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}} alt='img'/>:null}
             {this.props.value.fecha?this.props.value.fecha:null}
         </Card>
@@ -24,7 +25,7 @@ class MediaContainer extends Component {
                 {this.props.hideDelete?null:<Button basic negative onClick={this._deleteFile}><i className='fa fa-trash'></i> Eliminar</Button>}
             </Modal.Header>
             <Modal.Body>
-                {this.props.video?<video ref='element' autoPlay controls src={constants.base_url+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}}/>:null}
+                {this.props.video?<video ref='element' autoPlay controls src={(this.props.dns_ip?this.props.dns_ip:constants.base_url)+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}}/>:null}
                 {this.props.image?<img id='imagecontainerfrommedia' src={constants.base_url+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}} crossOrigin='true' alt='img'/>:null}
             </Modal.Body>
         </Modal>
