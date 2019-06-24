@@ -57,6 +57,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                                 autoCorrect="on"
                                 id="messsageTextarea"
                                 value={this.state.text}  
+                                onKeyPress={this.checkKey}
                                 onChange={event=>{this.setState({text:event.target.value})}}                              
                               >          
                               </textarea>
@@ -69,6 +70,18 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     
     );
   }
+
+  checkKey = (event) => {
+    var key = window.event.keyCode;    
+    if (key === 13) {
+      this.sendMessage()
+      return false;
+    }
+    else {
+        return true;
+    }
+  }
+
   sendMessage = () =>{
     if(this.state.text==='')
       return;

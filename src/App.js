@@ -26,42 +26,6 @@ import DetailsEmergency from './pages/DetailsEmergency';
 import Chat from './pages/Chat';
 import ModalCall from './components/ModalCall';
 
-const fakeCall={
-  active: 0,
-  cam_id: 4,  
-  cat_carrier_id: 1,  
-  cell_phone: 0,  
-  cellphone: "+525539700952", 
-  comment: "",  
-  date_creation: null,  
-  date_update: null,  
-  display_name: "Evangelina  Shanchez Guadarrama",  
-  dns: "172.30.23.217", 
-  flag_record_movie: 1, 
-  flag_streaming: 0,  
-  google_cordenate: "19.4594683,-99.2085305", 
-  id: 4,  
-  keep_video_days: 1, 
-  num_cam: 2, 
-  number: 46, 
-  password: "371CF5E046", 
-  path_photo: "/",  
-  personal_name: "Elsa aldrade mendez", 
-  phone: 55276520,  
-  port_output_streaming: 2002,  
-  ssid_name: "INFINITUM641E69", 
-  state: "Ciudad de México",  
-  street: "Río Napo", 
-  town: "Argentina Poniente", 
-  township: "Miguel hidalgo", 
-  type_camare_id: 1,  
-  user_creation: 28,  
-  user_id: 30,  
-  user_login: "labeba090354@gmail.com", 
-  user_nicename: "Evangelina  Shanchez Guadarrama", 
-  user_update: 0
-}
-
 class App extends Component {
 
   state = {
