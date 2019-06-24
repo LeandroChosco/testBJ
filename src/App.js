@@ -188,7 +188,7 @@ class App extends Component {
     }) 
     const socket = socketIOClient('http://95.216.37.253:3011');
     socket.on("messages", this.checkCall);
-    setTimeout(()=>this.checkCall(fakeCall),5000)
+    //setTimeout(()=>this.checkCall(fakeCall),5000)
 
   }
 

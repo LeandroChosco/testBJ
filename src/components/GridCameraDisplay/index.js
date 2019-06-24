@@ -71,7 +71,7 @@ class GridCameraDisplay extends Component {
         </Row>               
         {this.props.loading?null:
         <Row className='paginatorContainerOnGrid'>
-            <Col>
+            <Col style={{height:'100%'}}>
              Camaras por pagina <Select placeholder='Camaras por pagina' options={countryOptions}  value={this.state.limit} onChange={(e,value)=>{                
                 const pageCount = Math.ceil(this.state.markers.length / value.value)
                 console.log("paginas a mostar",pageCount)
