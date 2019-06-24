@@ -54,7 +54,8 @@ class App extends Component {
     fisrtTimecomplaiments:true,
     complaiments:[],
     modalCall:false,
-    callInfo:{}
+    callInfo:{},
+    calls:[]
   }
   
 
@@ -123,6 +124,13 @@ class App extends Component {
         return value
       })})
     }) 
+
+    firebaseC5.app('c5virtual').firestore().collection('calls').orderBy('dateTime','desc').onSnapshot(docs => {
+      this.setState({calls:docs.docs.map(doc=>{
+        let value = doc.data()
+        return value})
+      })
+    })
     
     firebaseC5.app('c5virtual').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot(docs=>{     
       if (this.state.showNotification&&!this.state.fisrtTimeChat) {
@@ -157,18 +165,21 @@ class App extends Component {
     if (this.state.showNotification) {
       console.log('wewbsoket data',data)
       const notification = this.refs.notificationSystem;
-      if(notification){
-        notification.addNotification({
-          title:'Llama entrante de '+data.user_nicename,
-          message: 'Se registro una llamada entrante',
-          level: 'error',
-          action: {
-            label: 'Ver detalles',
-            callback: ()=> {
-              this.setState({modalCall:true, callInfo:data})
+      if(notification){        
+        firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{
+          notification.addNotification({
+            title:'Llama entrante de '+data.user_nicename,
+            message: 'Se registro una llamada entrante',
+            level: 'error',
+            action: {
+              label: 'Ver detalles',
+              callback: ()=> {
+                this.setState({modalCall:true, callInfo:{...data,id:doc.id}})
+                firebaseC5.app('c5virtual').firestore().collection('calls').doc(doc.id).update({status:0})
+              }
             }
-          }
-        });
+          });
+        })
       }
     }    
   }
@@ -302,7 +313,10 @@ class App extends Component {
             toggleSideMenu = {this._cameraSideInfo}  
             cameraID={this.state.cameraID}
             help={this.state.sos}
-            support={this.state.support}/>
+            support={this.state.support}
+            complaiments={this.state.complaiments}
+            calls={this.state.calls}
+            />
           :null
         }
         <Route path="/" exact render={(props) => 

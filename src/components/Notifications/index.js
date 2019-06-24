@@ -53,6 +53,28 @@ class Notifications extends Component {
                             {this.props.support.length===0?'No hay solicitudes de soporte reportadas':null}
                         </div>
                     </Accordion.Content>
+
+                    <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
+                        <Icon name='dropdown' />
+                        Denuncias
+                    </Accordion.Title>
+                    <Accordion.Content active={activeIndex === 1}  style={{overflowY:'auto', overflowX:'hidden', height:'100%'}}>
+                        <div align='center'>
+                            {this.props.complaiments.map((value, index)=><div key={index} info={value}>informacion de denuncia</div>)}
+                            {this.props.support.length===0?'No hay denuncias':null}
+                        </div>
+                    </Accordion.Content>
+
+                    <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
+                        <Icon name='dropdown' />
+                        Robo a casa abitacion
+                    </Accordion.Title>
+                    <Accordion.Content active={activeIndex === 1}  style={{overflowY:'auto', overflowX:'hidden', height:'100%'}}>
+                        <div align='center'>
+                            {this.props.calls.map((value, index)=><div key={index} info={value}>Informacion de llamada</div>)}
+                            {this.props.support.length===0?'No hay reportes de robos':null}
+                        </div>
+                    </Accordion.Content>
                 </Accordion>             
                 {/* <div align = 'center'>
                     <Header>Emergencia</Header>
