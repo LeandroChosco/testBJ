@@ -27,7 +27,7 @@ class ModalCall extends Component {
                             />
                         </Card.Header>
                         <Card.Content>
-                            <div className="row">
+                            <div className="row" style={{paddingBottom:20}}>
                                 <div className="rowCallInfo">
                                     <MapContainer                 
                                         options={{
@@ -50,12 +50,12 @@ class ModalCall extends Component {
                                 </div>
                             </div>
                             <div className="row textContainer">
-                                <div className="col-4"><b>Nombre: </b>{data.user_nicename}</div>
-                                <div className="col-4"><b>Telefono: </b>{data.phone}</div>
-                                <div className="col-4"><b>Celular: </b>{data.cellphone}</div>
+                                <div style={{fontSize:'2.5vh'}} className="col-6"><b>Nombre: </b>{data.user_nicename}</div>
+                                <div style={{fontSize:'2.5vh'}} className="col-3"><b>Telefono: </b>{data.phone}</div>
+                                <div style={{fontSize:'2.5vh'}} className="col-3"><b>Celular: </b>{data.cellphone}</div>
                             </div>
                             <div className="row textContainer">
-                                <div className="col">
+                                <div style={{fontSize:'2.5vh'}} className="col">
                                     <b>Dirección: </b>{data.street} {data.number}, {data.town}, {data.township}, {data.state}
                                 </div>
                             </div>

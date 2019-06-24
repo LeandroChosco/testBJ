@@ -3,6 +3,8 @@ import { Accordion, Icon } from 'semantic-ui-react'
 
 import SupportItem from '../SupportItem';
 import SOSItem from '../SOSItem';
+import ComplaimentItem from '../ComplaimentItem'
+import RobberyItem from '../RobberyItem'
 
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
@@ -54,25 +56,25 @@ class Notifications extends Component {
                         </div>
                     </Accordion.Content>
 
-                    <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
+                    <Accordion.Title active={activeIndex === 2} index={2} onClick={this.handleClick}>
                         <Icon name='dropdown' />
                         Denuncias
                     </Accordion.Title>
-                    <Accordion.Content active={activeIndex === 1}  style={{overflowY:'auto', overflowX:'hidden', height:'100%'}}>
+                    <Accordion.Content active={activeIndex === 2}  style={{overflowY:'auto', overflowX:'hidden', height:'100%'}}>
                         <div align='center'>
-                            {this.props.complaiments.map((value, index)=><div key={index} info={value}>informacion de denuncia</div>)}
-                            {this.props.support.length===0?'No hay denuncias':null}
+                            {this.props.complaiments.map((value, index)=><ComplaimentItem key={index} info={value}/>)}
+                            {this.props.complaiments.length===0?'No hay denuncias':null}
                         </div>
                     </Accordion.Content>
 
-                    <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
+                    <Accordion.Title active={activeIndex === 3} index={3} onClick={this.handleClick}>
                         <Icon name='dropdown' />
-                        Robo a casa abitacion
+                        Robo a casa habitación
                     </Accordion.Title>
-                    <Accordion.Content active={activeIndex === 1}  style={{overflowY:'auto', overflowX:'hidden', height:'100%'}}>
+                    <Accordion.Content active={activeIndex === 3}  style={{overflowY:'auto', overflowX:'hidden', height:'100%'}}>
                         <div align='center'>
-                            {this.props.calls.map((value, index)=><div key={index} info={value}>Informacion de llamada</div>)}
-                            {this.props.support.length===0?'No hay reportes de robos':null}
+                            {this.props.calls.map((value, index)=><RobberyItem key={index} info={value}/>)}
+                            {this.props.calls.length===0?'No hay reportes de robos':null}
                         </div>
                     </Accordion.Content>
                 </Accordion>             

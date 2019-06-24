@@ -44,7 +44,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                         chats[index].messages.map((value,ref)=>
                         <div key={ref} className={value.from} ref={ref===chats[index].messages.length-1?"message":"message"+ref} id={ref===chats[index].messages.length-1?"lastMessage":"message"+ref}>
                           <p>{value.msg}</p>
-                          <small>{value.dateTime.toDate().toLocaleString()}</small>
+                          <small>{value.dateTime.toDate?value.dateTime.toDate().toLocaleString():null}</small>
                         </div>)
                         :'No se ha seleccionado ningun chat':'No se ha seleccionado ningun chat'}
                     </div>
