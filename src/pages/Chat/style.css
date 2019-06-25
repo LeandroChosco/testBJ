@@ -20,13 +20,14 @@
 
 .messagesContainer{
     position: absolute;
-    top:350px;
+    top:437px;
     left: 0;
     right: 0;
     bottom: 10vh;
     padding: 15px;
+    padding-top: 0;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: auto; 
 }
 
 .cameraView{

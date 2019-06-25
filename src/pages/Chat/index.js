@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Icon } from 'semantic-ui-react';
+import { Card, Icon, Button } from 'semantic-ui-react';
 
 import './style.css'
 import firebaseC5 from '../../constants/configC5';
@@ -40,10 +40,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                     {chatId!==''&&chats[index]?
                     <div className="cameraView">
                       <h3>{from}</h3>
-                      <div className="row">
-                        <div className="col">
-                          <CameraStream hideTitle marker={{title:chats[index].user_name,extraData:{num_cam:chats[index].user_cam.num_cam,cameraID:chats[index].user_cam.id,webSocket:constants.webSocket+':'+(2000+chats[index].user_cam.num_cam)}}}/>
-                        </div>
+                      <div className="row">                       
                         <div className="col">
                           <MapContainer                 
                             options={{
@@ -61,7 +58,35 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                             }}
                             onMapLoad={this._onMapLoad} /> 
                         </div>
+                        <div className="col">
+                          <CameraStream hideTitle marker={{extraData:{num_cam:chats[index].user_cam.num_cam,cameraID:chats[index].user_cam.id,webSocket:constants.webSocket+':'+(2000+chats[index].user_cam.num_cam)}}}/>
+                        </div>
+                        
                       </div>
+                      
+                      <div className="row" style={{paddingTop:15}}>
+                            <div className="col-8">
+                              <Card style={{width:'100%'}}>
+                                <Card.Content style={{padding: 0}}>
+                                <div className="row textContainer">
+                                    <div style={{fontSize:13,paddingRight:0}} className="col-6"><b>Nombre: </b>{chats[index].user_name}</div>
+                                    <div style={{fontSize:13,paddingLeft:0 ,paddingRight:0}} className="col-3"><b>Telefono: </b>{chats[index].user_cam.phone}</div>
+                                    <div style={{fontSize:13,paddingLeft:0, paddingRight:0}} className="col-3"><b>Celular: </b>{chats[index].user_cam.cellphone}</div>
+                                </div>
+                                <div className="row textContainer" style={{paddingTop: 0}}>
+                                    <div style={{fontSize:13}} className="col">
+                                        <b>Dirección: </b>{chats[index].user_cam.street} {chats[index].user_cam.number}, {chats[index].user_cam.town}, {chats[index].user_cam.township}, {chats[index].user_cam.state}
+                                    </div>
+                                </div>
+                                    </Card.Content>
+                              </Card>
+                            </div>
+                            <div className="col-4" style={{margin: 'auto'}} >
+                              <Button color="red" style={{width:'80%', alignItems: 'center',}} class="ui button">
+                               <Icon name='taxi' />Mandar unidad
+                              </Button>
+                            </div>
+                        </div>
                     </div>:null}
                     <div className="messagesContainer" id='messagesContainer'>
                       {chatId!==''&&chats[index]?chats[index].messages?
