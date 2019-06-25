@@ -123,3 +123,15 @@
     background-color: #fbfbfb;
     margin: 0;
 }
+
+.camcolgridholder>.card{
+    height: 100%;
+}
+
+.camcolgridholder>.card>.card-body{
+    height: 100%;
+}
+
+.camcolgridholder>.card>.card-body>.camHolder{
+    height: 80%;
+}
