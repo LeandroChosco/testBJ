@@ -151,7 +151,7 @@ class App extends Component {
 
     firebaseC5.app('c5virtual').firestore().collection('complaints')/*.orderBy('dateTime','desc')*/.onSnapshot(docs=>{  
       console.log('complaiments',docs.docs)   
-      if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimcomplaiments) {
+      if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimecomplaiments) {
         this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2)
       }
       if(this.state.fisrtTimecomplaiments)
