@@ -67,7 +67,7 @@ class GridCameraDisplay extends Component {
     return (
     <div className='gridCameraContainer' align='center'>                
         <Row >     
-            {this.state.markers.map((value,index) => (index<this.state.start+this.state.limit)&&index>=this.state.start?<Col className={this.state.selectedCamera === value.extraData?'p-l-0 p-r-0 activeselectedcameragrid':'p-l-0 p-r-0'}  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value,index)} marker={value.id}><CameraStream ref={'camrefgrid'+value.extraData.id} key={value.extraData.id} marker={value} height={.7}/></Col>:null)}        
+            {this.state.markers.map((value,index) => (index<this.state.start+this.state.limit)&&index>=this.state.start?<Col className={this.state.selectedCamera === value.extraData?'p-l-0 p-r-0 activeselectedcameragrid camcolgridholder':'p-l-0 p-r-0 camcolgridholder'}  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value,index)} marker={value.id}><CameraStream ref={'camrefgrid'+value.extraData.id} key={value.extraData.id} marker={value} height={.7}/></Col>:null)}        
         </Row>               
         {this.props.loading?null:
         <Row className='paginatorContainerOnGrid'>
@@ -150,7 +150,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                     <h4>{row.fecha}</h4>
                                 </div>
 
-                                        {row.videos.map((value,index)=><MediaContainer hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}                                        
+                                        {row.videos.map((value,index)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}                                        
                                     </div>
                                 ):null}
                             
