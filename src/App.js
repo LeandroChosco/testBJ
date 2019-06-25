@@ -204,6 +204,15 @@ class App extends Component {
       const notification = this.refs.notificationSystem;
       if(notification){        
         firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{
+          firebaseC5.app('c5virtual').firestore().collection('messages').add({
+            lastModification: new Date(),
+            from:'Alerta Robo Habitacion',
+            from_id:2,
+            user_creation:data.user_id,
+            user_name:data.user_nicename,
+            messages:[],
+            user_cam:data
+          })
           notification.addNotification({
             title:'Llama entrante de '+data.user_nicename,
             message: 'Se registro una llamada entrante',

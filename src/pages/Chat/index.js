@@ -5,17 +5,19 @@ import './style.css'
 import firebaseC5 from '../../constants/configC5';
 import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants';
+import MapContainer from '../../components/MapContainer';
 const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
  class Chat extends Component {
     state = {
         messages:[],
         chatId:'',
-        text:''
+        text:'',
+        from:''
     }
 
   render() {
     const {chats} = this.props;
-    const {chatId,index} = this.state;
+    const {chatId,index, from} = this.state;
     if (index!==undefined&&chatId===""&&chats.length>0) {
       this.setState({chatId:chats[index].id})
     }    
@@ -24,7 +26,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
             <div className="row fullHeight">
               <div className="col-4 userList">
                   {chats.map((chat,index)=>
-                    <Card key={index} onClick={()=>this.setState({chatId:chat.id,messages:chat.messages,index:index})}>
+                    <Card key={index} onClick={()=>{this.setState({chatId:''});setTimeout(()=>this.setState({chatId:chat.id,messages:chat.messages,index:index,from:chat.from}),500)}}>
                       <Card.Content>
                         <h3>{chat.user_name} </h3>
                         <p>
@@ -37,7 +39,29 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
               <div className="col-8 messages">
                     {chatId!==''&&chats[index]?
                     <div className="cameraView">
-                      <CameraStream hideTitle marker={{title:chats[index].user_name,extraData:{num_cam:chats[index].user_cam.num_cam,cameraID:chats[index].user_cam.id,webSocket:constants.webSocket+':'+(2000+chats[index].user_cam.num_cam)}}}/>
+                      <h3>{from}</h3>
+                      <div className="row">
+                        <div className="col">
+                          <CameraStream hideTitle marker={{title:chats[index].user_name,extraData:{num_cam:chats[index].user_cam.num_cam,cameraID:chats[index].user_cam.id,webSocket:constants.webSocket+':'+(2000+chats[index].user_cam.num_cam)}}}/>
+                        </div>
+                        <div className="col">
+                          <MapContainer                 
+                            options={{
+                                center: {lat: parseFloat(chats[index].user_cam.google_cordenate.split(',')[0]), lng: parseFloat(chats[index].user_cam.google_cordenate.split(',')[1])},
+                                zoom: 15,
+                                mapTypeId: 'roadmap',
+                                zoomControl: false,
+                                mapTypeControl: false,
+                                streetViewControl: false,
+                                fullscreenControl: false,
+                                openConfirm: false,
+                                typeConfirm:false,
+                                openSelection:false,
+                                checked:''
+                            }}
+                            onMapLoad={this._onMapLoad} /> 
+                        </div>
+                      </div>
                     </div>:null}
                     <div className="messagesContainer" id='messagesContainer'>
                       {chatId!==''&&chats[index]?chats[index].messages?
@@ -69,6 +93,18 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
         </div>
     
     );
+  }
+
+  _onMapLoad = (map) => {
+    const { chats } = this.props
+    const {index} = this.state
+    const coords ={lat: parseFloat(chats[index].user_cam.google_cordenate.split(',')[0]), lng: parseFloat(chats[index].user_cam.google_cordenate.split(',')[1])}    
+    this.setState({map:map})        
+    const marker = new window.google.maps.Marker({
+        position: coords,
+        map: map,
+        title: chats[index].user_nicename,        
+    });    
   }
 
   checkKey = (event) => {

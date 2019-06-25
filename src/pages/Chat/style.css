@@ -20,7 +20,7 @@
 
 .messagesContainer{
     position: absolute;
-    top:400px;
+    top:350px;
     left: 0;
     right: 0;
     bottom: 10vh;
@@ -31,6 +31,7 @@
 
 .cameraView{
     height: 300px;
+    padding-top: 15px;
 }
 
 .cameraView >.card{
