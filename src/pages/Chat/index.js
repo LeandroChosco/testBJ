@@ -7,6 +7,7 @@ import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants';
 import MapContainer from '../../components/MapContainer';
 const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
+let lastLength=0
  class Chat extends Component {
     state = {
         messages:[],
@@ -20,23 +21,11 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
 
   render() {
     const {chats} = this.props;
-    const {chatId,index} = this.state;
-    let {from} = this.state
-    if (index!==undefined&&chatId===""&&chats.length>0) {
-      this.setState({chatId:chats[index].id})
-    }    
-    if(index){
-      if (chats[index]) {
-        if (chats[index].messages) {
-          if (chats[index].messages[chats[index].messages.length-1]) {
-            if(chats[index].messages[chats[index].messages.length-1].from==='user')
-            {
-              from='Chat Soporte'
-            }
-          }
-        } 
-      }
-    }
+    const {chatId,index, from} = this.state;    
+    if (index!==undefined&&chatId===""&&chats.length>0){
+      this.setState({chatId:chats[index].id});
+    }     
+    console.log(from)
     return (
         <div  className="app-container" >   
             <div className="row fullHeight">
@@ -184,15 +173,14 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
       msg:this.state.text
     })
     this.props.stopNotification()
-    ref.doc(this.state.chatId).update({messages:messages}).then(()=>{
-      this.setState({text:''})
+    ref.doc(this.state.chatId).update({messages:messages,from:'Chat Soporte'}).then(()=>{
+      this.setState({text:'',from:'Chat Soporte'})
     })    
   }
 
   componentDidMount(){  
-    console.log(this.props)
-    if(this.props.location.hash!=='')
-      this.setState({index:0})    
+    console.log(this.props)    
+
   }
 
   QueryStringToJSON(query) {
@@ -213,9 +201,13 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
   componentDidUpdate(){
     //console.log(this.props)
     if(this.props.location.hash!==''&&this.state.index!=0)
-      if (this.props.chats.length>0) {
-        this.setState({index:0, form:this.props.chats[0].from})    
+    {
+      console.log(this.props.chats[0])
+      if (this.props.chats[0]!==undefined) {
+        console.log(this.props.chats[0].from)
+        this.setState({index:0, from:this.props.chats[0].from})    
       }
+    }
     if (this.props.location.search!=='') {
       let params = this.QueryStringToJSON(this.props.location.search)      
       if (this.props.chats.length>0) {
