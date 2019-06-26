@@ -62,7 +62,7 @@ const fakeCall={
   user_update: 0,  
 }
 
-let chatCallCreate = true
+let call = false
 
 class App extends Component {
 
@@ -172,6 +172,11 @@ class App extends Component {
         const notification = this.refs.notificationSystem;
         this.setState({stopNotification:true})      
         this.setState({callIsGoing:true})  
+        if (call) {
+          call = false
+          return
+        }
+        call = true
         //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{          
           notification.addNotification({
             title:'Llama entrante de '+docs.docs[docs.size-1].data().user_nicename,
