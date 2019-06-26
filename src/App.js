@@ -174,6 +174,7 @@ class App extends Component {
         this.setState({callIsGoing:true})  
         if (call) {
           call = false
+          this.setState({callIsGoing:false})
           return
         }
         call = true
@@ -198,6 +199,7 @@ class App extends Component {
         let value = doc.data()
         return value})
       })
+      this.setState({callIsGoing:false})
     })
     
     firebaseC5.app('c5virtual').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot(docs=>{     
