@@ -39,8 +39,8 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
               <div className="col-8 messages">
                     {chatId!==''&&chats[index]?
                     <div className="cameraView">
-                      <h2 style={{textAlign: 'center'}}>{from}</h2>
-                      <div className="row" style={{height: '60%'}}>                       
+                      <h2 style={{textAlign: 'center', height: '10%'}}>{from}</h2>
+                      <div className="row" style={{height: '70%'}}>                       
                         <div className="col" style={{height: '100%'}}>
                           <MapContainer                 
                             options={{
@@ -67,7 +67,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                         
                       </div>
                       
-                      <div className="row" style={{paddingTop:15}}>
+                      <div className="row" style={{paddingTop:15, height: '20%'}}>
                         <div className="col-8">
                           <Card style={{width:'100%'}}>
                             <Card.Content style={{padding: 0}}>
