@@ -62,6 +62,8 @@ const fakeCall={
   user_update: 0,  
 }
 
+let chatCallCreate = true
+
 class App extends Component {
 
   state = {
@@ -92,7 +94,8 @@ class App extends Component {
     modalCall:false,
     callInfo:{},
     calls:[],
-    stopNotification:false
+    stopNotification:false,
+    callIsGoing:false
   }
   
 
@@ -171,7 +174,7 @@ class App extends Component {
     })
     
     firebaseC5.app('c5virtual').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot(docs=>{     
-      if (this.state.showNotification&&!this.state.fisrtTimeChat) {
+      if (this.state.showNotification&&!this.state.fisrtTimeChat&&!this.state.callIsGoing) {
         this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',3,0)
       }
       if(this.state.fisrtTimeChat)
@@ -197,31 +200,14 @@ class App extends Component {
     console.log('socket open', data)
   }
 
-  checkCall = (data) =>{
-    console.log(data)
+  checkCall = (data) =>{    
     console.log(this.state.showNotification)
+    this.setState({callIsGoing:true})
     if (this.state.showNotification) {
       console.log('wewbsoket data',data)
       const notification = this.refs.notificationSystem;
       if(notification){
-        this.setState({stopNotification:true})
-        firebaseC5.app('c5virtual').firestore().collection('messages').where('from_id','==',2).where('user_creation','==',data.user_id).get()
-          .then(docs=>{
-            if(docs.size==0)
-              firebaseC5.app('c5virtual').firestore().collection('messages').add({
-                lastModification: new Date(),
-                from:'Alerta Robo Habitacion',
-                from_id:2,
-                user_creation:data.user_id,
-                user_name:data.user_nicename,
-                messages:[],
-                user_cam:data
-              })
-            else {
-              firebaseC5.app('c5virtual').firestore().collection('messages').doc(docs.docs[0].id).update({lastModification: new Date()})
-              
-            }
-          })                
+        this.setState({stopNotification:true})        
         firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{          
           notification.addNotification({
             title:'Llama entrante de '+data.user_nicename,
@@ -236,6 +222,25 @@ class App extends Component {
               }
             }
           });
+          firebaseC5.app('c5virtual').firestore().collection('messages').where('from_id','==',2).where('user_creation','==',data.user_id).get()
+            .then(docs=>{
+              console.log('once',docs)
+              /*if(docs.size==0)
+                firebaseC5.app('c5virtual').firestore().collection('messages').add({
+                  lastModification: new Date(),
+                  from:'Alerta Robo Habitacion',
+                  from_id:2,
+                  user_creation:data.user_id,
+                  user_name:data.user_nicename,
+                  messages:[],
+                  user_cam:data
+                })
+              else {
+                firebaseC5.app('c5virtual').firestore().collection('messages').doc(docs.docs[0].id).update({lastModification: new Date()}) 
+              }*/
+              console.log('no added')
+              this.setState({callIsGoing:false})          
+            })          
         })
       }
     }    
@@ -243,7 +248,7 @@ class App extends Component {
 
   showNot = (title,message,type,label,action,id) => {
     const notification = this.refs.notificationSystem;
-    if(notification&&!this.state.stopNotification){
+    if(notification&&!this.state.stopNotification&&!this.state.callIsGoing){
       notification.addNotification({
         title:title,
         message: message,

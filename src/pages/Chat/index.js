@@ -88,7 +88,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                           </Card>
                         </div>
                         <div className="col-4" style={{margin: 'auto'}} >
-                          <Button color="red" style={{width:'80%', alignItems: 'center',}} class="ui button">
+                          <Button color="red" style={{width:'80%', alignItems: 'center',}} className="ui button">
                             <Icon name='taxi' />Mandar unidad
                           </Button>
                         </div>
@@ -195,18 +195,18 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
 
     
   componentDidUpdate(){
-    console.log(this.props)
+    //console.log(this.props)
     if (this.props.location.search!=='') {
       let params = this.QueryStringToJSON(this.props.location.search)      
       if (this.props.chats.length>0) {
-        console.log(params)
+        //console.log(params)
         let i 
         this.props.chats.forEach((chat,index)=>{
           if (chat.user_creation == params.u && chat.from_id == params.f) {
             i = index
           }
         })
-        console.log(i)
+        //console.log(i)
         
         if (this.state.index!=i&&this.state.fisrt.u!==params.u) {
           this.setState({index:i,fisrt:params})
