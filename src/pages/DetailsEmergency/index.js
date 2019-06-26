@@ -131,13 +131,18 @@ const mapOptions= {
             </div>
             <div  className="row">
                 &nbsp;
-            </div>  
-            <div>
-                {this.state.match.userInfo?this.state.match.status===0?<Button onClick={this.giveHelp}>Brindar apoyo</Button>:null:null}
-            </div> 
+            </div>
             <div className='row'>
-                <div className="col-2" style={{margin: 'auto'}} >
-                    <Button color="red" style={{width: '100%'}} class="ui button">
+
+            {this.state.match.userInfo?this.state.match.status===0?
+                <div align="center" className="col-6" style={{margin: 'auto'}} >
+                    <Button style={{width: '200px'}} onClick={this.giveHelp}>Brindar apoyo</Button>
+                </div>
+                
+            :null:null}
+
+                <div align="center" className="col-6" style={{margin: 'auto'}} >
+                    <Button color="red" style={{width: '200px'}} class="ui button">
                     <Icon name='taxi' />Mandar unidad
                     </Button>
                 </div> 
