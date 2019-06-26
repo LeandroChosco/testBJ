@@ -40,8 +40,8 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                     {chatId!==''&&chats[index]?
                     <div className="cameraView">
                       <h2 style={{textAlign: 'center'}}>{from}</h2>
-                      <div className="row">                       
-                        <div className="col">
+                      <div className="row" style={{height: '60%'}}>                       
+                        <div className="col" style={{height: '100%'}}>
                           <MapContainer                 
                             options={{
                                 center: {lat: parseFloat(chats[index].user_cam.google_cordenate.split(',')[0]), lng: parseFloat(chats[index].user_cam.google_cordenate.split(',')[1])},
@@ -58,35 +58,38 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                             }}
                             onMapLoad={this._onMapLoad} /> 
                         </div>
-                        <div className="col">
-                          <CameraStream hideTitle marker={{extraData:{num_cam:chats[index].user_cam.num_cam,cameraID:chats[index].user_cam.id,webSocket:constants.webSocket+':'+(2000+chats[index].user_cam.num_cam)}}}/>
+                        <div className="col" style={{height: '100%'}}>
+                          <CameraStream
+                            style={{height:'100%'}}
+                            hideTitle 
+                            marker={{extraData:{num_cam:chats[index].user_cam.num_cam,cameraID:chats[index].user_cam.id,webSocket:constants.webSocket+':'+(2000+chats[index].user_cam.num_cam)}}}/>
                         </div>
                         
                       </div>
                       
                       <div className="row" style={{paddingTop:15}}>
-                            <div className="col-8">
-                              <Card style={{width:'100%'}}>
-                                <Card.Content style={{padding: 0}}>
-                                <div className="row textContainer">
-                                    <div style={{fontSize:13,paddingRight:0}} className="col-6"><b>Nombre: </b>{chats[index].user_name}</div>
-                                    <div style={{fontSize:13,paddingLeft:0 ,paddingRight:0}} className="col-3"><b>Telefono: </b>{chats[index].user_cam.phone}</div>
-                                    <div style={{fontSize:13,paddingLeft:0, paddingRight:0}} className="col-3"><b>Celular: </b>{chats[index].user_cam.cellphone}</div>
-                                </div>
-                                <div className="row textContainer" style={{paddingTop: 0}}>
-                                    <div style={{fontSize:13}} className="col">
-                                        <b>Dirección: </b>{chats[index].user_cam.street} {chats[index].user_cam.number}, {chats[index].user_cam.town}, {chats[index].user_cam.township}, {chats[index].user_cam.state}
-                                    </div>
-                                </div>
-                                    </Card.Content>
-                              </Card>
+                        <div className="col-8">
+                          <Card style={{width:'100%'}}>
+                            <Card.Content style={{padding: 0}}>
+                            <div className="row textContainer">
+                                <div style={{fontSize:13,paddingRight:0}} className="col-6"><b>Nombre: </b>{chats[index].user_name}</div>
+                                <div style={{fontSize:13,paddingLeft:0 ,paddingRight:0}} className="col-3"><b>Telefono: </b>{chats[index].user_cam.phone}</div>
+                                <div style={{fontSize:13,paddingLeft:0, paddingRight:0}} className="col-3"><b>Celular: </b>{chats[index].user_cam.cellphone}</div>
                             </div>
-                            <div className="col-4" style={{margin: 'auto'}} >
-                              <Button color="red" style={{width:'80%', alignItems: 'center',}} class="ui button">
-                               <Icon name='taxi' />Mandar unidad
-                              </Button>
+                            <div className="row textContainer" style={{paddingTop: 0}}>
+                                <div style={{fontSize:13}} className="col">
+                                    <b>Dirección: </b>{chats[index].user_cam.street} {chats[index].user_cam.number}, {chats[index].user_cam.town}, {chats[index].user_cam.township}, {chats[index].user_cam.state}
+                                </div>
                             </div>
+                                </Card.Content>
+                          </Card>
                         </div>
+                        <div className="col-4" style={{margin: 'auto'}} >
+                          <Button color="red" style={{width:'80%', alignItems: 'center',}} class="ui button">
+                            <Icon name='taxi' />Mandar unidad
+                          </Button>
+                        </div>
+                      </div>
                     </div>:null}
                     <div className="messagesContainer" id='messagesContainer'>
                       {chatId!==''&&chats[index]?chats[index].messages?
