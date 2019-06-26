@@ -66,7 +66,7 @@ class Match extends Component {
             this.props.toggleControls() 
         }
         
-        window.open(window.location.href.replace(window.location.pathname,'/') + 'detalles/' + this.props.info.messageId,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500')
+        window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/' + this.props.info.messageId,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500')
         //this.props.history.push('/detalles/'+this.state.extraData.id)
     }
     componentDidMount(){
