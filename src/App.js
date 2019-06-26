@@ -95,7 +95,8 @@ class App extends Component {
     callInfo:{},
     calls:[],
     stopNotification:false,
-    callIsGoing:false
+    callIsGoing:false,
+    fisrtTimeCall:true
   }
   
 
@@ -167,6 +168,25 @@ class App extends Component {
     }) 
 
     firebaseC5.app('c5virtual').firestore().collection('calls').orderBy('dateTime','desc').onSnapshot(docs => {
+      if (this.state.showNotification&&!this.state.fisrtTimeCall) {
+        const notification = this.refs.notificationSystem;
+        this.setState({stopNotification:true})        
+        //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{          
+          notification.addNotification({
+            title:'Llama entrante de '+docs.docs[docs.size-1].data().user_nicename,
+            message: 'Se registro una llamada entrante',
+            level: 'error',
+            action: {
+              label: 'Ver detalles',
+              callback: ()=> {
+                //this.setState({modalCall:true, callInfo:{...data,id:doc.id}})                
+                window.location.href = window.location.href.replace(window.location.pathname,'/chat#message')
+              }
+            }
+          });
+      }
+      if(this.state.fisrtTimeCall)
+        this.setState({fisrtTimeCall:false})
       this.setState({calls:docs.docs.map(doc=>{
         let value = doc.data()
         return value})
@@ -190,8 +210,8 @@ class App extends Component {
         return value
       })})
     }) 
-    const socket = socketIOClient('http://95.216.37.253:3011');
-    socket.on("messages", this.checkCall);
+    //const socket = socketIOClient('http://95.216.37.253:3011');
+    //socket.on("messages", this.checkCall);
     //setTimeout(()=>this.checkCall(fakeCall),5000)
 
   }
@@ -202,13 +222,13 @@ class App extends Component {
 
   checkCall = (data) =>{    
     console.log(this.state.showNotification)
-    this.setState({callIsGoing:true})
+    //this.setState({callIsGoing:true})
     if (this.state.showNotification) {
       console.log('wewbsoket data',data)
       const notification = this.refs.notificationSystem;
       if(notification){
         this.setState({stopNotification:true})        
-        firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{          
+        //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{          
           notification.addNotification({
             title:'Llama entrante de '+data.user_nicename,
             message: 'Se registro una llamada entrante',
@@ -216,32 +236,13 @@ class App extends Component {
             action: {
               label: 'Ver detalles',
               callback: ()=> {
-                //this.setState({modalCall:true, callInfo:{...data,id:doc.id}})
-                firebaseC5.app('c5virtual').firestore().collection('calls').doc(doc.id).update({status:0})
+                //this.setState({modalCall:true, callInfo:{...data,id:doc.id}})                
                 window.location.href = window.location.href.replace(window.location.pathname,'/chat#message')
               }
             }
           });
-          firebaseC5.app('c5virtual').firestore().collection('messages').where('from_id','==',2).where('user_creation','==',data.user_id).get()
-            .then(docs=>{
-              console.log('once',docs)
-              /*if(docs.size==0)
-                firebaseC5.app('c5virtual').firestore().collection('messages').add({
-                  lastModification: new Date(),
-                  from:'Alerta Robo Habitacion',
-                  from_id:2,
-                  user_creation:data.user_id,
-                  user_name:data.user_nicename,
-                  messages:[],
-                  user_cam:data
-                })
-              else {
-                firebaseC5.app('c5virtual').firestore().collection('messages').doc(docs.docs[0].id).update({lastModification: new Date()}) 
-              }*/
-              console.log('no added')
-              this.setState({callIsGoing:false})          
-            })          
-        })
+                    
+        //})
       }
     }    
   }
