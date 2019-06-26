@@ -168,9 +168,10 @@ class App extends Component {
     }) 
 
     firebaseC5.app('c5virtual').firestore().collection('calls').orderBy('dateTime','desc').onSnapshot(docs => {
-      if (this.state.showNotification&&!this.state.fisrtTimeCall) {
+      if (this.state.showNotification&&!this.state.fisrtTimeCall&& !this.state.callIsGoing) {
         const notification = this.refs.notificationSystem;
-        this.setState({stopNotification:true})        
+        this.setState({stopNotification:true})      
+        this.setState({callIsGoing:true})  
         //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{          
           notification.addNotification({
             title:'Llama entrante de '+docs.docs[docs.size-1].data().user_nicename,
@@ -184,6 +185,7 @@ class App extends Component {
               }
             }
           });
+          this.setState({callIsGoing:false})
       }
       if(this.state.fisrtTimeCall)
         this.setState({fisrtTimeCall:false})
