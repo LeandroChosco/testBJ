@@ -24,7 +24,7 @@
 
 .messagesContainer{
     position: absolute;
-    top:437px;
+    top:55vh;
     left: 0;
     right: 0;
     bottom: 10vh;
@@ -35,19 +35,19 @@
 }
 
 .cameraView{
-    height: 300px;
+    height: 60%;
     padding-top: 15px;
 }
 
-.cameraView >.card{
+.cameraView >.row>.col >.card{
     height: 100% !important;
 }
 
-.cameraView >.card>.card-body{
+.cameraView >.row>.col>.card>.card-body{
     height: 100% !important;
 }
 
-.cameraView >.card>.card-body>.dataHolder{
+.cameraView >.row>.card>.card-body>.dataHolder{
     height: 100% !important;
 }
 .app-container{
