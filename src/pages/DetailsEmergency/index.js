@@ -136,8 +136,8 @@ const mapOptions= {
                 {this.state.match.userInfo?this.state.match.status===0?<Button onClick={this.giveHelp}>Brindar apoyo</Button>:null:null}
             </div> 
             <div className='row'>
-                <div className="col" style={{margin: 'auto'}} >
-                    <Button color="red"class="ui button">
+                <div className="col-2" style={{margin: 'auto'}} >
+                    <Button color="red" style={{width: '100%'}} class="ui button">
                     <Icon name='taxi' />Mandar unidad
                     </Button>
                 </div> 
