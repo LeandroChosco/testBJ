@@ -208,7 +208,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
         })
         console.log(i)
         
-        if (this.state.index!=i&&this.state.fisrt.f===undefined) {
+        if (this.state.index!=i&&this.state.fisrt.u!==params.u) {
           this.setState({index:i,fisrt:params})
 
         }
