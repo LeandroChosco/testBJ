@@ -59,7 +59,7 @@ const fakeCall={
   user_id: 30,  
   user_login: "labeba090354@gmail.com", 
   user_nicename: "Evangelina  Shanchez Guadarrama", 
-  user_update: 0
+  user_update: 0,  
 }
 
 class App extends Component {
@@ -91,7 +91,8 @@ class App extends Component {
     complaiments:[],
     modalCall:false,
     callInfo:{},
-    calls:[]
+    calls:[],
+    stopNotification:false
   }
   
 
@@ -202,17 +203,26 @@ class App extends Component {
     if (this.state.showNotification) {
       console.log('wewbsoket data',data)
       const notification = this.refs.notificationSystem;
-      if(notification){        
-        firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{
-          firebaseC5.app('c5virtual').firestore().collection('messages').add({
-            lastModification: new Date(),
-            from:'Alerta Robo Habitacion',
-            from_id:2,
-            user_creation:data.user_id,
-            user_name:data.user_nicename,
-            messages:[],
-            user_cam:data
-          })
+      if(notification){
+        this.setState({stopNotification:true})
+        firebaseC5.app('c5virtual').firestore().collection('messages').where('from_id','==',2).where('user_creation','==',data.user_id).get()
+          .then(docs=>{
+            if(docs.size==0)
+              firebaseC5.app('c5virtual').firestore().collection('messages').add({
+                lastModification: new Date(),
+                from:'Alerta Robo Habitacion',
+                from_id:2,
+                user_creation:data.user_id,
+                user_name:data.user_nicename,
+                messages:[],
+                user_cam:data
+              })
+            else {
+              firebaseC5.app('c5virtual').firestore().collection('messages').doc(docs.docs[0].id).update({lastModification: new Date()})
+              
+            }
+          })                
+        firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{          
           notification.addNotification({
             title:'Llama entrante de '+data.user_nicename,
             message: 'Se registro una llamada entrante',
@@ -220,8 +230,9 @@ class App extends Component {
             action: {
               label: 'Ver detalles',
               callback: ()=> {
-                this.setState({modalCall:true, callInfo:{...data,id:doc.id}})
+                //this.setState({modalCall:true, callInfo:{...data,id:doc.id}})
                 firebaseC5.app('c5virtual').firestore().collection('calls').doc(doc.id).update({status:0})
+                window.location.href = window.location.href.replace(window.location.pathname,'/chat#message')
               }
             }
           });
@@ -232,7 +243,7 @@ class App extends Component {
 
   showNot = (title,message,type,label,action,id) => {
     const notification = this.refs.notificationSystem;
-    if(notification){
+    if(notification&&!this.state.stopNotification){
       notification.addNotification({
         title:title,
         message: message,
@@ -242,6 +253,9 @@ class App extends Component {
           callback: ()=> action===3?window.location.href = window.location.href.replace(window.location.pathname,'/chat#message'):action===5?window.open(window.location.href.replace(window.location.pathname,'/') + 'detalles/emergency/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):this.seeMatch(action)
         }
       });
+    }
+    if (this.state.stopNotification) {
+      this.setState({stopNotification:false})
     }
   }
 
@@ -387,7 +401,7 @@ class App extends Component {
         <Route path="/detalles/emergency/:id" exact render={(props) => <DetailsEmergency  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/chat" exact render={(props) => <Chat chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />
