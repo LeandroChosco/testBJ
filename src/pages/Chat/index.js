@@ -173,25 +173,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
   componentDidMount(){  
     console.log(this.props)
     if(this.props.location.hash!=='')
-      this.setState({index:0})
-    if (this.props.location.search!=='') {
-      let params = this.QueryStringToJSON(this.props.location.search)      
-      if (this.props.chats.length>0) {
-        //console.log(params)
-        let i 
-        this.props.chats.forEach((chat,index)=>{
-          if (chat.user_creation == params.u && chat.from_id == params.f) {
-            i = index
-          }
-        })
-        //console.log(i)
-        
-        if (this.state.index!=i&&this.state.fisrt.u!==params.u) {
-          this.setState({index:i,fisrt:params})
-
-        }
-      }
-    }
+      this.setState({index:0})    
   }
 
   QueryStringToJSON(query) {
@@ -214,14 +196,15 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     if (this.props.location.search!=='') {
       let params = this.QueryStringToJSON(this.props.location.search)      
       if (this.props.chats.length>0) {
-        //console.log(params)
+        console.log(params)
         let i 
+        console.log(this.props.chats)
         this.props.chats.forEach((chat,index)=>{
-          if (chat.user_creation == params.u && chat.from_id == params.f) {
+          if (chat.user_creation == params.u) {
             i = index
           }
         })
-        //console.log(i)
+        console.log(i)
         
         if (this.state.index!=i&&this.state.fisrt.u!==params.u) {
           this.setState({index:i,fisrt:params})

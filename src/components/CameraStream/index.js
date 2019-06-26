@@ -548,7 +548,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
   }
 
     componentWillUnmount(){
-        this.state.player.stop()
+        if(this.state.player)
+            this.state.player.stop()
         if(this.state.webSocket)
         {
             this.state.webSocket.close()
