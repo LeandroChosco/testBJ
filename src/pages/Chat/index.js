@@ -39,7 +39,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
               <div className="col-8 messages">
                     {chatId!==''&&chats[index]?
                     <div className="cameraView">
-                      <h3>{from}</h3>
+                      <h2 style={{textAlign: 'center'}}>{from}</h2>
                       <div className="row">                       
                         <div className="col">
                           <MapContainer                 
