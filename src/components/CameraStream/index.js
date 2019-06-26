@@ -11,7 +11,7 @@ import JSZipUtils from 'jszip-utils'
 import JSZip from 'jszip'
 import saveAs from 'file-saver'
 import jsmpeg from 'jsmpeg';
-
+import * as moment from 'moment';
 
 var vis = (function(){
     var stateKey, eventKey, keys = {
@@ -131,7 +131,7 @@ class CameraStream extends Component {
 
 this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
-                                            {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                            {this.state.video_history.map((value,index)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
                                         </div>
                                         {this.state.video_history.length === 0 ?
                                             <div align='center'>
@@ -196,7 +196,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
 
                             this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
-                                            {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                            {this.state.video_history.map((value,index)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
                                         </div>
                                         {this.state.video_history.length === 0 ?
                                             <div align='center'>
@@ -454,7 +454,46 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         const data = response.data
         console.log(data)
         this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
-    })           
+    })      
+    conections.getCamDataHistory(this.state.data.id?this.state.data.id:this.props.marker.extraData.id).then(response => {
+        let resHistory = response.data
+  		console.log('history', resHistory)
+  		if(resHistory.success){
+			let items = []
+  			resHistory.data.items = resHistory.data.items.map(val=>{
+				val.fecha = moment(val.RecordProccessVideo.datetime_start).format('HH:mm')
+				let fecha_inicio =   moment(val.RecordProccessVideo.datetime_start)
+				if (items.length === 0) {
+					items.push({dateTime:val.RecordProccessVideo.datetime_start,videos:[val]})
+				} else {
+					let found = false;
+					for (let index = 0; index < items.length; index++) {
+						let fecha_array = moment(items[index].dateTime);
+						if(fecha_array.isSame(fecha_inicio,'hour'))
+						{
+							found = true
+							items[index].videos.push(val)
+							break;
+						}
+						
+					}
+					if(!found){
+						items.push({dateTime:val.RecordProccessVideo.datetime_start,videos:[val]})
+					}
+				}
+  				return val
+			})			
+			items.map(val=>{
+				val.fecha = moment(val.dateTime).format('YYYY-MM-DD HH:mm')
+				return val
+			})
+			console.log(items)
+			resHistory.data.items = items
+            
+            this.setState({video_history:resHistory.data})
+
+  		}
+    })     
 }
 
   _wsError = (err) => {
@@ -509,7 +548,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
   }
 
     componentWillUnmount(){
-        this.state.player.stop()
+        if(this.state.player)
+            this.state.player.stop()
         if(this.state.webSocket)
         {
             this.state.webSocket.close()
