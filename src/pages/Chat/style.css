@@ -148,3 +148,16 @@
 .activeChat{
     background-color: #afafaf !important;
 }
+
+
+.Alerta.Robo.Habitacion{
+    background-color: orange;
+}
+
+.Alerta.Robo.Habitacion.user{
+    background-color: rgba(0, 255, 0,0.5)
+}
+
+.Chat.Soporte{
+    background-color: rgba(0, 255, 0,0.5)
+}

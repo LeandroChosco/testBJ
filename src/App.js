@@ -265,7 +265,7 @@ class App extends Component {
         level: type,
         action: {
           label: label,
-          callback: ()=> action===3?window.location.href = window.location.href.replace(window.location.pathname,'/chat#message'):action===5?window.open(window.location.href.replace(window.location.pathname,'/') + 'detalles/emergency/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):this.seeMatch(action)
+          callback: ()=> action===3?window.location.href = window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/chat#message'):action===5?window.open(window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/') + 'detalles/emergency/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):this.seeMatch(action)
         }
       });
     }

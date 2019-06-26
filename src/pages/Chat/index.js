@@ -20,10 +20,23 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
 
   render() {
     const {chats} = this.props;
-    const {chatId,index, from} = this.state;
+    const {chatId,index} = this.state;
+    let {from} = this.state
     if (index!==undefined&&chatId===""&&chats.length>0) {
       this.setState({chatId:chats[index].id})
     }    
+    if(index){
+      if (chats[index]) {
+        if (chats[index].messages) {
+          if (chats[index].messages[chats[index].messages.length-1]) {
+            if(chats[index].messages[chats[index].messages.length-1].from==='user')
+            {
+              from='Chat Soporte'
+            }
+          }
+        } 
+      }
+    }
     return (
         <div  className="app-container" >   
             <div className="row fullHeight">
@@ -42,7 +55,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
               <div className="col-8 messages">
                     {chatId!==''&&chats[index]?
                     <div className="cameraView">
-                      <h2 style={{textAlign: 'center', height: '10%'}}>{from}</h2>
+                      <h2 className={from} style={{textAlign: 'center', height: '10%'}}>{from}</h2>
                       <div className="row" style={{height: '70%'}}>                       
                         <div className="col" style={{height: '100%'}}>
                           <MapContainer                 
@@ -88,7 +101,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                           </Card>
                         </div>
                         <div className="col-4" style={{margin: 'auto'}} >
-                          <Button color="red" style={{width:'80%', alignItems: 'center',}} className="ui button">
+                          <Button color="red" style={{width:'80%', alignItems: 'center',}} className="ui button" onClick={this.closeChat}>
                             <Icon name='taxi' />Mandar unidad
                           </Button>
                         </div>
@@ -149,6 +162,12 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     }
   }
 
+
+  closeChat = () => {
+    /*let {chats} = this.props
+    */
+  }
+
   sendMessage = () =>{
     if(this.state.text==='')
       return;
@@ -193,6 +212,10 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     
   componentDidUpdate(){
     //console.log(this.props)
+    if(this.props.location.hash!==''&&this.state.index!=0)
+      if (this.props.chats.length>0) {
+        this.setState({index:0, form:this.props.chats[0].from})    
+      }
     if (this.props.location.search!=='') {
       let params = this.QueryStringToJSON(this.props.location.search)      
       if (this.props.chats.length>0) {
@@ -207,7 +230,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
         console.log(i)
         
         if (this.state.index!=i&&this.state.fisrt.u!==params.u) {
-          this.setState({index:i,fisrt:params})
+          this.setState({index:i,fisrt:params,from:this.props.chats[i].from})
 
         }
       }
