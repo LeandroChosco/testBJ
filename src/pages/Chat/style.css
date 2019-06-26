@@ -144,3 +144,7 @@
     margin:auto;  
     font-size: 2rem;
 }
+
+.activeChat{
+    background-color: #afafaf !important;
+}

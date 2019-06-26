@@ -1,6 +1,7 @@
 import React from 'react'
 import { Divider, Card } from 'semantic-ui-react';
-export default class RobberyItem extends React.Component {
+import { withRouter } from "react-router-dom";
+class RobberyItem extends React.Component {
    
     render(){
         return(
@@ -56,6 +57,8 @@ export default class RobberyItem extends React.Component {
     }
 
     _godetails = () => {
-
+        this.props.history.push('/chat?f=2&u='+this.props.info.user_id)
     }
 }
+
+export default withRouter(RobberyItem)

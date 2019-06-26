@@ -12,7 +12,10 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
         messages:[],
         chatId:'',
         text:'',
-        from:''
+        from:'',
+        fisrt:{
+          
+        }
     }
 
   render() {
@@ -25,8 +28,8 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
         <div  className="app-container" >   
             <div className="row fullHeight">
               <div className="col-4 userList">
-                  {chats.map((chat,index)=>
-                    <Card key={index} onClick={()=>{this.setState({chatId:''});setTimeout(()=>this.setState({chatId:chat.id,messages:chat.messages,index:index,from:chat.from}),500)}}>
+                  {chats.map((chat,i)=>
+                    <Card className={i===index?'activeChat':''} key={i} onClick={()=>{this.setState({chatId:''});setTimeout(()=>this.setState({chatId:chat.id,messages:chat.messages,index:i,from:chat.from}),500)}}>
                       <Card.Content>
                         <h3>{chat.user_name} </h3>
                         <p>
@@ -161,6 +164,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
       dateTime: new Date(),
       msg:this.state.text
     })
+    this.props.stopNotification()
     ref.doc(this.state.chatId).update({messages:messages}).then(()=>{
       this.setState({text:''})
     })    
@@ -170,11 +174,46 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     console.log(this.props)
     if(this.props.location.hash!=='')
       this.setState({index:0})
-
+    if (this.props.location.search!=='') {
+      
+    }
   }
+
+  QueryStringToJSON(query) {
+    query = query.replace('?','')            
+    var pairs = query.split('&');
+    
+    var result = {};
+    pairs.forEach(function(pair) {
+        pair = pair.split('=');
+        result[pair[0]] = decodeURIComponent(pair[1] || '');
+    });
+
+    return JSON.parse(JSON.stringify(result));
+}
+
 
     
   componentDidUpdate(){
+    console.log(this.props)
+    if (this.props.location.search!=='') {
+      let params = this.QueryStringToJSON(this.props.location.search)      
+      if (this.props.chats.length>0) {
+        console.log(params)
+        let i 
+        this.props.chats.forEach((chat,index)=>{
+          if (chat.user_creation == params.u && chat.from_id == params.f) {
+            i = index
+          }
+        })
+        console.log(i)
+        
+        if (this.state.index!=i&&this.state.fisrt.f===undefined) {
+          this.setState({index:i,fisrt:params})
+
+        }
+      }
+    }
     var messageBody = document.querySelector('#messagesContainer');
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
