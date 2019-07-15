@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import favicon from '../../assets/images/icons/favicon.png'
+import favicon from '../../assets/images/icons/favicon.jpeg'
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
@@ -18,7 +18,7 @@ class Login extends Component {
     }
 
     _handleChange = (e) => {
-        this.setState({[e.target.name]:e.target.value})        
+        this.setState({[e.target.name]:e.target.value})
     }
 
     _makeLogin = () => {
@@ -27,7 +27,7 @@ class Login extends Component {
 			let userInfo ={
 				user_login: username,
   				user_password:btoa(pass)
-			}			
+			}
 			this.setState({loading:true})
 			console.log(Conections)
             Conections.makeLogin(userInfo)
@@ -35,10 +35,10 @@ class Login extends Component {
 				const userResponse = response.data
 				console.log(userResponse)
 				if (userResponse.success && userResponse.data.login) {
-					this.props.makeAuth(userResponse.data.info_user)	
+					this.props.makeAuth(userResponse.data.info_user)
 				} else {
 					ToastsStore.error(userResponse.msg);
-					this.setState({loading:false, error:userResponse.msg})	
+					this.setState({loading:false, error:userResponse.msg})
 				}
 				this.setState({loading:false})
 			}).catch(error=>{
@@ -52,13 +52,13 @@ class Login extends Component {
 
   render() {
     return (
-        <div className="limiter">	
-			<ToastsContainer store={ToastsStore}/>		
+        <div className="limiter">
+			<ToastsContainer store={ToastsStore}/>
 		    {!this.props.isAuthenticated?<div className="container-login100 cityBackground">
-			    <div className="wrap-login100">															
+			    <div className="wrap-login100">
 					<form className="login100-form validate-form" id="loginForm" data-toggle="validator">
 					    <span className="login100-form-logo">
-						    <img src={favicon} style={{width: "60%"}} alt="mhlogo"/>						
+						    <img src={favicon} style={{width: "60%"}} alt="mhlogo"/>
 					    </span>
 					    <span className="login100-form-title p-b-34 p-t-27">
 						    Iniciar Sesión
@@ -81,7 +81,7 @@ class Login extends Component {
 							<JellyfishSpinner loading={this.state.loading} size={38} color='white'/>
 						    <button className="login100-form-btn" type="button" onClick={this._makeLogin}>
 							    Iniciar Sesión
-						    </button>							
+						    </button>
 					    </div>
 					    <div className="text-center p-t-90">
 						    <a className="txt1" href="#div">
@@ -91,7 +91,7 @@ class Login extends Component {
 				    </form>
 			    </div>
 		    </div>:null}
-	    </div>    
+	    </div>
     );
   }
 }
