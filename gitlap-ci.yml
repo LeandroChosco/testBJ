@@ -1,0 +1,23 @@
+image: node:8.10.0
+
+before_script:
+  - 'whith ssh-agent || (apt-get update -y && apt-get install openssh-client -y)'
+  - npm install
+
+
+stages:
+  - start
+
+#start
+.start:
+  stage: start
+  script:
+    - npm start
+
+deployToAWS:
+  only:
+    - CJ
+  stage: deploy
+  script:
+    - npm run build
+    - bash deploy/deploy.sh
