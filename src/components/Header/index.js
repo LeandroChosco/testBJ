@@ -16,6 +16,14 @@ class Header extends Component {
         this.props.history.push('/analisis')
     }
 
+    _goChat = () => {
+        if(this.props.isSidemenuShow){
+            this.props.toggleSideMenu()
+        }
+        document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')
+        this.props.history.push('/chat')
+    }
+
     _cameraAction = () => {    
         document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')    
         if(!this.props.location.pathname.includes("/map")){
@@ -45,8 +53,8 @@ class Header extends Component {
                    {this.props.userInfo.modules?
                         this.props.userInfo.modules.map(value=>
                             <Navbar.Text key={value.id} >
-                                <Button variant="outline-light" onClick = {value.id===1?this._cameraAction:value.id===2?this._goAnalitics:null}>
-                                    <i className={value.id===1?'fa fa-video-camera':value.id===2?'fa fa-simplybuilt':null}></i>
+                                <Button variant="outline-light" onClick = {value.id===1?this._cameraAction:value.id===2?this._goAnalitics:value.id===3?this._goChat:null}>
+                                    <i className={value.id===1?'fa fa-video-camera':value.id===2?'fa fa-simplybuilt':value.id===3?'fa fa-comments':null}></i>
                                     {value.name}
                                 </Button>
                             </Navbar.Text>

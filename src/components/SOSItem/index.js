@@ -54,6 +54,6 @@ export default class SOSItem extends React.Component {
             this.props.toggleControls() 
         }
         
-        window.open(window.location.href.replace(window.location.pathname,'/') + 'detalles/emergency/' + this.props.info.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500')
+        window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/emergency/' + this.props.info.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500')
     }
 }

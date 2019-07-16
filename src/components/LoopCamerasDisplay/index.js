@@ -7,7 +7,7 @@ import './style.css'
 import Match from '../Match';
 import MediaContainer from '../MediaContainer';
 import conections from '../../conections';
-
+import * as moment from 'moment'
 class LoopCamerasDisplay extends Component {
     
     state = {
@@ -88,15 +88,24 @@ class LoopCamerasDisplay extends Component {
                         </Tab.Pane> },
 
 this.props.moduleActions?this.props.moduleActions.viewHistorical?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
-                            <div className="row">
-                                {this.state.video_history.map((value,index)=><MediaContainer hideDelete src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
-                            </div>
-                            {this.state.video_history.length === 0 ?
+                            {this.state.video_history.items?this.state.video_history.items.map((row,count)=><div key={count} className="row">
+                                <div className="col-12">
+                                    <h4>{row.fecha}</h4>
+                                </div>
+
+                                        {row.videos.map((value,index)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}                                        
+                                    </div>
+                                ):null}
+                            
+                            {this.state.video_history.items?this.state.video_history.items.length === 0 ?
                                 <div align='center'>
                                     <p className="big-letter">No hay archivos que mostrar</p>
                                     <i className='fa fa-image fa-5x'></i>
                                 </div>
-                            :null}
+                            : null:<div align='center'>
+                            <p className="big-letter">No hay archivos que mostrar</p>
+                            <i className='fa fa-image fa-5x'></i>
+                            </div>}
                         </Tab.Pane> }:{}:{},
                     ]} />                    
                 </div>
@@ -154,7 +163,47 @@ this.props.moduleActions?this.props.moduleActions.viewHistorical?{ menuItem: 'Hi
             const data = response.data
             console.log(data)
             this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
-        })       
+        }) 
+        conections.getCamDataHistory(this.state.markers[this.state.slideIndex].extraData.id)
+        .then(response => {
+            let resHistory = response.data
+              console.log('history', resHistory)
+              if(resHistory.success){
+                let items = []
+                  resHistory.data.items = resHistory.data.items.map(val=>{
+                    val.fecha = moment(val.RecordProccessVideo.datetime_start).format('HH:mm')
+                    let fecha_inicio =   moment(val.RecordProccessVideo.datetime_start)
+                    if (items.length === 0) {
+                        items.push({dateTime:val.RecordProccessVideo.datetime_start,videos:[val]})
+                    } else {
+                        let found = false;
+                        for (let index = 0; index < items.length; index++) {
+                            let fecha_array = moment(items[index].dateTime);
+                            if(fecha_array.isSame(fecha_inicio,'hour'))
+                            {
+                                found = true
+                                items[index].videos.push(val)
+                                break;
+                            }
+                            
+                        }
+                        if(!found){
+                            items.push({dateTime:val.RecordProccessVideo.datetime_start,videos:[val]})
+                        }
+                    }
+                      return val
+                })			
+                items.map(val=>{
+                    val.fecha = moment(val.dateTime).format('YYYY-MM-DD HH:mm')
+                    return val
+                })
+                console.log(items)
+                resHistory.data.items = items
+                
+                this.setState({video_history:resHistory.data})
+    
+              }
+        })                
     }
 
 
