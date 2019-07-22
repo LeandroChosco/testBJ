@@ -52,8 +52,8 @@ class Analysis extends Component {
 
   render() {
     return (
-        <div >
-            {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">
+        <div id="analisis_holder" >
+            {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">            
                 <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
                     <ToggleButton value={1} variant='outline-primary' ><Icon name="grid layout"/></ToggleButton>
                     <ToggleButton value={2} variant='outline-primary' ><Icon name="clone"/></ToggleButton>
