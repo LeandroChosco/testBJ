@@ -126,12 +126,12 @@
 
 .camcolgridholder>.card{
     height: 100%;
-}
+}/*
 
 .camcolgridholder>.card>.card-body{
     height: 100%;
 }
-
+*/
 .camcolgridholder>.card>.card-body>.camHolder{
-    height: 80%;
+    height: auto;
 }
