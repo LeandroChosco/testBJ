@@ -7,7 +7,6 @@ import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants';
 import MapContainer from '../../components/MapContainer';
 const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
-let lastLength=0
  class Chat extends Component {
     state = {
         messages:[],
@@ -16,12 +15,14 @@ let lastLength=0
         from:'',
         fisrt:{
           
-        }
+        },
+        camData:{},
+        loading : false
     }
 
   render() {
     const {chats} = this.props;
-    const {chatId,index, from} = this.state;    
+    const {chatId,index, from, camData, loading} = this.state;    
     if (index!==undefined&&chatId===""&&chats.length>0){
       this.setState({chatId:chats[index].id});
     }     
@@ -31,7 +32,24 @@ let lastLength=0
             <div className="row fullHeight">
               <div className="col-4 userList">
                   {chats.map((chat,i)=>
-                    <Card className={i===index?'activeChat':''} key={i} onClick={()=>{this.setState({chatId:''});setTimeout(()=>this.setState({chatId:chat.id,messages:chat.messages,index:i,from:chat.from}),500)}}>
+                    <Card className={i===index?'activeChat':''} key={i} onClick={()=>{
+                      this.setState({chatId:'',loading:true});
+                      setTimeout(()=>{
+                        this.setState({
+                          chatId:chat.id,
+                          messages:chat.messages,
+                          index:i,
+                          from:chat.from,
+                          camData:{
+                            extraData:{
+                              num_cam:chat.user_cam.num_cam,
+                              cameraID:chat.user_cam.id,
+                              webSocket:constants.webSocket+':'+chat.user_cam.port_output_streaming
+                            }
+                          },
+                          loading:false
+                        })
+                      },1000)}}>
                       <Card.Content>
                         <h3>{chat.user_name} </h3>
                         <p>
@@ -42,7 +60,7 @@ let lastLength=0
                   )}
               </div>
               <div className="col-8 messages">
-                    {chatId!==''&&chats[index]?
+                    {!loading&&chatId!==''&&chats[index]?
                     <div className="cameraView">
                       <h2 className={from} style={{textAlign: 'center', height: '10%'}}>{from}</h2>
                       <div className="row" style={{height: '70%'}}>                       
@@ -67,7 +85,7 @@ let lastLength=0
                           <CameraStream
                             style={{height:'100%'}}
                             hideTitle 
-                            marker={{extraData:{num_cam:chats[index].user_cam.num_cam,cameraID:chats[index].user_cam.id,webSocket:constants.webSocket+':'+(2000+chats[index].user_cam.num_cam)}}}/>
+                            marker={camData}/>
                         </div>
                         
                       </div>
@@ -97,13 +115,14 @@ let lastLength=0
                       </div>
                     </div>:null}
                     <div className="messagesContainer" id='messagesContainer'>
-                      {chatId!==''&&chats[index]?chats[index].messages?
+                      {!loading&&chatId!==''&&chats[index]?chats[index].messages?
                         chats[index].messages.map((value,ref)=>
                         <div key={ref} className={value.from} ref={ref===chats[index].messages.length-1?"message":"message"+ref} id={ref===chats[index].messages.length-1?"lastMessage":"message"+ref}>
                           <p>{value.msg}</p>
                           <small>{value.dateTime.toDate?value.dateTime.toDate().toLocaleString():null}</small>
                         </div>)
-                        :'No se ha seleccionado ningun chat':'No se ha seleccionado ningun chat'}
+                        :loading===true?'Cargando...':'No se ha seleccionado ningun chat':loading===true?'Cargando...':'No se ha seleccionado ningun chat'}
+                        
                     </div>
                       {chatId!==''?<div className="messages_send_box">
                           <div style={{position: "relative"}}>
@@ -133,7 +152,7 @@ let lastLength=0
     const {index} = this.state
     const coords ={lat: parseFloat(chats[index].user_cam.google_cordenate.split(',')[0]), lng: parseFloat(chats[index].user_cam.google_cordenate.split(',')[1])}    
     this.setState({map:map})        
-    const marker = new window.google.maps.Marker({
+    new window.google.maps.Marker({
         position: coords,
         map: map,
         title: chats[index].user_nicename,        

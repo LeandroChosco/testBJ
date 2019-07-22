@@ -71,7 +71,7 @@ class ModalCall extends Component {
     const { data } = this.props
     const coords ={lat: parseFloat(data.google_cordenate.split(',')[0]), lng: parseFloat(data.google_cordenate.split(',')[1])}    
     this.setState({map:map})        
-    const marker = new window.google.maps.Marker({
+    new window.google.maps.Marker({
         position: coords,
         map: map,
         title: data.user_nicename,

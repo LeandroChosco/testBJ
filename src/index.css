@@ -41,3 +41,11 @@ code {
 .showfilesinfocameragrid,.showfilesinfocamera{
   background-color: #fafafa !important;
 }
+
+#analisis_holder{
+  margin-right: 70px;
+}
+
+.map{
+  margin-right: 70px;
+}
