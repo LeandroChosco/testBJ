@@ -13,7 +13,7 @@ export class MapContainer extends Component {
     if (!window.google) {
       var s = document.createElement('script');
       s.type = 'text/javascript';
-      s.src = `https://maps.google.com/maps/api/js?key=AIzaSyBPdY9qYAaATvzWFwYJdpimD99K4QaA72E`;
+      s.src = `https://maps.google.com/maps/api/js?key=AIzaSyDVdmSf9QE5KdHNDCSrXwXr3N7QnHaujtg`;
       var x = document.getElementsByTagName('script')[0];
       x.parentNode.insertBefore(s, x);
       // Below is important. 

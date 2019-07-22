@@ -14,7 +14,8 @@
     position: fixed;
     bottom: 0;
     background-color: lightgray;
-    width: 100vw;
+    width: 100%;
+    padding-right: 70px;
 }
 .showfiles{
     height: 50%;
