@@ -431,7 +431,8 @@ class Analysis extends Component {
                             num_cam:value.num_cam,
                             lat:value.google_cordenate.split(',')[0],
                             lng:value.google_cordenate.split(',')[1],
-                            webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
+                            webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
+                            // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                         })
                         if(this.props.match.params.id){
@@ -442,7 +443,8 @@ class Analysis extends Component {
                                     num_cam:value.num_cam,
                                     lat:value.google_cordenate.split(',')[0],
                                     lng:value.google_cordenate.split(',')[1],
-                                    webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
+                                    webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
+                                    // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
                                     name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                                 }
                                 idCamera = value.id

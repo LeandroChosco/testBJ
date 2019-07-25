@@ -80,7 +80,7 @@ class Map extends Component {
                 render(<CameraStream moduleActions={moduleActions} marker={marker} showButtons height={.65} showExternal/>, document.getElementById('infoWindow'+e.extraData.id))
             }
           })(e,render, this.state.moduleActions))
-        infoWindow.open(map)
+        infoWindow.open(map)        
     }
 
    
@@ -105,7 +105,8 @@ class Map extends Component {
                         num_cam:value.num_cam,
                         lat:parseFloat(value.google_cordenate.split(',')[0]), 
                         lng:parseFloat(value.google_cordenate.split(',')[1]),                            
-                        webSocket:constants.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
+                        webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
+                        //webSocket:constants.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
                         name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                     })
                 }

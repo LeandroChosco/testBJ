@@ -557,7 +557,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         if (this.state.isRecording) {
             conections.stopRecord({record_proccess_id:this.state.process_id },this.state.data.id)            
         }
-        clearInterval(this.interval)
+        clearInterval(this.state.interval)
         window.removeEventListener('restartCamEvent', this._restartCam, false)
     }
 
