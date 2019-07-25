@@ -53,7 +53,7 @@ class Analysis extends Component {
   render() {
     return (
         <div id="analisis_holder" >
-            {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">            
+            {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">
                 <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
                     <ToggleButton value={1} variant='outline-primary' ><Icon name="grid layout"/></ToggleButton>
                     <ToggleButton value={2} variant='outline-primary' ><Icon name="clone"/></ToggleButton>
@@ -417,54 +417,51 @@ class Analysis extends Component {
         } else {
             this.setState({moduleActions:{btnrecord:true,btnsnap:true,viewHistorial:true}})
         }
-        var getCams = conections.getAllCams()
-        for (const promise in getCams) {
-          getCams[promise]
-              .then((response) => {
-                  const camaras = response.data
-                  let auxCamaras = []
-                  let actualCamera = {}
-                  let title = ''
-                  let idCamera = null
-                  camaras.map(value=>{
-                      if (value.active === 1 && value.flag_streaming === 1) {
-                          auxCamaras.push({
-                              id:value.id,
-                              num_cam:value.num_cam,
-                              lat:value.google_cordenate.split(',')[0],
-                              lng:value.google_cordenate.split(',')[1],
-                              webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                              name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
-                          })
-                          if(this.props.match.params.id){
-                             if (parseInt(this.props.match.params.id) === value.id) {
-                                  title= value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
-                                  actualCamera = {
-                                      id:value.id,
-                                      num_cam:value.num_cam,
-                                      lat:value.google_cordenate.split(',')[0],
-                                      lng:value.google_cordenate.split(',')[1],
-                                      webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                                      name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
-                                  }
-                                  idCamera = value.id
-                             }
-                          }
+        conections.getAllCams()
+            .then((response) => {
+                const camaras = response.data
+                let auxCamaras = []
+                let actualCamera = {}
+                let title = ''
+                let idCamera = null
+                camaras.map(value=>{
+                    if (value.active === 1 && value.flag_streaming === 1) {
+                        auxCamaras.push({
+                            id:value.id,
+                            num_cam:value.num_cam,
+                            lat:value.google_cordenate.split(',')[0],
+                            lng:value.google_cordenate.split(',')[1],
+                            webSocket:'ws://'+value.UrlStreamToCameras[0].Url.dns_ip+':'+value.port_output_streaming,
+                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                        })
+                        if(this.props.match.params.id){
+                           if (parseInt(this.props.match.params.id) === value.id) {
+                                title= value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                                actualCamera = {
+                                    id:value.id,
+                                    num_cam:value.num_cam,
+                                    lat:value.google_cordenate.split(',')[0],
+                                    lng:value.google_cordenate.split(',')[1],
+                                    webSocket:'ws://'+value.UrlStreamToCameras[0].Url.dns_ip+value.port_output_streaming,
+                                    name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                                }
+                                idCamera = value.id
+                           }
+                        }
 
-                      }
-                      return true;
-                  })
-                  if(idCamera== null){
-                      this.setState({places:auxCamaras,loading: false})
-                  } else {
-                      this.setState({laces:auxCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera}})
-                      this.setState({displayTipe:3})
-                  }
-              }).catch(error=>{
-                  this.setState({loading: false,error:error})
-                  console.log('eeeeeeeeeeeerrrrrooooooor',error)
-              })
-            }
+                    }
+                    return true;
+                })
+                if(idCamera== null){
+                    this.setState({places:auxCamaras,loading: false})
+                } else {
+                    this.setState({laces:auxCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera}})
+                    this.setState({displayTipe:3})
+                }
+            }).catch(error=>{
+                this.setState({loading: false,error:error})
+                console.log('eeeeeeeeeeeerrrrrooooooor',error)
+            })
 
     }
 

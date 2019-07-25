@@ -20,35 +20,32 @@ class SideBar extends Component {
     }
 
     componentDidMount(){
-        var getCams = conections.getAllCams()
-        for (const promise in getCams) {
-          getCams[promise].then((data) => {
-                  const camaras = data.data
-                  let auxCamaras = []
-                  let options = []
-                  camaras.map(value=>{
-                      if (value.active === 1) {
-                          auxCamaras.push({
-                              id:value.id,
-                              num_cam:value.num_cam,
-                              lat:parseFloat(value.google_cordenate.split(',')[0]),
-                              lng:parseFloat(value.google_cordenate.split(',')[1]),
-                              webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                              name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
-                          })
-                      }
-                      return true;
-                  })
-                  auxCamaras.map((value)=>{
-                      options.push({
-                          value: value.id,
-                          label: 'Camara '+value.num_cam,
-                      })
-                      return true
-                  })
-                  this.setState({places:auxCamaras,options:options})
+     conections.getAllCams().then((data) => {
+                const camaras = data.data
+                let auxCamaras = []
+                let options = []
+                camaras.map(value=>{
+                    if (value.active === 1) {
+                        auxCamaras.push({
+                            id:value.id,
+                            num_cam:value.num_cam,
+                            lat:parseFloat(value.google_cordenate.split(',')[0]),
+                            lng:parseFloat(value.google_cordenate.split(',')[1]),
+                            webSocket:'ws://'+value.UrlStreamToCameras[0].Url.dns_ip+':'+value.port_output_streaming,
+                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                        })
+                    }
+                    return true;
+                })
+                auxCamaras.map((value)=>{
+                    options.push({
+                        value: value.id,
+                        label: 'Camara '+value.num_cam,
+                    })
+                    return true
+                })
+                this.setState({places:auxCamaras,options:options})
               });
-            }
 
     }
 

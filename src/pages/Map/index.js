@@ -95,42 +95,39 @@ class Map extends Component {
         } catch (e){
             console.log(e)
         }
-        var getCams = conections.getAllCams()
-        for (const promise in getCams) {
-          getCams[promise].then((data) => {
-              const camaras = data.data
-              let auxCamaras = []
-              camaras.map(value=>{
-                  if (value.active === 1&& value.flag_streaming === 1) {
-                      auxCamaras.push({
-                          id:value.id,
-                          num_cam:value.num_cam,
-                          lat:parseFloat(value.google_cordenate.split(',')[0]),
-                          lng:parseFloat(value.google_cordenate.split(',')[1]),
-                          webSocket:constants.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                          name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
-                      })
-                  }
-                  return true
-              })
-              this.setState({loading:false,places:auxCamaras})
-              const marker = []
-              this.state.places.map((value,index)=>{
-                  marker[index]= new window.google.maps.Marker({
-                      position: { lat:value.lat, lng:value.lng },
-                      map:  this.state.map,
-                      title: value.name,
-                      extraData:value
-                  });
-                  window.google.maps.event.addListener(marker[index],'click', (function(marker, map, createInfoWindow) {
-                      return function() {
-                      createInfoWindow(marker,map)
-                      }
-                  })(marker[index], this.state.map,this.createInfoWindow))
-                  return true
-              })
-          });
-        }
+        conections.getAllCams().then((data) => {
+            const camaras = data.data
+            let auxCamaras = []
+            camaras.map(value=>{
+                if (value.active === 1&& value.flag_streaming === 1) {
+                    auxCamaras.push({
+                        id:value.id,
+                        num_cam:value.num_cam,
+                        lat:parseFloat(value.google_cordenate.split(',')[0]),
+                        lng:parseFloat(value.google_cordenate.split(',')[1]),
+                        webSocket:'ws://'+value.UrlStreamToCameras[0].Url.dns_ip+':'+value.port_output_streaming,
+                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                    })
+                }
+                return true
+            })
+            this.setState({loading:false,places:auxCamaras})
+            const marker = []
+            this.state.places.map((value,index)=>{
+                marker[index]= new window.google.maps.Marker({
+                    position: { lat:value.lat, lng:value.lng },
+                    map:  this.state.map,
+                    title: value.name,
+                    extraData:value
+                });
+                window.google.maps.event.addListener(marker[index],'click', (function(marker, map, createInfoWindow) {
+                    return function() {
+                    createInfoWindow(marker,map)
+                    }
+                })(marker[index], this.state.map,this.createInfoWindow))
+                return true
+            })
+        });
       const navHeight = document.getElementsByTagName('nav')[0].scrollHeight
       const documentHeight = window.innerHeight
       let map = document.getElementsByClassName('map')[0]//.style.height = documentHeight - navHeight
