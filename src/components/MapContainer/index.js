@@ -13,7 +13,11 @@ export class MapContainer extends Component {
     if (!window.google) {
       var s = document.createElement('script');
       s.type = 'text/javascript';
-      s.src = `https://maps.google.com/maps/api/js?key=AIzaSyDVdmSf9QE5KdHNDCSrXwXr3N7QnHaujtg`;
+      let key= 'AIzaSyCHiHNfeGxYKOZRj-57F957Xe08f64fLHo'
+      if (process.env.NODE_ENV === 'production') {
+        key = 'AIzaSyDVdmSf9QE5KdHNDCSrXwXr3N7QnHaujtg'
+      }
+      s.src = `https://maps.google.com/maps/api/js?key=${key}`;
       var x = document.getElementsByTagName('script')[0];
       x.parentNode.insertBefore(s, x);
       // Below is important. 

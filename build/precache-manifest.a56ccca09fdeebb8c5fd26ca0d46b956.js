@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "1a10effe74f67e903c5b",
+    "revision": "8d9dcbca862ef35ad332",
     "url": "/static/css/main.4f26b962.chunk.css"
   },
   {
-    "revision": "1a10effe74f67e903c5b",
-    "url": "/static/js/main.e32774ff.chunk.js"
+    "revision": "8d9dcbca862ef35ad332",
+    "url": "/static/js/main.82869454.chunk.js"
   },
   {
     "revision": "42ac5946195a7306e2a5",
@@ -20,10 +20,6 @@ self.__precacheManifest = [
     "url": "/static/js/2.ec68bbc7.chunk.js"
   },
   {
-    "revision": "7940efc40d8e3b477e16cc41b0287139",
-    "url": "/static/media/Poppins-Bold.7940efc4.ttf"
-  },
-  {
     "revision": "731a28a413d642522667a2de8681ff35",
     "url": "/static/media/Poppins-Regular.731a28a4.ttf"
   },
@@ -34,6 +30,10 @@ self.__precacheManifest = [
   {
     "revision": "e63b93dfac2600782654e2b87910d681",
     "url": "/static/media/Poppins-SemiBold.e63b93df.ttf"
+  },
+  {
+    "revision": "7940efc40d8e3b477e16cc41b0287139",
+    "url": "/static/media/Poppins-Bold.7940efc4.ttf"
   },
   {
     "revision": "a4d31128b633bc0b1cc1f18a34fb3851",
@@ -68,12 +68,12 @@ self.__precacheManifest = [
     "url": "/static/media/fontawesome-webfont.912ec66d.svg"
   },
   {
-    "revision": "ef60a4f6c25ef7f39f2d25a748dbecfe",
-    "url": "/static/media/outline-icons.ef60a4f6.woff"
-  },
-  {
     "revision": "cd6c777f1945164224dee082abaea03a",
     "url": "/static/media/outline-icons.cd6c777f.woff2"
+  },
+  {
+    "revision": "ef60a4f6c25ef7f39f2d25a748dbecfe",
+    "url": "/static/media/outline-icons.ef60a4f6.woff"
   },
   {
     "revision": "9c74e172f87984c48ddf5c8108cabe67",
@@ -92,12 +92,12 @@ self.__precacheManifest = [
     "url": "/static/media/icons.0ab54153.woff2"
   },
   {
-    "revision": "e8c322de9658cbeb8a774b6624167c2c",
-    "url": "/static/media/brand-icons.e8c322de.woff2"
-  },
-  {
     "revision": "faff92145777a3cbaf8e7367b4807987",
     "url": "/static/media/icons.faff9214.woff"
+  },
+  {
+    "revision": "e8c322de9658cbeb8a774b6624167c2c",
+    "url": "/static/media/brand-icons.e8c322de.woff2"
   },
   {
     "revision": "a046592bac8f2fd96e994733faf3858c",
@@ -140,7 +140,7 @@ self.__precacheManifest = [
     "url": "/static/media/bg-01.8f6a99c3.jpg"
   },
   {
-    "revision": "4f15da77a8ed9ab24c7e26201762d603",
+    "revision": "141f0b1e683a93400e47e6d98e890f5d",
     "url": "/index.html"
   }
 ];
