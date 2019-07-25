@@ -75,114 +75,119 @@ class App extends Component {
     }  else {
       this.setState({showHeader:false})
     }    
-    
-    firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
-      if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
-        this.showNot('Match','Nuevo match detectado','warning','Ver match',0)
-      }
-      if(this.state.fisrtTime)
-        this.setState({fisrtTime:false})
-      this.setState({matches:docs.docs.map(v=>{
-        let value = v.data()
-        value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
-        return value
-      })})
-    })
 
-    firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
-      if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
-        this.showNot('SOS','Nueva alerta de ayuda generada','error','Ver detalles',5,docs.docs[docs.docs.length-1].id)
-        
-      }
-      if(this.state.fisrtTimeHelp)
-        this.setState({fisrtTimeHelp:false})
-      this.setState({sos:docs.docs.map(v=>{
-        let value = v.data()
-        value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
-        value.id = v.id
-        return value
-      })})
-    })
-    firebaseC5.app('c5virtual').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
-      if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
-        this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',2)
-      }
-      if(this.state.fisrtTimeSupport)
-        this.setState({fisrtTimeSupport:false})
-      this.setState({support:docs.docs.map(v=>{
-        let value = v.data()
-        value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
-        value.id = v.id
-        return value
-      })})
-    }) 
-    
-
-    firebaseC5.app('c5virtual').firestore().collection('complaints')/*.orderBy('dateTime','desc')*/.onSnapshot(docs=>{  
-      console.log('complaiments',docs.docs)   
-      if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimecomplaiments) {
-        this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2)
-      }
-      if(this.state.fisrtTimecomplaiments)
-        this.setState({fisrtTimecomplaiments:false})
-      this.setState({complaiments:docs.docs.map(v=>{
-        let value = v.data()        
-        return value
-      })})
-    }) 
-
-    firebaseC5.app('c5virtual').firestore().collection('calls').orderBy('dateTime','desc').onSnapshot(docs => {
-      if (this.state.showNotification&&!this.state.fisrtTimeCall&& !this.state.callIsGoing) {
-        const notification = this.refs.notificationSystem;
-        this.setState({stopNotification:true})      
-        this.setState({callIsGoing:true})  
-        if (call) {
-          call = false
-          this.setState({callIsGoing:false})
-          return
+    console.log('node env',process.env.NODE_ENV)
+    console.log('node env',process.env)
+    if (process.env.NODE_ENV==='production') {
+      firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
+        if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
+          this.showNot('Match','Nuevo match detectado','warning','Ver match',0)
         }
-        call = true
-        //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{          
-          notification.addNotification({
-            title:'Llama entrante de '+docs.docs[docs.size-1].data().user_nicename,
-            message: 'Se registro una llamada entrante',
-            level: 'error',
-            action: {
-              label: 'Ver detalles',
-              callback: ()=> {
-                //this.setState({modalCall:true, callInfo:{...data,id:doc.id}})                
-                window.location.href = window.location.href.replace(window.location.pathname,'/chat#message')
-              }
-            }
-          });
-          this.setState({callIsGoing:false})
-      }
-      if(this.state.fisrtTimeCall)
-        this.setState({fisrtTimeCall:false})
-      this.setState({calls:docs.docs.map(doc=>{
-        let value = doc.data()
-        return value})
+        if(this.state.fisrtTime)
+          this.setState({fisrtTime:false})
+        this.setState({matches:docs.docs.map(v=>{
+          let value = v.data()
+          value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          return value
+        })})
       })
-      this.setState({callIsGoing:false})
-    })
+  
+      firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
+        if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
+          this.showNot('SOS','Nueva alerta de ayuda generada','error','Ver detalles',5,docs.docs[docs.docs.length-1].id)
+          
+        }
+        if(this.state.fisrtTimeHelp)
+          this.setState({fisrtTimeHelp:false})
+        this.setState({sos:docs.docs.map(v=>{
+          let value = v.data()
+          value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          value.id = v.id
+          return value
+        })})
+      })
+      firebaseC5.app('c5virtual').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
+        if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
+          this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',2)
+        }
+        if(this.state.fisrtTimeSupport)
+          this.setState({fisrtTimeSupport:false})
+        this.setState({support:docs.docs.map(v=>{
+          let value = v.data()
+          value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          value.id = v.id
+          return value
+        })})
+      }) 
+      
+  
+      firebaseC5.app('c5virtual').firestore().collection('complaints')/*.orderBy('dateTime','desc')*/.onSnapshot(docs=>{  
+        console.log('complaiments',docs.docs)   
+        if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimecomplaiments) {
+          this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2)
+        }
+        if(this.state.fisrtTimecomplaiments)
+          this.setState({fisrtTimecomplaiments:false})
+        this.setState({complaiments:docs.docs.map(v=>{
+          let value = v.data()        
+          return value
+        })})
+      }) 
+  
+      firebaseC5.app('c5virtual').firestore().collection('calls').orderBy('dateTime','desc').onSnapshot(docs => {
+        if (this.state.showNotification&&!this.state.fisrtTimeCall&& !this.state.callIsGoing) {
+          const notification = this.refs.notificationSystem;
+          this.setState({stopNotification:true})      
+          this.setState({callIsGoing:true})  
+          if (call) {
+            call = false
+            this.setState({callIsGoing:false})
+            return
+          }
+          call = true
+          //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{          
+            notification.addNotification({
+              title:'Llama entrante de '+docs.docs[docs.size-1].data().user_nicename,
+              message: 'Se registro una llamada entrante',
+              level: 'error',
+              action: {
+                label: 'Ver detalles',
+                callback: ()=> {
+                  //this.setState({modalCall:true, callInfo:{...data,id:doc.id}})                
+                  window.location.href = window.location.href.replace(window.location.pathname,'/chat#message')
+                }
+              }
+            });
+            this.setState({callIsGoing:false})
+        }
+        if(this.state.fisrtTimeCall)
+          this.setState({fisrtTimeCall:false})
+        this.setState({calls:docs.docs.map(doc=>{
+          let value = doc.data()
+          return value})
+        })
+        this.setState({callIsGoing:false})
+      })
+      
+      firebaseC5.app('c5virtual').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot(docs=>{     
+        if (this.state.showNotification&&!this.state.fisrtTimeChat&&!this.state.callIsGoing) {
+          this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',3,0)
+        }
+        if(this.state.fisrtTimeChat)
+          this.setState({fisrtTimeChat:false})      
+        this.setState({chats:docs.docs.map(v=>{
+          let value = v.data()
+          value.lastModification = new Date(value.lastModification.toDate()).toLocaleString()
+          // value.messages = value.messages.map(message =>{
+          //   message.dateTime = new Date(message.dateTime.toDate()).toLocaleString()
+          //   return message
+          //})
+          value.id = v.id
+          return value
+        })})
+      })   
+    }
     
-    firebaseC5.app('c5virtual').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot(docs=>{     
-      if (this.state.showNotification&&!this.state.fisrtTimeChat&&!this.state.callIsGoing) {
-        this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',3,0)
-      }
-      if(this.state.fisrtTimeChat)
-        this.setState({fisrtTimeChat:false})      
-      this.setState({chats:docs.docs.map(v=>{
-        let value = v.data()
-        value.lastModification = new Date(value.lastModification.toDate()).toLocaleString()
-        /*value.messages = value.messages.map(message =>{
-          message.dateTime = new Date(message.dateTime.toDate()).toLocaleString()
-          return message
-        })*/
-        value.id = v.id
-        return value
-      })})
-    }) 
     //const socket = socketIOClient('http://95.216.37.253:3011');
     //socket.on("messages", this.checkCall);
     //setTimeout(()=>this.checkCall(fakeCall),5000)

@@ -80,7 +80,7 @@ class Map extends Component {
                 render(<CameraStream moduleActions={moduleActions} marker={marker} showButtons height={.65} showExternal/>, document.getElementById('infoWindow'+e.extraData.id))
             }
           })(e,render, this.state.moduleActions))
-        infoWindow.open(map)
+        infoWindow.open(map)        
     }
 
    

@@ -37,11 +37,11 @@ class LoopCamerasDisplay extends Component {
             </div>:null}
             {this.state.markers.map((value,index) =>
                 <div key={value.extraData.id} style={{height:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}>
-                    <CameraStream 
+                    {index===this.state.slideIndex?<CameraStream 
                         ref={'camstreamloopref'+value.id} 
                         marker={value} 
                         height={this.state.height}
-                        width={.5} />
+                        width={.5} />:null}
                 </div>
             )}        
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
