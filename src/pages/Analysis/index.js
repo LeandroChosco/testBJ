@@ -47,7 +47,8 @@ class Analysis extends Component {
         mails:[],
         user_id:0,
         userInfo:{},
-        moduleActions:{}
+        moduleActions:{},
+        id_cam:0
     }
 
   render() {
@@ -415,8 +416,15 @@ class Analysis extends Component {
                 this.setState({moduleActions:JSON.parse(isValid.UserToModules[0].actions)})
             }
         } else {
-            this.setState({moduleActions:{btnrecord:true,btnsnap:true,viewHistorial:true}})
+            this.setState({moduleActions:{btnrecord:true,btnsnap:true,viewHistorial:true},id_cam:this.props.match.params.id})
         }
+        this._loadCameras()
+        window.addEventListener('restartCamEvent', this._loadCameras, false)
+    }
+
+
+    _loadCameras = () => {
+        this.setState({loading:true})
         conections.getAllCams()
             .then((response) => {
                 const camaras = response.data
@@ -435,20 +443,16 @@ class Analysis extends Component {
                             // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                         })
-                        if(this.props.match.params.id){
-                           if (parseInt(this.props.match.params.id) === value.id) {
+                        if(this.state.id_cam !=0){
+                           if (parseInt(this.state.id_cam) === value.id) {
                                 title= value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                                 actualCamera = {
                                     id:value.id,
                                     num_cam:value.num_cam,
                                     lat:value.google_cordenate.split(',')[0],
                                     lng:value.google_cordenate.split(',')[1],
-<<<<<<< HEAD
                                     webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
                                     // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-=======
-                                    webSocket:'ws://'+value.UrlStreamToCameras[0].Url.dns_ip+value.port_output_streaming,
->>>>>>> beaebea5ebdcddba797dba83cfd01ee190b36435
                                     name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                                 }
                                 idCamera = value.id
@@ -459,19 +463,19 @@ class Analysis extends Component {
                     return true;
                 })
                 if(idCamera== null){
-                    this.setState({places:auxCamaras,loading: false})
+                    this.setState({places:auxCamaras,loading: false,error:undefined})
                 } else {
-                    this.setState({laces:auxCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera}})
+                    this.setState({laces:auxCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera},error:undefined})
                     this.setState({displayTipe:3})
                 }
             }).catch(error=>{
-                this.setState({loading: false,error:error})
+                this.setState({loading: false,error:'Error de conexion'})
                 console.log('eeeeeeeeeeeerrrrrooooooor',error)
             })
-
     }
 
     componentWillUnmount(){
+        window.removeEventListener('restartCamEvent', this._loadCameras, false)
         this.state.recordingProcess.map(value=>{
 
             conections.stopRecord({

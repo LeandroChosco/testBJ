@@ -282,6 +282,11 @@ class App extends Component {
         this.setState({loadingRestart:false})
         alert('Error reiniciando algunas camaras')
       })
+    }).catch(error =>{
+      const event = new Event('restartCamEvent')
+      window.dispatchEvent(event)
+      this.setState({loadingRestart:false})
+      alert('Error reiniciando algunas camaras')
     })
     /*conections.restartStream().then(data=>{
       this.setState({loadingRestart:false})

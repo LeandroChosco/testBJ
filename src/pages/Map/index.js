@@ -19,7 +19,7 @@ const mapOptions= {
     streetViewControl: false,
     fullscreenControl: false,
     map: null,
-    loading: true
+    loading: false
 }
 
 class Map extends Component {
@@ -28,7 +28,8 @@ class Map extends Component {
         places : [
         ],
         webSocket:'ws://18.222.106.238',
-        moduleActions:{}
+        moduleActions:{},
+        markers:[]
     }
 
   render() {
@@ -50,22 +51,8 @@ class Map extends Component {
   }
 
     _onMapLoad = map => {
-        this.setState({map:map})
-        const marker = []
-        this.state.places.map((value,index)=>{
-             marker[index]= new window.google.maps.Marker({
-                position: { lat:value.lat, lng:value.lng },
-                map: map | this.state.map,
-                title: value.name,
-                extraData:value
-            });
-            window.google.maps.event.addListener(marker[index],'click', (function(marker, map, createInfoWindow) {
-                return function() {
-                  createInfoWindow(marker,map)
-                }
-              })(marker[index], map | this.state.map,this.createInfoWindow))
-            return true
-        })
+        this.setState({map:map})        
+        this._loadCams()
 
     }
     createInfoWindow = (e, map) => {
@@ -95,6 +82,26 @@ class Map extends Component {
         } catch (e){
             console.log(e)
         }
+        
+      const navHeight = document.getElementsByTagName('nav')[0].scrollHeight
+      const documentHeight = window.innerHeight
+      let map = document.getElementsByClassName('map')[0]//.style.height = documentHeight - navHeight      
+      map.style.height  = documentHeight - navHeight + "px"
+      map.style.maxHeight  = documentHeight - navHeight + "px"
+      window.addEventListener('resize', this._resizeMap);
+      window.addEventListener('restartCamEvent', this._loadCameras, false)
+    }
+
+    componentWillUnmount(){
+        window.removeEventListener('restartCamEvent', this._loadCameras, false)        
+    }
+
+    _loadCams = () => {
+        this.setState({loading:true})
+        for (let index = 0; index < this.state.markers.length; index++) {
+            const element = this.state.markers[index];
+            element.setMap(null)
+        }
         conections.getAllCams().then((data) => {
             const camaras = data.data
             let auxCamaras = []
@@ -113,7 +120,7 @@ class Map extends Component {
                 return true
             })
             this.setState({loading:false,places:auxCamaras})
-            const marker = []
+            let marker = []
             this.state.places.map((value,index)=>{
                 marker[index]= new window.google.maps.Marker({
                     position: { lat:value.lat, lng:value.lng },
@@ -126,16 +133,11 @@ class Map extends Component {
                     createInfoWindow(marker,map)
                     }
                 })(marker[index], this.state.map,this.createInfoWindow))
-                return true
+                return value
             })
+            this.setState({markers:marker})
         });
-      const navHeight = document.getElementsByTagName('nav')[0].scrollHeight
-      const documentHeight = window.innerHeight
-      let map = document.getElementsByClassName('map')[0]//.style.height = documentHeight - navHeight
-      map.style.height  = documentHeight - navHeight + "px"
-      map.style.maxHeight  = documentHeight - navHeight + "px"
-      window.addEventListener('resize', this._resizeMap);
-  }
+    } 
 
     _resizeMap = () => {
         let navHeight;
