@@ -53,7 +53,7 @@ class Analysis extends Component {
   render() {
     return (
         <div id="analisis_holder" >
-            {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">            
+            {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">
                 <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
                     <ToggleButton value={1} variant='outline-primary' ><Icon name="grid layout"/></ToggleButton>
                     <ToggleButton value={2} variant='outline-primary' ><Icon name="clone"/></ToggleButton>
@@ -443,8 +443,12 @@ class Analysis extends Component {
                                     num_cam:value.num_cam,
                                     lat:value.google_cordenate.split(',')[0],
                                     lng:value.google_cordenate.split(',')[1],
+<<<<<<< HEAD
                                     webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
                                     // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
+=======
+                                    webSocket:'ws://'+value.UrlStreamToCameras[0].Url.dns_ip+value.port_output_streaming,
+>>>>>>> beaebea5ebdcddba797dba83cfd01ee190b36435
                                     name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                                 }
                                 idCamera = value.id
