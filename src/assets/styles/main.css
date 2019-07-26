@@ -195,11 +195,11 @@ iframe {
   overflow: hidden;
   padding: 55px 55px 37px 55px;
 
-  background: #02004C;
-  background: -webkit-linear-gradient(top, #02004C, #0a0a0a);
-  background: -o-linear-gradient(top, #02004C, #0a0a0a);
-  background: -moz-linear-gradient(top, #02004C, #0a0a0a);
-  background: linear-gradient(to top, #02004C, #0a0a0a);
+  background: #aa2823;
+  background: -webkit-linear-gradient(top, #aa2823, #0a0a0a);
+  background: -o-linear-gradient(top, #aa2823, #0a0a0a);
+  background: -moz-linear-gradient(top, #aa2823, #0a0a0a);
+  background: linear-gradient(to top, #aa2823, #0a0a0a);
 }
 
 
@@ -553,7 +553,7 @@ iframe {
 
 
 .bg-mh{
-  background: #02004C;
+  background: #aa2823;
 }
 
 .btn-outline-light:hover{
