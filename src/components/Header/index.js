@@ -24,8 +24,8 @@ class Header extends Component {
         this.props.history.push('/chat')
     }
 
-    _cameraAction = () => {    
-        document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')    
+    _cameraAction = () => {
+        document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')
         if(!this.props.location.pathname.includes("/map")){
             this.props.history.push('/map')
         } else {
@@ -46,7 +46,7 @@ class Header extends Component {
 
   render() {
     return (
-        <Navbar sticky="top" expand="lg" variant="light" bg="mh">                       
+        <Navbar sticky="top" expand="lg" variant="dark" bg="mh">                       
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse className="justify-content-end">
                 <Nav className="mr-auto">
@@ -58,22 +58,22 @@ class Header extends Component {
                                     {value.name}
                                 </Button>
                             </Navbar.Text>
-                        ):null 
-                    }                    
+                        ):null
+                    }
                 </Nav>
-                <Nav>     
+                <Nav>
                     {this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this.props._reloadCams}>
                         <i className={this.props.loadingRestart?'fa fa-repeat fa-spin':"fa fa-repeat"}></i>
-                    </Button>:null}                                                            
+                    </Button>:null}
                     <NavDropdown className="light" title={this.props.userInfo.user_nicename}>
                         <NavDropdown.Item onClick={this._logOut}>Cerrar sesion</NavDropdown.Item>
                     </NavDropdown>
                     {this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this._cameraSideInfo}>
                         <i className="fa fa-bell"></i>
-                    </Button>:null}                                           
-                    
+                    </Button>:null}
+
                 </Nav>
-                
+
             </Navbar.Collapse>
         </Navbar>
     );

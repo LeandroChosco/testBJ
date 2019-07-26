@@ -94,7 +94,7 @@ class GridCameraDisplay extends Component {
                 /> 
             </Col>
         </Row>}  
-            {this.props.error?<div className="errorContainer">
+            {this.props.error&&this.state.markers.length===0?<div className="errorContainer">
                 Error al cargar informacion: {JSON.stringify(this.props.error)}
             </div>:null}
         <div className={!this.state.autoplay?'camGridControl showfiles':'camGridControl'}>

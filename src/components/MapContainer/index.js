@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import './style.css'
 
 export class MapContainer extends Component {
-  onScriptLoad = () => {     
-       
+  onScriptLoad = () => {
+
     const map = new window.google.maps.Map(this.refs.mapDiv, this.props.options);
     this.props.onMapLoad(map)
   }
@@ -20,16 +20,16 @@ export class MapContainer extends Component {
       s.src = `https://maps.google.com/maps/api/js?key=${key}`;
       var x = document.getElementsByTagName('script')[0];
       x.parentNode.insertBefore(s, x);
-      // Below is important. 
+      // Below is important.
       //We cannot access google.maps until it's finished loading
       s.addEventListener('load', e => {
         this.onScriptLoad()
       })
-    } else {      
+    } else {
       this.onScriptLoad()
     }
   }
-    
+
   render() {
     return (
       <div style={{ width: '100%', height: '100%' }} ref="mapDiv" />

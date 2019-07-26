@@ -6,8 +6,8 @@ export default {
     makeLogin:(data)=>{
         return Axios.post(constants.base_url+':'+constants.apiPort+'/admin/login',data)
     },
-    restartStream:()=>{
-        return Axios.put(constants.apiStream+':'+constants.apiPort+'/control-cams/restart-streaming2/all')
+    restartStream:(dns = constants.apiStream)=>{
+        return Axios.put(dns+':'+constants.apiPort+'/control-cams/restart-streaming2/all')
     },
     sendTicket:(data)=> {
         return Axios.post(constants.base_url + ':' + constants.apiPort + '/tickets',data)

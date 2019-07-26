@@ -251,7 +251,44 @@ class App extends Component {
 
   _reloadCams = () => {
     this.setState({loadingRestart:true})
-    conections.restartStream().then(data=>{
+    conections.getAllCams().then(response=>{
+      const data = response.data
+      console.log(data)
+      let dns = []      
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        if (element.active === 1 && element.flag_streaming === 1) {
+          if (dns.indexOf('http://'+element.UrlStreamToCameras[0].Url.dns_ip) < 0 ) {
+            dns.push('http://'+element.UrlStreamToCameras[0].Url.dns_ip)
+          }
+        } 
+      }
+      console.log(dns)
+      let promises = []
+      for (let index = 0; index < dns.length; index++) {
+        const element = dns[index];
+        promises.push(conections.restartStream(element))
+        
+      }
+      Promise.all(promises).then(response=>{
+        console.log(response)
+        const event = new Event('restartCamEvent')
+        window.dispatchEvent(event)
+        this.setState({loadingRestart:false})
+      }).catch(reason=>{
+        console.log(reason)
+        const event = new Event('restartCamEvent')
+        window.dispatchEvent(event)
+        this.setState({loadingRestart:false})
+        alert('Error reiniciando algunas camaras')
+      })
+    }).catch(error =>{
+      const event = new Event('restartCamEvent')
+      window.dispatchEvent(event)
+      this.setState({loadingRestart:false})
+      alert('Error reiniciando algunas camaras')
+    })
+    /*conections.restartStream().then(data=>{
       this.setState({loadingRestart:false})
       if (data.data.success) {
         const event = new Event('restartCamEvent')
@@ -259,7 +296,7 @@ class App extends Component {
       } else {
         alert('Error reiniciando las camaras')
       }
-    })
+    })*/
   } 
 
 
