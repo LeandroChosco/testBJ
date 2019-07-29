@@ -196,10 +196,10 @@ iframe {
   padding: 55px 55px 37px 55px;
 
   background: #aa2823;
-  background: -webkit-linear-gradient(top, #aa2823, #0a0a0a);
-  background: -o-linear-gradient(top, #aa2823, #0a0a0a);
-  background: -moz-linear-gradient(top, #aa2823, #0a0a0a);
-  background: linear-gradient(to top, #aa2823, #0a0a0a);
+  background: -webkit-linear-gradient(top, rgba(242,131,62,1) 10%, rgba(221,52,117,1) 50%, rgba(75,77,152,1) 100%);
+  background: -o-linear-gradient(top,rgba(242,131,62,1) 10%, rgba(221,52,117,1) 50%, rgba(75,77,152,1) 100%);
+  background: -moz-linear-gradient(top,rgba(242,131,62,1) 10%, rgba(221,52,117,1) 50%, rgba(75,77,152,1) 100%);
+  background: linear-gradient(90deg, rgba(242,131,62,1) 10%, rgba(221,52,117,1) 50%, rgba(75,77,152,1) 100%);
 }
 
 
@@ -553,7 +553,7 @@ iframe {
 
 
 .bg-mh{
-  background: #aa2823;
+  background: linear-gradient(90deg, rgba(242,131,62,1) 10%, rgba(221,52,117,1) 50%, rgba(75,77,152,1) 100%);
 }
 
 .btn-outline-light:hover{
