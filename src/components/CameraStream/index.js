@@ -363,6 +363,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         }
     }
   componentDidMount(){      
+      if (this.props.marker.extraData === undefined) {
+          return false
+      }
       this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})               
       try{
           var ws = new WebSocket(this.props.marker.extraData.webSocket)
