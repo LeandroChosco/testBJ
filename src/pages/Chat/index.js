@@ -6,6 +6,7 @@ import firebaseC5 from '../../constants/configC5';
 import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants';
 import MapContainer from '../../components/MapContainer';
+import Axios from 'axios';
 const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
  class Chat extends Component {
     state = {
@@ -16,8 +17,9 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
         fisrt:{
           
         },
-        camData:{},
-        loading : false
+        camData:undefined,
+        loading : false,
+        hashUsed: false
     }
 
   render() {
@@ -33,20 +35,14 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
               <div className="col-4 userList">
                   {chats.map((chat,i)=>
                     <Card className={i===index?'activeChat':''} key={i} onClick={()=>{
-                      this.setState({chatId:'',loading:true});
+                      this.setState({chatId:'',loading:true, camData: undefined});
                       setTimeout(()=>{
+                        this._changeUserCam(chat)
                         this.setState({
                           chatId:chat.id,
                           messages:chat.messages,
                           index:i,
-                          from:chat.from,
-                          camData:{
-                            extraData:{
-                              num_cam:chat.user_cam.num_cam,
-                              cameraID:chat.user_cam.id,
-                              webSocket:constants.webSocket+':'+chat.user_cam.port_output_streaming
-                            }
-                          },
+                          from:chat.from,                          
                           loading:false
                         })
                       },1000)}}>
@@ -62,7 +58,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
               <div className="col-8 messages">
                     {!loading&&chatId!==''&&chats[index]?
                     <div className="cameraView">
-                      <h2 className={from} style={{textAlign: 'center', height: '10%'}}>{from}</h2>
+                      {/* <h2 className={from} style={{textAlign: 'center', height: '10%'}}>{from}</h2> */}
                       <div className="row" style={{height: '70%'}}>                       
                         <div className="col" style={{height: '100%'}}>
                           <MapContainer                 
@@ -82,10 +78,10 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                             onMapLoad={this._onMapLoad} /> 
                         </div>
                         <div className="col" style={{height: '100%'}}>
-                          <CameraStream
+                          {camData!==undefined?<CameraStream
                             style={{height:'100%'}}
                             hideTitle 
-                            marker={camData}/>
+                            marker={camData}/>:null}
                         </div>
                         
                       </div>
@@ -170,6 +166,25 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     }
   }
 
+  _changeUserCam = (chat) => {
+    console.log(chat)
+    Axios.get(constants.base_url+':'+constants.apiPort+'/admin/users/'+chat.user_creation).then(response=>{
+      console.log(response)
+      if (response.status ===200) {
+        if (response.data.success) {
+          const data = response.data.data
+          this.setState({camData:{
+            extraData:{
+              num_cam:data.UserToCameras[0].Camare.num_cam,
+              cameraID:data.UserToCameras[0].Camare.num_cam,
+              webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
+            }
+          }})
+        }
+      }
+    })
+  }
+
 
   closeChat = () => {
     /*let {chats} = this.props
@@ -219,12 +234,14 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     
   componentDidUpdate(){
     //console.log(this.props)
-    if(this.props.location.hash!==''&&this.state.index!=0)
+    if(this.props.location.hash!==''&&this.state.index!=0 && this.state.hashUsed=== false)
     {
       console.log(this.props.chats[0])
       if (this.props.chats[0]!==undefined) {
         console.log(this.props.chats[0].from)
-        this.setState({index:0, from:this.props.chats[0].from})    
+        //this.setState({index:0, from:this.props.chats[0].from})
+        this._changeUserCam(this.props.chats[0])
+        this.setState({index:0,from:this.props.chats[0].from,chatId:this.props.chats[0].id,hashUsed:true})    
       }
     }
     if (this.props.location.search!=='') {
@@ -241,7 +258,8 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
         console.log(i)
         
         if (this.state.index!=i&&this.state.fisrt.u!==params.u) {
-          this.setState({index:i,fisrt:params,from:this.props.chats[i].from})
+          this._changeUserCam(this.props.chats[i])
+          this.setState({index:i,fisrt:params,from:this.props.chats[i].from,chatId:this.props.chats[i].id})
 
         }
       }

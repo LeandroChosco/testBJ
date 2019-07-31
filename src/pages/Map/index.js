@@ -12,7 +12,7 @@ import conections from '../../conections';
 
 const mapOptions= {
     center: {lat: 19.459430, lng: -99.208588},
-    zoom: 15,
+    zoom: 14,
     mapTypeId: 'roadmap',
     zoomControl: false,
     mapTypeControl: false,

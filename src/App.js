@@ -20,6 +20,7 @@ import Welcome from './pages/Welcome';
 
 import firebase from './constants/config';
 import firebaseC5 from './constants/configC5';
+import firebaseC5cuajimalpa from './constants/configC5CJ'
 import Matches from './components/Matches';
 import DetailsEmergency from './pages/DetailsEmergency';
 import Chat from './pages/Chat';
@@ -145,9 +146,9 @@ class App extends Component {
             return
           }
           call = true
-          //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{          
+          //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
             notification.addNotification({
-              title:'Llama entrante de '+docs.docs[docs.size-1].data().user_nicename,
+              title:'Llama entrante de '+docs.docs[0].data().user_nicename,
               message: 'Se registro una llamada entrante',
               level: 'error',
               action: {
@@ -169,7 +170,7 @@ class App extends Component {
         this.setState({callIsGoing:false})
       })
       
-      firebaseC5.app('c5virtual').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot(docs=>{     
+      firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot(docs=>{     
         if (this.state.showNotification&&!this.state.fisrtTimeChat&&!this.state.callIsGoing) {
           this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',3,0)
         }
