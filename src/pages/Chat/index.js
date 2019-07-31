@@ -18,7 +18,8 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
           
         },
         camData:undefined,
-        loading : false
+        loading : false,
+        hashUsed: false
     }
 
   render() {
@@ -233,14 +234,14 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     
   componentDidUpdate(){
     //console.log(this.props)
-    if(this.props.location.hash!==''&&this.state.index!=0)
+    if(this.props.location.hash!==''&&this.state.index!=0 && this.state.hashUsed=== false)
     {
       console.log(this.props.chats[0])
       if (this.props.chats[0]!==undefined) {
         console.log(this.props.chats[0].from)
         //this.setState({index:0, from:this.props.chats[0].from})
         this._changeUserCam(this.props.chats[0])
-        this.setState({index:0,from:this.props.chats[0].from,chatId:this.props.chats[0].id})    
+        this.setState({index:0,from:this.props.chats[0].from,chatId:this.props.chats[0].id,hashUsed:true})    
       }
     }
     if (this.props.location.search!=='') {

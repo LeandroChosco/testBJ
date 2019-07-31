@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "0a6d6cb00e1b2538c1b6",
+    "revision": "547a9bc238ee0a07d733",
     "url": "/static/css/main.3a4204a4.chunk.css"
   },
   {
-    "revision": "0a6d6cb00e1b2538c1b6",
-    "url": "/static/js/main.febc282f.chunk.js"
+    "revision": "547a9bc238ee0a07d733",
+    "url": "/static/js/main.c4d48041.chunk.js"
   },
   {
     "revision": "42ac5946195a7306e2a5",
@@ -24,16 +24,16 @@ self.__precacheManifest = [
     "url": "/static/media/Poppins-Regular.731a28a4.ttf"
   },
   {
-    "revision": "7940efc40d8e3b477e16cc41b0287139",
-    "url": "/static/media/Poppins-Bold.7940efc4.ttf"
-  },
-  {
     "revision": "a4e11dda40531debd374e4c8b1dcc7f4",
     "url": "/static/media/Poppins-Medium.a4e11dda.ttf"
   },
   {
     "revision": "e63b93dfac2600782654e2b87910d681",
     "url": "/static/media/Poppins-SemiBold.e63b93df.ttf"
+  },
+  {
+    "revision": "7940efc40d8e3b477e16cc41b0287139",
+    "url": "/static/media/Poppins-Bold.7940efc4.ttf"
   },
   {
     "revision": "a4d31128b633bc0b1cc1f18a34fb3851",
@@ -140,7 +140,7 @@ self.__precacheManifest = [
     "url": "/static/media/bg-01.8f6a99c3.jpg"
   },
   {
-    "revision": "96d4a4658072d679d2ac59205f963639",
+    "revision": "63befd449524d0bf8c98fc670eee1834",
     "url": "/index.html"
   }
 ];
