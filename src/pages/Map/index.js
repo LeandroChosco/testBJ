@@ -12,7 +12,7 @@ import conections from '../../conections';
 
 const mapOptions= {
     center: {lat: 19.459430, lng: -99.208588},
-    zoom: 15,
+    zoom: 14,
     mapTypeId: 'roadmap',
     zoomControl: false,
     mapTypeControl: false,
@@ -105,8 +105,14 @@ class Map extends Component {
         conections.getAllCams().then((data) => {
             const camaras = data.data
             let auxCamaras = []
+            let center_lat = 0
+            let center_lng = 0
+            let total = 0
             camaras.map(value=>{
                 if (value.active === 1&& value.flag_streaming === 1) {
+                    center_lat = center_lat + parseFloat(value.google_cordenate.split(',')[0]) 
+                    center_lng=center_lng+parseFloat(value.google_cordenate.split(',')[1])
+                    total = total + 1                    
                     auxCamaras.push({
                         id:value.id,
                         num_cam:value.num_cam,
@@ -119,6 +125,9 @@ class Map extends Component {
                 }
                 return true
             })
+            center_lat = center_lat / total
+            center_lng = center_lng / total
+            this.state.map.setCenter(new window.google.maps.LatLng(center_lat, center_lng))
             this.setState({loading:false,places:auxCamaras})
             let marker = []
             this.state.places.map((value,index)=>{
