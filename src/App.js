@@ -145,9 +145,9 @@ class App extends Component {
             return
           }
           call = true
-          //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{          
+          //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
             notification.addNotification({
-              title:'Llama entrante de '+docs.docs[docs.size-1].data().user_nicename,
+              title:'Llama entrante de '+docs.docs[0].data().user_nicename,
               message: 'Se registro una llamada entrante',
               level: 'error',
               action: {
