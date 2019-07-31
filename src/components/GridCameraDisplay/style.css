@@ -126,12 +126,12 @@
 
 .camcolgridholder>.card{
     height: 100%;
-}/*
-
-/*.camcolgridholder>.card>.card-body{
-    height: 100%;
 }
-*/
+/*
+.camcolgridholder>.card>.card-body{
+    min-height: 70%;
+}*/
+
 .camcolgridholder>.card>.card-body>.camHolder{
-    height: auto;
+    height: initial;
 }
