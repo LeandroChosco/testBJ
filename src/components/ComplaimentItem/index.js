@@ -15,12 +15,11 @@ export default class ComplaimentItem extends React.Component {
                             </div>
                             <div className="textcontainerdescription">
                                 <p>
-                                    {'Nueva denuncia: '+this.props.info.msg}
+                                    <b>Nueva denuncia: </b>{this.props.info.description}
+                                    <br/>
+                                    <b>Ubicación: </b>{this.props.info.position}
                                 </p>                                
-                            </div>
-                            <div align='right'>
-                                <span className={this.props.info.status?"badge badge-success":this.props.info.status===undefined?"badge badge-success":"badge badge-danger"}>{this.props.info.status?'Abierto':this.props.info.status===undefined?'Abierto':'Cerrado'}</span>
-                            </div>
+                            </div>                            
                         </div>
                     </div>                     
                 </Card.Description>
@@ -34,6 +33,11 @@ export default class ComplaimentItem extends React.Component {
     }
 
     _godetails = () => {
+        if(this.props.toggleControls){
+            this.props.toggleControls() 
+        }
+        
+        window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/denuncia/' + this.props.info.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=850,height=700')
 
     }
 }
