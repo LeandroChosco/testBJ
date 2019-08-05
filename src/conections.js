@@ -35,6 +35,9 @@ export default {
     getCamDataHistory:(camera_id)=>{
         const user_id = getUserID() 
         return Axios.get(constants.base_url+':'+constants.apiPort+'/cams/'+camera_id+'/video_history?user_id='+user_id)
+    },
+    getTickets:()=>{
+        return Axios.get(constants.base_url+':'+constants.apiPort+'/tickets')
     }
 
     

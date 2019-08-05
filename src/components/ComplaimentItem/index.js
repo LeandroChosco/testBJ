@@ -13,7 +13,7 @@ export default class ComplaimentItem extends React.Component {
                             <div align='right'>
                                 {this.props.info?this.props.info.dateTime?this.props.info.dateTime.toDate().toLocaleString():'25-03-2019 14:35':'25-03-2019 14:35'}
                             </div>
-                            <div className="textcontainerdescription">
+                            <div>
                                 <p>
                                     <b>Nueva denuncia: </b>{this.props.info.description}
                                     <br/>

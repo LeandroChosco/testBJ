@@ -37,7 +37,28 @@ const mapOptions= {
                   Nueva Denuncia anonima
                 </Navbar.Text>                
             </Navbar>                            
-            <div  className="card">
+            <div  className="card">                                
+                <div className='row' style={{height:'100%'}}>                                        
+                    <div className='col'>                             
+                        {complaint.latitude!==undefined?<MapContainer
+                            options={mapOptions}
+                            onMapLoad={this._onMapLoad} />:null}
+                    </div>
+                    <div className='col' style={{height:'100%', minHeight:'150px'}}>                                  
+                        {complaint.url!==undefined?complaint.url.includes('.jpg')?
+                        <Image fluid rounded src={complaint.url}/>:
+                        <video style={{width:'100%'}} controls src={complaint.url}/>:null}
+                    
+                    </div>
+                </div>                
+                <div  className="row">
+                    &nbsp;
+                </div>  
+                <div className='row' style={{height:'100%'}}>                    
+                    <div className='col'>     
+                        <b>Ubicación: </b> {complaint.position}
+                    </div>                                       
+                </div>     
                 <div className='row'>
                     <div className='col'>
                         <b>Fecha y hora: </b> {complaint.dateTime}
@@ -50,34 +71,8 @@ const mapOptions= {
                     <div className='col'>
                         <b>Descripción: </b> {complaint.description}
                     </div>
-                </div>
-                <div className='row' style={{height:'100%'}}>                    
-                    <div className='col' style={{height:'100%'}}>          
-                        <b>Archivos adjuntos: </b>                         
-                    
-                    </div>
-                    <div className='col'>     
-                        <b>Ubicación: </b> {complaint.position}
-                    </div>
-                </div>   
-                <div className='row' style={{height:'100%'}}>                    
-                    <div className='col' style={{height:'100%'}}>                                  
-                        {complaint.url!==undefined?complaint.url.includes('.jpg')?
-                        <Image fluid rounded src={complaint.url}/>:
-                        <video style={{width:'100%'}} controls src={complaint.url}/>:null}
-                    
-                    </div>
-                    <div className='col'>                             
-                        {complaint.latitude!==undefined?<MapContainer
-                            options={mapOptions}
-                            onMapLoad={this._onMapLoad} />:null}
-                    </div>
-                </div>                
-                
-            </div>
-            <div  className="row">
-                &nbsp;
-            </div>                  
+                </div> 
+            </div>                         
         </div>
     
     );
