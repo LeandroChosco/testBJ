@@ -86,20 +86,7 @@ class App extends Component {
   }
 
 
-  loadData = () => {  
-    firebaseC5.app('c5virtual').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{  
-      console.log('complaiments',docs.docs)   
-      if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimecomplaiments) {
-        this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2)
-      }
-      if(this.state.fisrtTimecomplaiments)
-        this.setState({fisrtTimecomplaiments:false})
-      this.setState({complaiments:docs.docs.map(v=>{
-        let value = v.data()       
-        value.id = v.id 
-        return value
-      })})
-    })   
+  loadData = () => {      
     if (process.env.NODE_ENV==='production') {
       firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
         if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
