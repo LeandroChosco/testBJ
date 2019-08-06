@@ -38,6 +38,9 @@ export default {
     },
     getTickets:()=>{
         return Axios.get(constants.base_url+':'+constants.apiPort+'/tickets')
+    },
+    getTicket:(id)=>{
+        return Axios.get(constants.base_url+':'+constants.apiPort+'/tickets/'+id)
     }
 
     

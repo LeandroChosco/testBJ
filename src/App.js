@@ -26,6 +26,7 @@ import Chat from './pages/Chat';
 import ModalCall from './components/ModalCall';
 import DetailsComplaiment from './pages/DetailsComplaiment';
 import Tickets from './pages/Tickets';
+import DetailsSupport from './pages/DetailsSupport';
 
 
 let call = false
@@ -87,7 +88,20 @@ class App extends Component {
   }
 
 
-  loadData = () => {      
+  loadData = () => { 
+    firebaseC5.app('c5virtual').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
+      if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
+        this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',4,docs.docs[0].id)
+      }
+      if(this.state.fisrtTimeSupport)
+        this.setState({fisrtTimeSupport:false})
+      this.setState({support:docs.docs.map(v=>{
+        let value = v.data()
+        value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+        value.id = v.id
+        return value
+      })})
+    })      
     if (process.env.NODE_ENV==='production') {
       firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
         if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
@@ -239,7 +253,12 @@ class App extends Component {
         level: type,
         action: {
           label: label,
-          callback: ()=> action===3?window.location.href = window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/chat#message'):action===5?window.open(window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/') + 'detalles/emergency/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):action===2?window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/denuncia/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):this.seeMatch(action)
+          callback: ()=> 
+            action===3?window.location.href = window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/chat#message'):
+            action===5?window.open(window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/') + 'detalles/emergency/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):
+            action===2?window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/denuncia/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):
+            action===4?window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/soporte/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):
+            this.seeMatch(action)
         }
       });
     }
@@ -428,6 +447,7 @@ class App extends Component {
         <Route path="/analisis/:id" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/detalles/emergency/:id" exact render={(props) => <DetailsEmergency  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/denuncia/:id" exact render={(props) => <DetailsComplaiment  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/detalles/soporte/:id" exact render={(props) => <DetailsSupport  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
