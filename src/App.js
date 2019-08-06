@@ -131,10 +131,9 @@ class App extends Component {
       }) 
       
   
-      firebaseC5.app('c5virtual').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{  
-        console.log('complaiments',docs.docs)   
+      firebaseC5.app('c5virtual').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{          
         if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimecomplaiments) {
-          this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2)
+          this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2,docs.docs[0].id)
         }
         if(this.state.fisrtTimecomplaiments)
           this.setState({fisrtTimecomplaiments:false})
@@ -240,7 +239,7 @@ class App extends Component {
         level: type,
         action: {
           label: label,
-          callback: ()=> action===3?window.location.href = window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/chat#message'):action===5?window.open(window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/') + 'detalles/emergency/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):this.seeMatch(action)
+          callback: ()=> action===3?window.location.href = window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/chat#message'):action===5?window.open(window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/') + 'detalles/emergency/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):action===2?window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/denuncia/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):this.seeMatch(action)
         }
       });
     }
