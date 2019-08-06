@@ -138,11 +138,7 @@ const mapOptions= {
         }
         const diffTime = Math.abs(this.state.created.getTime() - new Date().getTime());
         const diffMinutes = Math.ceil(diffTime / (1000 * 60 )); 
-        console.log(diffMinutes );
-        if (diffMinutes  > 2) {
-            this.setState({show:true})
-            return
-        }
+        console.log(diffMinutes );        
         setTimeout(this.checkFileAviable,1000)
     }
     var http = new XMLHttpRequest();
