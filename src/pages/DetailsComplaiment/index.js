@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import {  Accordion, Icon, Button, Image } from 'semantic-ui-react';
+import { Image } from 'semantic-ui-react';
 import Geocode from "react-geocode";
 import './style.css'
 import MapContainer from '../../components/MapContainer/index.js';
 import firebaseC5 from '../../constants/configC5';
 import {  Navbar } from 'react-bootstrap';
-import personData from '../../constants/personData';
 const mapOptions= {
     center: {lat: 19.459430, lng: -99.208588},
     zoom: 15,
@@ -23,7 +22,8 @@ const mapOptions= {
  class DetailsComplaiment extends Component {
     state = {
         complaint:{},
-        show:false
+        show:false,
+        created:new Date()
     } 
 
   render() {
@@ -53,10 +53,10 @@ const mapOptions= {
                             options={mapOptions}
                             onMapLoad={this._onMapLoad} />:null}
                     </div>
-                    <div className='col loader' style={{height:'100%', minHeight:'150px', maxHeight:'400px'}}>                                  
+                    <div className='col loader' style={{height:'100%', minHeight:'150px', maxHeight:'350px'}}>                                  
                         {complaint.url!==undefined&&show?complaint.url.includes('.jpg')?
-                        <Image fluid rounded src={complaint.url}/>:
-                        <video style={{width:'100%'}} controls src={complaint.url}/>:null}
+                        <Image fluid rounded src={complaint.url} style={{maxHeight:'350px'}}/>:
+                        <video style={{width:'100%', maxHeight:'350px'}} controls src={complaint.url}/>:null}
                     
                     </div>
                 </div>                
@@ -129,15 +129,31 @@ const mapOptions= {
   }
 
   checkFileAviable = () => {
-    fetch(this.state.complaint.url)
-    .then(res=>{
-        console.log(res)
-        this.setState({show:true})
-    })
-    .catch(err=>{
-        console.log(err)
+
+    const callback = (r) =>{
+        console.log('callback',r)
+        if(r){
+            this.setState({show:true})
+            return
+        }
+        const diffTime = Math.abs(this.state.created.getTime() - new Date().getTime());
+        const diffMinutes = Math.ceil(diffTime / (1000 * 60 )); 
+        console.log(diffMinutes );
+        if (diffMinutes  > 2) {
+            this.setState({show:true})
+            return
+        }
         setTimeout(this.checkFileAviable,1000)
-    })
+    }
+    var http = new XMLHttpRequest();
+    http.open('HEAD', this.state.complaint.url);
+    http.onreadystatechange = function() {
+        if (this.readyState == this.DONE) {
+            console.log(this)
+            callback(this.status != 404 && this.status !=0);
+        }
+    };
+    http.send();    
   }
 
     componentDidMount(){
@@ -145,10 +161,11 @@ const mapOptions= {
         firebaseC5.app('c5virtual').firestore().collection('complaints').doc(this.props.match.params.id).onSnapshot(doc=>{            
             if(doc.exists){
                 let value = doc.data()
+                const created=new Date(value.dateTime.toDate())
                 value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
                 console.log(value)             
-                this.setState({complaint:value})               
-                setTimeout(this.checkFileAviable,100)
+                this.setState({complaint:value,created:created})               
+                setTimeout(this.checkFileAviable,1000)
             }
         })
     }
