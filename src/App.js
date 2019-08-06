@@ -88,20 +88,7 @@ class App extends Component {
   }
 
 
-  loadData = () => { 
-    firebaseC5.app('c5virtual').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
-      if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
-        this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',4,docs.docs[0].id)
-      }
-      if(this.state.fisrtTimeSupport)
-        this.setState({fisrtTimeSupport:false})
-      this.setState({support:docs.docs.map(v=>{
-        let value = v.data()
-        value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
-        value.id = v.id
-        return value
-      })})
-    })      
+  loadData = () => {     
     if (process.env.NODE_ENV==='production') {
       firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
         if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
@@ -132,7 +119,7 @@ class App extends Component {
       })
       firebaseC5.app('c5virtual').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
         if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
-          this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',2)
+          this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',4,docs.docs[0].id)
         }
         if(this.state.fisrtTimeSupport)
           this.setState({fisrtTimeSupport:false})
@@ -142,7 +129,7 @@ class App extends Component {
           value.id = v.id
           return value
         })})
-      }) 
+      })       
       
   
       firebaseC5.app('c5virtual').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{          
