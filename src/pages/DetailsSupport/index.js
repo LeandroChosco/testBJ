@@ -48,7 +48,7 @@ const mapOptions= {
             </Navbar>                            
             <div  className="card">                                
                 {support.data_cam?
-                    <div className='row' style={{height:'200px'}}>                                        
+                    <div className='row' style={{height:'250px'}}>                                        
                         <div className='col'>                             
                             
                                 <MapContainer
@@ -57,7 +57,7 @@ const mapOptions= {
                         </div>   
                         <div className='col'>                             
                             <CameraStream 
-                                style={{height:'100%'}}
+                                style={{height:'250px'}}
                                 hideTitle 
                                 marker={{
                                     extraData:{
@@ -138,12 +138,47 @@ const mapOptions= {
     });
   }
 
-  toProcess = () => {
-      console.log('move ticket to process')
+  toProcess = async () => {
+    try{
+        const res = await conections.toProcess({ticket_id:this.state.ticket.id})
+        console.log(res)
+        if(res.status ===200){
+            const data = res.data
+            if (data.success) {
+                firebaseC5.app('c5virtual').firestore().collection('support').doc(this.props.match.params.id).update({status:2})
+            } else {
+                alert('Error al querer atender ticket. ' + data.msg)
+            }
+        } else {
+            alert('Error al querer atender ticket. Error de conexion')
+        }
+    }catch(err){
+        alert('Error al querer atender ticket. Error de conexion')
+    }
   }
 
-  toClose = () => {
-    console.log('move ticket to close')
+  toClose = async () => {
+    try{
+        var solution = prompt('Por favor ingrese de manera clara la solucion al problema presentado')
+        if (solution === '' || solution === null) {
+            alert('Ingresar una solucion')
+            return
+        }
+        const res = await conections.toClose({ticket_id:this.state.ticket.id,solution:solution})
+        console.log(res)
+        if(res.status ===200){
+            const data = res.data
+            if (data.success) {
+                firebaseC5.app('c5virtual').firestore().collection('support').doc(this.props.match.params.id).update({status:3})
+            } else {
+                alert('Error al querer atender ticket. ' + data.msg)
+            }
+        } else {
+            alert('Error al querer atender ticket. Error de conexion')
+        }
+    }catch(err){
+        alert('Error al querer atender ticket. Error de conexion')
+    }
 }
 
 

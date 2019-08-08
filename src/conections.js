@@ -41,6 +41,14 @@ export default {
     },
     getTicket:(id)=>{
         return Axios.get(constants.base_url+':'+constants.apiPort+'/tickets/'+id)
+    },
+    toProcess:(data)=>{
+        data.user_id = getUserID()
+        return Axios.put(constants.base_url+':'+constants.apiPort+'/tickets/toProcess',data)
+    },
+    toClose:(data)=>{
+        data.user_id = getUserID()
+        return Axios.put(constants.base_url+':'+constants.apiPort+'/tickets/toClose',data)
     }
 
     
