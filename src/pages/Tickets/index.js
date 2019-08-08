@@ -24,6 +24,8 @@ class Tickets extends Component {
                 <div className ='col'>Solucion</div>
                 <div className ='col'>Fecha creacion</div>
                 <div className ='col'>Usuario creacion</div>
+                <div className ='col'>Fecha atencion/cierre</div>
+                <div className ='col'>Usuario atencion/cierre</div>
               </div>
             {error!==undefined?error:
             tickets.map((ticket,index)=>
@@ -32,7 +34,9 @@ class Tickets extends Component {
                 <div className ='col'>{ticket.problem}</div>
                 <div className ='col'>{ticket.solution}</div>
                 <div className ='col'>{new Date(ticket.date_creation).toLocaleString()}</div>
-                <div className ='col'>{ticket.user_creation}</div>
+                <div className ='col'>{ticket.UserCreation.user_nicename}</div>
+                <div className ='col'>{ticket.date_update?new Date(ticket.date_update).toLocaleString():null}</div>
+                <div className ='col'>{ticket.UserUpdate?ticket.UserUpdate.user_nicename:null}</div>
               </div>
             )}
         </div>

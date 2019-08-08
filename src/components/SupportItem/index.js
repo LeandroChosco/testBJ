@@ -27,7 +27,7 @@ export default class SupportItem extends React.Component {
                                 </p>                                
                             </div>
                             <div align='right'>
-                                <span className={this.props.info.status?"badge badge-success":this.props.info.status===undefined?"badge badge-success":"badge badge-danger"}>{this.props.info.status?'Abierto':this.props.info.status===undefined?'Abierto':'Cerrado'}</span>
+                                <span className={this.props.info.status===1||this.props.info.status===undefined?"badge badge-success":this.props.info.status===2?"badge badge-warning":"badge badge-danger"}>{this.props.info.status===1||this.props.info.status===undefined?'Abierto':this.props.info.status===2?'Proceso':'Cerrado'}</span>
                             </div>
                         </div>
                     </div>                    
