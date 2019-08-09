@@ -37,11 +37,11 @@ class LoopCamerasDisplay extends Component {
             </div>:null}
             {this.state.markers.map((value,index) =>
                 <div key={value.extraData.id} style={{height:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}>
-                    {index===this.state.slideIndex?<CameraStream 
+                    <CameraStream 
                         ref={'camstreamloopref'+value.id} 
                         marker={value} 
                         height={this.state.height}
-                        width={.5} />:null}
+                        width={.5} />
                 </div>
             )}        
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
@@ -142,7 +142,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorical?{ menuItem: 'Hi
         this.refs['camstreamloopref'+this.state.markers[this.state.slideIndex].id]._togglePlayPause()
     } 
     _openCameraInfo = () => { 
-        if (this.props.error === null) {
+        console.log(this.props.error)
+        if (this.props.error === null || this.props.error === undefined) {
             const index = 'camstreamloopref'+this.state.slideIndex
             console.log(index)               
             if(this.state.autoplay){                           
