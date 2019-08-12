@@ -205,10 +205,14 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
 
                             this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
-                                            {this.state.video_history.items.map((row,index)=>
-                                                <div className="row" align='center' key={index}>
-                                                    <div className='col-12'><h5>{row.fecha}</h5></div>
-                                                    {row.videos.map((value,i)=><div className="col-6"><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={i} /></div>)}
+                                        {this.state.video_history.items.map((row,index)=>
+                                                <div className="col-12" align='center' key={index}>
+                                                    <div className='row'>
+                                                        <div className='col'><h5>{row.fecha}</h5></div>
+                                                    </div>
+                                                    <div className="row">
+                                                        {row.videos.map((value,i)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={i} />)}
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>

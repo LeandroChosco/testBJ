@@ -168,13 +168,13 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 </div>
                 <div className="col matchesgrid" align="center">
                     Historial
-                    {this.props.matches.map((value, index)=>
+                    {this.props.matches?this.props.matches.map((value, index)=>
                         {
                             if(index%this.state.selectedCamera.num_cam!==0)
                                 return(null);
                             return(<Match key={index} info={value} toggleControls={this._closeControl} />)
                         })
-                    }
+                    :null}
                 </div>
             </div>            
         </div> 
