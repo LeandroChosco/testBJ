@@ -64,6 +64,7 @@ class GridCameraDisplay extends Component {
     }
 
   render() {
+      console.log('module actions', this.props.moduleActions)
     return (
     <div className='gridCameraContainer' align='center'>                
         <Row >     
@@ -168,7 +169,13 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 </div>
                 <div className="col matchesgrid" align="center">
                     Historial
-                    {this.state.matches.map((value, index)=><Match key={index} info={{name:value.title,location:value.description}} toggleControls={this._closeControl} />)}
+                    {this.props.matches.map((value, index)=>
+                        {
+                            if(index%this.state.selectedCamera.num_cam!==0)
+                                return(null);
+                            return(<Match key={index} info={value} toggleControls={this._closeControl} />)
+                        })
+                    }
                 </div>
             </div>            
         </div> 
@@ -301,7 +308,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
             return true
         })
         let aux = state
+        const pageCount = Math.ceil(markersForLoop.length /state.limit)
         aux.markers= markersForLoop
+        aux.pageCount= pageCount
         return aux        
     }
 }
