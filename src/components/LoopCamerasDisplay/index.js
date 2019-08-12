@@ -87,7 +87,7 @@ class LoopCamerasDisplay extends Component {
                             </div>
                         </Tab.Pane> },
 
-this.props.moduleActions?this.props.moduleActions.viewHistorical?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
+this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                             {this.state.video_history.items?this.state.video_history.items.map((row,count)=><div key={count} className="row">
                                 <div className="col-12">
                                     <h4>{row.fecha}</h4>
