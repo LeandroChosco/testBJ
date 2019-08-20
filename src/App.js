@@ -107,7 +107,7 @@ class App extends Component {
           return value
         })})
       })
-      firebaseC5.app('c5virtual').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
+      firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
         if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
           this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',2)
         }
