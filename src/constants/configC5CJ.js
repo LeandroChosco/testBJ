@@ -5,7 +5,7 @@ var firebaseConfig = {
     authDomain: "c5cuajimalpa.firebaseapp.com",
     databaseURL: "https://c5cuajimalpa.firebaseio.com",
     projectId: "c5cuajimalpa",
-    storageBucket: "",
+    storageBucket: "c5cuajimalpa.appspot.com",
     messagingSenderId: "321242403175",
     appId: "1:321242403175:web:9823cb773f4b4e20"
   };

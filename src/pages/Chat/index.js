@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Card, Icon, Button } from 'semantic-ui-react';
 
 import './style.css'
-import firebaseC5 from '../../constants/configC5';
+import firebaseC5cuajimalpa from '../../constants/configC5CJ';
 import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants';
 import MapContainer from '../../components/MapContainer';
 import Axios from 'axios';
-const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
+const ref = firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('messages')
  class Chat extends Component {
     state = {
         messages:[],
@@ -49,7 +49,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                       <Card.Content>
                         <h3>{chat.user_name} </h3>
                         <p>
-                          {chat.messages?chat.messages.length>0?(chat.messages[chat.messages.length-1].from==='user'?chat.user_name.split(' ')[0]:'C5')+': '+chat.messages[chat.messages.length-1].msg:'No hay mensajes que mostart':'No hay mensajes que mostart'}
+                          {chat.messages?chat.messages.length>0?(chat.messages[chat.messages.length-1].from==='user'?chat.user_name.split(' ')[0]:'C5')+': '+chat.messages[chat.messages.length-1].msg:'No hay mensajes que mostrar':'No hay mensajes que mostrar'}
                         </p>
                       </Card.Content>                      
                     </Card>
@@ -168,11 +168,13 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
 
   _changeUserCam = (chat) => {
     console.log(chat)
+    
     Axios.get(constants.base_url+':'+constants.apiPort+'/admin/users/'+chat.user_creation).then(response=>{
       console.log(response)
       if (response.status ===200) {
         if (response.data.success) {
           const data = response.data.data
+          console.log('data',data)
           this.setState({camData:{
             extraData:{
               num_cam:data.UserToCameras[0].Camare.num_cam,
