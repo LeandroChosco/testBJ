@@ -301,6 +301,7 @@ class Analysis extends Component {
                         loadingFiles={this.state.loadingFiles}
                         makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
+                        matches={this.props.matches}
                         snapShot={this._snapShot}/>)
         case 2:
             return (<LoopCamerasDisplay
@@ -319,6 +320,7 @@ class Analysis extends Component {
                         loadingFiles={this.state.loadingFiles}
                         makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
+                        matches={this.props.matches}
                         snapShot={this._snapShot}/>)
         case 3:
             return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} width={.5} hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)

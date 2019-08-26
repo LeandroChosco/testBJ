@@ -39,9 +39,9 @@ const mapOptions= {
   render() {
      const {activeIndex} = this.state
     return (
-        <div  className="app-container" >   
+        <div>   
             <Navbar sticky="top" expand="lg" variant="light" bg="mh">                       
-                <Navbar.Text >
+                <Navbar.Text style={{color:'white',fontWeight:'bold'}}>
                    Reporte de emergencia por {this.state.match.userInfo?this.state.match.userInfo.Person.name+' '+this.state.match.userInfo.Person.surname+' '+this.state.match.userInfo.Person.lastname:null}
                 </Navbar.Text>                
             </Navbar>     
