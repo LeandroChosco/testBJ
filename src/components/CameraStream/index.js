@@ -131,7 +131,16 @@ class CameraStream extends Component {
 
 this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
-                                            {this.state.video_history.map((value,index)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                        {this.state.video_history.items.map((row,index)=>
+                                                <div className="col-12" align='center' key={index}>
+                                                    <div className='row'>
+                                                        <div className='col'><h5>{row.fecha}</h5></div>
+                                                    </div>
+                                                    <div className="row">
+                                                        {row.videos.map((value,i)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={i} />)}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                         {this.state.video_history.length === 0 ?
                                             <div align='center'>
@@ -196,7 +205,16 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
 
                             this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
-                                            {this.state.video_history.map((value,index)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                        {this.state.video_history.items.map((row,index)=>
+                                                <div className="col-12" align='center' key={index}>
+                                                    <div className='row'>
+                                                        <div className='col'><h5>{row.fecha}</h5></div>
+                                                    </div>
+                                                    <div className="row">
+                                                        {row.videos.map((value,i)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={i} />)}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                         {this.state.video_history.length === 0 ?
                                             <div align='center'>
@@ -492,7 +510,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
 			})
 			console.log(items)
 			resHistory.data.items = items
-            
+            console.log('videos historicos',resHistory.data)
             this.setState({video_history:resHistory.data})
 
   		}
