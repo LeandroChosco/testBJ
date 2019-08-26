@@ -57,7 +57,7 @@ class GridCameraDisplay extends Component {
         recordingCams:[],
         recordingProcess:[],
         loadingRcord: false,
-        limit:10,
+        limit:15,
         start:0,
         pageCount:1,
         isplay:true

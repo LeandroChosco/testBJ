@@ -49,6 +49,12 @@ export default {
     toClose:(data)=>{
         data.user_id = getUserID()
         return Axios.put(constants.base_url+':'+constants.apiPort+'/tickets/toClose',data)
+    },
+    dashboardCams:()=>{        
+        return Axios.get(constants.base_url+':1337/dashboard/cams')
+    },
+    dashboardTickets:()=>{        
+        return Axios.get(constants.base_url+':1337/dashboard/tickets')
     }
 
     
