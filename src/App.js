@@ -27,6 +27,7 @@ import ModalCall from './components/ModalCall';
 import DetailsComplaiment from './pages/DetailsComplaiment';
 import Tickets from './pages/Tickets';
 import DetailsSupport from './pages/DetailsSupport';
+import Dashboard from './pages/Dashboard';
 
 
 let call = false
@@ -439,6 +440,7 @@ class App extends Component {
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />
