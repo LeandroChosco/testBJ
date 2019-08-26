@@ -24,6 +24,10 @@ import Matches from './components/Matches';
 import DetailsEmergency from './pages/DetailsEmergency';
 import Chat from './pages/Chat';
 import ModalCall from './components/ModalCall';
+import DetailsComplaiment from './pages/DetailsComplaiment';
+import Tickets from './pages/Tickets';
+import DetailsSupport from './pages/DetailsSupport';
+import Dashboard from './pages/Dashboard';
 
 
 let call = false
@@ -77,7 +81,15 @@ class App extends Component {
     }    
 
     console.log('node env',process.env.NODE_ENV)
-    console.log('node env',process.env)
+    console.log('node env',process.env)    
+    //const socket = socketIOClient('http://95.216.37.253:3011');
+    //socket.on("messages", this.checkCall);
+    //setTimeout(()=>this.checkCall(fakeCall),5000)
+
+  }
+
+
+  loadData = () => {     
     if (process.env.NODE_ENV==='production') {
       firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
         if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
@@ -108,7 +120,7 @@ class App extends Component {
       })
       firebaseC5.app('c5virtual').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
         if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
-          this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',2)
+          this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',4,docs.docs[0].id)
         }
         if(this.state.fisrtTimeSupport)
           this.setState({fisrtTimeSupport:false})
@@ -118,18 +130,18 @@ class App extends Component {
           value.id = v.id
           return value
         })})
-      }) 
+      })       
       
   
-      firebaseC5.app('c5virtual').firestore().collection('complaints')/*.orderBy('dateTime','desc')*/.onSnapshot(docs=>{  
-        console.log('complaiments',docs.docs)   
+      firebaseC5.app('c5virtual').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{          
         if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimecomplaiments) {
-          this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2)
+          this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2,docs.docs[0].id)
         }
         if(this.state.fisrtTimecomplaiments)
           this.setState({fisrtTimecomplaiments:false})
         this.setState({complaiments:docs.docs.map(v=>{
-          let value = v.data()        
+          let value = v.data()       
+          value.id = v.id 
           return value
         })})
       }) 
@@ -187,11 +199,6 @@ class App extends Component {
         })})
       })   
     }
-    
-    //const socket = socketIOClient('http://95.216.37.253:3011');
-    //socket.on("messages", this.checkCall);
-    //setTimeout(()=>this.checkCall(fakeCall),5000)
-
   }
 
   openSocket = (data) =>{
@@ -234,7 +241,12 @@ class App extends Component {
         level: type,
         action: {
           label: label,
-          callback: ()=> action===3?window.location.href = window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/chat#message'):action===5?window.open(window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/') + 'detalles/emergency/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):this.seeMatch(action)
+          callback: ()=> 
+            action===3?window.location.href = window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/chat#message'):
+            action===5?window.open(window.location.href.replace(window.location.search,'').replace(window.location.hash,'').replace(window.location.pathname,'/') + 'detalles/emergency/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):
+            action===2?window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/denuncia/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):
+            action===4?window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/soporte/' + id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500'):
+            this.seeMatch(action)
         }
       });
     }
@@ -304,10 +316,11 @@ class App extends Component {
     const isAuth = sessionStorage.getItem('isAuthenticated')    
     if (isAuth) {
       const data = JSON.parse(isAuth)
-      this.setState({isAuthenticated:data.logged,userInfo:data.userInfo,showNotification:true}) 
+      this.setState({isAuthenticated:data.logged,userInfo:data.userInfo,showNotification:true})       
       if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
         //setTimeout(this.showNot,10000)
-      }  
+        this.loadData()
+      } 
     } else {
       this.setState({isAuthenticated:false}) 
       if(window.location.pathname!=='/'&&window.location.pathname!=='/login'){        
@@ -323,6 +336,7 @@ class App extends Component {
     if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
       //setTimeout(this.showNot,10000)
     }          
+    this.loadData()
     setTimeout(this.setState({isAuthenticated:true}),500)
   }
 
@@ -417,12 +431,16 @@ class App extends Component {
         <Route path="/map" exact render={(props) =><Map canAccess={this.canAccess}  {...props} />} />
         <Route path="/welcome" exact render={(props) =><Welcome {...props}/>} />
         <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/> }/>
-        <Route path="/analisis" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/analisis" exact render={(props) => <Analysis matches={this.state.matches}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/analisis/:id" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/detalles/emergency/:id" exact render={(props) => <DetailsEmergency  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/detalles/denuncia/:id" exact render={(props) => <DetailsComplaiment  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/detalles/soporte/:id" exact render={(props) => <DetailsSupport  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />

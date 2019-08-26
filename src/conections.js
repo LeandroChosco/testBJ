@@ -35,6 +35,26 @@ export default {
     getCamDataHistory:(camera_id)=>{
         const user_id = getUserID() 
         return Axios.get(constants.base_url+':'+constants.apiPort+'/cams/'+camera_id+'/video_history?user_id='+user_id)
+    },
+    getTickets:()=>{
+        return Axios.get(constants.base_url+':'+constants.apiPort+'/tickets')
+    },
+    getTicket:(id)=>{
+        return Axios.get(constants.base_url+':'+constants.apiPort+'/tickets/'+id)
+    },
+    toProcess:(data)=>{
+        data.user_id = getUserID()
+        return Axios.put(constants.base_url+':'+constants.apiPort+'/tickets/toProcess',data)
+    },
+    toClose:(data)=>{
+        data.user_id = getUserID()
+        return Axios.put(constants.base_url+':'+constants.apiPort+'/tickets/toClose',data)
+    },
+    dashboardCams:()=>{        
+        return Axios.get(constants.base_url+':1337/dashboard/cams')
+    },
+    dashboardTickets:()=>{        
+        return Axios.get(constants.base_url+':1337/dashboard/tickets')
     }
 
     

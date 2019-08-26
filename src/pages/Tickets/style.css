@@ -1,0 +1,20 @@
+.header{
+    padding: 5px;
+    font-weight: bold;
+    background-color: #afafaf
+}
+
+.ticket1{
+    background-color: lightgrey;
+}
+.ticket0{
+    background-color: white;
+}
+.ticket{
+    padding: 5px;
+}
+
+.ticketContainer{
+    width: 100%;
+    padding-right: 70px;
+}

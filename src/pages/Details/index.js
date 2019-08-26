@@ -38,7 +38,7 @@ const mapOptions= {
 
   render() {
     return (
-        <div  className="app-container" >   
+        <div>   
             <Navbar sticky="top" expand="lg" variant="light" bg="mh">                       
                 <Navbar.Text >
                    Camara {this.state.idCamera}
