@@ -179,15 +179,23 @@ class App extends Component {
           return value})
         })
         this.setState({callIsGoing:false})
-      })
-      
-      firebaseC5.app('c5virtual').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot(docs=>{     
+      })       
+      firebaseC5.app('c5virtual').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot( docs=>{     
+        console.log( docs.docChanges())
+        let changes = docs.docChanges()
+        if (changes.length === 1) {
+          let index = changes[0].oldIndex
+          let data = changes[0].doc.data()
+          if (this.state.chats[index].messages.length === data.messages.length) {
+            this.setState({stopNotification:true})
+          }
+        }
         if (this.state.showNotification&&!this.state.fisrtTimeChat&&!this.state.callIsGoing) {
           this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',3,0)
         }
         if(this.state.fisrtTimeChat)
-          this.setState({fisrtTimeChat:false})      
-        this.setState({chats:docs.docs.map(v=>{
+          this.setState({fisrtTimeChat:false})                  
+        var chats = docs.docs.map(v=>{
           let value = v.data()
           value.lastModification = new Date(value.lastModification.toDate()).toLocaleString()
           // value.messages = value.messages.map(message =>{
@@ -196,9 +204,10 @@ class App extends Component {
           //})
           value.id = v.id
           return value
-        })})
-      })   
-    }
+        })      
+        this.setState({chats:chats})
+      })  
+    }    
   }
 
   openSocket = (data) =>{
