@@ -36,12 +36,12 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                   {chats.map((chat,i)=>
                     <Card className={i===index?'activeChat':''} key={i} onClick={()=>this.changeChat(chat,i)}>
                       <Card.Content>
-                        <div className={{position:'relative'}}>
+                        <div style={{position:'relative'}}>
                           <h3>{chat.user_name} </h3>
                           <p>
                             {chat.messages?chat.messages.length>0?(chat.messages[chat.messages.length-1].from==='user'?chat.user_name.split(' ')[0]:'C5')+': '+chat.messages[chat.messages.length-1].msg:'No hay mensajes que mostart':'No hay mensajes que mostart'}
                           </p>
-                          {chat.c5unread!==undefined&&chat.c5unread!==0?<div className='notificationNumber'><p>{chat.c5unread}</p></div>:null}
+                          {chat.c5Unread!==undefined&&chat.c5Unread!==0?<div className='notificationNumber'><p>{chat.c5Unread}</p></div>:null}
                         </div>
                       </Card.Content>                      
                     </Card>
