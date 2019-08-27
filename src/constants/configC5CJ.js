@@ -1,13 +1,13 @@
 import firebase from 'firebase'
 
 var firebaseConfig = {
-    apiKey: "AIzaSyANXNYbN33mWL1nMarlDuo4oCm0OYJ756s",
-    authDomain: "c5cuajimalpa.firebaseapp.com",
-    databaseURL: "https://c5cuajimalpa.firebaseio.com",
-    projectId: "c5cuajimalpa",
-    storageBucket: "c5cuajimalpa.appspot.com",
-    messagingSenderId: "321242403175",
-    appId: "1:321242403175:web:9823cb773f4b4e20"
+  apiKey: "AIzaSyA7iP5FnrU7NRYUxin8WYJCpBrc8rJD-WA",
+  authDomain: "c5cuau.firebaseapp.com",
+  databaseURL: "https://c5cuau.firebaseio.com",
+  projectId: "c5cuau",
+  storageBucket: "",
+  messagingSenderId: "724843435885",
+  appId: "1:724843435885:web:3c8d318857003128"
   };
 
 var firebaseC5cuajimalpa = firebase
