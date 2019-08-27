@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Card, Icon, Button } from 'semantic-ui-react';
 
 import './style.css'
-import firebaseC5 from '../../constants/configC5';
+import firebaseC5cuajimalpa from '../../constants/configC5CJ';
 import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants';
 import MapContainer from '../../components/MapContainer';
 import Axios from 'axios';
-const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
+const ref = firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('messages')
  class Chat extends Component {
     state = {
         messages:[],
@@ -34,23 +34,15 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
             <div className="row fullHeight">
               <div className="col-4 userList">
                   {chats.map((chat,i)=>
-                    <Card className={i===index?'activeChat':''} key={i} onClick={()=>{
-                      this.setState({chatId:'',loading:true, camData: undefined});
-                      setTimeout(()=>{
-                        this._changeUserCam(chat)
-                        this.setState({
-                          chatId:chat.id,
-                          messages:chat.messages,
-                          index:i,
-                          from:chat.from,                          
-                          loading:false
-                        })
-                      },1000)}}>
+                    <Card className={i===index?'activeChat':''} key={i} onClick={()=>this.changeChat(chat,i)}>
                       <Card.Content>
-                        <h3>{chat.user_name} </h3>
-                        <p>
-                          {chat.messages?chat.messages.length>0?(chat.messages[chat.messages.length-1].from==='user'?chat.user_name.split(' ')[0]:'C5')+': '+chat.messages[chat.messages.length-1].msg:'No hay mensajes que mostart':'No hay mensajes que mostart'}
-                        </p>
+                        <div style={{position:'relative'}}>
+                          <h3>{chat.user_name} </h3>
+                          <p>
+                            {chat.messages?chat.messages.length>0?(chat.messages[chat.messages.length-1].from==='user'?chat.user_name.split(' ')[0]:'C5')+': '+chat.messages[chat.messages.length-1].msg:'No hay mensajes que mostart':'No hay mensajes que mostart'}
+                          </p>
+                          {chat.c5Unread!==undefined&&chat.c5Unread!==0?<div className='notificationNumber'><p>{chat.c5Unread}</p></div>:null}
+                        </div>
                       </Card.Content>                      
                     </Card>
                   )}
@@ -58,7 +50,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
               <div className="col-8 messages">
                     {!loading&&chatId!==''&&chats[index]?
                     <div className="cameraView">
-                      {/* <h2 className={from} style={{textAlign: 'center', height: '10%'}}>{from}</h2> */}
+                      <h2 className={from} style={{textAlign: 'center', height: '10%'}}>{from}</h2> 
                       <div className="row" style={{height: '70%'}}>                       
                         <div className="col" style={{height: '100%'}}>
                           <MapContainer                 
@@ -155,6 +147,24 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     });    
   }
 
+  changeChat = (chat,i) => {
+    this.setState({chatId:'',loading:true, camData: undefined});
+    setTimeout(()=>{
+      this._changeUserCam(chat)
+      this.props.stopNotification()
+      ref.doc(chat.id).update({c5Unread:0}).then(()=>{
+        this.setState({text:'',from:'Chat Soporte'})
+      })  
+      this.setState({
+        chatId:chat.id,
+        messages:chat.messages,
+        index:i,
+        from:chat.from,                          
+        loading:false
+      })
+    },1000)
+  }
+
   checkKey = (event) => {
     var key = window.event.keyCode;    
     if (key === 13) {
@@ -168,11 +178,13 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
 
   _changeUserCam = (chat) => {
     console.log(chat)
+    
     Axios.get(constants.base_url+':'+constants.apiPort+'/admin/users/'+chat.user_creation).then(response=>{
       console.log(response)
       if (response.status ===200) {
         if (response.data.success) {
           const data = response.data.data
+          console.log('data',data)
           this.setState({camData:{
             extraData:{
               num_cam:data.UserToCameras[0].Camare.num_cam,
@@ -207,7 +219,16 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
       msg:this.state.text
     })
     this.props.stopNotification()
-    ref.doc(this.state.chatId).update({messages:messages,from:'Chat Soporte'}).then(()=>{
+    ref.doc(this.state.chatId).update({
+      messages:messages,
+      from:'Chat Soporte',
+      userUnread:this.props.chats[this.state.index].userUnread?
+        this.props.chats[this.state.index].userUnread+1:
+        1,
+      policeUnread:this.props.chats[this.state.index].policeUnread?
+        this.props.chats[this.state.index].policeUnread+1:
+        1,
+    }).then(()=>{
       this.setState({text:'',from:'Chat Soporte'})
     })    
   }
@@ -243,7 +264,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
         this._changeUserCam(this.props.chats[0])
         this.setState({index:0,from:this.props.chats[0].from,chatId:this.props.chats[0].id,hashUsed:true})    
       }
-    }
+    } 
     if (this.props.location.search!=='') {
       let params = this.QueryStringToJSON(this.props.location.search)      
       if (this.props.chats.length>0) {
@@ -264,9 +285,17 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
         }
       }
     }
+    if(this.state.index !== undefined && this.props.chats[this.state.index] !== undefined){
+      if(this.state.from!=this.props.chats[this.state.index].from){
+        this.setState({from:this.props.chats[this.state.index].from})
+      }
+    }
+
     var messageBody = document.querySelector('#messagesContainer');
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
   }
+  
 
 }
 

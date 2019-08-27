@@ -1,0 +1,18 @@
+.center{
+    margin: auto;
+}
+.mapContainerForDetail{
+    height: 40vh;
+}
+
+
+.app-container>.navbar > .navbar-text{
+    color: #fff !important;
+    font-weight: bold;
+}
+
+.loader{
+    background-image: url(../../assets/images/giphy.gif);
+    background-position: center;
+    background-repeat: no-repeat, repeat;
+}

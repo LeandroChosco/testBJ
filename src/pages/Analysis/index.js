@@ -56,9 +56,9 @@ class Analysis extends Component {
         <div id="analisis_holder" >
             {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">
                 <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
-                    <ToggleButton value={1} variant='outline-danger' ><Icon name="grid layout"/></ToggleButton>
-                    <ToggleButton value={2} variant='outline-danger' ><Icon name="clone"/></ToggleButton>
-                    {this.state.cameraID?<ToggleButton value={3} variant='outline-danger' ><Icon name="square"/></ToggleButton>:null}
+                    <ToggleButton value={1} variant='outline-primary' ><Icon name="grid layout"/></ToggleButton>
+                    <ToggleButton value={2} variant='outline-primary' ><Icon name="clone"/></ToggleButton>
+                    {this.state.cameraID?<ToggleButton value={3} variant='outline-primary' ><Icon name="square"/></ToggleButton>:null}
                 </ToggleButtonGroup>
             </div> :null}
             <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
@@ -301,6 +301,7 @@ class Analysis extends Component {
                         loadingFiles={this.state.loadingFiles}
                         makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
+                        matches={this.props.matches}
                         snapShot={this._snapShot}/>)
         case 2:
             return (<LoopCamerasDisplay
@@ -319,6 +320,7 @@ class Analysis extends Component {
                         loadingFiles={this.state.loadingFiles}
                         makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
+                        matches={this.props.matches}
                         snapShot={this._snapShot}/>)
         case 3:
             return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} width={.5} hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)

@@ -90,7 +90,7 @@
 
 .support {
     position: relative;
-    background: #8A2908;
+    background: #02004c;
     border-radius: .4em;
     padding: 5px;
     margin-top:10px;
@@ -151,12 +151,30 @@
 
 
 .Alerta.Robo.Habitacion{
-    background-color: red;
+    background-color: #aa3311;
+    border-radius: 15px;
     color: white;
 }
 
 
 .Chat.Soporte{
-    background-color: orange;
+    background-color: #ffaa20;
+    border-radius: 15px;
     color: white;
+}
+
+.notificationNumber{
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    margin: auto;
+    background: red;    
+    border-radius: 15px;
+}
+
+.notificationNumber > p {
+    color: #fafafa;
+    text-align: center;
 }

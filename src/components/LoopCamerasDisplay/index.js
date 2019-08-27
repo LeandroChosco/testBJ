@@ -37,11 +37,11 @@ class LoopCamerasDisplay extends Component {
             </div>:null}
             {this.state.markers.map((value,index) =>
                 <div key={value.extraData.id} style={{height:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}>
-                    {index===this.state.slideIndex?<CameraStream 
+                    <CameraStream 
                         ref={'camstreamloopref'+value.id} 
                         marker={value} 
                         height={this.state.height}
-                        width={.5} />:null}
+                        width={.5} />
                 </div>
             )}        
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
@@ -87,14 +87,19 @@ class LoopCamerasDisplay extends Component {
                             </div>
                         </Tab.Pane> },
 
-this.props.moduleActions?this.props.moduleActions.viewHistorical?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
+this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                             {this.state.video_history.items?this.state.video_history.items.map((row,count)=><div key={count} className="row">
                                 <div className="col-12">
                                     <h4>{row.fecha}</h4>
                                 </div>
 
-                                        {row.videos.map((value,index)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}                                        
+                                        {row.videos.map((value,index)=>{
+                                            if(index%this.state.slideIndex===0)
+                                                return(<MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)
+                                            return (null)
+                                        })}                                        
                                     </div>
+
                                 ):null}
                             
                             {this.state.video_history.items?this.state.video_history.items.length === 0 ?
@@ -111,7 +116,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorical?{ menuItem: 'Hi
                 </div>
                 <div className="col matches" align="center">
                     Historial
-                    {this.state.matches.map((value, index)=><Match key={index} info={{name:value.title,location:value.description}} toggleControls={this._closeControl} />)}
+                    {this.props.matches?this.props.matches.map((value, index)=><Match key={index} info={value} toggleControls={this._closeControl} />):null}
                 </div>
             </div>            
         </div>   
@@ -142,7 +147,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorical?{ menuItem: 'Hi
         this.refs['camstreamloopref'+this.state.markers[this.state.slideIndex].id]._togglePlayPause()
     } 
     _openCameraInfo = () => { 
-        if (this.props.error === null) {
+        console.log(this.props.error)
+        if (this.props.error === null || this.props.error === undefined) {
             const index = 'camstreamloopref'+this.state.slideIndex
             console.log(index)               
             if(this.state.autoplay){                           

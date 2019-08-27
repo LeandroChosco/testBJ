@@ -57,7 +57,7 @@ class GridCameraDisplay extends Component {
         recordingCams:[],
         recordingProcess:[],
         loadingRcord: false,
-        limit:20,
+        limit:15,
         start:0,
         pageCount:1,
         isplay:true
@@ -168,7 +168,13 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 </div>
                 <div className="col matchesgrid" align="center">
                     Historial
-                    {this.state.matches.map((value, index)=><Match key={index} info={{name:value.title,location:value.description}} toggleControls={this._closeControl} />)}
+                    {this.props.matches?this.props.matches.map((value, index)=>
+                        {
+                            if(index%this.state.selectedCamera.num_cam!==0)
+                                return(null);
+                            return(<Match key={index} info={value} toggleControls={this._closeControl} />)
+                        })
+                    :null}
                 </div>
             </div>            
         </div> 
@@ -301,7 +307,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
             return true
         })
         let aux = state
+        const pageCount = Math.ceil(markersForLoop.length /state.limit)
         aux.markers= markersForLoop
+        aux.pageCount= pageCount
         return aux        
     }
 }
