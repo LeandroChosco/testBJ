@@ -28,7 +28,6 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     if (index!==undefined&&chatId===""&&chats.length>0){
       this.setState({chatId:chats[index].id});
     }     
-    console.log(from)
     return (
         <div  className="app-container" >   
             <div className="row fullHeight">
@@ -177,9 +176,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
   }
 
   _changeUserCam = (chat) => {
-    console.log(chat)
-    Axios.get(constants.base_url+':'+constants.apiPort+'/admin/users/'+chat.user_creation).then(response=>{
-      console.log(response)
+    Axios.get(constants.base_url+':'+constants.apiPort+'/admin/users/'+chat.user_creation).then(response=>{    
       if (response.status ===200) {
         if (response.data.success) {
           const data = response.data.data
@@ -231,8 +228,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     })    
   }
 
-  componentDidMount(){  
-    console.log(this.props)    
+  componentDidMount(){      
 
   }
 
@@ -251,13 +247,10 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
 
 
     
-  componentDidUpdate(){
-    //console.log(this.props)
+  componentDidUpdate(){    
     if(this.props.location.hash!==''&&this.state.index!=0 && this.state.hashUsed=== false)
     {
-      console.log(this.props.chats[0])
-      if (this.props.chats[0]!==undefined) {
-        console.log(this.props.chats[0].from)
+      if (this.props.chats[0]!==undefined) {     
         //this.setState({index:0, from:this.props.chats[0].from})
         this._changeUserCam(this.props.chats[0])
         this.setState({index:0,from:this.props.chats[0].from,chatId:this.props.chats[0].id,hashUsed:true})    
@@ -265,16 +258,13 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
     } 
     if (this.props.location.search!=='') {
       let params = this.QueryStringToJSON(this.props.location.search)      
-      if (this.props.chats.length>0) {
-        console.log(params)
-        let i 
-        console.log(this.props.chats)
+      if (this.props.chats.length>0) {        
+        let i         
         this.props.chats.forEach((chat,index)=>{
           if (chat.user_creation == params.u) {
             i = index
           }
-        })
-        console.log(i)
+        })        
         
         if (this.state.index!=i&&this.state.fisrt.u!==params.u) {
           this._changeUserCam(this.props.chats[i])

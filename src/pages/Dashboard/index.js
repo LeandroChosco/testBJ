@@ -40,6 +40,15 @@ const COLORS =  scm.from_hue(235)
   .variation('pastel')
   .web_safe(false).colors();
 
+
+  const MOODS = {
+    "Happy":"Feliz",
+    "Sad":"Triste",
+    "Angry":"Enojado",
+    "Surprised":"Sorprendido",
+    "Disgusted":"Disgustado",
+    "Contemptuous":"Desprecio",
+  }
   
 class Dashboard extends Component {
 
@@ -54,6 +63,11 @@ class Dashboard extends Component {
         attended:[],
         created:[]
       },
+      loadTotalRecognition:true,
+      loadRecognitionAges:true,
+      loadingRecognitionPerDay:true,
+      loadingRecognitionMood:true,
+      loadingCamsGrid:true,
       personsMood:[
         {
           "mood": "Feliz",
@@ -86,34 +100,8 @@ class Dashboard extends Component {
           "fullMark": 100
         }
       ],
-      genderDetected:[{
-        name:'Mujer',
-        value:125
-      },{
-        name:'Hombre',
-        value:242
-      }],
-      agesDetected:[{
-        name:'-18',
-        total:25,
-        Hombres:15,
-        Mujeres:10
-      },{
-        name:'18-30',
-        total:135,
-        Hombres:75,
-        Mujeres:60
-      },{
-        name:'31-50',
-        total:95,
-        Hombres:40,
-        Mujeres:55
-      },{
-        name:'50+',
-        total:112,
-        Hombres:60,
-        Mujeres:52
-      }],
+      genderDetected:[],
+      agesDetected:[],
       personsperDay:[],
       attendedVSclosed: [],
       panes: [
@@ -128,9 +116,9 @@ class Dashboard extends Component {
     return (
         <div className='container-flex'>
           <div className='row'>
-          <div className='col chart overflow table-responsive'>
+          <div className='col chart overflow table-responsive' align='center'>
           {
-              this.state.loadingCams?
+              this.state.loadingCamsGrid?
               <ClassicSpinner 
                 loading={true}
                 size={40}
@@ -149,14 +137,14 @@ class Dashboard extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                  {this.state.lastCreatedCams.map((value,index)=>
+                  {this.state.lastCreatedCams.map?this.state.lastCreatedCams.map((value,index)=>
                     <tr key={index} >
                       <td><div className={'state'+value.flag_streaming}>&nbsp;</div></td>
                       <td >{value.num_cam}</td>
                       <td >{value.street} {value.number}, {value.town}, {value.township}, {value.state}</td>
                       <td >{new Date(value.date_creation).toLocaleString()}</td>
                     </tr>
-                  )}
+                  ):<tr><td colSpan='4' align='center'>Sin datos que mostrar</td></tr>}
                   </tbody>
                 </table>                                
               </div>
@@ -204,7 +192,7 @@ class Dashboard extends Component {
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="fecha" />
-                    <YAxis/>
+                    <YAxis allowDecimals={false}/>
                     <Tooltip />      
                     <Legend />              
                     <Bar dataKey="total" fill={'#'+COLORS[2]}/>                  
@@ -352,7 +340,7 @@ class Dashboard extends Component {
           <div className='col-6 chart' align='center'>
             <h3>Personas detectadas</h3>    
             {
-              this.state.loadingCams?
+              this.state.loadTotalRecognition?
                 <ClassicSpinner 
                   loading={true}
                   size={40}
@@ -371,9 +359,9 @@ class Dashboard extends Component {
               </ResponsiveContainer>}            
           </div>
           <div className='col-6 chart' align='center'>
-            <h3>Estato de animo</h3>
+            <h3>Estado de animo</h3>
             {
-              this.state.loadingCams?
+              this.state.loadingRecognitionMood?
                 <ClassicSpinner 
                   loading={true}
                   size={40}
@@ -383,7 +371,7 @@ class Dashboard extends Component {
                 <PolarGrid />
                 <PolarAngleAxis dataKey="mood" />
                 <PolarRadiusAxis angle={30} domain={[0, 100]} />
-                <Radar name="Estado de animo" dataKey="total" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />                
+                <Radar name="Estado de animo" dataKey="percentage" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />                
                 <Legend />
                 <Tooltip />
               </RadarChart>
@@ -394,7 +382,7 @@ class Dashboard extends Component {
           <div className='col-6 chart' align='center'>
             <h3>Rango de edades</h3>           
             {
-              this.state.loadingCams?
+              this.state.loadRecognitionAges?
                 <ClassicSpinner 
                   loading={true}
                   size={40}
@@ -420,7 +408,7 @@ class Dashboard extends Component {
           <div className='col-6 chart' align='center'>
             <h3>Personas por dia</h3>           
             {
-              this.state.loadingCams?
+              this.state.loadingRecognitionPerDay?
                 <ClassicSpinner 
                   loading={true}
                   size={40}
@@ -433,7 +421,7 @@ class Dashboard extends Component {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="fecha" />
+                <XAxis dataKey="date" />
                 <YAxis/>
                 <Tooltip />      
                 <Legend />                              
@@ -457,17 +445,26 @@ class Dashboard extends Component {
     )
   }
 
-  componentWillUnmount(){
+  componentWillUnmount(){    
     if (this.state.io) {
-      this.state.io.socket.disconnect();
+      if (this.state.io.socket.isConnected()) {
+        this.state.io.socket.disconnect(); 
+      }      
     }
   }
 
   loadData = () => {
-    this.setState({loadingCams:true,loadingTickets:true})
+    this.setState({
+      loadingCams:true,
+      loadingTickets:true,
+      loadTotalRecognition:true,
+      loadRecognitionAges:true,
+      loadingRecognitionPerDay:true,
+      loadingRecognitionMood:true,
+      loadingCamsGrid:true
+    })
     conections.dashboardCams().then(response => {
-      const data = response.data;
-      console.log(data)
+      const data = response.data;      
       this.setState({
         loadingCams:false,
         dataCams:[
@@ -479,60 +476,98 @@ class Dashboard extends Component {
       })
     })
     conections.dashboardTickets().then(this.processTicketsData)
-  }
-
-  componentDidMount() {    
-    
-    conections.dashboardCams().then(response => {
-      const data = response.data;
-      console.log(data)
-      this.setState({
-        loadingCams:false,
-        dataCams:[
-          {name:'Activas',value:data.active},
-          {name:'Inactivas',value:data.deactive},
-        ],
-        installed_by_moth:data.installed_by_moth.map(v=>{v.fecha =moment(v.fecha).format('MMM-YYYY'); return v}),
-        installed_last_moth:data.installed_last_moth.map(v=>{v.fecha =moment(v.fecha).format('DD-MM-YYYY'); return v})
-      })
+    conections.dashboardTotalRecognition().then(this.processDetected)
+    conections.dashboardRecognitionAges().then(this.processAges)
+    conections.dashboardRecognitionPerDay('?enddate='+moment().format('YYYY-MM-DD')+'&startdate='+moment().add(-15,'days').format('YYYY-MM-DD')).then(this.processPerDay)
+    conections.dashboardRecognitionMood().then(this.processMood)
+    conections.loadCams().then(this.lastCreatedCams).catch(err=>{
+      console.log('Cargando camaras',err)
     })
-
-    conections.dashboardTickets().then(this.processTicketsData)
-
-    let io;
+    /*let io;
     if (socketIOClient.sails) {
       io = socketIOClient;
-      io.socket.reconnect()
+      if(!io.socket.isConnected()&&!io.socket.isConnecting()) {
+        io.socket.reconnect()
+      }
     } else {
       io = sailsIOClient(socketIOClient);
     }
+    this.setState({io:io})    
     io.sails.url = constants.base_url+':1337';
-    io.socket.get('/cams?sort=num_cam asc&active=1&limit=10000', this.lastCreatedCams)    
-    this.setState({io:io})
-    let p = []
-    for (let index = 15; index >= 0; index--) {
-      p.push({
-        fecha: moment().locale('es').add(-index,'day').format('DD MMMM'),
-        total:Math.floor((Math.random()*Math.random()*100)+20)
-      })
-    }
-    this.setState({personsperDay:p})
+    io.socket.get('/cams?sort=num_cam asc&active=1&limit=10000', this.lastCreatedCams) */
   }
 
-  lastCreatedCams = (data) => {
-    console.log('lastCreatedCams',data)
-    this.setState({lastCreatedCams:data})
+  processMood = (response) => {
+    const data = response.data.data.map(v=>{
+      v.mood = MOODS[v.mood] ? MOODS[v.mood] : v.mood
+      return v;
+    })    
+    this.setState({personsMood:data,loadingRecognitionMood:false})
+  }
+  
+  processPerDay = (response) => {
+    const data = response.data.data    
+    this.setState({personsperDay:data,loadingRecognitionPerDay:false})
   }
 
-  lastUpdatedCams = (data) => {
-    console.log('lastUpdatedCams',data)
-    this.setState({lastUpdatedCams:data})
+  processDetected = (response) => {
+    const data = response.data.data
+    this.setState({
+      genderDetected:[
+        {
+          name:'Mujer',
+          value:data.women_detected
+        },{
+          name:'Hombre',
+          value:data.men_detected
+        }
+      ],
+      loadTotalRecognition:false
+    })    
+  } 
+
+  processAges = (response) => {
+    const data = response.data.data
+    this.setState({
+      agesDetected:[
+        {
+          name:'-18',
+          total:data.total_under_18,
+          Hombres:data.men_under_18,
+          Mujeres:data.women_under_18
+        },{
+          name:'18-30',
+          total:data.total_between_18_30,
+          Hombres:data.men_between_18_30,
+          Mujeres:data.women_between_18_30
+        },{
+          name:'31-50',
+          total:data.total_between_31_50,
+          Hombres:data.men_between_31_50,
+          Mujeres:data.women_between_31_50
+        },{
+          name:'50+',
+          total:data.total_over_50,
+          Hombres:data.men_over_50,
+          Mujeres:data.women_over_50
+        }
+      ],
+      loadRecognitionAges:false
+    })
+  }
+
+  componentDidMount() {    
+    this.loadData()           
+  }
+
+  lastCreatedCams = (response) => {    
+    const data = response.data    
+    this.setState({lastCreatedCams:data,loadingCamsGrid:false})
   }
 
 
   processTicketsData = (response) => {
-    const dataTickets = response.data;
-    console.log(dataTickets)     
+    const dataTickets = response.data;     
     const ticketStatus = [{
       name:'Abiertos', value:dataTickets.open
     },{
@@ -575,8 +610,7 @@ class Dashboard extends Component {
         attendedVSclosed.push({name:v.name,Cerrados:0,Proceso:v.total})
       }
       return v;
-    })
-    console.log(attendedVSclosed)
+    })    
     this.setState({
       loadingTickets:false, 
       dataTickets:ticketStatus,

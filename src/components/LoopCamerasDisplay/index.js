@@ -126,8 +126,6 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
 
 
     _recordToggle = () => {
-        console.log(this.state.markers)
-        console.log(this.state.slideIndex)
         //this.props.recordignToggle(this.state.markers[this.state.slideIndex])
     }
     _playPause = () =>{
@@ -139,18 +137,14 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 isplaying[index] = true
                 return true;
             })            
-        }
-        console.log(isplaying)
-        isplaying[this.state.slideIndex] = !isplaying[this.state.slideIndex]                
-        console.log(isplaying)
+        }    
+        isplaying[this.state.slideIndex] = !isplaying[this.state.slideIndex]                        
         this.setState({isplaying:isplaying,isplay:isplaying[this.state.slideIndex]})
         this.refs['camstreamloopref'+this.state.markers[this.state.slideIndex].id]._togglePlayPause()
     } 
-    _openCameraInfo = () => { 
-        console.log(this.props.error)
+    _openCameraInfo = () => {         
         if (this.props.error === null || this.props.error === undefined) {
-            const index = 'camstreamloopref'+this.state.slideIndex
-            console.log(index)               
+            const index = 'camstreamloopref'+this.state.slideIndex                           
             if(this.state.autoplay){                           
                 clearInterval(this.state.interval)
                 this.setState({autoplay: false})
@@ -166,14 +160,12 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     _loadFiles = () =>{ 
         conections.getCamData(this.state.markers[this.state.slideIndex].extraData.id)                                  
         .then(response => {
-            const data = response.data
-            console.log(data)
+            const data = response.data            
             this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
         }) 
         conections.getCamDataHistory(this.state.markers[this.state.slideIndex].extraData.id)
         .then(response => {
-            let resHistory = response.data
-              console.log('history', resHistory)
+            let resHistory = response.data              
               if(resHistory.success){
                 let items = []
                   resHistory.data.items = resHistory.data.items.map(val=>{
@@ -202,8 +194,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 items.map(val=>{
                     val.fecha = moment(val.dateTime).format('YYYY-MM-DD HH:mm')
                     return val
-                })
-                console.log(items)
+                })                
                 resHistory.data.items = items
                 
                 this.setState({video_history:resHistory.data})
@@ -212,6 +203,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         })                
     }
 
+    componentWillUnmount(){
+        clearInterval(this.state.interval)
+    }
 
     componentDidMount(){
         let markersForLoop = []

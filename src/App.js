@@ -79,13 +79,6 @@ class App extends Component {
     }  else {
       this.setState({showHeader:false})
     }    
-
-    console.log('node env',process.env.NODE_ENV)
-    console.log('node env',process.env)    
-    //const socket = socketIOClient('http://95.216.37.253:3011');
-    //socket.on("messages", this.checkCall);
-    //setTimeout(()=>this.checkCall(fakeCall),5000)
-
   }
 
 
@@ -353,8 +346,7 @@ class App extends Component {
     this.setState({sideMenu: !this.state.sideMenu})
   }
 
-  _cameraSideInfo = (cameraInfo) => {  
-    console.log(this.state.cameraInfoSide)
+  _cameraSideInfo = (cameraInfo) => {      
     this.setState({cameraInfoSide: !this.state.cameraInfoSide, cameraID:cameraInfo})
   }
 

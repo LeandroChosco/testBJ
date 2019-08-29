@@ -1,13 +1,13 @@
 
-const base_url = 'http://prod.apicams.mh.energetikadevelepment.com'
-//const webSocket = 'ws://prod.streaming.energetikadevelepment.com'
-//const apiStream = 'http://prod.streaming.energetikadevelepment.com'
+const base_url = window.location.hostname === 'localhost' ?
+    'http://localhost' :
+    window.location.hostname === 'cams.mh.dev.energetikadevelepment.com' ? 
+    'http://dev.apicams.mh.dev.energetikadevelepment.com' :
+    'http://prod.apicams.energetikadevelepment.com';
 const webSocketPort = '20'
 const apiPort = '3000'
  export default {
      base_url,
-     //webSocket,
-     //apiStream,
      apiPort,
      webSocketPort
  }
