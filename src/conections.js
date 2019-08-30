@@ -55,7 +55,23 @@ export default {
     },
     dashboardTickets:()=>{        
         return Axios.get(constants.base_url+':1337/dashboard/tickets')
+    },
+    dashboardTotalRecognition:()=>{        
+        return Axios.get(constants.base_url+':1337/dashboard/detected')
+    },
+    dashboardRecognitionAges:()=>{        
+        return Axios.get(constants.base_url+':1337/dashboard/ageranges')
+    },
+    dashboardRecognitionPerDay:(filter = '')=>{        
+        return Axios.get(constants.base_url+':1337/dashboard/peoplefordays'+filter)
+    },
+    dashboardRecognitionMood:()=>{        
+        return Axios.get(constants.base_url+':1337/dashboard/mood')
+    },
+    loadCams:()=>{        
+        return Axios.get(constants.base_url+':1337/cams?sort=num_cam asc&active=1&limit=-1')
     }
+
 
     
 }
