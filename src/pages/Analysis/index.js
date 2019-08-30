@@ -161,11 +161,8 @@ class Analysis extends Component {
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
-  _sendReport = () => {
-      console.log(this.state.cameraProblem)
-      this.setState({modalProblem:false})
-      console.log(this.state.phones.join())
-      console.log(this.state.mails.join())
+  _sendReport = () => {      
+      this.setState({modalProblem:false})      
      conections.sendTicket({
         "camera_id": this.state.cameraProblem.id,
         "problem": this.state.problemDescription,
@@ -180,8 +177,7 @@ class Analysis extends Component {
               if (data.success) {
                 alert('Ticket creado correctamente')
               } else {
-                alert('Error al crear ticket')
-                console.log(data.error)
+                alert('Error al crear ticket')                
               }
           })
   }
@@ -191,8 +187,7 @@ class Analysis extends Component {
       conections.snapShot(camera.id,this.state.user_id)
           .then(response => {
               this.setState({loadingSnap:false})
-              const data = response.data
-              console.log(data)
+              const data = response.data              
               if (data.success) {
                 this.refs.myChild._loadFiles()
               }
@@ -259,8 +254,7 @@ class Analysis extends Component {
             this.state.recordingProcess.map(value=>{
                 if (now.diff(value.creation_time,'minutes')>10) {
 
-                    conections.stopRecord({record_proccess_id:value.process_id }).then(response=>{
-                        console.log('response camid'+value.cam_id,response.data)
+                    conections.stopRecord({record_proccess_id:value.process_id }).then(response=>{                        
                         let stateRecordingProcess = this.state.recordingProcess
                         let stateRecordingCams = this.state.recordingCams
                         stateRecordingCams = stateRecordingCams.filter(el => el.id !== value.cam_id)
@@ -278,8 +272,7 @@ class Analysis extends Component {
     }
 
 
-    _makeReport = (camera) => {
-        console.log(camera)
+    _makeReport = (camera) => {        
         this.setState({modalProblem:true, cameraProblem:camera})
     }
   _showDisplay = () =>{
@@ -368,8 +361,7 @@ class Analysis extends Component {
         } else {
             conections.getCamData(camera.id)
             .then(response => {
-                const data = response.data
-                console.log(data)
+                const data = response.data                
                 images = data.data.photos
                 videos = data.data.videos
                 if(images.length !== 0 && videos.length !== 0){
@@ -412,8 +404,7 @@ class Analysis extends Component {
             const isValid = this.props.canAccess(2)
             if (!isValid) {
                 this.props.history.push('/welcome')
-            }
-            console.log(isValid.UserToModules[0].actions)
+            }            
             if(isValid.UserToModules[0]){
                 this.setState({moduleActions:JSON.parse(isValid.UserToModules[0].actions)})
             }
@@ -471,8 +462,7 @@ class Analysis extends Component {
                     this.setState({displayTipe:3})
                 }
             }).catch(error=>{
-                this.setState({loading: false,error:'Error de conexion'})
-                console.log('eeeeeeeeeeeerrrrrooooooor',error)
+                this.setState({loading: false,error:'Error de conexion'})                
             })
     }
 
@@ -484,8 +474,7 @@ class Analysis extends Component {
                 record_proccess_id:value.process_id
             },value.cam_id)
             .then((r) => {
-                const response = r.data
-                console.log(response)
+                const response = r.data                
             })
             return value;
         })
