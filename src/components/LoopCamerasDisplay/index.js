@@ -38,7 +38,7 @@ class LoopCamerasDisplay extends Component {
             {this.state.markers.map((value,index) =>
                 <div key={value.extraData.id} style={{height:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}>
                     <CameraStream 
-                        ref={'camstreamloopref'+value.id} 
+                        ref={'camstreamloopref'+value.extraData.id} 
                         marker={value} 
                         height={this.state.height}
                         width={.5} />
@@ -53,6 +53,7 @@ class LoopCamerasDisplay extends Component {
                         <Button basic circular onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.markers[this.state.slideIndex].extraData.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>
                         <Button basic circular onClick={()=>this.props.downloadFiles(this.state.markers[this.state.slideIndex].extraData, {videos:this.state.videos,images:this.state.photos})} loading={this.props.loadingFiles}> <i className="fa fa-download"></i></Button>
                         <Button basic circular onClick={()=>this.props.makeReport(this.state.markers[this.state.slideIndex].extraData)}> <i className="fa fa-warning"></i></Button>
+                        <Button basic circular onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button>
                 </div>
                 <div className='col-4'>
                     <Button onClick={this._openCameraInfo} className='pull-right' primary><i className={ this.state.autoplay?'fa fa-square':'fa fa-play'}></i> { this.state.autoplay?'Parar loop':'Continuar loop'} <i className={ this.state.autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}></i></Button>                
@@ -142,9 +143,21 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         this.setState({isplaying:isplaying,isplay:isplaying[this.state.slideIndex]})
         this.refs['camstreamloopref'+this.state.markers[this.state.slideIndex].id]._togglePlayPause()
     } 
+
+    _restartCamStream = async() => {
+        console.log(this.refs)
+        const index = 'camstreamloopref'+this.state.markers[this.state.slideIndex].extraData.id
+        console.log(index)
+        if(this.refs[index]===undefined)
+            return
+        this.setState({restarting:true})
+        await this.refs[index]._restartCamStream()
+        this.setState({restarting:false})
+    }
+
+
     _openCameraInfo = () => {         
-        if (this.props.error === null || this.props.error === undefined) {
-            const index = 'camstreamloopref'+this.state.slideIndex                           
+        if (this.props.error === null || this.props.error === undefined) {                                    
             if(this.state.autoplay){                           
                 clearInterval(this.state.interval)
                 this.setState({autoplay: false})

@@ -61,7 +61,8 @@ class CameraStream extends Component {
         problemDescription:'',
         typeReport:1,
         phones:[],
-        mails:[]
+        mails:[],
+        restarting: false
     }
 
     lastDecode= null
@@ -168,6 +169,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                 {this.props.hideFileButton?null:<Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>}
                                 {this.props.showExternal?<Button basic onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.data.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>:null}
                                 <Button basic onClick={()=>this.setState({modalProblem:true})}> <i className="fa fa-warning"></i></Button>
+                                <Button basic onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button>
                             </Card.Footer>:
                         null}
                     </Card.Body>   
@@ -617,5 +619,28 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                       
         });
     } 
+
+    _restartCamStream = async () => {
+        const dns = this.state.data.webSocket.split(':')[1]        
+        this.setState({restarting:true})
+        try{
+            const response= await conections.restartOneStream(dns, this.state.data.id) 
+            this.setState({restarting:false})
+            this._restartCam()
+            console.log(response)
+            if(response.status === 200) {
+                if (!response.data.success) {
+                    alert("Error al reiniciar camara")
+                }
+            }
+            return true
+        }catch(err){
+            this._restartCam()
+            this.setState({restarting:false})
+            alert("Error al reiniciar camara")
+            console.log(err)
+            return false
+        }
+    }
 }
 export default CameraStream;
