@@ -1,6 +1,6 @@
 const base_url = window.location.hostname === 'localhost' ?
     'http://localhost' :
-    window.location.hostname === 'cams.mh.dev.energetikadevelepment.com' || window.location.hostname === "http://adminc5mh-dev.s3-website-us-east-1.amazonaws.com"? 
+    window.location.hostname === 'cams.mh.dev.energetikadevelepment.com' || window.location.hostname === "adminc5mh-dev.s3-website-us-east-1.amazonaws.com"? 
     'http://dev.apicams.mh.dev.energetikadevelepment.com' :
     'http://prod.apicams.mh.energetikadevelepment.com';
 const webSocketPort = '20'
