@@ -62,8 +62,7 @@ let blob
                             {complaint.url!==undefined&&show?
                                 <Button 
                                     onClick={this._saveFile}
-                                    circular
-                                    basic  
+                                    circular                                    
                                     icon="download"
                                 />:
                                 null
