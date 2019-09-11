@@ -162,14 +162,14 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                         {this.props.hideText?null:<div align='left'>{this.state.cameraName}</div>}
                         {this.props.showButtons?
                             <Card.Footer>
-                                {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic disabled={this.state.photos.length>=5} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>:null:null}
+                                {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic disabled={this.state.photos.length>=5||this.state.loadingSnap} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>:null:null}
                                 <Button basic onClick={this._togglePlayPause}><i className={this.state.isPlay?'fa fa-pause':'fa fa-play'}></i></Button>
-                                {this.props.moduleActions?this.props.moduleActions.btnrecord?<Button basic disabled={this.state.videos.length>=5} loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>:null:null}
-                                <Button basic loading={this.state.loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>            
+                                {this.props.moduleActions?this.props.moduleActions.btnrecord?<Button basic disabled={this.state.videos.length>=5||this.state.isLoading} loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>:null:null}
+                                <Button basic disabled={this.state.loadingFiles} loading={this.state.loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>            
                                 {this.props.hideFileButton?null:<Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>}
                                 {this.props.showExternal?<Button basic onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.data.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>:null}
                                 <Button basic onClick={()=>this.setState({modalProblem:true})}> <i className="fa fa-warning"></i></Button>
-                                <Button basic onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button>
+                                <Button basic disabled={this.state.restarting} onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button>
                             </Card.Footer>:
                         null}
                     </Card.Body>   
