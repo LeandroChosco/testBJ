@@ -7,7 +7,10 @@ export default {
         return Axios.post(constants.base_url+':'+constants.apiPort+'/admin/login',data)
     },
     restartStream:(dns = constants.apiStream)=>{
-        return Axios.put(dns+':'+constants.apiPort+'/control-cams/restart-streaming2/all')
+        return Axios.put(dns+':'+constants.apiPort+'/control-cams/restart-streaming3/all')
+    },
+    restartOneStream:(dns = constants.apiStream,id)=>{
+        return Axios.put(dns+':'+constants.apiPort+'/control-cams/restart-streaming3/' + id)
     },
     sendTicket:(data)=> {
         return Axios.post(constants.base_url + ':' + constants.apiPort + '/tickets',data)
