@@ -74,7 +74,7 @@ const mapOptions= {
                         </div>
                         <div  className="row" >
                             <div  className="col" align='center'>  
-                                de poincidencia
+                                de coincidencia
                             </div>
                         </div>
                     </div>

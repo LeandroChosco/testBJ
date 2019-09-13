@@ -83,8 +83,8 @@ class App extends Component {
   }
 
 
-  loadData = () => {     
-    if (process.env.NODE_ENV==='production' || true) {
+  loadData = () => {         
+    if (process.env.NODE_ENV==='production') {
       firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
         if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
           this.showNot('Match','Nuevo match detectado','warning','Ver match',0)

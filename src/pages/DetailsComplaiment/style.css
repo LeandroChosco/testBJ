@@ -16,3 +16,10 @@
     background-position: center;
     background-repeat: no-repeat, repeat;
 }
+
+.downloadButton{
+    position: absolute;
+    right: 0;
+    padding: 15px;
+    z-index: 1;
+}
