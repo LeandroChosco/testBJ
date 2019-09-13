@@ -47,7 +47,8 @@
     "BP": "react-scripts build && git add . && git commit -m'build para despliege' && git push",
     "BPPD": "react-scripts build && git add . && git commit -m'build para despliege' && git push && ssh admin@95.216.37.253 'cd public_html/c5virtual_desarrollo && git pull && exit'",
     "deploy_production": "react-scripts build && git add . && git commit -m'build para despliege produccion' && git push && ssh admin@95.216.37.253 'cd public_html/c5virtual && git pull && exit'",
-    "deploy:dev": "react-scripts build && aws s3 sync build/ s3://adminc5mh-dev"
+    "deploy:dev": "react-scripts build && aws s3 sync build/ s3://adminc5mh-dev",
+    "deploy:prod": "react-scripts build && aws s3 sync build/ s3://adminc5mh"
   },
   "eslintConfig": {
     "extends": "react-app"
