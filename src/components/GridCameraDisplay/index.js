@@ -67,7 +67,13 @@ class GridCameraDisplay extends Component {
     return (
     <div className='gridCameraContainer' align='center'>                
         <Row >     
-            {this.state.markers.map((value,index) => (index<this.state.start+this.state.limit)&&index>=this.state.start?<Col className={this.state.selectedCamera === value.extraData?'p-l-0 p-r-0 activeselectedcameragrid camcolgridholder':'p-l-0 p-r-0 camcolgridholder'}  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value,index)} marker={value.id}><CameraStream ref={'camrefgrid'+value.extraData.id} key={value.extraData.id} marker={value}/></Col>:null)}        
+            {this.state.markers.map((value,index) => 
+                (index<this.state.start+this.state.limit)&&index>=this.state.start?
+                    <Col className={this.state.selectedCamera === value.extraData?'p-l-0 p-r-0 activeselectedcameragrid camcolgridholder':'p-l-0 p-r-0 camcolgridholder'}  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value,index)} marker={value.id}>
+                        <CameraStream ref={'camrefgrid'+value.extraData.id} key={value.extraData.id} marker={value}/>
+                    </Col>:
+                    null
+            )}        
         </Row>               
         {this.props.loading?null:
         <Row className='paginatorContainerOnGrid'>
@@ -101,12 +107,13 @@ class GridCameraDisplay extends Component {
             <div className='row stiky-top'>
                 <div className='col-4'>
                     
-                        {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic circular  disabled={this.state.photos.length>=5}  loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.selectedCamera)}><i className='fa fa-camera'></i></Button>:null:null}
-                        <Button basic circular onClick={this._playPause}><i className={this.state.isplay?'fa fa-pause':'fa fa-play'}></i></Button>
-                        {this.props.moduleActions?this.props.moduleActions.btnrecord?<Button basic circular  disabled={this.state.videos.length>=5}  loading={this.props.loadingRcord} onClick={()=>this.props.recordignToggle(this.state.selectedCamera)}><i className={ this.props.recordingCams.indexOf(this.state.selectedCamera)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>:null:null}
-                        <Button basic circular onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.selectedCamera.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>
-                        <Button basic circular onClick={()=>this.props.downloadFiles(this.state.selectedCamera, {videos:this.state.videos,images:this.state.photos})} loading={this.props.loadingFiles}> <i className="fa fa-download"></i></Button>
-                        <Button basic circular onClick={()=>this.props.makeReport(this.state.selectedCamera)}> <i className="fa fa-warning"></i></Button>
+                        {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic circular  disabled={this.state.photos.length>=5||this.props.loadingSnap||this.props.loadingRcord||this.props.loadingFiles||this.state.restarting||this.props.recordingCams.indexOf(this.state.selectedCamera)>-1}  loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.selectedCamera)}><i className='fa fa-camera'></i></Button>:null:null}
+                        <Button basic disabled={this.props.loadingSnap||this.props.loadingRcord||this.props.loadingFiles||this.state.restarting||this.props.recordingCams.indexOf(this.state.selectedCamera)>-1} circular onClick={this._playPause}><i className={this.state.isplay?'fa fa-pause':'fa fa-play'}></i></Button>
+                        {this.props.moduleActions?this.props.moduleActions.btnrecord?<Button basic circular  disabled={this.state.videos.length>=5||this.props.loadingSnap||this.props.loadingRcord||this.props.loadingFiles||this.state.restarting}  loading={this.props.loadingRcord} onClick={()=>this.props.recordignToggle(this.state.selectedCamera)}><i className={ this.props.recordingCams.indexOf(this.state.selectedCamera)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>:null:null}
+                        <Button basic disabled={this.props.loadingSnap||this.props.loadingRcord||this.props.loadingFiles||this.state.restarting||this.props.recordingCams.indexOf(this.state.selectedCamera)>-1} circular onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.selectedCamera.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>
+                        <Button basic disabled={this.props.loadingSnap||this.props.loadingRcord||this.props.loadingFiles||this.state.restarting||this.props.recordingCams.indexOf(this.state.selectedCamera)>-1} circular onClick={()=>this.props.downloadFiles(this.state.selectedCamera, {videos:this.state.videos,images:this.state.photos})} loading={this.props.loadingFiles}> <i className="fa fa-download"></i></Button>
+                        <Button basic disabled={this.props.loadingSnap||this.props.loadingRcord||this.props.loadingFiles||this.state.restarting||this.props.recordingCams.indexOf(this.state.selectedCamera)>-1} circular onClick={()=>this.props.makeReport(this.state.selectedCamera)}> <i className="fa fa-warning"></i></Button>
+                        <Button basic circular disabled={this.props.loadingSnap||this.props.loadingRcord||this.props.loadingFiles||this.state.restarting||this.props.recordingCams.indexOf(this.state.selectedCamera)>-1} onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button>
                 </div>
                 <div className='col-5'>
                     <b>Camara {this.state.selectedCamera.num_cam}</b> {this.state.selectedCamera.name} 
@@ -191,6 +198,12 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         console.log(isplaying)
         this.setState({isplaying:isplaying,isplay:isplaying[this.state.slideIndex]})
         this.refs['camrefgrid'+this.state.selectedCamera.id]._togglePlayPause()
+    }
+
+    _restartCamStream = async () => {
+        this.setState({restarting:true})
+        await this.refs["camrefgrid"+this.state.selectedCamera.id]._restartCamStream()
+        this.setState({restarting:false})
     }
 
 

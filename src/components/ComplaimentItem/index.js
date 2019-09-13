@@ -28,7 +28,7 @@ export default class ComplaimentItem extends React.Component {
     }
 
     componentDidMount(){
-        console.log('proooops',this.props)
+        
 
     }
 

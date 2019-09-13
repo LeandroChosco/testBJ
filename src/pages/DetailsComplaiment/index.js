@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Image } from 'semantic-ui-react';
+import { Image, Button } from 'semantic-ui-react';
 import Geocode from "react-geocode";
 import './style.css'
 import MapContainer from '../../components/MapContainer/index.js';
 import firebaseC5 from '../../constants/configC5';
 import {  Navbar } from 'react-bootstrap';
+import { saveAs } from 'file-saver';
 const mapOptions= {
     center: {lat: 19.459430, lng: -99.208588},
     zoom: 15,
@@ -18,6 +19,8 @@ const mapOptions= {
     openSelection:false,
     checked:''
 }
+
+let blob
 
  class DetailsComplaiment extends Component {
     state = {
@@ -53,7 +56,19 @@ const mapOptions= {
                             options={mapOptions}
                             onMapLoad={this._onMapLoad} />:null}
                     </div>
-                    <div className='col loader' style={{height:'100%', minHeight:'150px', maxHeight:'350px'}}>                                  
+                    <div className='col loader' style={{height:'100%', minHeight:'150px', maxHeight:'350px', position:'relative'}}>                                  
+                        <div className='row downloadButton'>                    
+                            <div className='col pull-right'>
+                            {complaint.url!==undefined&&show?
+                                <Button 
+                                    onClick={this._saveFile}
+                                    circular                                    
+                                    icon="download"
+                                />:
+                                null
+                            } 
+                            </div>
+                        </div> 
                         {complaint.url!==undefined&&show?complaint.url.includes('.jpg')?
                         <Image fluid rounded src={complaint.url} style={{maxHeight:'350px'}}/>:
                         <video style={{width:'100%', maxHeight:'350px'}} controls src={complaint.url}/>:null}
@@ -80,7 +95,7 @@ const mapOptions= {
                     <div className='col'>
                         <b>Descripción: </b> {complaint.description}
                     </div>
-                </div> 
+                </div>                 
             </div>                         
         </div>
     
@@ -88,12 +103,10 @@ const mapOptions= {
   }
 
   _getAddress = async() => {
-      try {
-          console.log('load adrres')
+      try {          
         Geocode.setApiKey("AIzaSyDVdmSf9QE5KdHNDCSrXwXr3N7QnHaujtg");
         const response =await Geocode.fromLatLng(this.state.complaint.latitude, this.state.complaint.longitude)        
-        const address = response.results[0].formatted_address;
-        console.log(address);
+        const address = response.results[0].formatted_address;        
         let complaint = this.state.complaint
         complaint.position=address
         this.setState({complaint:complaint})
@@ -103,8 +116,7 @@ const mapOptions= {
       }    
   }
   _getCoords = async() => {
-    try {
-        console.log('load adrres')
+    try {        
       Geocode.setApiKey("AIzaSyDVdmSf9QE5KdHNDCSrXwXr3N7QnHaujtg");
       const response =await Geocode.fromAddress( this.state.complaint.position)        
       const { lat, lng } = response.results[0].geometry.location;
@@ -119,6 +131,10 @@ const mapOptions= {
     }    
 }
 
+_saveFile = () => {
+    saveAs(blob,this.state.complaint.url.split('/')[this.state.complaint.url.split('/').length - 1])
+}
+
   _onMapLoad = (map) =>{    
     map.setCenter(new window.google.maps.LatLng(parseFloat(this.state.complaint.latitude), parseFloat(this.state.complaint.longitude)))
     new window.google.maps.Marker({
@@ -128,14 +144,30 @@ const mapOptions= {
     });
   }
 
+  _getBlob = () => {
+    const callback = (r) =>{
+        blob = r.response
+        //saveAs(r.response,r.responseURL.split('/')[r.responseURL.split('/').length - 1])                  
+    }
+    var http = new XMLHttpRequest();
+    http.open('GET', this.state.complaint.url);
+    http.responseType = 'blob';
+    http.onreadystatechange = function() {
+        if (this.readyState == this.DONE) {
+            callback(this);
+        }
+    };
+    http.send(); 
+  }
+
   checkFileAviable = () => {
 
     const callback = (r) =>{
-        console.log('callback',r)
         if(r){
             this.setState({show:true})
+            this._getBlob()
             return
-        }
+        }        
         const diffTime = Math.abs(this.state.created.getTime() - new Date().getTime());
         const diffMinutes = Math.ceil(diffTime / (1000 * 60 )); 
         console.log(diffMinutes );        
@@ -145,21 +177,18 @@ const mapOptions= {
     http.open('HEAD', this.state.complaint.url);
     http.onreadystatechange = function() {
         if (this.readyState == this.DONE) {
-            console.log(this)
             callback(this.status != 404 && this.status !=0);
         }
     };
     http.send();    
   }
 
-    componentDidMount(){
-        console.log(this.props.match.params.id)
+    componentDidMount(){        
         firebaseC5.app('c5virtual').firestore().collection('complaints').doc(this.props.match.params.id).onSnapshot(doc=>{            
             if(doc.exists){
                 let value = doc.data()
                 const created=new Date(value.dateTime.toDate())
-                value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
-                console.log(value)             
+                value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()                        
                 this.setState({complaint:value,created:created})               
                 setTimeout(this.checkFileAviable,1000)
             }
