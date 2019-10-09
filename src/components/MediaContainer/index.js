@@ -33,11 +33,25 @@ class MediaContainer extends Component {
     );
   }
 
-    _saveFile = () => {
-                    
-        saveAs(this.props.src,this.props.video?'video.mp4':this.props.image?'image.jpg':'file')
-                
-    }
+  _saveFile = () => {
+    console.log("dns_ip: ", this.props.dns_ip)
+    setTimeout(async()=>{
+        const response={
+            file:constants.base_url +":" +constants.apiPort +"/"+ this.props.src
+        };
+        const statusResponse = await fetch(response.file)
+        console.log("status: ", statusResponse)
+        if(statusResponse.status === 200){
+            window.saveAs(response.file,this.props.video?'video.mp4':this.props.image?'image.jpg':'file')
+        }else{
+            const responseHistory={
+                file:this.props.dns_ip +":" +constants.apiPort +"/"+ this.props.src
+            };
+            window.saveAs(responseHistory.file,this.props.video?'video.mp4':this.props.image?'image.jpg':'file')
+        }
+    }, 1000);
+    //window.saveAs(this.props.src,this.props.video?'video.mp4':this.props.image?'image.jpg':'file')       
+}
 
     _deleteFile = () => {
         console.log(this.props.cam)
