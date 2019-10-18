@@ -455,6 +455,17 @@ class Analysis extends Component {
                     }
                     return true;
                 })
+                auxCamaras.push({
+                    id:2,
+                    num_cam:2,
+                    lat:19.383124,
+                    lng:-99.1509531,
+                    
+                    // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
+                    name: '794 Uxmal Ciudad de México, Cd. de México',
+                    isIframe: true,
+                    url:'http://wellkeeper.us/flowplayer/rtmp2.html'
+                })
                 if(idCamera== null){
                     this.setState({places:auxCamaras,loading: false,error:undefined})
                 } else {
