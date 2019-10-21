@@ -128,8 +128,8 @@ class Map extends Component {
             auxCamaras.push({
                 id:2,
                 num_cam:2,
-                lat:19.383124,
-                lng:-99.1509531,
+                lat:19.3718587,
+                lng:-99.1606554,
                 
                 // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
                 name: '794 Uxmal Ciudad de México, Cd. de México',
