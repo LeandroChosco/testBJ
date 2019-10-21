@@ -125,6 +125,17 @@ class Map extends Component {
                 }
                 return true
             })
+            auxCamaras.push({
+                id:2,
+                num_cam:2,
+                lat:19.3718587,
+                lng:-99.1606554,
+                
+                // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
+                name: '794 Uxmal Ciudad de México, Cd. de México',
+                isIframe: true,
+                url:'http://wellkeeper.us/flowplayer/rtmp2.html'
+            })
             center_lat = center_lat / total
             center_lng = center_lng / total
             this.state.map.setCenter(new window.google.maps.LatLng(center_lat, center_lng))
