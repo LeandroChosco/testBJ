@@ -6,6 +6,8 @@ import constants from '../../constants/constants';
 import Axios from 'axios';
 import { NOTFOUND } from 'dns';
 import { stat } from 'fs';
+
+
 class MediaContainer extends Component {
     
     state = {
@@ -13,7 +15,6 @@ class MediaContainer extends Component {
     }
 
   render() {
-      console.log(this.props)
     return (
     <div className='mediaContainer col-6 p10'>   
         <Card onClick={()=>this.setState({modal:true})}>

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@videojs/http-streaming": "^1.10.6",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "color-scheme": "^1.0.1",
@@ -13,6 +14,7 @@
     "jszip": "^3.2.1",
     "jszip-utils": "0.0.2",
     "moment": "^2.24.0",
+    "node-sass": "^4.12.0",
     "nuka-carousel": "^4.5.3",
     "react": "^16.8.5",
     "react-bootstrap": "^1.0.0-beta.6",
@@ -35,7 +37,11 @@
     "semantic-ui-react": "^0.86.0",
     "socket.io-client": "^2.2.0",
     "styled-components": "^4.2.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "video.js": "^7.6.5",
+    "videojs-flash": "^2.2.1",
+    "videojs-swf": "^5.4.2",
+    "videojs-watermark": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

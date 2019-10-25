@@ -427,17 +427,38 @@ class Analysis extends Component {
                 let idCamera = null
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1) {
-                        auxCamaras.push({
-                            id:value.id,
-                            num_cam:value.num_cam,
-                            lat:value.google_cordenate.split(',')[0],
-                            lng:value.google_cordenate.split(',')[1],
-                            webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
-                            // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
-                        })
+                        let url = 'rtmp://18.212.185.68/live/cam';                        
+                        if (true) {
+                            if (value.num_cam < 10) {
+                                url = url + '0' +value.num_cam.toString()
+                            } else {
+                                url = url +value.num_cam.toString()
+                            }
+                            auxCamaras.push({
+                                id:value.id,
+                                num_cam:value.num_cam,
+                                lat:value.google_cordenate.split(',')[0],
+                                lng:value.google_cordenate.split(',')[1],
+                                webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
+                                // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
+                                name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
+                                url:url,
+                                isRtmp:true
+                            })
+                        } else {
+                            auxCamaras.push({
+                                id:value.id,
+                                num_cam:value.num_cam,
+                                lat:value.google_cordenate.split(',')[0],
+                                lng:value.google_cordenate.split(',')[1],
+                                webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
+                                // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
+                                name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                            })
+                        }
+                        
                         if(this.state.id_cam !=0){
-                           if (parseInt(this.state.id_cam) === value.id) {
+                           if (parseInt(this.state.id_cam) === value.id) {                           
                                 title= value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                                 actualCamera = {
                                     id:value.id,
@@ -446,7 +467,9 @@ class Analysis extends Component {
                                     lng:value.google_cordenate.split(',')[1],
                                     webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
                                     // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                                    name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                                    name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
+                                    url:url,
+                                    isRtmp:true
                                 }
                                 idCamera = value.id
                            }

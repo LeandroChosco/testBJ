@@ -9,6 +9,7 @@ import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
 import constants from '../../constants/constants';
 import conections from '../../conections';
+import videojs from 'video.js'
 
 const mapOptions= {
     center: {lat: 19.459430, lng: -99.208588},
@@ -66,8 +67,17 @@ class Map extends Component {
             return function() {
                 render(<CameraStream moduleActions={moduleActions} marker={marker} showButtons height={.65} showExternal/>, document.getElementById('infoWindow'+e.extraData.id))
             }
-          })(e,render, this.state.moduleActions))
+          })(e,render, this.state.moduleActions))       
         infoWindow.open(map)        
+        const i = setInterval( ()=>{
+            console.log("infoWindow is bound to map: "+(infoWindow.getMap() ? true : false));
+            console.log(infoWindow)
+            if(!infoWindow.getMap()){
+                infoWindow.close()
+                clearInterval(i)
+                videojs("hls-player"+e.extraData.num_cam).dispose()
+            }             
+        }, 1000);
     }
 
 
@@ -113,6 +123,12 @@ class Map extends Component {
                     center_lat = center_lat + parseFloat(value.google_cordenate.split(',')[0]) 
                     center_lng=center_lng+parseFloat(value.google_cordenate.split(',')[1])
                     total = total + 1                    
+                    let url = 'rtmp://18.212.185.68/live/cam';                                            
+                    if (value.num_cam < 10) {
+                        url = url + '0' +value.num_cam.toString()
+                    } else {
+                        url = url +value.num_cam.toString()
+                    }  
                     auxCamaras.push({
                         id:value.id,
                         num_cam:value.num_cam,
@@ -120,7 +136,9 @@ class Map extends Component {
                         lng:parseFloat(value.google_cordenate.split(',')[1]),                            
                         webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
                         //webSocket:constants.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
+                        url:url,
+                        isRtmp:true
                     })
                 }
                 return true
