@@ -91,11 +91,11 @@ class App extends Component {
         }
         if(this.state.fisrtTime)
           this.setState({fisrtTime:false})
-        this.setState({matches:docs.docs.map(v=>{
+        this.setState({matches:[]/*docs.docs.map(v=>{
           let value = v.data()
           value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
           return value
-        })})
+        })*/})
       })
   
       firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
