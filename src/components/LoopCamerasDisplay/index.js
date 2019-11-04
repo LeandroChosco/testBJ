@@ -37,12 +37,12 @@ class LoopCamerasDisplay extends Component {
                 Error al cargar informacion: {JSON.stringify(this.props.error)}
             </div>:null}
             {this.state.height?this.state.markers.map((value,index) =>
-               index===this.state.slideIndex?<div key={value.extraData.id} style={{height:'100%',width:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}>
-                    <CameraStream 
+               index===this.state.slideIndex?<div key={value.extraData.id} style={{height:'100%',width:'100%', paddign:'50%'}} align='center' className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}>
+                    <CameraStream
                         ref={'camstreamloopref'+value.extraData.id} 
                         marker={value} 
-                        height={this.state.height}
-                        width={.5} />
+                        height={'100%'}                       
+                        width={'75%'} />
                 </div>:null
             ):null}        
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
@@ -237,10 +237,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         const documentHeight = window.innerHeight         
         let map = document.getElementsByClassName('holderOfSlides')[0]//.style.height = documentHeight - navHeight       
         map.style.height  = (documentHeight - navHeight - bottomBar - viewBar) + "px"   
-        let height = documentHeight - navHeight - bottomBar - viewBar -100
-        map.style.maxHeight  = (documentHeight - navHeight - bottomBar - viewBar) + "px"                      
-        //let time
-        const time =  setInterval(this.changeSlide,1000*10)        
+        let height = documentHeight - navHeight - bottomBar - viewBar - 150
+        map.style.maxHeight  = (documentHeight - navHeight - bottomBar - viewBar) + "px"                              
+        let time = setInterval(this.changeSlide,1000*10)        
         let cameras = []
           for(let item in responseJson.items){
             let suspect = responseJson.items[item]            

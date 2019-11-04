@@ -185,7 +185,9 @@ const ref = firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('mes
             extraData:{
               num_cam:data.UserToCameras[0].Camare.num_cam,
               cameraID:data.UserToCameras[0].Camare.num_cam,
-              webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
+              //webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
+              isHls:true,
+              url: 'http://' + data.UserToCameras[0].Camare.UrlStreamMediaServer.ip_url_ms + ':' + data.UserToCameras[0].Camare.UrlStreamMediaServer. output_port + data.UserToCameras[0].Camare.UrlStreamMediaServer. name + data.UserToCameras[0].Camare.channel 
             }
           }})
         }

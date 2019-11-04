@@ -65,7 +65,7 @@ class Map extends Component {
         console.log(e)
         infoWindow.addListener('domready', (function(marker, render,moduleActions) {
             return function() {
-                render(<CameraStream moduleActions={moduleActions} marker={marker} showButtons showExternal/>, document.getElementById('infoWindow'+e.extraData.id))
+                render(<CameraStream moduleActions={moduleActions} marker={marker} height={'300px'} showButtons showExternal/>, document.getElementById('infoWindow'+e.extraData.id))
             }
           })(e,render, this.state.moduleActions))       
         infoWindow.open(map)        
@@ -75,7 +75,9 @@ class Map extends Component {
             if(!infoWindow.getMap()){
                 infoWindow.close()
                 clearInterval(i)
-                videojs("hls-player"+e.extraData.num_cam).dispose()
+                if (e.extraData.isRtmp) {
+                    videojs("hls-player"+e.extraData.num_cam).dispose()   
+                }                
             }             
         }, 1000);
     }
@@ -122,23 +124,15 @@ class Map extends Component {
                 if (value.active === 1&& value.flag_streaming === 1) {
                     center_lat = center_lat + parseFloat(value.google_cordenate.split(',')[0]) 
                     center_lng=center_lng+parseFloat(value.google_cordenate.split(',')[1])
-                    total = total + 1                    
-                    let url = 'rtmp://18.212.185.68/live/cam';                                            
-                    if (value.num_cam < 10) {
-                        url = url + '0' +value.num_cam.toString()
-                    } else {
-                        url = url +value.num_cam.toString()
-                    }  
+                    total = total + 1                                        
                     auxCamaras.push({
                         id:value.id,
                         num_cam:value.num_cam,
                         lat:parseFloat(value.google_cordenate.split(',')[0]), 
                         lng:parseFloat(value.google_cordenate.split(',')[1]),                            
-                        webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
-                        //webSocket:constants.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
-                        url:url,
-                        isRtmp:true
+                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,                        
+                        isHls:true,
+                        url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer. name + value.channel 
                     })
                 }
                 return true
