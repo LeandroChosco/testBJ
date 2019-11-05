@@ -31,8 +31,10 @@ class SideBar extends Component {
                             num_cam:value.num_cam,
                             lat:parseFloat(value.google_cordenate.split(',')[0]),
                             lng:parseFloat(value.google_cordenate.split(',')[1]),
-                            webSocket:'ws://'+value.UrlStreamToCameras[0].Url.dns_ip+':'+value.port_output_streaming,
-                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                            //webSocket:'ws://'+value.UrlStreamToCameras[0].Url.dns_ip+':'+value.port_output_streaming,
+                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
+                            isHls:true,
+                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel 
                         })
                     }
                     return true;
