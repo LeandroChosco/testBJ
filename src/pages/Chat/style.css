@@ -178,3 +178,7 @@
     color: #fafafa;
     text-align: center;
 }
+
+.camHolder{
+    height: 100% !important;
+}
