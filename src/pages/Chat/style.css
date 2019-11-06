@@ -151,7 +151,7 @@
 
 
 .Alerta.Robo.Habitacion{
-    background-color: var(--main-bg-color);
+    background-color: #aa3311;
     border-radius: 15px;
     color: white;
 }
