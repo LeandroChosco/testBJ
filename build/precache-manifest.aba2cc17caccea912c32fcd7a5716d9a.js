@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "b5b8d7fef8b5b357eead",
-    "url": "/static/css/main.c4d801f1.chunk.css"
+    "revision": "64542205b5abf8e7833e",
+    "url": "/static/css/main.2aadf9d6.chunk.css"
   },
   {
-    "revision": "b5b8d7fef8b5b357eead",
-    "url": "/static/js/main.c1b68a5b.chunk.js"
+    "revision": "64542205b5abf8e7833e",
+    "url": "/static/js/main.541d1389.chunk.js"
   },
   {
     "revision": "42ac5946195a7306e2a5",
@@ -24,12 +24,12 @@ self.__precacheManifest = [
     "url": "/static/media/Poppins-Medium.a4e11dda.ttf"
   },
   {
-    "revision": "7940efc40d8e3b477e16cc41b0287139",
-    "url": "/static/media/Poppins-Bold.7940efc4.ttf"
-  },
-  {
     "revision": "731a28a413d642522667a2de8681ff35",
     "url": "/static/media/Poppins-Regular.731a28a4.ttf"
+  },
+  {
+    "revision": "7940efc40d8e3b477e16cc41b0287139",
+    "url": "/static/media/Poppins-Bold.7940efc4.ttf"
   },
   {
     "revision": "e63b93dfac2600782654e2b87910d681",
@@ -68,12 +68,16 @@ self.__precacheManifest = [
     "url": "/static/media/fontawesome-webfont.912ec66d.svg"
   },
   {
+    "revision": "ef60a4f6c25ef7f39f2d25a748dbecfe",
+    "url": "/static/media/outline-icons.ef60a4f6.woff"
+  },
+  {
     "revision": "cd6c777f1945164224dee082abaea03a",
     "url": "/static/media/outline-icons.cd6c777f.woff2"
   },
   {
-    "revision": "ef60a4f6c25ef7f39f2d25a748dbecfe",
-    "url": "/static/media/outline-icons.ef60a4f6.woff"
+    "revision": "9c74e172f87984c48ddf5c8108cabe67",
+    "url": "/static/media/flags.9c74e172.png"
   },
   {
     "revision": "701ae6abd4719e9c2ada3535a497b341",
@@ -82,10 +86,6 @@ self.__precacheManifest = [
   {
     "revision": "ad97afd3337e8cda302d10ff5a4026b8",
     "url": "/static/media/outline-icons.ad97afd3.ttf"
-  },
-  {
-    "revision": "9c74e172f87984c48ddf5c8108cabe67",
-    "url": "/static/media/flags.9c74e172.png"
   },
   {
     "revision": "0ab54153eeeca0ce03978cc463b257f7",
@@ -108,16 +108,16 @@ self.__precacheManifest = [
     "url": "/static/media/icons.8e3c7f55.eot"
   },
   {
-    "revision": "13db00b7a34fee4d819ab7f9838cc428",
-    "url": "/static/media/brand-icons.13db00b7.eot"
-  },
-  {
     "revision": "b87b9ba532ace76ae9f6edfe9f72ded2",
     "url": "/static/media/icons.b87b9ba5.ttf"
   },
   {
     "revision": "c5ebe0b32dc1b5cc449a76c4204d13bb",
     "url": "/static/media/brand-icons.c5ebe0b3.ttf"
+  },
+  {
+    "revision": "13db00b7a34fee4d819ab7f9838cc428",
+    "url": "/static/media/brand-icons.13db00b7.eot"
   },
   {
     "revision": "82f60bd0b94a1ed68b1e6e309ce2e8c3",
@@ -140,7 +140,7 @@ self.__precacheManifest = [
     "url": "/static/media/bg-01.8f6a99c3.jpg"
   },
   {
-    "revision": "f458e7b5889ab83977be4b746a5cb523",
+    "revision": "5878d0fdd0b1d8700d04d2420d749c28",
     "url": "/index.html"
   }
 ];
