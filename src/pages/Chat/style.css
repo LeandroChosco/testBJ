@@ -151,7 +151,7 @@
 
 
 .Alerta.Robo.Habitacion{
-    background-color: #aa3311;
+    background-color: var(--main-bg-color);
     border-radius: 15px;
     color: white;
 }
@@ -179,6 +179,6 @@
     text-align: center;
 }
 
-.camHolder{
+.camContainerChatDiv>.card>.card-body>.camHolder{
     height: 100% !important;
 }
