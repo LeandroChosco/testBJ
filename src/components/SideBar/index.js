@@ -81,7 +81,7 @@ class SideBar extends Component {
                 />
                 <div id="selection">
                 {
-                    this.state.selectedOption.map( value => <CameraStream key={value.extraData.id} marker={value} height={.6} showButtons/>)
+                    this.state.selectedOption.map( value => <CameraStream key={value.extraData.id} marker={value} height={300} showButtons/>)
                 }
                 </div>
             </div>
