@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import Clappr from 'clappr'
 class HlsPlayer extends Component{
+
+    state = { player: undefined }
+
     render(){
         return(
             <div id={'player'+this.props.num_cam} style={{height:this.props.height?this.props.height:'100%'}}>
@@ -36,7 +39,14 @@ class HlsPlayer extends Component{
             playback: {
                 playInline: true,
             },
-        });
+        });        
+        this.setState({player:player})
+    }
+
+    componentWillUnmount(){
+        if (this.state.player) {
+            this.state.player.destroy()
+        }
     }
 }
 
