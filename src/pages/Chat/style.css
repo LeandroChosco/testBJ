@@ -90,7 +90,7 @@
 
 .support {
     position: relative;
-    background: #02004c;
+    background: var(--main-bg-color);
     border-radius: .4em;
     padding: 5px;
     margin-top:10px;
@@ -151,7 +151,7 @@
 
 
 .Alerta.Robo.Habitacion{
-    background-color: #aa3311;
+    background-color: var(--main-bg-color);
     border-radius: 15px;
     color: white;
 }
