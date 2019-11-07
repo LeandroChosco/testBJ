@@ -72,33 +72,40 @@ const ref = firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('mes
                           {camData!==undefined?<CameraStream
                             style={{height:'100%'}}
                             hideTitle 
+                            height="100%"
                             marker={camData}/>:null}
                         </div>
                         
                       </div>
                       
                       <div className="row" style={{paddingTop:15, height: '20%'}}>
-                        <div className="col-8">
+                        
                           <Card style={{width:'100%'}}>
                             <Card.Content style={{padding: 0}}>
-                            <div className="row textContainer">
-                                <div style={{fontSize:13,paddingRight:0}} className="col-6"><b>Nombre: </b>{chats[index].user_name}</div>
-                                <div style={{fontSize:13,paddingLeft:0 ,paddingRight:0}} className="col-3"><b>Telefono: </b>{chats[index].user_cam.phone}</div>
-                                <div style={{fontSize:13,paddingLeft:0, paddingRight:0}} className="col-3"><b>Celular: </b>{chats[index].user_cam.cellphone}</div>
-                            </div>
-                            <div className="row textContainer" style={{paddingTop: 0}}>
-                                <div style={{fontSize:13}} className="col">
-                                    <b>Dirección: </b>{chats[index].user_cam.street} {chats[index].user_cam.number}, {chats[index].user_cam.town}, {chats[index].user_cam.township}, {chats[index].user_cam.state}
+                              <div className="row">
+                              <div className="col-8">
+                                <div className="row textContainer">
+                                    <div style={{fontSize:13,paddingRight:0}} className="col-6"><b>Nombre: </b>{chats[index].user_name}</div>
+                                    <div style={{fontSize:13,paddingLeft:0 ,paddingRight:0}} className="col-3"><b>Telefono: </b>{chats[index].user_cam.phone}</div>
+                                    <div style={{fontSize:13,paddingLeft:0, paddingRight:0}} className="col-3"><b>Celular: </b>{chats[index].user_cam.cellphone}</div>
                                 </div>
-                            </div>
-                                </Card.Content>
+                                <div className="row textContainer" style={{paddingTop: 0}}>
+                                    <div style={{fontSize:13}} className="col">
+                                        <b>Dirección: </b>{chats[index].user_cam.street} {chats[index].user_cam.number}, {chats[index].user_cam.town}, {chats[index].user_cam.township}, {chats[index].user_cam.state}
+                                    </div>
+                                </div>
+                              </div>                            
+                              <div className="col-4" style={{margin: 'auto'}} >
+                                <Button color="red" style={{width:'80%', alignItems: 'center',}} className="ui button" onClick={this.closeChat}>
+                                  <Icon name='taxi' />Mandar unidad
+                                </Button>
+                              </div>
+                              </div>
+
+                            </Card.Content>
                           </Card>
-                        </div>
-                        <div className="col-4" style={{margin: 'auto'}} >
-                          <Button color="red" style={{width:'80%', alignItems: 'center',}} className="ui button" onClick={this.closeChat}>
-                            <Icon name='taxi' />Mandar unidad
-                          </Button>
-                        </div>
+                        
+                        
                       </div>
                     </div>:null}
                     <div className="messagesContainer" id='messagesContainer'>
@@ -185,7 +192,9 @@ const ref = firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('mes
             extraData:{
               num_cam:data.UserToCameras[0].Camare.num_cam,
               cameraID:data.UserToCameras[0].Camare.num_cam,
-              webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
+              //webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
+              isHls:true,
+              url: 'http://' + data.UserToCameras[0].Camare.UrlStreamMediaServer.ip_url_ms + ':' + data.UserToCameras[0].Camare.UrlStreamMediaServer. output_port + data.UserToCameras[0].Camare.UrlStreamMediaServer. name + data.UserToCameras[0].Camare.channel 
             }
           }})
         }

@@ -30,7 +30,7 @@ import Tickets from './pages/Tickets';
 import DetailsSupport from './pages/DetailsSupport';
 import Dashboard from './pages/Dashboard';
 
-
+import RtmpPlayer from './components/RtmpPlayer';
 let call = false
 
 class App extends Component {
@@ -84,7 +84,7 @@ class App extends Component {
 
 
   loadData = () => {         
-    if (process.env.NODE_ENV==='production') {
+    if (process.env.NODE_ENV==='production'||true) {
       firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
         if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
           this.showNot('Match','Nuevo match detectado','warning','Ver match',0)
@@ -180,8 +180,10 @@ class App extends Component {
         if (changes.length === 1) {
           let index = changes[0].oldIndex
           let data = changes[0].doc.data()
-          if (this.state.chats[index].messages.length === data.messages.length) {
-            this.setState({stopNotification:true})
+          if (this.state.chats[index]) {
+            if (this.state.chats[index].messages.length === data.messages.length) {
+              this.setState({stopNotification:true})
+            }
           }
         }
         if (this.state.showNotification&&!this.state.fisrtTimeChat&&!this.state.callIsGoing) {
@@ -442,7 +444,7 @@ class App extends Component {
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                    
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />

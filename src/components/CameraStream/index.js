@@ -6,12 +6,13 @@ import constants from '../../constants/constants'
 import conections from '../../conections'
 import { Button, Form, Label, TextArea, Radio, Tab } from 'semantic-ui-react';
 import Chips from 'react-chips'
-
+import RtmpPlayer from '../RtmpPlayer'
 import JSZipUtils from 'jszip-utils'
 import JSZip from 'jszip'
 import saveAs from 'file-saver'
 import jsmpeg from 'jsmpeg';
 import * as moment from 'moment';
+import HlsPlayer from '../HlsPlayer';
 
 var vis = (function(){
     var stateKey, eventKey, keys = {
@@ -76,7 +77,7 @@ class CameraStream extends Component {
                     </Card.Title>
                     {/*<iframe onLoad={this.loaded} id={'the-iframe'+this.props.marker.extraData.id} src={this.props.marker.extraData.url} style={{width:'100%',height:'100%'}}/>*/}
                     <div style={{padding:10}}>
-                        <video  autoplay id="videoElement"/>
+                        <video  autoPlay id="videoElement"/>
                     </div>
                     <div align='left'>{this.props.marker.extraData.name}</div>
                 </Card>
@@ -91,8 +92,8 @@ class CameraStream extends Component {
                         <Card.Text>
                             <Row>
                                 <Col lg={6}>
-                                    <div className="camHolder">  
-                                        <canvas id={'camcanvasstreamer'+this.state.cameraID} ref="camRef" style={{width:'100%',height:this.props.height?this.props.height:'100%'}}></canvas>                      
+                                    <div className="camHolder">
+                                        {this.props.marker.extraData.isRtmp? <RtmpPlayer height={this.props.height} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} />: this.props.marker.extraData.isHls? <HlsPlayer height={this.props.height} width={this.props.width} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} /> :<canvas id={'camcanvasstreamer'+this.state.cameraID} ref="camRef" style={{width:'100%',height:this.props.height?this.props.height:'100%'}}></canvas>                      }                                          
                                     </div>
                                 </Col>
                                 <Col lg={6}>
@@ -167,8 +168,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                             </div>
                         </div>:null} 
                         <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"} style={{width:'100%'}} align='center'>
-                            <div ref="camHolder" style={{width:'100%', height:'100%'}}>  
-                                    <canvas ref="camRef" id={'canvasCamaraStream'+this.state.data.id} style={{width:'100%',height:'100%'}}></canvas>                      
+                            <div ref="camHolder" style={{width:'100%', height:this.props.height?this.props.height:'100%'}}>  
+                            {this.props.marker.extraData.isRtmp? <RtmpPlayer height={this.props.height} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} />: this.props.marker.extraData.isHls? <HlsPlayer height={this.props.height}  width={this.props.width} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} /> : <canvas ref="camRef" id={'canvasCamaraStream'+this.state.data.id} style={{width:'100%',height:'100%'}}></canvas>}
                                     {this.state.tryReconect?'Reconectando...':null}
                             </div> 
                         </div>
@@ -433,6 +434,12 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         return true;
       }
       this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})               
+      if (this.props.marker.extraData.isRtmp === true) {
+        return false
+      }
+      if (this.props.marker.extraData.isHls === true) {
+        return false
+      }
       try{
           var ws = new WebSocket(this.props.marker.extraData.webSocket)
           ws.onerror = this._wsError

@@ -9,6 +9,11 @@
 .holderOfSlides>div>.card>.card-body {
     height: 100% !important;    
 }
+.holderOfSlides{
+    overflow: hidden;
+    display: block;    
+    width: 100%;
+}
 
 .camControl{
     position: fixed;
@@ -26,7 +31,7 @@
 }
 
 .hiddenCameraNotshow{
-    display: none;
+    display: block;
 }
 .ui.card{
     height: auto !important;
