@@ -56,9 +56,9 @@ class Analysis extends Component {
         <div id="analisis_holder" >
             {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">
                 <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
-                    <ToggleButton value={1} variant='outline-primary' ><Icon name="grid layout"/></ToggleButton>
-                    <ToggleButton value={2} variant='outline-primary' ><Icon name="clone"/></ToggleButton>
-                    {this.state.cameraID?<ToggleButton value={3} variant='outline-primary' ><Icon name="square"/></ToggleButton>:null}
+                    <ToggleButton value={1} variant='outline-dark' ><Icon name="grid layout"/></ToggleButton>
+                    <ToggleButton value={2} variant='outline-dark' ><Icon name="clone"/></ToggleButton>
+                    {this.state.cameraID?<ToggleButton value={3} variant='outline-dark' ><Icon name="square"/></ToggleButton>:null}
                 </ToggleButtonGroup>
             </div> :null}
             <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
