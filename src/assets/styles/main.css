@@ -5,19 +5,27 @@ Primary Colors
   /**Colores principales*/
   --mh-color:#aa2823;
   --cj-color:#02004C;
-  --cz-color:#aa2823;
-  --cuau-color:#aa2823;
-  --bj-color:#aa2823;
+  --cz-color:rgb(17, 155, 197);  
+  --bj-color:#186dad;
   --zp-color:#aa2823;
+  --cuau-color:rgba(242,131,62,1);
   /*Segundo color para gradient*/
-  --mh-second: #0a0a0a;
-  --cj-second: #0a0a0a;
-  --cz-second: #0a0a0a;
-  --cuau-second: #0a0a0a;
-  --bj-second: #0a0a0a;
+  --mh-second: #aa2823;
+  --cj-second: #02004C;
+  --cz-second: rgb(17, 155, 197);
+  --bj-second: #186dad;
+  --cuau-second: rgba(221,52,117,1);
+  /*Tercer color*/
+  --mh-third: #0a0a0a;
+  --cj-third: #0a0a0a;
+  --cz-third: #0a0a0a;  
+  --bj-third: #186dad;
+  --cuau-third: rgba(221,52,117,1);
 
+  /*Volver color principal*/
   --main-bg-color:var(--cj-color);
-  --secong-color:var(--cj-second)
+  --secong-color:var(--cj-second);
+  --third-color:var(--cj-third);
 }
 
 
@@ -217,10 +225,10 @@ iframe {
   padding: 55px 55px 37px 55px;
 
   background: var(--main-bg-color);
-  background: -webkit-linear-gradient(top, var(--main-bg-color), var(--secong-color));
-  background: -o-linear-gradient(top, var(--main-bg-color), var(--secong-color));
-  background: -moz-linear-gradient(top, var(--main-bg-color), var(--secong-color));
-  background: linear-gradient(to top, var(--main-bg-color), var(--secong-color));
+  background: -webkit-linear-gradient(top, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: -o-linear-gradient(top, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: -moz-linear-gradient(top, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: linear-gradient(to top, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
 }
 
 
@@ -447,10 +455,10 @@ iframe {
   border-radius: 25px;
 
   background: var(--main-bg-color);
-  background: -webkit-linear-gradient(bottom,var(--main-bg-color), var(--secong-color));
-  background: -o-linear-gradient(bottom, var(--main-bg-color), var(--secong-color));
-  background: -moz-linear-gradient(bottom, var(--main-bg-color), var(--secong-color));
-  background: linear-gradient(to bottom, var(--main-bg-color), var(--secong-color));
+  background: -webkit-linear-gradient(bottom, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: -o-linear-gradient(bottom, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: -moz-linear-gradient(bottom, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: linear-gradient(to bottom, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
   position: relative;
   z-index: 1;
 
