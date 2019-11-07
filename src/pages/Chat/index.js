@@ -68,7 +68,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
                             }}
                             onMapLoad={this._onMapLoad} /> 
                         </div>
-                        <div className="col" style={{height: '100%'}}>
+                        <div className="col camContainerChatDiv" style={{height: '100%'}}>
                           {camData!==undefined?<CameraStream
                             style={{height:'100%'}}
                             hideTitle 

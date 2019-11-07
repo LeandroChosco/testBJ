@@ -179,6 +179,6 @@
     text-align: center;
 }
 
-.camHolder{
+.camContainerChatDiv>.card>.card-body>.camHolder{
     height: 100% !important;
 }
