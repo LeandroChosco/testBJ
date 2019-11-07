@@ -1,3 +1,32 @@
+/*******
+Primary Colors
+****/
+:root{
+  /**Colores principales*/
+  --mh-color:#aa2823;
+  --cj-color:#02004C;
+  --cz-color:rgb(17, 155, 197);  
+  --bj-color:#186dad;
+  --zp-color:#aa2823;
+  --cuau-color:rgba(242,131,62,1);
+  /*Segundo color para gradient*/
+  --mh-second: #aa2823;
+  --cj-second: #02004C;
+  --cz-second: rgb(17, 155, 197);
+  --bj-second: #186dad;
+  --cuau-second: rgba(221,52,117,1);
+  /*Tercer color*/
+  --mh-third: #0a0a0a;
+  --cj-third: #0a0a0a;
+  --cz-third: #0a0a0a;  
+  --bj-third: #186dad;
+  --cuau-third: rgba(221,52,117,1);
+
+  /*Volver color principal*/
+  --main-bg-color:var(--cuau-color);
+  --secong-color:var(--cuau-second);
+  --third-color:var(--cuau-third);
+}
 
 
 
@@ -195,11 +224,11 @@ iframe {
   overflow: hidden;
   padding: 55px 55px 37px 55px;
 
-  background: #aa2823;
-  background: -webkit-linear-gradient(top, rgba(242,131,62,1) 10%, rgba(221,52,117,1) 50%, rgba(75,77,152,1) 100%);
-  background: -o-linear-gradient(top,rgba(242,131,62,1) 10%, rgba(221,52,117,1) 50%, rgba(75,77,152,1) 100%);
-  background: -moz-linear-gradient(top,rgba(242,131,62,1) 10%, rgba(221,52,117,1) 50%, rgba(75,77,152,1) 100%);
-  background: linear-gradient(90deg, rgba(242,131,62,1) 10%, rgba(221,52,117,1) 50%, rgba(75,77,152,1) 100%);
+  background: var(--main-bg-color);
+  background: -webkit-linear-gradient(top, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: -o-linear-gradient(top, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: -moz-linear-gradient(top, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: linear-gradient(to top, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
 }
 
 
@@ -425,11 +454,11 @@ iframe {
   height: 50px;
   border-radius: 25px;
 
-  background: #aa2823;
-  background: -webkit-linear-gradient(bottom, #fff, #0a0a0a);
-  background: -o-linear-gradient(bottom, #fff, #0a0a0a);
-  background: -moz-linear-gradient(bottom, #fff, #0a0a0a);
-  background: linear-gradient(to bottom, #fff, #0a0a0a);
+  background: var(--main-bg-color);
+  background: -webkit-linear-gradient(bottom, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: -o-linear-gradient(bottom, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: -moz-linear-gradient(bottom, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
+  background: linear-gradient(to bottom, var(--main-bg-color) 10%, var(--secong-color) 50%, var(--third-color) 100%);
   position: relative;
   z-index: 1;
 
@@ -553,7 +582,7 @@ iframe {
 
 
 .bg-mh{
-  background: linear-gradient(90deg, rgba(242,131,62,1) 10%, rgba(221,52,117,1) 50%, rgba(75,77,152,1) 100%);
+  background: linear-gradient(to left, var(--main-bg-color) 30%, var(--secong-color) 60%, var(--third-color) 100%);
 }
 
 .btn-outline-light:hover{
