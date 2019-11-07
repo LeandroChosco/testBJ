@@ -68,7 +68,7 @@ const ref = firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('mes
                             }}
                             onMapLoad={this._onMapLoad} /> 
                         </div>
-                        <div className="col" style={{height: '100%'}}>
+                        <div className="col camContainerChatDiv" style={{height: '100%'}}>
                           {camData!==undefined?<CameraStream
                             style={{height:'100%'}}
                             hideTitle 
