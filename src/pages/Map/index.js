@@ -130,7 +130,7 @@ class Map extends Component {
                         num_cam:value.num_cam,
                         lat:parseFloat(value.google_cordenate.split(',')[0]), 
                         lng:parseFloat(value.google_cordenate.split(',')[1]),                            
-                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,                        
+                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' +value.num_cam,                        
                         isHls:true,
                         url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer. name + value.channel 
                     })
