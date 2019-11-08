@@ -56,9 +56,9 @@ class Analysis extends Component {
         <div id="analisis_holder" >
             {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">
                 <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
-                    <ToggleButton value={1} variant='outline-primary' ><Icon name="grid layout"/></ToggleButton>
-                    <ToggleButton value={2} variant='outline-primary' ><Icon name="clone"/></ToggleButton>
-                    {this.state.cameraID?<ToggleButton value={3} variant='outline-primary' ><Icon name="square"/></ToggleButton>:null}
+                    <ToggleButton value={1} variant='outline-dark' ><Icon name="grid layout"/></ToggleButton>
+                    <ToggleButton value={2} variant='outline-dark' ><Icon name="clone"/></ToggleButton>
+                    {this.state.cameraID?<ToggleButton value={3} variant='outline-dark' ><Icon name="square"/></ToggleButton>:null}
                 </ToggleButtonGroup>
             </div> :null}
             <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
@@ -425,28 +425,32 @@ class Analysis extends Component {
                 let actualCamera = {}
                 let title = ''
                 let idCamera = null
+                let index = 1
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1) {
+                        let url = 'rtmp://18.212.185.68/live/cam';                                               
                         auxCamaras.push({
                             id:value.id,
-                            num_cam:value.num_cam,
+                            num_cam:value.num_cam,//index,
                             lat:value.google_cordenate.split(',')[0],
                             lng:value.google_cordenate.split(',')[1],
-                            webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
-                            // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
-                        })
+                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,// + ' #cam' +value.num_cam,
+                            isHls:true,
+                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
+                        })                       
+                        index++
                         if(this.state.id_cam !=0){
-                           if (parseInt(this.state.id_cam) === value.id) {
+                           if (parseInt(this.state.id_cam) === value.id) {                           
                                 title= value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                                 actualCamera = {
                                     id:value.id,
                                     num_cam:value.num_cam,
                                     lat:value.google_cordenate.split(',')[0],
-                                    lng:value.google_cordenate.split(',')[1],
-                                    webSocket: 'ws://' + value.UrlStreamToCameras[0].Url.dns_ip + ':' + value.port_output_streaming,
-                                    // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                                    name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                                    lng:value.google_cordenate.split(',')[1],                                   
+                                    name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,// + ' #cam' +value.num_cam,
+                                    isHls:true,
+                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel 
+            
                                 }
                                 idCamera = value.id
                            }

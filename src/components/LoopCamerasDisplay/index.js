@@ -8,6 +8,7 @@ import Match from '../Match';
 import MediaContainer from '../MediaContainer';
 import conections from '../../conections';
 import * as moment from 'moment'
+  
 class LoopCamerasDisplay extends Component {
     
     state = {
@@ -21,7 +22,7 @@ class LoopCamerasDisplay extends Component {
         video_history:[],
         isplaying:[],
         matches: [],
-        height:'50%',
+        height:undefined,
         isplay: true
     }
 
@@ -35,15 +36,15 @@ class LoopCamerasDisplay extends Component {
             {this.props.error?<div className="errorContainer">
                 Error al cargar informacion: {JSON.stringify(this.props.error)}
             </div>:null}
-            {this.state.markers.map((value,index) =>
-                <div key={value.extraData.id} style={{height:'100%'}} className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}>
-                    <CameraStream 
+            {this.state.height?this.state.markers.map((value,index) =>
+               index===this.state.slideIndex?<div key={value.extraData.id} style={{height:'100%',width:'100%', paddign:'50%'}} align='center' className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}>
+                    <CameraStream
                         ref={'camstreamloopref'+value.extraData.id} 
                         marker={value} 
-                        height={this.state.height}
-                        width={.5} />
-                </div>
-            )}        
+                        height={'100%'}                       
+                        width={'75%'} />
+                </div>:null
+            ):null}        
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
             <div className='row stiky-top'>
                 <div className='col-8'>
@@ -144,10 +145,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         this.refs['camstreamloopref'+this.state.markers[this.state.slideIndex].id]._togglePlayPause()
     } 
 
-    _restartCamStream = async() => {
-        console.log(this.refs)
-        const index = 'camstreamloopref'+this.state.markers[this.state.slideIndex].extraData.id
-        console.log(index)
+    _restartCamStream = async() => {        
+        const index = 'camstreamloopref'+this.state.markers[this.state.slideIndex].extraData.id        
         if(this.refs[index]===undefined)
             return
         this.setState({restarting:true})
@@ -232,14 +231,15 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
             return true
         })    
         this.setState({isplaying:playing})
-        const navHeight = document.getElementsByTagName('nav')[0].scrollHeight
-        const viewBar = document.getElementsByClassName('toggleViewButton')[0].scrollHeight
-        const bottomBar = document.getElementsByClassName('camControl')[0].scrollHeight
-        const documentHeight = window.innerHeight 
+        const navHeight = document.getElementsByTagName('nav')[0].scrollHeight        
+        const viewBar = document.getElementsByClassName('toggleViewButton')[0].scrollHeight        
+        const bottomBar = document.getElementsByClassName('camControl')[0].scrollHeight        
+        const documentHeight = window.innerHeight         
         let map = document.getElementsByClassName('holderOfSlides')[0]//.style.height = documentHeight - navHeight       
         map.style.height  = (documentHeight - navHeight - bottomBar - viewBar) + "px"   
-        map.style.maxHeight  = (documentHeight - navHeight - bottomBar - viewBar) + "px"                      
-        const time =  setInterval(this.changeSlide,5000)        
+        let height = documentHeight - navHeight - bottomBar - viewBar - 150
+        map.style.maxHeight  = (documentHeight - navHeight - bottomBar - viewBar) + "px"                              
+        let time = setInterval(this.changeSlide,1000*10)        
         let cameras = []
           for(let item in responseJson.items){
             let suspect = responseJson.items[item]            
@@ -255,7 +255,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 this.setState({videos:data.data.videos,photos:data.data.photos})
             })
           }
-          this.setState({interval: time,markers:markersForLoop, height:.1,matches:cameras})
+          this.setState({interval: time,markers:markersForLoop, height:height,matches:cameras})
     }
 
     changeSlide = () => {
