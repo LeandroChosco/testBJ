@@ -24,18 +24,20 @@ class SideBar extends Component {
                 const camaras = data.data
                 let auxCamaras = []
                 let options = []
+                let index = 1
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1) {
                         auxCamaras.push({
                             id:value.id,
-                            num_cam:value.num_cam,
+                            num_cam:index,
                             lat:parseFloat(value.google_cordenate.split(',')[0]),
                             lng:parseFloat(value.google_cordenate.split(',')[1]),
                             //webSocket:'ws://'+value.UrlStreamToCameras[0].Url.dns_ip+':'+value.port_output_streaming,
-                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
+                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                             isHls:true,
                             url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel 
                         })
+                        index++
                     }
                     return true;
                 })
