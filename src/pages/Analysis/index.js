@@ -425,19 +425,20 @@ class Analysis extends Component {
                 let actualCamera = {}
                 let title = ''
                 let idCamera = null
+                let index = 1
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1) {
                         let url = 'rtmp://18.212.185.68/live/cam';                                               
                         auxCamaras.push({
                             id:value.id,
-                            num_cam:value.num_cam,
+                            num_cam:index,
                             lat:value.google_cordenate.split(',')[0],
                             lng:value.google_cordenate.split(',')[1],
-                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
+                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                             isHls:true,
                             url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
                         })                       
-                    
+                        index = index +1
                         if(this.state.id_cam !=0){
                            if (parseInt(this.state.id_cam) === value.id) {                           
                                 title= value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
@@ -457,17 +458,6 @@ class Analysis extends Component {
 
                     }
                     return true;
-                })
-                auxCamaras.push({
-                    id:2,
-                    num_cam:2,
-                    lat:19.383124,
-                    lng:-99.1509531,
-                    
-                    // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                    name: '794 Uxmal Ciudad de México, Cd. de México',
-                    isIframe: true,
-                    url:'http://wellkeeper.us/flowplayer/rtmp2.html'
                 })
                 if(idCamera== null){
                     this.setState({places:auxCamaras,loading: false,error:undefined})
