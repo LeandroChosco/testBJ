@@ -128,10 +128,10 @@ class Map extends Component {
                     total = total + 1                                        
                     auxCamaras.push({
                         id:value.id,
-                        num_cam:value.num_cam,//index,
+                        num_cam:index,
                         lat:parseFloat(value.google_cordenate.split(',')[0]), 
                         lng:parseFloat(value.google_cordenate.split(',')[1]),                            
-                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,// + ' #cam' +value.num_cam,                        
+                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' +value.num_cam,                        
                         isHls:true,
                         url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer. name + value.channel 
                     })
