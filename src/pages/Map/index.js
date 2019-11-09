@@ -120,6 +120,7 @@ class Map extends Component {
             let center_lat = 0
             let center_lng = 0
             let total = 0
+            let index =1 
             camaras.map(value=>{
                 if (value.active === 1&& value.flag_streaming === 1) {
                     center_lat = center_lat + parseFloat(value.google_cordenate.split(',')[0]) 
@@ -127,26 +128,16 @@ class Map extends Component {
                     total = total + 1                                        
                     auxCamaras.push({
                         id:value.id,
-                        num_cam:value.num_cam,
+                        num_cam:index,
                         lat:parseFloat(value.google_cordenate.split(',')[0]), 
                         lng:parseFloat(value.google_cordenate.split(',')[1]),                            
-                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,                        
+                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,                        
                         isHls:true,
                         url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer. name + value.channel 
                     })
+                    index++
                 }
                 return true
-            })
-            auxCamaras.push({
-                id:2,
-                num_cam:2,
-                lat:19.3718587,
-                lng:-99.1606554,
-                
-                // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                name: '794 Uxmal Ciudad de México, Cd. de México',
-                isIframe: true,
-                url:'http://wellkeeper.us/flowplayer/rtmp2.html'
             })
             center_lat = center_lat / total
             center_lng = center_lng / total
