@@ -483,6 +483,7 @@ class Analysis extends Component {
                 let title = ''
                 let idCamera = null
                 let index = 1
+                let indexFail = 1
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1) {
                         let url = 'rtmp://18.212.185.68/live/cam';                                               
@@ -516,13 +517,14 @@ class Analysis extends Component {
                     } else { 
                         offlineCamaras.push({
                             id:value.id,
-                            num_cam:index,
+                            num_cam:indexFail,
                             lat:value.google_cordenate.split(',')[0],
                             lng:value.google_cordenate.split(',')[1],
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                             isHls:true,
                             url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
                         })   
+                        indexFail++
                     }
                     return true;
                 })
