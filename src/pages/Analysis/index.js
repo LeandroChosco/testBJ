@@ -59,7 +59,7 @@ class Analysis extends Component {
   render() {
     if (this.state.loading) {
         return (
-            <div id="analisis_holder" >
+            <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
                 <JellyfishSpinner
                     size={250}
                     color="#686769"
