@@ -1,6 +1,7 @@
 .gridCameraContainer{
     overflow-x: hidden;
     margin: auto;
+    padding-bottom: 30px;
 }
 
 
