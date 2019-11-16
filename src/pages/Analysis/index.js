@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap'
-import { Icon, TextArea, Form, Label, Button, Radio } from 'semantic-ui-react'
+import { Icon, TextArea, Form, Label, Button, Radio, Tab } from 'semantic-ui-react'
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
@@ -48,13 +48,66 @@ class Analysis extends Component {
         user_id:0,
         userInfo:{},
         moduleActions:{},
-        id_cam:0
+        id_cam:0,
+        panes: [
+            { menuItem: 'En linea', render: () => <Tab.Pane attached={false}>{this._renderOnlineTab()}</Tab.Pane> },
+            { menuItem: 'Fuera de linea', render: () => <Tab.Pane attached={false}>{this._renderOfflineTab()}</Tab.Pane> },            
+        ],
+        offlineCamaras: []
     }
 
   render() {
+    if (this.state.loading) {
+        return (
+            <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
+                <JellyfishSpinner
+                    size={250}
+                    color="#686769"
+                    loading={this.state.loading}
+                />
+            </div>
+        )    
+    }
     return (
         <div id="analisis_holder" >
-            {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">
+            <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
+                   
+            {
+                this._renderModals()
+            }
+            
+        </div>
+    );
+  }
+
+  _renderOfflineTab = () => {
+    return (
+        <div>
+            <GridCameraDisplay
+                        ref='myChild'
+                        error={this.state.error}
+                        loading={this.state.loading}
+                        places = {this.state.offlineCamaras}
+                        toggleControlsBottom = {this._toggleControlsBottom}
+                        recordignToggle={this._recordignToggle}
+                        loadingRcord={this.state.loadingRcord}
+                        isRecording={this.state.isRecording}
+                        recordingCams={this.state.recordingCams}
+                        recordingProcess={this.state.recordingProcess}
+                        loadingSnap={this.state.loadingSnap}
+                        downloadFiles={this._downloadFiles}
+                        loadingFiles={this.state.loadingFiles}
+                        makeReport={this._makeReport}
+                        moduleActions={this.state.moduleActions}
+                        matches={this.props.matches}
+                        snapShot={this._snapShot}/>
+        </div>
+    )
+  }
+  _renderOnlineTab = () => {
+      return (
+          <Fragment>
+               {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">
                 <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
                     <ToggleButton value={1} variant='outline-dark' ><Icon name="grid layout"/></ToggleButton>
                     <ToggleButton value={2} variant='outline-dark' ><Icon name="clone"/></ToggleButton>
@@ -62,16 +115,19 @@ class Analysis extends Component {
                 </ToggleButtonGroup>
             </div> :null}
             <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
-         <JellyfishSpinner
-                size={250}
-                color="#686769"
-                loading={this.state.loading}
-            />
-         </div>
+         
+            </div>
             {
-                this._showDisplay()
+                this._showDisplay()                
             }
-            <Modal size="lg" show={this.state.modalProblem} onHide={()=>this.setState({modalProblem:false, cameraProblem:{},problemDescription:'',phones:[],mails:[]})}>
+          </Fragment>
+      )
+  }
+
+  _renderModals = () =>{
+      return (
+          <Fragment>
+              <Modal size="lg" show={this.state.modalProblem} onHide={()=>this.setState({modalProblem:false, cameraProblem:{},problemDescription:'',phones:[],mails:[]})}>
                             <Modal.Header closeButton>
                                 Reportar problema en camara {this.state.cameraProblem.num_cam}
                             </Modal.Header>
@@ -148,8 +204,8 @@ class Analysis extends Component {
                                 {this.state.recordMessage}
                             </Modal.Body>
                         </Modal>
-        </div>
-    );
+          </Fragment>
+      )
   }
 
   onChange = chips => {
@@ -422,10 +478,12 @@ class Analysis extends Component {
             .then((response) => {
                 const camaras = response.data
                 let auxCamaras = []
+                let offlineCamaras = []
                 let actualCamera = {}
                 let title = ''
                 let idCamera = null
                 let index = 1
+                let indexFail = 1
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1) {
                         let url = 'rtmp://18.212.185.68/live/cam';                                               
@@ -456,13 +514,24 @@ class Analysis extends Component {
                            }
                         }
 
+                    } else { 
+                        offlineCamaras.push({
+                            id:value.id,
+                            num_cam:indexFail,
+                            lat:value.google_cordenate.split(',')[0],
+                            lng:value.google_cordenate.split(',')[1],
+                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
+                            isHls:true,
+                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
+                        })   
+                        indexFail++
                     }
                     return true;
                 })
                 if(idCamera== null){
-                    this.setState({places:auxCamaras,loading: false,error:undefined})
+                    this.setState({places:auxCamaras,offlineCamaras:offlineCamaras,loading: false,error:undefined})
                 } else {
-                    this.setState({laces:auxCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera},error:undefined})
+                    this.setState({laces:auxCamaras,offlineCamaras:offlineCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera},error:undefined})
                     this.setState({displayTipe:3})
                 }
             }).catch(error=>{

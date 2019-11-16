@@ -133,7 +133,7 @@ class CameraStream extends Component {
 
 this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
-                                        {this.state.video_history.items.map((row,index)=>
+                                        {this.state.video_history.items ? this.state.video_history.items.map((row,index)=>
                                                 <div className="col-12" align='center' key={index}>
                                                     <div className='row'>
                                                         <div className='col'><h5>{row.fecha}</h5></div>
@@ -142,7 +142,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                                         {row.videos.map((value,i)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={i} />)}
                                                     </div>
                                                 </div>
-                                            )}
+                                            ):null}
                                         </div>
                                         {this.state.video_history.length === 0 ?
                                             <div align='center'>
@@ -387,6 +387,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
       if (this.props.marker.extraData === undefined) {
           return false
       }
+      if(this.props.showButtons){
+        this._loadFiles()
+    }
       this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})               
       if (this.props.marker.extraData.isRtmp === true) {
         return false
