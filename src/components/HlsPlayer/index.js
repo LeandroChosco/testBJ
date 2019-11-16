@@ -39,6 +39,7 @@ class HlsPlayer extends Component{
             playback: {
                 playInline: true,
             },
+            preload: 'metadata'
         });        
         this.setState({player:player})
     }
