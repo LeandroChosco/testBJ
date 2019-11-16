@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import favicon from '../../assets/images/icons/favicon.jpeg'
+import favicon from '../../assets/images/icons/favicon.png'
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
