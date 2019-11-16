@@ -20,7 +20,7 @@ import Welcome from './pages/Welcome';
 
 import firebase from './constants/config';
 import firebaseC5 from './constants/configC5';
-import firebaseC5cuajimalpa from './constants/configC5CJ'
+ 
 import Matches from './components/Matches';
 import DetailsEmergency from './pages/DetailsEmergency';
 import Chat from './pages/Chat';
@@ -29,6 +29,7 @@ import DetailsComplaiment from './pages/DetailsComplaiment';
 import Tickets from './pages/Tickets';
 import DetailsSupport from './pages/DetailsSupport';
 import Dashboard from './pages/Dashboard';
+import Cuadrantes from './pages/Cuadrantes'
 
 import RtmpPlayer from './components/RtmpPlayer';
 let call = false
@@ -98,7 +99,7 @@ class App extends Component {
         })})
       })
   
-      firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
+      firebaseC5.app('c5cuajimalpa').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
         if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
           this.showNot('SOS','Nueva alerta de ayuda generada','error','Ver detalles',5,docs.docs[docs.docs.length-1].id)
           
@@ -112,7 +113,7 @@ class App extends Component {
           return value
         })})
       })
-      firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
+      firebaseC5.app('c5cuajimalpa').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
         if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
           this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',4,docs.docs[0].id)
         }
@@ -127,7 +128,7 @@ class App extends Component {
       })       
       
   
-      firebaseC5.app('c5virtual').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{          
+      firebaseC5.app('c5cuajimalpa').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{          
         if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimecomplaiments) {
           this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2,docs.docs[0].id)
         }
@@ -140,7 +141,7 @@ class App extends Component {
         })})
       }) 
   
-      firebaseC5.app('c5virtual').firestore().collection('calls').orderBy('dateTime','desc').onSnapshot(docs => {
+      firebaseC5.app('c5cuajimalpa').firestore().collection('calls').orderBy('dateTime','desc').onSnapshot(docs => {
         if (this.state.showNotification&&!this.state.fisrtTimeCall&& !this.state.callIsGoing) {
           const notification = this.refs.notificationSystem;
           this.setState({stopNotification:true})      
@@ -151,7 +152,7 @@ class App extends Component {
             return
           }
           call = true
-          //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
+          //firebaseC5.app('c5cuajimalpa').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
             notification.addNotification({
               title:'Llama entrante de '+docs.docs[0].data().user_nicename,
               message: 'Se registro una llamada entrante',
@@ -444,7 +445,8 @@ class App extends Component {
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                    
+        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} /> 
+        <Route path="/cuadrantes" exact render={(props) => <Cuadrantes matches={this.state.matches}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />

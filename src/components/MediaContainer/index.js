@@ -6,12 +6,14 @@ import constants from '../../constants/constants';
 import Axios from 'axios';
 import { NOTFOUND } from 'dns';
 import { stat } from 'fs';
-
+import Clappr from 'clappr'
+import HlsPlayer from '../HlsPlayer';
 
 class MediaContainer extends Component {
     
     state = {
-        modal : false,        
+        modal : false,
+        player: undefined        
     }
 
   render() {
@@ -28,14 +30,27 @@ class MediaContainer extends Component {
                 {this.props.hideDelete?null:<Button basic negative onClick={this._deleteFile}><i className='fa fa-trash'></i> Eliminar</Button>}
             </Modal.Header>
             <Modal.Body>
-                {this.props.video?<video ref='element' autoPlay controls src={(this.props.dns_ip?this.props.dns_ip:constants.base_url)+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}}/>:null}
+                {/* {this.props.video?<video ref='element' autoPlay controls src={(this.props.dns_ip?this.props.dns_ip:constants.base_url)+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}}/>:null} */}
+                {this.props.video?
+                    <HlsPlayer src = {(this.props.dns_ip?this.props.dns_ip:constants.base_url)+':'+constants.apiPort+'/'+ this.props.src}
+                    num_cam={this.props.value.id} />
+                : null}
                 {this.props.image?<img id='imagecontainerfrommedia' src={constants.base_url+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}} crossOrigin='true' alt='img'/>:null}
             </Modal.Body>
         </Modal>
     </div>
     );
-  }
+    }
 
+    componentDidMount(){        
+        
+        //console.log('url',(this.props.dns_ip?this.props.dns_ip:constants.base_url)+':'+constants.apiPort+'/'+ this.props.src) 
+       
+    }
+
+    componentWillUnmount(){
+        
+    }
     _saveFile = () => {
         console.log("dns_ip: ", this.props.dns_ip)
         setTimeout(async()=>{
