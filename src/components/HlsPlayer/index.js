@@ -45,7 +45,7 @@ class HlsPlayer extends Component{
          player.on(Clappr.Events.PLAYER_ERROR, err =>  {
              console.log('error en el player',err)
             if (err.code === 'hls:3') {
-                player.load(player.playerInfo.options.sourse)
+                player.load(this.props.src)
                 player.play()
              }
          });
