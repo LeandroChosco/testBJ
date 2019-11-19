@@ -372,7 +372,7 @@ class Analysis extends Component {
                         matches={this.props.matches}
                         snapShot={this._snapShot}/>)
         case 3:
-            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} width={.5} hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
+            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450}  hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
         default:
            return null
     }
