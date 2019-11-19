@@ -78,9 +78,9 @@ class Header extends Component {
                     }
                 </Nav>
                 <Nav>
-                    {this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this.props._reloadCams}>
+                    {/* {this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this.props._reloadCams}>
                         <i className={this.props.loadingRestart?'fa fa-repeat fa-spin':"fa fa-repeat"}></i>
-                    </Button>:null}
+                    </Button>:null} */}
                     <NavDropdown className="light" title={this.props.userInfo.user_nicename}>
                         <NavDropdown.Item onClick={this._logOut}>Cerrar sesion</NavDropdown.Item>
                     </NavDropdown>
