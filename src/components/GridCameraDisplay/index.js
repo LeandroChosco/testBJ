@@ -114,6 +114,7 @@ class GridCameraDisplay extends Component {
                         <Button basic disabled={this.props.loadingSnap||this.props.loadingRcord||this.props.loadingFiles||this.state.restarting||this.props.recordingCams.indexOf(this.state.selectedCamera)>-1} circular onClick={()=>this.props.downloadFiles(this.state.selectedCamera, {videos:this.state.videos,images:this.state.photos})} loading={this.props.loadingFiles}> <i className="fa fa-download"></i></Button>
                         <Button basic disabled={this.props.loadingSnap||this.props.loadingRcord||this.props.loadingFiles||this.state.restarting||this.props.recordingCams.indexOf(this.state.selectedCamera)>-1} circular onClick={()=>this.props.makeReport(this.state.selectedCamera)}> <i className="fa fa-warning"></i></Button>
                         {/* <Button basic circular disabled={this.props.loadingSnap||this.props.loadingRcord||this.props.loadingFiles||this.state.restarting||this.props.recordingCams.indexOf(this.state.selectedCamera)>-1} onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button> */}
+                        <Button basic circular onClick={()=>this.props.changeStatus(this.state.selectedCamera)}> <i className="fa fa-exchange"></i></Button>
                 </div>
                 <div className='col-5'>
                     <b>Camara {this.state.selectedCamera.num_cam}</b> {this.state.selectedCamera.name} 

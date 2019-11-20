@@ -171,6 +171,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                 {this.props.showExternal?<Button basic disabled={this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.data.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>:null}
                                 <Button basic disabled={this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} onClick={()=>this.setState({modalProblem:true})}> <i className="fa fa-warning"></i></Button>
                                 {/* <Button basic disabled={this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button> */}
+                                {/* <Button basic onClick={this._chageCamStatus}> <i className="fa fa-exchange"></i></Button> */}
                             </Card.Footer>:
                         null}
                     </Card.Body>   
@@ -651,6 +652,22 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
             console.log(err)
             return false
         }
+    }
+
+    _chageCamStatus = () =>{
+        conections.changeCamStatus(this.state.cameraID)
+            .then(response=>{
+                console.log(response)
+                if(response.status === 200) {
+                    if (response.data.success) {
+                        const event = new Event('restartCamEvent')
+                        window.dispatchEvent(event)
+                    }
+                }                
+            })
+            .catch(err=>{
+                console.log(err)
+            })
     }
 }
 export default CameraStream;
