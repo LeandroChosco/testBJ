@@ -100,7 +100,8 @@ class Analysis extends Component {
                         makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
-                        snapShot={this._snapShot}/>
+                        snapShot={this._snapShot}
+                        changeStatus={this._chageCamStatus}/>
         </div>
     )
   }
@@ -351,7 +352,8 @@ class Analysis extends Component {
                         makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
-                        snapShot={this._snapShot}/>)
+                        snapShot={this._snapShot}
+                        changeStatus={this._chageCamStatus}/>)
         case 2:
             return (<LoopCamerasDisplay
                         ref='myChild'
@@ -370,7 +372,8 @@ class Analysis extends Component {
                         makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
-                        snapShot={this._snapShot}/>)
+                        snapShot={this._snapShot}
+                        changeStatus={this._chageCamStatus}/>)
         case 3:
             return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450}  hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
         default:
@@ -551,6 +554,22 @@ class Analysis extends Component {
             })
             return value;
         })
+    }
+    _chageCamStatus = (camare) =>{
+        conections.changeCamStatus(camare.id)
+            .then(response=>{
+                console.log(response)
+                if(response.status === 200) {
+                    if (response.data.success) {
+                        const event = new Event('restartCamEvent')
+                        window.dispatchEvent(event)
+                    }
+                }                
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+
     }
 }
 
