@@ -25,6 +25,9 @@ class SideBar extends Component {
                 let auxCamaras = []
                 let options = []
                 let index = 1
+                if (camaras === undefined) {
+                    return
+                }
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1) {
                         auxCamaras.push({
@@ -41,6 +44,7 @@ class SideBar extends Component {
                     }
                     return true;
                 })
+
                 auxCamaras.push({
                     id:2,
                     num_cam:2,
@@ -50,7 +54,8 @@ class SideBar extends Component {
                     name: '794 Uxmal Ciudad de México, Cd. de México',
                     isIframe: true,
                     url:'http://wellkeeper.us/flowplayer/rtmp2.html'
-                })    
+                })  
+                
                 auxCamaras.map((value)=>{
                     options.push({
                         value: value.id,

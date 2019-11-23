@@ -7,7 +7,15 @@ import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import '../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css'
 import './style.css'
 
-class Header extends Component {
+class Header extends Component { 
+    _goCuadrantes = () => {
+        if(this.props.isSidemenuShow){
+            this.props.toggleSideMenu()
+        }
+        document.getElementsByClassName('navbar-collapse')[0].classList.remove('show')
+        this.props.history.push('/cuadrantes')
+    }
+
     _goAnalitics = () => {
         if(this.props.isSidemenuShow){
             this.props.toggleSideMenu()
@@ -61,8 +69,8 @@ class Header extends Component {
                    {this.props.userInfo.modules?
                         this.props.userInfo.modules.map(value=>
                             <Navbar.Text key={value.id} >
-                                <Button variant="outline-light" onClick = {value.id===1?this._cameraAction:value.id===2?this._goAnalitics:value.id===3?this._goChat:value.id===4?this._goDashboard:null}>
-                                    <i className={value.id===1?'fa fa-video-camera':value.id===2?'fa fa-simplybuilt':value.id===3?'fa fa-comments':value.id===4?'fa fa-bar-chart':null}></i>
+                                <Button variant="outline-light" onClick = {value.id===1?this._cameraAction:value.id===2?this._goAnalitics:value.id===3?this._goChat:value.id===4?this._goDashboard:value.id===5?this._goCuadrantes:null}>
+                                    <i className={value.id===1?'fa fa-video-camera':value.id===2?'fa fa-simplybuilt':value.id===3?'fa fa-comments':value.id===4?'fa fa-bar-chart':value.id===5?'fa fa-object-ungroup':null}></i>
                                     {value.name}
                                 </Button>
                             </Navbar.Text>
@@ -70,9 +78,9 @@ class Header extends Component {
                     }
                 </Nav>
                 <Nav>
-                    {this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this.props._reloadCams}>
+                    {/*this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this.props._reloadCams}>
                         <i className={this.props.loadingRestart?'fa fa-repeat fa-spin':"fa fa-repeat"}></i>
-                    </Button>:null}
+                </Button>:null*/}
                     <NavDropdown className="light" title={this.props.userInfo.user_nicename}>
                         <NavDropdown.Item onClick={this._logOut}>Cerrar sesion</NavDropdown.Item>
                     </NavDropdown>

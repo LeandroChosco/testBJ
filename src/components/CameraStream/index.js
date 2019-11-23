@@ -146,7 +146,7 @@ class CameraStream extends Component {
 
 this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
-                                        {this.state.video_history.items.map((row,index)=>
+                                        {this.state.video_history.items ? this.state.video_history.items.map((row,index)=>
                                                 <div className="col-12" align='center' key={index}>
                                                     <div className='row'>
                                                         <div className='col'><h5>{row.fecha}</h5></div>
@@ -155,7 +155,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                                         {row.videos.map((value,i)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={i} />)}
                                                     </div>
                                                 </div>
-                                            )}
+                                            ):null}
                                         </div>
                                         {this.state.video_history.length === 0 ?
                                             <div align='center'>
@@ -177,13 +177,14 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                         {this.props.showButtons?
                             <Card.Footer>
                                 {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic disabled={this.state.photos.length>=5||this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>:null:null}
-                                <Button basic disabled={this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} onClick={this._togglePlayPause}><i className={this.state.isPlay?'fa fa-pause':'fa fa-play'}></i></Button>
+                                {/*<Button basic disabled={this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} onClick={this._togglePlayPause}><i className={this.state.isPlay?'fa fa-pause':'fa fa-play'}></i></Button>*/}
                                 {this.props.moduleActions?this.props.moduleActions.btnrecord?<Button basic disabled={this.state.videos.length>=5||this.state.loadingSnap||this.state.isLoading||this.state.restarting||this.state.loadingFiles} loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={ this.state.isRecording?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>:null:null}
                                 <Button basic disabled={this.state.loadingFiles||this.state.loadingSnap||this.state.isLoading||this.state.restarting} loading={this.state.loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>            
                                 {this.props.hideFileButton?null:<Button className="pull-right" variant="outline-secondary" onClick={()=>this.setState({showData:!this.state.showData})}><i className={this.state.showData?'fa fa-video-camera':'fa fa-list'}></i></Button>}
                                 {this.props.showExternal?<Button basic disabled={this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.data.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>:null}
                                 <Button basic disabled={this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} onClick={()=>this.setState({modalProblem:true})}> <i className="fa fa-warning"></i></Button>
-                                <Button basic disabled={this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button>
+                                <Button basic onClick={this._chageCamStatus}> <i className="fa fa-exchange"></i></Button>
+                                {/*<Button basic disabled={this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button>*/}
                             </Card.Footer>:
                         null}
                     </Card.Body>   
@@ -433,6 +434,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         }               
         return true;
       }
+      if(this.props.showButtons){
+        this._loadFiles()
+    }
       this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})               
       if (this.props.marker.extraData.isRtmp === true) {
         return false
@@ -694,6 +698,23 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
             console.log(err)
             return false
         }
+    }
+
+    _chageCamStatus = () =>{
+        conections.changeCamStatus(this.state.cameraID)
+            .then(response=>{
+                console.log(response)
+                if(response.status === 200) {
+                    if (response.data.success) {
+                        const event = new Event('restartCamEvent')
+                        window.dispatchEvent(event)
+                    }
+                }                
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+
     }
 }
 export default CameraStream;
