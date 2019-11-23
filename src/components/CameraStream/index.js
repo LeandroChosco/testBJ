@@ -77,7 +77,7 @@ class CameraStream extends Component {
                     </Card.Title>
                     {/*<iframe onLoad={this.loaded} id={'the-iframe'+this.props.marker.extraData.id} src={this.props.marker.extraData.url} style={{width:'100%',height:'100%'}}/>*/}
                     <div style={{padding:10}}>
-                        <video  autoPlay id="videoElement"/>
+                        <video  autoplay id="videoElement"/>
                     </div>
                     <div align='left'>{this.props.marker.extraData.name}</div>
                 </Card>

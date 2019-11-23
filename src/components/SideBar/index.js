@@ -20,7 +20,7 @@ class SideBar extends Component {
     }
 
     componentDidMount(){
-     conections.getAllCams().then((data) => {            
+     conections.getAllCams().then((data) => {
                 const camaras = data.data
                 let auxCamaras = []
                 let options = []
