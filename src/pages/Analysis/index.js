@@ -100,7 +100,8 @@ class Analysis extends Component {
                         makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
-                        snapShot={this._snapShot}/>
+                        snapShot={this._snapShot}
+                        changeStatus={this._chageCamStatus}/>
         </div>
     )
   }
@@ -351,7 +352,8 @@ class Analysis extends Component {
                         makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
-                        snapShot={this._snapShot}/>)
+                        snapShot={this._snapShot}
+                        changeStatus={this._chageCamStatus}/>)
         case 2:
             return (<LoopCamerasDisplay
                         ref='myChild'
@@ -370,9 +372,10 @@ class Analysis extends Component {
                         makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
-                        snapShot={this._snapShot}/>)
+                        snapShot={this._snapShot}
+                        changeStatus={this._chageCamStatus}/>)
         case 3:
-            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={.45} width={.5} hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
+            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450}  hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
         default:
            return null
     }
@@ -515,16 +518,18 @@ class Analysis extends Component {
                         }
 
                     } else { 
-                        offlineCamaras.push({
-                            id:value.id,
-                            num_cam:indexFail,
-                            lat:value.google_cordenate.split(',')[0],
-                            lng:value.google_cordenate.split(',')[1],
-                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
-                            isHls:true,
-                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
-                        })   
-                        indexFail++
+                        if(value.active === 1 ){
+                            offlineCamaras.push({
+                                id:value.id,
+                                num_cam:indexFail,
+                                lat:value.google_cordenate.split(',')[0],
+                                lng:value.google_cordenate.split(',')[1],
+                                name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
+                                isHls:true,
+                                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
+                            })   
+                            indexFail++
+                        }                        
                     }
                     return true;
                 })
@@ -551,6 +556,22 @@ class Analysis extends Component {
             })
             return value;
         })
+    }
+    _chageCamStatus = (camare) =>{
+        conections.changeCamStatus(camare.id)
+            .then(response=>{
+                console.log(response)
+                if(response.status === 200) {
+                    if (response.data.success) {
+                        const event = new Event('restartCamEvent')
+                        window.dispatchEvent(event)
+                    }
+                }                
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+
     }
 }
 

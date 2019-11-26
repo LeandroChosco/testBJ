@@ -72,7 +72,10 @@ export default {
         return Axios.get(/* constants.base_url+ */'http://3.133.151.209:1337/dashboard/mood')
     },
     loadCams:()=>{        
-        return Axios.get(constants.base_url+':1337/cams?sort=num_cam asc&active=1&limit=-1')
+        return Axios.get(constants.base_url+ ':1337/cams?sort=num_cam asc&active=1&limit=-1')
+    },
+    changeCamStatus:(id)=>{        
+        return Axios.put(constants.base_url+ ':' +  constants.apiPort + '/control-cams/change-status/' + id)
     }
 
 
