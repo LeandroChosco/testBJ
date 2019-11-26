@@ -43,13 +43,17 @@ const COLORS =  scm.from_hue(235)
 
   const MOODS = {
     "Happy":"Feliz",
+    "Happiness":"Feliz",
     "Sad":"Triste",
+    "Sadness":"Triste",
     "Angry":"Enojado",
+    "Anger":"Enojado",
     "Surprised":"Sorprendido",
+    "Surprise":"Sorprendido",
     "Disgusted":"Disgustado",
     "Contemptuous":"Desprecio",
   }
-  
+
 class Dashboard extends Component {
 
     state = {    
@@ -498,10 +502,19 @@ class Dashboard extends Component {
   }
 
   processMood = (response) => {
-    const data = response.data.data.map(v=>{
+    let data =  []
+    let indexes =  []
+    response.data.data.map(v=>{
       v.mood = MOODS[v.mood] ? MOODS[v.mood] : v.mood
+      if (indexes.indexOf(v.mood)>-1) {
+        data[indexes.indexOf(v.mood)].percentage = (v.percentage + data[indexes.indexOf(v.mood)].percentage) / 2
+      } else {
+        data.push(v)
+        indexes.push(v.mood)
+      }
       return v;
     })    
+    console.log('mood data',data)
     this.setState({personsMood:data,loadingRecognitionMood:false})
   }
   
