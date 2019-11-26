@@ -46,7 +46,7 @@ class LoopCamerasDisplay extends Component {
                 </div>:null
             ):null}        
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
-            <div className='row stiky-top'>
+        {this.state.markers[this.state.slideIndex]?<div className='row stiky-top'>
                 <div className='col-8'>
                         {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic circular disabled={this.state.photos.length>=5||this.state.restarting||this.props.loadingSnap||this.props.loadingFiles||this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.markers[this.state.slideIndex].extraData)}><i className='fa fa-camera'></i></Button>:null:null}
                         {/* <Button basic circular disabled={this.state.restarting||this.props.loadingSnap||this.props.loadingFiles||this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} onClick={this._playPause}><i className={this.state.isplay?'fa fa-pause':'fa fa-play'}></i></Button> */}
@@ -60,7 +60,7 @@ class LoopCamerasDisplay extends Component {
                 <div className='col-4'>
                     <Button onClick={this._openCameraInfo} className='pull-right' primary><i className={ this.state.autoplay?'fa fa-square':'fa fa-play'}></i> { this.state.autoplay?'Parar loop':'Continuar loop'} <i className={ this.state.autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}></i></Button>                
                 </div>
-            </div>
+            </div>:null}
             <div className={!this.state.autoplay?'row showfilesinfocamera':'row hidefiles'}>
                 <div className="col snapshots">
                     Fotos
