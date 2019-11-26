@@ -18,7 +18,7 @@ class Cuadrantes extends Component{
             <div>
                 <div className="containerCuadrantes">
                     {this.state.auxCuadrantes.map((value,index) =>
-                            <div key = {`cuadrnate${index}`}className="ui left labeled button buttonCuadrantes" >
+                            <div key = {`cuadrante${index}`} className="ui left labeled button buttonCuadrantes" >
                                 <a className="ui right pointing basic label" onClick={()=>this._camsCuadrante(index)}>{value}</a>
                                 <button className="ui icon button">
                                     <i aria-hidden="true" className="plus icon" onClick={() => this._addCams(value)} ></i>
