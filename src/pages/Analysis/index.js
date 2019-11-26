@@ -110,9 +110,9 @@ class Analysis extends Component {
           <Fragment>
                {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">
                 <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
-                    <ToggleButton value={1} variant='outline-danger' ><Icon name="grid layout"/></ToggleButton>
-                    <ToggleButton value={2} variant='outline-danger' ><Icon name="clone"/></ToggleButton>
-                    {this.state.cameraID?<ToggleButton value={3} variant='outline-danger' ><Icon name="square"/></ToggleButton>:null}
+                    <ToggleButton value={1} variant='outline-primary' ><Icon name="grid layout"/></ToggleButton>
+                    <ToggleButton value={2} variant='outline-primary' ><Icon name="clone"/></ToggleButton>
+                    {this.state.cameraID?<ToggleButton value={3} variant='outline-primary' ><Icon name="square"/></ToggleButton>:null}
                 </ToggleButtonGroup>
             </div> :null}
             <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
@@ -375,7 +375,7 @@ class Analysis extends Component {
                         snapShot={this._snapShot}
                         changeStatus={this._chageCamStatus}/>)
         case 3:
-            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450} hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
+            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450}  hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
         default:
            return null
     }
@@ -518,7 +518,7 @@ class Analysis extends Component {
                         }
 
                     } else { 
-                        if (value.active === 1 ) {
+                        if(value.active === 1 ){
                             offlineCamaras.push({
                                 id:value.id,
                                 num_cam:indexFail,
@@ -529,7 +529,7 @@ class Analysis extends Component {
                                 url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
                             })   
                             indexFail++
-                        }
+                        }                        
                     }
                     return true;
                 })
@@ -557,9 +557,8 @@ class Analysis extends Component {
             return value;
         })
     }
-
-    _chageCamStatus = (camera) =>{
-        conections.changeCamStatus(camera.id)
+    _chageCamStatus = (camare) =>{
+        conections.changeCamStatus(camare.id)
             .then(response=>{
                 console.log(response)
                 if(response.status === 200) {

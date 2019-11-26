@@ -40,16 +40,15 @@ class HlsPlayer extends Component{
                 playInline: true,
             },
             preload: 'metadata'
-        });
+        });       
         
-        player.on(Clappr.Events.PLAYER_ERROR, err =>  {
-            console.log('error en el player',err)
-           if (err.code === 'hls:3') {
-               player.load(this.props.src)
-               player.play()
-            }
-        });
-
+         player.on(Clappr.Events.PLAYER_ERROR, err =>  {
+             console.log('error en el player',err)
+            if (err.code === 'hls:3') {
+                player.load(this.props.src)
+                player.play()
+             }
+         });
         this.setState({player:player})
     }
 
