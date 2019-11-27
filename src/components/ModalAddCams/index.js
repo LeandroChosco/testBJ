@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { Modal, ListGroup } from 'react-bootstrap';
-import { Checkbox, Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
+import { Checkbox, Dimmer, Loader, Image, Segment, Button } from 'semantic-ui-react'
 import ModalViewCam  from '../ModalViewCam'
 import './style.css'
 import conections from '../../conections';
+import img from '../../assets/images/paragraph.png'
 class ModalAddCams extends Component{
     state = {
         auxCams:[],
@@ -16,22 +17,22 @@ class ModalAddCams extends Component{
         return(
             <Modal backdrop={'static'} show={this.props.modal} onHide={this.props.hide}>
                 <Modal.Header closeButton>                      
-                    <p>Agregar Camaras {this.props.name_cuadrante}</p>
+                    <p>Agregar Camaras {this.props.name_cuadrante.name}</p>
                 </Modal.Header>
                 <Modal.Body className="camsGroup">
                     {this.state.loading ? 
                         <Segment style={{height: '100%'}}>
                     
-                            <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+                            <Image src={img} />
                         </Segment>
                         :
                         <Fragment>
                             <ListGroup>
                                 {this.state.auxCams.map((value)=> 
-                                    <ListGroup.Item key={value.num_cam}>
+                                    <ListGroup.Item key={value.id}>
                                         <div className="row">
                                             <div className="col col-9">
-                                                <Checkbox onChange={this._selectionCheckbox} value={value.num_cam} label={'Camara '+value.num_cam} />
+                                                <Checkbox onChange={this._selectionCheckbox} value={value.id} checked={value.selected} label={'Camara '+value.num_cam} />
                                             </div>
                                             <div className="col col-3">
                                                 <p style={{textAlign:'right', cursor:'pointer'}} onClick={() => this._viewCam(value)}><b>Ver</b></p>
@@ -41,7 +42,7 @@ class ModalAddCams extends Component{
                                 )}
                             </ListGroup>
                             <div style={{textAlign:'right', padding:0, marginTop:10}} className="col">
-                                <button className="ui button" onClick={this._addCam}>Agregar</button>
+                                <Button className="ui button" onClick={this._addCam}>Agregar</Button>
                             </div>
                             </Fragment>
                     }
@@ -58,21 +59,15 @@ class ModalAddCams extends Component{
     }
 
     _loadCameras = () => {
-        conections.getAllCams()
+        let aux = []
+        conections.loadCamsCuadrantes(this.props.name_cuadrante.id)
             .then((response) => {
-                this.state.auxCams = response.data.filter(item =>{
-                    return (item.active === 1 && item.flag_streaming === 1)
-                }).sort((a,b) => {
-                    if (a.num_cam > b.num_cam) {
-                        return 1;
-                      }
-                      if (a.num_cam < b.num_cam) {
-                        return -1;
-                      }
-                      return 0;
-                })
-            //console.log('CAMARAS MODALL',this.state.auxCams)
-            this.setState({loading:false})
+                //console.log('camaras cuadrantesss', response)
+                this.setState({loading:false, auxCams:response.data.data.map(item =>{
+                    item.selected = item.RelCuadranteCam ? item.RelCuadranteCam.activo ? true: false : false
+                    return item
+                })})
+                
         })
     }
 
@@ -84,21 +79,44 @@ class ModalAddCams extends Component{
     _selectionCheckbox = (event, data) =>{
         //console.log(data)
         let aux = this.state.selection
-        if(data.checked){
-            aux.push(data.value)
-        }else{
-            delete aux[aux.indexOf(data.value)]
+        let found = false
+        aux.map(select=>{
+            if (select.id === data.value) {
+                found = true
+                select.selected = data.checked
+            }
+            return select
+        })
+        if (!found) {
+            aux.push({id:data.value,selected:data.checked})
         }
 
+        let cams = this.state.auxCams
         
+        cams.map(cam=>{
+            if (cam.id === data.value) {
+                cam.selected = data.checked
+            }
+            return cam
+        })
 
-        this.setState({selection: aux})
-
+        this.setState({selection: aux, auxCams:cams})
+        //console.log('selecccion',this.state.selection)
     }
 
     _addCam = () =>{
-        let camsAdd = this.state.selection.filter(item =>{return item != 'empty' })
-        console.log('selection',camsAdd, this.props.name_cuadrante)
+        let camsAdd = {
+            id_cuadrante:this.props.name_cuadrante.id,
+            cams:this.state.selection
+        }
+        console.log('dataAdd',camsAdd)
+        if(this.state.selection.length != 0){
+            conections.addCamsCuadrante(camsAdd).then((response) =>{
+                console.log('resAdd',response)
+                 this.props.hide(this.props.name_cuadrante.id)
+            })
+        }else
+            this.props.hide()
     }
 
 }

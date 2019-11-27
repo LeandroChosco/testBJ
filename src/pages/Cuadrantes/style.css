@@ -9,3 +9,12 @@
 .formatInput{
     width: 150px;
 }
+
+.errorContainer{
+    position: absolute;
+    top:40%;
+    font-size: 1.5em;
+    color: black;
+    height: 100%;
+    margin: auto;
+}

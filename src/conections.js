@@ -76,8 +76,22 @@ export default {
     },
     changeCamStatus:(id)=>{        
         return Axios.put(constants.base_url+ ':' +  constants.apiPort + '/control-cams/change-status/' + id)
+    },
+    loadCamsCuadrantes:(id_cuadrante)=>{        
+        return Axios.get(constants.base_url+ ':' +  constants.apiPort + '/register-cams/cuadrantes-cams?id_cuadrante='+id_cuadrante)
+    },
+    getCuadrantes:()=>{        
+        return Axios.get(constants.base_url+ ':' +  constants.apiPort + '/register-cams/cuadrantes')
+    },
+    newCuadrante:(data)=>{
+        return Axios.post(constants.base_url+':'+constants.apiPort+'/register-cams/new-cuadrante',data)
+    },
+    addCamsCuadrante:(data)=>{
+        return Axios.post(constants.base_url+':'+constants.apiPort+'/register-cams/cuadrante-cam',data)
+    },
+    getCamsCuadrante:(id_cuadrante)=>{        
+        return Axios.get(constants.base_url+ ':' +  constants.apiPort + '/register-cams/cuadrante/cams?id_cuadrante='+id_cuadrante)
     }
-
 
     
 }
