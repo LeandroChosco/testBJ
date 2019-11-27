@@ -154,6 +154,7 @@ const ref = firebaseC5.app('c5virtual').firestore().collection('messages')
   }
 
   changeChat = (chat,i) => {
+    console.log(chat)
     this.setState({chatId:'',loading:true, camData: undefined});
     setTimeout(()=>{
       this._changeUserCam(chat)

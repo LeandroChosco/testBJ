@@ -20,7 +20,6 @@ import Welcome from './pages/Welcome';
 
 import firebase from './constants/config';
 import firebaseC5 from './constants/configC5';
- 
 import Matches from './components/Matches';
 import DetailsEmergency from './pages/DetailsEmergency';
 import Chat from './pages/Chat';
@@ -29,7 +28,6 @@ import DetailsComplaiment from './pages/DetailsComplaiment';
 import Tickets from './pages/Tickets';
 import DetailsSupport from './pages/DetailsSupport';
 import Dashboard from './pages/Dashboard';
-import Cuadrantes from './pages/Cuadrantes'
 
 import RtmpPlayer from './components/RtmpPlayer';
 let call = false
@@ -445,8 +443,7 @@ class App extends Component {
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} /> 
-        <Route path="/cuadrantes" exact render={(props) => <Cuadrantes matches={this.state.matches}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                    
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />
