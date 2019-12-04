@@ -495,11 +495,13 @@ class Analysis extends Component {
                             num_cam:index,
                             lat:value.google_cordenate.split(',')[0],
                             lng:value.google_cordenate.split(',')[1],
-                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' +value.num_cam,
+                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                             isHls:true,
-                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
+                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                            real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
+                            camera_number:value.num_cam,
                         })                       
-                        index++
+                        index = index +1
                         if(this.state.id_cam !=0){
                            if (parseInt(this.state.id_cam) === value.id) {                           
                                 title= value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
@@ -508,9 +510,11 @@ class Analysis extends Component {
                                     num_cam:value.num_cam,
                                     lat:value.google_cordenate.split(',')[0],
                                     lng:value.google_cordenate.split(',')[1],                                   
-                                    name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' +value.num_cam,
+                                    name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
                                     isHls:true,
-                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel 
+                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                    real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
+                                    camera_number:value.num_cam,
             
                                 }
                                 idCamera = value.id
@@ -526,7 +530,9 @@ class Analysis extends Component {
                                 lng:value.google_cordenate.split(',')[1],
                                 name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                                 isHls:true,
-                                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
+                                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
+                                camera_number:value.num_cam,
                             })   
                             indexFail++
                         }                        

@@ -49,7 +49,7 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
               <div className="col-8 messages">
                     {!loading&&chatId!==''&&chats[index]?
                     <div className="cameraView">
-                      <h2 className={from} style={{textAlign: 'center', height: '10%'}}>{from}</h2> 
+                      <h2 className={from} style={{textAlign: 'center', height: '10%'}}>{from==='Chat Soporte'?'Chat C5':from}</h2> 
                       <div className="row" style={{height: '70%'}}>                       
                         <div className="col" style={{height: '100%'}}>
                           <MapContainer                 
@@ -160,7 +160,7 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
       this._changeUserCam(chat)
       this.props.stopNotification()
       ref.doc(chat.id).update({c5Unread:0}).then(()=>{
-        this.setState({text:'',from:'Chat Soporte'})
+        this.setState({text:'',from:'Chat C5'})
       })  
       this.setState({
         chatId:chat.id,
@@ -227,7 +227,7 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
     this.props.stopNotification()
     ref.doc(this.state.chatId).update({
       messages:messages,
-      from:'Chat Soporte',
+      from:'Chat C5',
       userUnread:this.props.chats[this.state.index].userUnread?
         this.props.chats[this.state.index].userUnread+1:
         1,
@@ -235,7 +235,7 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
         this.props.chats[this.state.index].policeUnread+1:
         1,
     }).then(()=>{
-      this.setState({text:'',from:'Chat Soporte'})
+      this.setState({text:'',from:'Chat C5'})
     })    
   }
 
