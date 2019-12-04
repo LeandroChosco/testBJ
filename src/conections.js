@@ -91,6 +91,9 @@ export default {
     },
     getCamsCuadrante:(id_cuadrante)=>{        
         return Axios.get(constants.base_url+ ':' +  constants.apiPort + '/register-cams/cuadrante/cams?id_cuadrante='+id_cuadrante)
+    },
+    getCamMatches:(num_cam)=>{        
+        return Axios.get(/* constants.base_url+ */'http://3.133.151.209:1337/matchApi?num_cam='+num_cam)
     }
 
     
