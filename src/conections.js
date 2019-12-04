@@ -72,15 +72,20 @@ export default {
         return Axios.get( constants.base_url + ':1337/dashboard/mood')
     },
     loadCams:()=>{        
-        return Axios.get(constants.base_url+ ':1337/cams?sort=num_cam asc&active=1&limit=-1')
+        return Axios.get(constants.base_url + ':1337/cams?sort=num_cam asc&active=1&limit=1000&populate=false')
     },
     changeCamStatus:(id)=>{        
-        return Axios.put(constants.base_url+ ':' +  constants.apiPort + '/control-cams/change-status/' + id)
+        return Axios.put(constants.base_url + ':' +  constants.apiPort + '/control-cams/change-status/' + id)
     },
     getCamMatches:(num_cam)=>{        
-        return Axios.get( constants.base_url+ ':1337/matchApi?num_cam='+num_cam)
+        return Axios.get( constants.base_url + ':1337/matchApi?num_cam='+num_cam)
+    },
+    getCamMatchesDetail:(matchId)=>{        
+        return Axios.get( constants.base_url + ':1337/matchApi/'+matchId)
+    },
+    getCambyNumCam:(num_cam)=>{        
+        return Axios.get( constants.base_url + ':1337/cams?num_cam='+num_cam)
     }
-
 
     
 }

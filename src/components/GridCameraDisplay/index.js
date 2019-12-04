@@ -258,7 +258,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     
               }
         }) 
-        conections.getCamMatches(cam?cam.num_cam:this.state.selectedCamera?this.state.selectedCamera.num_cam:0).then(response=>{
+        console.log(cam)        
+        conections.getCamMatches(cam?cam.real_num_cam:this.state.selectedCamera?this.state.selectedCamera.real_num_cam:0).then(response=>{
             if (response.status === 200) {
                 this.setState({matches:response.data})
             }
@@ -281,10 +282,10 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 })
                 this.setState({isplaying:isp})
             }
-            this.setState({selectedCamera: marker.extraData, autoplay:false, slideIndex: index, isRecording: recording,isplay:this.state.isplaying[this.state.slideIndex]===undefined?true:this.state.isplaying[this.state.slideIndex]})
+            this.setState({ matches:[],selectedCamera: marker.extraData, autoplay:false, slideIndex: index, isRecording: recording,isplay:this.state.isplaying[this.state.slideIndex]===undefined?true:this.state.isplaying[this.state.slideIndex]})
             this._loadFiles(marker.extraData)
         } else {
-            this.setState({selectedCamera: {}, autoplay:true, videos:[],photos:[], video_history:[]})
+            this.setState({selectedCamera: {}, autoplay:true, videos:[],photos:[], video_history:[], matches:[]})
         }             
         
     }
