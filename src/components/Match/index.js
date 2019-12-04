@@ -23,7 +23,11 @@ class Match extends Component {
             return (
                 <div style={{height:'65px',width:'65px', padding:5, position:'relative'}} onClick={this.props._toggleSmallBig}>
                     {this.props.info.status!==0?<div className='notificationDot'></div>:null}
-                    <Image style={{height:'100%',width:'100%', borderRadius:30}} src={'http://95.216.37.253:3000/images/'+this.props.info.name.replace(/ /g,'')+'/'+this.props.info.messageId+'-face.jpeg'} />
+                    {this.props.info.faceImage?
+                        <Image style={{height:'100%',width:'100%', borderRadius:30}} src={'data:image/png;base64,'+this.props.info.faceImage} />:
+                        <Image style={{height:'100%',width:'100%', borderRadius:30}} src={this.props.info.name?'http://95.216.37.253:3000/images/'+this.props.info.name.replace(/ /g,'')+'/'+this.props.info.messageId+'-face.jpeg':this.state.imageCamera} />
+                    }
+                    
                 </div>
             )
         }      
@@ -35,14 +39,19 @@ class Match extends Component {
                     </Card.Meta> */}
                     <Card.Description>
                         <div className =" imageContainer row">
-                            <div className = 'col-4 suspectPhoto' align="center"><Image src={this.props.info.name?'http://95.216.37.253:3000/images/'+this.props.info.name.replace(/ /g,'')+'/'+this.props.info.messageId+'-face.jpeg':this.state.imageCamera} /></div>
+                            <div className = 'col-4 suspectPhoto' align="center">
+                                {this.props.info.faceImage?
+                                    <Image src={'data:image/png;base64,'+this.props.info.faceImage} />:
+                                    <Image src={this.props.info.name?'http://95.216.37.253:3000/images/'+this.props.info.name.replace(/ /g,'')+'/'+this.props.info.messageId+'-face.jpeg':this.state.imageCamera} />
+                                }
+                            </div>
                             <div className = 'col-8 limitlines' align='left'> 
                                 <div align='right'>
-                                    {this.props.info?this.props.info.dateTime?this.props.info.dateTime:'25-03-2019 14:35':'25-03-2019 14:35'}
+                                    {this.props.info?this.props.info.dateTime?this.props.info.dateTime:new Date(this.props.info.DwellTime).toLocaleString():'25-03-2019 14:35'}
                                 </div>
                                 <div className="textcontainerdescription">
                                     <p>
-                                        <b>{this.props.info?this.props.info.name?this.props.info.name:this.state.name:this.state.name}</b>, 
+                                        <b>{this.props.info?this.props.info.name?this.props.info.name:this.props.info.IdentityName:this.state.name}</b>, 
                                         {this.props.info.location}
                                     </p>
                                 </div>
@@ -66,7 +75,7 @@ class Match extends Component {
             this.props.toggleControls() 
         }
         
-        window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/' + this.props.info.messageId,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500')
+        window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/' + (this.props.info.messageId?this.props.info.messageId:this.props.info.id),'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500')
         //this.props.history.push('/detalles/'+this.state.extraData.id)
     }
     componentDidMount(){
