@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap'
 import './style.css'
-import { Input, Icon, TextArea, Form, Label, Button, Radio, Tab } from 'semantic-ui-react'
+import { Input, Icon, TextArea, Form, Label, Button, Radio, Tab, Dropdown } from 'semantic-ui-react'
 import  ModalAddCams  from '../../components/ModalAddCams'
 import conections from '../../conections';
 import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
@@ -50,7 +50,56 @@ class Cuadrantes extends Component{
         userInfo:{},
         moduleActions:{},
         id_cam:0,
-        cuadranteActual:''
+        cuadranteActual:'',
+        optionsCuadrantes: [
+            {
+                key: 'Cuadrante 1',
+                text: 'Cuadrante 1',
+                value: 'Cuadrante 1',
+            },{
+                key: 'Cuadrante 2',
+                text: 'Cuadrante 2',
+                value: 'Cuadrante 2',
+            },{
+                key: 'Cuadrante 3',
+                text: 'Cuadrante 3',
+                value: 'Cuadrante 3',
+            },{
+                key: 'Cuadrante 4',
+                text: 'Cuadrante 4',
+                value: 'Cuadrante 4',
+            },{
+                key: 'Cuadrante 5',
+                text: 'Cuadrante 5',
+                value: 'Cuadrante 5',
+            },{
+                key: 'Cuadrante 6',
+                text: 'Cuadrante 6',
+                value: 'Cuadrante 6',
+            },{
+                key: 'Cuadrante 7',
+                text: 'Cuadrante 7',
+                value: 'Cuadrante 7',
+            },{
+                key: 'Cuadrante 8',
+                text: 'Cuadrante 8',
+                value: 'Cuadrante 8',
+            },{
+                key: 'Cuadrante 9',
+                text: 'Cuadrante 9',
+                value: 'Cuadrante 9',
+            },{
+                key: 'Cuadrante 10',
+                text: 'Cuadrante 10',
+                value: 'Cuadrante 10',
+            },{
+                key: 'Otro',
+                text: 'Otro',
+                value: 'Otro',
+            }    
+        ],
+        flagOtroName: false,
+        flagDelete: false
 
     }
 
@@ -59,8 +108,14 @@ class Cuadrantes extends Component{
             <div>
                 <div className="containerCuadrantes">
                     {this.state.cuadrantes.map((value) =>
+                            
                             <Button key = {value.id} className="buttonCuadrantes" as='div' labelPosition='left'>
-                                <Label as='a' basic pointing='right' onClick={()=>this._camsCuadrante(value.id)}>
+                                {
+                                    this.state.flagDelete 
+                                    ?<Button style={{borderRadius:'.28571429rem'}} color='red' icon='minus' onClick={()=>this._deleteCuadrante(value.id)} />
+                                    :null
+                                }
+                                <Label as='a' basic pointing='right'  className={this.state.cuadranteActual == value.id ? 'colorSelected': 'colorNormal'} onClick={()=>this._camsCuadrante(value.id)}>
                                 {value.name}
                                 </Label>
                                 <Button icon onClick={() => this._addCams(value)}>
@@ -70,11 +125,25 @@ class Cuadrantes extends Component{
                             
                         )
                     }
-                    <Button className="buttonCuadrantes" onClick={()=>this._newCuadrante(true)}>Nuevo Cuadrante</Button> 
+                    {
+                        this.state.flagDelete 
+                        ?<Button className="buttonCuadrantes" onClick={()=>this.setState({flagDelete: false, cuadranteActual:1})}>Cancelar</Button> 
+                        :
+                            this.state.cuadrantes.length != 0 
+                            ?<Button  style={{width:'50px',margin:'0px'}} className="buttonCuadrantes delete" color="red" onClick={()=>this.setState({flagDelete: true, cuadranteActual:''})}>
+                                <Icon name='trash alternate'/>
+                            </Button> 
+                            :null
+                    }
+                    <Button className="buttonCuadrantes" onClick={()=>this._newCuadrante(true)}>Crear Cuadrante</Button> 
                     {this.state.showInput ?
                         <div className="ui action input">
                             <Button style={{marginRight: '3px'}} onClick={() => this.setState({showInput:false, valueNew:''})} icon='close' />
-                            <Input focus className="formatInput" onChange={(e,{value})=>this.setState({valueNew:value})} value={this.state.valueNew} placeholder='Nombre Cuadrante' />
+                            {
+                                this.state.flagOtroName
+                                ?<Input focus className="formatInput" onChange={(e,{value})=>this.setState({valueNew:value})} value={this.state.valueNew} placeholder='Nombre Cuadrante' />
+                                :<Dropdown className="formatInput" onChange={(e,{value})=>this._changeName(value)} placeholder='Nombre Cuadrante' selection options={this.state.optionsCuadrantes} />
+                            }    
                             <Button style={{marginLeft: '4px'}}  onClick={()=>this._newCuadrante(false)} disabled={this.state.valueNew === ''}>Agregar</Button>
                         </div>
                     :null}   
@@ -92,8 +161,6 @@ class Cuadrantes extends Component{
                         />
                     </div>
                     :this.state.camsCuadrante.length != 0 ?
-                            <div>
-                                <h4>{this.state.cuadranteActual}</h4>
                                 <GridCameraDisplay
                                     ref='myChild'
                                     error={this.state.error}
@@ -113,7 +180,6 @@ class Cuadrantes extends Component{
                                     matches={this.props.matches}
                                     snapShot={this._snapShot}
                                     changeStatus={this._chageCamStatus}/>
-                            </div>
                         :<div className="errorContainer">
                             Cuadrante sin camaras asignadas
                         </div>
@@ -131,7 +197,27 @@ class Cuadrantes extends Component{
         this._loadCuadrantes()
     }
 
+    _changeName = (value) =>{
+        if(value === 'Otro'){
+            this.setState({flagOtroName:true})
+        }else{
+            this.setState({valueNew:value})
+        }
+        
+    }
+
+    _deleteCuadrante = (id) =>{
+        //console.log('idCuadrante', id)
+        conections.deleteCuadrante(id).then((res)=>{
+            console.log('resDelete',res)
+            if(res.data.success){
+                this._loadCuadrantes()
+            }
+        })
+    }
+
     _loadCuadrantes = () => {
+        this.setState({loading: true})
         conections.getCuadrantes()
             .then((response) => {
                 //console.log('cuadrantesss', response)
@@ -143,9 +229,9 @@ class Cuadrantes extends Component{
     _newCuadrante = (action) => {
         console.log(action)
         if(action)
-            this.setState({showInput:true})
+            this.setState({showInput:true, flagOtroName:false})
         else{
-            this.setState({showInput:false})
+            this.setState({showInput:false, flagOtroName:false})
             conections.newCuadrante({name: this.state.valueNew})
                 .then((resNew)=>{
                     this.setState({valueNew:''})
@@ -161,6 +247,7 @@ class Cuadrantes extends Component{
         this.setState({showModal:false})
         //console.log('idddd',id)
         if(id){
+            this.setState({loading: true})
             this._camsCuadrante(id)
         }
        
@@ -172,12 +259,12 @@ class Cuadrantes extends Component{
     }
 
     _camsCuadrante = (id) => {
-        this.state.camsCuadrante.map(item =>{
+        this.state.cuadrantes.map(item =>{
             if(item.id === id){
-                this.setState({cuadranteActual:item.name})
+                this.setState({cuadranteActual:item.id})
             }
         })
-        this.setState({loading: true})
+        
         conections.getCamsCuadrante(id).then((response)=>{
             //console.log('res',response.data.data)
             const camaras = response.data.data

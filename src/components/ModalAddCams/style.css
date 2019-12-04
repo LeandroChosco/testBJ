@@ -1,4 +1,6 @@
+
 .camsGroup{
-    height: 400px !important;
+    height: 630px !important;
     overflow-y: auto !important;
+    overflow-x: hidden !important;
 }
