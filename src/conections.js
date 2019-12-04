@@ -76,6 +76,9 @@ export default {
     },
     changeCamStatus:(id)=>{        
         return Axios.put(constants.base_url+ ':' +  constants.apiPort + '/control-cams/change-status/' + id)
+    },
+    getCamMatches:(num_cam)=>{        
+        return Axios.get( constants.base_url+ ':1337/matchApi?num_cam='+num_cam)
     }
 
 
