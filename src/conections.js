@@ -96,7 +96,22 @@ export default {
         return Axios.put(constants.base_url+ ':' +  constants.apiPort + '/register-cams/cuadrante?id_cuadrante='+id_cuadrante)
     },    
     getCamMatches:(num_cam)=>{        
+        return Axios.get( constants.base_url + ':1337/matchApi?num_cam='+num_cam)        
+    },
+    changeCamStatus:(id)=>{        
+        return Axios.put(constants.base_url + ':' +  constants.apiPort + '/control-cams/change-status/' + id)
+    },
+    getMatches: () => {        
+        return Axios.get( constants.base_url + ':1337/matchApi')
+    },
+    getCamMatches:(num_cam)=>{        
         return Axios.get( constants.base_url + ':1337/matchApi?num_cam='+num_cam)
+    },
+    getCamMatchesDetail:(matchId)=>{        
+        return Axios.get( constants.base_url + ':1337/matchApi/'+matchId)
+    },
+    getCambyNumCam:(num_cam)=>{        
+        return Axios.get( constants.base_url + ':1337/cams?num_cam='+num_cam)
     }
 
     

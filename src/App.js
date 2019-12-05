@@ -29,8 +29,10 @@ import Tickets from './pages/Tickets';
 import DetailsSupport from './pages/DetailsSupport';
 import Dashboard from './pages/Dashboard';
 import Cuadrantes from './pages/Cuadrantes'
+import socketIOClient from 'socket.io-client';
+import sailsIOClient from 'sails.io.js';
+import constants from './constants/constants';
 
-import RtmpPlayer from './components/RtmpPlayer';
 let call = false
 
 class App extends Component {
@@ -82,10 +84,52 @@ class App extends Component {
     }    
   }
 
+  sortConvs = (a,b) => {
+    if (b.DwellTime < a.DwellTime) {
+        return -1;
+    }
+    if (a.DwellTime < b.DwellTime) {
+        return 1;
+    }
+    return 0;
+  }
+
+
+
+  matchesApiHandler = (event) => {
+    console.log('matches handler',event)
+    if (event.length !== undefined) {
+      let data = event.sort(this.sortConvs)
+      this.setState({matches:data})      
+    } else {
+      if( event.verb === 'created') {                
+        let data =this.state.matches
+        data.push(event.data)
+        data = data.sort(this.sortConvs);                
+        console.log(data)
+        this.showNot('Match','Nuevo match detectado','warning','Ver match',0)
+        this.setState({matches:data})     
+      } 
+      if( event.verb === 'updated') {      
+        let data =this.state.matches
+        data = data.map(match=>{
+          if(match.id === event.id){
+            match = {
+                ...match,
+                ...event.data
+            }
+          }
+          return match
+        }).sort(this.sortConvs);
+        this.setState({matches:data})     
+      }
+    }
+  }
+
 
   loadData = () => {         
     if (process.env.NODE_ENV==='production'||true) {
-      firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
+      /*firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
         if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
           this.showNot('Match','Nuevo match detectado','warning','Ver match',0)
         }
@@ -96,7 +140,23 @@ class App extends Component {
           value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
           return value
         })})
-      })
+      })*/
+
+      let io;
+      if (socketIOClient.sails) {
+        io = socketIOClient;
+        if(!io.socket.isConnected()&&!io.socket.isConnecting()) {
+          io.socket.reconnect()
+        }
+      } else {
+        io = sailsIOClient(socketIOClient);
+      }
+      this.setState({io:io})          
+      io.sails.url = constants.base_url+':1337';
+      io.socket.get('/matchApi', this.matchesApiHandler)
+      io.socket.on('/matchApi', this.matchesApiHandler)
+
+      
   
       firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
         if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
