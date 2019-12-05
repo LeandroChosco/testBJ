@@ -209,7 +209,7 @@ class Cuadrantes extends Component{
     _deleteCuadrante = (id) =>{
         //console.log('idCuadrante', id)
         conections.deleteCuadrante(id).then((res)=>{
-            console.log('resDelete',res)
+            //console.log('resDelete',res)
             if(res.data.success){
                 this._loadCuadrantes()
             }
@@ -222,12 +222,18 @@ class Cuadrantes extends Component{
             .then((response) => {
                 //console.log('cuadrantesss', response)
                 this.setState({cuadrantes: response.data.data})
-                this._camsCuadrante(this.state.cuadrantes[0].id)
+                if(this.props.match.params.id){
+                    this._camsCuadrante(this.props.match.params.id)
+                    this.setState({cuadranteActual:this.props.match.params.id})
+                }
+                else{
+                    this._camsCuadrante(this.state.cuadrantes[0].id)
+                    this.setState({cuadranteActual:this.state.cuadrantes[0].id})
+                }
         })
     }
 
     _newCuadrante = (action) => {
-        console.log(action)
         if(action)
             this.setState({showInput:true, flagOtroName:false})
         else{
@@ -245,7 +251,6 @@ class Cuadrantes extends Component{
 
     _hideModal = (id) =>{
         this.setState({showModal:false})
-        //console.log('idddd',id)
         if(id){
             this.setState({loading: true})
             this._camsCuadrante(id)
@@ -259,6 +264,7 @@ class Cuadrantes extends Component{
     }
 
     _camsCuadrante = (id) => {
+        //console.log('idCams',id)
         this.state.cuadrantes.map(item =>{
             if(item.id === id){
                 this.setState({cuadranteActual:item.id})
