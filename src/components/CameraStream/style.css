@@ -27,6 +27,11 @@
     animation-iteration-count: infinite;
 }
 
+.styleTag{
+    margin-left: 20px !important;
+    margin-top: 2px !important;
+}
+
 @keyframes opacityOnAndOff {
     0% {
         opacity: 0;

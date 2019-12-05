@@ -496,6 +496,7 @@ class Analysis extends Component {
                             lat:value.google_cordenate.split(',')[0],
                             lng:value.google_cordenate.split(',')[1],
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
+                            rel_cuadrante:value.RelCuadranteCams,
                             isHls:true,
                             url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                             real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
@@ -542,7 +543,7 @@ class Analysis extends Component {
                 if(idCamera== null){
                     this.setState({places:auxCamaras,offlineCamaras:offlineCamaras,loading: false,error:undefined})
                 } else {
-                    this.setState({laces:auxCamaras,offlineCamaras:offlineCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera},error:undefined})
+                    this.setState({places:auxCamaras,offlineCamaras:offlineCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera},error:undefined})
                     this.setState({displayTipe:3})
                 }
             }).catch(error=>{
