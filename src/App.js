@@ -107,6 +107,8 @@ class App extends Component {
         data.push(event.data)
         data = data.sort(this.sortConvs);                
         console.log(data)
+        this.showNot('Match','Nuevo match detectado','warning','Ver match',0)
+        this.setState({matches:data})     
       } 
       if( event.verb === 'updated') {      
         let data =this.state.matches
@@ -119,6 +121,7 @@ class App extends Component {
           }
           return match
         }).sort(this.sortConvs);
+        this.setState({matches:data})     
       }
     }
   }
