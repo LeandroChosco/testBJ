@@ -180,9 +180,13 @@ class Cuadrantes extends Component{
                                     matches={this.props.matches}
                                     snapShot={this._snapShot}
                                     changeStatus={this._chageCamStatus}/>
-                        :<div className="errorContainer">
-                            Cuadrante sin camaras asignadas
-                        </div>
+                        : this.state.cuadrantes.length != 0 
+                            ?<div className="errorContainer">
+                                Cuadrante sin camaras asignadas
+                            </div>
+                            :<div className="errorContainer">
+                                No hay cuadrantes que mostrar
+                            </div>
                     }
                 </div>
                 {
@@ -218,9 +222,9 @@ class Cuadrantes extends Component{
 
     _loadCuadrantes = () => {
         this.setState({loading: true})
-        conections.getCuadrantes()
-            .then((response) => {
-                //console.log('cuadrantesss', response)
+        conections.getCuadrantes().then((response) => {
+            //console.log('cuadrantesss', response)
+            if(response.data.data.length != 0){
                 this.setState({cuadrantes: response.data.data})
                 if(this.props.match.params.id){
                     this._camsCuadrante(this.props.match.params.id)
@@ -230,6 +234,10 @@ class Cuadrantes extends Component{
                     this._camsCuadrante(this.state.cuadrantes[0].id)
                     this.setState({cuadranteActual:this.state.cuadrantes[0].id})
                 }
+            }else{
+                this.setState({loading: false})
+            }
+                    
         })
     }
 
@@ -238,13 +246,12 @@ class Cuadrantes extends Component{
             this.setState({showInput:true, flagOtroName:false})
         else{
             this.setState({showInput:false, flagOtroName:false})
-            conections.newCuadrante({name: this.state.valueNew})
-                .then((resNew)=>{
-                    this.setState({valueNew:''})
-                    if(resNew.data.success){
-                        this._loadCuadrantes()
-                    }
-                })
+            conections.newCuadrante({name: this.state.valueNew}).then((resNew)=>{
+                this.setState({valueNew:''})
+                if(resNew.data.success){
+                    this._loadCuadrantes()
+                }
+            })
         }
         
     }
