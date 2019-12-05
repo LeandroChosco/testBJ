@@ -29,6 +29,13 @@ class ModalAddCams extends Component{
             filter: textFilter({
                 placeholder: 'Buscar Número'
             })
+          },{
+            dataField: "direccion",
+            text: 'Dirección',
+            style: { width: '200px' },
+            filter: textFilter({
+                placeholder: 'Buscar Dirección'
+            })
           }, {
             dataField: 'ver',
             formatter:(cel,row) =>this._buttonVer(cel,row) ,
@@ -39,14 +46,14 @@ class ModalAddCams extends Component{
           }]
         const selectRow = {
             mode: 'checkbox',
-            clickToSelect: true,
+            clickToSelect: false,
             onSelect: (row, isSelect, rowIndex, e) => this._selectionCheckbox(row, isSelect, rowIndex, e),
             hideSelectAll: true,
             selected: this.state.checkboxSelect
             // onSelectAll: (isSelect, rows, e) => this._selectionAll(isSelect, rows, e)
         }
         return(
-            <Modal backdrop={'static'} show={this.props.modal} onHide={this.props.hide}>
+            <Modal style={{display: this.state.showModalView ? 'none' : 'block'}} size="xl" backdrop={'static'} show={this.props.modal} onHide={this.props.hide}>
                 <Modal.Header closeButton>                      
                     <p>Agregar Camaras <b style={{color:'black'}}>{this.props.name_cuadrante.name}</b></p>
                 </Modal.Header>
@@ -58,23 +65,9 @@ class ModalAddCams extends Component{
                         </Segment>
                         :
                         <Fragment>
-                            {/* <ListGroup>
-                                {this.state.auxCams.map((value)=> 
-                                    <ListGroup.Item key={value.id}>
-                                        <div className="row">
-                                            <div className="col col-9">
-                                                <Checkbox onChange={this._selectionCheckbox} value={value.id} checked={value.selected} label={'Camara '+value.num_cam} />
-                                            </div>
-                                            <div className="col col-3">
-                                                <p style={{textAlign:'right', cursor:'pointer'}} onClick={() => this._viewCam(value)}><b>Ver</b></p>
-                                            </div>
-                                        </div>
-                                    </ListGroup.Item>
-                                )}
-                            </ListGroup> */}
                             <BootstrapTable keyField='id' data={ this.state.auxCams } columns={ columns } pagination={paginationFactory()} filter={filterFactory()} selectRow={ selectRow } />
                             <div style={{textAlign:'center', padding:0, marginTop:10}} className="col">
-                                <Button style={{width:'200px'}} onClick={this._addCam}>Agregar<Icon style={{marginLeft:'3px'}} name='add' /></Button>
+                                <Button style={{width:'360px',marginLeft:'30px'}} onClick={this._addCam} disabled={this.state.selection.length === 0}>Agregar<Icon style={{marginLeft:'3px'}} name='add' /></Button>
                                 {/* <Button style={{fontSize:'16px'}} onClick={this._addCam} disabled={this.state.selection.length === 0} circular icon='add' /> */}
                             </div>
                             </Fragment>
@@ -95,9 +88,21 @@ class ModalAddCams extends Component{
         let aux = []
         conections.loadCamsCuadrantes(this.props.name_cuadrante.id)
             .then((response) => {
-                //console.log('camaras cuadrantesss', response)
+                console.log('camaras cuadrantesss', response)
                 this.setState({loading:false, auxCams:response.data.data.map(item =>{
-                    item.selected = item.RelCuadranteCam ? item.RelCuadranteCam.activo ? true: false : false
+                    item.direccion = item.street+' '+item.number+', '+item.township+', '+item.town+', '+item.state
+                    if(item.RelCuadranteCams.length != 0){
+                        item.RelCuadranteCams.map(cam =>{
+                            if(cam.id_cuadrante === this.props.name_cuadrante.id){
+                                if(cam.activo)
+                                    item.selected =true
+                                else
+                                    item.selected = false
+                            }
+                        })
+                    }else{
+                        item.selected = false
+                    }   
                     return item
                     }).sort(function(a, b) {
                         if (a.num_cam > b.num_cam) {
@@ -111,7 +116,7 @@ class ModalAddCams extends Component{
                 })
 
                 let auxSelection = []
-                //console.log('data',this.state.auxCams)
+                console.log('data',this.state.auxCams)
                 this.state.auxCams.map(item =>{
                     if(item.selected){
                         auxSelection.push(item.id)
@@ -237,7 +242,7 @@ class ModalAddCams extends Component{
 
     _buttonVer = (cell,row) =>{
         return(
-            <Button onClick={() => this._viewCam(row)} style={{fontSize:'14px', margin:'auto', textAlign:'center', padding:'0px', height:'21px', width:'80px'}}>Ver</Button>
+            <Button onClick={() => this._viewCam(row)} style={{fontSize:'14px', margin:'auto', textAlign:'center', padding:'0px', height:'30px', width:'150px'}}>Ver</Button>
         )
     }
 

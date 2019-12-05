@@ -72,7 +72,7 @@ export default {
         return Axios.get(/* constants.base_url+ */'http://3.133.151.209:1337/dashboard/mood')
     },
     loadCams:()=>{        
-        return Axios.get(/* constants.base_url+ */'http://3.133.151.209:1337/cams?sort=num_cam asc&active=1&limit=-1&populate=false')
+        return Axios.get(/* constants.base_url+ */'http://3.133.151.209:1337/cams?sort=num_cam asc&active=1&limit=1000&populate=false')
     },
     changeCamStatus:(id)=>{        
         return Axios.put(constants.base_url+ ':' +  constants.apiPort + '/control-cams/change-status/' + id)
@@ -94,6 +94,9 @@ export default {
     },
     deleteCuadrante:(id_cuadrante)=>{
         return Axios.put(constants.base_url+ ':' +  constants.apiPort + '/register-cams/cuadrante?id_cuadrante='+id_cuadrante)
+    },    
+    getCamMatches:(num_cam)=>{        
+        return Axios.get(/* constants.base_url+ */'http://3.133.151.209:1337/matchApi?num_cam='+num_cam)
     }
 
     

@@ -176,13 +176,11 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 </div>
                 <div className="col matchesgrid" align="center">
                     Historial
-                    {this.props.matches?this.props.matches.map((value, index)=>
+                    {this.state.matches.length>0?this.state.matches.map((value, index)=>
                         {
-                            if(index%this.state.selectedCamera.num_cam!==0)
-                                return(null);
                             return(<Match key={index} info={value} toggleControls={this._closeControl} />)
                         })
-                    :null}
+                    :<h4>Sin historial de matches</h4>}
                 </div>
             </div>            
         </div> 
@@ -259,7 +257,13 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 this.setState({video_history:resHistory.data})
     
               }
-        })          
+        }) 
+        console.log(cam)        
+        conections.getCamMatches(cam?cam.real_num_cam:this.state.selectedCamera?this.state.selectedCamera.real_num_cam:0).then(response=>{
+            if (response.status === 200) {
+                this.setState({matches:response.data})
+            }
+        })
     }
 
 
@@ -278,10 +282,10 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 })
                 this.setState({isplaying:isp})
             }
-            this.setState({selectedCamera: marker.extraData, autoplay:false, slideIndex: index, isRecording: recording,isplay:this.state.isplaying[this.state.slideIndex]===undefined?true:this.state.isplaying[this.state.slideIndex]})
+            this.setState({ matches:[],selectedCamera: marker.extraData, autoplay:false, slideIndex: index, isRecording: recording,isplay:this.state.isplaying[this.state.slideIndex]===undefined?true:this.state.isplaying[this.state.slideIndex]})
             this._loadFiles(marker.extraData)
         } else {
-            this.setState({selectedCamera: {}, autoplay:true, videos:[],photos:[], video_history:[]})
+            this.setState({selectedCamera: {}, autoplay:true, videos:[],photos:[], video_history:[], matches:[]})
         }             
         
     }
@@ -294,17 +298,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 extraData:value
             })
             return true
-        })
-        let cameras = []
-          for(let item in responseJson.items){
-            let suspect = responseJson.items[item]            
-            //if(suspect.person_classification !== "Victim"){
-              suspect.description = suspect.description.replace(/<p>/g,'').replace(/<\/p>/g,'')                            
-              cameras.push(suspect)
-            //}
-          }               
-        const pageCount = Math.ceil(cameras.length /this.state.limit)        
-        this.setState({markers:markersForLoop, matches:cameras,pageCount:pageCount})
+        })            
+        const pageCount = Math.ceil(markersForLoop.length /this.state.limit)        
+        this.setState({markers:markersForLoop,pageCount:pageCount})
     }
 
     componentWillUnmount(){

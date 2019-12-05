@@ -12,7 +12,7 @@ class ModalViewCam extends Component{
                 <Modal.Header closeButton>                      
                     <p>Camara {this.props.dataCam.num_cam}</p>
                 </Modal.Header>
-                <Modal.Body style={{height: '630px', paddingTop:'120px'}}>
+                <Modal.Body style={{height: '400px'}}>
                     <HlsPlayer src={'http://'+this.props.dataCam.UrlStreamMediaServer.ip_url_ms+':'+this.props.dataCam.UrlStreamMediaServer.output_port+this.props.dataCam.UrlStreamMediaServer.name+this.props.dataCam.channel} 
                         num_cam={this.props.dataCam.num_cam}/>
 
