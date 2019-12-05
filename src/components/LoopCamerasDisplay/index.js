@@ -214,7 +214,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     
               }
         })     
-        conections.getCamMatches(this.state.markers[this.state.slideIndex].extraData.id.num_cam).then(response=>{
+        conections.getCamMatches(this.state.markers[this.state.slideIndex].extraData.real_num_cam).then(response=>{
             if (response.status === 200) {
                 this.setState({matches:response.data})
             }

@@ -289,50 +289,42 @@ const mapOptions= {
 
     componentDidMount(){
 
-        firebase.firestore().collection('matches').doc(this.props.match.params.id).get().then(doc=>{
-            console.log(doc)
-            if(doc.exists){
-                let value = doc.data()
-                value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
-                this.setState({match:value, loading:false})
-            } else {
-                conections.getCamMatchesDetail(this.props.match.params.id)
-                    .then(response => {
-                        if (response.status === 200) {
-                            console.log(response.data)
-                            let data = response.data
+      
+        conections.getCamMatchesDetail(this.props.match.params.id)
+            .then(response => {
+                if (response.status === 200) {
+                    console.log(response.data)
+                    let data = response.data
 
-                            data.dateTime = new Date(data.DwellTime).toLocaleString()
-                            this.setState({match:data})
-                            console.log('data de match', data)
-                            conections.getCambyNumCam(parseInt(data.num_cam))
-                                .then(response =>{
-                                    if (response.status === 200) {
-                                        if (response.data[0]===undefined) {
-                                            this.setState({places:[], loading:false})   
-                                            return 
-                                        }
-                                        let camData = {
-                                            id:response.data[0].id,                                            
-                                            lat:parseFloat(response.data[0].google_cordenate.split(',')[0]),
-                                            lng:parseFloat(response.data[0].google_cordenate.split(',')[1]),
-                                            isHls:true,
-                                            
-                                            real_num_cam:response.data[0].num_cam<10?('0'+response.data[0].num_cam.toString()):response.data[0].num_cam.toString(),
-                                            camera_number:response.data[0].num_cam,
-                                        }
-                                        console.log('here',camData)
-                                        this.setState({places:[camData], loading:false})
-                                        
-                                    }
-                                })
-                        }
-                    })
-                    .catch(err=>{
-                        console.log('error al obtener detalle de match',err)
-                    })
-            }
-        })
+                    data.dateTime = new Date(data.DwellTime).toLocaleString()
+                    this.setState({match:data})
+                    console.log('data de match', data)
+                    conections.getCambyNumCam(parseInt(data.num_cam))
+                        .then(response =>{
+                            if (response.status === 200) {
+                                if (response.data[0]===undefined) {
+                                    this.setState({places:[], loading:false})   
+                                    return 
+                                }
+                                let camData = {
+                                    id:response.data[0].id,                                            
+                                    lat:parseFloat(response.data[0].google_cordenate.split(',')[0]),
+                                    lng:parseFloat(response.data[0].google_cordenate.split(',')[1]),
+                                    isHls:true,
+                                    
+                                    real_num_cam:response.data[0].num_cam<10?('0'+response.data[0].num_cam.toString()):response.data[0].num_cam.toString(),
+                                    camera_number:response.data[0].num_cam,
+                                }
+                                console.log('here',camData)
+                                this.setState({places:[camData], loading:false})
+                                
+                            }
+                        })
+                }
+            })
+            .catch(err=>{
+                console.log('error al obtener detalle de match',err)
+            })            
     }
 
     
