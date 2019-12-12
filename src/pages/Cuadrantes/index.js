@@ -112,7 +112,7 @@ class Cuadrantes extends Component{
                             <Button key = {value.id} className="buttonCuadrantes" as='div' labelPosition='left'>
                                 {
                                     this.state.flagDelete 
-                                    ?<Button style={{borderRadius:'.28571429rem'}} color='red' icon='minus' onClick={()=>this._deleteCuadrante(value.id)} />
+                                    ?<Button style={{borderRadius:'.28571429rem'}} color='red' icon='minus' onClick={()=>this._deleteCuadrante(value)} />
                                     :null
                                 }
                                 <Label as='a' basic pointing='right'  className={this.state.cuadranteActual == value.id ? 'colorSelected': 'colorNormal'} onClick={()=>this._camsCuadrante(value.id)}>
@@ -210,14 +210,17 @@ class Cuadrantes extends Component{
         
     }
 
-    _deleteCuadrante = (id) =>{
-        //console.log('idCuadrante', id)
-        conections.deleteCuadrante(id).then((res)=>{
-            //console.log('resDelete',res)
-            if(res.data.success){
-                this._loadCuadrantes()
-            }
-        })
+    _deleteCuadrante = (cuadrante) =>{
+        console.log('cuadrante', cuadrante)
+        if(window.confirm("¿Esta seguro de eliminar "+cuadrante.name+" ?")){
+            conections.deleteCuadrante(cuadrante.id).then((res)=>{
+                //console.log('resDelete',res)
+                if(res.data.success){
+                    this._loadCuadrantes()
+                }
+            })
+        }      
+        
     }
 
     _loadCuadrantes = () => {

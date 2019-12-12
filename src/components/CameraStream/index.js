@@ -166,7 +166,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                 this.state.data.rel_cuadrante ?
                                 this.state.data.rel_cuadrante.length != 0 ?
                                         this.state.data.rel_cuadrante.map(item =>
-                                            <Label key = {item.id} className="styleTag" as='a' tag onClick={()=>this._goToCuadrante(item.id_cuadrante)}>Cuadrante {item.id_cuadrante}</Label>
+                                            <Label key = {item.id} className="styleTag" as='a' tag onClick={()=>this._goToCuadrante(item.id_cuadrante)}>{item.Cuadrante.name}</Label>
                                         )
                                 :null
                             :null
@@ -406,7 +406,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
       if(this.props.showButtons){
         this._loadFiles()
     }
-      this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})           
+      this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})          
       if (this.props.marker.extraData.isRtmp === true) {
         return false
       }

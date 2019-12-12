@@ -23,16 +23,14 @@ class ModalAddCams extends Component{
     }
     render () {
         const columns = [{
-            dataField: "num_cam",
+            dataField: "camara",
             text: 'Camara',
-            formatter:(cel,row) =>this._formatoCell(cel,row),
             filter: textFilter({
                 placeholder: 'Buscar Número'
             })
           },{
             dataField: "direccion",
             text: 'Dirección',
-            style: { width: '200px' },
             filter: textFilter({
                 placeholder: 'Buscar Dirección'
             })
@@ -90,6 +88,7 @@ class ModalAddCams extends Component{
             .then((response) => {
                 console.log('camaras cuadrantesss', response)
                 this.setState({loading:false, auxCams:response.data.data.map(item =>{
+                    item.camara = 'Camara '+item.num_cam
                     item.direccion = item.street+' '+item.number+', '+item.township+', '+item.town+', '+item.state
                     if(item.RelCuadranteCams.length != 0){
                         item.RelCuadranteCams.map(cam =>{

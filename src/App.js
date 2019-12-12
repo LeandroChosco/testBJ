@@ -167,7 +167,11 @@ class App extends Component {
           this.setState({fisrtTimeHelp:false})
         this.setState({sos:docs.docs.map(v=>{
           let value = v.data()
-          value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          console.log('value',value)
+          if(value.dateTime.toDate)
+            value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          else 
+            value.dateTime = value.date
           value.id = v.id
           return value
         })})
@@ -180,7 +184,10 @@ class App extends Component {
           this.setState({fisrtTimeSupport:false})
         this.setState({support:docs.docs.map(v=>{
           let value = v.data()
-          value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          if(value.dateTime.toDate)
+            value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          else 
+            value.dateTime = value.date
           value.id = v.id
           return value
         })})
