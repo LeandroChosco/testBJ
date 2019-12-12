@@ -176,11 +176,21 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 </div>
                 <div className="col matchesgrid" align="center">
                     Historial
-                    {this.state.matches.length>0?this.state.matches.map((value, index)=>
+                    {/*  ---matches reales---
+                     {this.state.matches.length>0?this.state.matches.map((value, index)=>
                         {
                             return(<Match key={index} info={value} toggleControls={this._closeControl} />)
                         })
-                    :<h4>Sin historial de matches</h4>}
+                    :<h4>Sin historial de matches</h4>} */}
+                    {/* ---matches planchados */}
+                    {this.props.matches?this.props.matches.map((value, index)=>
+                        {
+                            if(index%this.state.selectedCamera.num_cam!==0)
+                                return(null);
+                            return(<Match key={index} info={value} toggleControls={this._closeControl} />)
+                        })
+                    :null}
+
                 </div>
             </div>            
         </div> 
@@ -258,12 +268,14 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     
               }
         }) 
+        /* ---matches reales ---
         console.log(cam)        
         conections.getCamMatches(cam?cam.real_num_cam:this.state.selectedCamera?this.state.selectedCamera.real_num_cam:0).then(response=>{
             if (response.status === 200) {
                 this.setState({matches:response.data})
             }
         })
+        */
     }
 
 
@@ -282,12 +294,21 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 })
                 this.setState({isplaying:isp})
             }
+        /*  --- matches reales ---  
             this.setState({ matches:[],selectedCamera: marker.extraData, autoplay:false, slideIndex: index, isRecording: recording,isplay:this.state.isplaying[this.state.slideIndex]===undefined?true:this.state.isplaying[this.state.slideIndex]})
             this._loadFiles(marker.extraData)
         } else {
             this.setState({selectedCamera: {}, autoplay:true, videos:[],photos:[], video_history:[], matches:[]})
         }             
-        
+        */
+
+        // --- matches forzados
+        this.setState({selectedCamera: marker.extraData, autoplay:false, slideIndex: index, isRecording: recording,isplay:this.state.isplaying[this.state.slideIndex]===undefined?true:this.state.isplaying[this.state.slideIndex]})
+            this._loadFiles(marker.extraData)
+        } else {
+            this.setState({selectedCamera: {}, autoplay:true, videos:[],photos:[], video_history:[]})
+        } 
+
     }
 
     componentDidMount(){       
@@ -298,9 +319,26 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 extraData:value
             })
             return true
-        })            
+        }) 
+                   
+        /* --- matches reales---
         const pageCount = Math.ceil(markersForLoop.length /this.state.limit)        
         this.setState({markers:markersForLoop,pageCount:pageCount})
+        */
+
+        // --- matches forzados ---
+        let cameras = []
+          for(let item in responseJson.items){
+            let suspect = responseJson.items[item]            
+            //if(suspect.person_classification !== "Victim"){
+              suspect.description = suspect.description.replace(/<p>/g,'').replace(/<\/p>/g,'')                            
+              cameras.push(suspect)
+            //}
+          }               
+        const pageCount = Math.ceil(cameras.length /this.state.limit)        
+        this.setState({markers:markersForLoop, matches:cameras,pageCount:pageCount})
+
+
     }
 
     componentWillUnmount(){

@@ -119,7 +119,11 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 </div>
                 <div className="col matches" align="center">
                     Historial
-                    {this.state.matches.length>0?this.state.matches.map((value, index)=><Match key={index} info={value} toggleControls={this._closeControl} />):<h4>Sin historial de matches</h4>}
+                    {/* --- matches reales ---
+                    {this.state.matches.length>0?this.state.matches.map((value, index)=><Match key={index} info={value} toggleControls={this._closeControl} />):<h4>Sin historial de matches</h4>} 
+                    */}
+                    {/* --- matches planchados */}
+                    {this.props.matches?this.props.matches.map((value, index)=><Match key={index} info={value} toggleControls={this._closeControl} />):null}
                 </div>
             </div>            
         </div>   
@@ -213,12 +217,14 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 this.setState({video_history:resHistory.data})
     
               }
-        })     
+        })
+        /* --- matches reales ---     
         conections.getCamMatches(this.state.markers[this.state.slideIndex].extraData.real_num_cam).then(response=>{
             if (response.status === 200) {
                 this.setState({matches:response.data})
             }
-        })           
+        }) 
+        */          
     }
 
     componentWillUnmount(){
@@ -261,7 +267,12 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 this.setState({videos:data.data.videos,photos:data.data.photos})
             })
           }
+          /*  --- matches reales ---
           this.setState({interval: time,markers:markersForLoop, height:height})
+          */
+
+          // --- matches planchados ---
+          this.setState({interval: time,markers:markersForLoop, height:height,matches:cameras})
     }
 
     changeSlide = () => {

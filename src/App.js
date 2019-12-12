@@ -28,7 +28,8 @@ import ModalCall from './components/ModalCall';
 import DetailsComplaiment from './pages/DetailsComplaiment';
 import Tickets from './pages/Tickets';
 import DetailsSupport from './pages/DetailsSupport';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard'; 
+import Cuadrantes from './pages/Cuadrantes'
 import socketIOClient from 'socket.io-client';
 import sailsIOClient from 'sails.io.js';
 import constants from './constants/constants';
@@ -84,6 +85,8 @@ class App extends Component {
     }    
   }
 
+  /*
+    ----- matches reales ----
   sortConvs = (a,b) => {
     if (b.DwellTime < a.DwellTime) {
         return -1;
@@ -125,11 +128,14 @@ class App extends Component {
       }
     }
   }
+      */
 
 
   loadData = () => {         
     if (process.env.NODE_ENV==='production'||true) {
-      /*firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
+      // --- matches planchados ---
+
+      firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
         if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
           this.showNot('Match','Nuevo match detectado','warning','Ver match',0)
         }
@@ -140,8 +146,10 @@ class App extends Component {
           value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
           return value
         })})
-      })*/
+      })
 
+      /*
+      --- matches reales ----
       let io;
       if (socketIOClient.sails) {
         io = socketIOClient;
@@ -156,7 +164,7 @@ class App extends Component {
       io.socket.get('/matchApi', this.matchesApiHandler)
       io.socket.on('/matchApi', this.matchesApiHandler)
 
-      
+      */
   
       firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
         if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
@@ -167,7 +175,11 @@ class App extends Component {
           this.setState({fisrtTimeHelp:false})
         this.setState({sos:docs.docs.map(v=>{
           let value = v.data()
-          value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          //console.log('value',value)
+          if(value.dateTime.toDate)
+            value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          else 
+            value.dateTime = value.date
           value.id = v.id
           return value
         })})
@@ -180,7 +192,10 @@ class App extends Component {
           this.setState({fisrtTimeSupport:false})
         this.setState({support:docs.docs.map(v=>{
           let value = v.data()
-          value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          if(value.dateTime.toDate)
+            value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          else 
+            value.dateTime = value.date
           value.id = v.id
           return value
         })})
@@ -234,7 +249,7 @@ class App extends Component {
         })
         this.setState({callIsGoing:false})
       })       
-      firebaseC5.app('c5cuajimalpa').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot( docs=>{     
+      firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot( docs=>{     
         console.log( docs.docChanges())
         let changes = docs.docChanges()
         if (changes.length === 1) {
@@ -504,7 +519,9 @@ class App extends Component {
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                    
+        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/cuadrantes" exact render={(props) => <Cuadrantes matches={this.state.matches}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                                        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />
