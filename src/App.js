@@ -84,6 +84,8 @@ class App extends Component {
     }    
   }
 
+  /*
+    ----- matches reales ----
   sortConvs = (a,b) => {
     if (b.DwellTime < a.DwellTime) {
         return -1;
@@ -125,11 +127,14 @@ class App extends Component {
       }
     }
   }
+      */
 
 
   loadData = () => {         
     if (process.env.NODE_ENV==='production'||true) {
-      /*firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
+      // --- matches planchados ---
+
+      firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
         if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
           this.showNot('Match','Nuevo match detectado','warning','Ver match',0)
         }
@@ -140,8 +145,10 @@ class App extends Component {
           value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
           return value
         })})
-      })*/
+      })
 
+      /*
+      --- matches reales ----
       let io;
       if (socketIOClient.sails) {
         io = socketIOClient;
@@ -156,7 +163,7 @@ class App extends Component {
       io.socket.get('/matchApi', this.matchesApiHandler)
       io.socket.on('/matchApi', this.matchesApiHandler)
 
-      
+      */
   
       firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
         if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
@@ -167,7 +174,7 @@ class App extends Component {
           this.setState({fisrtTimeHelp:false})
         this.setState({sos:docs.docs.map(v=>{
           let value = v.data()
-          console.log('value',value)
+          //console.log('value',value)
           if(value.dateTime.toDate)
             value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
           else 
