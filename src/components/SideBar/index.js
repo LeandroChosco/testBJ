@@ -25,6 +25,7 @@ class SideBar extends Component {
                 let auxCamaras = []
                 let options = []
                 let index = 1
+                console.log('camm',camaras)
                 if (camaras === undefined) {
                     return
                 }
