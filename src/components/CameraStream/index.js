@@ -13,7 +13,12 @@ import saveAs from 'file-saver'
 import jsmpeg from 'jsmpeg';
 import * as moment from 'moment';
 import HlsPlayer from '../HlsPlayer';
-import { withRouter } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from "react-router-dom";
 
 var vis = (function(){
     var stateKey, eventKey, keys = {
@@ -179,8 +184,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                 this.state.data.rel_cuadrante ?
                                 this.state.data.rel_cuadrante.length != 0 ?
                                         this.state.data.rel_cuadrante.map(item =>
-                                            <Label key = {item.id} className="styleTag" as='a' tag onClick={()=>this._goToCuadrante(item.id_cuadrante)}>{item.Cuadrante.name}</Label>
-                                        )
+                                                <Label key = {item.id} className="styleTag" as='a' tag onClick={()=>this._goToCuadrante(item.id_cuadrante)}>{item.Cuadrante.name}</Label>
+                                            )
                                 :null
                             :null
                             }
@@ -336,7 +341,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     } 
 
     _goToCuadrante = (id_cuadrante) =>{
-        this.props.history.push('/cuadrantes/'+id_cuadrante)
+        window.location.assign(window.location.href.replace(window.location.pathname,'').replace(window.location.search,'').replace(window.location.hash,'')+'/cuadrantes/'+id_cuadrante)
     }
 
     onChange = chips => {
@@ -717,4 +722,4 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
             })
     }
 }
-export default withRouter(CameraStream);
+export default CameraStream;
