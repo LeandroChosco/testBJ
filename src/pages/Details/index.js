@@ -6,6 +6,7 @@ import MapContainer from '../../components/MapContainer/index.js';
 import firebase from '../../constants/config';
 import { Modal, Navbar } from 'react-bootstrap';
 import confirmMatch from '../../constants/confirmMatch';
+import conections from '../../conections';
 const mapOptions= {
     center: {lat: 19.459430, lng: -99.208588},
     zoom: 15,
@@ -17,7 +18,7 @@ const mapOptions= {
     openConfirm: false,
     typeConfirm:false,
     openSelection:false,
-    checked:''
+    checked:'',    
 }
 
  class Details extends Component {
@@ -33,10 +34,14 @@ const mapOptions= {
         ],    
         images: [{},{}],
         idCamera:Math.floor(Math.random() * 10) + 1,
-        match:{}
+        match:{},
+        loading: true
     }
 
   render() {
+      if (this.state.loading === true) {
+          return(<h4>CARGANDO...</h4>)
+      }
     return (
         <div>   
             <Navbar sticky="top" expand="lg" variant="light" bg="mh">                       
@@ -61,7 +66,10 @@ const mapOptions= {
                             <div  className="col imageContainer" align='center'>
                                 <h4>Imagen de camara</h4>
                                 <div  className="card-image">
-                                    <Image wrapped size="small" src={this.state.match?this.state.match.name?'http://95.216.37.253:3000/images/'+this.state.match.name.replace(/ /g,'')+'/'+this.state.match.messageId+'-face.jpeg':'':''}/>
+                                    {this.state.match.faceImage?
+                                        <Image wrapped size='small' src={'data:image/png;base64,'+this.state.match.faceImage} />:
+                                        <Image wrapped size='small' src={this.state.match.name?'http://95.216.37.253:3000/images/'+this.state.match.name.replace(/ /g,'')+'/'+this.state.match.messageId+'-face.jpeg':this.state.imageCamera} />
+                                    }                                    
                                 </div>
                             </div>
                         </div>
@@ -69,7 +77,7 @@ const mapOptions= {
                     <div  className="col-2 center imageContainer" >
                         <div  className="row" >
                             <div  className="col" align='center'>  
-                                <Header size='huge' color="brown">{this.state.match?this.state.match.confidence:''}</Header>
+                                <Header size='huge' color="brown">{this.state.match?this.state.match.confidence?this.state.match.confidence:this.state.match.Confidence:''}</Header>
                             </div>
                         </div>
                         <div  className="row" >
@@ -274,20 +282,57 @@ const mapOptions= {
                 title: value.name,
                 extraData:value
             });
+            map.setCenter( { lat:value.lat, lng:value.lng })
             return true;
         })
   }
 
     componentDidMount(){
-
         firebase.firestore().collection('matches').doc(this.props.match.params.id).get().then(doc=>{
             console.log(doc)
             if(doc.exists){
                 let value = doc.data()
                 value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
-                this.setState({match:value})
+                this.setState({match:value, loading:false})
+            }else{
+                conections.getCamMatchesDetail(this.props.match.params.id)
+                .then(response => {
+                    if (response.status === 200) {
+                        console.log(response.data)
+                        let data = response.data
+
+                        data.dateTime = new Date(data.DwellTime).toLocaleString()
+                        this.setState({match:data})
+                        console.log('data de match', data)
+                        conections.getCambyNumCam(parseInt(data.num_cam))
+                            .then(response =>{
+                                if (response.status === 200) {
+                                    if (response.data[0]===undefined) {
+                                        this.setState({places:[], loading:false})   
+                                        return 
+                                    }
+                                    let camData = {
+                                        id:response.data[0].id,                                            
+                                        lat:parseFloat(response.data[0].google_cordenate.split(',')[0]),
+                                        lng:parseFloat(response.data[0].google_cordenate.split(',')[1]),
+                                        isHls:true,
+                                        
+                                        real_num_cam:response.data[0].num_cam<10?('0'+response.data[0].num_cam.toString()):response.data[0].num_cam.toString(),
+                                        camera_number:response.data[0].num_cam,
+                                    }
+                                    console.log('here',camData)
+                                    this.setState({places:[camData], loading:false})
+                                    
+                                }
+                            })
+                    }
+                })
+                .catch(err=>{
+                    console.log('error al obtener detalle de match',err)
+                })  
             }
-        })
+        })     
+                
     }
 
     

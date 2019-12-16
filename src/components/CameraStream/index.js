@@ -13,6 +13,7 @@ import saveAs from 'file-saver'
 import jsmpeg from 'jsmpeg';
 import * as moment from 'moment';
 import HlsPlayer from '../HlsPlayer';
+import { withRouter } from "react-router-dom";
 
 var vis = (function(){
     var stateKey, eventKey, keys = {
@@ -173,7 +174,17 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                     {this.state.tryReconect?'Reconectando...':null}
                             </div> 
                         </div>
-                        {this.props.hideText?null:<div align='left'>{this.state.cameraName}</div>}
+                        {this.props.hideText?null:<div align='left'>{this.state.cameraName}
+                            {
+                                this.state.data.rel_cuadrante ?
+                                this.state.data.rel_cuadrante.length != 0 ?
+                                        this.state.data.rel_cuadrante.map(item =>
+                                            <Label key = {item.id} className="styleTag" as='a' tag onClick={()=>this._goToCuadrante(item.id_cuadrante)}>{item.Cuadrante.name}</Label>
+                                        )
+                                :null
+                            :null
+                            }
+                        </div>}
                         {this.props.showButtons?
                             <Card.Footer>
                                 {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic disabled={this.state.photos.length>=5||this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>:null:null}
@@ -324,18 +335,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         );
     } 
 
-    loaded = () => {
-        console.log('loaded i frame')
-        var iframe = document.getElementById('the-iframe'+this.props.marker.extraData.id);
-        var style = document.createElement('style');
-        style.textContent =
-        'video {' +
-        '  width: 100%;' +
-        '  heigth: 100%;' +
-        '}' 
-        ;
-        console.log(iframe.children)
-        //iframe.contentDocument.head.appendChild(style);
+    _goToCuadrante = (id_cuadrante) =>{
+        this.props.history.push('/cuadrantes/'+id_cuadrante)
     }
 
     onChange = chips => {
@@ -437,7 +438,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
       if(this.props.showButtons){
         this._loadFiles()
     }
-      this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})               
+      this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})          
       if (this.props.marker.extraData.isRtmp === true) {
         return false
       }
@@ -714,7 +715,6 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
             .catch(err=>{
                 console.log(err)
             })
-
     }
 }
-export default CameraStream;
+export default withRouter(CameraStream);
