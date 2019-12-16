@@ -28,9 +28,12 @@ import ModalCall from './components/ModalCall';
 import DetailsComplaiment from './pages/DetailsComplaiment';
 import Tickets from './pages/Tickets';
 import DetailsSupport from './pages/DetailsSupport';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard'; 
+import Cuadrantes from './pages/Cuadrantes'
+import socketIOClient from 'socket.io-client';
+import sailsIOClient from 'sails.io.js';
+import constants from './constants/constants';
 
-import RtmpPlayer from './components/RtmpPlayer';
 let call = false
 
 class App extends Component {
@@ -82,9 +85,56 @@ class App extends Component {
     }    
   }
 
+  /*
+    ----- matches reales ----
+  sortConvs = (a,b) => {
+    if (b.DwellTime < a.DwellTime) {
+        return -1;
+    }
+    if (a.DwellTime < b.DwellTime) {
+        return 1;
+    }
+    return 0;
+  }
+
+
+
+  matchesApiHandler = (event) => {
+    console.log('matches handler',event)
+    if (event.length !== undefined) {
+      let data = event.sort(this.sortConvs)
+      this.setState({matches:data})      
+    } else {
+      if( event.verb === 'created') {                
+        let data =this.state.matches
+        data.push(event.data)
+        data = data.sort(this.sortConvs);                
+        console.log(data)
+        this.showNot('Match','Nuevo match detectado','warning','Ver match',0)
+        this.setState({matches:data})     
+      } 
+      if( event.verb === 'updated') {      
+        let data =this.state.matches
+        data = data.map(match=>{
+          if(match.id === event.id){
+            match = {
+                ...match,
+                ...event.data
+            }
+          }
+          return match
+        }).sort(this.sortConvs);
+        this.setState({matches:data})     
+      }
+    }
+  }
+      */
+
 
   loadData = () => {         
     if (process.env.NODE_ENV==='production'||true) {
+      // --- matches planchados ---
+
       firebase.firestore().collection('matches').orderBy('dateTime','desc').onSnapshot(docs=>{
         if (this.state.matches.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTime) {
           this.showNot('Match','Nuevo match detectado','warning','Ver match',0)
@@ -97,6 +147,24 @@ class App extends Component {
           return value
         })})
       })
+
+      /*
+      --- matches reales ----
+      let io;
+      if (socketIOClient.sails) {
+        io = socketIOClient;
+        if(!io.socket.isConnected()&&!io.socket.isConnecting()) {
+          io.socket.reconnect()
+        }
+      } else {
+        io = sailsIOClient(socketIOClient);
+      }
+      this.setState({io:io})          
+      io.sails.url = constants.base_url+':1337';
+      io.socket.get('/matchApi', this.matchesApiHandler)
+      io.socket.on('/matchApi', this.matchesApiHandler)
+
+      */
   
       firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
         if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
@@ -107,7 +175,11 @@ class App extends Component {
           this.setState({fisrtTimeHelp:false})
         this.setState({sos:docs.docs.map(v=>{
           let value = v.data()
-          value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          //console.log('value',value)
+          if(value.dateTime.toDate)
+            value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          else 
+            value.dateTime = value.date
           value.id = v.id
           return value
         })})
@@ -120,7 +192,10 @@ class App extends Component {
           this.setState({fisrtTimeSupport:false})
         this.setState({support:docs.docs.map(v=>{
           let value = v.data()
-          value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          if(value.dateTime.toDate)
+            value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          else 
+            value.dateTime = value.date
           value.id = v.id
           return value
         })})
@@ -174,7 +249,7 @@ class App extends Component {
         })
         this.setState({callIsGoing:false})
       })       
-      firebaseC5.app('c5cuajimalpa').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot( docs=>{     
+      firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot( docs=>{     
         console.log( docs.docChanges())
         let changes = docs.docChanges()
         if (changes.length === 1) {
@@ -444,7 +519,9 @@ class App extends Component {
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                    
+        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/cuadrantes" exact render={(props) => <Cuadrantes matches={this.state.matches}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                                        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />
