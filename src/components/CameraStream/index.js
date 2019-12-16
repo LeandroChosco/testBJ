@@ -323,7 +323,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     } 
 
     _goToCuadrante = (id_cuadrante) =>{
-        this.props.history.push('/cuadrantes/'+id_cuadrante)
+        window.location.assign(window.location.href.replace(window.location.pathname,'').replace(window.location.search,'').replace(window.location.hash,'')+'/cuadrantes/'+id_cuadrante)
     }
 
     onChange = chips => {
@@ -685,4 +685,4 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
             })
     }
 }
-export default withRouter(CameraStream);
+export default CameraStream;
