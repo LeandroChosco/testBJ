@@ -123,19 +123,21 @@ class Map extends Component {
             let index = 1
             camaras.map(value=>{
                 if (value.active === 1&& value.flag_streaming === 1) {
-                    center_lat = center_lat + parseFloat(value.google_cordenate.split(',')[0]) 
-                    center_lng=center_lng+parseFloat(value.google_cordenate.split(',')[1])
-                    total = total + 1                                        
-                    auxCamaras.push({
-                        id:value.id,
-                        num_cam:index,
-                        lat:parseFloat(value.google_cordenate.split(',')[0]), 
-                        lng:parseFloat(value.google_cordenate.split(',')[1]),                            
-                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' +value.num_cam,                        
-                        isHls:true,
-                        url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer. name + value.channel 
-                    })
-                    index++;
+                    if(value.google_cordenate != ''){
+                        center_lat = center_lat + parseFloat(value.google_cordenate.split(',')[0]) 
+                        center_lng=center_lng+parseFloat(value.google_cordenate.split(',')[1])
+                        total = total + 1                                        
+                        auxCamaras.push({
+                            id:value.id,
+                            num_cam:index,
+                            lat:parseFloat(value.google_cordenate.split(',')[0]), 
+                            lng:parseFloat(value.google_cordenate.split(',')[1]),                            
+                            name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' +value.num_cam,                        
+                            isHls:true,
+                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer. name + value.channel 
+                        })
+                        index++;
+                    }
                 }
                 return true
             })
@@ -145,18 +147,20 @@ class Map extends Component {
             this.setState({loading:false,places:auxCamaras})
             let marker = []
             this.state.places.map((value,index)=>{
-                marker[index]= new window.google.maps.Marker({
-                    position: { lat:value.lat, lng:value.lng },
-                    map:  this.state.map,
-                    title: value.name,
-                    extraData:value
-                });
-                window.google.maps.event.addListener(marker[index],'click', (function(marker, map, createInfoWindow) {
-                    return function() {
-                    createInfoWindow(marker,map)
-                    }
-                })(marker[index], this.state.map,this.createInfoWindow))
-                return value
+                if(value.lat && value.lng){
+                    marker[index]= new window.google.maps.Marker({
+                        position: { lat:value.lat, lng:value.lng },
+                        map:  this.state.map,
+                        title: value.name,
+                        extraData:value
+                    });
+                    window.google.maps.event.addListener(marker[index],'click', (function(marker, map, createInfoWindow) {
+                        return function() {
+                        createInfoWindow(marker,map)
+                        }
+                    })(marker[index], this.state.map,this.createInfoWindow))
+                    return value
+                }
             })
             this.setState({markers:marker})
         });
