@@ -1,8 +1,8 @@
 const base_url = window.location.hostname === 'localhost' ?
     'http://localhost' :
-    window.location.hostname === 'cams.cuajimalpa.dev.energetikadevelepment.com' ? 
+    window.location.hostname === 'adminc5cuajimalpa-new.s3-website-us-east-1.amazonaws.com' ? 
     'http://dev.apicams.cuajimalpa.dev.energetikadevelepment.com' :
-    'http://prod.apicams.cuajimalpa.energetikadevelepment.com';
+    'http://dev.apicams.cuajimalpa.dev.energetikadevelepment.com';
 const webSocketPort = '20'
 const apiPort = '3000'
  export default {

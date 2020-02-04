@@ -31,6 +31,26 @@ export default {
         const user_id = getUserID() 
         return Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + camera_id + '/data?user_id='+user_id)
     },
+
+    //nuevos endpoint para menejor de media
+
+    snapShotV2:(camara_id)=>{
+        const user_id = getUserID() 
+        return Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshotV2/' + camara_id+'?user_id='+user_id)
+    },
+    stopRecordV2: (data, camera_id)=> {
+        const user_id = getUserID() 
+        return Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-recordV2/' + camera_id+'?user_id='+user_id,data)
+    },
+    startRecordV2:(data,camera_id)=>{
+        const user_id = getUserID() 
+        return Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/start-recordV2/' + camera_id+'?user_id='+user_id,data)        
+    },
+    getCamDataV2:(camera_id)=>{
+        const user_id = getUserID() 
+        return Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + camera_id + '/dataV2?user_id='+user_id)
+    },
+
     getAllCams:()=>{
         const user_id = getUserID() 
         return Axios.get(constants.base_url+':'+constants.apiPort+'/register-cams/all-cams?user_id='+user_id)

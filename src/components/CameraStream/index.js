@@ -64,7 +64,8 @@ class CameraStream extends Component {
         typeReport:1,
         phones:[],
         mails:[],
-        restarting: false
+        restarting: false,
+        servidorMultimedia: ''
     }
 
     lastDecode= null
@@ -107,7 +108,7 @@ class CameraStream extends Component {
                             <div className="col snapshots">
                                 Fotos
                                 <div className="row">
-                                    {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} image key={index} />)}
+                                    {this.state.photos.map((value,index)=><MediaContainer servidorMultimedia={this.state.servidorMultimedia} src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} image key={index} />)}
                                 </div>
                                 {this.state.photos.length === 0 ?
                                     <div align='center'>
@@ -121,7 +122,7 @@ class CameraStream extends Component {
                                 <Tab menu={{ secondary: true, pointing: true }} panes={[
                                     { menuItem: 'Actuales', render: () => <Tab.Pane attached={false}><div>
                                         <div className="row">
-                                            {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                            {this.state.videos.map((value,index)=><MediaContainer servidorMultimedia={this.state.servidorMultimedia}  src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
                                         </div>
                                         {this.state.videos.length === 0 ?
                                             <div align='center'>
@@ -166,6 +167,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                 this.state.data.rel_cuadrante ?
                                 this.state.data.rel_cuadrante.length != 0 ?
                                         this.state.data.rel_cuadrante.map(item =>
+                                            
                                             <Label key = {item.id} className="styleTag" as='a' tag onClick={()=>this._goToCuadrante(item.id_cuadrante)}>{item.Cuadrante.name}</Label>
                                         )
                                 :null
@@ -193,7 +195,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                             <div className="col snapshots">
                                 Fotos
                                 <div className="row">
-                                    {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} image key={index} />)}
+                                    {this.state.photos.map((value,index)=><MediaContainer servidorMultimedia={this.state.servidorMultimedia} src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} image key={index} />)}
                                 </div>
                                 {this.state.photos.length === 0 ?
                                     <div align='center'>
@@ -207,7 +209,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                 <Tab menu={{ secondary: true, pointing: true }} panes={[
                                     { menuItem: 'Actuales', render: () => <Tab.Pane attached={false}><div>
                                         <div className="row">
-                                            {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
+                                            {this.state.videos.map((value,index)=><MediaContainer servidorMultimedia={this.state.servidorMultimedia} src={value.relative_url} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={index} />)}
                                         </div>
                                         {this.state.videos.length === 0 ?
                                             <div align='center'>
@@ -220,23 +222,27 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
 
                             this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
                                         <div className="row">
-                                        {this.state.video_history.items.map((row,index)=>
-                                                <div className="col-12" align='center' key={index}>
-                                                    <div className='row'>
-                                                        <div className='col'><h5>{row.fecha}</h5></div>
+                                            {this.state.video_history.length !== 0 ?
+                                                this.state.video_history.items.map((row,index)=> (
+                                                    <div className="col-12" align='center' key={index}>
+                                                        <div className='row'>
+                                                            <div className='col'><h5>{row.fecha}</h5></div>
+                                                        </div>
+                                                        <div className="row">
+                                                            {row.videos.map((value,i)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={i} />)}
+                                                        </div>
                                                     </div>
-                                                    <div className="row">
-                                                        {row.videos.map((value,i)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={i} />)}
-                                                    </div>
+                                                ))
+                                                :
+                                                (
+                                                <div align='center'>
+                                                    <p className="big-letter">No hay archivos que mostrar</p>
+                                                    <i className='fa fa-image fa-5x'></i>
                                                 </div>
-                                            )}
+                                                )
+                                            }
+                                            
                                         </div>
-                                        {this.state.video_history.length === 0 ?
-                                            <div align='center'>
-                                                <p className="big-letter">No hay archivos que mostrar</p>
-                                                <i className='fa fa-image fa-5x'></i>
-                                            </div>
-                                        :null}
                                     </Tab.Pane>}:{}:{},
                                 ]} />
                             </div>
@@ -375,8 +381,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         if(this.state.isRecording){
             
             this.setState({isLoading:true})
-            conections.stopRecord({
-                record_proccess_id:this.state.process_id 
+            conections.stopRecordV2({
+                clave:this.state.process_id 
             },this.state.data.id)           
                 .then((r) => { 
                     const response = r.data
@@ -389,11 +395,11 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                     }
                 })
         } else {
-            conections.startRecord({},this.state.data.id)
+            conections.startRecordV2({},this.state.data.id)
                 .then((r) => { 
                     const response = r.data
                     if (response.success === true) {
-                        this.setState({isRecording:true,process_id:response.id_record_proccess})                        
+                        this.setState({isRecording:true,process_id:response.clave})                        
                         
                     }
                 })
@@ -406,7 +412,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
       if(this.props.showButtons){
         this._loadFiles()
     }
-      this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData})          
+      this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData}) 
+      console.log('dataaaaaaacuadrante',this.props)         
       if (this.props.marker.extraData.isRtmp === true) {
         return false
       }
@@ -485,11 +492,11 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
 
   _snapShot = () => {
       this.setState({loadingSnap:true})
-      conections.snapShot(this.state.data.id?this.state.data.id:this.props.marker.extraData.id)
+      conections.snapShotV2(this.state.data.id?this.state.data.id:this.props.marker.extraData.id)
         .then(response => {
             this.setState({loadingSnap:false})
             const data = response.data
-            console.log(data)
+            //console.log(data)
             if (data.success) {
                 this._loadFiles()
             }
@@ -498,15 +505,15 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
   }
 
   _loadFiles = () =>{  
-      conections.getCamData(this.state.data.id?this.state.data.id:this.props.marker.extraData.id)   
+      conections.getCamDataV2(this.state.data.id?this.state.data.id:this.props.marker.extraData.id)   
       .then(response => {
         const data = response.data
-        console.log(data)
-        this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
+        //console.log(data)
+        this.setState({videos:data.data.files_multimedia.videos,photos:data.data.files_multimedia.photos, servidorMultimedia: 'http://'+ data.data.dns_ip})
     })      
     conections.getCamDataHistory(this.state.data.id?this.state.data.id:this.props.marker.extraData.id).then(response => {
         let resHistory = response.data
-  		console.log('history', resHistory)
+  		//console.log('history', resHistory)
   		if(resHistory.success){
 			let items = []
   			resHistory.data.items = resHistory.data.items.map(val=>{
@@ -536,9 +543,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
 				val.fecha = moment(val.dateTime).format('YYYY-MM-DD HH:mm')
 				return val
 			})
-			console.log(items)
+			//console.log(items)
 			resHistory.data.items = items
-            console.log('videos historicos',resHistory.data)
+            //console.log('videos historicos',resHistory.data)
             this.setState({video_history:resHistory.data})
 
   		}
@@ -631,12 +638,12 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         var imgs = zip.folder('images')
         this.state.photos.forEach((url)=>{
             var filename = url.name;
-            imgs.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+            imgs.file(filename, this.urlToPromise(this.state.servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
         });
         var vds = zip.folder('videos')
         this.state.videos.forEach((url)=>{
             var filename = url.name;
-            vds.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+            vds.file(filename, this.urlToPromise(this.state.servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
         });
         zip.generateAsync({type:"blob"}).then((content) => {
             // see FileSaver.js

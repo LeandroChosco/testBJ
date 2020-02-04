@@ -23,7 +23,12 @@ class LoopCamerasDisplay extends Component {
         isplaying:[],
         matches: [],
         height:undefined,
-        isplay: true
+        isplay: true,
+        servidorMultimedia: '',
+        loadingSnap: false,
+        recordingCams:[],
+        recordingProcess:[],
+        loadingRcord: false,
     }
 
     _showCameraInfo(){
@@ -48,13 +53,13 @@ class LoopCamerasDisplay extends Component {
         <div className={!this.state.autoplay?'camControl showfiles':'camControl'}>
         {this.state.markers[this.state.slideIndex]?<div className='row stiky-top'>
                 <div className='col-8'>
-                        {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic circular disabled={this.state.photos.length>=5||this.state.restarting||this.props.loadingSnap||this.props.loadingFiles||this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} loading={this.props.loadingSnap} onClick={()=>this.props.snapShot(this.state.markers[this.state.slideIndex].extraData)}><i className='fa fa-camera'></i></Button>:null:null}
-                        {/* <Button basic circular disabled={this.state.restarting||this.props.loadingSnap||this.props.loadingFiles||this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} onClick={this._playPause}><i className={this.state.isplay?'fa fa-pause':'fa fa-play'}></i></Button> */}
-                        {this.props.moduleActions?this.props.moduleActions.btnrecord?<Button basic circular disabled={this.state.videos.length>=5||this.state.restarting||this.props.loadingSnap||this.props.loadingFiles} onClick={() => this.props.recordignToggle(this.state.markers[this.state.slideIndex].extraData)}><i className={ this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>:null:null}
-                        <Button basic circular disabled={this.state.restarting||this.props.loadingSnap||this.props.loadingFiles||this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.markers[this.state.slideIndex].extraData.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>
-                        <Button basic circular disabled={this.state.restarting||this.props.loadingSnap||this.props.loadingFiles||this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} onClick={()=>this.props.downloadFiles(this.state.markers[this.state.slideIndex].extraData, {videos:this.state.videos,images:this.state.photos})} loading={this.props.loadingFiles}> <i className="fa fa-download"></i></Button>
-                        <Button basic circular disabled={this.state.restarting||this.props.loadingSnap||this.props.loadingFiles||this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} onClick={()=>this.props.makeReport(this.state.markers[this.state.slideIndex].extraData)}> <i className="fa fa-warning"></i></Button>
-                        {/* <Button basic circular disabled={this.state.restarting||this.props.loadingSnap||this.props.loadingFiles||this.props.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button> */}
+                        {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic circular disabled={this.state.photos.length>=5||this.state.restarting||this.state.loadingSnap||this.props.loadingFiles||this.state.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} loading={this.state.loadingSnap} onClick={()=>this._snapShot(this.state.markers[this.state.slideIndex].extraData)}><i className='fa fa-camera'></i></Button>:null:null}
+                        {/* <Button basic circular disabled={this.state.restarting||this.state.loadingSnap||this.props.loadingFiles||this.state.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} onClick={this._playPause}><i className={this.state.isplay?'fa fa-pause':'fa fa-play'}></i></Button> */}
+                        {this.props.moduleActions?this.props.moduleActions.btnrecord?<Button basic circular disabled={this.state.videos.length>=5||this.state.restarting||this.state.loadingSnap||this.props.loadingFiles} onClick={() => this._recordignToggle(this.state.markers[this.state.slideIndex].extraData)}><i className={ this.state.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>:null:null}
+                        <Button basic circular disabled={this.state.restarting||this.state.loadingSnap||this.props.loadingFiles||this.state.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + this.state.markers[this.state.slideIndex].extraData.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>
+                        <Button basic circular disabled={this.state.restarting||this.state.loadingSnap||this.props.loadingFiles||this.state.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} onClick={()=>this.props.downloadFiles(this.state.markers[this.state.slideIndex].extraData, {videos:this.state.videos,images:this.state.photos, servidorMultimedia:this.state.servidorMultimedia})} loading={this.props.loadingFiles}> <i className="fa fa-download"></i></Button>
+                        <Button basic circular disabled={this.state.restarting||this.state.loadingSnap||this.props.loadingFiles||this.state.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} onClick={()=>this.props.makeReport(this.state.markers[this.state.slideIndex].extraData)}> <i className="fa fa-warning"></i></Button>
+                        {/* <Button basic circular disabled={this.state.restarting||this.state.loadingSnap||this.props.loadingFiles||this.state.recordingCams.indexOf(this.state.markers[this.state.slideIndex].extraData)>-1} onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button> */}
                         <Button basic circular onClick={()=>this.props.changeStatus(this.state.markers[this.state.slideIndex].extraData)}> <i className="fa fa-exchange"></i></Button>
                 </div>
                 <div className='col-4'>
@@ -65,7 +70,7 @@ class LoopCamerasDisplay extends Component {
                 <div className="col snapshots">
                     Fotos
                     <div className="row">
-                        {this.state.photos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} image key={index} />)}
+                        {this.state.photos.map((value,index)=><MediaContainer servidorMultimedia={this.state.servidorMultimedia} src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} image key={index} />)}
                     </div>
                      {this.state.photos.length === 0 ?
                             <div align='center'>
@@ -79,7 +84,7 @@ class LoopCamerasDisplay extends Component {
                     <Tab menu={{ secondary: true, pointing: true }} panes={[
                         { menuItem: 'Actuales', render: () => <Tab.Pane attached={false}><div>
                             <div className="row">
-                                {this.state.videos.map((value,index)=><MediaContainer src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
+                                {this.state.videos.map((value,index)=><MediaContainer servidorMultimedia={this.state.servidorMultimedia} src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
                             </div>
                             {this.state.videos.length === 0 ?
                                 <div align='center'>
@@ -131,6 +136,96 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     );
   }
 
+    _snapShot = (camera) => {
+        this.setState({loadingSnap:true})
+
+        conections.snapShotV2(camera.id,this.state.user_id)
+            .then(response => {
+                this.setState({loadingSnap:false})
+                const data = response.data              
+                if (data.success) {
+                    //console.log('refs',this.refs)
+                    this._loadFiles(camera)
+                }
+            })
+    }
+
+    _recordignToggle = (selectedCamera) => {
+        if(this.state.recordingCams.indexOf(selectedCamera)>-1){
+            let process_id = 0
+            this.state.recordingProcess.map(value=>{
+                if(value.cam_id === selectedCamera.id){
+                    process_id = value.process_id
+                }
+                return true
+            })
+            this.setState({loadingRcord:true})
+    
+                conections.stopRecordV2({clave:process_id},selectedCamera.id)
+                .then((r) => {
+                    const response = r.data
+                    if (response.success === true) {
+    
+                        let stateRecordingProcess = this.state.recordingProcess
+                        let stateRecordingCams = this.state.recordingCams
+                        stateRecordingCams = stateRecordingCams.filter(el => el !== selectedCamera)
+                        stateRecordingProcess = stateRecordingProcess.filter(el => el.cam_id !== selectedCamera.id)
+                        this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false,loadingRcord:false,modal:true,recordMessage:response.msg})
+                        this._loadFiles()
+                    } else {
+                        let stateRecordingProcess = this.state.recordingProcess
+                        let stateRecordingCams = this.state.recordingCams
+                        stateRecordingCams = stateRecordingCams.filter(el => el !== selectedCamera)
+                        stateRecordingProcess = stateRecordingProcess.filter(el => el.cam_id !== selectedCamera.id)
+                        this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false,loadingRcord:false,modal:true,recordMessage:response.msg})
+                    }
+                })
+        } else {
+           conections.startRecordV2({},selectedCamera.id)
+                .then((r) => {
+                    const response = r.data
+                    if (response.success === true) {
+                        let recordingProcess = {
+                            cam_id: selectedCamera.id,
+                            process_id: response.clave,
+                            creation_time: moment()
+                        }
+                        let stateRecordingProcess = this.state.recordingProcess
+                        let stateRecordingCams = this.state.recordingCams
+                        stateRecordingProcess.push(recordingProcess)
+                        stateRecordingCams.push(selectedCamera)
+                        this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: true})
+                        if (this.state.interval === null) {
+                            let interval = setInterval(this._checkLiveTimeRecording,5000)
+                            this.setState({interval: interval})
+                        }
+                    }
+                })
+        }
+    }  
+
+    _checkLiveTimeRecording = () =>{
+        if (this.state.recordingProcess.length > 0) {
+            let now = moment()
+            this.state.recordingProcess.map(value=>{
+                if (now.diff(value.creation_time,'minutes')>10) {
+
+                    conections.stopRecord({record_proccess_id:value.process_id }).then(response=>{                        
+                        let stateRecordingProcess = this.state.recordingProcess
+                        let stateRecordingCams = this.state.recordingCams
+                        stateRecordingCams = stateRecordingCams.filter(el => el.id !== value.cam_id)
+                        stateRecordingProcess = stateRecordingProcess.filter(el => el.cam_id !== value.cam_id)
+                        this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false,loadingRcord:false})
+                        this._loadFiles()
+                    })
+                }
+                return value
+            })
+        } else {
+            clearInterval(this.interval)
+            this.setState({interval: null})
+        }
+    }
 
     _recordToggle = () => {
         //this.props.recordignToggle(this.state.markers[this.state.slideIndex])
@@ -175,10 +270,11 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     }
 
     _loadFiles = () =>{ 
-        conections.getCamData(this.state.markers[this.state.slideIndex].extraData.id)                                  
+        conections.getCamDataV2(this.state.markers[this.state.slideIndex].extraData.id)                                  
         .then(response => {
-            const data = response.data            
-            this.setState({videos:data.data.videos,photos:data.data.photos,video_history:data.data.videos_history})
+            const data = response.data 
+            if(data.success)             
+                this.setState({videos:data.data.files_multimedia.videos,photos:data.data.files_multimedia.photos, servidorMultimedia: 'http://'+ data.data.dns_ip})
         }) 
         conections.getCamDataHistory(this.state.markers[this.state.slideIndex].extraData.id)
         .then(response => {
@@ -261,10 +357,11 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
             //}
           }       
           if (this.state.markers[0]) {
-              conections.getCamData(this.state.markers[this.state.slideIndex].extraData.id)            
+              conections.getCamDataV2(this.state.markers[this.state.slideIndex].extraData.id)            
             .then(response => {
-                const data = response.data                
-                this.setState({videos:data.data.videos,photos:data.data.photos})
+                const data = response.data 
+                if(data.success)                 
+                    this.setState({videos:data.data.files_multimedia.videos,photos:data.data.files_multimedia.photos})
             })
           }
           /*  --- matches reales ---
@@ -287,10 +384,11 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         }
         this.setState({videos:[],photos:[]})
         let si = this.state.slideIndex === this.state.markers.length - 1 ? 0 : this.state.slideIndex + 1
-        conections.getCamData(this.state.markers[si].extraData.id)        
+        conections.getCamDataV2(this.state.markers[si].extraData.id)        
             .then(response => {
-                const data = response.data                
-                this.setState({videos:data.data.videos,photos:data.data.photos})
+                const data = response.data
+                if(data.success)                  
+                    this.setState({videos:data.data.files_multimedia.videos,photos:data.data.files_multimedia.photos})
             })
         this.setState({slideIndex: si,isplaying:isp,isplay:this.state.isplaying[si]===undefined?true:this.state.isplaying[si] })
     }
