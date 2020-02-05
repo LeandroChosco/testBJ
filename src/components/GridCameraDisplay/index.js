@@ -8,7 +8,7 @@ import Match from '../Match';
 import MediaContainer from '../MediaContainer';
 import ReactPaginate from 'react-paginate';
 import conections from '../../conections';
-import * as moment from 'moment'
+import * as moment from 'moment';
 
 const countryOptions = [{
     key: 5,
@@ -62,12 +62,12 @@ class GridCameraDisplay extends Component {
         pageCount:1,
         isplay:true,
         servidorMultimedia: '',
-        loadingSnap: false
+        loadingSnap: false,
     }
 
   render() {
     return (
-    <div className='gridCameraContainer' align='center'>                
+    <div className='gridCameraContainer' align='center'>    
         <Row >     
             {this.state.markers.map((value,index) => 
                 (index<this.state.start+this.state.limit)&&index>=this.state.start?

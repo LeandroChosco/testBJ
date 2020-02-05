@@ -413,7 +413,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         this._loadFiles()
     }
       this.setState({cameraName:this.props.marker.title,num_cam:this.props.marker.extraData.num_cam,cameraID:this.props.marker.extraData.id,data:this.props.marker.extraData}) 
-      console.log('dataaaaaaacuadrante',this.props)         
+      //console.log('dataaaaaaacuadrante',this.props)         
       if (this.props.marker.extraData.isRtmp === true) {
         return false
       }

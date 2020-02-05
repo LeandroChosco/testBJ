@@ -33,6 +33,8 @@ import Cuadrantes from './pages/Cuadrantes'
 import socketIOClient from 'socket.io-client';
 import sailsIOClient from 'sails.io.js';
 import constants from './constants/constants';
+import Sound from 'react-sound';
+import sonido from './assets/tonos/notificacion.mp3'
 
 let call = false
 
@@ -68,7 +70,8 @@ class App extends Component {
     calls:[],
     stopNotification:false,
     callIsGoing:false,
-    fisrtTimeCall:true
+    fisrtTimeCall:true,
+    reproducirSonido: false
   }
   
 
@@ -169,7 +172,7 @@ class App extends Component {
       firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
         if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
           this.showNot('SOS','Nueva alerta de ayuda generada','error','Ver detalles',5,docs.docs[docs.docs.length-1].id)
-          
+          this.setState({reproducirSonido: true})
         }
         if(this.state.fisrtTimeHelp)
           this.setState({fisrtTimeHelp:false})
@@ -205,6 +208,7 @@ class App extends Component {
       firebaseC5.app('c5virtual').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{          
         if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimecomplaiments) {
           this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2,docs.docs[0].id)
+          this.setState({reproducirSonido: true})
         }
         if(this.state.fisrtTimecomplaiments)
           this.setState({fisrtTimecomplaiments:false})
@@ -219,7 +223,8 @@ class App extends Component {
         if (this.state.showNotification&&!this.state.fisrtTimeCall&& !this.state.callIsGoing) {
           const notification = this.refs.notificationSystem;
           this.setState({stopNotification:true})      
-          this.setState({callIsGoing:true})  
+          this.setState({callIsGoing:true})
+          this.setState({reproducirSonido: true})  
           if (call) {
             call = false
             this.setState({callIsGoing:false})
@@ -263,6 +268,7 @@ class App extends Component {
         }
         if (this.state.showNotification&&!this.state.fisrtTimeChat&&!this.state.callIsGoing) {
           this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',3,0)
+          this.setState({reproducirSonido: true})
         }
         if(this.state.fisrtTimeChat)
           this.setState({fisrtTimeChat:false})                  
@@ -460,7 +466,15 @@ class App extends Component {
 
   render() {
     return (
-    <Router>    
+    <Router>
+      {this.state.reproducirSonido ? 
+          <Sound 
+              url={sonido}
+              playStatus={Sound.status.PLAYING}
+              onFinishedPlaying={()=>this.setState({reproducirSonido:false})}
+          />
+          :null
+      }     
       {this.state.modalCall?<ModalCall data={this.state.callInfo} modal={this.state.modalCall} hideModal={()=>this.setState({modalCall:false, callInfo:{}})} />:null  }
       <div className="fullcontainer">                
         {this.state.isAuthenticated&&this.state.showHeader?
