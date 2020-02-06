@@ -237,24 +237,28 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                     </Tab.Pane> },
 
                             this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
-                                        <div className="row">
-                                        {this.state.video_history.items.map((row,index)=>
-                                                <div className="col-12" align='center' key={index}>
-                                                    <div className='row'>
-                                                        <div className='col'><h5>{row.fecha}</h5></div>
+                                       <div className="row">
+                                            {this.state.video_history.length !== 0 ?
+                                                this.state.video_history.items.map((row,index)=> (
+                                                    <div className="col-12" align='center' key={index}>
+                                                        <div className='row'>
+                                                            <div className='col'><h5>{row.fecha}</h5></div>
+                                                        </div>
+                                                        <div className="row">
+                                                            {row.videos.map((value,i)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={i} />)}
+                                                        </div>
                                                     </div>
-                                                    <div className="row">
-                                                        {row.videos.map((value,i)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.data} reloadData={this._loadFiles} video key={i} />)}
-                                                    </div>
+                                                ))
+                                                :
+                                                (
+                                                <div align='center'>
+                                                    <p className="big-letter">No hay archivos que mostrar</p>
+                                                    <i className='fa fa-image fa-5x'></i>
                                                 </div>
-                                            )}
+                                                )
+                                            }
+                                            
                                         </div>
-                                        {this.state.video_history.length === 0 ?
-                                            <div align='center'>
-                                                <p className="big-letter">No hay archivos que mostrar</p>
-                                                <i className='fa fa-image fa-5x'></i>
-                                            </div>
-                                        :null}
                                     </Tab.Pane>}:{}:{},
                                 ]} />
                             </div>
