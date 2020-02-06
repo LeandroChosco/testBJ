@@ -10,7 +10,7 @@ const style = {
 const ToolTipComponent = props => {
   const _gotoChats = () => {
     console.log(props);
-    this.props.history.push('/chat?f=2&u='+this.props.info.user_id)
+    this.props.history.push('/chat?f=2&u='+this.props.user_id)
   };
   return (
       <Grid centered divided columns={2}>
