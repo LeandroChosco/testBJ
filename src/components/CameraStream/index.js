@@ -14,6 +14,7 @@ import jsmpeg from 'jsmpeg';
 import * as moment from 'moment';
 import HlsPlayer from '../HlsPlayer';
 import { withRouter } from "react-router-dom";
+import ModalMoreInformation from '../../components/ModalMoreInformation'
 
 var vis = (function(){
     var stateKey, eventKey, keys = {
@@ -65,7 +66,8 @@ class CameraStream extends Component {
         phones:[],
         mails:[],
         restarting: false,
-        servidorMultimedia: ''
+        servidorMultimedia: '',
+        showModalMoreInformation: false
     }
 
     lastDecode= null
@@ -173,7 +175,14 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                 :null
                             :null
                             }
-                        </div>}
+                            <Button onClick={()=> this.setState({showModalMoreInformation: true})} className="ml-2 mt-1">Más información</Button>
+                            {this.state.showModalMoreInformation?
+                                <ModalMoreInformation modal={this.state.showModalMoreInformation} hide={()=> this.setState({showModalMoreInformation: false})} num_cam={this.state.cameraID} data_cam={this.state.cameraName}></ModalMoreInformation>
+                                :null
+                            }
+                        </div>
+                        
+                        }
                         {this.props.showButtons?
                             <Card.Footer>
                                 {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic disabled={this.state.photos.length>=5||this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>:null:null}

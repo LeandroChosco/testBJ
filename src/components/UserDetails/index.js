@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Header, Button, Popup, Grid } from "semantic-ui-react";
+import './style.css'
 
 const style = {
   container: {
@@ -7,23 +8,30 @@ const style = {
   }
 };
 
-const ToolTipComponent = props => {
+
+const UserDetailsComponent = props => {
+  const {dataUser} = props
   const _gotoChats = () => {
     console.log(props);
-    this.props.history.push('/chat?f=2&u='+this.props.user_id)
+    props.history.push('/chat?f=2&u='+dataUser.u_user_id)
   };
+  
+  useEffect(()=>{
+    console.log(props)
+  },[])
+
   return (
-      <Grid centered divided columns={2}>
+      <Grid centered divided columns={2} className="container">
         <Grid.Column textAlign="center">
-          <Header as="h4">Informacion de Vecino</Header>
+          <Header as="h4">Informació del Vecino</Header>
           <p>
-            <b>Nombre: </b> {this.props.name}
+            <b>Nombre: </b> {dataUser.display_name}
           </p>
           <p>
-            <b>Telefono: </b> {this.props.phone}
+            <b>Telefono: </b> {dataUser.phone}
           </p>
           <p>
-            <b>Celular: </b> {this.props.cellphone}
+            <b>Celular: </b> {dataUser.cellphone}
           </p>
         </Grid.Column>
         <Grid.Column textAlign="center">
@@ -34,4 +42,4 @@ const ToolTipComponent = props => {
   );
 };
 
-export default ToolTipComponent;
+export default UserDetailsComponent;

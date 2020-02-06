@@ -132,6 +132,9 @@ export default {
     },
     getCambyNumCam:(num_cam)=>{        
         return Axios.get( constants.base_url + ':1337/cams?num_cam='+num_cam)
+    },
+    getMoreInformationByCam:(num_cam)=>{
+        return Axios.get( constants.base_url + ':' + constants.apiPort + '/register-cams/single-cam?cam_id='+num_cam)
     }
 
     
