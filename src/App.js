@@ -35,6 +35,7 @@ import sailsIOClient from 'sails.io.js';
 import constants from './constants/constants';
 import Sound from 'react-sound';
 import sonido from './assets/tonos/notificacion.mp3'
+import soundManager from 'soundmanager2'
 
 let call = false
 
@@ -76,6 +77,8 @@ class App extends Component {
   
 
   componentDidMount(){
+    console.log(soundManager)
+    soundManager.soundManager.setup({ ignoreMobileRestrictions: true });
     if(window.location.pathname.includes('mobile_help')){
       this.setState({showHeader:false})
       return true;
