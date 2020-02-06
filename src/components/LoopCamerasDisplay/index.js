@@ -263,8 +263,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
           if (this.state.markers[0]) {
               conections.getCamData(this.state.markers[this.state.slideIndex].extraData.id)            
             .then(response => {
-                const data = response.data                
-                this.setState({videos:data.data.videos,photos:data.data.photos})
+                const data = response.data 
+                if(data.success)                 
+                    this.setState({videos:data.data.videos,photos:data.data.photos})
             })
           }
           /*  --- matches reales ---
@@ -289,8 +290,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         let si = this.state.slideIndex === this.state.markers.length - 1 ? 0 : this.state.slideIndex + 1
         conections.getCamData(this.state.markers[si].extraData.id)        
             .then(response => {
-                const data = response.data                
-                this.setState({videos:data.data.videos,photos:data.data.photos})
+                const data = response.data
+                if(data.success)                  
+                    this.setState({videos:data.data.videos,photos:data.data.photos})
             })
         this.setState({slideIndex: si,isplaying:isp,isplay:this.state.isplaying[si]===undefined?true:this.state.isplaying[si] })
     }
