@@ -1,5 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap'
+import '../../assets/styles/util.css';
+import '../../assets/styles/main.css';
+import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
 import { Input, Icon, TextArea, Form, Label, Button, Radio, Tab, Dropdown } from 'semantic-ui-react'
 import  ModalAddCams  from '../../components/ModalAddCams'
@@ -151,7 +154,7 @@ class Cuadrantes extends Component{
                         <ModalAddCams modal={this.state.showModal} hide={(flag)=>this._hideModal(flag)} name_cuadrante={this.state.cuadranteSelection} />
                     :null}  
                 </div>
-                <div className="containerCams">
+                <div id="analisis_holder"  className="containerCams">
                     {this.state.loading ?
                         <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
                         <JellyfishSpinner

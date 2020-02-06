@@ -38,3 +38,21 @@
 a.colorNormal:hover{
     color: #4183c4 !important;
 }
+
+.toggleViewButton{    
+    
+    top:10;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    transition: right 500ms; 
+    opacity: 0.95;       
+}
+
+.toggleViewButton:hover{    
+    opacity: 1;  
+}
+
+#analisis_holder{
+    height: 100%;
+}
