@@ -13,7 +13,7 @@ const UserDetailsComponent = props => {
   const {dataUser} = props
   const _gotoChats = () => {
     //console.log(props);
-    props.propsIniciales.history.push('/chat?'+dataUser.u_user_id)
+    props.propsIniciales.history.push('/chat?f=2&u='+dataUser.u_user_id);
   };
   
   useEffect(()=>{

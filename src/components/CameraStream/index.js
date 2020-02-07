@@ -180,7 +180,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                 :<Button onClick={()=> this.setState({showModalMoreInformation: true})} className="ml-2 mt-1">Más información</Button>
                             }
                             {this.state.showModalMoreInformation?
-                                <ModalMoreInformation propsIniciales={this.props.propsIniciales} modal={this.state.showModalMoreInformation} hide={()=> this.setState({showModalMoreInformation: false})} num_cam={this.state.cameraID} data_cam={this.state.cameraName}></ModalMoreInformation>
+                                <ModalMoreInformation propsIniciales={this.props.propsIniciales} modal={this.state.showModalMoreInformation} hide={()=> this.setState({showModalMoreInformation: false})} cam_id={this.state.cameraID} data_cam={this.state.cameraName}></ModalMoreInformation>
                                 :null
                             }
                         </div>
