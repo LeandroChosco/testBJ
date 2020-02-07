@@ -17,7 +17,7 @@ class ModalMoreInformation extends Component {
                 <Modal.Body className="pl-0 pr-0">
                     {this.state.dataUsuers.length !== 0?
                         this.state.dataUsuers.map(user =>(
-                            <UserDetails key={user.u_user_id} dataUser={user}></UserDetails>
+                            <UserDetails propsIniciales={this.props.propsIniciales} key={user.u_user_id} dataUser={user}></UserDetails>
                         ))
                     :
                         this.state.loading 

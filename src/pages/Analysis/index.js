@@ -354,7 +354,8 @@ class Analysis extends Component {
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
                         snapShot={this._snapShot}
-                        changeStatus={this._chageCamStatus}/>)
+                        changeStatus={this._chageCamStatus}
+                        propsIniciales={this.props}/>)
         case 2:
             return (<LoopCamerasDisplay
                         ref='myChild'
