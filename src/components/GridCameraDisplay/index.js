@@ -66,6 +66,7 @@ class GridCameraDisplay extends Component {
     }
 
   render() {
+      console.log(this.props)
     return (
     <div className='gridCameraContainer' align='center'>    
         <Row >     

@@ -179,8 +179,9 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                 this.props.hideButton ? null
                                 :<Button onClick={()=> this.setState({showModalMoreInformation: true})} className="ml-2 mt-1">Más información</Button>
                             }
+                            
                             {this.state.showModalMoreInformation?
-                                <ModalMoreInformation propsIniciales={this.props.propsIniciales} modal={this.state.showModalMoreInformation} hide={()=> this.setState({showModalMoreInformation: false})} cam_id={this.state.cameraID} cam_name={this.state.cameraName} cam_data={this.props.marker}></ModalMoreInformation>
+                                <ModalMoreInformation dataCamValue={this.props.marker.extraData.dataCamValue} propsIniciales={this.props.propsIniciales} modal={this.state.showModalMoreInformation} hide={()=> this.setState({showModalMoreInformation: false})} cam_id={this.state.cameraID} data_cam={this.state.cameraName}></ModalMoreInformation>
                                 :null
                             }
                         </div>
@@ -417,7 +418,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                 })
         }
     }
-  componentDidMount(){    
+  componentDidMount(){   
+      console.log(this.props) 
       if (this.props.marker.extraData === undefined) {
           return false
       }
