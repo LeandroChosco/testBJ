@@ -6,13 +6,14 @@ import UserDetails from '../../components/UserDetails'
 class ModalMoreInformation extends Component {
     state = { 
         dataUsuers: [],
-        loading: true
+        loading: true,
+        camName : 'Cargando..'
      }
     render() { 
         return ( 
             <Modal size="lg"  show={this.props.modal} onHide={this.props.hide}>
                 <Modal.Header closeButton>                      
-                    <h3>{this.state.dataCam ? this.state.dataCam : 'Cargando..'}</h3>
+                    <h3>{this.state.camName}</h3>
                 </Modal.Header>
                 <Modal.Body className="pl-0 pr-0">
                     {this.state.dataUsuers.length !== 0?
@@ -34,11 +35,11 @@ class ModalMoreInformation extends Component {
 
     componentDidMount(){
         console.log('cam_id',this.props.cam_id)
-        console.log('datacam',this.props.data_cam)
+        console.log('cam_name',this.props.cam_name)
         conections.getMoreInformationByCam(this.props.cam_id).then(res =>{
             console.log('responde',res.data)
             if(res.status === 200){
-                this.setState({dataUsuers: res.data, dataCam: this.props.data_cam})
+                this.setState({dataUsuers: res.data, camName: this.props.cam_name})
             }
 
         })
