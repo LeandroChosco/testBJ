@@ -491,6 +491,7 @@ class Analysis extends Component {
                 let indexFail = 1
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1) {
+                        // console.log(value)
                         let url = 'rtmp://18.212.185.68/live/cam';                                               
                         auxCamaras.push({
                             id:value.id,
@@ -503,6 +504,7 @@ class Analysis extends Component {
                             url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                             real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
                             camera_number:value.num_cam,
+                            dataCamValue: value
                         })                       
                         index = index +1
                         if(this.state.id_cam !=0){
