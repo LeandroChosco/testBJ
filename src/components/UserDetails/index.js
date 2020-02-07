@@ -12,18 +12,18 @@ const style = {
 const UserDetailsComponent = props => {
   const {dataUser} = props
   const _gotoChats = () => {
-    console.log(props);
+    //console.log(props);
     props.history.push('/chat?f=2&u='+dataUser.u_user_id)
   };
   
   useEffect(()=>{
-    console.log(props)
+    //console.log(props)
   },[])
 
   return (
       <Grid centered divided columns={2} className="container">
         <Grid.Column textAlign="center">
-          <Header as="h4">Informació del Vecino</Header>
+          <Header as="h4">Información del Vecino</Header>
           <p>
             <b>Nombre: </b> {dataUser.display_name}
           </p>
