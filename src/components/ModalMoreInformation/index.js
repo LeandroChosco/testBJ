@@ -35,13 +35,13 @@ class ModalMoreInformation extends Component {
   }
 
   componentDidMount() {
-    console.log("Info de camara: ", this.props.dataCamValue);
-    console.log("cam_id", this.props.cam_id);
-    console.log("datacam", this.props.data_cam);
+    //console.log("Info de camara: ", this.props.dataCamValue);
+    //console.log("cam_id", this.props.cam_id);
+    //console.log("datacam", this.props.data_cam);
     conections.getMoreInformationByCam(this.props.cam_id).then(res => {
-      console.log("responde", res.data);
-      if (res.status === 200) {
-        this.setState({ dataUsuers: res.data, dataCam: this.props.data_cam });
+      //console.log("responde", res);
+      if (res.data.success) {
+        this.setState({ dataUsuers: res.data.usersToCam, dataCam: this.props.data_cam });
       }
     });
   }

@@ -15,7 +15,7 @@ const UserDetailsComponent = props => {
 
   const _gotoChats = () => {
     let userFound = false;
-    console.log('dataUser',dataUser);
+    //console.log('dataUser',dataUser);
     props.propsIniciales.chats.forEach((chat)=>{
       if (chat.user_creation == dataUser.u_user_id) {
         userFound = true;
@@ -25,8 +25,8 @@ const UserDetailsComponent = props => {
     
     if(!userFound){
 
-      console.log('no encontrado, cree chat');
-      console.log(props.dataCamValue);
+      //console.log('no encontrado, cree chat');
+      //console.log(props.dataCamValue);
       firebaseC5.app('c5cuajimalpa').firestore().collection('messages').add({
         c5Unread: 0,
         lastModification: new Date(),
@@ -53,7 +53,7 @@ const UserDetailsComponent = props => {
   };
   
   useEffect(()=>{
-    console.log(props)
+    //console.log(props)
   },[])
 
   return (
