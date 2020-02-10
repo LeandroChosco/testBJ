@@ -258,7 +258,8 @@ class Cuadrantes extends Component{
                             moduleActions={this.state.moduleActions}
                             matches={this.props.matches}
                             snapShot={this._snapShot}
-                            changeStatus={this._chageCamStatus}/>)
+                            changeStatus={this._chageCamStatus}
+                            propsIniciales={this.props}/>)
             case 2:
                 return (<LoopCamerasDisplay
                             ref='myChild'
@@ -278,7 +279,8 @@ class Cuadrantes extends Component{
                             moduleActions={this.state.moduleActions}
                             matches={this.props.matches}
                             snapShot={this._snapShot}
-                            changeStatus={this._chageCamStatus}/>)
+                            changeStatus={this._chageCamStatus}
+                            propsIniciales={this.props}/>)
             case 3:
                 return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450}  hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
             default:
@@ -388,7 +390,8 @@ class Cuadrantes extends Component{
                                 lng:value.google_cordenate.split(',')[1],
                                 name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                                 isHls:true,
-                                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
+                                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                dataCamValue: value     
                             })                       
                             index = index +1
                             if(this.state.id_cam !=0){
@@ -401,7 +404,8 @@ class Cuadrantes extends Component{
                                         lng:value.google_cordenate.split(',')[1],                                   
                                         name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
                                         isHls:true,
-                                        url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel 
+                                        url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                        dataCamValue: value 
                 
                                     }
                                     idCamera = value.id
@@ -417,7 +421,8 @@ class Cuadrantes extends Component{
                                     lng:value.google_cordenate.split(',')[1],
                                     name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                                     isHls:true,
-                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
+                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                    dataCamValue: value     
                                 })   
                                 indexFail++
                             }
@@ -428,7 +433,7 @@ class Cuadrantes extends Component{
                 if(idCamera== null){
                     this.setState({camsCuadrante:auxCamaras,offlineCamaras:offlineCamaras,loading: false,error:undefined})
                 } else {
-                    this.setState({laces:auxCamaras,offlineCamaras:offlineCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera},error:undefined})
+                    this.setState({places:auxCamaras,offlineCamaras:offlineCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera},error:undefined})
                     this.setState({displayTipe:3})
                 }
             }).catch(error=>{

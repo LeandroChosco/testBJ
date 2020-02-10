@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import { Header, Button, Popup, Grid } from "semantic-ui-react";
 import './style.css'
-import firebaseC5 from '../../constants/configC5';
+import firebaseC5cuajimalpa from '../../constants/configC5CJ';
 
 const style = {
   container: {
@@ -27,7 +27,7 @@ const UserDetailsComponent = props => {
 
       //console.log('no encontrado, cree chat');
       //console.log(props.dataCamValue);
-      firebaseC5.app('c5cuajimalpa').firestore().collection('messages').add({
+      firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('messages').add({
         c5Unread: 0,
         lastModification: new Date(),
         from: 'Chat Soporte',
