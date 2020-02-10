@@ -371,7 +371,8 @@ class Cuadrantes extends Component{
                                 lng:value.google_cordenate.split(',')[1],
                                 name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                                 isHls:true,
-                                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
+                                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                dataCamValue: value     
                             })                       
                             index = index +1
                             if(this.state.id_cam !=0){
@@ -384,7 +385,8 @@ class Cuadrantes extends Component{
                                         lng:value.google_cordenate.split(',')[1],                                   
                                         name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
                                         isHls:true,
-                                        url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel 
+                                        url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                        dataCamValue: value 
                 
                                     }
                                     idCamera = value.id
@@ -400,7 +402,8 @@ class Cuadrantes extends Component{
                                     lng:value.google_cordenate.split(',')[1],
                                     name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                                     isHls:true,
-                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
+                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                    dataCamValue: value     
                                 })   
                                 indexFail++
                             }
