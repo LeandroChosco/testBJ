@@ -39,6 +39,7 @@ class LoopCamerasDisplay extends Component {
             {this.state.height?this.state.markers.map((value,index) =>
                index===this.state.slideIndex?<div key={value.extraData.id} style={{height:'100%',width:'100%', paddign:'50%'}} align='center' className={(index===this.state.slideIndex )?'':'hiddenCameraNotshow'}>
                     <CameraStream
+                        propsIniciales={this.props.propsIniciales}
                         ref={'camstreamloopref'+value.extraData.id} 
                         marker={value} 
                         height={'100%'}                       
