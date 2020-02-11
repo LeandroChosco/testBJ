@@ -71,7 +71,7 @@ class MobileHelp extends Component {
                                     lat:value.google_cordenate.split(',')[0], 
                                     lng:value.google_cordenate.split(',')[1],                            
                                     webSocket:constants.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                                    name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
+                                    name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,// + ' #cam' +value.num_cam
                                 }
                                                                 
                             }

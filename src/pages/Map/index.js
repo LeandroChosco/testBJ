@@ -120,7 +120,7 @@ class Map extends Component {
             let center_lat = 0
             let center_lng = 0
             let total = 0
-            let index =1 
+            let index = 1
             camaras.map(value=>{
                 if (value.active === 1&& value.flag_streaming === 1) {
                     if(value.google_cordenate != ''){

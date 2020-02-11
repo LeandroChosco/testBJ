@@ -33,6 +33,10 @@ import Cuadrantes from './pages/Cuadrantes'
 import socketIOClient from 'socket.io-client';
 import sailsIOClient from 'sails.io.js';
 import constants from './constants/constants';
+import Sound from 'react-sound';
+import sonido from './assets/tonos/notificacion.mp3'
+import soundManager from 'soundmanager2'
+
 
 let call = false
 
@@ -68,11 +72,13 @@ class App extends Component {
     calls:[],
     stopNotification:false,
     callIsGoing:false,
-    fisrtTimeCall:true
+    fisrtTimeCall:true,
+    reproducirSonido: false
   }
   
 
   componentDidMount(){
+    soundManager.soundManager.setup({ ignoreMobileRestrictions: true });
     if(window.location.pathname.includes('mobile_help')){
       this.setState({showHeader:false})
       return true;
@@ -166,10 +172,10 @@ class App extends Component {
 
       */
   
-      firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
+     firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
         if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
           this.showNot('SOS','Nueva alerta de ayuda generada','error','Ver detalles',5,docs.docs[docs.docs.length-1].id)
-          
+          this.setState({reproducirSonido: true})
         }
         if(this.state.fisrtTimeHelp)
           this.setState({fisrtTimeHelp:false})
@@ -184,7 +190,7 @@ class App extends Component {
           return value
         })})
       })
-      firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
+      firebaseC5.app('c5cuajimalpa').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
         if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
           this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',4,docs.docs[0].id)
         }
@@ -202,9 +208,10 @@ class App extends Component {
       })       
       
   
-      firebaseC5.app('c5virtual').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{          
+      firebaseC5.app('c5cuajimalpa').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{          
         if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimecomplaiments) {
           this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2,docs.docs[0].id)
+          this.setState({reproducirSonido: true})
         }
         if(this.state.fisrtTimecomplaiments)
           this.setState({fisrtTimecomplaiments:false})
@@ -215,18 +222,19 @@ class App extends Component {
         })})
       }) 
   
-      firebaseC5.app('c5virtual').firestore().collection('calls').orderBy('dateTime','desc').onSnapshot(docs => {
+      firebaseC5.app('c5cuajimalpa').firestore().collection('calls').orderBy('dateTime','desc').onSnapshot(docs => {
         if (this.state.showNotification&&!this.state.fisrtTimeCall&& !this.state.callIsGoing) {
           const notification = this.refs.notificationSystem;
           this.setState({stopNotification:true})      
-          this.setState({callIsGoing:true})  
+          this.setState({callIsGoing:true})
+          this.setState({reproducirSonido: true})  
           if (call) {
             call = false
             this.setState({callIsGoing:false})
             return
           }
           call = true
-          //firebaseC5.app('c5virtual').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
+          //firebaseC5.app('c5cuajimalpa').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
             notification.addNotification({
               title:'Llama entrante de '+docs.docs[0].data().user_nicename,
               message: 'Se registro una llamada entrante',
@@ -263,6 +271,7 @@ class App extends Component {
         }
         if (this.state.showNotification&&!this.state.fisrtTimeChat&&!this.state.callIsGoing) {
           this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',3,0)
+          this.setState({reproducirSonido: true})
         }
         if(this.state.fisrtTimeChat)
           this.setState({fisrtTimeChat:false})                  
@@ -460,7 +469,15 @@ class App extends Component {
 
   render() {
     return (
-    <Router>    
+    <Router> 
+      {this.state.reproducirSonido ? 
+          <Sound 
+              url={sonido}
+              playStatus={Sound.status.PLAYING}
+              onFinishedPlaying={()=>this.setState({reproducirSonido:false})}
+          />
+          :null
+      }   
       {this.state.modalCall?<ModalCall data={this.state.callInfo} modal={this.state.modalCall} hideModal={()=>this.setState({modalCall:false, callInfo:{}})} />:null  }
       <div className="fullcontainer">                
         {this.state.isAuthenticated&&this.state.showHeader?
@@ -510,7 +527,7 @@ class App extends Component {
         <Route path="/map" exact render={(props) =><Map canAccess={this.canAccess}  {...props} />} />
         <Route path="/welcome" exact render={(props) =><Welcome {...props}/>} />
         <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/> }/>
-        <Route path="/analisis" exact render={(props) => <Analysis matches={this.state.matches}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/analisis" exact render={(props) => <Analysis matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/analisis/:id" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/detalles/emergency/:id" exact render={(props) => <DetailsEmergency  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/denuncia/:id" exact render={(props) => <DetailsComplaiment  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
@@ -520,8 +537,8 @@ class App extends Component {
         <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
-        <Route path="/cuadrantes" exact render={(props) => <Cuadrantes matches={this.state.matches}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
-        <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                                        
+        <Route path="/cuadrantes" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                                        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />

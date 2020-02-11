@@ -1,5 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap'
+import '../../assets/styles/util.css';
+import '../../assets/styles/main.css';
+import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
 import { Input, Icon, TextArea, Form, Label, Button, Radio, Tab, Dropdown } from 'semantic-ui-react'
 import  ModalAddCams  from '../../components/ModalAddCams'
@@ -106,7 +109,7 @@ class Cuadrantes extends Component{
     render(){
         return(
             <div>
-                <div className="containerCuadrantes">
+                <div id="analisis_holder" className="containerCuadrantes">
                     {this.state.cuadrantes.map((value) =>
                             
                             <Button key = {value.id} className="buttonCuadrantes" as='div' labelPosition='left'>
@@ -161,25 +164,22 @@ class Cuadrantes extends Component{
                         />
                     </div>
                     :this.state.camsCuadrante.length != 0 ?
-                                <GridCameraDisplay
-                                    ref='myChild'
-                                    error={this.state.error}
-                                    loading={this.state.loading}
-                                    places = {this.state.camsCuadrante}
-                                    toggleControlsBottom = {this._toggleControlsBottom}
-                                    recordignToggle={this._recordignToggle}
-                                    loadingRcord={this.state.loadingRcord}
-                                    isRecording={this.state.isRecording}
-                                    recordingCams={this.state.recordingCams}
-                                    recordingProcess={this.state.recordingProcess}
-                                    loadingSnap={this.state.loadingSnap}
-                                    downloadFiles={this._downloadFiles}
-                                    loadingFiles={this.state.loadingFiles}
-                                    makeReport={this._makeReport}
-                                    moduleActions={this.state.moduleActions}
-                                    matches={this.props.matches}
-                                    snapShot={this._snapShot}
-                                    changeStatus={this._chageCamStatus}/>
+                            <Fragment>
+                                {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">
+                                    <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
+                                        <ToggleButton value={1} variant='outline-dark' ><Icon name="grid layout"/></ToggleButton>
+                                        <ToggleButton value={2} variant='outline-dark' ><Icon name="clone"/></ToggleButton>
+                                        {this.state.cameraID?<ToggleButton value={3} variant='outline-dark' ><Icon name="square"/></ToggleButton>:null}
+                                    </ToggleButtonGroup>
+                                </div> :null}
+                                <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
+                            
+                                </div>
+                                {
+                                    this._showDisplay()                
+                                }
+                            </Fragment>
+
                         : this.state.cuadrantes.length != 0 
                             ?<div className="errorContainer">
                                 Cuadrante sin camaras asignadas
@@ -198,8 +198,76 @@ class Cuadrantes extends Component{
     }
 
     componentDidMount(){
+        if (!this.props.match.params.id) {
+            const isValid = this.props.canAccess(2)
+            if (!isValid) {
+                this.props.history.push('/welcome')
+            }            
+            if(isValid.UserToModules[0]){
+                this.setState({moduleActions:JSON.parse(isValid.UserToModules[0].actions)})
+            }
+        } else {
+            this.setState({moduleActions:{btnrecord:true,btnsnap:true,viewHistorial:true},id_cam:this.props.match.params.id})
+        }
         this._loadCuadrantes()
+
     }
+
+    _changeDisplay = (value) => {
+        this.setState({displayTipe:value})
+    }
+
+    _showDisplay = () =>{
+        switch(this.state.displayTipe){
+            case 1:
+                return (<GridCameraDisplay
+                            ref='myChild'
+                            error={this.state.error}
+                            loading={this.state.loading}
+                            places = {this.state.camsCuadrante}
+                            toggleControlsBottom = {this._toggleControlsBottom}
+                            recordignToggle={this._recordignToggle}
+                            loadingRcord={this.state.loadingRcord}
+                            isRecording={this.state.isRecording}
+                            recordingCams={this.state.recordingCams}
+                            recordingProcess={this.state.recordingProcess}
+                            loadingSnap={this.state.loadingSnap}
+                            downloadFiles={this._downloadFiles}
+                            loadingFiles={this.state.loadingFiles}
+                            makeReport={this._makeReport}
+                            moduleActions={this.state.moduleActions}
+                            matches={this.props.matches}
+                            snapShot={this._snapShot}
+                            changeStatus={this._chageCamStatus}
+                            propsIniciales={this.props}/>)
+            case 2:
+                return (<LoopCamerasDisplay
+                            ref='myChild'
+                            error={this.state.error}
+                            loading={this.state.loading}
+                            places = {this.state.camsCuadrante}
+                            toggleControlsBottom = {this._toggleControlsBottom}
+                            recordignToggle={this._recordignToggle}
+                            loadingRcord={this.state.loadingRcord}
+                            isRecording={this.state.isRecording}
+                            recordingCams={this.state.recordingCams}
+                            recordingProcess={this.state.recordingProcess}
+                            loadingSnap={this.state.loadingSnap}
+                            downloadFiles={this._downloadFiles}
+                            loadingFiles={this.state.loadingFiles}
+                            makeReport={this._makeReport}
+                            moduleActions={this.state.moduleActions}
+                            matches={this.props.matches}
+                            snapShot={this._snapShot}
+                            changeStatus={this._chageCamStatus}
+                            propsIniciales={this.props}/>)
+            case 3:
+                return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450}  hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
+            default:
+               return null
+        }
+      }
+
 
     _changeName = (value) =>{
         if(value === 'Otro'){
@@ -303,7 +371,8 @@ class Cuadrantes extends Component{
                                 lng:value.google_cordenate.split(',')[1],
                                 name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                                 isHls:true,
-                                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
+                                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                dataCamValue: value     
                             })                       
                             index = index +1
                             if(this.state.id_cam !=0){
@@ -316,7 +385,8 @@ class Cuadrantes extends Component{
                                         lng:value.google_cordenate.split(',')[1],                                   
                                         name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
                                         isHls:true,
-                                        url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel 
+                                        url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                        dataCamValue: value 
                 
                                     }
                                     idCamera = value.id
@@ -332,7 +402,8 @@ class Cuadrantes extends Component{
                                     lng:value.google_cordenate.split(',')[1],
                                     name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                                     isHls:true,
-                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel     
+                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                    dataCamValue: value     
                                 })   
                                 indexFail++
                             }

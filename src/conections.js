@@ -54,10 +54,10 @@ export default {
         return Axios.put(constants.base_url+':'+constants.apiPort+'/tickets/toClose',data)
     },
     dashboardCams:()=>{        
-        return Axios.get( constants.base_url + ':1337/dashboard/cams')
+        return Axios.get(constants.base_url+':1337/dashboard/cams')
     },
     dashboardTickets:()=>{        
-        return Axios.get( constants.base_url + ':1337/dashboard/tickets')
+        return Axios.get(constants.base_url+':1337/dashboard/tickets')
     },
     dashboardTotalRecognition:()=>{        
         return Axios.get(/* constants.base_url+ */constants.base_url + ':1337/dashboard/detected')
@@ -112,6 +112,9 @@ export default {
     },
     getCambyNumCam:(num_cam)=>{        
         return Axios.get( constants.base_url + ':1337/cams?num_cam='+num_cam)
+    },
+    getMoreInformationByCam:(num_cam)=>{
+        return Axios.get( constants.base_url + ':' + constants.apiPort + '/register-cams/single-cam?cam_id='+num_cam)
     }
 
     

@@ -13,12 +13,9 @@ import saveAs from 'file-saver'
 import jsmpeg from 'jsmpeg';
 import * as moment from 'moment';
 import HlsPlayer from '../HlsPlayer';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-  } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import ModalMoreInformation from '../../components/ModalMoreInformation'
+
 
 var vis = (function(){
     var stateKey, eventKey, keys = {
@@ -69,7 +66,10 @@ class CameraStream extends Component {
         typeReport:1,
         phones:[],
         mails:[],
-        restarting: false
+        restarting: false,
+        servidorMultimedia: '',
+        showModalMoreInformation: false
+
     }
 
     lastDecode= null
@@ -189,7 +189,18 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                                 :null
                             :null
                             }
+                            {
+                                this.props.hideButton ? null
+                                :<Button onClick={()=> this.setState({showModalMoreInformation: true})} className="ml-2 mt-1">Más información</Button>
+                            }
+                            
+                            {this.state.showModalMoreInformation?
+                                <ModalMoreInformation dataCamValue={this.props.marker.extraData.dataCamValue} propsIniciales={this.props.propsIniciales} modal={this.state.showModalMoreInformation} hide={()=> this.setState({showModalMoreInformation: false})} cam_id={this.state.cameraID} data_cam={this.state.cameraName}></ModalMoreInformation>
+                                :null
+                            }
+
                         </div>}
+                        
                         {this.props.showButtons?
                             <Card.Footer>
                                 {this.props.moduleActions?this.props.moduleActions.btnsnap?<Button basic disabled={this.state.photos.length>=5||this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button>:null:null}
