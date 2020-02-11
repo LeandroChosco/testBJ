@@ -241,12 +241,13 @@ class Analysis extends Component {
   _snapShot = (camera) => {
     this.setState({loadingSnap:true})
 
-      conections.snapShot(camera.id,this.state.user_id)
+      conections.snapShotV2(camera.id,this.state.user_id)
           .then(response => {
               this.setState({loadingSnap:false})
               const data = response.data              
               if (data.success) {
-                this.refs.myChild._loadFiles()
+                //console.log('refs',this.refs)
+                //this.refs.myChild._loadFiles()
               }
           })
 }
@@ -262,7 +263,7 @@ class Analysis extends Component {
         })
         this.setState({loadingRcord:true})
 
-            conections.stopRecord({record_proccess_id:process_id},selectedCamera.id)
+            conections.stopRecordV2({clave:process_id},selectedCamera.id)
             .then((r) => {
                 const response = r.data
                 if (response.success === true) {
@@ -282,13 +283,13 @@ class Analysis extends Component {
                 }
             })
     } else {
-       conections.startRecord({},selectedCamera.id)
+       conections.startRecordV2({},selectedCamera.id)
             .then((r) => {
                 const response = r.data
                 if (response.success === true) {
                     let recordingProcess = {
                         cam_id: selectedCamera.id,
-                        process_id: response.id_record_proccess,
+                        process_id: response.clave,
                         creation_time: moment()
                     }
                     let stateRecordingProcess = this.state.recordingProcess
@@ -353,7 +354,8 @@ class Analysis extends Component {
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
                         snapShot={this._snapShot}
-                        changeStatus={this._chageCamStatus}/>)
+                        changeStatus={this._chageCamStatus}
+                        propsIniciales={this.props}/>)
         case 2:
             return (<LoopCamerasDisplay
                         ref='myChild'
@@ -397,19 +399,19 @@ class Analysis extends Component {
         });
     }
 
-    _downloadFiles = (camera,{videos,images}) => {
+    _downloadFiles = (camera,{videos,images,servidorMultimedia}) => {
         this.setState({loadingFiles:true})
         var zip = new JSZip();
         var imgs = zip.folder('images')
         if(images.length !== 0 && videos.length !== 0){
             images.forEach((url)=>{
                 var filename = url.name;
-                imgs.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+                imgs.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
             });
             var vds = zip.folder('videos')
             videos.forEach((url)=>{
                 var filename = url.name;
-                vds.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+                vds.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
             });
             zip.generateAsync({type:"blob"}).then((content) => {
                 // see FileSaver.js
@@ -418,20 +420,20 @@ class Analysis extends Component {
 
             });
         } else {
-            conections.getCamData(camera.id)
+            conections.getCamDataV2(camera.id)
             .then(response => {
                 const data = response.data                
-                images = data.data.photos
-                videos = data.data.videos
+                images = data.data.files_multimedia.photos
+                videos = data.data.files_multimedia.videos
                 if(images.length !== 0 && videos.length !== 0){
                     images.forEach((url)=>{
                         var filename = url.name;
-                        imgs.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+                        imgs.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
                     });
                     var vds = zip.folder('videos')
                     videos.forEach((url)=>{
                         var filename = url.name;
-                        vds.file(filename, this.urlToPromise(constants.base_url + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
+                        vds.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
                     });
                     zip.generateAsync({type:"blob"}).then((content) => {
                         // see FileSaver.js
@@ -489,6 +491,7 @@ class Analysis extends Component {
                 let indexFail = 1
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1) {
+                        // console.log(value)
                         let url = 'rtmp://18.212.185.68/live/cam';                                               
                         auxCamaras.push({
                             id:value.id,
@@ -501,6 +504,7 @@ class Analysis extends Component {
                             url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                             real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
                             camera_number:value.num_cam,
+                            dataCamValue: value
                         })                       
                         index = index +1
                         if(this.state.id_cam !=0){

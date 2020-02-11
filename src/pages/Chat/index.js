@@ -73,6 +73,7 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
                             style={{height:'100%'}}
                             hideTitle 
                             height="100%"
+                            hideButton
                             marker={camData}/>:null}
                         </div>
                         
@@ -239,8 +240,49 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
     })    
   }
 
-  componentDidMount(){      
+  componentDidMount(){  
+    if(this.props.location.hash!==''&&this.state.index!=0 && this.state.hashUsed=== false)
+    {
+      if (this.props.chats[0]!==undefined) {     
+        //this.setState({index:0, from:this.props.chats[0].from})
+        this._changeUserCam(this.props.chats[0])
+        this.setState({index:0,from:this.props.chats[0].from,chatId:this.props.chats[0].id,hashUsed:true})    
+      }
+    } 
+    if (this.props.location.search!=='') {
+      let params = this.QueryStringToJSON(this.props.location.search)      
+      if (this.props.chats.length>0) {        
+        let i         
+        this.props.chats.forEach((chat,index)=>{
+          if (chat.user_creation == params.u) {
+            i = index
+          }
+        })        
+        
+        if (this.state.index!=i&&this.state.fisrt.u!==params.u) {
+          this._changeUserCam(this.props.chats[i])
+          this.setState({index:i,fisrt:params,from:this.props.chats[i].from,chatId:this.props.chats[i].id})
 
+        }
+      }
+    }
+    if(this.state.index !== undefined && this.props.chats[this.state.index] !== undefined){
+      if(this.state.from!=this.props.chats[this.state.index].from){
+        this.setState({from:this.props.chats[this.state.index].from})
+      }
+    }
+
+    var messageBody = document.querySelector('#messagesContainer');
+    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+    
+   //console.log(this.props.match.params.id);
+  //  const {chats} = this.props;
+  //  let user_id = this.props.match.params.id
+  //  if(user_id){
+  //   console.log(chats)
+  //  }
+
+  console.log('chatss',this.props.chats)
   }
 
   QueryStringToJSON(query) {

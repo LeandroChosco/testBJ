@@ -124,15 +124,14 @@ class Map extends Component {
             camaras.map(value=>{
                 if (value.active === 1&& value.flag_streaming === 1) {
                     if(value.google_cordenate != ''){
-                        center_lat = center_lat + parseFloat(value.google_cordenate.split(',')[0])
-                        center_lng=center_lng + parseFloat(value.google_cordenate.split(',')[1])
-                        total = total + 1  
-
+                        center_lat = center_lat + parseFloat(value.google_cordenate.split(',')[0]) 
+                        center_lng=center_lng+parseFloat(value.google_cordenate.split(',')[1])
+                        total = total + 1                                        
                         auxCamaras.push({
                             id:value.id,
                             num_cam:index,
-                            lat: parseFloat(value.google_cordenate.split(',')[0]), 
-                            lng: parseFloat(value.google_cordenate.split(',')[1]),                            
+                            lat:parseFloat(value.google_cordenate.split(',')[0]), 
+                            lng:parseFloat(value.google_cordenate.split(',')[1]),                            
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,                        
                             isHls:true,
                             url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer. name + value.channel 
