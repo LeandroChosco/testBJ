@@ -115,6 +115,7 @@ class Map extends Component {
             element.setMap(null)
         }
         conections.getAllCams().then((data) => {
+            console.log('Marker: ', data.data)
             const camaras = data.data
             let auxCamaras = []
             let center_lat = 0
@@ -134,7 +135,8 @@ class Map extends Component {
                             lng:parseFloat(value.google_cordenate.split(',')[1]),                            
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,                        
                             isHls:true,
-                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer. name + value.channel 
+                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer. name + value.channel,
+                            flag_color: value.flag_color
                         })
                         index++
                     }
@@ -148,8 +150,12 @@ class Map extends Component {
             let marker = []
             this.state.places.map((value,index)=>{
                 if(value.lat && value.lng){
+                    if(value.flag_color === null) {value.flag_color = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"}
                     marker[index]= new window.google.maps.Marker({
                         position: { lat:value.lat, lng:value.lng },
+                        icon: {
+                            url: value.flag_color
+                          },
                         map:  this.state.map,
                         title: value.name,
                         extraData:value
