@@ -115,6 +115,7 @@ class Map extends Component {
             element.setMap(null)
         }
         conections.getAllCams().then((data) => {
+            console.log('Markers: ', data.data)
             const camaras = data.data
             let auxCamaras = []
             let center_lat = 0
@@ -122,6 +123,7 @@ class Map extends Component {
             let total = 0
             let index =1 
             camaras.map(value=>{
+                
                 if (value.active === 1&& value.flag_streaming === 1) {
                     if(value.google_cordenate != ''){
                         center_lat = center_lat + parseFloat(value.google_cordenate.split(',')[0]) 
@@ -134,23 +136,16 @@ class Map extends Component {
                             lng:parseFloat(value.google_cordenate.split(',')[1]),                            
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,                        
                             isHls:true,
-                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer. name + value.channel 
+                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer. name + value.channel,
+                            flag_color: value.flag_color,
+                            tipo_camara: value.tipo_camara
                         })
                         index++
                     }
                 }
                 return true
             })
-            auxCamaras.push({
-                id:2,
-                num_cam:2,
-                lat:19.3718587,
-                lng:-99.1606554,
-                // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                name: '794 Uxmal Ciudad de México, Cd. de México',
-                isIframe: true,
-                url:'http://wellkeeper.us/flowplayer/rtmp2.html'
-            })   
+             
             center_lat = center_lat / total
             center_lng = center_lng / total
             this.state.map.setCenter(new window.google.maps.LatLng(center_lat, center_lng))
@@ -158,8 +153,12 @@ class Map extends Component {
             let marker = []
             this.state.places.map((value,index)=>{
                 if(value.lat && value.lng){
+                    if(value.flag_color === null) {value.flag_color = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"}
                     marker[index]= new window.google.maps.Marker({
                         position: { lat:value.lat, lng:value.lng },
+                        icon: {
+                            url: value.flag_color
+                          },
                         map:  this.state.map,
                         title: value.name,
                         extraData:value

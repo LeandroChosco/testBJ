@@ -544,16 +544,16 @@ class Analysis extends Component {
                     }
                     return true;
                 })
-                auxCamaras.push({
-                    id:2,
-                    num_cam:2,
-                    lat:19.3718587,
-                    lng:-99.1606554,
-                    // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                    name: '794 Uxmal Ciudad de México, Cd. de México',
-                    isIframe: true,
-                    url:'http://wellkeeper.us/flowplayer/rtmp2.html'
-                })   
+                // auxCamaras.push({
+                //     id:2,
+                //     num_cam:2,
+                //     lat:19.3718587,
+                //     lng:-99.1606554,
+                //     // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
+                //     name: '794 Uxmal Ciudad de México, Cd. de México',
+                //     isIframe: true,
+                //     url:'http://wellkeeper.us/flowplayer/rtmp2.html'
+                // })   
                 if(idCamera== null){
                     this.setState({places:auxCamaras,offlineCamaras:offlineCamaras,loading: false,error:undefined})
                 } else {
