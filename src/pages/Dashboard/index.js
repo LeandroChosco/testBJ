@@ -440,8 +440,8 @@ class Dashboard extends Component {
 
   render(){
     return(
-      <div className='holder'>
-        <div>
+      <div className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
+        <div className={this.props.showMatches ? "hide-matches" : "show-matches"}>
           <button className='btn clear pull-right' onClick={this.loadData}><i className={'fa fa-repeat'}></i>Actualizar</button>
         </div>
         <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
