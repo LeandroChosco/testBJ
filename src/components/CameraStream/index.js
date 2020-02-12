@@ -73,7 +73,20 @@ class CameraStream extends Component {
     lastDecode= null
     tryReconect= false
     render() {
-
+        if (this.props.marker.extraData.isIframe) {
+            return(
+                <Card style={{display:this.state.display}}> 
+                    <Card.Title>
+                        <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.props.marker.extraData.num_cam}</div>
+                    </Card.Title>
+                    {/*<iframe onLoad={this.loaded} id={'the-iframe'+this.props.marker.extraData.id} src={this.props.marker.extraData.url} style={{width:'100%',height:'100%'}}/>*/}
+                    <div style={{padding:10}}>
+                        <video  autoplay id="videoElement"/>
+                    </div>
+                    <div align='left'>{this.props.marker.extraData.name}</div>
+                </Card>
+            )
+        }
         return (
             <Card style={{display:this.state.display}}>                    
                 {this.props.horizontal?
@@ -103,7 +116,7 @@ class CameraStream extends Component {
                     </Card.Body>:
                     <Card.Body>                                                                          
                         {this.props.hideTitle?null:<Card.Title>
-                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam}</div>
+                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam}, Tipo: {this.props.marker.extraData.dataCamValue.tipo_camara === 2 ? <i>PTZ</i> : <i>Normal</i>} </div>
                         </Card.Title>}
                         {this.state.showData?
                         <div className="row dataHolder p10">
@@ -423,6 +436,25 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
       if (this.props.marker.extraData === undefined) {
           return false
       }
+      if(this.props.marker.extraData.isIframe){
+          console.log('is iframe')   
+          if (window.flvjs.isSupported()) {
+            setTimeout(()=>{
+                var videoElement = document.getElementById('videoElement');
+                videoElement.muted = true;
+                videoElement.play();
+                videoElement.controls= true;
+                var flvPlayer = window.flvjs.createPlayer({
+                    type: 'flv',
+                    url: 'ws://wellkeeper.us:8000/live/mex.flv'
+                });
+                flvPlayer.attachMediaElement(videoElement);
+                flvPlayer.load();
+                flvPlayer.play();                
+            },1000)
+        }               
+        return true;
+      }
       if(this.props.showButtons){
         this._loadFiles()
     }
@@ -617,7 +649,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     console.log('player error',err)
   }
 
-    componentWillUnmount(){
+    componentWillUnmount(){       
         if(this.state.player)
             this.state.player.stop()
         if(this.state.webSocket)
