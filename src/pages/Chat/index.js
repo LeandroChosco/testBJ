@@ -240,7 +240,7 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
     })    
   }
 
-  componentDidMount(){      
+  componentDidMount(){  
     if(this.props.location.hash!==''&&this.state.index!=0 && this.state.hashUsed=== false)
     {
       if (this.props.chats[0]!==undefined) {     
@@ -275,6 +275,7 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
     var messageBody = document.querySelector('#messagesContainer');
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 
+  console.log('chatss',this.props.chats)
   }
 
   QueryStringToJSON(query) {

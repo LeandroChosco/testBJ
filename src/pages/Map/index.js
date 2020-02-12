@@ -165,6 +165,7 @@ class Map extends Component {
                         title: value.name,
                         extraData:value
                     });
+                    console.log('icon', marker[index])
                     window.google.maps.event.addListener(marker[index],'click', (function(marker, map, createInfoWindow) {
                         return function() {
                         createInfoWindow(marker,map)

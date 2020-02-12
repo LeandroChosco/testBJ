@@ -37,7 +37,6 @@ import Sound from 'react-sound';
 import sonido from './assets/tonos/notificacion.mp3'
 import soundManager from 'soundmanager2'
 
-
 let call = false
 
 class App extends Component {
@@ -272,6 +271,8 @@ class App extends Component {
         if (this.state.showNotification&&!this.state.fisrtTimeChat&&!this.state.callIsGoing) {
           this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',3,0)
           this.setState({reproducirSonido: true})
+          // if(changes[0].doc._hasPendingWrites === false)
+          //   this.setState({reproducirSonido: true})
         }
         if(this.state.fisrtTimeChat)
           this.setState({fisrtTimeChat:false})                  
@@ -534,7 +535,7 @@ class App extends Component {
         <Route path="/detalles/soporte/:id" exact render={(props) => <DetailsSupport  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />  
         <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/cuadrantes" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
