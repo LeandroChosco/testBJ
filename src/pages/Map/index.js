@@ -115,7 +115,7 @@ class Map extends Component {
             element.setMap(null)
         }
         conections.getAllCams().then((data) => {
-            console.log('Markers: ', data.data)
+            // console.log('Markers: ', data.data)
             const camaras = data.data
             let auxCamaras = []
             let center_lat = 0

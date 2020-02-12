@@ -116,7 +116,7 @@ class CameraStream extends Component {
                     </Card.Body>:
                     <Card.Body>                                                                          
                         {this.props.hideTitle?null:<Card.Title>
-                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam}</div>
+                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam}titulo</div>
                         </Card.Title>}
                         {this.state.showData?
                         <div className="row dataHolder p10">

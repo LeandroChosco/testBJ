@@ -504,7 +504,8 @@ class Analysis extends Component {
                             url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                             real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
                             camera_number:value.num_cam,
-                            dataCamValue: value
+                            dataCamValue: value,
+                            tipo_camara: value.tipo_camara
                         })                       
                         index = index +1
                         if(this.state.id_cam !=0){
