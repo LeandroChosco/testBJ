@@ -22,6 +22,7 @@ import firebase from './constants/config';
 import firebaseC5 from './constants/configC5';
 import firebaseC5cuajimalpa from './constants/configC5CJ'
 import Matches from './components/Matches';
+import ArrowToggle from './components/ArrowToggle'
 import DetailsEmergency from './pages/DetailsEmergency';
 import Chat from './pages/Chat';
 import ModalCall from './components/ModalCall';
@@ -72,7 +73,8 @@ class App extends Component {
     stopNotification:false,
     callIsGoing:false,
     fisrtTimeCall:true,
-    reproducirSonido: false
+    reproducirSonido: false,
+    showMatches: true
   }
   
 
@@ -467,6 +469,12 @@ class App extends Component {
     return isValid
 }
 
+ocultarMatches = (value) => {
+  this.setState({
+    showMatches: value
+  })
+}
+
   render() {
     return (
     <Router>
@@ -492,10 +500,14 @@ class App extends Component {
           :null
         } 
         {this.state.isAuthenticated&&this.state.showHeader?
+          (<React.Fragment>
+          <ArrowToggle ocultarMatches={this.ocultarMatches} />   
+            {this.state.showMatches ?
           <Matches 
           toggleSideMenu = {this._cameraSideInfo}  
           cameraID={this.state.cameraID}
-          matchs={this.state.matches}/>  
+          matchs={this.state.matches}/>  :null}
+          </React.Fragment>)
           :null
         }           
         <SideBar toggleSideMenu = {this._toggleSideMenu} active={this.state.sideMenu}/>
@@ -524,20 +536,20 @@ class App extends Component {
               }}/>
           }
         />
-        <Route path="/map" exact render={(props) =><Map canAccess={this.canAccess}  {...props} />} />
+        <Route path="/map" exact render={(props) =><Map canAccess={this.canAccess} showMatches={this.state.showMatches} {...props} />} />
         <Route path="/welcome" exact render={(props) =><Welcome {...props}/>} />
         <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/> }/>
-        <Route path="/analisis" exact render={(props) => <Analysis matches={this.state.matches} chats={this.state.chats}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/analisis" exact render={(props) => <Analysis showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/analisis/:id" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/detalles/emergency/:id" exact render={(props) => <DetailsEmergency  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/denuncia/:id" exact render={(props) => <DetailsComplaiment  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/soporte/:id" exact render={(props) => <DetailsSupport  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/chat" exact render={(props) => <Chat stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />  
+        <Route path="/chat" exact render={(props) => <Chat showMatches={this.state.showMatches} stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />  
         <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
-        <Route path="/cuadrantes" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                                        
       </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}

@@ -13,15 +13,15 @@ code {
     monospace;
 }
 
-#root{
+#root {
   height: 100%;
 }
 
-.fullcontainer{
+.fullcontainer {
   height: 100%;
 }
 
-.matchesMagicButtom{
+.matchesMagicButtom {
   position: fixed;
   top: 15%;
   right: -15px;
@@ -29,23 +29,31 @@ code {
   opacity: 0.7;
 }
 
-.matchesMagicButtom:hover{
+.matchesMagicButtom:hover {
   opacity: 1;
 }
 
-.imageMatchesMagicButtom{
+.imageMatchesMagicButtom {
   height: 35px;
-  width: 35px;  
+  width: 35px;
 }
 
-.showfilesinfocameragrid,.showfilesinfocamera{
+.showfilesinfocameragrid,
+.showfilesinfocamera {
   background-color: #fafafa !important;
 }
 
-#analisis_holder{
+/* #analisis_holder {
   margin-right: 70px;
+} */
+
+.map {
+  margin-right: 0px;
 }
 
-.map{
-  margin-right: 70px;
+.hide-matches {
+  margin-right: 0 !important;
+}
+.show-matches {
+  margin-right: 70px !important;
 }

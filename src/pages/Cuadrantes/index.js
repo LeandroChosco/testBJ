@@ -154,7 +154,7 @@ class Cuadrantes extends Component{
                         <ModalAddCams modal={this.state.showModal} hide={(flag)=>this._hideModal(flag)} name_cuadrante={this.state.cuadranteSelection} />
                     :null}  
                 </div>
-                <div id="analisis_holder"  className="containerCams">
+                <div id="analisis_holder"  className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
                     {this.state.loading ?
                         <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
                         <JellyfishSpinner

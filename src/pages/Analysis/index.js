@@ -69,7 +69,7 @@ class Analysis extends Component {
         )    
     }
     return (
-        <div id="analisis_holder" >
+        <div id="analisis_holder"  className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
             <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
                    
             {

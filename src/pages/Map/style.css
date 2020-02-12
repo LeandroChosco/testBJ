@@ -1,18 +1,19 @@
-.map{
-    height: 100%;
+.map {
+  height: 100%;
 }
 
-.windowpopinfo{
-    width: 550px;
-    overflow-y: hidden;
+
+.windowpopinfo {
+  width: 550px;
+  overflow-y: hidden;
 }
 
-.gm-style-iw-d{
-    overflow: hidden !important;
-    padding: 5px;
+.gm-style-iw-d {
+  overflow: hidden !important;
+  padding: 5px;
 }
 
-.gm-style-iw{
-    padding-right: 10px !important;
-    padding-bottom: 10px !important;
+.gm-style-iw {
+  padding-right: 10px !important;
+  padding-bottom: 10px !important;
 }
