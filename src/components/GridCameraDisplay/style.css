@@ -124,6 +124,15 @@
   background-color: #fbfbfb;
   margin: 0;
 }
+.paginatorContainerOnGrid2 {
+  margin-top: 10px;
+  border-top: 2px solid;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #fbfbfb;
+  margin: 0;
+}
 
 .camcolgridholder > .card {
   height: 100%;

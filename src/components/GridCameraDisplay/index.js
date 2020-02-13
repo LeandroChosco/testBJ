@@ -79,7 +79,7 @@ class GridCameraDisplay extends Component {
             )}        
         </Row>               
         {this.props.loading?null:
-        <Row className='paginatorContainerOnGrid'>
+        <Row className={!this.props.showMatches ? "hide-matches paginatorContainerOnGrid2" : "show-matches paginatorContainerOnGrid"}>
             <Col style={{height:'100%'}}>
              Camaras por pagina <Select placeholder='Camaras por pagina' options={countryOptions}  value={this.state.limit} onChange={(e,value)=>{                
                 const pageCount = Math.ceil(this.state.markers.length / value.value)
@@ -107,7 +107,8 @@ class GridCameraDisplay extends Component {
                 Error al cargar informacion: {JSON.stringify(this.props.error)}
             </div>:null}
         <div className={!this.state.autoplay?'camGridControl showfiles':'camGridControl'}>
-        <div className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
+            <div className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
+        
             <div className='row stiky-top'>
                 <div className='col-4'>
                     
@@ -199,7 +200,8 @@ class GridCameraDisplay extends Component {
             </div>            
         </div> 
         </div> 
-    </div>
+        </div> 
+    
     
     );
   }
