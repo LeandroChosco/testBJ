@@ -116,7 +116,7 @@ class CameraStream extends Component {
                     </Card.Body>:
                     <Card.Body>                                                                          
                         {this.props.hideTitle?null:<Card.Title>
-                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam}titulo</div>
+                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam} {this.props.marker.extraData.dataCamValue==undefined?null:this.props.marker.extraData.dataCamValue.tipo_camara === 2 ? <i>, Tipo: PTZ</i> : null} {this.props.marker.extraData.tipo_camara === undefined?null:this.props.marker.extraData.tipo_camara===2?<i>, Tipo: PTZ</i>:null}</div>
                         </Card.Title>}
                         {this.state.showData?
                         <div className="row dataHolder p10">
@@ -432,12 +432,12 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         }
     }
   componentDidMount(){   
-      console.log(this.props) 
+    //   console.log(this.props) 
       if (this.props.marker.extraData === undefined) {
           return false
       }
       if(this.props.marker.extraData.isIframe){
-          console.log('is iframe')   
+        //   console.log('is iframe')   
           if (window.flvjs.isSupported()) {
             setTimeout(()=>{
                 var videoElement = document.getElementById('videoElement');
@@ -522,7 +522,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         if (!this.tryReconect&&this.state.isVisible) {
             this.setState({tryReconect:true})
             this.tryReconect = true
-            console.log('is delay, cam' + this.state.data.num_cam)                
+            // console.log('is delay, cam' + this.state.data.num_cam)                
             this.state.player.stop()                            
             if (this.state.webSocket) {
                 this.state.webSocket.close()
