@@ -481,6 +481,7 @@ class Analysis extends Component {
         this.setState({loading:true})
         conections.getAllCams()
             .then((response) => {
+                console.log(response.data)
                 const camaras = response.data
                 let auxCamaras = []
                 let offlineCamaras = []
