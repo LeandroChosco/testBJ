@@ -33,7 +33,7 @@ class Map extends Component {
 
   render() {
     return (
-      <div className="map">
+      <div className={"map"}>
         <div
           style={{
             position: "absolute",

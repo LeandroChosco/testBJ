@@ -1,0 +1,7 @@
+.container {
+  position: fixed;
+  right: 0.25rem;
+  z-index: 1220;
+  width: auto;
+  border: 0px;
+}

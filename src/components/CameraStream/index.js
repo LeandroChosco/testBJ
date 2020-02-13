@@ -116,7 +116,7 @@ class CameraStream extends Component {
                     </Card.Body>:
                     <Card.Body>                                                                          
                         {this.props.hideTitle?null:<Card.Title>
-                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam} {this.props.marker.extraData.dataCamValue==undefined?null:this.props.marker.extraData.dataCamValue.tipo_camara === 2 ? <i>, Tipo: PTZ</i> : null} {this.props.marker.extraData.tipo_camara === undefined?null:this.props.marker.extraData.tipo_camara===2?<i>, Tipo: PTZ</i>:null}</div>
+                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam}  {this.props.marker.extraData.tipo_camara === undefined?null:this.props.marker.extraData.tipo_camara===2?<i>, Tipo: PTZ</i>:null}</div>
                         </Card.Title>}
                         {this.state.showData?
                         <div className="row dataHolder p10">
