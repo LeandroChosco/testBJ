@@ -10,9 +10,17 @@ const ArrowToggle = props => {
     guardarFlecha(!flecha);
   };
   return (
-    <button className="container" onClick={changeArrow}>
-      <Icon name={flecha ? "arrow right" : "arrow left"} size="big" />
-    </button>
+    <React.Fragment>
+      {flecha ? (
+        <button className="containerToHide" onClick={changeArrow}>
+          <Icon name="chevron circle right" size="big" />
+        </button>
+      ) : (
+        <button className="containerToShow" onClick={changeArrow}>
+          <Icon name="chevron circle left" size="big" />
+        </button>
+      )}
+    </React.Fragment>
   );
 };
 
