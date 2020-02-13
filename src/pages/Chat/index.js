@@ -29,8 +29,8 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
       this.setState({chatId:chats[index].id});
     }     
     return (
-        <div  className="app-container" >   
-            <div className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
+        <div  className={!this.props.showMatches ? "hide-matches app-container" : "show-matches app-container"} >   
+            <div className="row fullHeight">
               <div className="col-4 userList">
                   {chats.map((chat,i)=>
                     <Card className={i===index?'activeChat':''} key={i} onClick={()=>this.changeChat(chat,i)}>
