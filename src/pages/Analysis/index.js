@@ -101,6 +101,7 @@ class Analysis extends Component {
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
                         snapShot={this._snapShot}
+                        showMatches={this.props.showMatches}
                         changeStatus={this._chageCamStatus}/>
         </div>
     )
@@ -355,6 +356,7 @@ class Analysis extends Component {
                         matches={this.props.matches}
                         snapShot={this._snapShot}
                         changeStatus={this._chageCamStatus}
+                        showMatches={this.props.showMatches}
                         propsIniciales={this.props}/>)
         case 2:
             return (<LoopCamerasDisplay

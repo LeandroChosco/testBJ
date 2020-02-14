@@ -1,139 +1,147 @@
-.gridCameraContainer{
-    overflow-x: hidden;
-    margin: auto;
-    padding-bottom: 30px;
-    height: 100vh;
+.gridCameraContainer {
+  overflow-x: hidden;
+  margin: auto;
+  padding-bottom: 30px;
+  height: 100vh;
 }
 
-
-.camGridControl{
-    position: fixed;
-    bottom: 0;
-    height: 0;
-    background-color: lightgray;
-    width: 95%;
-    display: none;
+.camGridControl {
+  position: fixed;
+  bottom: 0;
+  height: 0;
+  background-color: lightgray;
+  width: 100%;
+  display: none;
 }
-.showfiles{
-    height: 30%;
-    overflow-y: hidden;
-    display: block;
+.showfiles {
+  height: 30%;
+  overflow-y: hidden;
+  display: block;
 }
-.hidefiles{
-    height: 0;
-}
-
-.hiddenCameraNotshow{
-    display: none;
-}
-.ui.card{
-    height: auto !important;
-}
-.stiky-top{
-    position: sticky;
-}
-.recording{
-    animation: opacityOnAndOff;
-    animation-duration: 1s;
-    animation-delay: 0s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
+.hidefiles {
+  height: 0;
 }
 
-.snapshotsgrid,.videosgrid{
-    height: 100%;
-    border-right: 1px solid;
+.hiddenCameraNotshow {
+  display: none;
+}
+.ui.card {
+  height: auto !important;
+}
+.stiky-top {
+  position: sticky;
+}
+.recording {
+  animation: opacityOnAndOff;
+  animation-duration: 1s;
+  animation-delay: 0s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
 }
 
-.showfilesinfocameragrid{
-    background-color: white;
-    height: 100%;
-}
-.snapshotsgrid,.videosgrid,.matchesgrid{
-    height: 100%;
-    overflow-y: auto;
-}
-.videosgrid>div>div>video{
-    width: 100%;
-    height: 100%;
+.snapshotsgrid,
+.videosgrid {
+  height: 100%;
+  border-right: 1px solid;
 }
 
-.errorContainer{
-    position: absolute;
-    top:40%;
-    font-size: 1.5em;
-    color: red;
-    height: 100%;
-    margin: auto;
+.showfilesinfocameragrid {
+  background-color: white;
+  height: 100%;
 }
-.big-letter{
-    font-size: 1.5rem;
-    font-weight: 100;
+.snapshotsgrid,
+.videosgrid,
+.matchesgrid {
+  height: 100%;
+  overflow-y: auto;
 }
-
-.fa-5x{
-    font-weight: 100 !important;    
+.videosgrid > div > div > video {
+  width: 100%;
+  height: 100%;
 }
 
-.activeselectedcameragrid{
-    border: 1px red solid !important;
-    border-radius: 2px;
+.errorContainer {
+  position: absolute;
+  top: 40%;
+  font-size: 1.5em;
+  color: red;
+  height: 100%;
+  margin: auto;
+}
+.big-letter {
+  font-size: 1.5rem;
+  font-weight: 100;
+}
+
+.fa-5x {
+  font-weight: 100 !important;
+}
+
+.activeselectedcameragrid {
+  border: 1px red solid !important;
+  border-radius: 2px;
 }
 @keyframes opacityOnAndOff {
-    0% {
-        opacity: 0;
-    }
-    50%{
-      opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
-
-.pagination {    
-    justify-content: space-around;
+.pagination {
+  justify-content: space-around;
 }
 
-.pagination >li {    
-    background-color: #fafafa;
-    border-radius: 5px;
-    width: 100%;
+.pagination > li {
+  background-color: #fafafa;
+  border-radius: 5px;
+  width: 100%;
 }
-.pagination >li>a {    
-
-    width: 100%;
-    display: block;
-    cursor: pointer;
-    color: black;
+.pagination > li > a {
+  width: 100%;
+  display: block;
+  cursor: pointer;
+  color: black;
 }
-.pagination >.active {    
-    background-color: #afafaf;
-    border: 1px solid #fbfbfb;
-    border-radius: 5px;
-    width: 100%;
-}
-
-
-.paginatorContainerOnGrid{
-    margin-top: 10px;
-    border-top: 2px solid;
-    position: fixed;
-    bottom: 0;
-    width: 95%;
-    background-color: #fbfbfb;
-    margin: 0;
+.pagination > .active {
+  background-color: #afafaf;
+  border: 1px solid #fbfbfb;
+  border-radius: 5px;
+  width: 100%;
 }
 
-.camcolgridholder>.card{
-    height: 100%;
+.paginatorContainerOnGrid {
+  margin-top: 10px;
+  border-top: 2px solid;
+  position: fixed;
+  bottom: 0;
+  width: 95%;
+  background-color: #fbfbfb;
+  margin: 0;
+}
+.paginatorContainerOnGrid2 {
+  margin-top: 10px;
+  border-top: 2px solid;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #fbfbfb;
+  margin: 0;
+}
+
+.camcolgridholder > .card {
+  height: 100%;
 }
 /*
-.camcolgridholder>.card>.card-body{
-    min-height: 70%;
-}*/
+  .camcolgridholder>.card>.card-body{
+      min-height: 70%;
+  }*/
 
-.camcolgridholder>.card>.card-body>.camHolder{
-    height: initial;
+.camcolgridholder > .card > .card-body > .camHolder {
+  height: initial;
 }
