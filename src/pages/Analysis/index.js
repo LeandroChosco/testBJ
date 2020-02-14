@@ -69,7 +69,7 @@ class Analysis extends Component {
         )    
     }
     return (
-        <div id="analisis_holder" >
+        <div id="analisis_holder" className={!this.props.showMatches ? "hide-matches" : "show-matches"} >
             <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
                    
             {
@@ -101,6 +101,7 @@ class Analysis extends Component {
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
                         snapShot={this._snapShot}
+                        showMatches={this.props.showMatches}
                         changeStatus={this._chageCamStatus}/>
         </div>
     )
@@ -355,6 +356,7 @@ class Analysis extends Component {
                         matches={this.props.matches}
                         snapShot={this._snapShot}
                         changeStatus={this._chageCamStatus}
+                        showMatches={this.props.showMatches}
                         propsIniciales={this.props}/>)
         case 2:
             return (<LoopCamerasDisplay
@@ -482,6 +484,7 @@ class Analysis extends Component {
         this.setState({loading:true})
         conections.getAllCams()
             .then((response) => {
+                console.log(response.data)
                 const camaras = response.data
                 let auxCamaras = []
                 let offlineCamaras = []
@@ -505,7 +508,8 @@ class Analysis extends Component {
                             url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                             real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
                             camera_number:value.num_cam,
-                            dataCamValue: value
+                            dataCamValue: value,
+                            tipo_camara: value.tipo_camara
                         })                       
                         index = index +1
                         if(this.state.id_cam !=0){
@@ -546,16 +550,16 @@ class Analysis extends Component {
                     }
                     return true;
                 })
-                auxCamaras.push({
-                    id:2,
-                    num_cam:2,
-                    lat:19.3718587,
-                    lng:-99.1606554,
-                    // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                    name: '794 Uxmal Ciudad de México, Cd. de México',
-                    isIframe: true,
-                    url:'http://wellkeeper.us/flowplayer/rtmp2.html'
-                })   
+                // auxCamaras.push({
+                //     id:2,
+                //     num_cam:2,
+                //     lat:19.3718587,
+                //     lng:-99.1606554,
+                //     // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
+                //     name: '794 Uxmal Ciudad de México, Cd. de México',
+                //     isIframe: true,
+                //     url:'http://wellkeeper.us/flowplayer/rtmp2.html'
+                // })   
                 if(idCamera== null){
                     this.setState({places:auxCamaras,offlineCamaras:offlineCamaras,loading: false,error:undefined})
                 } else {
