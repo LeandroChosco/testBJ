@@ -39,10 +39,18 @@
 
 .showfiles {
   padding-left: 15px;
-  padding-right: 15px;
+  /* padding-right: 15px; */
   padding-bottom: 40px;
 }
 
 #analisis_holder {
   height: 100%;
+}
+.con-margin {
+  /* margin-right: 70px !important; */
+  padding-right: 90px;
+}
+.sin-margin {
+  /* margin-right: 0 !important; */
+  padding-right: 25px;
 }
