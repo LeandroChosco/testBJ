@@ -106,8 +106,12 @@ class GridCameraDisplay extends Component {
             {this.props.error&&this.state.markers.length===0?<div className="errorContainer">
                 Error al cargar informacion: {JSON.stringify(this.props.error)}
             </div>:null}
-        <div className={!this.state.autoplay?'camGridControl showfiles':'camGridControl'}>
-            <div className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
+        {/* <div className={!this.state.autoplay ? 'camGridControl showfiles':'camGridControl'}> */}
+        <div className={!this.state.autoplay ?
+            !this.props.showMatches ? "sin-margin camGridControl showfiles" : "con-margin camGridControl showfiles"
+            :
+            !this.props.showMatches ? "sin-margin camGridControl" : "con-margin camGridControl"}>
+            {/* <div className={!this.props.showMatches ? "hide-matches" : "show-matches"}> */}
         
             <div className='row stiky-top'>
                 <div className='col-4'>
@@ -200,7 +204,7 @@ class GridCameraDisplay extends Component {
             </div>            
         </div> 
         </div> 
-        </div> 
+        // </div> 
     
     
     );
@@ -408,7 +412,8 @@ class GridCameraDisplay extends Component {
 
     }
 
-    componentDidMount(){     
+    componentDidMount(){   
+        console.log(this.props.showMatches)  
         let markersForLoop = []
         this.props.places.map((value)=>{
             markersForLoop.push({

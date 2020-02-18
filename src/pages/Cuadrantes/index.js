@@ -259,6 +259,7 @@ class Cuadrantes extends Component{
                             matches={this.props.matches}
                             snapShot={this._snapShot}
                             changeStatus={this._chageCamStatus}
+                            showMatches={this.props.showMatches}
                             propsIniciales={this.props}/>)
             case 2:
                 return (<LoopCamerasDisplay

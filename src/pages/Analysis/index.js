@@ -463,6 +463,7 @@ class Analysis extends Component {
 
 
     componentDidMount(){
+        console.log(this.props.showMatches) 
         if (!this.props.match.params.id) {
             const isValid = this.props.canAccess(2)
             if (!isValid) {

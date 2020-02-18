@@ -1,49 +1,48 @@
-.btn-group, .btn-group-toggle{
-    width: 100%;
+.btn-group,
+.btn-group-toggle {
+  width: 100%;
 }
 
-.camUniqueHolder>.card{        
-    height: 100%;
+.camUniqueHolder > .card {
+  height: 100%;
 }
 
-.camUniqueHolder{        
-    height: 100%;
+.camUniqueHolder {
+  height: 100%;
 }
 
-
-.toggleViewButton{    
-    
-    top:10;
-    right: 0;
-    left: 0;
-    z-index: 1;
-    transition: right 500ms; 
-    opacity: 0.95;       
+.toggleViewButton {
+  top: 10;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  transition: right 500ms;
+  opacity: 0.95;
 }
 
-.toggleViewButton:hover{    
-    opacity: 1;  
+.toggleViewButton:hover {
+  opacity: 1;
 }
 
-.iconArroWMagic{
-    opacity: 0.5;
+.iconArroWMagic {
+  opacity: 0.5;
 }
 
-.btn-outline-danger:not(.active){
-    background-color: white;
+.btn-outline-danger:not(.active) {
+  background-color: white;
 }
 
-.btn-outline-danger:not(.active):hover{
-    background-color: white;
-    color: brown;
+.btn-outline-danger:not(.active):hover {
+  background-color: white;
+  color: brown;
 }
 
-.showfiles{
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 40px;
+.showfiles {
+  padding-left: 15px;
+  /* padding-right: 15px; */
+  padding-bottom: 40px;
 }
 
-#analisis_holder{
-    height: 100%;
+#analisis_holder {
+  height: 100%;
 }
