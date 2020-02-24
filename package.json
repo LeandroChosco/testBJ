@@ -12,6 +12,7 @@
     "firebase": "^6.1.0",
     "google-maps-react": "^2.0.2",
     "jsmpeg": "^1.0.0",
+    "jsmpeg-player": "^3.0.3",
     "jszip": "^3.2.1",
     "jszip-utils": "0.0.2",
     "moment": "^2.24.0",
@@ -47,7 +48,8 @@
     "video.js": "^7.6.5",
     "videojs-flash": "^2.2.1",
     "videojs-swf": "^5.4.2",
-    "videojs-watermark": "^2.0.0"
+    "videojs-watermark": "^2.0.0",
+    "ws-avc-player": "^2.0.2"
   },
   "scripts": {
     "start": "react-scripts start",

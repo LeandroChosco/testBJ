@@ -168,7 +168,7 @@ class Map extends Component {
                 value.state +
                 " #cam" +
                 value.num_cam,
-              isHls: true,
+              isHls: value.tipo_camara === 3 ? false : true,
               url:
                 "http://" +
                 value.UrlStreamMediaServer.ip_url_ms +
@@ -176,7 +176,9 @@ class Map extends Component {
                 value.UrlStreamMediaServer.output_port +
                 value.UrlStreamMediaServer.name +
                 value.channel,
-              flag_color: value.flag_color
+              flag_color: value.flag_color,
+              dataCamValue: value,
+              fromMap: true
             });
             index++;
           }

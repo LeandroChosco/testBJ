@@ -15,6 +15,7 @@ import * as moment from 'moment';
 import HlsPlayer from '../HlsPlayer';
 import { withRouter } from "react-router-dom";
 import ModalMoreInformation from '../../components/ModalMoreInformation'
+import WssPlayer from '../WssPlayer'
 
 var vis = (function(){
     var stateKey, eventKey, keys = {
@@ -73,20 +74,20 @@ class CameraStream extends Component {
     lastDecode= null
     tryReconect= false
     render() {
-        if (this.props.marker.extraData.isIframe) {
-            return(
-                <Card style={{display:this.state.display}}> 
-                    <Card.Title>
-                        <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.props.marker.extraData.num_cam}</div>
-                    </Card.Title>
-                    {/*<iframe onLoad={this.loaded} id={'the-iframe'+this.props.marker.extraData.id} src={this.props.marker.extraData.url} style={{width:'100%',height:'100%'}}/>*/}
-                    <div style={{padding:10}}>
-                        <video  autoplay id="videoElement"/>
-                    </div>
-                    <div align='left'>{this.props.marker.extraData.name}</div>
-                </Card>
-            )
-        }
+        // if (this.props.marker.extraData.isIframe) {
+        //     return(
+        //         <Card style={{display:this.state.display}}> 
+        //             <Card.Title>
+        //                 <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.props.marker.extraData.num_cam}</div>
+        //             </Card.Title>
+        //             <iframe onLoad={this.loaded} id={'the-iframe'+this.props.marker.extraData.id} src={this.props.marker.extraData.dns} style={{width:'100%',height:'100%'}}/>
+        //             <div style={{padding:10}}>
+        //                 <video  autoPlay id="videoElement"/>
+        //             </div>
+        //             <div align='left'>{this.props.marker.extraData.name}</div>
+        //         </Card>
+        //     )
+        // }
         return (
             <Card style={{display:this.state.display}}>                    
                 {this.props.horizontal?
@@ -97,7 +98,14 @@ class CameraStream extends Component {
                             <Row>
                                 <Col lg={6}>
                                     <div className="camHolder">
-                                        {this.props.marker.extraData.isRtmp? <RtmpPlayer height={this.props.height} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} />: this.props.marker.extraData.isHls? <HlsPlayer height={this.props.height} width={this.props.width} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} /> :<canvas id={'camcanvasstreamer'+this.state.cameraID} ref="camRef" style={{width:'100%',height:this.props.height?this.props.height:'100%'}}></canvas>                      }                                          
+                                        {this.props.marker.extraData.isRtmp
+                                            ? <RtmpPlayer height={this.props.height} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} />
+                                            : 
+                                            this.props.marker.extraData.dataCamValue.tipo_camara === 3 ? <WssPlayer data={this.props.marker.extraData} />
+                                               : 
+                                               this.props.marker.extraData.isHls
+                                                    ? <HlsPlayer height={this.props.height} width={this.props.width} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} /> 
+                                                    :<canvas id={'camcanvasstreamer'+this.state.cameraID} ref="camRef" style={{width:'100%',height:this.props.height?this.props.height:'100%'}}></canvas>}                                          
                                     </div>
                                 </Col>
                                 <Col lg={6}>
@@ -116,7 +124,13 @@ class CameraStream extends Component {
                     </Card.Body>:
                     <Card.Body>                                                                          
                         {this.props.hideTitle?null:<Card.Title>
-                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam} {this.props.marker.extraData.dataCamValue==undefined?null:this.props.marker.extraData.dataCamValue.tipo_camara === 2 ? <i>, Tipo: PTZ</i> : null} {this.props.marker.extraData.tipo_camara === undefined?null:this.props.marker.extraData.tipo_camara===2?<i>, Tipo: PTZ</i>:null}</div>
+                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam} 
+                                {this.props.marker.extraData.dataCamValue==undefined?null:this.props.marker.extraData.dataCamValue.tipo_camara === 2 ? <i>, Tipo: PTZ</i> : null} 
+                                {/* {this.props.marker.extraData.tipo_camara === undefined?null:this.props.marker.extraData.tipo_camara===2?<i>, Tipo: PTZ</i>:null} */}
+                                {this.props.marker.extraData.dataCamValue==undefined?null:this.props.marker.extraData.dataCamValue.tipo_camara === 3 ? <i>, Web Socket</i> : null} 
+                                {/* {this.props.marker.extraData.tipo_camara === undefined?null:this.props.marker.extraData.tipo_camara===3?<i>, Web Socket</i>:null} */}
+                            </div>
+                            
                         </Card.Title>}
                         {this.state.showData?
                         <div className="row dataHolder p10">
@@ -173,7 +187,14 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
                         </div>:null} 
                         <div className={this.state.showData?"camHolder hideCamHolder":"camHolder"} style={{width:'100%'}} align='center'>
                             <div ref="camHolder" style={{width:'100%', height:this.props.height?this.props.height:'100%'}}>  
-                            {this.props.marker.extraData.isRtmp? <RtmpPlayer height={this.props.height} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} />: this.props.marker.extraData.isHls? <HlsPlayer height={this.props.height}  width={this.props.width} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} /> : <canvas ref="camRef" id={'canvasCamaraStream'+this.state.data.id} style={{width:'100%',height:'100%'}}></canvas>}
+                            {this.props.marker.extraData.isRtmp
+                                            ? <RtmpPlayer height={this.props.height} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} />
+                                            : 
+                                            this.props.marker.extraData.dataCamValue.tipo_camara === 3 ? <WssPlayer data={this.props.marker.extraData} />
+                                               : 
+                                               this.props.marker.extraData.isHls
+                                                    ? <HlsPlayer height={this.props.height} width={this.props.width} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} /> 
+                                                    :<canvas id={'camcanvasstreamer'+this.state.cameraID} ref="camRef" style={{width:'100%',height:this.props.height?this.props.height:'100%'}}></canvas>}
                                     {this.state.tryReconect?'Reconectando...':null}
                             </div> 
                         </div>
@@ -432,29 +453,33 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         }
     }
   componentDidMount(){   
+
       console.log(this.props) 
+      if(this.props.marker.extraData.dataCamValue.tipo_camara === 3) {
+          return false
+      }
       if (this.props.marker.extraData === undefined) {
           return false
       }
-      if(this.props.marker.extraData.isIframe){
-          console.log('is iframe')   
-          if (window.flvjs.isSupported()) {
-            setTimeout(()=>{
-                var videoElement = document.getElementById('videoElement');
-                videoElement.muted = true;
-                videoElement.play();
-                videoElement.controls= true;
-                var flvPlayer = window.flvjs.createPlayer({
-                    type: 'flv',
-                    url: 'ws://wellkeeper.us:8000/live/mex.flv'
-                });
-                flvPlayer.attachMediaElement(videoElement);
-                flvPlayer.load();
-                flvPlayer.play();                
-            },1000)
-        }               
-        return true;
-      }
+    //   if(this.props.marker.extraData.isIframe){
+    //       console.log('is iframe')   
+    //       if (flvjs.isSupported()) {
+    //         setTimeout(()=>{
+    //             var videoElement = document.getElementById('videoElement');
+    //             videoElement.muted = true;
+    //             videoElement.play();
+    //             videoElement.controls= true;
+    //             var flvPlayer = flvjs.createPlayer({
+    //                 type: 'flv',
+    //                 url: 'ws://wellkeeper.us:8000/live/mex.flv'
+    //             });
+    //             flvPlayer.attachMediaElement(videoElement);
+    //             flvPlayer.load();
+    //             flvPlayer.play();                
+    //         },1000)
+    //     }               
+    //     return true;
+    //   }
       if(this.props.showButtons){
         this._loadFiles()
     }
@@ -473,18 +498,18 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
       } catch (err) {
         this._wsError(err)
       }
-      try {
-        var p = new jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true, onload:this._endedPlay, /*ondecodeframe:this._decode,*/onfinished:this._endedPlay,disableGl:true,forceCanvas2D: true});
-        let interval = setInterval(this._checkIsUp,60000)  
-        this.setState({interval: interval})
-      } catch (err) {
-          this._playerError(err)
-      }
+    //   try {
+    //     var p = new jsmpeg(ws, {canvas:this.refs.camRef, autoplay:true,audio:false,loop: true, onload:this._endedPlay, /*ondecodeframe:this._decode,*/onfinished:this._endedPlay,disableGl:true,forceCanvas2D: true});
+    //     let interval = setInterval(this._checkIsUp,60000)  
+    //     this.setState({interval: interval})
+    //   } catch (err) {
+    //       this._playerError(err)
+    //   }
            
-      this.setState({
-          webSocket: ws,
-          player: p,
-      })     
+    //   this.setState({
+    //       webSocket: ws,
+    //       player: p,
+    //   })     
       if (this.props.width) {
         if (this.refs.camRef.getBoundingClientRect().width === 0) {
           this.refs.camHolder.style.width = window.visualViewport.width  * this.props.width+'px'  

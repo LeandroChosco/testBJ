@@ -390,7 +390,7 @@ class Cuadrantes extends Component{
                                 lat:value.google_cordenate.split(',')[0],
                                 lng:value.google_cordenate.split(',')[1],
                                 name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
-                                isHls:true,
+                                isHls: value.tipo_camara === 3 ? false : true,
                                 url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                                 dataCamValue: value     
                             })                       
@@ -404,7 +404,7 @@ class Cuadrantes extends Component{
                                         lat:value.google_cordenate.split(',')[0],
                                         lng:value.google_cordenate.split(',')[1],                                   
                                         name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
-                                        isHls:true,
+                                        isHls: value.tipo_camara === 3 ? false : true,
                                         url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                                         dataCamValue: value 
                 
@@ -421,7 +421,7 @@ class Cuadrantes extends Component{
                                     lat:value.google_cordenate.split(',')[0],
                                     lng:value.google_cordenate.split(',')[1],
                                     name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
-                                    isHls:true,
+                                    isHls: value.tipo_camara === 3 ? false : true,
                                     url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                                     dataCamValue: value     
                                 })   
