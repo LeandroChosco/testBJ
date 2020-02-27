@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import conections from "../../conections";
 import "./style.css";
 
 export class MapContainer extends Component {
@@ -8,8 +8,43 @@ export class MapContainer extends Component {
       this.refs.mapDiv,
       this.props.options
     );
-    this.props.onMapLoad(map);
-  };
+
+    conections.getLimitsCam().then(res =>{
+      //console.log('limits', res)
+      var dataLimit = res.data.data
+      if(res.status === 200){
+        if(res.data.success){
+          console.log('data',dataLimit)
+          dataLimit.map(data =>{
+            var polygonCoord = data.coordenadas_limites
+            // Construct the polygon.
+            var polygon = new window.google.maps.Polygon({
+              paths: polygonCoord,
+              strokeColor: data.color,
+              strokeOpacity: 0.8,
+              strokeWeight: 1,
+              fillColor: data.color,
+              fillOpacity: 0.35
+            });
+            polygon.setMap(map)
+          })
+          /*var polygonCoord = res.data.data.coordenadas_limites
+          // Construct the polygon.
+          var polygon = new window.google.maps.Polygon({
+            paths: polygonCoord,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 1,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35
+          });
+          polygon.setMap(map)*/
+          };
+        }
+      })
+
+      this.props.onMapLoad(map);
+    };
 
   componentDidMount() {
     if (!window.google) {

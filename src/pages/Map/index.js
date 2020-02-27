@@ -20,7 +20,7 @@ const mapOptions = {
   streetViewControl: false,
   fullscreenControl: false,
   map: null,
-  loading: false
+  loading: false,
 };
 
 class Map extends Component {
@@ -123,6 +123,7 @@ class Map extends Component {
     map.style.maxHeight = documentHeight - navHeight + "px";
     window.addEventListener("resize", this._resizeMap);
     window.addEventListener("restartCamEvent", this._loadCameras, false);
+    
   }
 
   componentWillUnmount() {
