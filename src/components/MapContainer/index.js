@@ -27,24 +27,27 @@ export class MapContainer extends Component {
               fillOpacity: 0.35
             });
             polygon.setMap(map)
+            var infoWindow = new window.google.maps.InfoWindow;
+            polygon.addListener('click', (function(event){
+              var contentString = data.nombre;
+
+              // Replace the info window's content and position.
+              infoWindow.setContent(contentString);
+              infoWindow.setPosition(event.latLng);
+
+              infoWindow.open(map);
+            }));
+            
           })
-          /*var polygonCoord = res.data.data.coordenadas_limites
-          // Construct the polygon.
-          var polygon = new window.google.maps.Polygon({
-            paths: polygonCoord,
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 1,
-            fillColor: '#FF0000',
-            fillOpacity: 0.35
-          });
-          polygon.setMap(map)*/
+
+          
           };
         }
       })
 
       this.props.onMapLoad(map);
     };
+
 
   componentDidMount() {
     if (!window.google) {
@@ -71,5 +74,15 @@ export class MapContainer extends Component {
     return <div style={{ width: "100%", height: "100%" }} ref="mapDiv" />;
   }
 }
+
+// function showArrays(event) {
+//   var contentString = 'Content here';
+
+//   // Replace the info window's content and position.
+//   infoWindow.setContent(contentString);
+//   infoWindow.setPosition(event.latLng);
+
+//   infoWindow.open(map);
+// }
 
 export default MapContainer;

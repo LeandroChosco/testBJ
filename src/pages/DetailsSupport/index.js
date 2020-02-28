@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import './style.css'
 import MapContainer from '../../components/MapContainer/index.js';
-import firebaseC5 from '../../constants/configC5';
+import firebaseC5cuajimalpa from '../../constants/configC5CJ';
 import {  Navbar } from 'react-bootstrap';
 import conections from '../../conections';
 import CameraStream from '../../components/CameraStream';
@@ -145,7 +145,7 @@ const mapOptions= {
         if(res.status ===200){
             const data = res.data
             if (data.success) {
-                firebaseC5.app('c5virtual').firestore().collection('support').doc(this.props.match.params.id).update({status:2})
+                firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('support').doc(this.props.match.params.id).update({status:2})
             } else {
                 alert('Error al querer atender ticket. ' + data.msg)
             }
@@ -168,8 +168,8 @@ const mapOptions= {
         console.log(res)
         if(res.status ===200){
             const data = res.data
-            if (data.success) {
-                firebaseC5.app('c5virtual').firestore().collection('support').doc(this.props.match.params.id).update({status:3})
+            if (data.success) {      
+                firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('support').doc(this.props.match.params.id).update({status:3})
             } else {
                 alert('Error al querer atender ticket. ' + data.msg)
             }
@@ -184,7 +184,8 @@ const mapOptions= {
 
     componentDidMount(){
         console.log(this.props.match.params.id)
-        firebaseC5.app('c5virtual').firestore().collection('support').doc(this.props.match.params.id).onSnapshot(doc=>{            
+        firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('support').doc(this.props.match.params.id).onSnapshot(doc=>{ 
+            console.log('resSupport', doc)           
             if(doc.exists){
                 let value = doc.data()
 
