@@ -154,7 +154,7 @@ class Cuadrantes extends Component{
                         <ModalAddCams modal={this.state.showModal} hide={(flag)=>this._hideModal(flag)} name_cuadrante={this.state.cuadranteSelection} />
                     :null}  
                 </div>
-                <div id="analisis_holder"  className={!this.props.showMatches ? "hide-matches" : "show-matches"}>>
+                <div id="analisis_holder"  className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
                     {this.state.loading ?
                         <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
                         <JellyfishSpinner
@@ -390,7 +390,7 @@ class Cuadrantes extends Component{
                                 lat:value.google_cordenate.split(',')[0],
                                 lng:value.google_cordenate.split(',')[1],
                                 name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
-                                isHls:true,
+                                isHls: value.tipo_camara === 3 ? false : true,
                                 url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                                 dataCamValue: value     
                             })                       
@@ -404,7 +404,7 @@ class Cuadrantes extends Component{
                                         lat:value.google_cordenate.split(',')[0],
                                         lng:value.google_cordenate.split(',')[1],                                   
                                         name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
-                                        isHls:true,
+                                        isHls: value.tipo_camara === 3 ? false : true,
                                         url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                                         dataCamValue: value 
                 
@@ -421,7 +421,7 @@ class Cuadrantes extends Component{
                                     lat:value.google_cordenate.split(',')[0],
                                     lng:value.google_cordenate.split(',')[1],
                                     name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
-                                    isHls:true,
+                                    isHls: value.tipo_camara === 3 ? false : true,
                                     url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                                     dataCamValue: value     
                                 })   

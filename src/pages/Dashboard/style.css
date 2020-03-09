@@ -1,42 +1,41 @@
-.chart{
-    height: 350px;
-    margin-bottom: 70px;
+.chart {
+  height: 350px;
+  margin-bottom: 70px;
 }
-.chart2x{
-    height: 500px;
-    margin-bottom: 70px;
-}
-
-.fullChart{
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-.tableRow{
-    padding: 5px;
-    border: 1px #afafaf solid;
-    
-}
-.tableCel{
-    padding: 5px;
-}
-.state1{
-    background-color: green;
-    border-radius: 10px;
-    width: 20px;
-    height: 20px;
-
-}
-.state0{
-    background-color: brown;
-    border-radius: 10px;
-    width: 20px;
-    height: 20px;
+.chart2x {
+  height: 500px;
+  margin-bottom: 70px;
 }
 
-.holder{
-    margin-right: 70px;
+.fullChart {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.tableRow {
+  padding: 5px;
+  border: 1px #afafaf solid;
+}
+.tableCel {
+  padding: 5px;
+}
+.state1 {
+  background-color: green;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+}
+.state0 {
+  background-color: brown;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
 }
 
-.overflow{
-    overflow-y: scroll;
+.holder {
+  margin-right: 70px;
 }
+
+.overflow {
+  overflow-y: scroll;
+}
+

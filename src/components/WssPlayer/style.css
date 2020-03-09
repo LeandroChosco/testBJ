@@ -1,0 +1,10 @@
+canvas {
+  z-index: 0 !important;
+}
+.video-socket-contenedor-analisis {
+  padding-bottom: 26em;
+}
+
+.video-socket-contenedor-mapa {
+  padding-bottom: 23em;
+}
