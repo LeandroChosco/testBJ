@@ -455,12 +455,8 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
   componentDidMount(){   
 
       console.log(this.props) 
-      if(this.props.marker.extraData.dataCamValue.tipo_camara === 3) {
-          return false
-      }
-      if (this.props.marker.extraData === undefined) {
-          return false
-      }
+      
+      
     //   if(this.props.marker.extraData.isIframe){
     //       console.log('is iframe')   
     //       if (flvjs.isSupported()) {
@@ -491,6 +487,10 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
       if (this.props.marker.extraData.isHls === true) {
         return false
       }
+      if(this.props.marker.extraData.dataCamValue.tipo_camara === 3) {
+        return false
+    }
+      
       try{
           var ws = new WebSocket(this.props.marker.extraData.webSocket)
           ws.onerror = this._wsError

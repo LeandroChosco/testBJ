@@ -463,7 +463,7 @@ class Analysis extends Component {
 
 
     componentDidMount(){
-        console.log(this.props.showMatches) 
+        // console.log(this.props.showMatches) 
         if (!this.props.match.params.id) {
             const isValid = this.props.canAccess(2)
             if (!isValid) {
@@ -480,11 +480,14 @@ class Analysis extends Component {
     }
 
 
-    _loadCameras = () => {
-        this.setState({loading:true})
-        conections.getAllCams()
-            .then((response) => {
-                const camaras = response.data
+
+    _loadCameras =  () => {
+        console.log('este es _loadCamera')
+        this.setState({loading:true}, console.log('loading'))
+         conections.getAllCams()
+            .then(  ( response) =>  {
+                console.log(response)
+                const  camaras =  response.data
                 let auxCamaras = []
                 let offlineCamaras = []
                 let actualCamera = {}

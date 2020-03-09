@@ -72,7 +72,7 @@ class GridCameraDisplay extends Component {
         <Row >     
             {this.state.markers.map((value,index) => 
                 (index<this.state.start+this.state.limit)&&index>=this.state.start?
-                    <Col className={this.state.selectedCamera === value.extraData?'p-l-0 p-r-0 activeselectedcameragrid camcolgridholder':'p-l-0 p-r-0 camcolgridholder'}  lg={4} sm={6}   key={value.extraData.id} onClick = {() => this._openCameraInfo(value,index)} marker={value.id}>
+                    <Col className={this.state.selectedCamera === value.extraData?'p-l-0 p-r-0 activeselectedcameragrid camcolgridholder':'p-l-0 p-r-0 camcolgridholder'}  lg={4} sm={6}   key={value.extraData.id} onClick = {value.extraData.dataCamValue.tipo_camara === 3 ? null :() => this._openCameraInfo(value,index)} marker={value.id}>
                         <CameraStream  propsIniciales={this.props.propsIniciales} ref={'camrefgrid'+value.extraData.id} key={value.extraData.id} marker={value}/>
                     </Col>:
                     null
@@ -413,7 +413,7 @@ class GridCameraDisplay extends Component {
     }
 
     componentDidMount(){   
-        console.log(this.props.showMatches)  
+        console.log(this.props)  
         let markersForLoop = []
         this.props.places.map((value)=>{
             markersForLoop.push({

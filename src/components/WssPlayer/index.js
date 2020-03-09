@@ -4,24 +4,30 @@ import JSMpeg from "jsmpeg-player";
 import "./style.css";
 
 const WssPlayer = ({ data }) => {
-  console.log("ENTRO AL COMPONENTE WSS");
-  console.log(data);
+  // console.log("ENTRO AL COMPONENTE WSS");
+  // console.log(data);
 
+  let player = null;
   const appendID = `player${data.num_cam}`;
-
   useEffect(() => {
     try {
-      var player = () =>
-        new JSMpeg.VideoElement(
-          `#${appendID}`,
-          "wss://feeds.juganudigital.com/98457a6a",
-          { autoSetWrapperSize: false }
-        );
-      player();
+      // const player = () =>
+      //   new JSMpeg.VideoElement(`#${appendID}`, data.dataCamValue.dns, {
+      //     autoSetWrapperSize: false
+      //   });
+      // player();
+      player = new JSMpeg.VideoElement(`#${appendID}`, data.dataCamValue.dns, {
+        autoSetWrapperSize: false
+      });
+      console.log(data.num_cam);
+      console.log(player);
     } catch (error) {
       console.log("Error player");
       console.log(error);
     }
+    // return () => {
+    //   player.destroy();
+    // };
   }, []);
 
   return (
