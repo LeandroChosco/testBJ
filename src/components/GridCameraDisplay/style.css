@@ -138,10 +138,19 @@
   height: 100%;
 }
 /*
-.camcolgridholder>.card>.card-body{
-    min-height: 70%;
-}*/
+  .camcolgridholder>.card>.card-body{
+      min-height: 70%;
+  }*/
 
 .camcolgridholder > .card > .card-body > .camHolder {
   height: initial;
+}
+
+.con-margin {
+  /* margin-right: 70px !important; */
+  padding-right: 90px;
+}
+.sin-margin {
+  /* margin-right: 0 !important; */
+  padding-right: 25px;
 }

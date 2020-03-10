@@ -69,7 +69,7 @@ class Analysis extends Component {
         )    
     }
     return (
-        <div id="analisis_holder" className={!this.props.showMatches ? "hide-matches" : "show-matches"} >
+        <div id="analisis_holder"  className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
             <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
                    
             {
@@ -464,6 +464,7 @@ class Analysis extends Component {
 
 
     componentDidMount(){
+        // console.log(this.props.showMatches) 
         if (!this.props.match.params.id) {
             const isValid = this.props.canAccess(2)
             if (!isValid) {
@@ -480,12 +481,14 @@ class Analysis extends Component {
     }
 
 
-    _loadCameras = () => {
-        this.setState({loading:true})
-        conections.getAllCams()
-            .then((response) => {
-                console.log(response.data)
-                const camaras = response.data
+
+    _loadCameras =  () => {
+        console.log('este es _loadCamera')
+        this.setState({loading:true}, console.log('loading'))
+         conections.getAllCams()
+            .then(  ( response) =>  {
+                console.log(response)
+                const  camaras =  response.data
                 let auxCamaras = []
                 let offlineCamaras = []
                 let actualCamera = {}
@@ -495,7 +498,7 @@ class Analysis extends Component {
                 let indexFail = 1
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1) {
-                        // console.log(value)
+                        console.log(value)
                         let url = 'rtmp://18.212.185.68/live/cam';                                               
                         auxCamaras.push({
                             id:value.id,
@@ -504,8 +507,8 @@ class Analysis extends Component {
                             lng:value.google_cordenate.split(',')[1],
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                             rel_cuadrante:value.RelCuadranteCams,
-                            isHls:true,
-                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                            isHls: value.tipo_camara === 3 ? false : true,
+                            url: value.UrlStreamMediaServer !== null ? 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel : null,
                             real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
                             camera_number:value.num_cam,
                             dataCamValue: value,
@@ -525,7 +528,9 @@ class Analysis extends Component {
                                     url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                                     real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
                                     camera_number:value.num_cam,
-                                    dataCamValue: value
+                                    dataCamValue: value,
+                                    tipo_camara: value.tipo_camara
+            
                                 }
                                 idCamera = value.id
                            }
@@ -543,7 +548,8 @@ class Analysis extends Component {
                                 url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                                 real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
                                 camera_number:value.num_cam,
-                                dataCamValue: value
+                                dataCamValue: value,
+                                tipo_camara: value.tipo_camara
                             })   
                             indexFail++
                         }                        

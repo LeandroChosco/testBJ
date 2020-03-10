@@ -135,6 +135,9 @@ export default {
     },
     getMoreInformationByCam:(num_cam)=>{
         return Axios.get( constants.base_url + ':' + constants.apiPort + '/register-cams/single-cam?cam_id='+num_cam)
+    },
+    getLimitsCam: () =>{
+        return Axios.get(constants.base_url + ':' +  constants.apiPort + '/register-cams/limits-zone')
     }
 
     

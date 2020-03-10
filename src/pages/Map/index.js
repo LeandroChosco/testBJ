@@ -33,7 +33,7 @@ class Map extends Component {
 
   render() {
     return (
-      <div className={"map"}>
+      <div className="map">
         <div
           style={{
             position: "absolute",
@@ -89,8 +89,10 @@ class Map extends Component {
     );
     infoWindow.open(map);
     const i = setInterval(() => {
-      // console.log("infoWindow is bound to map: "+(infoWindow.getMap() ? true : false));
-      // console.log(infoWindow)
+      console.log(
+        "infoWindow is bound to map: " + (infoWindow.getMap() ? true : false)
+      );
+      console.log(infoWindow);
       if (!infoWindow.getMap()) {
         infoWindow.close();
         clearInterval(i);
@@ -134,7 +136,7 @@ class Map extends Component {
       element.setMap(null);
     }
     conections.getAllCams().then(data => {
-      console.log("Markers: ", data.data);
+      console.log("Marker: ", data.data);
       const camaras = data.data;
       let auxCamaras = [];
       let center_lat = 0;
@@ -166,23 +168,25 @@ class Map extends Component {
                 value.state +
                 " #cam" +
                 value.num_cam,
-              isHls: true,
+              isHls: value.tipo_camara === 3 ? false : true,
               url:
-                "http://" +
-                value.UrlStreamMediaServer.ip_url_ms +
-                ":" +
-                value.UrlStreamMediaServer.output_port +
-                value.UrlStreamMediaServer.name +
-                value.channel,
+                value.UrlStreamMediaServer !== null
+                  ? "http://" +
+                    value.UrlStreamMediaServer.ip_url_ms +
+                    ":" +
+                    value.UrlStreamMediaServer.output_port +
+                    value.UrlStreamMediaServer.name +
+                    value.channel
+                  : null,
               flag_color: value.flag_color,
-              tipo_camara: value.tipo_camara
+              dataCamValue: value,
+              fromMap: true
             });
             index++;
           }
         }
         return true;
       });
-
       center_lat = center_lat / total;
       center_lng = center_lng / total;
       this.state.map.setCenter(
@@ -203,15 +207,13 @@ class Map extends Component {
             },
             map: this.state.map,
             title: value.name,
-            extraData: value,
-            dataCamValue: value.dataCamValue
+            extraData: value
           });
           window.google.maps.event.addListener(
             marker[index],
             "click",
             (function(marker, map, createInfoWindow) {
               return function() {
-                console.log(marker);
                 createInfoWindow(marker, map);
               };
             })(marker[index], this.state.map, this.createInfoWindow)
