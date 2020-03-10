@@ -171,7 +171,7 @@ class App extends Component {
 
       */
   
-     firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
+     firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime','desc').onSnapshot(docs=>{      
         if (this.state.sos.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeHelp) {
           this.showNot('SOS','Nueva alerta de ayuda generada','error','Ver detalles',5,docs.docs[docs.docs.length-1].id)
           this.setState({reproducirSonido: true})
@@ -189,7 +189,7 @@ class App extends Component {
           return value
         })})
       })
-      firebaseC5.app('c5cuajimalpa').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
+      firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('support').orderBy('dateTime','desc').onSnapshot(docs=>{     
         if (this.state.support.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimeSupport) {
           this.showNot('Solicitud de soporte','Nueva solicitud de soporte generada','info','Ver detalles',4,docs.docs[0].id)
         }
@@ -207,7 +207,7 @@ class App extends Component {
       })       
       
   
-      firebaseC5.app('c5cuajimalpa').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{          
+      firebaseC5.app('c5virtual').firestore().collection('complaints').orderBy('dateTime','desc').onSnapshot(docs=>{          
         if (this.state.complaiments.length!==docs.size&&this.state.showNotification&&!this.state.fisrtTimecomplaiments) {
           this.showNot('Nueva denuncia','Se ha recibido una nueva denuncia','info','Ver detalles',2,docs.docs[0].id)
           this.setState({reproducirSonido: true})
@@ -221,7 +221,7 @@ class App extends Component {
         })})
       }) 
   
-      firebaseC5.app('c5cuajimalpa').firestore().collection('calls').orderBy('dateTime','desc').onSnapshot(docs => {
+      firebaseC5.app('c5virtual').firestore().collection('calls').orderBy('dateTime','desc').onSnapshot(docs => {
         if (this.state.showNotification&&!this.state.fisrtTimeCall&& !this.state.callIsGoing) {
           const notification = this.refs.notificationSystem;
           this.setState({stopNotification:true})      

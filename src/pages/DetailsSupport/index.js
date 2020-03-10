@@ -59,11 +59,12 @@ const mapOptions= {
                             <CameraStream 
                                 style={{height:'250px'}}
                                 hideTitle 
+                                hideButton
                                 marker={{
                                     extraData:{
                                         num_cam:support.data_cam[0].num_cam,
                                         cameraID:support.data_cam[0].num_cam,
-                                        webSocket:'ws://'+support.data_cam[0].UrlStreamToCameras[0].Url.dns_ip+':'+support.data_cam[0].port_output_streaming
+                                        webSocket: support.data_cam[0].UrlStreamToCameras.length !== 0 ? 'ws://'+support.data_cam[0].UrlStreamToCameras[0].Url.dns_ip+':'+support.data_cam[0].port_output_streaming : null
                                     }   
                                 }}
                             />
@@ -183,9 +184,9 @@ const mapOptions= {
 
 
     componentDidMount(){
-        console.log(this.props.match.params.id)
+        //console.log(this.props.match.params.id)
         firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('support').doc(this.props.match.params.id).onSnapshot(doc=>{ 
-            console.log('resSupport', doc)           
+            //console.log('resSupport', doc)           
             if(doc.exists){
                 let value = doc.data()
 
@@ -194,7 +195,7 @@ const mapOptions= {
                 console.log(value)             
                 this.setState({support:value,created:created})         
                 conections.getTicket(value.ticket_id).then(res=>{
-                    console.log(res)
+                    //console.log(res)
                     if(res.status ===200){
                         const data = res.data
                         if (data.success) {
