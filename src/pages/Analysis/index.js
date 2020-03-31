@@ -102,6 +102,7 @@ class Analysis extends Component {
                         matches={this.props.matches}
                         snapShot={this._snapShot}
                         showMatches={this.props.showMatches}
+                        propsIniciales={this.props}
                         changeStatus={this._chageCamStatus}/>
         </div>
     )
