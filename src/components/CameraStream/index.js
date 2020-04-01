@@ -547,7 +547,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         if (!this.tryReconect&&this.state.isVisible) {
             this.setState({tryReconect:true})
             this.tryReconect = true
-            // console.log('is delay, cam' + this.state.data.num_cam)                
+            console.log('is delay, cam' + this.state.data.num_cam)                
             this.state.player.stop()                            
             if (this.state.webSocket) {
                 this.state.webSocket.close()

@@ -74,6 +74,7 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
                             hideTitle 
                             height="100%"
                             hideButton
+                            propsIniciales={this.props}
                             marker={camData}/>:null}
                         </div>
                         
@@ -190,14 +191,14 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
         if (response.data.success) {
           const data = response.data.data
           console.log('data',data)
-          this.setState({camData:{
+          this.setState({camData:data.UserToCameras[0] == undefined ? undefined : {
             extraData:{
-              num_cam:data.UserToCameras[0].Camare.num_cam,
-              cameraID:data.UserToCameras[0].Camare.num_cam,
+              num_cam:data.UserToCameras[0] !== undefined ? data.UserToCameras[0].Camare.num_cam : null,
+              cameraID:data.UserToCameras[0] !== undefined ? data.UserToCameras[0].Camare.num_cam : null,
               //webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
               isHls:true,
-              url: 'http://' + data.UserToCameras[0].Camare.UrlStreamMediaServer.ip_url_ms + ':' + data.UserToCameras[0].Camare.UrlStreamMediaServer. output_port + data.UserToCameras[0].Camare.UrlStreamMediaServer. name + data.UserToCameras[0].Camare.channel,
-              dataCamValue: data.UserToCameras[0].Camare
+              url: data.UserToCameras[0] !== undefined ? 'http://' + data.UserToCameras[0].Camare.UrlStreamMediaServer.ip_url_ms + ':' + data.UserToCameras[0].Camare.UrlStreamMediaServer. output_port + data.UserToCameras[0].Camare.UrlStreamMediaServer. name + data.UserToCameras[0].Camare.channel : null,
+              dataCamValue: data.UserToCameras[0] !== undefined ? data.UserToCameras[0].Camare :null
             }
           }})
         }

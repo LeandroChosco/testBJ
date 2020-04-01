@@ -518,6 +518,7 @@ ocultarMatches = (value) => {
             support={this.state.support}
             complaiments={this.state.complaiments}
             calls={this.state.calls}
+            propsIniciales={this.state.chats}
             />
           :null
         }
@@ -535,7 +536,7 @@ ocultarMatches = (value) => {
               }}/>
           }
         />
-        <Route path="/map" exact render={(props) =><Map canAccess={this.canAccess} showMatches={this.state.showMatches} {...props} />} />
+        <Route path="/map" exact render={(props) =><Map canAccess={this.canAccess} showMatches={this.state.showMatches} {...props} chats={this.state.chats} />} />
         <Route path="/welcome" exact render={(props) =><Welcome {...props}/>} />
         <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/> }/>
         <Route path="/analisis" exact render={(props) => <Analysis showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />

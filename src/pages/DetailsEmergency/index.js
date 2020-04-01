@@ -177,17 +177,20 @@ const mapOptions= {
         firebaseC5.app('c5virtual').firestore().collection('help').doc(this.props.match.params.id).onSnapshot(doc=>{            
             if(doc.exists){
                 let value = doc.data()
-                value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+                console.log(value)
+                if(value.dateTime === {}) {
+                    value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+                }
                 value.userInfo.Person.birthday = new Date(value.userInfo.Person.birthday.toDate()).toLocaleDateString()                                
                 if (this.state.map) {
                     new window.google.maps.Polyline({
-                        path: JSON.parse(JSON.stringify(value.route).replace(/latitude/g,'lat').replace(/longitude/g,'lng')),
+                        path: value.route !== undefined ? JSON.parse(JSON.stringify(value.route).replace(/latitude/g,'lat').replace(/longitude/g,'lng')) : null,
                         map: this.state.map,
                         title: value.title,                
                     });
                     this.state.map.setCenter({
-                        lat:value.route[ value.route.length - 1 ].latitude,
-                        lng:value.route[ value.route.length - 1 ].longitude
+                        lat: value.route !== undefined  ? value.route[ value.route.length - 1 ].latitude : 19.4978,
+                        lng: value.route !== undefined ? value.route[ value.route.length - 1 ].longitude : -99.1269
                     })
                 }
                 firebaseC5.app('c5virtual').firestore().collection('users').doc(value.user_creation).get().then(userDoc=>{
