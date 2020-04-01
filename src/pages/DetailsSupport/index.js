@@ -36,7 +36,7 @@ class DetailsSupport extends Component {
 
   render() {
     const { support, ticket } = this.state;
-    console.log(support);
+    console.log(ticket);
     return (
       <div>
         <Navbar sticky="top" expand="lg" variant="light" bg="mh">
@@ -58,7 +58,7 @@ class DetailsSupport extends Component {
                   onMapLoad={this._onMapLoad}
                 />
               </div>
-              <div className="col">
+              {/* <div className="col">
                 <CameraStream
                   style={{ height: "250px" }}
                   hideTitle
@@ -75,7 +75,7 @@ class DetailsSupport extends Component {
                     }
                   }}
                 />
-              </div>
+              </div> */}
             </div>
           ) : null}
           <div className="row">&nbsp;</div>
@@ -257,12 +257,12 @@ class DetailsSupport extends Component {
 
           const created = new Date(value.dateTime.toDate());
           value.dateTime = new Date(value.dateTime.toDate()).toLocaleString();
-          //console.log(value)
+          console.log(value);
           this.setState({ support: value, created: created });
           conections
             .getTicket(value.ticket_id)
             .then(res => {
-              //console.log(res)
+              console.log(res);
               if (res.status === 200) {
                 const data = res.data;
                 if (data.success) {
