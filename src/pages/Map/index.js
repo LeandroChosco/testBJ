@@ -69,13 +69,14 @@ class Map extends Component {
         '<div id="infoWindow' + e.extraData.id + '" class="windowpopinfo"/>',
       position: { lat: e.position.lat(), lng: e.position.lng() }
     });
-    console.log(e);
+    const propsIniciales = this.props;
     infoWindow.addListener(
       "domready",
       (function(marker, render, moduleActions) {
         return function() {
           render(
             <CameraStream
+              propsIniciales={propsIniciales}
               moduleActions={moduleActions}
               marker={marker}
               height={"300px"}
@@ -116,6 +117,7 @@ class Map extends Component {
   };
 
   componentDidMount() {
+    console.log(this.props);
     const isValid = this.props.canAccess(1);
     if (!isValid) {
       this.props.history.push("/welcome");

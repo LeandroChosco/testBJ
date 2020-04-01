@@ -74,6 +74,7 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
                             hideTitle 
                             height="100%"
                             hideButton
+                            propsIniciales={this.props}
                             marker={camData}/>:null}
                         </div>
                         
