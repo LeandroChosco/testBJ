@@ -119,7 +119,8 @@ class SideBar extends Component {
               key={value.extraData.id}
               marker={value}
               height={300}
-              showButtons
+              hideButton
+              showButtons={false}
             />
           ))}
         </div>
