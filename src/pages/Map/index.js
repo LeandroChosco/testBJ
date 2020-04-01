@@ -81,6 +81,18 @@ class Map extends Component {
               height={"300px"}
               showButtons
               showExternal
+              hideButton={
+                marker.extraData.dataCamValue.tipo_camara === 2 ||
+                marker.extraData.dataCamValue.tipo_camara === 3
+                  ? true
+                  : false
+              }
+              showButtons={
+                marker.extraData.dataCamValue.tipo_camara === 2 ||
+                marker.extraData.dataCamValue.tipo_camara === 3
+                  ? false
+                  : true
+              }
             />,
             document.getElementById("infoWindow" + e.extraData.id)
           );
@@ -180,6 +192,7 @@ class Map extends Component {
                   : null,
               flag_color: value.flag_color,
               dataCamValue: value,
+              tipo_camara: value.tipo_camara,
               fromMap: true
             });
             index++;

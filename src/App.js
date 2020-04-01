@@ -518,6 +518,7 @@ ocultarMatches = (value) => {
             support={this.state.support}
             complaiments={this.state.complaiments}
             calls={this.state.calls}
+            propsIniciales={this.state.chats}
             />
           :null
         }
