@@ -20,9 +20,15 @@ class MediaContainer extends Component {
     return (
     <div className='mediaContainer col-6 p10'>   
         <Card onClick={()=>this.setState({modal:true})}>
-            {this.props.video?<video poster={this.props.value.RecordProccessImage?this.props.dns_ip+':'+constants.apiPort+'/'+this.props.value.RecordProccessImage.relative_path_file :''} src={(this.props.dns_ip?this.props.dns_ip:this.props.servidorMultimedia)+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}}/>:null}
+                        {this.props.video? 
+                <video 
+                    poster={this.props.src_img ? this.props.dns_ip+':'+constants.apiPort+'/'+this.props.src_img : null} 
+                    src={(this.props.dns_ip?this.props.dns_ip:this.props.servidorMultimedia)+':'+constants.apiPort+'/'+ this.props.src} 
+                    style={{width:'100%'}}
+                    />
+            :null}
             {this.props.image?<img src={this.props.servidorMultimedia+':'+constants.apiPort+'/'+ this.props.src} style={{width:'100%'}} alt='img'/>:null}
-            {this.props.value.fecha?this.props.value.fecha:null}
+            {this.props.hour}
         </Card>
         <Modal show={this.state.modal} onHide={()=>this.setState({modal:false})}>
             <Modal.Header closeButton>                      

@@ -9,6 +9,7 @@ import MediaContainer from '../MediaContainer';
 import ReactPaginate from 'react-paginate';
 import conections from '../../conections';
 import * as moment from 'moment';
+import { DateTime } from "luxon";
 
 const countryOptions = [{
     key: 5,
@@ -160,26 +161,37 @@ class GridCameraDisplay extends Component {
                             :null}
                             </div>
                         </Tab.Pane> },
-                                this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
-                                                     
-                                {this.state.video_history.items?this.state.video_history.items.map((row,count)=><div key={count} className="row">
-                                <div className="col-12">
-                                    <h4>{row.fecha}</h4>
-                                </div>
-
-                                        {row.videos.map((value,index)=><MediaContainer dns_ip={'http://'+this.state.video_history.dns_ip} hideDelete src={value.RecordProccessVideo.relative_path_file} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}                                        
+                             this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
+                                {this.state.video_history[1].length !== 0 ?  
+                                this.state.video_history[1].map((row,count)=>
+                                    <div key={count} className="row">
+                                        <div className="col-12">
+                                            <h4>{`${row.videos[0].fecha} - ${row.videos[0].hour}`}</h4>
+                                        </div>
+                                            {row.videos.map((e, count) => 
+                                                <MediaContainer
+                                                    dns_ip={`http://${this.state.video_history[0]}`}
+                                                    hideDelete 
+                                                    src={e.relative_path_video}
+                                                    flag_video={e.exists_video}
+                                                    hour={e.real_hour}
+                                                    src_img={e.relative_path_image}
+                                                    flag_img={e.exists_image}
+                                                    value={e}
+                                                    cam={this.state.markers[this.state.slideIndex].extraData}
+                                                    reloadData={this._loadFiles}
+                                                    video
+                                                    key={count}
+                                                />
+                                            )}
                                     </div>
-                                ):null}
-                            
-                            {this.state.video_history.items?this.state.video_history.items.length === 0 ?
+                                    )
+                                :
                                 <div align='center'>
                                     <p className="big-letter">No hay archivos que mostrar</p>
                                     <i className='fa fa-image fa-5x'></i>
                                 </div>
-                            : null:<div align='center'>
-                            <p className="big-letter">No hay archivos que mostrar</p>
-                            <i className='fa fa-image fa-5x'></i>
-                        </div>}
+                                }
                         </Tab.Pane> }:{}:{},
                     ]} />    
                 </div>
@@ -327,47 +339,63 @@ class GridCameraDisplay extends Component {
             const data = response.data
             console.log(data)
             this.setState({videos:data.data.files_multimedia.videos,photos:data.data.files_multimedia.photos, servidorMultimedia: 'http://'+ data.data.dns_ip})
-        })  
+        })
+
+        const last_day = DateTime.local()
+            .plus({ days: -1 })
+            .setZone("America/Mexico_City")
+            .toISODate();
+        const current_day = DateTime.local()
+            .setZone("America/Mexico_City")
+            .toISODate();
+
+        const createArrDate = (arr) => {
+            let nuevoObjeto = {};
+            arr.forEach((x) => {
+            if (!nuevoObjeto.hasOwnProperty(x.fecha)) {
+                nuevoObjeto[x.fecha] = {
+                videos: [],
+                }
+            }
+            nuevoObjeto[x.fecha].videos.push(x);
+            });
+            return nuevoObjeto;
+        }
+        
+        const createArrHour = (arr) => {
+            let nuevoObjeto = {};
+            arr.forEach((x) => {
+            if (!nuevoObjeto.hasOwnProperty(x.hour)) {
+                nuevoObjeto[x.hour] = {
+                videos: [],
+                };
+            }
+            nuevoObjeto[x.hour].videos.push(x);
+            });
+            return nuevoObjeto;
+        };
+
         conections.getCamDataHistory(cam?cam.id:this.state.selectedCamera?this.state.selectedCamera.id:0)
-        .then(response => {
+            .then(response => {
             let resHistory = response.data
-              console.log('history', resHistory)
-              if(resHistory.success){
-                let items = []
-                  resHistory.data.items = resHistory.data.items.map(val=>{
-                    val.fecha = moment(val.RecordProccessVideo.datetime_start).format('HH:mm')
-                    let fecha_inicio =   moment(val.RecordProccessVideo.datetime_start)
-                    if (items.length === 0) {
-                        items.push({dateTime:val.RecordProccessVideo.datetime_start,videos:[val]})
-                    } else {
-                        let found = false;
-                        for (let index = 0; index < items.length; index++) {
-                            let fecha_array = moment(items[index].dateTime);
-                            if(fecha_array.isSame(fecha_inicio,'hour'))
-                            {
-                                found = true
-                                items[index].videos.push(val)
-                                break;
-                            }
-                            
-                        }
-                        if(!found){
-                            items.push({dateTime:val.RecordProccessVideo.datetime_start,videos:[val]})
-                        }
-                    }
-                      return val
-                })			
-                items.map(val=>{
-                    val.fecha = moment(val.dateTime).format('YYYY-MM-DD HH:mm')
-                    return val
-                })
-                console.log(items)
-                resHistory.data.items = items
-                
-                this.setState({video_history:resHistory.data})
-    
-              }
-        }) 
+            let dns_ip = resHistory.data.dns_ip
+            if(resHistory.success){
+                let dates = createArrDate(resHistory.data.items)
+                let hours_last_day = createArrHour(dates[last_day].videos)
+                let hours_current_day = createArrHour(dates[current_day].videos);
+                this.setState({
+                video_history: [
+                    dns_ip,
+                    Object.values(hours_last_day)
+                        .reverse()
+                        .concat(Object.values(hours_current_day).reverse()).reverse(),
+                    ],
+                });
+            } else {
+                this.setState({ video_history: null })
+            }
+        })
+
         /* ---matches reales ---
         console.log(cam)        
         conections.getCamMatches(cam?cam.real_num_cam:this.state.selectedCamera?this.state.selectedCamera.real_num_cam:0).then(response=>{
