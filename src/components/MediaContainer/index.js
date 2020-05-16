@@ -22,7 +22,7 @@ class MediaContainer extends Component {
         <Card onClick={()=>this.setState({modal:true})}>
                         {this.props.video? 
                 <video 
-                    poster={this.props.src_img ? this.props.dns_ip+':'+constants.apiPort+'/'+this.props.src_img : null} 
+                    poster={this.props.dns_ip+':'+constants.apiPort+'/'+this.props.src_img} 
                     src={(this.props.dns_ip?this.props.dns_ip:this.props.servidorMultimedia)+':'+constants.apiPort+'/'+ this.props.src} 
                     style={{width:'100%'}}
                     />

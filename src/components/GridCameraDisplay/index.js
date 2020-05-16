@@ -162,13 +162,13 @@ class GridCameraDisplay extends Component {
                             </div>
                         </Tab.Pane> },
                              this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
-                                {this.state.video_history[1].length !== 0 ?  
+                                {this.state.video_history[1] ?  
                                 this.state.video_history[1].map((row,count)=>
                                     <div key={count} className="row">
                                         <div className="col-12">
                                             <h4>{`${row.videos[0].fecha} - ${row.videos[0].hour}`}</h4>
                                         </div>
-                                            {row.videos.map((e, count) => 
+                                        {row.videos.map((e, count) => 
                                                 <MediaContainer
                                                     dns_ip={`http://${this.state.video_history[0]}`}
                                                     hideDelete 
@@ -186,12 +186,17 @@ class GridCameraDisplay extends Component {
                                             )}
                                     </div>
                                     )
-                                :
+                                :null}
+                            {this.state.video_history.items?this.state.video_history.items.length === 0 ?
                                 <div align='center'>
                                     <p className="big-letter">No hay archivos que mostrar</p>
                                     <i className='fa fa-image fa-5x'></i>
                                 </div>
-                                }
+                            : null:<div align='center'>
+                            <p className="big-letter">No hay archivos que mostrar</p>
+                            <i className='fa fa-image fa-5x'></i>
+                        </div>}
+
                         </Tab.Pane> }:{}:{},
                     ]} />    
                 </div>
