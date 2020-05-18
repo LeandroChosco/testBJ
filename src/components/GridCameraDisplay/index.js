@@ -162,7 +162,7 @@ class GridCameraDisplay extends Component {
                             </div>
                         </Tab.Pane> },
                              this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
-                                {this.state.video_history[1] ?  
+                                {this.state.video_history[0] ?  
                                 this.state.video_history[1].map((row,count)=>
                                     <div key={count} className="row">
                                         <div className="col-12">
@@ -186,17 +186,12 @@ class GridCameraDisplay extends Component {
                                             )}
                                     </div>
                                     )
-                                :null}
-                            {this.state.video_history.items?this.state.video_history.items.length === 0 ?
+                                :
                                 <div align='center'>
                                     <p className="big-letter">No hay archivos que mostrar</p>
                                     <i className='fa fa-image fa-5x'></i>
                                 </div>
-                            : null:<div align='center'>
-                            <p className="big-letter">No hay archivos que mostrar</p>
-                            <i className='fa fa-image fa-5x'></i>
-                        </div>}
-
+                                }
                         </Tab.Pane> }:{}:{},
                     ]} />    
                 </div>
