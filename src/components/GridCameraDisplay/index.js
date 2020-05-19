@@ -67,7 +67,7 @@ class GridCameraDisplay extends Component {
     }
 
   render() {
-      //console.log(this.props)
+      
     return (
     <div className='gridCameraContainer' align='center'>    
         <Row >     
@@ -84,7 +84,7 @@ class GridCameraDisplay extends Component {
             <Col style={{height:'100%'}}>
              Camaras por pagina <Select placeholder='Camaras por pagina' options={countryOptions}  value={this.state.limit} onChange={(e,value)=>{                
                 const pageCount = Math.ceil(this.state.markers.length / value.value)
-                console.log("paginas a mostar",pageCount)
+                
                 this.setState({start:0,limit:value.value,pageCount:pageCount})
             }}/>
             </Col>
@@ -229,7 +229,7 @@ class GridCameraDisplay extends Component {
                 this.setState({loadingSnap:false})
                 const data = response.data              
                 if (data.success) {
-                    //console.log('refs',this.refs)
+                    
                     this._loadFiles(camera)
                 }
             })
@@ -314,9 +314,9 @@ class GridCameraDisplay extends Component {
 
     _playPause =() => {          
         let isplaying = this.state.isplaying
-        console.log(isplaying)
+        
         isplaying[this.state.slideIndex] = !isplaying[this.state.slideIndex]                
-        console.log(isplaying)
+        
         this.setState({isplaying:isplaying,isplay:isplaying[this.state.slideIndex]})
         this.refs['camrefgrid'+this.state.selectedCamera.id]._togglePlayPause()
     }
@@ -327,24 +327,18 @@ class GridCameraDisplay extends Component {
         this.setState({restarting:false})
     }
 
-
     handlePageClick = data => {
-        console.log(data)
+        
         this.setState({start:data.selected*this.state.limit})
       };
 
     _loadFiles = (cam) =>{
-        conections.getCamDataV2(cam?cam.id:this.state.selectedCamera?this.state.selectedCamera.id:0)
-        .then(response => {
-            const data = response.data
-            console.log(data)
-            this.setState({videos:data.data.files_multimedia.videos,photos:data.data.files_multimedia.photos, servidorMultimedia: 'http://'+ data.data.dns_ip})
-        })
 
         const last_day = DateTime.local()
             .plus({ days: -1 })
             .setZone("America/Mexico_City")
             .toISODate();
+        
         const current_day = DateTime.local()
             .setZone("America/Mexico_City")
             .toISODate();
@@ -396,8 +390,14 @@ class GridCameraDisplay extends Component {
             }
         })
 
+        conections.getCamDataV2(cam?cam.id:this.state.selectedCamera?this.state.selectedCamera.id:0)
+        .then(response => {
+            const data = response.data
+            this.setState({videos:data.data.files_multimedia.videos,photos:data.data.files_multimedia.photos, servidorMultimedia: 'http://'+ data.data.dns_ip})
+        })
+
         /* ---matches reales ---
-        console.log(cam)        
+        
         conections.getCamMatches(cam?cam.real_num_cam:this.state.selectedCamera?this.state.selectedCamera.real_num_cam:0).then(response=>{
             if (response.status === 200) {
                 this.setState({matches:response.data})
@@ -440,7 +440,7 @@ class GridCameraDisplay extends Component {
     }
 
     componentDidMount(){     
-        console.log(this.props)
+        
         let markersForLoop = []
         this.props.places.map((value)=>{
             markersForLoop.push({
