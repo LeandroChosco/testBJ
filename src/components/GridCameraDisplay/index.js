@@ -11,6 +11,9 @@ import conections from '../../conections';
 import * as moment from 'moment';
 import { DateTime } from "luxon";
 
+import { Spinner } from "react-bootstrap";
+
+
 const countryOptions = [{
     key: 5,
     text: 5,
@@ -64,6 +67,8 @@ class GridCameraDisplay extends Component {
         isplay:true,
         servidorMultimedia: '',
         loadingSnap: false,
+        loading: true,
+        loadingHistory: true
     }
 
   render() {
@@ -139,12 +144,19 @@ class GridCameraDisplay extends Component {
                     <div className="row">
                         {this.state.photos.map((value,index)=><MediaContainer servidorMultimedia={this.state.servidorMultimedia} image value={value} cam={this.state.selectedCamera} reloadData={this._loadFiles} key={index} src={value.relative_url}/>)}
                     </div>
-                    {this.state.photos.length === 0 ?
+                    {this.state.loading ? 
+                        <div>
+                            <Spinner animation="border" variant="info" role="status" size="xl">
+                                <span className="sr-only">Loading...</span>
+                            </Spinner>
+                        </div>
+                        : this.state.photos.length === 0 ?
                             <div align='center'>
-                             <p className="big-letter">No hay archivos que mostrar</p>
-                             <i className='fa fa-image fa-5x'></i>
+                                <p className="big-letter">No hay archivos que mostrar</p>
+                                <i className='fa fa-image fa-5x'></i>
                             </div>
-                            :null}
+                            :null
+                            }
                 </div>
                 <div className="col videosgrid">
                     Videos
@@ -162,35 +174,43 @@ class GridCameraDisplay extends Component {
                             </div>
                         </Tab.Pane> },
                              this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
-                                {this.state.video_history[0] ?  
-                                this.state.video_history[1].map((row,count)=>
-                                    <div key={count} className="row">
-                                        <div className="col-12">
-                                            <h4>{`${row.videos[0].fecha} - ${row.videos[0].hour}`}</h4>
-                                        </div>
-                                        {row.videos.map((e, count) => 
-                                                <MediaContainer
-                                                    dns_ip={`http://${this.state.video_history[0]}`}
-                                                    hideDelete 
-                                                    src={e.relative_path_video}
-                                                    flag_video={e.exists_video}
-                                                    hour={e.real_hour}
-                                                    src_img={e.relative_path_image}
-                                                    flag_img={e.exists_image}
-                                                    value={e}
+                                {
+                                    this.state.loadingHistory ? 
+                                            <div>
+                                                <Spinner animation="border" variant="info" role="status" size="xl">
+                                                    <span className="sr-only">Loading...</span>
+                                                </Spinner>
+                                            </div>
+                                        :
+                                        this.state.video_history[0] ?  
+                                            this.state.video_history[1].map((row,count)=>
+                                                <div key={count} className="row">
+                                                    <div className="col-12">
+                                                        <h4>{`${row.videos[0].fecha} - ${row.videos[0].hour}`}</h4>
+                                                    </div>
+                                                    {row.videos.map((e, count) => 
+                                                            <MediaContainer
+                                                                dns_ip={`http://${this.state.video_history[0]}`}
+                                                                hideDelete 
+                                                                src={e.relative_path_video}
+                                                                flag_video={e.exists_video}
+                                                                hour={e.real_hour}
+                                                                src_img={e.relative_path_image}
+                                                                flag_img={e.exists_image}
+                                                                value={e}
                                                     cam={this.state.markers[this.state.slideIndex].extraData}
-                                                    reloadData={this._loadFiles}
-                                                    video
-                                                    key={count}
-                                                />
+                                                                reloadData={this._loadFiles}
+                                                                video
+                                                                key={count}
+                                                            />
                                             )}
                                     </div>
                                     )
-                                :
-                                <div align='center'>
-                                    <p className="big-letter">No hay archivos que mostrar</p>
-                                    <i className='fa fa-image fa-5x'></i>
-                                </div>
+                                            :
+                                            <div align='center'>
+                                                <p className="big-letter">No hay archivos que mostrar</p>
+                                                <i className='fa fa-image fa-5x'></i>
+                                            </div>
                                 }
                         </Tab.Pane> }:{}:{},
                     ]} />    
@@ -371,6 +391,7 @@ class GridCameraDisplay extends Component {
 
         conections.getCamDataHistory(cam?cam.id:this.state.selectedCamera?this.state.selectedCamera.id:0)
             .then(response => {
+            this.setState({loadingHistory: false})
             let resHistory = response.data
             let dns_ip = resHistory.data.dns_ip
             if(resHistory.success){
@@ -396,6 +417,7 @@ class GridCameraDisplay extends Component {
             this.setState({videos:data.data.files_multimedia.videos,photos:data.data.files_multimedia.photos, servidorMultimedia: 'http://'+ data.data.dns_ip})
         })
 
+        this.setState({loading: false})
         /* ---matches reales ---
         
         conections.getCamMatches(cam?cam.real_num_cam:this.state.selectedCamera?this.state.selectedCamera.real_num_cam:0).then(response=>{
