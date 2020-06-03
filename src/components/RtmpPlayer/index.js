@@ -20,7 +20,7 @@ class RtmpPlayer extends React.Component {
     }
 
     componentDidMount(){
-          
+          console.log(this.props)
         const loadPLayer = () =>
         {                        
                 var pwidth = document.getElementById('player'+this.props.num_cam).offsetWidth                

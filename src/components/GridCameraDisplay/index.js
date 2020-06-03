@@ -8,12 +8,9 @@ import Match from '../Match';
 import MediaContainer from '../MediaContainer';
 import ReactPaginate from 'react-paginate';
 import conections from '../../conections';
-import * as moment from 'moment';
-import { DateTime } from "luxon";
-
-import { Spinner } from "react-bootstrap";
-
-
+import moment from 'moment-timezone';
+import {DateTime} from 'luxon'
+import Spinner from 'react-bootstrap/Spinner'
 const countryOptions = [{
     key: 5,
     text: 5,
@@ -67,12 +64,12 @@ class GridCameraDisplay extends Component {
         isplay:true,
         servidorMultimedia: '',
         loadingSnap: false,
-        loading: true,
-        loadingHistory: true
+        videosLoading: false,
+        imageLoading: false
     }
 
   render() {
-      
+      //console.log(this.props)
     return (
     <div className='gridCameraContainer' align='center'>    
         <Row >     
@@ -89,7 +86,7 @@ class GridCameraDisplay extends Component {
             <Col style={{height:'100%'}}>
              Camaras por pagina <Select placeholder='Camaras por pagina' options={countryOptions}  value={this.state.limit} onChange={(e,value)=>{                
                 const pageCount = Math.ceil(this.state.markers.length / value.value)
-                
+                // console.log("paginas a mostar",pageCount)
                 this.setState({start:0,limit:value.value,pageCount:pageCount})
             }}/>
             </Col>
@@ -144,73 +141,85 @@ class GridCameraDisplay extends Component {
                     <div className="row">
                         {this.state.photos.map((value,index)=><MediaContainer servidorMultimedia={this.state.servidorMultimedia} image value={value} cam={this.state.selectedCamera} reloadData={this._loadFiles} key={index} src={value.relative_url}/>)}
                     </div>
-                    {this.state.loading ? 
-                        <div>
-                            <Spinner animation="border" variant="info" role="status" size="xl">
-                                <span className="sr-only">Loading...</span>
-                            </Spinner>
-                        </div>
-                        : this.state.photos.length === 0 ?
+                    {this.state.imageLoading ? 
+                            <div><Spinner animation="border" variant="info" role="status" size="xl">
+                            <span className="sr-only">Loading...</span>
+                            </Spinner></div>:this.state.photos.length === 0 ?
                             <div align='center'>
-                                <p className="big-letter">No hay archivos que mostrar</p>
-                                <i className='fa fa-image fa-5x'></i>
+                             <p className="big-letter">No hay archivos que mostrar</p>
+                             <i className='fa fa-image fa-5x'></i>
                             </div>
-                            :null
-                            }
+                            :null}
                 </div>
                 <div className="col videosgrid">
                     Videos
                     <Tab menu={{ secondary: true, pointing: true }} panes={[
                         { menuItem: 'Actuales', render: () => <Tab.Pane attached={false}><div>
                             <div className="row">
-                                {this.state.videos.map((value,index)=><MediaContainer servidorMultimedia={this.state.servidorMultimedia} src={value.relative_url} value={value} cam={this.state.markers[this.state.slideIndex].extraData} reloadData={this._loadFiles} video key={index} />)}
+                                {this.state.videos.map((value, index) => <MediaContainer
+                                    servidorMultimedia={this.state.servidorMultimedia}
+                                    src={value.relative_url} value={value}
+                                    cam={this.state.markers[this.state.slideIndex].extraData}
+                                    reloadData={this._loadFiles} video key={index} />)}
                             </div>
-                            {this.state.videos.length === 0 ?
+                            {this.state.videosLoading ? 
+                                    <div><Spinner animation="border" variant="info" role="status" size="xl">
+                                    <span className="sr-only">Loading...</span>
+                                </Spinner></div> :
+                                this.state.videos.length < 1 ?
                                 <div align='center'>
                                     <p className="big-letter">No hay archivos que mostrar</p>
                                     <i className='fa fa-image fa-5x'></i>
-                                </div>
-                            :null}
+                                </div>:null
+                            }
+
                             </div>
                         </Tab.Pane> },
-                             this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
-                                {
-                                    this.state.loadingHistory ? 
-                                            <div>
-                                                <Spinner animation="border" variant="info" role="status" size="xl">
-                                                    <span className="sr-only">Loading...</span>
-                                                </Spinner>
-                                            </div>
-                                        :
-                                        this.state.video_history[0] ?  
-                                            this.state.video_history[1].map((row,count)=>
-                                                <div key={count} className="row">
-                                                    <div className="col-12">
-                                                        <h4>{`${row.videos[0].fecha} - ${row.videos[0].hour}`}</h4>
-                                                    </div>
+                                this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'Historico', render: () => <Tab.Pane attached={false}>
+                                {this.state.video_history !== null ?
+                                    this.state.video_history[0] ?
+                                        this.state.video_history[1].map((row,count)=>
+                                            <div key={count} className="row">
+                                                <div className="col-12">
+                                                    <h4>{`${row.videos[0].fecha} - ${row.videos[0].hour}`}</h4>
+                                                </div>
                                                     {row.videos.map((e, count) => 
-                                                            <MediaContainer
-                                                                dns_ip={`http://${this.state.video_history[0]}`}
-                                                                hideDelete 
-                                                                src={e.relative_path_video}
-                                                                flag_video={e.exists_video}
-                                                                hour={e.real_hour}
-                                                                src_img={e.relative_path_image}
-                                                                flag_img={e.exists_image}
-                                                                value={e}
-                                                    cam={this.state.markers[this.state.slideIndex].extraData}
-                                                                reloadData={this._loadFiles}
-                                                                video
-                                                                key={count}
-                                                            />
-                                            )}
-                                    </div>
-                                    )
-                                            :
-                                            <div align='center'>
-                                                <p className="big-letter">No hay archivos que mostrar</p>
-                                                <i className='fa fa-image fa-5x'></i>
+                                                      <MediaContainer
+                                                            dns_ip={`http://${this.state.video_history[0]}`}
+                                                            hideDelete 
+                                                            src={e.exists_video ? e.relative_path_video: '/images/no_video.jpg'}
+                                                            flag_video={e.exists_video}
+                                                            hour={e.real_hour}
+                                                            src_img={e.relative_path_image}
+                                                            flag_img={e.exists_image}
+                                                            value={e}
+                                                            cam={this.state.markers[this.state.slideIndex].extraData}
+                                                            reloadData={this._loadFiles}
+                                                            video
+                                                            key={count}
+                                                        />
+
+                                                    )}
                                             </div>
+                                            )
+                                        :
+                                        <div align='center'>
+                                            <p className="big-letter">No hay archivos que mostrar111</p>
+                                            <i className='fa fa-image fa-5x'></i>
+                                        </div>
+                                    :
+                                    <div align='center'>
+                                         {this.state.loading ? 
+                                            <div><Spinner animation="border" variant="info" role="status" size="xl">
+                                                <span className="sr-only">Loading...</span>
+                                                </Spinner></div> :
+                                                this.state.videos.length < 1 ?
+                                            <div align='center'>
+                                            <p className="big-letter">No hay archivos que mostrar</p>
+                                            <i className='fa fa-image fa-5x'></i>
+                                        </div>:null
+                            }
+                                    </div>
                                 }
                         </Tab.Pane> }:{}:{},
                     ]} />    
@@ -246,10 +255,11 @@ class GridCameraDisplay extends Component {
 
         conections.snapShotV2(camera.id,this.state.user_id)
             .then(response => {
+                // console.log(response)
                 this.setState({loadingSnap:false})
                 const data = response.data              
                 if (data.success) {
-                    
+                    //console.log('refs',this.refs)
                     this._loadFiles(camera)
                 }
             })
@@ -276,7 +286,8 @@ class GridCameraDisplay extends Component {
                         stateRecordingCams = stateRecordingCams.filter(el => el !== selectedCamera)
                         stateRecordingProcess = stateRecordingProcess.filter(el => el.cam_id !== selectedCamera.id)
                         this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false,loadingRcord:false,modal:true,recordMessage:response.msg})
-                        this._loadFiles()
+                        // console.log(selectedCamera)
+                        this._loadFiles(selectedCamera)
                     } else {
                         let stateRecordingProcess = this.state.recordingProcess
                         let stateRecordingCams = this.state.recordingCams
@@ -334,12 +345,21 @@ class GridCameraDisplay extends Component {
 
     _playPause =() => {          
         let isplaying = this.state.isplaying
-        
+        // console.log(isplaying)
         isplaying[this.state.slideIndex] = !isplaying[this.state.slideIndex]                
-        
+        // console.log(isplaying)
         this.setState({isplaying:isplaying,isplay:isplaying[this.state.slideIndex]})
         this.refs['camrefgrid'+this.state.selectedCamera.id]._togglePlayPause()
     }
+
+    _refreshComponent = () => {
+        this.setState({loading: true})
+        setTimeout(() => { 
+            this.spinnerif()
+          },2500)
+          
+    }
+
 
     _restartCamStream = async () => {
         this.setState({restarting:true})
@@ -347,31 +367,42 @@ class GridCameraDisplay extends Component {
         this.setState({restarting:false})
     }
 
+
     handlePageClick = data => {
-        
+        // console.log(data)
         this.setState({start:data.selected*this.state.limit})
       };
-
-    _loadFiles = (cam) =>{
-
+    
+    _loadFiles = (cam) => {
+        // console.log("LOAD FILE EMPEZO")
+        // console.log("CAMMMMMMMM: ", cam?cam.id:this.state.selectedCamera?this.state.selectedCamera.id:0)
+        this.setState({
+            loading: true,
+            videos: [],
+            photos: [],
+            video_history: null,
+            videosLoading: true,
+            imageLoading: true
+        })
+        
         const last_day = DateTime.local()
-            .plus({ days: -1 })
-            .setZone("America/Mexico_City")
-            .toISODate();
+        .plus({ days: -1 })
+        .setZone("America/Mexico_City")
+        .toISODate();
         
         const current_day = DateTime.local()
-            .setZone("America/Mexico_City")
-            .toISODate();
-
+        .setZone("America/Mexico_City")
+        .toISODate();
+        
         const createArrDate = (arr) => {
             let nuevoObjeto = {};
             arr.forEach((x) => {
-            if (!nuevoObjeto.hasOwnProperty(x.fecha)) {
-                nuevoObjeto[x.fecha] = {
-                videos: [],
+                if (!nuevoObjeto.hasOwnProperty(x.fecha)) {
+                    nuevoObjeto[x.fecha] = {
+                        videos: [],
+                    }
                 }
-            }
-            nuevoObjeto[x.fecha].videos.push(x);
+                nuevoObjeto[x.fecha].videos.push(x);
             });
             return nuevoObjeto;
         }
@@ -379,57 +410,81 @@ class GridCameraDisplay extends Component {
         const createArrHour = (arr) => {
             let nuevoObjeto = {};
             arr.forEach((x) => {
-            if (!nuevoObjeto.hasOwnProperty(x.hour)) {
-                nuevoObjeto[x.hour] = {
-                videos: [],
-                };
-            }
-            nuevoObjeto[x.hour].videos.push(x);
+                if (!nuevoObjeto.hasOwnProperty(x.hour)) {
+                    nuevoObjeto[x.hour] = {
+                        videos: [],
+                    };
+                }
+                nuevoObjeto[x.hour].videos.push(x);
             });
             return nuevoObjeto;
         };
-
-        conections.getCamDataHistory(cam?cam.id:this.state.selectedCamera?this.state.selectedCamera.id:0)
+        // console.log("SELECCTED CAMARA", this.state.selectedCamera)
+        // console.log(cam)
+        conections.getCamDataHistory(cam ? cam.id : this.state.selectedCamera ? this.state.selectedCamera.id:0, cam.real_num_cam)
             .then(response => {
-            this.setState({loadingHistory: false})
-            let resHistory = response.data
-            let dns_ip = resHistory.data.dns_ip
-            if(resHistory.success){
-                let dates = createArrDate(resHistory.data.items)
-                let hours_last_day = createArrHour(dates[last_day].videos)
-                let hours_current_day = createArrHour(dates[current_day].videos);
-                this.setState({
-                video_history: [
-                    dns_ip,
-                    Object.values(hours_last_day)
-                        .reverse()
-                        .concat(Object.values(hours_current_day).reverse()).reverse(),
-                    ],
-                });
-            } else {
-                this.setState({ video_history: null })
-            }
+                // console.log(response)
+
+                let resHistory = response.data
+                if(resHistory.data.items.length > 0) {
+                    let dns_ip = resHistory.data.dns_ip
+                    if(resHistory.success){
+                        let dates = createArrDate(resHistory.data.items)
+                        let hours_last_day = createArrHour(dates[last_day].videos)
+                        let hours_current_day = createArrHour(dates[current_day].videos);
+                        this.setState({
+                            video_history: [
+                                dns_ip,
+                                Object.values(hours_last_day)
+                                    .reverse()
+                                    .concat(Object.values(hours_current_day).reverse()).reverse(),
+                            ]
+                        });
+                        setTimeout(() => {
+                            this.spinnerif()
+                        }, 400);
+                       
+                    } else {
+                        this.setState({ video_history: null })
+                        this.spinnerif()
+                    }
+                } else {
+                    this.setState({ video_history: null })
+                    this.spinnerif()
+                    
+                }
         })
 
         conections.getCamDataV2(cam?cam.id:this.state.selectedCamera?this.state.selectedCamera.id:0)
-        .then(response => {
-            const data = response.data
-            this.setState({videos:data.data.files_multimedia.videos,photos:data.data.files_multimedia.photos, servidorMultimedia: 'http://'+ data.data.dns_ip})
-        })
-
-        this.setState({loading: false})
-        /* ---matches reales ---
-        
-        conections.getCamMatches(cam?cam.real_num_cam:this.state.selectedCamera?this.state.selectedCamera.real_num_cam:0).then(response=>{
-            if (response.status === 200) {
-                this.setState({matches:response.data})
-            }
-        })
-        */
+            .then(async response => {
+                console.log(response)
+                this.setState({
+                    loadingPhotos: false,
+                    videos:response.data.data.files_multimedia.videos,
+                    photos:response.data.data.files_multimedia.photos, 
+                    servidorMultimedia: 'http://'+ response.data.data.dns_ip
+                })
+                
+                setTimeout(() => {
+                    // console.log("VIDEOS SPINNER")
+                    this.spinnerif()
+                    this.setState({videosLoading: false, imageLoading: false})
+                }, 100);
+            }).catch(err => {
+                console.log(err)
+                setTimeout(() => {
+                    this.setState({videosLoading: false, imageLoading: false})
+                }, 100);
+            })
     }
 
 
     _openCameraInfo = (marker) => {   
+        this.setState({loading: true})
+        setTimeout(() => { 
+            this.spinnerif()
+            },2500)
+
         if (marker) {
             let index = this.state.markers.indexOf(marker)            
             let recording = false       
@@ -461,8 +516,15 @@ class GridCameraDisplay extends Component {
 
     }
 
+    spinnerif = () => {
+        if (this.state.loading) {
+            setTimeout(() => { 
+            this.setState({loading: false})
+          },2500)}
+        }
+    
+
     componentDidMount(){     
-        
         let markersForLoop = []
         this.props.places.map((value)=>{
             markersForLoop.push({
