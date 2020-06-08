@@ -126,9 +126,8 @@ class CameraStream extends Component {
                         {this.props.hideTitle?null:<Card.Title>
                             <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam} 
                                 {this.props.marker.extraData.dataCamValue==undefined?null:this.props.marker.extraData.dataCamValue.tipo_camara === 2 ? <i>, Tipo: PTZ</i> : null} 
-                                {/* {this.props.marker.extraData.tipo_camara === undefined?null:this.props.marker.extraData.tipo_camara===2?<i>, Tipo: PTZ</i>:null} */}
                                 {this.props.marker.extraData.dataCamValue==undefined?null:this.props.marker.extraData.dataCamValue.tipo_camara === 3 ? <i>, Web Socket</i> : null} 
-                                {/* {this.props.marker.extraData.tipo_camara === undefined?null:this.props.marker.extraData.tipo_camara===3?<i>, Web Socket</i>:null} */}
+                                {this.props.marker.extraData.dataCamValue==undefined?null:this.props.marker.extraData.dataCamValue.tipo_camara === 4 ? <i>, Térmica</i> : null} 
                             </div>
                             
                         </Card.Title>}
@@ -454,7 +453,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     }
   componentDidMount(){   
 
-      console.log(this.props) 
+      console.log("CAMERASTREAM PROPS", this.props) 
       
       
     //   if(this.props.marker.extraData.isIframe){

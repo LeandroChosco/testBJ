@@ -31,6 +31,7 @@ import Tickets from './pages/Tickets';
 import DetailsSupport from './pages/DetailsSupport';
 import Dashboard from './pages/Dashboard'; 
 import Cuadrantes from './pages/Cuadrantes'
+import Sospechosos from "./pages/Sospechosos";
 import constants from './constants/constants';
 import Sound from 'react-sound';
 import sonido from './assets/tonos/notificacion.mp3'
@@ -488,7 +489,9 @@ ocultarMatches = (value) => {
       {this.state.modalCall?<ModalCall data={this.state.callInfo} modal={this.state.modalCall} hideModal={()=>this.setState({modalCall:false, callInfo:{}})} />:null  }
       <div className="fullcontainer">                
         {this.state.isAuthenticated&&this.state.showHeader?
-          <Header 
+            <Header
+            sideMenu={this.state.sideMenu}
+            _toggleSideMenu={this._toggleSideMenu}
             loadingRestart={this.state.loadingRestart} 
             toggleSideMenu = {this._toggleSideMenu} 
             logOut = {this._logOut} 
@@ -551,7 +554,8 @@ ocultarMatches = (value) => {
         <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  showMatches={this.state.showMatches} {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                                        
-      </div>
+        <Route path="/personas" exact render={(props) => <Sospechosos showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />
       <div className="fullcontainerLayer"></div>

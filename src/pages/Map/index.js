@@ -70,6 +70,7 @@ class Map extends Component {
       position: { lat: e.position.lat(), lng: e.position.lng() }
     });
     const propsIniciales = this.props;
+    console.log("PROPS: ", this.propsIniciales)
     infoWindow.addListener(
       "domready",
       (function(marker, render, moduleActions) {
@@ -84,13 +85,15 @@ class Map extends Component {
               showExternal
               hideButton={
                 marker.extraData.dataCamValue.tipo_camara === 2 ||
-                marker.extraData.dataCamValue.tipo_camara === 3
+                marker.extraData.dataCamValue.tipo_camara === 3 ||
+                marker.extraData.dataCamValue.tipo_camara === 4
                   ? true
                   : false
               }
               showButtons={
                 marker.extraData.dataCamValue.tipo_camara === 2 ||
-                marker.extraData.dataCamValue.tipo_camara === 3
+                marker.extraData.dataCamValue.tipo_camara === 3 ||
+                marker.extraData.dataCamValue.tipo_camara === 4
                   ? false
                   : true
               }

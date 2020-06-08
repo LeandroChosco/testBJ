@@ -2,6 +2,23 @@ import Axios from "axios";
 import constants from "./constants/constants";
 
 export default {
+  getDesconocidos: ()=>{
+    return Axios.get(constants.sails_url + ':' + constants.sails_port +'/getUnknow/?limit=50')
+},
+getDetecciones: ()=>{
+    return Axios.get(constants.sails_url + ':' + constants.sails_port + +'/getMatches/')
+},
+
+createPersons: (data) =>{
+    return Axios.post(constants.sails_url + ':' + constants.sails_port + '/create/persons/', data)
+},
+getPersons: (type)=>{
+    if(type)
+        return Axios.get(constants.sails_url + ':' + constants.sails_port + '/getPersons/?type='+type)
+    else
+        return Axios.get(constants.sails_url + ':' + constants.sails_port + '/getPersons/')
+},
+
   makeLogin: data => {
     return Axios.post(
       constants.base_url + ":" + constants.apiPort + "/admin/login",
@@ -138,18 +155,17 @@ export default {
         user_id
     );
   },
-  getCamDataHistory: camera_id => {
+  getCamDataHistory: (camera_id, num_cam) => {
     const user_id = getUserID();
+    console.log(
+      "URL: ",
+      `${constants.base_url}:${constants.apiPort}/cams/${camera_id}/${num_cam}/video_history?user_id=${user_id}`
+    );
     return Axios.get(
-      constants.base_url +
-        ":" +
-        constants.apiPort +
-        "/cams/" +
-        camera_id +
-        "/video_history?user_id=" +
-        user_id
+      `${constants.base_url}:${constants.apiPort}/cams/${camera_id}/${num_cam}/video_history?user_id=${user_id}`
     );
   },
+
   getTickets: () => {
     return Axios.get(constants.base_url + ":" + constants.apiPort + "/tickets");
   },

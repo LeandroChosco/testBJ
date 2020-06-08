@@ -8,6 +8,16 @@ import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 
 class Header extends Component {
+  _goSospechosos = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/personas");
+  };
+
   _goCuadrantes = () => {
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
@@ -50,6 +60,10 @@ class Header extends Component {
   };
 
   _logOut = () => {
+    if (this.props.sideMenu) {
+      this.props._toggleSideMenu();
+    }
+
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
@@ -93,6 +107,8 @@ class Header extends Component {
                           ? this._goDashboard
                           : value.id === 5
                           ? this._goCuadrantes
+                          : value.id === 6
+                          ? this._goSospechosos
                           : null
                       }
                     >
@@ -108,6 +124,8 @@ class Header extends Component {
                             ? "fa fa-bar-chart"
                             : value.id === 5
                             ? "fa fa-object-ungroup"
+                            : value.id === 6
+                            ? "fa fa-id-card"
                             : null
                         }
                       ></i>
