@@ -15,38 +15,38 @@ const countryOptions = [
   {
     key: 5,
     text: 5,
-    value: 5,
+    value: 5
   },
   {
     key: 10,
     text: 10,
-    value: 10,
+    value: 10
   },
   {
     key: 15,
     text: 15,
-    value: 15,
+    value: 15
   },
   {
     key: 20,
     text: 20,
-    value: 20,
+    value: 20
   },
   {
     key: 25,
     text: 25,
-    value: 25,
+    value: 25
   },
   {
     key: 30,
     text: 30,
-    value: 30,
+    value: 30
   },
   {
     key: 50,
     text: 50,
-    value: 50,
-  },
+    value: 50
+  }
 ];
 class GridCameraDisplay extends Component {
   state = {
@@ -72,7 +72,7 @@ class GridCameraDisplay extends Component {
     servidorMultimedia: "",
     loadingSnap: false,
     videosLoading: false,
-    imageLoading: false,
+    imageLoading: false
   };
 
   render() {
@@ -127,7 +127,7 @@ class GridCameraDisplay extends Component {
                   this.setState({
                     start: 0,
                     limit: value.value,
-                    pageCount: pageCount,
+                    pageCount: pageCount
                   });
                 }}
               />
@@ -263,7 +263,7 @@ class GridCameraDisplay extends Component {
                   this.props.downloadFiles(this.state.selectedCamera, {
                     videos: this.state.videos,
                     images: this.state.photos,
-                    servidorMultimedia: this.state.servidorMultimedia,
+                    servidorMultimedia: this.state.servidorMultimedia
                   })
                 }
                 loading={this.props.loadingFiles}
@@ -410,7 +410,7 @@ class GridCameraDisplay extends Component {
                           ) : null}
                         </div>
                       </Tab.Pane>
-                    ),
+                    )
                   },
                   this.props.moduleActions
                     ? this.props.moduleActions.viewHistorial
@@ -487,10 +487,10 @@ class GridCameraDisplay extends Component {
                                 </div>
                               )}
                             </Tab.Pane>
-                          ),
+                          )
                         }
                       : {}
-                    : {},
+                    : {}
                 ]}
               />
             </div>
@@ -523,11 +523,11 @@ class GridCameraDisplay extends Component {
     );
   }
 
-  _snapShot = (camera) => {
+  _snapShot = camera => {
     this.setState({ loadingSnap: true });
-    console.log(camera)
-    conections.snapShotV2(camera.id, this.state.user_id).then((response) => {
-      console.log(response)
+    console.log(camera);
+    conections.snapShotV2(camera.id, this.state.user_id).then(response => {
+      console.log(response);
       this.setState({ loadingSnap: false });
       const data = response.data;
       if (data.success) {
@@ -537,10 +537,10 @@ class GridCameraDisplay extends Component {
     });
   };
 
-  _recordignToggle = (selectedCamera) => {
+  _recordignToggle = selectedCamera => {
     if (this.state.recordingCams.indexOf(selectedCamera) > -1) {
       let process_id = 0;
-      this.state.recordingProcess.map((value) => {
+      this.state.recordingProcess.map(value => {
         if (value.cam_id === selectedCamera.id) {
           process_id = value.process_id;
         }
@@ -550,16 +550,16 @@ class GridCameraDisplay extends Component {
 
       conections
         .stopRecordV2({ clave: process_id }, selectedCamera.id)
-        .then((r) => {
+        .then(r => {
           const response = r.data;
           if (response.success === true) {
             let stateRecordingProcess = this.state.recordingProcess;
             let stateRecordingCams = this.state.recordingCams;
             stateRecordingCams = stateRecordingCams.filter(
-              (el) => el !== selectedCamera
+              el => el !== selectedCamera
             );
             stateRecordingProcess = stateRecordingProcess.filter(
-              (el) => el.cam_id !== selectedCamera.id
+              el => el.cam_id !== selectedCamera.id
             );
             this.setState({
               recordingCams: stateRecordingCams,
@@ -567,7 +567,7 @@ class GridCameraDisplay extends Component {
               isRecording: false,
               loadingRcord: false,
               modal: true,
-              recordMessage: response.msg,
+              recordMessage: response.msg
             });
             // console.log(selectedCamera)
             this._loadFiles(selectedCamera);
@@ -575,10 +575,10 @@ class GridCameraDisplay extends Component {
             let stateRecordingProcess = this.state.recordingProcess;
             let stateRecordingCams = this.state.recordingCams;
             stateRecordingCams = stateRecordingCams.filter(
-              (el) => el !== selectedCamera
+              el => el !== selectedCamera
             );
             stateRecordingProcess = stateRecordingProcess.filter(
-              (el) => el.cam_id !== selectedCamera.id
+              el => el.cam_id !== selectedCamera.id
             );
             this.setState({
               recordingCams: stateRecordingCams,
@@ -586,18 +586,18 @@ class GridCameraDisplay extends Component {
               isRecording: false,
               loadingRcord: false,
               modal: true,
-              recordMessage: response.msg,
+              recordMessage: response.msg
             });
           }
         });
     } else {
-      conections.startRecordV2({}, selectedCamera.id).then((r) => {
+      conections.startRecordV2({}, selectedCamera.id).then(r => {
         const response = r.data;
         if (response.success === true) {
           let recordingProcess = {
             cam_id: selectedCamera.id,
             process_id: response.clave,
-            creation_time: moment(),
+            creation_time: moment()
           };
           let stateRecordingProcess = this.state.recordingProcess;
           let stateRecordingCams = this.state.recordingCams;
@@ -606,7 +606,7 @@ class GridCameraDisplay extends Component {
           this.setState({
             recordingCams: stateRecordingCams,
             recordingProcess: stateRecordingProcess,
-            isRecording: true,
+            isRecording: true
           });
           if (this.state.interval === null) {
             let interval = setInterval(this._checkLiveTimeRecording, 5000);
@@ -620,24 +620,24 @@ class GridCameraDisplay extends Component {
   _checkLiveTimeRecording = () => {
     if (this.state.recordingProcess.length > 0) {
       let now = moment();
-      this.state.recordingProcess.map((value) => {
+      this.state.recordingProcess.map(value => {
         if (now.diff(value.creation_time, "minutes") > 10) {
           conections
             .stopRecord({ record_proccess_id: value.process_id })
-            .then((response) => {
+            .then(response => {
               let stateRecordingProcess = this.state.recordingProcess;
               let stateRecordingCams = this.state.recordingCams;
               stateRecordingCams = stateRecordingCams.filter(
-                (el) => el.id !== value.cam_id
+                el => el.id !== value.cam_id
               );
               stateRecordingProcess = stateRecordingProcess.filter(
-                (el) => el.cam_id !== value.cam_id
+                el => el.cam_id !== value.cam_id
               );
               this.setState({
                 recordingCams: stateRecordingCams,
                 recordingProcess: stateRecordingProcess,
                 isRecording: false,
-                loadingRcord: false,
+                loadingRcord: false
               });
               this._loadFiles();
             });
@@ -657,7 +657,7 @@ class GridCameraDisplay extends Component {
     // console.log(isplaying)
     this.setState({
       isplaying: isplaying,
-      isplay: isplaying[this.state.slideIndex],
+      isplay: isplaying[this.state.slideIndex]
     });
     this.refs["camrefgrid" + this.state.selectedCamera.id]._togglePlayPause();
   };
@@ -677,13 +677,13 @@ class GridCameraDisplay extends Component {
     this.setState({ restarting: false });
   };
 
-  handlePageClick = (data) => {
+  handlePageClick = data => {
     // console.log(data)
     this.setState({ start: data.selected * this.state.limit });
   };
 
-  _loadFiles = (cam) => {
-    console.log('hola', cam.dataCamValue)
+  _loadFiles = cam => {
+    console.log("hola", cam.dataCamValue);
     // console.log("LOAD FILE EMPEZO")
     // console.log("CAMMMMMMMM: ", cam?cam.id:this.state.selectedCamera?this.state.selectedCamera.id:0)
     this.setState({
@@ -706,12 +706,12 @@ class GridCameraDisplay extends Component {
       .setZone("America/Mexico_City")
       .toISODate();
 
-    const createArrDate = (arr) => {
+    const createArrDate = arr => {
       let nuevoObjeto = {};
-      arr.forEach((x) => {
+      arr.forEach(x => {
         if (!nuevoObjeto.hasOwnProperty(x.fecha)) {
           nuevoObjeto[x.fecha] = {
-            videos: [],
+            videos: []
           };
         }
         nuevoObjeto[x.fecha].videos.push(x);
@@ -719,25 +719,22 @@ class GridCameraDisplay extends Component {
       return nuevoObjeto;
     };
 
-    const createArrHour = (arr) => {
+    const createArrHour = arr => {
       let nuevoObjeto = {};
-      arr.forEach((x) => {
+      arr.forEach(x => {
         if (!nuevoObjeto.hasOwnProperty(x.hour)) {
           nuevoObjeto[x.hour] = {
-            videos: [],
+            videos: []
           };
         }
         nuevoObjeto[x.hour].videos.push(x);
       });
       return nuevoObjeto;
     };
-    console.log("SELECCTED CAMARA", this.state.selectedCamera)
+    console.log("SELECCTED CAMARA", this.state.selectedCamera);
     conections
-      .getCamDataHistory(
-        cam.dataCamValue.id, 
-        cam.dataCamValue.num_cam
-      )
-      .then((response) => {
+      .getCamDataHistory(cam.dataCamValue.id, cam.dataCamValue.num_cam)
+      .then(response => {
         // console.log("HISTORICOS: ", response);
 
         let resHistory = response.data;
@@ -753,8 +750,8 @@ class GridCameraDisplay extends Component {
                 Object.values(hours_last_day)
                   .reverse()
                   .concat(Object.values(hours_current_day).reverse())
-                  .reverse(),
-              ],
+                  .reverse()
+              ]
             });
             this.spinnerif();
           } else {
@@ -768,16 +765,14 @@ class GridCameraDisplay extends Component {
       });
 
     conections
-      .getCamDataV2(
-        cam.dataCamValue.id
-      )
-      .then(async (response) => {
-        console.log(response)
+      .getCamDataV2(cam.dataCamValue.id)
+      .then(async response => {
+        console.log(response);
         this.setState({
           loadingPhotos: false,
           videos: response.data.data.files_multimedia.videos,
           photos: response.data.data.files_multimedia.photos,
-          servidorMultimedia: "http://" + response.data.data.dns_ip,
+          servidorMultimedia: "http://" + response.data.data.dns_ip
         });
 
         setTimeout(() => {
@@ -786,7 +781,7 @@ class GridCameraDisplay extends Component {
           this.setState({ videosLoading: false, imageLoading: false });
         }, 100);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         setTimeout(() => {
           this.setState({ videosLoading: false, imageLoading: false });
@@ -794,7 +789,7 @@ class GridCameraDisplay extends Component {
       });
   };
 
-  _openCameraInfo = (marker) => {
+  _openCameraInfo = marker => {
     this.setState({ loading: true });
     setTimeout(() => {
       this.spinnerif();
@@ -831,7 +826,7 @@ class GridCameraDisplay extends Component {
         isplay:
           this.state.isplaying[this.state.slideIndex] === undefined
             ? true
-            : this.state.isplaying[this.state.slideIndex],
+            : this.state.isplaying[this.state.slideIndex]
       });
       this._loadFiles(marker.extraData);
     } else {
@@ -840,7 +835,7 @@ class GridCameraDisplay extends Component {
         autoplay: true,
         videos: [],
         photos: [],
-        video_history: [],
+        video_history: []
       });
     }
   };
@@ -854,12 +849,12 @@ class GridCameraDisplay extends Component {
   };
 
   componentDidMount() {
-    console.log("PROPS", this.props)
+    // console.log("PROPS", this.props)
     let markersForLoop = [];
-    this.props.places.map((value) => {
+    this.props.places.map(value => {
       markersForLoop.push({
         title: value.name,
-        extraData: value,
+        extraData: value
       });
       return true;
     });
@@ -884,7 +879,7 @@ class GridCameraDisplay extends Component {
     this.setState({
       markers: markersForLoop,
       matches: cameras,
-      pageCount: pageCount,
+      pageCount: pageCount
     });
   }
 
@@ -895,7 +890,7 @@ class GridCameraDisplay extends Component {
     props.places.map((value, index) => {
       markersForLoop.push({
         title: value.name,
-        extraData: value,
+        extraData: value
       });
       return true;
     });

@@ -32,6 +32,7 @@ import DetailsSupport from './pages/DetailsSupport';
 import Dashboard from './pages/Dashboard'; 
 import Cuadrantes from './pages/Cuadrantes'
 import Sospechosos from "./pages/Sospechosos";
+import Covid from './pages/Covid'
 import constants from './constants/constants';
 import Sound from 'react-sound';
 import sonido from './assets/tonos/notificacion.mp3'
@@ -258,7 +259,7 @@ class App extends Component {
         this.setState({callIsGoing:false})
       })       
       firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('messages').orderBy('lastModification','desc').onSnapshot( docs=>{     
-        console.log( docs.docChanges())
+        // console.log( docs.docChanges())
         let changes = docs.docChanges()
         if (changes.length === 1) {
           let index = changes[0].oldIndex
@@ -555,6 +556,7 @@ ocultarMatches = (value) => {
         <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                                        
         <Route path="/personas" exact render={(props) => <Sospechosos showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/covid" exact render={(props) => <Covid showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />

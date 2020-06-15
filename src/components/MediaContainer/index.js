@@ -14,12 +14,14 @@ class MediaContainer extends Component {
   state = {
     modal: false,
     player: undefined,
-    loading: false,
+    loading: false
   };
 
   render() {
     return (
-      <div className="mediaContainer col-6 p10">
+      <div
+        className={!this.props.covid ? "mediaContainer col-6 p10" : "col-3 p-3"}
+      >
         <Card
           onClick={
             this.props.src === "/images/no_video.jpg"
@@ -53,11 +55,14 @@ class MediaContainer extends Component {
           {this.props.image ? (
             <img
               src={
-                this.props.servidorMultimedia +
-                ":" +
-                constants.apiPort +
-                "/" +
-                this.props.src
+                this.props.covid
+                  ? `${constants.sails_url}:${constants.sails_port}/public/` +
+                    this.props.value
+                  : this.props.servidorMultimedia +
+                    ":" +
+                    constants.apiPort +
+                    "/" +
+                    this.props.src
               }
               style={{ width: "100%" }}
               alt="img"
@@ -88,7 +93,8 @@ class MediaContainer extends Component {
                 <Button basic onClick={this._saveFile}>
                   <i className="fa fa-download"></i> Descargar{" "}
                 </Button>
-                {!this.props.dns_ip && (
+
+                {!this.props.covid && !this.props.dns_ip && (
                   <Button basic negative onClick={this._deleteFile}>
                     <i className="fa fa-trash"></i> Eliminar
                   </Button>
@@ -116,11 +122,14 @@ class MediaContainer extends Component {
               <img
                 id="imagecontainerfrommedia"
                 src={
-                  this.props.servidorMultimedia +
-                  ":" +
-                  constants.apiPort +
-                  "/" +
-                  this.props.src
+                  this.props.covid
+                    ? `${constants.sails_url}:${constants.sails_port}/public/` +
+                      this.props.value
+                    : this.props.servidorMultimedia +
+                      ":" +
+                      constants.apiPort +
+                      "/" +
+                      this.props.src
                 }
                 style={{ width: "100%" }}
                 crossOrigin="true"
@@ -134,7 +143,11 @@ class MediaContainer extends Component {
   }
 
   componentDidMount() {
-    // console.log(this.props)
+    // console.log(
+    //   "mediacontainer",
+    //   `${constants.sails_url}:${constants.sails_port}/public/` +
+    //     this.props.value
+    // );
     //console.log('url',(this.props.dns_ip?this.props.dns_ip:constants.base_url)+':'+constants.apiPort+'/'+ this.props.src , this.props.servidorMultimedia)
   }
   componentDidUpdate() {
@@ -144,19 +157,23 @@ class MediaContainer extends Component {
   componentWillUnmount() {}
   _saveFile = async () => {
     this.setState({
-      loading: true,
+      loading: true
     });
     const response = {
-      file: this.props.dns_ip
+      file: this.props.covid
+        ? `${constants.sails_url}:${constants.sails_port}/public/` +
+          this.props.value
+        : this.props.dns_ip
         ? this.props.dns_ip + ":" + constants.apiPort + "/" + this.props.src
         : this.props.servidorMultimedia +
           ":" +
           constants.apiPort +
           "/" +
-          this.props.src,
+          this.props.src
     };
+    console.log(response);
     const statusResponse = await fetch(response.file);
-    // console.log("status: ", statusResponse)
+    console.log("status: ", statusResponse);
     if (statusResponse.status === 200) {
       window.saveAs(
         response.file,
@@ -175,8 +192,7 @@ class MediaContainer extends Component {
       }
     } else {
       const responseHistory = {
-        file:
-          this.props.dns_ip + ":" + constants.apiPort + "/" + this.props.src,
+        file: this.props.dns_ip + ":" + constants.apiPort + "/" + this.props.src
       };
       window.saveAs(
         responseHistory.file,
@@ -209,7 +225,7 @@ class MediaContainer extends Component {
         "/" +
         this.props.value.id +
         "/1/V2"
-    ).then((response) => {
+    ).then(response => {
       console.log("eliminando archivo");
       console.log(response);
       if (response.data.success) {

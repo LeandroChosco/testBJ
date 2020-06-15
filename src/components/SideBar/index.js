@@ -20,14 +20,14 @@ class SideBar extends Component {
 
   componentDidMount() {
     conections.getAllCams().then(data => {
-      console.log(data);
+      // console.log(data);
       const camaras = data.data;
       if (data.status === 200) {
-        console.log("entro al if");
+        // console.log("entro al if");
         let auxCamaras = [];
         let options = [];
         let index = 1;
-        console.log("camm", camaras);
+        // console.log("camm", camaras);
         if (camaras === undefined) {
           return;
         }

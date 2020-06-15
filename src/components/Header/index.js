@@ -8,6 +8,15 @@ import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 
 class Header extends Component {
+  _goCovid = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/covid");
+  };
   _goSospechosos = () => {
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
@@ -109,6 +118,8 @@ class Header extends Component {
                           ? this._goCuadrantes
                           : value.id === 6
                           ? this._goSospechosos
+                          : value.id === 7
+                          ? this._goCovid
                           : null
                       }
                     >
@@ -126,6 +137,8 @@ class Header extends Component {
                             ? "fa fa-object-ungroup"
                             : value.id === 6
                             ? "fa fa-id-card"
+                            : value.id === 7
+                            ? "fa fa-user-md"
                             : null
                         }
                       ></i>
