@@ -2,9 +2,20 @@ import Axios from "axios";
 import constants from "./constants/constants";
 
 export default {
-  getTermicFiles: () => {
+  getOnTermicPhotoData: name => {
+    console.log(
+      constants.sails_url +
+        ":" +
+        constants.sails_port +
+        "/termicfiles-one/" +
+        name
+    );
     return Axios.get(
-      constants.sails_url + ":" + constants.sails_port + "/" + "termic-files/"
+      constants.sails_url +
+        ":" +
+        constants.sails_port +
+        "/termicfiles-one/" +
+        name
     );
   },
   getDesconocidos: () => {

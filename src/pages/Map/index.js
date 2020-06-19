@@ -70,7 +70,7 @@ class Map extends Component {
       position: { lat: e.position.lat(), lng: e.position.lng() }
     });
     const propsIniciales = this.props;
-    console.log("PROPS: ", this.propsIniciales)
+    console.log("PROPS: ", this.propsIniciales);
     infoWindow.addListener(
       "domready",
       (function(marker, render, moduleActions) {
@@ -120,7 +120,7 @@ class Map extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props);
+    // console.log(this.props);
     const isValid = this.props.canAccess(1);
     if (!isValid) {
       this.props.history.push("/welcome");
@@ -153,7 +153,7 @@ class Map extends Component {
       element.setMap(null);
     }
     conections.getAllCams().then(data => {
-      console.log("Marker: ", data.data);
+      // console.log("Marker: ", data.data);
       const camaras = data.data;
       let auxCamaras = [];
       let center_lat = 0;

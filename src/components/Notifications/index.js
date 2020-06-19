@@ -5,6 +5,7 @@ import SupportItem from "../SupportItem";
 import SOSItem from "../SOSItem";
 import ComplaimentItem from "../ComplaimentItem";
 import RobberyItem from "../RobberyItem";
+import CovidItem from "../CovidItem";
 
 import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
@@ -126,18 +127,26 @@ class Notifications extends Component {
                 : null}
             </div>
           </Accordion.Content>
+          <Accordion.Title
+            active={activeIndex === 4}
+            index={4}
+            onClick={this.handleClick}
+          >
+            <Icon name="dropdown" />
+            Alerta Covid
+          </Accordion.Title>
+          <Accordion.Content
+            active={activeIndex === 4}
+            style={{ overflowY: "auto", overflowX: "hidden", height: "100%" }}
+          >
+            <div align="center">
+              {this.props.alertaCovid.map((value, index) => (
+                <CovidItem info={value} key={index} />
+              ))}
+              {this.props.alertaCovid.length === 0 && "No hay alertas de covid"}
+            </div>
+          </Accordion.Content>
         </Accordion>
-        {/* <div align = 'center'>
-                    <Header>Emergencia</Header>
-                </div>
-                <div style={{height:'50%',overflowY:'scroll', position:'relative',overflowX:'hidden',paddingBottom: '50px',paddingTop: '15px'}}>                                        
-                </div>
-                <div align = 'center'>
-                    <Header>Soporte</Header>
-                </div>
-                <div style={{height:'50%',overflowY:'scroll', position:'relative',overflowX:'hidden',paddingTop: '15px',paddingBottom: '50px'}}>                    
-                    
-                </div> */}
       </div>
     );
   }
@@ -148,6 +157,8 @@ class Notifications extends Component {
   };
 
   componentDidMount() {
+    console.log(this.props);
+
     const element = this.refs.camInfoSideMenu;
     this.refs.camInfoSideMenu.classList.add("active-side");
     const navHeight = document.getElementsByTagName("nav")[0].scrollHeight;

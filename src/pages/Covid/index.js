@@ -14,7 +14,6 @@ import moment from 'moment'
 import JSZipUtils from 'jszip-utils'
 import JSZip from 'jszip'
 import saveAs from 'file-saver'
-import Chips from 'react-chips'
 import conections from '../../conections';
 class Analysis extends Component {
 
@@ -313,7 +312,11 @@ class Analysis extends Component {
     switch(this.state.displayTipe){
         case 1:
             return (<GridCovidDisplay
-                        ref='myChild'
+                ref='myChild'
+                        newCovidState = {this.props.newCovidState}
+                        _newCovidItem = {this.props._newCovidItem}
+                        newCovidItem = {this.props.newCovidItem}
+                        alertaCovid={this.props.alertaCovid}
                         error={this.state.error}
                         loading={this.state.loading}
                         places = {this.state.places}

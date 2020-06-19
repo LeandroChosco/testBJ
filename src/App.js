@@ -38,6 +38,13 @@ import Sound from 'react-sound';
 import sonido from './assets/tonos/notificacion.mp3'
 import soundManager from 'soundmanager2'
 
+import CovidItemDetail from './components/CovidItemDetail'
+
+import socketIOClient from "socket.io-client";
+import sailsIOClient from "sails.io.js";
+var io = sailsIOClient(socketIOClient);
+
+
 let call = false
 
 class App extends Component {
@@ -74,11 +81,60 @@ class App extends Component {
     callIsGoing:false,
     fisrtTimeCall:true,
     reproducirSonido: false,
-    showMatches: true
+    showMatches: true,
+    alertaCovid: [],
+    newCovidState: false,
+    newCovidItem: [],
+    alertaCovidTmp: []
   }
   
 
-  componentDidMount(){
+  componentDidMount() {
+    io.sails.url = constants.sails_url + ':' + constants.sails_port;
+    io.socket.get('/termicfiles', (data) => {
+      console.log("Al socket get")
+      console.log(data)
+      let covidTmp = [];
+      data.data.forEach(element => {
+        if (element.name.includes("172.20.39.15_01")) {
+          covidTmp.push(element);
+        }
+      });
+
+      this.setState({alertaCovid: data.data, alertaCovidTmp: covidTmp})
+    })
+    io.socket.on('foo', (data) =>{
+      console.log("al segundo emit")
+      console.log(data.data)
+      const notification = this.refs.notificationSystem;
+      let tmpArr = [...this.state.alertaCovid]
+      tmpArr.unshift(data.data)
+      this.setState({ reproducirSonido: true, alertaCovid: tmpArr, newCovidItem: data.data, newCovidState: true })  
+      notification.addNotification({
+        title:'Alerta Covid en ' + data.data.camData[0].township,
+        message: "Camara: "+ data.data.cam_id + " Dirección: " + data.data.camData[0].street + " " + data.data.camData[0].number + " Col." +  data.data.camData[0].town,
+        level: 'error',
+        action: {
+          label: 'Ver detalles',
+          callback: ()=> {
+            window.open(
+              window.location.href
+                .replace(window.location.pathname, "/")
+                .replace(window.location.search, "")
+                .replace(window.location.hash, "") +
+                "detalles/covid/" +
+                data.data.name,
+              "_blank",
+              "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=400"
+            );
+          }
+        }
+      });
+      // setTimeout(() => {
+      //   this.setState({newCovidState: false})
+      // }, 500);
+    })
+    
     soundManager.soundManager.setup({ ignoreMobileRestrictions: true });
     if(window.location.pathname.includes('mobile_help')){
       this.setState({showHeader:false})
@@ -137,7 +193,11 @@ class App extends Component {
   }
       */
 
-
+  _newCovidItem = () => {
+    if (this.state.newCovidState) {    
+      this.setState({newCovidState: false})
+    }
+}
   loadData = () => {         
     if (process.env.NODE_ENV==='production'||true) {
       // --- matches planchados ---
@@ -154,7 +214,9 @@ class App extends Component {
           return value
         })})
       })
-
+      
+      
+      
       /*
       --- matches reales ----
       let io;
@@ -515,7 +577,8 @@ ocultarMatches = (value) => {
         }           
         <SideBar toggleSideMenu = {this._toggleSideMenu} active={this.state.sideMenu}/>
         {this.state.cameraInfoSide?
-          <Notifications 
+            <Notifications 
+            alertaCovid = {this.state.alertaCovidTmp}
             toggleSideMenu = {this._cameraSideInfo}  
             cameraID={this.state.cameraID}
             help={this.state.sos}
@@ -545,6 +608,7 @@ ocultarMatches = (value) => {
         <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/> }/>
         <Route path="/analisis" exact render={(props) => <Analysis showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/analisis/:id" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
+        <Route path="/detalles/covid/:id" exact render={(props) => <CovidItemDetail  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/emergency/:id" exact render={(props) => <DetailsEmergency  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/denuncia/:id" exact render={(props) => <DetailsComplaiment  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/soporte/:id" exact render={(props) => <DetailsSupport  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
@@ -556,7 +620,7 @@ ocultarMatches = (value) => {
         <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                                        
         <Route path="/personas" exact render={(props) => <Sospechosos showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
-        <Route path="/covid" exact render={(props) => <Covid showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/covid" exact render={(props) => <Covid _newCovidItem = {this._newCovidItem} newCovidState={this.state.newCovidState} newCovidItem = {this.state.newCovidItem} alertaCovid={this.state.alertaCovid} showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         </div>
       {this.state.cameraControl?<CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active ={this.state.cameraControl}/>:null}
       <NotificationSystem ref='notificationSystem' />

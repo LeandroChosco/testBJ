@@ -56,8 +56,11 @@ class MediaContainer extends Component {
             <img
               src={
                 this.props.covid
-                  ? `${constants.sails_url}:${constants.sails_port}/public/` +
-                    this.props.value
+                  ? `${constants.sails_url}:${constants.sails_port}` +
+                    "/" +
+                    this.props.value.relative_path +
+                    "/" +
+                    this.props.value.name
                   : this.props.servidorMultimedia +
                     ":" +
                     constants.apiPort +
@@ -123,8 +126,11 @@ class MediaContainer extends Component {
                 id="imagecontainerfrommedia"
                 src={
                   this.props.covid
-                    ? `${constants.sails_url}:${constants.sails_port}/public/` +
-                      this.props.value
+                    ? `${constants.sails_url}:${constants.sails_port}` +
+                      "/" +
+                      this.props.value.relative_path +
+                      "/" +
+                      this.props.value.name
                     : this.props.servidorMultimedia +
                       ":" +
                       constants.apiPort +
@@ -151,7 +157,7 @@ class MediaContainer extends Component {
     //console.log('url',(this.props.dns_ip?this.props.dns_ip:constants.base_url)+':'+constants.apiPort+'/'+ this.props.src , this.props.servidorMultimedia)
   }
   componentDidUpdate() {
-    // console.log(this.props)
+    // console.log(this.props);
   }
 
   componentWillUnmount() {}
@@ -161,8 +167,11 @@ class MediaContainer extends Component {
     });
     const response = {
       file: this.props.covid
-        ? `${constants.sails_url}:${constants.sails_port}/public/` +
-          this.props.value
+        ? `${constants.sails_url}:${constants.sails_port}` +
+          "/" +
+          this.props.value.relative_path +
+          "/" +
+          this.props.value.name
         : this.props.dns_ip
         ? this.props.dns_ip + ":" + constants.apiPort + "/" + this.props.src
         : this.props.servidorMultimedia +

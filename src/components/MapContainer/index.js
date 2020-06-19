@@ -9,14 +9,14 @@ export class MapContainer extends Component {
       this.props.options
     );
 
-    conections.getLimitsCam().then(res =>{
+    conections.getLimitsCam().then(res => {
       //console.log('limits', res)
-      var dataLimit = res.data.data
-      if(res.status === 200){
-        if(res.data.success){
-          console.log('data',dataLimit)
-          dataLimit.map(data =>{
-            var polygonCoord = data.coordenadas_limites
+      var dataLimit = res.data.data;
+      if (res.status === 200) {
+        if (res.data.success) {
+          // console.log('data',dataLimit)
+          dataLimit.map(data => {
+            var polygonCoord = data.coordenadas_limites;
             // Construct the polygon.
             var polygon = new window.google.maps.Polygon({
               paths: polygonCoord,
@@ -26,9 +26,9 @@ export class MapContainer extends Component {
               fillColor: data.color,
               fillOpacity: 0.35
             });
-            polygon.setMap(map)
-            var infoWindow = new window.google.maps.InfoWindow;
-            polygon.addListener('click', (function(event){
+            polygon.setMap(map);
+            var infoWindow = new window.google.maps.InfoWindow();
+            polygon.addListener("click", function(event) {
               var contentString = data.nombre;
 
               // Replace the info window's content and position.
@@ -36,18 +36,14 @@ export class MapContainer extends Component {
               infoWindow.setPosition(event.latLng);
 
               infoWindow.open(map);
-            }));
-            
-          })
-
-          
-          };
+            });
+          });
         }
-      })
+      }
+    });
 
-      this.props.onMapLoad(map);
-    };
-
+    this.props.onMapLoad(map);
+  };
 
   componentDidMount() {
     if (!window.google) {
