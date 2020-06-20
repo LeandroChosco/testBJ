@@ -267,7 +267,7 @@ class GridCameraDisplay extends Component {
       photos: [],
       imageLoading: true
     });
-
+    console.log(this.state.selectedCamera);
     // console.log("CAM: ", cam);
     let auxCovidFile = [];
     let arrAux = [...this.props.alertaCovid];
@@ -354,6 +354,7 @@ class GridCameraDisplay extends Component {
         this.state.selectedCamera != {} &&
         this.props.newCovidItem.cam_id === this.state.selectedCamera.id
       ) {
+        console.log(this.state.selectedCamera);
         // this._loadFiles(this.state.selectedCamera);
         let tmpArr = [...this.state.photos];
         console.log(this.props.newCovidItem);

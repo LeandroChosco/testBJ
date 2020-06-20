@@ -96,7 +96,7 @@ class App extends Component {
       console.log(data)
       let covidTmp = [];
       data.data.forEach(element => {
-        if (element.name.includes("172.20.39.15_01")) {
+        if (element.camData[0].termic_type == 1) {
           covidTmp.push(element);
         }
       });
@@ -104,13 +104,19 @@ class App extends Component {
       this.setState({alertaCovid: data.data, alertaCovidTmp: covidTmp})
     })
     io.socket.on('foo', (data) =>{
-      console.log("al segundo emit")
+      console.log("EMIT")
       console.log(data.data)
       const notification = this.refs.notificationSystem;
       let tmpArr = [...this.state.alertaCovid]
       tmpArr.unshift(data.data)
-      this.setState({ reproducirSonido: true, alertaCovid: tmpArr, newCovidItem: data.data, newCovidState: true })  
-      notification.addNotification({
+      let covidTmp = [...this.state.alertaCovidTmp]
+      
+      if (data.data.camData[0].termic_type == 1) {
+        covidTmp.unshift(data.data)
+      }
+      this.setState({ reproducirSonido: true, alertaCovidTmp: covidTmp, alertaCovid: tmpArr, newCovidItem: data.data, newCovidState: true })
+      if (data.data.camData[0].termic_type == 1) {
+        notification.addNotification({
         title:'Alerta Covid en ' + data.data.camData[0].township,
         message: "Camara: "+ data.data.cam_id + " Dirección: " + data.data.camData[0].street + " " + data.data.camData[0].number + " Col." +  data.data.camData[0].town,
         level: 'error',
@@ -128,8 +134,9 @@ class App extends Component {
               "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=400"
             );
           }
+          
         }
-      });
+      });}
       // setTimeout(() => {
       //   this.setState({newCovidState: false})
       // }, 500);
