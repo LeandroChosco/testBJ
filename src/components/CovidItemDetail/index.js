@@ -6,6 +6,8 @@ import MapContainer from "../../components/MapContainer/index.js";
 import { Modal, Navbar } from "react-bootstrap";
 import conections from "../../conections";
 import constants from "../../constants/constants";
+import CovidTree from "../../pages/CovidTree";
+import { Tab } from "semantic-ui-react";
 
 const mapOptions = {
   center: { lat: 19.45943, lng: -99.208588 },
@@ -51,8 +53,9 @@ const CovidItemDetail = props => {
   const [geolocation, setGeolocation] = useState([]);
 
   useEffect(() => {
+    console.log(props);
     let data = camDataPeticion();
-    console.log(data);
+    // console.log(data);
   }, []);
 
   const camDataPeticion = () => {
@@ -119,48 +122,67 @@ const CovidItemDetail = props => {
         />
       </div>
       <div className="row">&nbsp;</div>
-
-      <div className="card">
-        <div className="card">
-          <div className="row">
-            <div className="col-4">
-              <div className="card-image">
-                <Image
-                  wrapped
-                  size="medium"
-                  src={
-                    constants.sails_url +
-                    ":" +
-                    constants.sails_port +
-                    "/" +
-                    dataComplete.relative_path +
-                    "/" +
-                    dataComplete.name
-                  }
-                />
-              </div>
-            </div>
-            <div className="col-8">
-              <h4>Datos de Cámara</h4>
-              <div className="row">
-                <div className="col-12">
-                  <b>Ubicación:</b>
-                  <div className="">
-                    {dataComplete.camData[0].street +
-                      " No. " +
-                      dataComplete.camData[0].number +
-                      "," +
-                      " Col. " +
-                      dataComplete.camData[0].town +
-                      ", " +
-                      dataComplete.camData[0].township}
+      <Tab
+        menu={{ secondary: true, pointing: true }}
+        panes={[
+          {
+            menuItem: "Datos de camara",
+            render: () => (
+              <Tab.Pane attached={false}>
+                <div className="card">
+                  <div className="row">
+                    <div className="col-4">
+                      <div className="card-image">
+                        <Image
+                          wrapped
+                          size="medium"
+                          src={
+                            constants.sails_url +
+                            ":" +
+                            constants.sails_port +
+                            "/" +
+                            dataComplete.relative_path +
+                            "/" +
+                            dataComplete.name
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="col-8">
+                      <h4>Datos de Cámara</h4>
+                      <div className="row">
+                        <div className="col-12">
+                          <b>Ubicación:</b>
+                          <div className="">
+                            {dataComplete.camData[0].street +
+                              " No. " +
+                              dataComplete.camData[0].number +
+                              "," +
+                              " Col. " +
+                              dataComplete.camData[0].town +
+                              ", " +
+                              dataComplete.camData[0].township}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+              </Tab.Pane>
+            )
+          },
+          {
+            menuItem: "Arbol de posible contagio",
+            render: () => (
+              <Tab.Pane attached={false}>
+                <CovidTree />
+              </Tab.Pane>
+            )
+          }
+        ]}
+      />
+
+      <div className="card"></div>
     </div>
   );
 };

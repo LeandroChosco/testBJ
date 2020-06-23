@@ -13,20 +13,37 @@ const CovidItem = props => {
   }, []);
 
   const _godetails = () => {
+    // console.log(props);
     if (props.toggleControls) {
       props.toggleControls();
     }
+    if (props.dashboard) {
+      console.log("entro al if de dashboard ");
+      window.open(
+        window.location.href
+          .replace(window.location.pathname, "/")
+          .replace(window.location.search, "")
+          .replace(window.location.hash, "") +
+          "detalles/covidtree/" +
+          props.info.name,
+        "_blank",
+        "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=800,height=600"
+      );
+    }
 
-    window.open(
-      window.location.href
-        .replace(window.location.pathname, "/")
-        .replace(window.location.search, "")
-        .replace(window.location.hash, "") +
-        "detalles/covid/" +
-        props.info.name,
-      "_blank",
-      "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=400"
-    );
+    if (!props.dashboard) {
+      //   window.open(
+      //     window.location.href
+      //       .replace(window.location.pathname, "/")
+      //       .replace(window.location.search, "")
+      //       .replace(window.location.hash, "") +
+      //       "detalles/covid/" +
+      //       props.info.name,
+      //     "_blank",
+      //     "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=900,height=600"
+      //   );
+      props.history.push();
+    }
   };
 
   return (
@@ -57,6 +74,12 @@ const CovidItem = props => {
                 </div>
               </div>
               <Divider />
+              <div className="row">
+                <div className="col-4">
+                  <b>Camara:</b>
+                </div>
+                <div className="col-8">{props.info.cam_id}</div>
+              </div>
               <div className="row">
                 <div className="col-4">
                   <b>Dirección:</b>

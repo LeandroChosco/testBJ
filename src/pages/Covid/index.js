@@ -14,7 +14,9 @@ import moment from 'moment'
 import JSZipUtils from 'jszip-utils'
 import JSZip from 'jszip'
 import saveAs from 'file-saver'
-import conections from '../../conections';
+import conections from '../../conections'
+
+
 class Analysis extends Component {
 
     state = {
@@ -70,10 +72,6 @@ class Analysis extends Component {
     return (
         <div id="analisis_holder"  className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
             <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
-                   
-            {/* {
-                this._renderModals()
-            } */}
             
         </div>
     );
@@ -100,89 +98,7 @@ class Analysis extends Component {
       )
   }
 
-//   _renderModals = () =>{
-//       return (
-//           <Fragment>
-//               <Modal size="lg" show={this.state.modalProblem} onHide={()=>this.setState({modalProblem:false, cameraProblem:{},problemDescription:'',phones:[],mails:[]})}>
-//                             <Modal.Header closeButton>
-//                                 Reportar problema en camara {this.state.cameraProblem.num_cam}
-//                             </Modal.Header>
-//                             <Modal.Body>
-//                                 <Form>
-//                                     <Form.Field>
 
-//                                         <Form.Field>
-//                                             <Radio
-//                                                 label='Reportar emergencia'
-//                                                 name='typeReport'
-//                                                 value={1}
-//                                                 checked={this.state.typeReport === 1}
-//                                                 onChange={this.handleChange}
-//                                             />
-//                                         </Form.Field>
-//                                         <Form.Field>
-//                                             <Radio
-//                                                 label='Mantenimiento de camara'
-//                                                 name='typeReport'
-//                                                 value={2}
-//                                                 checked={this.state.typeReport === 2}
-//                                                 onChange={this.handleChange}
-//                                             />
-//                                         </Form.Field>
-//                                     </Form.Field>
-//                                     {this.state.typeReport === 2?null:<Form.Field>
-//                                         <Label>
-//                                             Se notificara a los numeros de emergencia registrados. Si se desea agregar un telefono extra ingreselo aqui indicando la lada del mismo(+525512345678).
-//                                         </Label>
-//                                         <Chips
-//                                             value={this.state.phones}
-//                                             onChange={this.onChange}
-//                                             fromSuggestionsOnly={false}
-//                                             createChipKeys={[' ',13,32]}
-//                                         />
-//                                     </Form.Field>}
-//                                     {this.state.typeReport === 2?null:<Form.Field>
-//                                         <Label>
-//                                             Se notificara a los emails de emergencia registrados. Si se desea agregar un email extra ingreselo aqui.
-//                                         </Label>
-//                                         <Chips
-//                                             value={this.state.mails}
-//                                             onChange={this.onChangeMail}
-//                                             fromSuggestionsOnly={false}
-//                                             createChipKeys={[' ',13,32]}
-//                                         />
-//                                     </Form.Field>}
-//                                     <Form.Field>
-//                                         {this.state.typeReport === 2?<Label>
-//                                             Se lo mas claro posible, indique si ha realizado
-//                                             alguna accion para intentar resolver el problema.
-//                                         </Label>:<Label>
-//                                            Indique la emergencia que se presento en la camara.
-//                                         </Label>}
-//                                         <TextArea
-//                                             value={this.state.problemDescription}
-//                                             onChange={this.handleChange}
-//                                             rows={10}
-//                                             name = 'problemDescription'
-//                                             placeholder='Redacte aqui su problema'
-//                                         />
-//                                     </Form.Field>
-//                                 </Form>
-//                                 <Button className='pull-right' primary onClick={this._sendReport}>Enviar</Button>
-//                             </Modal.Body>
-//                         </Modal>
-
-//                         <Modal size="lg" show={this.state.modal} onHide={()=>this.setState({modal:false})}>
-//                             <Modal.Header closeButton>
-//                                 Grabacion terminada
-//                             </Modal.Header>
-//                             <Modal.Body>
-//                                 {this.state.recordMessage}
-//                             </Modal.Body>
-//                         </Modal>
-//           </Fragment>
-//       )
-//   }
 
   onChange = chips => {
     this.setState({ phones:chips });
@@ -311,8 +227,9 @@ class Analysis extends Component {
   _showDisplay = () =>{
     switch(this.state.displayTipe){
         case 1:
-            return (<GridCovidDisplay
-                ref='myChild'
+            return (<>
+                <GridCovidDisplay
+                        ref='myChild'
                         newCovidState = {this.props.newCovidState}
                         _newCovidItem = {this.props._newCovidItem}
                         newCovidItem = {this.props.newCovidItem}
@@ -335,7 +252,9 @@ class Analysis extends Component {
                         snapShot={this._snapShot}
                         changeStatus={this._chageCamStatus}
                         showMatches={this.props.showMatches}
-                        propsIniciales={this.props}/>)
+                        propsIniciales={this.props} />
+               
+            </>)
         case 2:
             return (<LoopCamerasDisplay
                         ref='myChild'

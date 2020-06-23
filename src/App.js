@@ -39,6 +39,7 @@ import sonido from './assets/tonos/notificacion.mp3'
 import soundManager from 'soundmanager2'
 
 import CovidItemDetail from './components/CovidItemDetail'
+import CovidTree from "./pages/CovidTree"
 
 import socketIOClient from "socket.io-client";
 import sailsIOClient from "sails.io.js";
@@ -83,6 +84,7 @@ class App extends Component {
     reproducirSonido: false,
     showMatches: true,
     alertaCovid: [],
+    alertaCovidState: false,
     newCovidState: false,
     newCovidItem: [],
     alertaCovidTmp: []
@@ -101,7 +103,8 @@ class App extends Component {
         }
       });
 
-      this.setState({alertaCovid: data.data, alertaCovidTmp: covidTmp})
+      this.setState({alertaCovid: data.data, alertaCovidTmp: covidTmp , alertaCovidState: true})
+      
     })
     io.socket.on('foo', (data) =>{
       console.log("EMIT")
@@ -204,7 +207,12 @@ class App extends Component {
     if (this.state.newCovidState) {    
       this.setState({newCovidState: false})
     }
-}
+  }
+  _alertaCovidState = () => {
+    if (this.state.alertaCovidState) {
+      this.setState({alertaCovidState: false})
+    }
+  }
   loadData = () => {         
     if (process.env.NODE_ENV==='production'||true) {
       // --- matches planchados ---
@@ -581,8 +589,10 @@ ocultarMatches = (value) => {
           matchs={this.state.matches}/>  :null}
           </React.Fragment>)
           :null
-        }           
+          }           
+          {this.state.isAuthenticated && 
         <SideBar toggleSideMenu = {this._toggleSideMenu} active={this.state.sideMenu}/>
+          }
         {this.state.cameraInfoSide?
             <Notifications 
             alertaCovid = {this.state.alertaCovidTmp}
@@ -615,7 +625,8 @@ ocultarMatches = (value) => {
         <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated}/> }/>
         <Route path="/analisis" exact render={(props) => <Analysis showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats}  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/analisis/:id" exact render={(props) => <Analysis  canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/detalles/covid/:id" exact render={(props) => <CovidItemDetail  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        {/* <Route path="/detalles/covidtree/:id" exact render={(props) => <CovidTree  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} /> */}
+        <Route path="/detalles/covid/:id" exact render={(props) => <CovidItemDetail  {...props} alertaCovid={this.state.alertaCovid} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/emergency/:id" exact render={(props) => <DetailsEmergency  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/denuncia/:id" exact render={(props) => <DetailsComplaiment  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/detalles/soporte/:id" exact render={(props) => <DetailsSupport  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
@@ -623,7 +634,7 @@ ocultarMatches = (value) => {
         <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
         <Route path="/chat" exact render={(props) => <Chat showMatches={this.state.showMatches} stopNotification={()=>this.setState({stopNotification:true})} chats={this.state.chats} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />  
         <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
-        <Route path="/dashboard" exact render={(props) => <Dashboard canAccess={this.canAccess}  showMatches={this.state.showMatches} {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
+        <Route path="/dashboard" exact render={(props) => <Dashboard {...props} alertaCovidState={this.state.alertaCovidState}  _alertaCovidState={this._alertaCovidState} _newCovidItem = {this._newCovidItem} newCovidState={this.state.newCovidState} newCovidItem = {this.state.newCovidItem} alertaCovid={this.state.alertaCovid}  canAccess={this.canAccess}  showMatches={this.state.showMatches} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />
         <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />                                        
         <Route path="/personas" exact render={(props) => <Sospechosos showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />

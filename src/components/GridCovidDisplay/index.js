@@ -13,6 +13,7 @@ import moment from "moment-timezone";
 import { DateTime } from "luxon";
 import Spinner from "react-bootstrap/Spinner";
 import constants from "../../constants/constants";
+import CovidChart from "../CovidChart";
 const countryOptions = [
   {
     key: 5,
@@ -79,7 +80,6 @@ class GridCameraDisplay extends Component {
   };
 
   render() {
-    //console.log(this.props)
     return (
       <div className="gridCameraContainer" align="center">
         <Row>
@@ -158,7 +158,11 @@ class GridCameraDisplay extends Component {
         ) : null}
         <div
           className={
-            !this.state.autoplay
+            this.props.dashboard
+              ? !this.props.showMatches
+                ? "sin-margin camGridControl2 showfiles2"
+                : "con-margin camGridControl2 showfiles2"
+              : !this.state.autoplay
               ? !this.props.showMatches
                 ? "sin-margin camGridControl2 showfiles2"
                 : "con-margin camGridControl2 showfiles2"
@@ -171,7 +175,6 @@ class GridCameraDisplay extends Component {
             className="row stiky-top"
             style={{ backgroundColor: "lightgray" }}
           >
-            {/* <div className="col-4"></div> */}
             <div className="col">
               <b>
                 Alerta de Temperatura Camara {this.state.selectedCamera.num_cam}
@@ -185,24 +188,26 @@ class GridCameraDisplay extends Component {
                 className="danger"
                 primary
               >
-                {this.state.autoplay ? "" : "Recargar imagenes"}{" "}
-                <i className={"fa fa-repeat"}></i>
+                {/* {this.state.autoplay ? "" : "Recargar imagenes"}{" "} */}
+                Recargar imagenes <i className={"fa fa-repeat"}></i>
               </Button>
-              <Button
-                onClick={() => this._openCameraInfo(false)}
-                className="pull-right"
-                primary
-              >
-                {" "}
-                {this.state.autoplay ? "" : "Ocultar controles"}{" "}
-                <i
-                  className={
-                    this.state.autoplay
-                      ? "fa fa-chevron-up"
-                      : "fa fa-chevron-down"
-                  }
-                ></i>
-              </Button>
+              {!this.props.dashboard && (
+                <Button
+                  onClick={() => this._openCameraInfo(false)}
+                  className="pull-right"
+                  primary
+                >
+                  {" "}
+                  {this.state.autoplay ? "" : "Ocultar controles"}{" "}
+                  <i
+                    className={
+                      this.state.autoplay
+                        ? "fa fa-chevron-up"
+                        : "fa fa-chevron-down"
+                    }
+                  ></i>
+                </Button>
+              )}
             </div>
           </div>
           <div style={{ backgroundColor: "white" }}>
@@ -214,10 +219,31 @@ class GridCameraDisplay extends Component {
               }
             >
               <div className="col">
+                {/* <Tab
+                  menu={{ secondary: true, pointing: true }}
+                  panes={[
+                    {
+                      menuItem: "Actuales",
+                      render: () => (
+                        <Tab.Pane attached={false}>
+                          <CovidChart/>
+                        </Tab.Pane>
+                      )
+                    },
+                    {
+                      menuItem: "Historico",
+                      render: () => (
+                        <Tab.Pane attached={false}>Este es un tab</Tab.Pane>
+                      )
+                    }
+                  ]}
+                /> */}
+
                 <div className="row">
                   {this.state.photos.map((value, index) => (
                     <div key={index} className="col-3 p10">
                       <CovidItem
+                        dashboard={this.props.dashboard}
                         info={value}
                         covid={true}
                         clasName="col"
@@ -267,26 +293,35 @@ class GridCameraDisplay extends Component {
       photos: [],
       imageLoading: true
     });
-    console.log(this.state.selectedCamera);
+    if (this.props.dashboard) {
+      // console.log(this.props.alertaCovid);
+      setTimeout(() => {
+        this.setState({
+          imageLoading: false,
+          loading: false,
+          photos: this.props.alertaCovid
+        });
+      }, 1000);
+    }
+    // console.log(this.state.selectedCamera);
     // console.log("CAM: ", cam);
-    let auxCovidFile = [];
-    let arrAux = [...this.props.alertaCovid];
-    // console.log(this.props.alertaCovid);
+    if (!this.props.dashboard) {
+      let auxCovidFile = [];
+      let arrAux = [...this.props.alertaCovid];
 
-    arrAux.forEach(element => {
-      if (element.cam_id == cam.id) {
-        // console.log(element);
-        auxCovidFile.push(element);
-      }
-    });
-    setTimeout(() => {
-      this.setState({
-        imageLoading: false,
-        loading: false,
-        // urlPhotos: response.data.data.relative_path,
-        photos: auxCovidFile
+      arrAux.forEach(element => {
+        if (element.cam_id == cam.id) {
+          auxCovidFile.push(element);
+        }
       });
-    }, 500);
+      setTimeout(() => {
+        this.setState({
+          imageLoading: false,
+          loading: false,
+          photos: auxCovidFile
+        });
+      }, 500);
+    }
   };
 
   _openCameraInfo = marker => {
@@ -371,6 +406,9 @@ class GridCameraDisplay extends Component {
     // tmpArr.unshift(data.data)
     // console.log("NUEVA NOTIFICACION");
     // }
+    if (this.props.dashboard) {
+      this._loadFiles();
+    }
     let markersForLoop = [];
     this.props.places.map(value => {
       markersForLoop.push({
