@@ -170,15 +170,15 @@ const CovidItemDetail = props => {
                 </div>
               </Tab.Pane>
             )
+          },
+          {
+            menuItem: "Arbol de posible contagio",
+            render: () => (
+              <Tab.Pane attached={false}>
+                <CovidTree />
+              </Tab.Pane>
+            )
           }
-          // {
-          //   menuItem: "Arbol de posible contagio",
-          //   render: () => (
-          //     <Tab.Pane attached={false}>
-          //       <CovidTree />
-          //     </Tab.Pane>
-          //   )
-          // }
         ]}
       />
 
