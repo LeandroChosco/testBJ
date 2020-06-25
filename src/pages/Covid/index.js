@@ -72,7 +72,7 @@ class Analysis extends Component {
         id_cam:0,
         panes: [
             { menuItem: 'En linea', render: () => <Tab.Pane attached={false}>{this._renderOnlineTab()}</Tab.Pane> },
-            // { menuItem: 'Dashboard', render: () => <Tab.Pane attached={false}>{this._renderCovidPerDay()}</Tab.Pane> },            
+            { menuItem: 'Dashboard', render: () => <Tab.Pane attached={false}>{this._renderCovidPerDay()}</Tab.Pane> },            
         ],
         covidPerDay: [
             {

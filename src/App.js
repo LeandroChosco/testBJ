@@ -40,7 +40,7 @@ import soundManager from 'soundmanager2'
 
 import CovidItemDetail from './components/CovidItemDetail'
 import CovidTree from "./pages/CovidTree"
-
+import RoberyNotification from './components/RoberyNotification'
 import socketIOClient from "socket.io-client";
 import sailsIOClient from "sails.io.js";
 var io = sailsIOClient(socketIOClient);
@@ -87,7 +87,12 @@ class App extends Component {
     alertaCovidState: false,
     newCovidState: false,
     newCovidItem: [],
-    alertaCovidTmp: []
+    alertaCovidTmp: [],
+    roberyNotification: {
+      display: false,
+      data: null
+    }
+
   }
   
 
@@ -320,9 +325,34 @@ class App extends Component {
               action: {
                 label: 'Ver detalles',
                 callback: ()=> {
-                  //this.setState({modalCall:true, callInfo:{...data,id:doc.id}})                
-                  window.location.href = window.location.href.replace(window.location.pathname,'/chat#message')
+                  // this.setState({modalCall:true, callInfo:{...data,id:doc.id}})                
+                  // window.location.href = window.location.href.replace(window.location.pathname, '/chat#message')
+                  // this.props.history.push('/chat?f=2&u='+dataUser.u_user_id)
+                  let userFound = false;
+                  // console.log("RESPUESTA DEL DOC", docs.docs[0].data())
+                  // console.log("HISTORY: ", this.props)
+                  
+                  this.state.chats.forEach((chat) => {
+                    if (chat.user_creation == docs.docs[0].data().user_id && this.state.chats.length > 0) {
+                      console.log("EL CHAT: ", chat)
+                      userFound = true;
+                      // window.location.href = window.location.href.replace(window.location.pathname, '/chat#'+chat.user_creation)
+                      // this.props.history.push('/chat?f=2&u='+chat.user_creation);
+                      if (userFound) { 
+                        this.setState({
+                          roberyNotification: {
+                            display: true,
+                            data: chat
+                          },
+                          callIsGoing: false
+                        })
+                      }
+                      
+                    }
+                  }) 
                 }
+
+
               }
             });
             this.setState({callIsGoing:false})
@@ -369,6 +399,19 @@ class App extends Component {
       })  
     }    
   }
+
+  notificationRoute = () => {
+    console.log("Funcion notificationRoute")
+    this.setState({
+      showNotification: true,
+      fisrtTimeCall: false,
+      callIsGoing: false,
+      roberyNotification: {
+        display: false
+      } 
+    })
+  }
+
 
   openSocket = (data) =>{
     console.log('socket open', data)
@@ -555,7 +598,12 @@ ocultarMatches = (value) => {
 
   render() {
     return (
-    <Router> 
+      <Router> 
+         {
+          this.state.roberyNotification.display &&
+          <RoberyNotification notificationRoute={this.notificationRoute} userId={this.state.roberyNotification.data} />
+        }
+
       {this.state.reproducirSonido ? 
           <Sound 
               url={sonido}
