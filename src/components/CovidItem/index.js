@@ -13,7 +13,7 @@ const CovidItem = props => {
   }, []);
 
   const _godetails = () => {
-    // console.log(props);
+    console.log(props);
     if (props.toggleControls) {
       props.toggleControls();
     }
@@ -32,17 +32,17 @@ const CovidItem = props => {
     }
 
     if (!props.dashboard) {
-      //   window.open(
-      //     window.location.href
-      //       .replace(window.location.pathname, "/")
-      //       .replace(window.location.search, "")
-      //       .replace(window.location.hash, "") +
-      //       "detalles/covid/" +
-      //       props.info.name,
-      //     "_blank",
-      //     "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=900,height=600"
-      //   );
-      props.history.push();
+        window.open(
+          window.location.href
+            .replace(window.location.pathname, "/")
+            .replace(window.location.search, "")
+            .replace(window.location.hash, "") +
+            "detalles/covid/" +
+            props.info.name,
+          "_blank",
+          "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=900,height=600"
+        );
+      // props.history.push();
     }
   };
 

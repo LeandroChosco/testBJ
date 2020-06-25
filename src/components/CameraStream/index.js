@@ -388,7 +388,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
     _sendReport = () => {
-        console.log(this.state.cameraProblem)
+        // console.log(this.state.cameraProblem)
         this.setState({modalProblem:false})
         conections.sendTicket({
           "camera_id": this.state.data.id,
@@ -432,7 +432,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
             },this.state.data.id)           
                 .then((r) => { 
                     const response = r.data
-                    console.log(response)
+                    // console.log(response)
                     if (response.success === true) {
                         this.setState({isRecording:false,isLoading:false,modal:true,recordMessage:response.msg})                        
                         this._loadFiles()
@@ -453,7 +453,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     }
   componentDidMount(){   
 
-      console.log("CAMERASTREAM PROPS", this.props) 
+    //   console.log("CAMERASTREAM PROPS", this.props) 
       
       
     //   if(this.props.marker.extraData.isIframe){
@@ -546,7 +546,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         if (!this.tryReconect&&this.state.isVisible) {
             this.setState({tryReconect:true})
             this.tryReconect = true
-            console.log('is delay, cam' + this.state.data.num_cam)                
+            // console.log('is delay, cam' + this.state.data.num_cam)                
             this.state.player.stop()                            
             if (this.state.webSocket) {
                 this.state.webSocket.close()
@@ -652,7 +652,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
         if (!this.tryReconect&&this.state.isVisible) {
             this.setState({tryReconect:true})
             this.tryReconect = true
-            console.log('reconnecting, cam ' + this.state.data.num_cam)                
+            // console.log('reconnecting, cam ' + this.state.data.num_cam)                
             this.state.player.stop()  
             if(this.state.player.destroy){
                 this.state.player.destroy()  
@@ -730,7 +730,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
             const response= await conections.restartOneStream(dns, this.state.data.id) 
             this.setState({restarting:false})
             this._restartCam()
-            console.log(response)
+            // console.log(response)
             if(response.status === 200) {
                 if (!response.data.success) {
                     alert("Error al reiniciar camara")
@@ -749,7 +749,7 @@ this.props.moduleActions?this.props.moduleActions.viewHistorial?{ menuItem: 'His
     _chageCamStatus = () =>{
         conections.changeCamStatus(this.state.cameraID)
             .then(response=>{
-                console.log(response)
+                // console.log(response)
                 if(response.status === 200) {
                     if (response.data.success) {
                         const event = new Event('restartCamEvent')

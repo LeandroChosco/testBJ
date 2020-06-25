@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap'
-import { Icon, TextArea, Form, Label, Button, Radio, Tab } from 'semantic-ui-react'
+import { Icon, Tab } from 'semantic-ui-react'
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
@@ -10,11 +10,31 @@ import GridCovidDisplay from '../../components/GridCovidDisplay';
 import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants'
 import { JellyfishSpinner } from "react-spinners-kit";
-import moment from 'moment'
 import JSZipUtils from 'jszip-utils'
-import JSZip from 'jszip'
-import saveAs from 'file-saver'
 import conections from '../../conections'
+
+import {
+    Legend, 
+    Tooltip, 
+    ResponsiveContainer,
+    CartesianGrid,
+    XAxis,
+    YAxis,
+    Bar,
+    ComposedChart,
+} from 'recharts';
+import { ClassicSpinner } from "react-spinners-kit";
+import CovidItem from "../../components/CovidItem"
+import Spinner from "react-bootstrap/Spinner";
+import ColorScheme from 'color-scheme'
+
+const scm = new ColorScheme();
+const COLORS =  scm.from_hue(235)
+  .scheme('analogic')
+  .distance(0.3)
+  .add_complement(false)
+  .variation('pastel')
+  .web_safe(false).colors();
 
 
 class Analysis extends Component {
@@ -52,9 +72,49 @@ class Analysis extends Component {
         id_cam:0,
         panes: [
             { menuItem: 'En linea', render: () => <Tab.Pane attached={false}>{this._renderOnlineTab()}</Tab.Pane> },
-            // { menuItem: 'Fuera de linea', render: () => <Tab.Pane attached={false}>{this._renderOfflineTab()}</Tab.Pane> },            
+            // { menuItem: 'Dashboard', render: () => <Tab.Pane attached={false}>{this._renderCovidPerDay()}</Tab.Pane> },            
         ],
-        offlineCamaras: []
+        covidPerDay: [
+            {
+              date: "2020-06-16",
+              total: 5,
+              cam_id: 154
+            },
+            {
+              date: "2020-06-17",
+              total: 15,
+              cam_id: 154
+            },
+            {
+              date: "2020-06-18",
+              total: 25,
+              cam_id: 154
+            },
+            {
+              date: "2020-06-19",
+              total: 5,
+              cam_id: 154
+            },
+            {
+              date: "2020-06-20",
+              total: 35,
+              cam_id: 154
+            },
+            {
+              date: "2020-06-21",
+              total: 5,
+              cam_id: 154
+            },
+            {
+              date: "2020-06-22",
+              total: 5,
+              cam_id: 154
+            },
+        ],
+        photos: [],
+        imageLoading: false,
+        loadingCovidGrid: false
+
     }
 
   render() {
@@ -97,133 +157,105 @@ class Analysis extends Component {
           </Fragment>
       )
   }
+    
+  _renderCovidPerDay() {
+    return (
+      <div className="row">
+         <div className='col-12 chart-covid' align='center'>
+            <h3>Personas por dia</h3>           
+            {
+              this.state.covidPerDay.length < 1 ?
+                <ClassicSpinner 
+                  loading={true}
+                  size={40}
+                  color="#686769"
+                />:<ResponsiveContainer>
+              <ComposedChart                   
+                data={this.state.covidPerDay}                    
+                margin={{
+                  top: 5, right: 30, left: 20, bottom: 30,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis/>
+                <Tooltip />      
+                <Legend />                              
+                <Bar dataKey="total" fill={'#'+COLORS[1]}  />                
+              </ComposedChart>
+              </ResponsiveContainer>
+          }   
+           
+            <div className="row mt-10">
+            
+                  {!this.state.loadingCovidGrid && this.state.photos.map((value, index) => (
+                    <div key={index} className="col-3 p10">
+                      <CovidItem
+                        dashboard={false}
+                        info={value}
+                        covid={true}
+                        clasName="col"
+                        servidorMultimedia={this.state.servidorMultimedia}
+                        image={true}
+                        value={value}
+                        cam={this.state.selectedCamera}
+                        reloadData={this._loadCovidFiles}
+                        src={value.relative_url}
+                      />
+                    </div>
+                  ))}
+                </div>
+          {this.state.imageLoading &&
+            <div className="p-3">
+              <Spinner
+                animation="border"
+                variant="info"
+                role="status"
+                size="xl"
+              >
+                <span className="sr-only">Loading...</span>
+              </Spinner>
+            </div>
+          }
+                 {!this.state.imageLoading && this.state.photos.length === 0 && 
+                  <div style={{"marginTop": "15px"}} align="center ">
+                    <p className="big-letter">No hay archivos que mostrar</p>
+                    <i className="fa fa-image fa-5x"></i>
+                  </div>
+                 }
+         
+          </div>
+      </div>
+    )
+  }
 
 
+    _loadCovidFiles = () => {
+      console.log("COVID", this.props.alertaCovid)
+    this.setState({
+      photos: [],
+        imageLoading: true,
+        loadingCovidGrid: true
+    });
+    let covidTmp = [];
+    this.props.alertaCovid.forEach(element => {
+      if (element.camData[0].termic_type == 1) {
+        covidTmp.push(element);
+      }
+    });
+    setTimeout(() => {
+      this.setState({
+        imageLoading: false,
+        loadingCovidGrid: false,
+        photos: covidTmp
+      });
+    }, 1000);
+  }
 
   onChange = chips => {
     this.setState({ phones:chips });
   }
-  onChangeMail = chips => {
-    this.setState({ mails:chips });
-  }
-
-  handleChange = (e, { name, value }) => this.setState({ [name]: value })
-
-  _sendReport = () => {      
-      this.setState({modalProblem:false})      
-     conections.sendTicket({
-        "camera_id": this.state.cameraProblem.id,
-        "problem": this.state.problemDescription,
-        "phones":this.state.phones.join(),
-        "mails":this.state.mails.join(),
-        "type_report":this.state.typeReport,
-        "user_id": 1
-      })
-          .then(response => {
-              const data = response.data
-              this.setState({cameraProblem:{},problemDescription:''})
-              if (data.success) {
-                alert('Ticket creado correctamente')
-              } else {
-                alert('Error al crear ticket')                
-              }
-          })
-  }
-  _snapShot = (camera) => {
-    this.setState({loadingSnap:true})
-
-      conections.snapShotV2(camera.id,this.state.user_id)
-          .then(response => {
-              this.setState({loadingSnap:false})
-              const data = response.data              
-              if (data.success) {
-                //console.log('refs',this.refs)
-                //this.refs.myChild._loadFiles()
-              }
-          })
-}
-
-  _recordignToggle = (selectedCamera) => {
-    if(this.state.recordingCams.indexOf(selectedCamera)>-1){
-        let process_id = 0
-        this.state.recordingProcess.map(value=>{
-            if(value.cam_id === selectedCamera.id){
-                process_id = value.process_id
-            }
-            return true
-        })
-        this.setState({loadingRcord:true})
-
-            conections.stopRecordV2({clave:process_id},selectedCamera.id)
-            .then((r) => {
-                const response = r.data
-                if (response.success === true) {
-
-                    let stateRecordingProcess = this.state.recordingProcess
-                    let stateRecordingCams = this.state.recordingCams
-                    stateRecordingCams = stateRecordingCams.filter(el => el !== selectedCamera)
-                    stateRecordingProcess = stateRecordingProcess.filter(el => el.cam_id !== selectedCamera.id)
-                    this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false,loadingRcord:false,modal:true,recordMessage:response.msg})
-                    this.refs.myChild._loadFiles()
-                } else {
-                    let stateRecordingProcess = this.state.recordingProcess
-                    let stateRecordingCams = this.state.recordingCams
-                    stateRecordingCams = stateRecordingCams.filter(el => el !== selectedCamera)
-                    stateRecordingProcess = stateRecordingProcess.filter(el => el.cam_id !== selectedCamera.id)
-                    this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false,loadingRcord:false,modal:true,recordMessage:response.msg})
-                }
-            })
-    } else {
-       conections.startRecordV2({},selectedCamera.id)
-            .then((r) => {
-                const response = r.data
-                if (response.success === true) {
-                    let recordingProcess = {
-                        cam_id: selectedCamera.id,
-                        process_id: response.clave,
-                        creation_time: moment()
-                    }
-                    let stateRecordingProcess = this.state.recordingProcess
-                    let stateRecordingCams = this.state.recordingCams
-                    stateRecordingProcess.push(recordingProcess)
-                    stateRecordingCams.push(selectedCamera)
-                    this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: true})
-                    if (this.state.interval === null) {
-                        let interval = setInterval(this._checkLiveTimeRecording,5000)
-                        this.setState({interval: interval})
-                    }
-                }
-            })
-    }
-}
-
-    _checkLiveTimeRecording = () =>{
-        if (this.state.recordingProcess.length > 0) {
-            let now = moment()
-            this.state.recordingProcess.map(value=>{
-                if (now.diff(value.creation_time,'minutes')>10) {
-
-                    conections.stopRecord({record_proccess_id:value.process_id }).then(response=>{                        
-                        let stateRecordingProcess = this.state.recordingProcess
-                        let stateRecordingCams = this.state.recordingCams
-                        stateRecordingCams = stateRecordingCams.filter(el => el.id !== value.cam_id)
-                        stateRecordingProcess = stateRecordingProcess.filter(el => el.cam_id !== value.cam_id)
-                        this.setState({recordingCams:stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false,loadingRcord:false})
-                        this.refs.myChild._loadFiles()
-                    })
-                }
-                return value
-            })
-        } else {
-            clearInterval(this.interval)
-            this.setState({interval: null})
-        }
-    }
-
-
-    _makeReport = (camera) => {        
-        this.setState({modalProblem:true, cameraProblem:camera})
-    }
+    
   _showDisplay = () =>{
     switch(this.state.displayTipe){
         case 1:
@@ -237,19 +269,14 @@ class Analysis extends Component {
                         error={this.state.error}
                         loading={this.state.loading}
                         places = {this.state.places}
-                        toggleControlsBottom = {this._toggleControlsBottom}
-                        recordignToggle={this._recordignToggle}
                         loadingRcord={this.state.loadingRcord}
                         isRecording={this.state.isRecording}
                         recordingCams={this.state.recordingCams}
                         recordingProcess={this.state.recordingProcess}
                         loadingSnap={this.state.loadingSnap}
-                        downloadFiles={this._downloadFiles}
                         loadingFiles={this.state.loadingFiles}
-                        makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
-                        snapShot={this._snapShot}
                         changeStatus={this._chageCamStatus}
                         showMatches={this.props.showMatches}
                         propsIniciales={this.props} />
@@ -261,19 +288,14 @@ class Analysis extends Component {
                         error={this.state.error}
                         loading={this.state.loading}
                         places = {this.state.places}
-                        toggleControlsBottom = {this._toggleControlsBottom}
-                        recordignToggle={this._recordignToggle}
                         loadingRcord={this.state.loadingRcord}
                         isRecording={this.state.isRecording}
                         recordingCams={this.state.recordingCams}
                         recordingProcess={this.state.recordingProcess}
                         loadingSnap={this.state.loadingSnap}
-                        downloadFiles={this._downloadFiles}
                         loadingFiles={this.state.loadingFiles}
-                        makeReport={this._makeReport}
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
-                        snapShot={this._snapShot}
                         changeStatus={this._chageCamStatus}
                         propsIniciales={this.props}/>)
         case 3:
@@ -283,85 +305,29 @@ class Analysis extends Component {
     }
   }
 
-
-    urlToPromise = (url) => {
-        return new Promise(function(resolve, reject)
-        {
-            JSZipUtils.getBinaryContent(url, function (err, data)
-            {
-                if(err)
-                {
-                    reject(err);
-                } else {
-                    resolve(data);
-                }
-            });
-        });
-    }
-
-    _downloadFiles = (camera,{videos,images,servidorMultimedia}) => {
-        this.setState({loadingFiles:true})
-        var zip = new JSZip();
-        var imgs = zip.folder('images')
-        if(images.length !== 0 && videos.length !== 0){
-            images.forEach((url)=>{
-                var filename = url.name;
-                imgs.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
-            });
-            var vds = zip.folder('videos')
-            videos.forEach((url)=>{
-                var filename = url.name;
-                vds.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
-            });
-            zip.generateAsync({type:"blob"}).then((content) => {
-                // see FileSaver.js
-                this.setState({loadingFiles:false})
-                saveAs(content, "cam_"+camera.num_cam+".zip");
-
-            });
-        } else {
-            conections.getCamDataV2(camera.id)
-            .then(response => {
-                const data = response.data                
-                images = data.data.files_multimedia.photos
-                videos = data.data.files_multimedia.videos
-                if(images.length !== 0 && videos.length !== 0){
-                    images.forEach((url)=>{
-                        var filename = url.name;
-                        imgs.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
-                    });
-                    var vds = zip.folder('videos')
-                    videos.forEach((url)=>{
-                        var filename = url.name;
-                        vds.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
-                    });
-                    zip.generateAsync({type:"blob"}).then((content) => {
-                        // see FileSaver.js
-                        this.setState({loadingFiles:false})
-                        saveAs(content, "cam_"+camera.num_cam+".zip");
-
-                    });
-                } else {
-
-                }
-
-            })
-        }
-    }
-
-    _toggleControlsBottom = (marker) => {
-        this.props.toggleControls(marker)
-    }
-
   _changeDisplay = (value) => {
       this.setState({displayTipe:value})
   }
 
-
+  componentDidUpdate() {
+      console.log("PROPS ALERTACOVID", this.props)
+      if (this.props.newCovidState === true) {
+        this.props._newCovidItem();
+        let tmpArr = [...this.state.photos];
+        console.log(this.props.newCovidItem);
+        tmpArr.unshift(this.props.newCovidItem);
+        this.setState({ photos: tmpArr });
+      }
+    if (this.props.alertaCovidState) {
+      this.props._alertaCovidState()
+      this._loadCovidFiles()
+    }
+  }
 
 
     componentDidMount(){
         // console.log(this.props.showMatches) 
+        this._loadCovidFiles()  
         if (!this.props.match.params.id) {
             const isValid = this.props.canAccess(2)
             if (!isValid) {
@@ -435,36 +401,8 @@ class Analysis extends Component {
                         }
 
                     }
-                    // else { 
-                    //     if(value.active === 1 ){
-                    //         offlineCamaras.push({
-                    //             id:value.id,
-                    //             num_cam:indexFail,
-                    //             lat:value.google_cordenate.split(',')[0],
-                    //             lng:value.google_cordenate.split(',')[1],
-                    //             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
-                    //             isHls:true,
-                    //             url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
-                    //             real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
-                    //             camera_number:value.num_cam,
-                    //             dataCamValue: value,
-                    //             tipo_camara: value.tipo_camara
-                    //         })   
-                    //         indexFail++
-                    //     }                        
-                    // }
                     return true;
-                })
-                // auxCamaras.push({
-                //     id:2,
-                //     num_cam:2,
-                //     lat:19.3718587,
-                //     lng:-99.1606554,
-                //     // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                //     name: '794 Uxmal Ciudad de México, Cd. de México',
-                //     isIframe: true,
-                //     url:'http://wellkeeper.us/flowplayer/rtmp2.html'
-                // })   
+                }) 
                 if(idCamera== null){
                     this.setState({places:auxCamaras,offlineCamaras:offlineCamaras,loading: false,error:undefined})
                 } else {

@@ -153,7 +153,7 @@ class Dashboard extends Component {
         { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
         { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
         { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboard()}</Tab.Pane> },
-        { menuItem: 'Alerta Covid', render: () => <Tab.Pane attached={false}>{this.renderCovidPerDay()}</Tab.Pane> },
+        // { menuItem: 'Alerta Covid', render: () => <Tab.Pane attached={false}>{this.renderCovidPerDay()}</Tab.Pane> },
       ]
     }
 
@@ -480,76 +480,76 @@ class Dashboard extends Component {
     )
   }
 
-  renderCovidPerDay() {
-    return (
-      <div className="row">
-         <div className='col-12 chart-covid' align='center'>
-            <h3>Personas por dia</h3>           
-            {
-              this.state.covidPerDay.length < 1 ?
-                <ClassicSpinner 
-                  loading={true}
-                  size={40}
-                  color="#686769"
-                />:<ResponsiveContainer>
-              <ComposedChart                   
-                data={this.state.covidPerDay}                    
-                margin={{
-                  top: 5, right: 30, left: 20, bottom: 30,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis/>
-                <Tooltip />      
-                <Legend />                              
-                <Bar dataKey="total" fill={'#'+COLORS[1]}  />                
-              </ComposedChart>
-              </ResponsiveContainer>
-          }   
+  // renderCovidPerDay() {
+  //   return (
+  //     <div className="row">
+  //        <div className='col-12 chart-covid' align='center'>
+  //           <h3>Personas por dia</h3>           
+  //           {
+  //             this.state.covidPerDay.length < 1 ?
+  //               <ClassicSpinner 
+  //                 loading={true}
+  //                 size={40}
+  //                 color="#686769"
+  //               />:<ResponsiveContainer>
+  //             <ComposedChart                   
+  //               data={this.state.covidPerDay}                    
+  //               margin={{
+  //                 top: 5, right: 30, left: 20, bottom: 30,
+  //               }}
+  //             >
+  //               <CartesianGrid strokeDasharray="3 3" />
+  //               <XAxis dataKey="date" />
+  //               <YAxis/>
+  //               <Tooltip />      
+  //               <Legend />                              
+  //               <Bar dataKey="total" fill={'#'+COLORS[1]}  />                
+  //             </ComposedChart>
+  //             </ResponsiveContainer>
+  //         }   
            
-            <div className="row mt-10">
+  //           <div className="row mt-10">
             
-                  {!this.state.loading && this.state.photos.map((value, index) => (
-                    <div key={index} className="col-3 p10">
-                      <CovidItem
-                        dashboard={false}
-                        info={value}
-                        covid={true}
-                        clasName="col"
-                        servidorMultimedia={this.state.servidorMultimedia}
-                        image={true}
-                        value={value}
-                        cam={this.state.selectedCamera}
-                        reloadData={this._loadFiles}
-                        src={value.relative_url}
-                      />
-                    </div>
-                  ))}
-                </div>
-          {this.state.imageLoading &&
-            <div className="p-3">
-              <Spinner
-                animation="border"
-                variant="info"
-                role="status"
-                size="xl"
-              >
-                <span className="sr-only">Loading...</span>
-              </Spinner>
-            </div>
-          }
-                 {!this.state.imageLoading && this.state.photos.length === 0 && 
-                  <div style={{"marginTop": "15px"}} align="center ">
-                    <p className="big-letter">No hay archivos que mostrar</p>
-                    <i className="fa fa-image fa-5x"></i>
-                  </div>
-                 }
+  //                 {!this.state.loading && this.state.photos.map((value, index) => (
+  //                   <div key={index} className="col-3 p10">
+  //                     <CovidItem
+  //                       dashboard={false}
+  //                       info={value}
+  //                       covid={true}
+  //                       clasName="col"
+  //                       servidorMultimedia={this.state.servidorMultimedia}
+  //                       image={true}
+  //                       value={value}
+  //                       cam={this.state.selectedCamera}
+  //                       reloadData={this._loadFiles}
+  //                       src={value.relative_url}
+  //                     />
+  //                   </div>
+  //                 ))}
+  //               </div>
+  //         {this.state.imageLoading &&
+  //           <div className="p-3">
+  //             <Spinner
+  //               animation="border"
+  //               variant="info"
+  //               role="status"
+  //               size="xl"
+  //             >
+  //               <span className="sr-only">Loading...</span>
+  //             </Spinner>
+  //           </div>
+  //         }
+  //                {!this.state.imageLoading && this.state.photos.length === 0 && 
+  //                 <div style={{"marginTop": "15px"}} align="center ">
+  //                   <p className="big-letter">No hay archivos que mostrar</p>
+  //                   <i className="fa fa-image fa-5x"></i>
+  //                 </div>
+  //                }
          
-          </div>
-      </div>
-    )
-  }
+  //         </div>
+  //     </div>
+  //   )
+  // }
 
   render(){
     return(

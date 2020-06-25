@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Tree from "react-tree-graph";
 import "./style.css";
+import { Image } from "semantic-ui-react";
+
+import ModalCovidTree from "../../components/ModalCovidTree";
+
+const imageURL =
+  "http://prod.adminc5.bj.sails.energetikadevelepment.com:1337/public/154/172.20.39.15_01_20200624140213876_MEASURE_TEMP_ALARM_DETECTION.jpg";
 
 const CovidTree = () => {
   let data = {
@@ -109,27 +115,58 @@ const CovidTree = () => {
     ]
   };
 
+  const [node, setNode] = useState();
+  const [showModal, setShowModal] = useState(false);
+
   const handleClick = (event, node) => {
     console.log("handle click ", event);
     console.log("handle click node", node);
-    alert(`${node} AQUI UN MODAL, FOTO O INFORMACION`);
+    setNode(node);
+    setShowModal(true);
+    // alert(`${node} AQUI UN MODAL, FOTO O INFORMACION`);
+  };
+
+  const hideModal = () => {
+    setShowModal(false);
   };
 
   return (
-    <div className="custom-container">
-      <Tree
-        animated={true}
-        data={data}
-        nodeRadius={15}
-        margins={{ top: 20, bottom: 10, left: 20, right: 200 }}
-        height={700}
-        width={1000}
-        gProps={{
-          className: "node",
-          onClick: handleClick
-        }}
-      />
-    </div>
+    <>
+      {showModal && (
+        <ModalCovidTree
+          node={node}
+          modal={showModal}
+          hide={() => hideModal()}
+        />
+      )}
+      <div
+        className="custom-container row p-10"
+        style={{ alignItems: "center" }}
+      >
+        <div className="col-6 m-0" style={{ display: "contents" }}>
+          <Image
+            className=" ustify-content-end m-0"
+            size="small"
+            src={imageURL}
+            alt=""
+          />
+        </div>
+        <div className="col-6 justify-content-start">
+          <Tree
+            animated={true}
+            data={data}
+            nodeRadius={15}
+            margins={{ top: 20, bottom: 10, left: 20, right: 200 }}
+            height={700}
+            width={1000}
+            gProps={{
+              className: "node",
+              onClick: handleClick
+            }}
+          />
+        </div>
+      </div>
+    </>
   );
 };
 
