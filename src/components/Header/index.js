@@ -90,6 +90,16 @@ class Header extends Component {
     this.props.history.push("/dashboard");
   };
 
+  _goSOS = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/sos");
+  };
+
   _cameraSideInfo = () => {
     this.props.cameraSideInfo();
   };
@@ -101,7 +111,7 @@ class Header extends Component {
         <Navbar.Collapse className="justify-content-end">
           <Nav className="mr-auto">
             {this.props.userInfo.modules
-              ? this.props.userInfo.modules.map(value => (
+              ? this.props.userInfo.modules.map((value) => (
                   <Navbar.Text key={value.id}>
                     <Button
                       variant="outline-light"
@@ -120,6 +130,8 @@ class Header extends Component {
                           ? this._goSospechosos
                           : value.id === 7
                           ? this._goCovid
+                          : value.id === 8
+                          ? this._goSOS
                           : null
                       }
                     >
@@ -139,6 +151,8 @@ class Header extends Component {
                             ? "fa fa-id-card"
                             : value.id === 7
                             ? "fa fa-user-md"
+                            : value.id == 8
+                            ? "fa fa-comments"
                             : null
                         }
                       ></i>
