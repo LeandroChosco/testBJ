@@ -186,7 +186,8 @@ class App extends Component {
     const docRef = await firebaseSos
       .app("sos")
       .firestore()
-      .collection(MESSAGES_COLLECTION);
+      .collection(MESSAGES_COLLECTION)
+      .orderBy("lastModification", "desc");
 
     let allMessage = await docRef.get();
 
@@ -539,6 +540,7 @@ class App extends Component {
         .app("sos")
         .firestore()
         .collection(MESSAGES_COLLECTION)
+        .orderBy("lastModification", "desc")
         .onSnapshot((docs) => {
           // console.log( docs.docChanges())
           let changes = docs.docChanges();

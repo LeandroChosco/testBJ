@@ -291,12 +291,12 @@ class Chat extends Component {
 
         console.log("holaaa", newData);
 
-        // ref
-        //   .docs(chat.id)
-        //   .update({ c5Unread: 0 })
-        //   .then(() => {
-        //     this.setState({ text: "", from: "Chat C5" });
-        //   });
+        refSOS
+          .doc(chat.id)
+          .update({ c5Unread: 0 })
+          .then(() => {
+            this.setState({ text: "" });
+          });
 
         this.setState({
           chatId: chat.id,
