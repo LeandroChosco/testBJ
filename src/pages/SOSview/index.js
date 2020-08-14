@@ -38,6 +38,11 @@ class Chat extends Component {
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: chats[index].id });
     }
+
+    const chatSelected =  chats && chats[index]
+
+    const textareaDisabled = chatSelected && chatSelected.active !== undefined ? !chatSelected.active : true;
+
     return (
       <div
         className={
@@ -57,18 +62,24 @@ class Chat extends Component {
                 <Card.Content>
                   <div style={{ position: "relative" }}>
                     <h3>{chat.user_name} </h3>
-                    <p>
-                      {chat.messages
-                        ? chat.messages.length > 0
-                          ? (chat.messages[chat.messages.length - 1].from ===
-                            "user"
-                              ? chat.user_name.split(" ")[0]
-                              : "C5") +
-                            ": " +
-                            chat.messages[chat.messages.length - 1].msg //msg
-                          : "No hay mensajes que mostart"
-                        : "No hay mensajes que mostart"}
-                    </p>
+                    {
+                         
+                         chat.active !== undefined && chat.active ?
+                         <p>
+                         {chat.messages
+                           ? chat.messages.length > 0
+                             ? (chat.messages[chat.messages.length - 1].from ===
+                               "user"
+                                 ? chat.user_name.split(" ")[0]
+                                 : "C5") +
+                               ": " +
+                               chat.messages[chat.messages.length - 1].msg //msg
+                             : "No hay mensajes que mostart"
+                           : "No hay mensajes que mostart"}
+                       </p>:
+                       <p>Ticket Id: {chat.id} - Cerrado</p>
+                       }
+                    
                     {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
                       <div className="notificationNumber">
                         <p>{chat.c5Unread}</p>
@@ -228,6 +239,7 @@ class Chat extends Component {
               <div className="messages_send_box">
                 <div style={{ position: "relative" }}>
                   <textarea
+                    disabled={textareaDisabled}
                     placeholder="Escriba su mensaje"
                     name="text"
                     autoComplete="on"

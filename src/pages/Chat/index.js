@@ -243,6 +243,20 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
   }
 
   componentDidMount(){  
+    const {index} =this.state;
+    const {chatSelected, chats} = this.props
+    if( chatSelected && chatSelected !== index && chats[chatSelected] ){
+      console.log('Entro aqui', chatSelected)
+      console.log('Chat index', index)
+      return this.setState({
+        chatId: chats[chatSelected].id,
+        messages: chats[chatSelected].messages,
+        index: chatSelected,
+        from : chats[chatSelected].from,
+      })
+    }else{
+      console.log('chatoos', chats)
+    }
     if(this.props.location.hash!==''&&this.state.index!=0 && this.state.hashUsed=== false)
     {
       if (this.props.chats[0]!==undefined) {     
@@ -295,7 +309,26 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
 
 
     
-  componentDidUpdate(){    
+  componentDidUpdate(prevProps){    
+    const {index} =this.state;
+    const {chatSelected, chats} = this.props
+    const {chatSelected: chatSelectedPrev, chats: chatsPrev}= prevProps;
+    // chatId:chat.id,
+    // messages:chat.messages,
+    // index:i,
+    // from:chat.from,                          
+    // loading:false
+    if( chatSelected && chatSelected !== chatSelectedPrev && chatSelected !== index && chats[chatSelected]){
+      console.log('Entro aqui', chatSelected)
+      console.log('Chat index', index)
+      this._changeUserCam(this.props.chats[chatSelected])
+      return this.setState({
+        chatId: chats[chatSelected].id,
+        messages: chats[chatSelected].messages,
+        index: chatSelected,
+        from : chats[chatSelected].from,
+      })
+    }
     if(this.props.location.hash!==''&&this.state.index!=0 && this.state.hashUsed=== false)
     {
       if (this.props.chats[0]!==undefined) {     

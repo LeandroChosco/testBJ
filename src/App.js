@@ -70,6 +70,7 @@ class App extends Component {
     support: [],
     fisrtTimeChat: true,
     chats: [],
+    chatSelected: null,
     showNotification: false,
     fisrtTime: true,
     fisrtTimeHelp: true,
@@ -155,8 +156,8 @@ class App extends Component {
                   .replace(window.location.pathname, "/")
                   .replace(window.location.search, "")
                   .replace(window.location.hash, "") +
-                  "detalles/covid/" +
-                  data.data.name,
+                "detalles/covid/" +
+                data.data.name,
                 "_blank",
                 "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=400"
               );
@@ -490,11 +491,14 @@ class App extends Component {
         .collection("messages")
         .orderBy("lastModification", "desc")
         .onSnapshot((docs) => {
-          // console.log( docs.docChanges())
+          console.log(docs.docChanges())
           let changes = docs.docChanges();
+
           if (changes.length === 1) {
             let index = changes[0].oldIndex;
             let data = changes[0].doc.data();
+            console.log('data', data)
+
             if (this.state.chats[index]) {
               if (
                 this.state.chats[index].messages.length === data.messages.length
@@ -514,7 +518,8 @@ class App extends Component {
               "success",
               "Ver detalles",
               3,
-              0
+              0,
+              changes[0].oldIndex
             );
             this.setState({ reproducirSonido: true });
             // if(changes[0].doc._hasPendingWrites === false)
@@ -533,6 +538,8 @@ class App extends Component {
             value.id = v.id;
             return value;
           });
+
+
           this.setState({ chats: chats });
         });
 
@@ -637,7 +644,7 @@ class App extends Component {
     }
   };
 
-  showNot = (title, message, type, label, action, id) => {
+  showNot = (title, message, type, label, action, id, index) => {
     const notification = this.refs.notificationSystem;
     if (
       notification &&
@@ -650,46 +657,61 @@ class App extends Component {
         level: type,
         action: {
           label: label,
-          callback: () =>
-            action === 3
+          callback: () => {
+            let pathName = window.location.pathname
+            if (pathName === "/chat" || pathName === "/chat#message") {
+              if (action === 3) {
+                return this.setState({ chatSelected: index }, () => {
+                  this.setState({ chatSelected: null })
+                })
+              }
+            }else{
+              this.setState({ chatSelected: index }, () => {
+                this.setState({ chatSelected: null })
+              })
+            }
+
+            return action === 3
               ? (window.location.href = window.location.href
-                  .replace(window.location.search, "")
-                  .replace(window.location.hash, "")
-                  .replace(window.location.pathname, "/chat#message"))
+                .replace(window.location.search, "")
+                .replace(window.location.hash, "")
+                .replace(window.location.pathname, "/chat#message"))
               : action === 5
-              ? window.open(
+                ? window.open(
                   window.location.href
                     .replace(window.location.search, "")
                     .replace(window.location.hash, "")
                     .replace(window.location.pathname, "/") +
-                    "detalles/emergency/" +
-                    id,
+                  "detalles/emergency/" +
+                  id,
                   "_blank",
                   "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500"
                 )
-              : action === 2
-              ? window.open(
-                  window.location.href
-                    .replace(window.location.pathname, "/")
-                    .replace(window.location.search, "")
-                    .replace(window.location.hash, "") +
+                : action === 2
+                  ? window.open(
+                    window.location.href
+                      .replace(window.location.pathname, "/")
+                      .replace(window.location.search, "")
+                      .replace(window.location.hash, "") +
                     "detalles/denuncia/" +
                     id,
-                  "_blank",
-                  "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500"
-                )
-              : action === 4
-              ? window.open(
-                  window.location.href
-                    .replace(window.location.pathname, "/")
-                    .replace(window.location.search, "")
-                    .replace(window.location.hash, "") +
-                    "detalles/soporte/" +
-                    id,
-                  "_blank",
-                  "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500"
-                )
-              : this.seeMatch(action),
+                    "_blank",
+                    "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500"
+                  )
+                  : action === 4
+                    ? window.open(
+                      window.location.href
+                        .replace(window.location.pathname, "/")
+                        .replace(window.location.search, "")
+                        .replace(window.location.hash, "") +
+                      "detalles/soporte/" +
+                      id,
+                      "_blank",
+                      "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500"
+                    )
+                    : this.seeMatch(action)
+          }
+
         },
       });
     }
@@ -936,20 +958,20 @@ class App extends Component {
                       ? this.state.userInfo.modules[0].id === 1
                         ? "/map"
                         : this.state.userInfo.modules[0].id === 2
-                        ? "/analisis"
-                        : "/welcome"
+                          ? "/analisis"
+                          : "/welcome"
                       : "/welcome",
                     state: { from: props.location },
                   }}
                 />
               ) : (
-                <Redirect
-                  to={{
-                    pathname: "/login",
-                    state: { from: props.location },
-                  }}
-                />
-              )
+                  <Redirect
+                    to={{
+                      pathname: "/login",
+                      state: { from: props.location },
+                    }}
+                  />
+                )
             }
           />
           <Route
@@ -1084,6 +1106,7 @@ class App extends Component {
             exact
             render={(props) => (
               <Chat
+                chatSelected={this.state.chatSelected}
                 showMatches={this.state.showMatches}
                 stopNotification={() =>
                   this.setState({ stopNotification: true })
