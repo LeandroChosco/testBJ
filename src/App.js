@@ -667,7 +667,7 @@ class App extends Component {
               }
             }else{
               this.setState({ chatSelected: index }, () => {
-                this.setState({ chatSelected: null })
+                // this.setState({ chatSelected: null })
               })
             }
 
@@ -1105,19 +1105,19 @@ class App extends Component {
             path="/chat"
             exact
             render={(props) => (
-              <Chat
-                chatSelected={this.state.chatSelected}
-                showMatches={this.state.showMatches}
-                stopNotification={() =>
-                  this.setState({ stopNotification: true })
-                }
-                chats={this.state.chats}
-                canAccess={this.canAccess}
-                {...props}
-                userInfo={this.state.userInfo}
-                toggleSideMenu={this._cameraSideInfo}
-                toggleControls={this._toggleControls}
-              />
+              this.state.chats.length !== 0 ? <Chat
+              chatSelected={this.state.chatSelected}
+              showMatches={this.state.showMatches}
+              stopNotification={() =>
+                this.setState({ stopNotification: true })
+              }
+              chats={this.state.chats}
+              canAccess={this.canAccess}
+              {...props}
+              userInfo={this.state.userInfo}
+              toggleSideMenu={this._cameraSideInfo}
+              toggleControls={this._toggleControls}
+            />: <div/>
             )}
           />
           <Route

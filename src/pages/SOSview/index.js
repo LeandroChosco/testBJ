@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Icon, Button } from "semantic-ui-react";
+import { Card, Icon, Button, Input } from "semantic-ui-react";
 
 import "./style.css";
 import firebaseC5 from "../../constants/configC5";
@@ -7,7 +7,7 @@ import CameraStream from "../../components/CameraStream";
 import constants from "../../constants/constants";
 import MapContainer from "../../components/MapContainer";
 import Axios from "axios";
-
+import moment from 'moment'
 // fireSOS
 
 import { getSOS, getTracking, MESSAGES_COLLECTION } from "../../Api/sos";
@@ -21,6 +21,7 @@ const refSOS = firebaseSos
 class Chat extends Component {
   state = {
     messages: [],
+    chats: [],
     chatId: "",
     text: "",
     from: "",
@@ -32,6 +33,20 @@ class Chat extends Component {
     personalInformation: {},
   };
 
+  filterAction = (event) => {
+    const { target: { value } } = event
+    const { chats } = this.state
+    let expresion = new RegExp(`${value}.*`, "i");
+    if (value.trim().length !== 0) {
+      const newFilterSearch = chats.filter(c => c.trackingType && expresion.test(c.trackingType) || c.create_at && expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, h:mm a')))
+      console.log('value', value)
+      console.log('encontrados', newFilterSearch)
+      this.setState({ chats: newFilterSearch })
+    } else if (value.trim().length === 0) {
+      this.setState({ chats: this.props.chats })
+    }
+  }
+
   render() {
     const { chats } = this.props;
     const { chatId, index, from, camData, loading, tracking } = this.state;
@@ -39,7 +54,7 @@ class Chat extends Component {
       this.setState({ chatId: chats[index].id });
     }
 
-    const chatSelected =  chats && chats[index]
+    const chatSelected = chats && chats[index]
 
     const textareaDisabled = chatSelected && chatSelected.active !== undefined ? !chatSelected.active : true;
 
@@ -53,7 +68,10 @@ class Chat extends Component {
       >
         <div className="row fullHeight">
           <div className="col-4 userList">
-            {chats.map((chat, i) => (
+            <div>
+              <Input placeholder="Buscar por tipo de alerta" style={{width:"100%"}} onChange={this.filterAction}></Input>
+            </div>
+            {this.state.chats.map((chat, i) => (
               <Card
                 className={i === index ? "activeChat" : ""}
                 key={i}
@@ -61,27 +79,27 @@ class Chat extends Component {
               >
                 <Card.Content>
                   <div style={{ position: "relative" }}>
-                    <h3>{chat.user_name} </h3>
+                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name} - {chat.trackingType}</h4> <p>{moment(moment(chat.create_at)).format('DD-MM-YYYY, h:mm a')}</p></div>
                     {
-                         
-                         chat.active !== undefined && chat.active ?
-                         <p>
-                         {chat.messages
-                           ? chat.messages.length > 0
-                             ? (chat.messages[chat.messages.length - 1].from ===
-                               "user"
-                                 ? chat.user_name.split(" ")[0]
-                                 : "C5") +
-                               ": " +
-                               chat.messages[chat.messages.length - 1].msg //msg
-                             : "No hay mensajes que mostart"
-                           : "No hay mensajes que mostart"}
-                       </p>:
-                       <p>Ticket Id: {chat.id} - Cerrado</p>
-                       }
-                    
+
+                      chat.active !== undefined && chat.active ?
+                        <p>
+                          {chat.messages
+                            ? chat.messages.length > 0
+                              ? (chat.messages[chat.messages.length - 1].from ===
+                                "user"
+                                ? chat.user_name.split(" ")[0]
+                                : "C5") +
+                              ": " +
+                              chat.messages[chat.messages.length - 1].msg //msg
+                              : "No hay mensajes que mostart"
+                            : "No hay mensajes que mostart"}
+                        </p> :
+                        <p>Ticket Id: {chat.id} - Cerrado</p>
+                    }
+
                     {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                      <div className="notificationNumber">
+                      <div className="notificationNumber" style={{marginTop: 15}}>
                         <p>{chat.c5Unread}</p>
                       </div>
                     ) : null}
@@ -204,36 +222,36 @@ class Chat extends Component {
               {!loading && chatId !== "" && chats[index]
                 ? chats[index].messages
                   ? chats[index].messages.map((value, ref) => (
-                      <div
-                        key={ref}
-                        className={
-                          value.from === "Soporte" ? "support" : "user"
-                        }
-                        ref={
-                          ref === chats[index].messages.length - 1
-                            ? "message"
-                            : "message" + ref
-                        }
-                        id={
-                          ref === chats[index].messages.length - 1
-                            ? "lastMessage"
-                            : "message" + ref
-                        }
-                      >
-                        <p>{value.msg}</p>
-                        <small>
-                          {value.dateTime.toDate
-                            ? value.dateTime.toDate().toLocaleString()
-                            : null}
-                        </small>
-                      </div>
-                    ))
+                    <div
+                      key={ref}
+                      className={
+                        value.from === "Soporte" ? "support" : "user"
+                      }
+                      ref={
+                        ref === chats[index].messages.length - 1
+                          ? "message"
+                          : "message" + ref
+                      }
+                      id={
+                        ref === chats[index].messages.length - 1
+                          ? "lastMessage"
+                          : "message" + ref
+                      }
+                    >
+                      <p>{value.msg}</p>
+                      <small>
+                        {value.dateTime.toDate
+                          ? value.dateTime.toDate().toLocaleString()
+                          : null}
+                      </small>
+                    </div>
+                  ))
                   : loading === true
-                  ? "Cargando..."
-                  : "No se ha seleccionado ningun chat"
+                    ? "Cargando..."
+                    : "No se ha seleccionado ningun chat"
                 : loading === true
-                ? "Cargando..."
-                : "No se ha seleccionado ningun chat"}
+                  ? "Cargando..."
+                  : "No se ha seleccionado ningun chat"}
             </div>
             {chatId !== "" ? (
               <div className="messages_send_box">
@@ -337,10 +355,10 @@ class Chat extends Component {
   _changeUserCam = (chat) => {
     Axios.get(
       constants.base_url +
-        ":" +
-        constants.apiPort +
-        "/admin/users/" +
-        chat.user_creation
+      ":" +
+      constants.apiPort +
+      "/admin/users/" +
+      chat.user_creation
     ).then((response) => {
       if (response.status === 200) {
         if (response.data.success) {
@@ -351,35 +369,35 @@ class Chat extends Component {
               data.UserToCameras[0] == undefined
                 ? undefined
                 : {
-                    extraData: {
-                      num_cam:
-                        data.UserToCameras[0] !== undefined
-                          ? data.UserToCameras[0].Camare.num_cam
-                          : null,
-                      cameraID:
-                        data.UserToCameras[0] !== undefined
-                          ? data.UserToCameras[0].Camare.num_cam
-                          : null,
-                      //webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
-                      isHls: true,
-                      url:
-                        data.UserToCameras[0] !== undefined
-                          ? "http://" +
-                            data.UserToCameras[0].Camare.UrlStreamMediaServer
-                              .ip_url_ms +
-                            ":" +
-                            data.UserToCameras[0].Camare.UrlStreamMediaServer
-                              .output_port +
-                            data.UserToCameras[0].Camare.UrlStreamMediaServer
-                              .name +
-                            data.UserToCameras[0].Camare.channel
-                          : null,
-                      dataCamValue:
-                        data.UserToCameras[0] !== undefined
-                          ? data.UserToCameras[0].Camare
-                          : null,
-                    },
+                  extraData: {
+                    num_cam:
+                      data.UserToCameras[0] !== undefined
+                        ? data.UserToCameras[0].Camare.num_cam
+                        : null,
+                    cameraID:
+                      data.UserToCameras[0] !== undefined
+                        ? data.UserToCameras[0].Camare.num_cam
+                        : null,
+                    //webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
+                    isHls: true,
+                    url:
+                      data.UserToCameras[0] !== undefined
+                        ? "http://" +
+                        data.UserToCameras[0].Camare.UrlStreamMediaServer
+                          .ip_url_ms +
+                        ":" +
+                        data.UserToCameras[0].Camare.UrlStreamMediaServer
+                          .output_port +
+                        data.UserToCameras[0].Camare.UrlStreamMediaServer
+                          .name +
+                        data.UserToCameras[0].Camare.channel
+                        : null,
+                    dataCamValue:
+                      data.UserToCameras[0] !== undefined
+                        ? data.UserToCameras[0].Camare
+                        : null,
                   },
+                },
           });
         }
       }
@@ -432,7 +450,9 @@ class Chat extends Component {
     // const track = await getTracking();
 
     // console.log("hey", track);
-
+    if (this.props.chats) {
+      this.setState({ chats: this.props.chats })
+    }
     if (
       this.props.location.hash !== "" &&
       this.state.index != 0 &&
@@ -498,7 +518,14 @@ class Chat extends Component {
     return JSON.parse(JSON.stringify(result));
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    const { chats: chatsPrev } = prevProps
+    const { chats } = this.props
+    if (chats && chatsPrev && chats.length !== chatsPrev.length) {
+      this.setState({ chats: chats }, () => {
+        console.log('chats state', this.state.chats)
+      })
+    }
     if (
       this.props.location.hash !== "" &&
       this.state.index != 0 &&
