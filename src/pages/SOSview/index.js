@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Icon, Button, Input } from "semantic-ui-react";
+import { Card, Icon, Button, Input, Dropdown } from "semantic-ui-react";
 
 import "./style.css";
 import firebaseC5 from "../../constants/configC5";
@@ -8,6 +8,7 @@ import constants from "../../constants/constants";
 import MapContainer from "../../components/MapContainer";
 import Axios from "axios";
 import moment from 'moment'
+import _ from 'lodash'
 // fireSOS
 
 import { getSOS, getTracking, MESSAGES_COLLECTION } from "../../Api/sos";
@@ -18,6 +19,33 @@ const refSOS = firebaseSos
   .app("sos")
   .firestore()
   .collection(MESSAGES_COLLECTION);
+
+
+const COLORS = {
+  "Emergencia Medica": "#9EE8A7",
+  "Proteccion Policial": "#FFB887",
+  "Proteccion Civil": "#E29EE8",
+  "Seguridad": "#FFB887"
+}
+
+const SEARCHOPTIONS = [
+  {
+    key: 'name',
+    text: 'Nombre de Usuario',
+    value: 'name',
+  },
+  {
+    key: 'date',
+    text: 'Fecha',
+    value: 'date',
+  },
+  {
+    key: 'alertType',
+    text: 'Tipo de Alerta',
+    value: 'alertType',
+  },
+]
+
 class Chat extends Component {
   state = {
     messages: [],
@@ -31,21 +59,31 @@ class Chat extends Component {
     loading: false,
     hashUsed: false,
     personalInformation: {},
+    optionSelected: "alertType"
   };
 
   filterAction = (event) => {
     const { target: { value } } = event
-    const { chats } = this.state
+    const { chats, } = this.props
+    const { optionSelected } = this.state
     let expresion = new RegExp(`${value}.*`, "i");
+
     if (value.trim().length !== 0) {
-      const newFilterSearch = chats.filter(c => c.trackingType && expresion.test(c.trackingType) || c.create_at && expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, h:mm a')))
-      console.log('value', value)
-      console.log('encontrados', newFilterSearch)
+      let newFilterSearch
+      if (optionSelected === "alertType") {
+        newFilterSearch = chats.filter(c => c.trackingType && expresion.test(c.trackingType))
+      } else if (optionSelected === "date") {
+        newFilterSearch = chats.filter(c => expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, h:mm a')))
+      } else if (optionSelected === "name") {
+        newFilterSearch = chats.filter(c => expresion.test(c.user_name))
+      }
       this.setState({ chats: newFilterSearch })
     } else if (value.trim().length === 0) {
       this.setState({ chats: this.props.chats })
     }
   }
+
+  handleChangeOption = (e, { value }) => this.setState({ optionSelected: value })
 
   render() {
     const { chats } = this.props;
@@ -68,18 +106,29 @@ class Chat extends Component {
       >
         <div className="row fullHeight">
           <div className="col-4 userList">
-            <div>
-              <Input placeholder="Buscar por tipo de alerta" style={{width:"100%"}} onChange={this.filterAction}></Input>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+
+              <Input placeholder="Buscar alertas" style={{ flex: 2 }} onChange={this.filterAction}></Input>
+              <Dropdown
+                placeholder='Buscar por'
+                fluid
+                selection
+                options={SEARCHOPTIONS}
+                defaultValue="alertType"
+                onChange={this.handleChangeOption}
+                style={{ flex: 1 }}
+              />
             </div>
             {this.state.chats.map((chat, i) => (
               <Card
                 className={i === index ? "activeChat" : ""}
+                // style={{ backgroundColor: index !== undefined ? index === i ? "#FFF" : COLORS[chat.trackingType] : COLORS[chat.trackingType] }}
                 key={i}
                 onClick={() => this.changeChat(chat, i)}
               >
                 <Card.Content>
                   <div style={{ position: "relative" }}>
-                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name} - {chat.trackingType}</h4> <p>{moment(moment(chat.create_at)).format('DD-MM-YYYY, h:mm a')}</p></div>
+                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{moment(moment(chat.create_at)).format('DD-MM-YYYY, h:mm a')}</p></div>
                     {
 
                       chat.active !== undefined && chat.active ?
@@ -95,14 +144,18 @@ class Chat extends Component {
                               : "No hay mensajes que mostart"
                             : "No hay mensajes que mostart"}
                         </p> :
-                        <p>Ticket Id: {chat.id} - Cerrado</p>
+                        <p>Ticket Id: {chat.id}</p>
                     }
 
                     {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                      <div className="notificationNumber" style={{marginTop: 15}}>
+                      <div className="notificationNumber" style={{ marginTop: 15 }}>
                         <p>{chat.c5Unread}</p>
                       </div>
                     ) : null}
+                    <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
+                      <small style={{ ...styles.badge, backgroundColor: COLORS[chat.trackingType], }}> <strong>{chat.trackingType}</strong> </small>
+                      <div> <small style={{ ...styles.badge, marginLeft: 3}}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
+                    </div>
                   </div>
                 </Card.Content>
               </Card>
@@ -113,7 +166,11 @@ class Chat extends Component {
               <div className="cameraView">
                 <h2
                   className={"Chat C5"}
-                  style={{ textAlign: "center", height: "10%" }}
+                  style={{
+                    textAlign: "center",
+                    backgroundColor: COLORS[chats[index].trackingType],
+                    height: "10%"
+                  }}
                 >
                   {from}
                 </h2>
@@ -521,7 +578,7 @@ class Chat extends Component {
   componentDidUpdate(prevProps) {
     const { chats: chatsPrev } = prevProps
     const { chats } = this.props
-    if (chats && chatsPrev && chats.length !== chatsPrev.length) {
+    if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
       this.setState({ chats: chats }, () => {
         console.log('chats state', this.state.chats)
       })
@@ -578,3 +635,14 @@ class Chat extends Component {
 }
 
 export default Chat;
+
+const styles = {
+  badge: {
+    paddingLeft: 3,
+    paddingRight: 3,
+    borderRadius: 3,
+    fontSize: 10,
+    paddingTop: 2,
+    paddingBottom: 2
+  }
+}

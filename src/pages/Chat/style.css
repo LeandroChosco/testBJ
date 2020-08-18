@@ -148,7 +148,9 @@
 .activeChat{
     background-color: #afafaf !important;
 }
-
+.selectedChat{
+    background-color: #fff!important;
+}
 
 .Alerta.Robo.Habitacion{
     background-color: var(--main-bg-color);
