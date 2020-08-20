@@ -92,6 +92,8 @@ class App extends Component {
     newCovidState: false,
     newCovidItem: [],
     alertaCovidTmp: [],
+    redirectToRoute: true,
+    redirectMessage:{},
     roberyNotification: {
       display: false,
       data: null,

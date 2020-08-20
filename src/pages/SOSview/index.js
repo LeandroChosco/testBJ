@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Icon, Button, Input, Dropdown } from "semantic-ui-react";
+import { Card, Icon, Button, Input, Dropdown, Tab } from "semantic-ui-react";
 
 import "./style.css";
 import firebaseC5 from "../../constants/configC5";
@@ -15,6 +15,7 @@ import { getSOS, getTracking, MESSAGES_COLLECTION } from "../../Api/sos";
 import firebaseSos from "../../constants/configSOS";
 
 const ref = firebaseC5.app("c5cuajimalpa").firestore().collection("messages");
+
 const refSOS = firebaseSos
   .app("sos")
   .firestore()
@@ -28,6 +29,12 @@ const COLORS = {
   "Seguridad": "#FFB887"
 }
 
+const FILTERSOPTIONS = [
+  "Emergencia Medica",
+  "Seguridad",
+  "Proteccion Civil",
+]
+
 const SEARCHOPTIONS = [
   {
     key: 'name',
@@ -39,54 +46,138 @@ const SEARCHOPTIONS = [
     text: 'Fecha',
     value: 'date',
   },
-  {
-    key: 'alertType',
-    text: 'Tipo de Alerta',
-    value: 'alertType',
-  },
 ]
+
+
+
 
 class Chat extends Component {
   state = {
     messages: [],
     chats: [],
+    activeIndex: 0,
     chatId: "",
     text: "",
     from: "",
     fisrt: {},
+    searching: "",
     tracking: {},
     camData: undefined,
     loading: false,
     hashUsed: false,
     personalInformation: {},
-    optionSelected: "alertType"
+    optionSelected: "name"
   };
+  panes = [
+    {
+      menuItem: 'Emergencia Medica',
+      render: () => <Tab.Pane attached={false} style={styles.tab} > {this.renderListChats("Emergencia Medica")}</Tab.Pane>,
+    },
+    {
+      menuItem: 'Seguridad',
+      render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("Seguridad")}</Tab.Pane>,
+    },
+    {
+      menuItem: 'Proteccion Civil',
+      render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("Proteccion Civil")}</Tab.Pane>,
+    },
+  ]
+
 
   filterAction = (event) => {
     const { target: { value } } = event
-    const { chats, } = this.props
-    const { optionSelected } = this.state
-    let expresion = new RegExp(`${value}.*`, "i");
-
-    if (value.trim().length !== 0) {
-      let newFilterSearch
-      if (optionSelected === "alertType") {
-        newFilterSearch = chats.filter(c => c.trackingType && expresion.test(c.trackingType))
-      } else if (optionSelected === "date") {
-        newFilterSearch = chats.filter(c => expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, h:mm a')))
-      } else if (optionSelected === "name") {
-        newFilterSearch = chats.filter(c => expresion.test(c.user_name))
+    const { chats, activeIndex } = this.state;
+    const {chats : chatsProps} = this.props
+    const { optionSelected, searching } = this.state
+    this.setState({ searching: value.trim() }, () => {
+       const filterData = chatsProps.filter(c => c.trackingType === FILTERSOPTIONS[activeIndex])
+      let expresion = new RegExp(`${searching}.*`, "i");
+      if (searching.trim().length !== 0) {
+        let newFilterSearch
+        if (optionSelected === "alertType") {
+          newFilterSearch = filterData.filter(c => c.trackingType && expresion.test(c.trackingType))
+        } else if (optionSelected === "date") {
+          newFilterSearch = filterData.filter(c => expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, h:mm a')))
+        } else if (optionSelected === "name") {
+          newFilterSearch = filterData.filter(c => expresion.test(c.user_name))
+        }
+        this.setState({ chats: newFilterSearch })
+      } 
+       if (value.trim().length === 0) {
+        let newChats = this.props.chats.filter(c => c.trackingType === FILTERSOPTIONS[this.state.activeIndex])
+        this.setState({ chats: newChats })
       }
-      this.setState({ chats: newFilterSearch })
-    } else if (value.trim().length === 0) {
-      this.setState({ chats: this.props.chats })
-    }
+    });
+
+
   }
 
   handleChangeOption = (e, { value }) => this.setState({ optionSelected: value })
 
+  renderListChats = (type) => {
+    const { index, searching, chats } = this.state;
+
+    return (<div >
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <Input placeholder="Buscar alertas" style={{ flex: 2 }} onChange={this.filterAction}></Input>
+        <Dropdown
+          placeholder='Buscar por'
+          fluid
+          selection
+          options={SEARCHOPTIONS}
+          defaultValue="name"
+          onChange={this.handleChangeOption}
+          style={{ flex: 1 }}
+        />
+
+      </div>
+
+      {chats.map((chat, i) => (
+        <Card
+          className={i === index ? "activeChat" : ""}
+          style={{ width: "100%" }}
+          key={i}
+          onClick={() => this.changeChat(chat, i)}
+        >
+          <Card.Content>
+            <div style={{ position: "relative" }}>
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{moment(moment(chat.create_at)).format('DD-MM-YYYY, h:mm a')}</p></div>
+              {
+
+                chat.active !== undefined && chat.active ?
+                  <p>
+                    {chat.messages
+                      ? chat.messages.length > 0
+                        ? (chat.messages[chat.messages.length - 1].from ===
+                          "user"
+                          ? chat.user_name.split(" ")[0]
+                          : "C5") +
+                        ": " +
+                        chat.messages[chat.messages.length - 1].msg //msg
+                        : "No hay mensajes que mostart"
+                      : "No hay mensajes que mostart"}
+                  </p> :
+                  <p>Ticket Id: {chat.id}</p>
+              }
+
+              {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
+                <div className="notificationNumber" style={{ marginTop: 15 }}>
+                  <p>{chat.c5Unread}</p>
+                </div>
+              ) : null}
+              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                {/* <small style={{ ...styles.badge, backgroundColor: COLORS[chat.trackingType], }}> <strong>{chat.trackingType}</strong> </small> */}
+                <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
+              </div>
+            </div>
+          </Card.Content>
+        </Card>
+      ))}
+    </div>)
+  }
+
   render() {
-    const { chats } = this.props;
+    const { chats } = this.state;
     const { chatId, index, from, camData, loading, tracking } = this.state;
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: chats[index].id });
@@ -106,60 +197,17 @@ class Chat extends Component {
       >
         <div className="row fullHeight">
           <div className="col-4 userList">
-            <div style={{ display: "flex", flexDirection: "row" }}>
-
-              <Input placeholder="Buscar alertas" style={{ flex: 2 }} onChange={this.filterAction}></Input>
-              <Dropdown
-                placeholder='Buscar por'
-                fluid
-                selection
-                options={SEARCHOPTIONS}
-                defaultValue="alertType"
-                onChange={this.handleChangeOption}
-                style={{ flex: 1 }}
-              />
-            </div>
-            {this.state.chats.map((chat, i) => (
-              <Card
-                className={i === index ? "activeChat" : ""}
-                // style={{ backgroundColor: index !== undefined ? index === i ? "#FFF" : COLORS[chat.trackingType] : COLORS[chat.trackingType] }}
-                key={i}
-                onClick={() => this.changeChat(chat, i)}
-              >
-                <Card.Content>
-                  <div style={{ position: "relative" }}>
-                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{moment(moment(chat.create_at)).format('DD-MM-YYYY, h:mm a')}</p></div>
-                    {
-
-                      chat.active !== undefined && chat.active ?
-                        <p>
-                          {chat.messages
-                            ? chat.messages.length > 0
-                              ? (chat.messages[chat.messages.length - 1].from ===
-                                "user"
-                                ? chat.user_name.split(" ")[0]
-                                : "C5") +
-                              ": " +
-                              chat.messages[chat.messages.length - 1].msg //msg
-                              : "No hay mensajes que mostart"
-                            : "No hay mensajes que mostart"}
-                        </p> :
-                        <p>Ticket Id: {chat.id}</p>
-                    }
-
-                    {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                      <div className="notificationNumber" style={{ marginTop: 15 }}>
-                        <p>{chat.c5Unread}</p>
-                      </div>
-                    ) : null}
-                    <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
-                      <small style={{ ...styles.badge, backgroundColor: COLORS[chat.trackingType], }}> <strong>{chat.trackingType}</strong> </small>
-                      <div> <small style={{ ...styles.badge, marginLeft: 3}}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
-                    </div>
-                  </div>
-                </Card.Content>
-              </Card>
-            ))}
+            <Tab menu={{ pointing: true }} panes={this.panes} onTabChange={(t, i) => {
+              const { chats } = this.props
+              const { index } = this.state
+              let newChats = chats.filter(c => c.trackingType === FILTERSOPTIONS[i.activeIndex]);
+              if (index !== undefined) {
+                let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType
+                this.setState({ from: selected ? selected : "Error getting data" })
+              }
+              let newIndex = index > newChats.length - 1 ? 0 : index
+              this.setState({ chats: newChats, activeIndex: i.activeIndex, index: newIndex })
+            }} />
           </div>
           <div className="col-8 messages">
             {!loading && chatId !== "" && chats[index] ? (
@@ -360,7 +408,6 @@ class Chat extends Component {
   };
 
   changeChat = (chat, i) => {
-    // console.log("i", i);
 
     this.setState(
       { chatId: "", loading: true, camData: undefined },
@@ -375,8 +422,6 @@ class Chat extends Component {
           ...newData,
           id: trackingInformation.data.id,
         };
-
-        console.log("holaaa", newData);
 
         refSOS
           .doc(chat.id)
@@ -420,7 +465,6 @@ class Chat extends Component {
       if (response.status === 200) {
         if (response.data.success) {
           const data = response.data.data;
-          console.log("data", data);
           this.setState({
             camData:
               data.UserToCameras[0] == undefined
@@ -558,8 +602,6 @@ class Chat extends Component {
 
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
-
-    console.log("chatss", this.props.chats);
   }
 
   QueryStringToJSON(query) {
@@ -579,9 +621,7 @@ class Chat extends Component {
     const { chats: chatsPrev } = prevProps
     const { chats } = this.props
     if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-      this.setState({ chats: chats }, () => {
-        console.log('chats state', this.state.chats)
-      })
+      this.setState({ chats: chats })
     }
     if (
       this.props.location.hash !== "" &&
@@ -644,5 +684,6 @@ const styles = {
     fontSize: 10,
     paddingTop: 2,
     paddingBottom: 2
-  }
+  },
+  tab: { backgroundColor: "#dadada", borderWidth: 0, borderColor: "#dadada" }
 }
