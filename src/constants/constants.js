@@ -6,8 +6,9 @@ const base_url =
   // :
   "http://prod.apicams.bj.energetikadevelepment.com";
 const webSocketPort = "20";
-const sails_url = "http://prod.adminc5.bj.sails.energetikadevelepment.com";
-// const sails_url = "http://localhost";
+/* const sails_url = "http://prod.adminc5.bj.sails.energetikadevelepment.com"; */
+const sails_url = "http://18.191.101.241";
+/* const sails_url = "http://localhost"; */
 const apiPort = "3000";
 const sails_port = "1337";
 export default {
