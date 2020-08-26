@@ -26,14 +26,19 @@ import {
 } from 'recharts';
 import ColorScheme from 'color-scheme'
 import { ClassicSpinner } from "react-spinners-kit";
+import Card from "../../components/Card/Card";
+import CardHeader from "../../components/Card/CardHeader";
+import CardBody from '../../components/Card/CardBody';
+import neutralEmoji from '../../assets/images/emojis/neutral.png'
+import sadEmoji from '../../assets/images/emojis/triste.png'
+import happyEmoji from '../../assets/images/emojis/feliz.png'
+import angryEmoji from '../../assets/images/emojis/enojado.png'
+import surpriseEmoji from '../../assets/images/emojis/sorprendido.png'
 import { Tab } from 'semantic-ui-react'
 import socketIOClient from 'socket.io-client';
 import sailsIOClient from 'sails.io.js';
 import constants from '../../constants/constants';
 import * as moment from 'moment'
-import GridCovidDisplay from '../../components/GridCovidDisplay'
-import CovidItem from "../../components/CovidItem"
-import Spinner from "react-bootstrap/Spinner";
 
 const scm = new ColorScheme();
 const COLORS =  scm.from_hue(235)
@@ -59,8 +64,7 @@ const COLORS =  scm.from_hue(235)
 
 class Dashboard extends Component {
 
-  state = {    
-      places: [],
+    state = {    
       loadingCams: true,
       dataCams: [],
       loadingTickets: true,
@@ -75,44 +79,7 @@ class Dashboard extends Component {
       loadRecognitionAges:true,
       loadingRecognitionPerDay:true,
       loadingRecognitionMood:true,
-      loadingCamsGrid: true,
-      covidPerDay: [
-        {
-          date: "2020-06-16",
-          total: 5,
-          cam_id: 154
-        },
-        {
-          date: "2020-06-17",
-          total: 15,
-          cam_id: 154
-        },
-        {
-          date: "2020-06-18",
-          total: 25,
-          cam_id: 154
-        },
-        {
-          date: "2020-06-19",
-          total: 5,
-          cam_id: 154
-        },
-        {
-          date: "2020-06-20",
-          total: 35,
-          cam_id: 154
-        },
-        {
-          date: "2020-06-21",
-          total: 5,
-          cam_id: 154
-        },
-        {
-          date: "2020-06-22",
-          total: 5,
-          cam_id: 154
-        },
-      ],
+      loadingCamsGrid:true,
       personsMood:[
         {
           "mood": "Feliz",
@@ -153,7 +120,6 @@ class Dashboard extends Component {
         { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
         { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
         { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboard()}</Tab.Pane> },
-        // { menuItem: 'Alerta Covid', render: () => <Tab.Pane attached={false}>{this.renderCovidPerDay()}</Tab.Pane> },
       ]
     }
 
@@ -379,49 +345,90 @@ class Dashboard extends Component {
     );
   }
 
-  renderRecognitionDashboard(){
+  renderRecognitionDashboard() {
     return (
       <div className='container-flex'>
-        <div className='row'>                      
+        <div className='row'>
           <div className='col-6 chart' align='center'>
-            <h3>Personas detectadas</h3>    
             {
-              this.state.loadTotalRecognition?
-                <ClassicSpinner 
+              this.state.loadTotalRecognition ?
+                <ClassicSpinner
                   loading={true}
                   size={40}
                   color="#686769"
-                />:        
-            <ResponsiveContainer>
-              <PieChart>
-                <Legend />
-                <Pie  data={this.state.genderDetected} dataKey="value" nameKey="name" >
-                {
-                  this.state.dataTickets.map((entry, index) => <Cell key={`cell-${index}`} fill={'#'+COLORS[index % COLORS.length]} />)
-                }
-                </Pie>                     
-                <Tooltip/>
-              </PieChart>
-              </ResponsiveContainer>}            
+                /> :
+                <Card  style={{ width: '45rem', height: '20rem' }}>
+                  <CardHeader color="blue">
+                <h4 className="pt-2">Personas detectadas</h4>
+              </CardHeader>
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Legend />
+                    <Pie innerRadius={60} outerRadius={80} paddingAngle={5} fill="#8884d8" data={this.state.genderDetected} dataKey="value" nameKey="name" >
+                      {
+                        this.state.dataTickets.map((entry, index) => <Cell key={`cell-${index}`} fill={'#' + COLORS[index % COLORS.length]} />)
+                      }
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer></Card>}
+                  
           </div>
           <div className='col-6 chart' align='center'>
-            <h3>Estado de animo</h3>
-            {
-              this.state.loadingRecognitionMood?
-                <ClassicSpinner 
+            <Card  style={{ width: '45rem', height: '20rem' }}>
+            <CardHeader color="blue">
+                <h4 className="pt-2">Estado de Animo</h4><br></br><br></br>
+              </CardHeader>
+              <CardBody>
+                 
+            <ul className="cardlist">
+              <li>
+                <img src={neutralEmoji} width='20%'></img>
+                <h4>Neutral</h4>
+            {this.state.personsMood[0].total}
+              </li>
+              <li>
+              <img src={surpriseEmoji} width='20%'></img>
+            <h4>Sorprendido</h4>
+              {this.state.personsMood[1].total}
+              </li>
+              <li>
+              <img src={sadEmoji} width='20%'></img>
+            <h4>Triste</h4> 
+              {this.state.personsMood[2].total}
+              </li>
+              <li>
+              <img src={happyEmoji} width='20%'></img>
+            <h4>Feliz</h4>
+              {this.state.personsMood[3].total}
+              </li>
+              <li>
+              <img src={angryEmoji} width='20%'></img>
+            <h4>Enojado</h4>
+              {this.state.personsMood[4].total}
+              </li>
+            </ul>
+              </CardBody>
+
+</Card>
+
+            {/* {
+              this.state.loadingRecognitionMood ?
+                <ClassicSpinner
                   loading={true}
                   size={40}
                   color="#686769"
-                />:<ResponsiveContainer>
-              <RadarChart data={this.state.personsMood}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="mood" />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} />
-                <Radar name="Estado de animo" dataKey="percentage" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />                
-                <Legend />
-                <Tooltip />
-              </RadarChart>
-            </ResponsiveContainer>}
+                /> : <ResponsiveContainer>
+                  <RadarChart data={this.state.personsMood}>
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="mood" />
+                    <PolarRadiusAxis angle={30} domain={[0, 100]} />
+                    <Radar name="assaEstado de animo" dataKey="total" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+
+                    <Legend />
+                    <Tooltip />
+                  </RadarChart>
+                </ResponsiveContainer>} */}
           </div>
         </div>
         <div className='row'>
@@ -480,81 +487,11 @@ class Dashboard extends Component {
     )
   }
 
-  // renderCovidPerDay() {
-  //   return (
-  //     <div className="row">
-  //        <div className='col-12 chart-covid' align='center'>
-  //           <h3>Personas por dia</h3>           
-  //           {
-  //             this.state.covidPerDay.length < 1 ?
-  //               <ClassicSpinner 
-  //                 loading={true}
-  //                 size={40}
-  //                 color="#686769"
-  //               />:<ResponsiveContainer>
-  //             <ComposedChart                   
-  //               data={this.state.covidPerDay}                    
-  //               margin={{
-  //                 top: 5, right: 30, left: 20, bottom: 30,
-  //               }}
-  //             >
-  //               <CartesianGrid strokeDasharray="3 3" />
-  //               <XAxis dataKey="date" />
-  //               <YAxis/>
-  //               <Tooltip />      
-  //               <Legend />                              
-  //               <Bar dataKey="total" fill={'#'+COLORS[1]}  />                
-  //             </ComposedChart>
-  //             </ResponsiveContainer>
-  //         }   
-           
-  //           <div className="row mt-10">
-            
-  //                 {!this.state.loading && this.state.photos.map((value, index) => (
-  //                   <div key={index} className="col-3 p10">
-  //                     <CovidItem
-  //                       dashboard={false}
-  //                       info={value}
-  //                       covid={true}
-  //                       clasName="col"
-  //                       servidorMultimedia={this.state.servidorMultimedia}
-  //                       image={true}
-  //                       value={value}
-  //                       cam={this.state.selectedCamera}
-  //                       reloadData={this._loadFiles}
-  //                       src={value.relative_url}
-  //                     />
-  //                   </div>
-  //                 ))}
-  //               </div>
-  //         {this.state.imageLoading &&
-  //           <div className="p-3">
-  //             <Spinner
-  //               animation="border"
-  //               variant="info"
-  //               role="status"
-  //               size="xl"
-  //             >
-  //               <span className="sr-only">Loading...</span>
-  //             </Spinner>
-  //           </div>
-  //         }
-  //                {!this.state.imageLoading && this.state.photos.length === 0 && 
-  //                 <div style={{"marginTop": "15px"}} align="center ">
-  //                   <p className="big-letter">No hay archivos que mostrar</p>
-  //                   <i className="fa fa-image fa-5x"></i>
-  //                 </div>
-  //                }
-         
-  //         </div>
-  //     </div>
-  //   )
-  // }
-
   render(){
     return(
       <div className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
         <div className={this.props.showMatches ? "hide-matches" : "show-matches"}>
+
           <button className='btn clear pull-right' onClick={this.loadData}><i className={'fa fa-repeat'}></i>Actualizar</button>
         </div>
         <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
@@ -570,20 +507,6 @@ class Dashboard extends Component {
     }
   }
 
-  _loadFiles = () => {
-    this.setState({
-      photos: [],
-      imageLoading: true
-    });
-    setTimeout(() => {
-      this.setState({
-        imageLoading: false,
-        loading: false,
-        photos: this.props.alertaCovid
-      });
-    }, 1000);
-  }
-
   loadData = () => {
     this.setState({
       loadingCams:true,
@@ -594,7 +517,6 @@ class Dashboard extends Component {
       loadingRecognitionMood:true,
       loadingCamsGrid:true
     })
-    this._loadFiles()
     conections.dashboardCams().then(response => {
       const data = response.data;      
       this.setState({
@@ -648,7 +570,6 @@ class Dashboard extends Component {
   
   processPerDay = (response) => {
     const data = response.data.data    
-    console.log(data)
     this.setState({personsperDay:data,loadingRecognitionPerDay:false})
   }
 
@@ -699,14 +620,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {    
-    this.loadData()  
-  }
-  componentDidUpdate() {
-    // console.log(this.props.alertaCovidState)
-    if (this.props.alertaCovidState) {
-      this.props._alertaCovidState()
-      this._loadFiles()
-    }
+    this.loadData()           
   }
 
   lastCreatedCams = (response) => {    
@@ -789,53 +703,6 @@ function customLabel(p){
         </Text>      
     )
 }
-
-// function _loadCameras() {
-//   // console.log('este es _loadCamera')
-//   // this.setState({loading:true}, console.log('loading'))
-//    conections.getAllCams()
-//       .then(  ( response) =>  {
-//           // console.log(response)
-//           const  camaras =  response.data
-//           let auxCamaras = []
-//           let actualCamera = {}
-//           let title = ''
-//           let idCamera = null
-//           let index = 1
-//           camaras.map(value=>{
-//               if (value.active === 1 && value.flag_streaming === 1 && value.tipo_camara === 4) {
-//                   // console.log(value)
-                                                               
-//                   auxCamaras.push({
-//                       id:value.id,
-//                       num_cam:index,
-//                       lat:value.google_cordenate.split(',')[0],
-//                       lng:value.google_cordenate.split(',')[1],
-//                       name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
-//                       rel_cuadrante:value.RelCuadranteCams,
-//                       isHls: value.tipo_camara === 3 ? false : true,
-//                       url: value.tipo_camara !== 3 ? 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel : null,
-//                       real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
-//                       camera_number:value.num_cam,
-//                       dataCamValue: value,
-//                       tipo_camara: value.tipo_camara
-//                   })                       
-//                   index = index + 1
-                  
-
-//               }
-//               return true;
-//           })
-//           if(idCamera== null){
-//               this.setState({places:auxCamaras,loading: false,error:undefined})
-//           } else {
-//               this.setState({places:auxCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera},error:undefined})
-//               this.setState({displayTipe:3})
-//           }
-//       }).catch(error=>{
-//           console.log("ERROR: ", error)             
-//       })
-// }
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
