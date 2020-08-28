@@ -8,6 +8,24 @@ import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 
 class Header extends Component {
+  _goAlarma = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/alarma");
+  };
+  _goFicha = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/ficha");
+  };
   _goCovid = () => {
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
@@ -132,6 +150,10 @@ class Header extends Component {
                           ? this._goCovid
                           : value.id === 8
                           ? this._goSOS
+                          : value.id === 9
+                          ? this._goAlarma
+                          : value.id === 10
+                          ? this._goFicha
                           : null
                       }
                     >

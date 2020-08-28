@@ -29,6 +29,8 @@ import DetailsComplaiment from "./pages/DetailsComplaiment";
 import Tickets from "./pages/Tickets";
 import DetailsSupport from "./pages/DetailsSupport";
 import Dashboard from "./pages/Dashboard";
+import Ficha from "./pages/Ficha";
+import Alarma from "./pages/Alarma";
 import Cuadrantes from "./pages/Cuadrantes";
 import Sospechosos from "./pages/Sospechosos";
 import Covid from "./pages/Covid";
@@ -1140,6 +1142,42 @@ class App extends Component {
             exact
             render={(props) => (
               <Dashboard
+                {...props}
+                _newCovidItem={this._newCovidItem}
+                newCovidState={this.state.newCovidState}
+                newCovidItem={this.state.newCovidItem}
+                alertaCovid={this.state.alertaCovid}
+                canAccess={this.canAccess}
+                showMatches={this.state.showMatches}
+                userInfo={this.state.userInfo}
+                toggleSideMenu={this._cameraSideInfo}
+                toggleControls={this._toggleControls}
+              />
+            )}
+          />
+          <Route
+            path="/ficha"
+            exact
+            render={(props) => (
+              <Ficha
+                {...props}
+                _newCovidItem={this._newCovidItem}
+                newCovidState={this.state.newCovidState}
+                newCovidItem={this.state.newCovidItem}
+                alertaCovid={this.state.alertaCovid}
+                canAccess={this.canAccess}
+                showMatches={this.state.showMatches}
+                userInfo={this.state.userInfo}
+                toggleSideMenu={this._cameraSideInfo}
+                toggleControls={this._toggleControls}
+              />
+            )}
+          />
+                    <Route
+            path="/alarma"
+            exact
+            render={(props) => (
+              <Alarma
                 {...props}
                 _newCovidItem={this._newCovidItem}
                 newCovidState={this.state.newCovidState}

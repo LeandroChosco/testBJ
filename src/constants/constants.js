@@ -4,7 +4,7 @@ const base_url =
   //   : window.location.hostname === "cams.bj.dev.energetikadevelepment.com"
   //   ? "http://dev.apicams.bj.dev.energetikadevelepment.com"
   // :
-  "http://prod.apicams.bj.energetikadevelepment.com";
+  "http://18.222.228.237";
 const webSocketPort = "20";
 /* const sails_url = "http://prod.adminc5.bj.sails.energetikadevelepment.com"; */
 const sails_url = "http://18.191.101.241";
