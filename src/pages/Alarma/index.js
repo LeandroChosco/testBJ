@@ -23,7 +23,7 @@ class Alarma extends Component {
     }
 
     alarmas(){
-        window.open('http://alarma.energetikadevelepment.com:8080/', 'Data','height=600,width=1200')
+        window.open('http://alarma.energetikadevelepment.com:8080/', 'Alarma','height=600,width=1200')
     }
 
   renderAlarma(){

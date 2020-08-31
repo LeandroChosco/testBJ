@@ -15,7 +15,7 @@ class Header extends Component {
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
-    this.props.history.push("/alarma");
+      window.open('http://alarma.energetikadevelepment.com:8080/', 'Alarma','height=600,width=1200');
   };
   _goFicha = () => {
     if (this.props.isSidemenuShow) {
@@ -24,7 +24,7 @@ class Header extends Component {
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
-    this.props.history.push("/ficha");
+      window.open('http://clientes.ubiqo.net/Publica/Inicio_Sesion.aspx?ReturnUrl=%2f', 'Ficha de Incidencias','height=600,width=1200');
   };
   _goCovid = () => {
     if (this.props.isSidemenuShow) {
@@ -175,6 +175,10 @@ class Header extends Component {
                             ? "fa fa-user-md"
                             : value.id == 8
                             ? "fa fa-comments"
+                            : value.id == 9
+                            ? "fa fa-bullhorn"
+                            : value.id == 10
+                            ? "fa fa-taxi"
                             : null
                         }
                       ></i>
