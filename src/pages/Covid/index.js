@@ -169,8 +169,8 @@ class Analysis extends Component {
                   loading={true}
                   size={40}
                   color="#686769"
-                />:<ResponsiveContainer>
-              <ComposedChart                   
+                />:<ResponsiveContainer width="99%" height={400}>
+              <ComposedChart                
                 data={this.state.covidPerDay}                    
                 margin={{
                   top: 5, right: 30, left: 20, bottom: 30,
