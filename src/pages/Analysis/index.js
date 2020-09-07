@@ -69,7 +69,7 @@ class Analysis extends Component {
         )    
     }
     return (
-        <div id="analisis_holder"  className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
+        <div id="analisis_holder" className={!this.props.showMatches ? "hide-matches" : "show-matches"} >
             <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
                    
             {
@@ -101,8 +101,8 @@ class Analysis extends Component {
                         moduleActions={this.state.moduleActions}
                         matches={this.props.matches}
                         snapShot={this._snapShot}
-                        showMatches={this.props.showMatches}
                         changeStatus={this._chageCamStatus}
+                        showMatches={this.props.showMatches}
                         propsIniciales={this.props}/>
         </div>
     )
@@ -381,7 +381,7 @@ class Analysis extends Component {
                         changeStatus={this._chageCamStatus}
                         propsIniciales={this.props}/>)
         case 3:
-            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450}  hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
+            return (<div className="camUniqueHolder"><CameraStream  marker={this.state.actualCamera} showButtons height={450}  hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
         default:
            return null
     }
@@ -465,7 +465,6 @@ class Analysis extends Component {
 
 
     componentDidMount(){
-        // console.log(this.props.showMatches) 
         if (!this.props.match.params.id) {
             const isValid = this.props.canAccess(2)
             if (!isValid) {
@@ -482,25 +481,21 @@ class Analysis extends Component {
     }
 
 
-
-    _loadCameras =  () => {
-        console.log('este es _loadCamera')
-        this.setState({loading:true}, console.log('loading'))
-         conections.getAllCams()
-            .then(  ( response) =>  {
-                console.log(response)
-                const  camaras =  response.data
+    _loadCameras = () => {
+        this.setState({loading:true})
+        conections.getAllCams()
+            .then((response) => {
+                const camaras = response.data
                 let auxCamaras = []
                 let offlineCamaras = []
                 let actualCamera = {}
                 let title = ''
                 let idCamera = null
                 let index = 1
-                let indexFail = 1
+                
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1) {
-                        console.log(value)
-                        let url = 'rtmp://18.212.185.68/live/cam';                                               
+                        //let url = 'rtmp://18.212.185.68/live/cam';                                               
                         auxCamaras.push({
                             id:value.id,
                             num_cam:index,
@@ -508,15 +503,14 @@ class Analysis extends Component {
                             lng:value.google_cordenate.split(',')[1],
                             name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                             rel_cuadrante:value.RelCuadranteCams,
-                            isHls: value.tipo_camara === 3 ? false : true,
-                            url: value.UrlStreamMediaServer !== null ? 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel : null,
+                            isHls:true,
+                            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
                             real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
                             camera_number:value.num_cam,
-                            dataCamValue: value,
-                            tipo_camara: value.tipo_camara
+                            dataCamValue: value
                         })                       
                         index = index +1
-                        if(this.state.id_cam !=0){
+                        if(this.state.id_cam !== 0){
                            if (parseInt(this.state.id_cam) === value.id) {                           
                                 title= value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                                 actualCamera = {
@@ -526,18 +520,17 @@ class Analysis extends Component {
                                     lng:value.google_cordenate.split(',')[1],                                   
                                     name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
                                     isHls:true,
-                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
+                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
                                     real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
                                     camera_number:value.num_cam,
-                                    dataCamValue: value,
-                                    tipo_camara: value.tipo_camara
-            
+                                    dataCamValue: value
                                 }
                                 idCamera = value.id
                            }
                         }
 
-                    } else { 
+                    } /*else {
+                        console.log('value',value) 
                         if(value.active === 1 ){
                             offlineCamaras.push({
                                 id:value.id,
@@ -549,24 +542,39 @@ class Analysis extends Component {
                                 url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer. output_port + value.UrlStreamMediaServer. name + value.channel,
                                 real_num_cam:value.num_cam<10?('0'+value.num_cam.toString()):value.num_cam.toString(),
                                 camera_number:value.num_cam,
-                                dataCamValue: value,
-                                tipo_camara: value.tipo_camara
+                                dataCamValue: value
                             })   
                             indexFail++
                         }                        
-                    }
+                    }*/
                     return true;
                 })
-                // auxCamaras.push({
-                //     id:2,
-                //     num_cam:2,
-                //     lat:19.3718587,
-                //     lng:-99.1606554,
-                //     // webSocket:this.state.webSocket + ':' +constants.webSocketPort+(value.num_cam>=10?'':'0') + value.num_cam,
-                //     name: '794 Uxmal Ciudad de México, Cd. de México',
-                //     isIframe: true,
-                //     url:'http://wellkeeper.us/flowplayer/rtmp2.html'
-                // })   
+        
+                conections.getCamsOffline().then((res)=>{
+                    let indexFail = 1
+                    const offline = res.data
+                    console.log('offline',offline);
+                    offline.map((valueoff)=>{
+                        if(valueoff.active === 1){
+                            offlineCamaras.push({
+                                id:valueoff.id,
+                                num_cam:indexFail,
+                                lat:valueoff.google_cordenate.split(',')[0],
+                                lng:valueoff.google_cordenate.split(',')[1],
+                                name: valueoff.street +' '+ valueoff.number + ', ' + valueoff.township+ ', ' + valueoff.town+ ', ' + valueoff.state + ' #cam' + valueoff.num_cam,
+                                isHls:true,
+                                url: 'http://' + valueoff.UrlStreamMediaServer.ip_url_ms + ':' + valueoff.UrlStreamMediaServer.output_port + valueoff.UrlStreamMediaServer.name + valueoff.channel,
+                                real_num_cam:valueoff.num_cam<10?('0'+valueoff.num_cam.toString()):valueoff.num_cam.toString(),
+                                camera_number:valueoff.num_cam,
+                                dataCamValue: valueoff
+                            })   
+                            indexFail++
+                        }  
+                        return true;
+                    })
+                });
+
+
                 if(idCamera== null){
                     this.setState({places:auxCamaras,offlineCamaras:offlineCamaras,loading: false,error:undefined})
                 } else {
@@ -578,6 +586,9 @@ class Analysis extends Component {
             })
     }
 
+
+
+
     componentWillUnmount(){
         window.removeEventListener('restartCamEvent', this._loadCameras, false)
         this.state.recordingProcess.map(value=>{
@@ -586,7 +597,7 @@ class Analysis extends Component {
                 record_proccess_id:value.process_id
             },value.cam_id)
             .then((r) => {
-                const response = r.data                
+                //const response = r.data                
             })
             return value;
         })

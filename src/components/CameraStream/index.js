@@ -350,11 +350,11 @@ class CameraStream extends Component {
                   ? this.state.data.rel_cuadrante.length != 0
                     ? this.state.data.rel_cuadrante.map((item) => (
                         <Label
-                          key={item.id}
-                          className="styleTag"
-                          as="a"
-                          tag
-                          onClick={() => this._goToCuadrante(item.id_cuadrante)}
+                        key={item.id}
+                        className="styleTag"
+                        as="a"
+                        tag
+                        onClick={() => this._goToCuadrante(item.id_cuadrante)}
                         >
                           {item.Cuadrante.name}
                         </Label>

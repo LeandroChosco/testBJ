@@ -67,7 +67,7 @@ const CovidItem = props => {
               <div className="row">
                 <div className="col-12">
                   <img
-                    src={`${constants.sails_url}:${constants.sails_port}/${props.info.relative_path}/${props.info.name}`}
+                    src={`${constants.sails_url}:${constants.sailsPort}/${props.info.relative_path}/${props.info.name}`}
                     style={{ width: "100%" }}
                     alt="img"
                   />

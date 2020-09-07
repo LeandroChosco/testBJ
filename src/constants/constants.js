@@ -10,11 +10,11 @@ const webSocketPort = "20";
 const sails_url = "http://18.191.101.241";
 /* const sails_url = "http://localhost"; */
 const apiPort = "3000";
-const sails_port = "1337";
+const sailsPort = "1337";
 export default {
   base_url,
   sails_url,
   apiPort,
   webSocketPort,
-  sails_port
+  sailsPort
 };

@@ -188,3 +188,10 @@
 .camContainerChatDiv>.card>.card-body>.camHolder{
     height: 100% !important;
 }
+
+.closed-ticked {
+    margin: auto;
+    text-align: center;
+    padding: 2%;
+    font-weight: bold;
+}

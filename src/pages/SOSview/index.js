@@ -30,9 +30,9 @@ const COLORS = {
 }
 
 const FILTERSOPTIONS = [
-  "Emergencia Medica",
+  "Emergencia Médica",
   "Seguridad",
-  "Proteccion Civil",
+  "Protección Civil",
 ]
 
 const SEARCHOPTIONS = [
@@ -87,10 +87,10 @@ class Chat extends Component {
   filterAction = (event) => {
     const { target: { value } } = event
     const { chats, activeIndex } = this.state;
-    const {chats : chatsProps} = this.props
+    const { chats: chatsProps } = this.props
     const { optionSelected, searching } = this.state
     this.setState({ searching: value.trim() }, () => {
-       const filterData = chatsProps.filter(c => c.trackingType === FILTERSOPTIONS[activeIndex])
+      const filterData = chatsProps.filter(c => c.trackingType === FILTERSOPTIONS[activeIndex])
       let expresion = new RegExp(`${searching}.*`, "i");
       if (searching.trim().length !== 0) {
         let newFilterSearch
@@ -102,8 +102,8 @@ class Chat extends Component {
           newFilterSearch = filterData.filter(c => expresion.test(c.user_name))
         }
         this.setState({ chats: newFilterSearch })
-      } 
-       if (value.trim().length === 0) {
+      }
+      if (value.trim().length === 0) {
         let newChats = this.props.chats.filter(c => c.trackingType === FILTERSOPTIONS[this.state.activeIndex])
         this.setState({ chats: newChats })
       }
@@ -202,7 +202,7 @@ class Chat extends Component {
               const { index } = this.state
               let newChats = chats.filter(c => c.trackingType === FILTERSOPTIONS[i.activeIndex]);
               if (index !== undefined) {
-                let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType
+                let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
                 this.setState({ from: selected ? selected : "Error getting data" })
               }
               let newIndex = index > newChats.length - 1 ? 0 : index
@@ -330,7 +330,7 @@ class Chat extends Component {
                     <div
                       key={ref}
                       className={
-                        value.from === "Soporte" ? "support" : "user"
+                        value.from === "Soporte" || value.from === "C2 base blindar" ? "support" : "user"
                       }
                       ref={
                         ref === chats[index].messages.length - 1
@@ -360,26 +360,30 @@ class Chat extends Component {
             </div>
             {chatId !== "" ? (
               <div className="messages_send_box">
-                <div style={{ position: "relative" }}>
-                  <textarea
-                    disabled={textareaDisabled}
-                    placeholder="Escriba su mensaje"
-                    name="text"
-                    autoComplete="on"
-                    autoCorrect="on"
-                    id="messsageTextarea"
-                    value={this.state.text}
-                    onKeyPress={this.checkKey}
-                    onChange={(event) => {
-                      this.setState({ text: event.target.value });
-                    }}
-                  ></textarea>
-                  <Icon
-                    name="send"
-                    id="sendbutton"
-                    onClick={this.sendMessage}
-                  />
-                </div>
+                {!textareaDisabled ?
+                  <div style={{ position: "relative" }}>
+                    <textarea
+                      disabled={textareaDisabled}
+                      placeholder="Escriba su mensaje"
+                      name="text"
+                      autoComplete="on"
+                      autoCorrect="on"
+                      id="messsageTextarea"
+                      value={this.state.text}
+                      onKeyPress={this.checkKey}
+                      onChange={(event) => {
+                        this.setState({ text: event.target.value });
+                      }}
+                    ></textarea>
+                    <Icon
+                      name="send"
+                      id="sendbutton"
+                      onClick={this.sendMessage}
+                    />
+                  </div>
+                  :
+                  <div className="closed-ticked">El ticket ya se encuentra cerrado</div>
+                }
               </div>
             ) : null}
           </div>
@@ -519,7 +523,7 @@ class Chat extends Component {
       return message;
     });
     messages.push({
-      from: "Soporte",
+      from: "C2 base blindar",
       dateTime: new Date(),
       msg: this.state.text, //msg
     });
