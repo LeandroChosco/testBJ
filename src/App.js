@@ -273,7 +273,7 @@ class App extends Component {
 
 
   loadData = () => {         
-    // if (process.env.NODE_ENV==='production'||true) {
+    if (process.env.NODE_ENV==='production'||true) {
       // --- matches planchados ---
     console.log("dentro del load data")
       conections.getMatchAPI().then(docs=>{
@@ -535,7 +535,7 @@ class App extends Component {
         this.setState({callIsGoing:false})
       })       
 
-    // }    
+    }    
 
   }
 
