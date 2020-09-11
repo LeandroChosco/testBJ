@@ -196,7 +196,7 @@ class App extends Component {
           .app("sos")
           .firestore()
           .collection(MESSAGES_COLLECTION)
-          .where("c5_admin_clave", "==", alcaldia.clave_municipal)
+          // .where("c5_admin_clave", "==", alcaldia.clave_municipal)
           .orderBy("lastModification", "desc")
 
         let allMessage = await docRef.get();
@@ -273,9 +273,9 @@ class App extends Component {
 
 
   loadData = () => {         
-    if (process.env.NODE_ENV==='production'||true) {
+    // if (process.env.NODE_ENV==='production'||true) {
       // --- matches planchados ---
-
+    console.log("dentro del load data")
       conections.getMatchAPI().then(docs=>{
         if(this.state.matches.length !== docs.data.length && this.state.showNotification && !this.state.fisrtTime){
           this.showNot(
@@ -334,12 +334,12 @@ class App extends Component {
       io.socket.on('/matchApi', this.matchesApiHandler)
 
       */
-     this.state.datosAlcaldia.length > 0 && 
+    //  this.state.datosAlcaldia.length > 0 && 
      firebaseSos
      .app("sos")
      .firestore()
      .collection(MESSAGES_COLLECTION)
-     .where("c5_admin_clave", "==", this.state.datosAlcaldia[0].clave_municipal)
+    //  .where("c5_admin_clave", "==", this.state.datosAlcaldia[0].clave_municipal)
      .orderBy("lastModification", "desc")
      .onSnapshot((docs) => {
       // console.log( docs.docChanges())
@@ -535,7 +535,7 @@ class App extends Component {
         this.setState({callIsGoing:false})
       })       
 
-    }    
+    // }    
 
   }
 
@@ -686,7 +686,7 @@ class App extends Component {
     window.location.href = window.location.href.replace(window.location.pathname,'/')         
     if (!window.location.pathname.includes('detalles')&&!window.location.pathname.includes('analisis/')) {      
       //setTimeout(this.showNot,10000)
-    }          
+    } 
     this.loadData()
     setTimeout(this.setState({isAuthenticated:true}),500)
   }
