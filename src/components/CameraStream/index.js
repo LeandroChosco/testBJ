@@ -346,7 +346,7 @@ class CameraStream extends Component {
             {this.props.hideText ? null : (
               <div align="left">
                 {this.state.cameraName}
-                {this.state.data.rel_cuadrante
+                {/* {this.state.data.rel_cuadrante
                   ? this.state.data.rel_cuadrante.length != 0
                     ? this.state.data.rel_cuadrante.map((item) => (
                         <Label
@@ -356,11 +356,11 @@ class CameraStream extends Component {
                         tag
                         onClick={() => this._goToCuadrante(item.id_cuadrante)}
                         >
-                          {item.Cuadrante.name}
+                           {item.id_cuadrante} 
                         </Label>
                       ))
                     : null
-                  : null}
+                  : null} */}
                 {this.props.hideButton ? null : (
                   <Button
                     onClick={() =>
