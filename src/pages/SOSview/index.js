@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Card, Icon, Button, Input, Dropdown, Tab } from "semantic-ui-react";
 
 import "./style.css";
-import firebaseC5 from "../../constants/configC5";
-import CameraStream from "../../components/CameraStream";
+// import firebaseC5 from "../../constants/configC5";
+// import CameraStream from "../../components/CameraStream";
 import constants from "../../constants/constants";
 import MapContainer from "../../components/MapContainer";
 import Axios from "axios";
@@ -11,10 +11,10 @@ import moment from 'moment'
 import _ from 'lodash'
 // fireSOS
 
-import { getSOS, getTracking, MESSAGES_COLLECTION } from "../../Api/sos";
+import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION } from "../../Api/sos";
 import firebaseSos from "../../constants/configSOS";
 
-const ref = firebaseC5.app("c5cuajimalpa").firestore().collection("messages");
+// const ref = firebaseC5.app("c5cuajimalpa").firestore().collection("messages");
 
 const refSOS = firebaseSos
   .app("sos")
@@ -66,7 +66,9 @@ class Chat extends Component {
     loading: false,
     hashUsed: false,
     personalInformation: {},
-    optionSelected: "name"
+    optionSelected: "name",
+    marker: null,
+    firebaseSub: null
   };
   panes = [
     {
@@ -86,7 +88,7 @@ class Chat extends Component {
 
   filterAction = (event) => {
     const { target: { value } } = event
-    const { chats, activeIndex } = this.state;
+    const { activeIndex } = this.state;
     const { chats: chatsProps } = this.props
     const { optionSelected, searching } = this.state
     this.setState({ searching: value.trim() }, () => {
@@ -115,7 +117,7 @@ class Chat extends Component {
   handleChangeOption = (e, { value }) => this.setState({ optionSelected: value })
 
   renderListChats = (type) => {
-    const { index, searching, chats } = this.state;
+    const { index, chats } = this.state;
 
     return (<div >
       <div style={{ display: "flex", flexDirection: "row" }}>
@@ -178,15 +180,13 @@ class Chat extends Component {
 
   render() {
     const { chats } = this.state;
-    const { chatId, index, from, camData, loading, tracking } = this.state;
+    const { chatId, index, from, loading, tracking } = this.state;
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: chats[index].id });
     }
-
     const chatSelected = chats && chats[index]
 
     const textareaDisabled = chatSelected && chatSelected.active !== undefined ? !chatSelected.active : true;
-
     return (
       <div
         className={
@@ -227,7 +227,7 @@ class Chat extends Component {
                     className="col"
                     style={{ height: "100%", width: "100%" }}
                   >
-                    {Object.keys(tracking).length != 0 && (
+                    {Object.keys(tracking).length !== 0 && tracking.pointCoords && (
                       <MapContainer
                         options={{
                           center: {
@@ -253,6 +253,7 @@ class Chat extends Component {
                           openSelection: false,
                           checked: "",
                         }}
+                        coordsPath={tracking.pointCoords}
                         onMapLoad={this._onMapLoad}
                       />
                     )}
@@ -394,7 +395,7 @@ class Chat extends Component {
 
   _onMapLoad = (map) => {
     const { chats } = this.props;
-    const { index, tracking } = this.state;
+    const { index, tracking, marker } = this.state;
     const coords = {
       lat: parseFloat(
         tracking.pointCoords[tracking.pointCoords.length - 1].latitude
@@ -403,12 +404,29 @@ class Chat extends Component {
         tracking.pointCoords[tracking.pointCoords.length - 1].longitude
       ),
     };
-    this.setState({ map: map });
-    new window.google.maps.Marker({
-      position: coords,
-      map: map,
-      title: chats[index].user_nicename,
-    });
+
+    let _marker = null;
+
+    if (!marker) {
+      _marker = new window.google.maps.Marker({
+        position: coords,
+        map: map,
+        title: chats[index].user_nicename,
+      });
+    } else {
+      if (tracking.active) {
+        _marker = Object.assign(marker, {});
+        _marker.setPosition(coords)
+        _marker.setMap(map);
+      } else {
+        _marker = new window.google.maps.Marker({
+          position: coords,
+          map: map,
+          title: chats[index].user_nicename,
+        });
+      }
+    }
+    this.setState({ map, marker: _marker });
   };
 
   changeChat = (chat, i) => {
@@ -417,7 +435,6 @@ class Chat extends Component {
       { chatId: "", loading: true, camData: undefined },
       async () => {
         this.props.stopNotification();
-
         const trackingInformation = await getTracking(chat.trackingId);
 
         let newData = trackingInformation.data.data();
@@ -426,13 +443,6 @@ class Chat extends Component {
           ...newData,
           id: trackingInformation.data.id,
         };
-
-        refSOS
-          .doc(chat.id)
-          .update({ c5Unread: 0 })
-          .then(() => {
-            this.setState({ text: "" });
-          });
 
         this.setState({
           chatId: chat.id,
@@ -444,6 +454,34 @@ class Chat extends Component {
           personalInformation: newData.userInformation, //
           pointCoords: [], //
         });
+
+        if (chat.active) {
+          const unsub = firebaseSos
+            .app("sos")
+            .firestore()
+            .collection(SOS_COLLECTION)
+            .onSnapshot((docs) => {
+              const track_changes = docs.docChanges();
+              if (track_changes.length === 1) {
+                const updatedChatId = track_changes[0].doc.id;
+                const track_data = track_changes[0].doc.data();
+                if (chat.trackingId === updatedChatId) {
+                  if (chat.active) {
+                    this.setState({ tracking: track_data });
+                  }
+                }
+              }
+            });
+          this.setState({ firebaseSub: unsub });
+        } else {
+          this.state.firebaseSub();
+        }
+        refSOS
+          .doc(chat.id)
+          .update({ c5Unread: 0 })
+          .then(() => {
+            this.setState({ text: "" });
+          });
       }
     );
   };
@@ -471,7 +509,7 @@ class Chat extends Component {
           const data = response.data.data;
           this.setState({
             camData:
-              data.UserToCameras[0] == undefined
+              data.UserToCameras[0] === undefined
                 ? undefined
                 : {
                   extraData: {
@@ -560,7 +598,7 @@ class Chat extends Component {
     }
     if (
       this.props.location.hash !== "" &&
-      this.state.index != 0 &&
+      this.state.index !== 0 &&
       this.state.hashUsed === false
     ) {
       if (this.props.chats[0] !== undefined) {
@@ -579,12 +617,12 @@ class Chat extends Component {
       if (this.props.chats.length > 0) {
         let i;
         this.props.chats.forEach((chat, index) => {
-          if (chat.user_creation == params.u) {
+          if (chat.user_creation === params.u) {
             i = index;
           }
         });
 
-        if (this.state.index != i && this.state.fisrt.u !== params.u) {
+        if (this.state.index !== i && this.state.fisrt.u !== params.u) {
           this._changeUserCam(this.props.chats[i]);
           this.setState({
             index: i,
@@ -599,7 +637,7 @@ class Chat extends Component {
       this.state.index !== undefined &&
       this.props.chats[this.state.index] !== undefined
     ) {
-      if (this.state.from != this.props.chats[this.state.index].from) {
+      if (this.state.from !== this.props.chats[this.state.index].from) {
         this.setState({ from: this.props.chats[this.state.index].from });
       }
     }
@@ -629,7 +667,7 @@ class Chat extends Component {
     }
     if (
       this.props.location.hash !== "" &&
-      this.state.index != 0 &&
+      this.state.index !== 0 &&
       this.state.hashUsed === false
     ) {
       if (this.props.chats[0] !== undefined) {
@@ -648,12 +686,12 @@ class Chat extends Component {
       if (this.props.chats.length > 0) {
         let i;
         this.props.chats.forEach((chat, index) => {
-          if (chat.user_creation == params.u) {
+          if (chat.user_creation === params.u) {
             i = index;
           }
         });
 
-        if (this.state.index != i && this.state.fisrt.u !== params.u) {
+        if (this.state.index !== i && this.state.fisrt.u !== params.u) {
           this._changeUserCam(this.props.chats[i]);
           this.setState({
             index: i,
@@ -664,14 +702,14 @@ class Chat extends Component {
         }
       }
     }
-    if (
-      this.state.index !== undefined &&
-      this.props.chats[this.state.index] !== undefined
-    ) {
-      if (this.state.from != this.props.chats[this.state.index].from) {
-        // this.setState({ from: this.props.chats[this.state.index].from });
-      }
-    }
+    // if (
+    //   this.state.index !== undefined &&
+    //   this.props.chats[this.state.index] !== undefined
+    // ) {
+    //   if (this.state.from !== this.props.chats[this.state.index].from) {
+    //     // this.setState({ from: this.props.chats[this.state.index].from });
+    //   }
+    // }
 
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
