@@ -3,6 +3,12 @@ import conections from "../../conections";
 import "./style.css";
 
 export class MapContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      map: null
+    };
+  }
   onScriptLoad = () => {
     const map = new window.google.maps.Map(
       this.refs.mapDiv,
@@ -15,6 +21,18 @@ export class MapContainer extends Component {
       if (res.status === 200) {
         if (res.data.success) {
           // console.log('data',dataLimit)
+          if(this.props.coordsPath && this.props.coordsPath.length > 0){
+            const coords = this.props.coordsPath.map(item => ({lat: item.latitude , lng: item.longitude}));
+            const flightPath = new window.google.maps.Polyline({
+              path: coords,
+              geodesic: true,
+              strokeColor: "#FF0000",
+              strokeOpacity: 1.0,
+              strokeWeight: 2
+            });
+            flightPath.setMap(map);
+          }
+
           dataLimit.map(data => {
             var polygonCoord = data.coordenadas_limites;
             // Construct the polygon.
@@ -43,6 +61,7 @@ export class MapContainer extends Component {
     });
 
     this.props.onMapLoad(map);
+    this.setState({ map });
   };
 
   componentDidMount() {
@@ -64,6 +83,26 @@ export class MapContainer extends Component {
     } else {
       this.onScriptLoad();
     }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { coordsPath: prevCoordsPath } = prevProps;
+    const { coordsPath, onMapLoad } = this.props;
+    const { map } = this.state;
+    if(prevCoordsPath !== coordsPath){
+      if(this.state.map){
+        const coords = coordsPath.map(item => ({lat: item.latitude , lng: item.longitude}));
+            const flightPath = new window.google.maps.Polyline({
+              path: coords,
+              geodesic: true,
+              strokeColor: "#FF0000",
+              strokeOpacity: 1.0,
+              strokeWeight: 2
+            });
+            flightPath.setMap(map);
+            onMapLoad(map);
+          }
+      }
   }
 
   render() {
