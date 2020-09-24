@@ -14,18 +14,18 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
         chatId:'',
         text:'',
         from:'',
-        fisrt:{
-          
-        },
+        fisrt:{},
+        alarmType: '',
+        alarm: {},
         camData:undefined,
         loading : false,
         hashUsed: false
     }
 
   render() {
-    const {chats} = this.props;
-    const {chatId,index, from, camData, loading} = this.state;    
-    if (index!==undefined&&chatId===""&&chats.length>0){
+    const { chats } = this.props;
+    const {chatId, index, from, camData, loading, alarm, alarmType} = this.state;   
+    if (index !== undefined && chatId === "" && chats.length > 0){
       this.setState({chatId:chats[index].id});
     }     
     return (
@@ -33,23 +33,33 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
             <div className="row fullHeight">
               <div className="col-4 userList">
                   {chats.map((chat,i)=>
-                    <Card className={i===index?'activeChat':''} key={i} onClick={()=>this.changeChat(chat,i)}>
+                    <Card className={i === index ? 'activeChat' : ''} key={i} onClick={()=>this.changeChat(chat,i)}>
                       <Card.Content>
                         <div style={{position:'relative'}}>
                           <h3>{chat.user_name} </h3>
                           <p>
-                            {chat.messages?chat.messages.length>0?(chat.messages[chat.messages.length-1].from==='user'?chat.user_name.split(' ')[0]:'C5')+': '+chat.messages[chat.messages.length-1].msg:'No hay mensajes que mostart':'No hay mensajes que mostart'}
+                            {chat.messages?chat.messages.length>0?(chat.messages[chat.messages.length-1].from==='user'?chat.user_name.split(' ')[0]:'C5')+': '+chat.messages[chat.messages.length-1].msg:'No hay mensajes que mostrar':'No hay mensajes que mostrar'}
                           </p>
-                          {chat.c5Unread!==undefined&&chat.c5Unread!==0?<div className='notificationNumber'><p>{chat.c5Unread}</p></div>:null}
+                            {chat.c5Unread!==undefined&&chat.c5Unread!==0?<div className='notificationNumber'><p>{chat.c5Unread}</p></div>:null}
                         </div>
                       </Card.Content>                      
                     </Card>
                   )}
               </div>
               <div className="col-8 messages">
-                    {!loading&&chatId!==''&&chats[index]?
+                    { !loading && chatId !== '' && chats[index] ?
                     <div className="cameraView">
-                      <h2 className={from} style={{textAlign: 'center', height: '10%'}}>{from==='Chat Soporte'?'Chat C5':from}</h2> 
+                      {chats[index].alarmType === "Fuego" ? 
+                        <h2 className={chats[index].alarmType} style={{textAlign: 'center', height: '10%'}}> Alarma Fuego </h2> 
+                        : chats[index].alarmType === 'Medico' ?
+                        <h2 className={chats[index].alarmType} style={{textAlign: 'center', height: '10%'}}> Alarma Medico </h2> 
+                        : chats[index].alarmType === 'Policia' ? 
+                        <h2 className={chats[index].alarmType} style={{textAlign: 'center', height: '10%'}}> Alarma Policia </h2> 
+                        : chats[index].from === 'user' ?
+                        <h2 className={"Fuego"} style={{textAlign: 'center', height: '10%'}}> SOS - Auxilio </h2> 
+                        :
+                        <h2 className={from} style={{textAlign: 'center', height: '10%'}}> {from === 'Chat Soporte' ? 'Chat C5' : from} </h2> 
+                      }
                       <div className="row" style={{height: '70%'}}>                       
                         <div className="col" style={{height: '100%'}}>
                           <MapContainer                 
@@ -80,8 +90,7 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
                         
                       </div>
                       
-                      <div className="row" style={{paddingTop:15, height: '20%'}}>
-                        
+                      <div className="row" style={{paddingTop:15, height: '30%'}}>
                           <Card style={{width:'100%'}}>
                             <Card.Content style={{padding: 0}}>
                               <div className="row">
@@ -92,10 +101,22 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
                                     <div style={{fontSize:13,paddingLeft:0, paddingRight:0}} className="col-3"><b>Celular: </b>{chats[index].user_cam.cellphone}</div>
                                 </div>
                                 <div className="row textContainer" style={{paddingTop: 0}}>
+                                  {chats[index].alarmType !== undefined ?                                   
+                                    <div style={{fontSize:13}} className="col">
+                                        <b>Descripción: </b> {chats[index].alarm.description}
+                                    </div>
+                                  : null}
                                     <div style={{fontSize:13}} className="col">
                                         <b>Dirección: </b>{chats[index].user_cam.street} {chats[index].user_cam.number}, {chats[index].user_cam.town}, {chats[index].user_cam.township}, {chats[index].user_cam.state}
                                     </div>
                                 </div>
+                                {chats[index].alarmType !== undefined ?                                 
+                                  <div className="row textContainer">
+                                      <div style={{fontSize:13,paddingRight:0}} className="col-6"><b>Tipo de Alarma: </b>{chats[index].alarmType}</div>
+                                      <div style={{fontSize:13,paddingLeft:0 ,paddingRight:0}} className="col-3"><b>Marca Alarma: </b>{chats[index].alarm.device_brand.name}</div>
+                                      <div style={{fontSize:13,paddingLeft:0, paddingRight:0}} className="col-3"><b>Numero de Serie: </b>{chats[index].alarm.serial_number}</div>
+                                  </div>
+                                : null}
                               </div>                            
                               <div className="col-4" style={{margin: 'auto'}} >
                                 <Button color="red" style={{width:'80%', alignItems: 'center',}} className="ui button" onClick={this.closeChat}>
@@ -106,11 +127,12 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
 
                             </Card.Content>
                           </Card>
-                        
-                        
                       </div>
-                    </div>:null}
-                    <div className="messagesContainer" id='messagesContainer'>
+                    </div>
+                    :
+                    null
+                    }
+                    <div className="messagesContainer" id='messagesContainer' style={{top: '60%'}}>
                       {!loading&&chatId!==''&&chats[index]?chats[index].messages?
                         chats[index].messages.map((value,ref)=>
                         <div key={ref} className={value.from} ref={ref===chats[index].messages.length-1?"message":"message"+ref} id={ref===chats[index].messages.length-1?"lastMessage":"message"+ref}>
@@ -120,8 +142,9 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
                         :loading===true?'Cargando...':'No se ha seleccionado ningun chat':loading===true?'Cargando...':'No se ha seleccionado ningun chat'}
                         
                     </div>
-                      {chatId!==''?<div className="messages_send_box">
-                          <div style={{position: "relative"}}>
+                      {chatId !== '' ? 
+                      <div className="messages_send_box">
+                          <div style={{position: "relative", width: "98%"}} >
                               <textarea 
                                 placeholder="Escriba su mensaje"                                  
                                 name="text" 
@@ -133,7 +156,9 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
                                 onChange={event=>{this.setState({text:event.target.value})}}                              
                               >          
                               </textarea>
-                              <Icon name="send" id="sendbutton" onClick={this.sendMessage}/>
+                              <div style={{padding: '4px'}}>
+                                <Icon name="send" id="sendbutton" onClick={this.sendMessage} style={{right: '20px'}}/>
+                              </div>
                           </div>
                       </div> :null}   
               </div>
@@ -141,6 +166,54 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
         </div>
     
     );
+  }
+
+  componentDidMount(){  
+    const {index} =this.state;
+    const {chatSelected, chats} = this.props
+    if( chatSelected && chatSelected !== index && chats[chatSelected] ){
+      console.log('Entro aqui', chatSelected)
+      console.log('Chat index', index)
+      return this.setState({
+        chatId: chats[chatSelected].id,
+        messages: chats[chatSelected].messages,
+        index: chatSelected,
+        from : chats[chatSelected].from,
+        alarm: chats[chatSelected].alarm,
+        alarmType: chats[chatSelected].alarmType
+      })
+    } else {
+      console.log('chatoos', chats)
+      console.log('chatos chat', chatSelected);
+      console.log('chatos index', index)
+    }
+    if (this.props.location.search!=='') {
+      let params = this.QueryStringToJSON(this.props.location.search)      
+      if (this.props.chats.length>0) {        
+        let i         
+        this.props.chats.forEach((chat,index)=>{
+          if (chat.user_creation == params.u) {
+            i = index
+          }
+        })        
+        
+        if (this.state.index!=i&&this.state.fisrt.u!==params.u) {
+          this._changeUserCam(this.props.chats[i])
+          this.setState({index:i,fisrt:params,from:this.props.chats[i].from,chatId:this.props.chats[i].id})
+
+        }
+      }
+    }
+    if(this.state.index !== undefined && this.props.chats[this.state.index] !== undefined){
+      if(this.state.from!=this.props.chats[this.state.index].from){
+        this.setState({from:this.props.chats[this.state.index].from})
+      }
+    }
+
+    var messageBody = document.querySelector('#messagesContainer');
+    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
+  console.log('chatss',this.props.chats)
   }
 
   _onMapLoad = (map) => {
@@ -155,9 +228,13 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
     });    
   }
 
-  changeChat = (chat,i) => {
-    console.log(chat)
-    this.setState({chatId:'',loading:true, camData: undefined});
+  changeChat = (chat, i) => {
+    console.log('changChat', chat)
+    this.setState({
+      chatId:'', 
+      loading:true, 
+      camData: undefined
+    });
     setTimeout(()=>{
       this._changeUserCam(chat)
       this.props.stopNotification()
@@ -169,7 +246,9 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
         messages:chat.messages,
         index:i,
         from:chat.from,                          
-        loading:false
+        loading:false,
+        alarmType: chat.alarmType,
+        alarm: chat.alarm
       })
     },1000)
   }
@@ -206,13 +285,12 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
     })
   }
 
-
   closeChat = () => {
     /*let {chats} = this.props
     */
   }
 
-  sendMessage = () =>{
+  sendMessage = () => {
     if(this.state.text==='')
       return;
 
@@ -242,62 +320,8 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
     })    
   }
 
-  componentDidMount(){  
-    const {index} =this.state;
-    const {chatSelected, chats} = this.props
-    if( chatSelected && chatSelected !== index && chats[chatSelected] ){
-      console.log('Entro aqui', chatSelected)
-      console.log('Chat index', index)
-      return this.setState({
-        chatId: chats[chatSelected].id,
-        messages: chats[chatSelected].messages,
-        index: chatSelected,
-        from : chats[chatSelected].from,
-      })
-    }else{
-      console.log('chatoos', chats)
-      console.log('chatos chat', chatSelected);
-      console.log('chatos index', index)
-    }
-    // if(this.props.location.hash!==''&&this.state.index!=0 && this.state.hashUsed=== false)
-    // {
-    //   if (this.props.chats[0]!==undefined) {     
-    //     //this.setState({index:0, from:this.props.chats[0].from})
-    //     this._changeUserCam(this.props.chats[0])
-    //     this.setState({index:0,from:this.props.chats[0].from,chatId:this.props.chats[0].id,hashUsed:true})    
-    //   }
-    // } 
-    if (this.props.location.search!=='') {
-      let params = this.QueryStringToJSON(this.props.location.search)      
-      if (this.props.chats.length>0) {        
-        let i         
-        this.props.chats.forEach((chat,index)=>{
-          if (chat.user_creation == params.u) {
-            i = index
-          }
-        })        
-        
-        if (this.state.index!=i&&this.state.fisrt.u!==params.u) {
-          this._changeUserCam(this.props.chats[i])
-          this.setState({index:i,fisrt:params,from:this.props.chats[i].from,chatId:this.props.chats[i].id})
-
-        }
-      }
-    }
-    if(this.state.index !== undefined && this.props.chats[this.state.index] !== undefined){
-      if(this.state.from!=this.props.chats[this.state.index].from){
-        this.setState({from:this.props.chats[this.state.index].from})
-      }
-    }
-
-    var messageBody = document.querySelector('#messagesContainer');
-    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
-
-  console.log('chatss',this.props.chats)
-  }
-
   QueryStringToJSON(query) {
-    query = query.replace('?','')            
+    query = query.replace('?', '')            
     var pairs = query.split('&');
     
     var result = {};
@@ -307,10 +331,8 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
     });
 
     return JSON.parse(JSON.stringify(result));
-}
+  }
 
-
-    
   componentDidUpdate(prevProps){    
     const {index} =this.state;
     const {chatSelected, chats} = this.props
@@ -367,7 +389,6 @@ const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
 
   }
   
-
 }
 
 export default Chat;

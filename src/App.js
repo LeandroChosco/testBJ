@@ -46,6 +46,8 @@ import firebaseSos from "./constants/configSOS";
 import { MESSAGES_COLLECTION } from "./Api/sos";
 var io = sailsIOClient(socketIOClient);
 
+// const ioAlarm = socketIOClient('http://localhost:3000')
+
 
 
 let call = false
@@ -132,9 +134,8 @@ class App extends Component {
         }
       });
       this.setState({alertaCovidd: data.data, alertaCovid: data.data, alertaCovidTmp: covidTmp , alertaCovidState: true})
-      
     })
-    io.socket.on('foo', (data) =>{
+    io.socket.on('foo', (data) => {
       console.log("EMIT")
       console.log('otra data', data.data)
       const notification = this.refs.notificationSystem;
@@ -165,13 +166,25 @@ class App extends Component {
               "toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=400"
             );
           }
-          
         }
-      });}
+      })
+    }
+      notification.addNotification({
+          title:'Alarma Activada',
+          message: "Fuego",
+          level: 'error',
+          action: {
+            label: 'Ver detalles',
+          }
+        })
       // setTimeout(() => {
       //   this.setState({newCovidState: false})
       // }, 500);
     })
+
+    // ioAlarm.on('connect', console.log('conectado a XtunAPI'))
+    // const notification = this.refs.notificationSystem;
+
 
     
     soundManager.soundManager.setup({ ignoreMobileRestrictions: true });
@@ -368,6 +381,7 @@ class App extends Component {
           3,
           0
         );
+        this.showNot('Activacion de Alarma','Nuevo solicitud de apoyo - Fuego','error','Ir a chat',3,0)
         this.setState({ reproducirSonido: true });
         // if(changes[0].doc._hasPendingWrites === false)
         //   this.setState({reproducirSonido: true})
@@ -456,6 +470,7 @@ class App extends Component {
         }
         if (this.state.showNotification&&!this.state.fisrtTimeChat&&!this.state.callIsGoing) {
           this.showNot('Mensaje de usuario','Nuevo mensaje de usuario','success','Ver detalles',3,0)
+          this.showNot('Activacion de Alarma','Nuevo solicitud de auxilio - Fuego','error','Ir a chat',3,0)
           this.setState({reproducirSonido: true})
         }
         if(this.state.fisrtTimeChat)
@@ -835,7 +850,8 @@ class App extends Component {
             path="/chat"
             exact
             render={(props) => (
-              this.state.chats.length !== 0 ? <Chat
+              this.state.chats.length !== 0 ? 
+              <Chat
                 chatSelected={this.state.chatSelected}
                 showMatches={this.state.showMatches}
                 stopNotification={() =>
@@ -847,7 +863,8 @@ class App extends Component {
                 userInfo={this.state.userInfo}
                 toggleSideMenu={this._cameraSideInfo}
                 toggleControls={this._toggleControls}
-              /> : <div />
+              /> 
+              : <div />
             )}
           />
         <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu = {this._cameraSideInfo} toggleControls={this._toggleControls}/>} />        
