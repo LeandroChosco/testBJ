@@ -43,13 +43,3 @@
         opacity: 0;
     }
 }
-
-iframe>html>body{
-    height: 100%;
-    width: 100%;
-}
-
-video{
-    height: 100%;
-    width: 100%;
-}
