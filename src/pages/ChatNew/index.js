@@ -4,7 +4,10 @@ import { Tab, Card, Button, Icon } from 'semantic-ui-react'
 import CameraStream from '../../components/CameraStream'
 import MapContainer from '../../components/MapContainer'
 import constants from '../../constants/constants';
+import moment from 'moment'
 import Axios from 'axios'
+
+import FadeLoader from "react-spinners/FadeLoader";
 
 import firebaseC5 from '../../constants/configC5';
 const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
@@ -17,290 +20,166 @@ class ChatNew extends Component {
         chatId: '',
         camData: undefined,
         panes: [
-            { menuItem: 'Chat C5', render: () => <Tab.Pane attached={false}>{this._renderChatC5()}</Tab.Pane> },
-            // { menuItem: 'SOS', render: () => <Tab.Pane attached={false}>{this._renderChatSOS()}</Tab.Pane> },
-            { menuItem: 'Alarma Fuego', render: () => <Tab.Pane attached={false}>{this._renderChatFire()}</Tab.Pane> },
-            { menuItem: 'Alarma Policia', render: () => <Tab.Pane attached={false}>{this._renderChatPolice()}</Tab.Pane> },
-            { menuItem: 'Alarma Medico', render: () => <Tab.Pane attached={false}>{this._renderChatMedic()}</Tab.Pane> },
+            { menuItem: 'C5', render: () => <Tab.Pane attached={false} style={{backgroundColor: '#dadada'}}>{this._renderListChats(this.props.chats)}</Tab.Pane> },
+            { menuItem: 'Fuego', render: () => <Tab.Pane attached={false} style={{backgroundColor: '#dadada'}}>{this._renderListChats(this.props.fireChats)}</Tab.Pane> },
+            { menuItem: 'Policia', render: () => <Tab.Pane attached={false} style={{backgroundColor: '#dadada'}}>{this._renderListChats(this.props.policeChats)}</Tab.Pane> },
+            { menuItem: 'Medico', render: () => <Tab.Pane attached={false} style={{backgroundColor: '#dadada'}}>{this._renderListChats(this.props.medicChats)}</Tab.Pane> },
         ],
+        chats: [],
+        type: ''
+    }
+
+    componentDidMount(){
+        this.setState({chats: this.props.chats, type: 'c5'})
     }
 
     render() {
         return (
-            <div>
-                <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
-            </div>
-        )
-    }
-
-    _renderChatC5 = () => {
-        const { chats } = this.props
-        const { index, loading, chatId } = this.state
-
-        return (
-            <div className='row' style={{ height: '80vh', width: '95vw' }}>
-                <div className='col-4 userList'>
-                    <h3>Lista de Mensajes</h3>
-                    {chats.map((chat, i) =>
-                        <Card key={i} className={i === index ? 'activeChat' : ''} onClick={() => this.changeChat(chat, i)}>
-                            <Card.Content>
-                                <div style={{ position: 'relative' }}>
-                                    <h3>{chat.user_name}</h3>
-                                    <p>
-                                        {
-                                            chat.messages ?
-                                                chat.messages.length > 0 ?
-                                                    (chat.messages[chat.messages.length - 1].from === 'user' ? chat.user_name.split(' ')[0] : 'C5') + ': ' + chat.messages[chat.messages.length - 1].msg :
-                                                    'No hay mensajes que mostrar' :
-                                                'No hay mensajes que mostrar'
-                                        }
-                                    </p>
-                                    {
-                                        chat.c5Unread !== undefined && chat.c5Unread !== 0 ?
-                                            <div className='notificationNumber'>
-                                                <p>{chat.c5Unread}</p>
-                                            </div>
-                                            :
-                                            null
-                                    }
-                                </div>
-                            </Card.Content>
-                        </Card>
-                    )}
-                </div>
-                <div className='col-8 messages'>
-                    {!loading && chatId !== '' && chats[index] ?
-                        <div className='cameraView'>
-                            <h2 className='ChatC5'>Chat C5</h2>
-                            {this._renderMapAndCamera(chats)}
-                            <br />
-                            {this._renderInfoUserChat(chats, index)}
+            <>
+                <div className='row' style={{ height: '95vh', width: '95vw'}} >
+                    <div className="col-4 userList">
+                        <Tab 
+                            menu={{ pointing: true, secondary: true }} 
+                            panes={this.state.panes} 
+                            onTabChange={(t, i) => {
+                                this.setState({index: null})
+                                switch (i.activeIndex) {
+                                    case 0:
+                                        this.setState({chats: this.props.chats, type: 'c5'})
+                                    break;
+                                    case 1:
+                                        this.setState({chats: this.props.fireChats, type: 'fire'})
+                                    break;
+                                    case 2:
+                                        this.setState({chats: this.props.policeChats, type: 'police'})
+                                    break;
+                                    case 3: 
+                                        this.setState({chats: this.props.medicChats, type: 'medic'})
+                                    default:
+                                    break;
+                                }
+                            }}
+                        />
+                        <div className='serverStatusBar'>
+                            <div>
+                                <p><b>{this.props.socket.id ? this.props.socket.id : '-'}</b></p>
+                            </div>
+                            <div>
+                                <h4 className={this.props.socket ? 'onlineServer' : 'offlineServer'}>{this.props.socket ? 'En linea' : 'Desconectado'}</h4>
+                            </div>
                         </div>
-                        : null}
-                    {this._renderChatInterface(chats, index)}
+                    </div>
+                    <div className="col-8 messages">
+                        {this._renderChat()}
+                    </div>
                 </div>
-            </div>
+            </>
         )
     }
 
-    _renderChatSOS = () => {
-        const { chats } = this.props
-        const { index, loading, chatId } = this.state
-        console.log('Chats SOS', chats)
-        return (
-            <div className='row' style={{ height: '80vh', width: '95vw' }}>
-                <div className='col-4 userList'>
-                    <h3>Lista de Mensajes</h3>
-                    {chats.map((chat, i) =>
-                        <Card key={i} className={i === index ? 'activeChat' : ''} onClick={() => this.changeChat(chat, i)}>
-                            <Card.Content>
-                                <div style={{ position: 'relative' }}>
-                                    <h3>{chat.user_name}</h3>
+    _renderListChats = (chats) => {
+        const {index} = this.state
+        return(
+            <div style={{height: '81vh', overflow: 'scroll', backgroundColor: '#dadada'}}>
+                {chats.map((chat, i) =>
+                    <Card 
+                        key={i} 
+                        style={{ width: "95%" }}
+                        className={i === index ? 'activeChat' : ''} 
+                        onClick={() => this.changeChat(chat, i)}
+                    >
+                        <Card.Content>
+                            <div style={{ position: 'relative' }}>
+                              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{moment(moment(chat.create_at)).format('DD-MM-YYYY, h:mm a')}</p></div>
+                                {
+                                    chat.active !== undefined && chat.active ?
                                     <p>
-                                        {
-                                            chat.messages ?
-                                                chat.messages.length > 0 ?
-                                                    (chat.messages[chat.messages.length - 1].from === 'user' ? chat.user_name.split(' ')[0] : 'C5') + ': ' + chat.messages[chat.messages.length - 1].msg :
-                                                    'No hay mensajes que mostrar' :
-                                                'No hay mensajes que mostrar'
-                                        }
-                                    </p>
-                                    {
-                                        chat.c5Unread !== undefined && chat.c5Unread !== 0 ?
-                                            <div className='notificationNumber'>
-                                                <p>{chat.c5Unread}</p>
-                                            </div>
-                                            :
-                                            null
-                                    }
+                                        {chat.messages
+                                        ? chat.messages.length > 0
+                                            ? (chat.messages[chat.messages.length - 1].from ===
+                                            "user"
+                                            ? chat.user_name.split(" ")[0]
+                                            : "C5") +
+                                            ": " +
+                                            chat.messages[chat.messages.length - 1].msg //msg
+                                            : "No hay mensajes que mostart"
+                                        : "No hay mensajes que mostart"}
+                                    </p> :
+                                    <p>Ticket Id: {chat.id}</p>
+                                }
+                                {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
+                                    <div className="notificationNumber" style={{ marginTop: 15 }}>
+                                    <p>{chat.c5Unread}</p>
+                                    </div>
+                                ) : null}
+                                <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                                    <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
                                 </div>
-                            </Card.Content>
-                        </Card>
-                    )}
-                </div>
-                <div className='col-8 messages'>
-                    {!loading && chatId !== '' && chats[index] ?
-                        <div className='cameraView'>
-                            <h2 className='SOS'>SOS - Auxilio</h2>
-                            {this._renderMapAndCamera(chats)}
-                            <br />
-                            {this._renderInfoUserChat(chats, index)}
-                        </div>
-                        : null}
-                    {this._renderChatInterface(chats, index)}
-                </div>
+                            </div>
+                        </Card.Content>
+                    </Card>
+                )}
             </div>
         )
     }
 
-    _renderChatFire = () => {
-        const { fireChats } = this.props
-        const { index, loading, chatId } = this.state
-        return (
-            <div className='row' style={{ height: '80vh', width: '95vw' }}>
-                <div className='col-4 userList'>
-                    <h3>Lista de Mensajes</h3>
-                    {fireChats.map((chat, i) =>
-                        <Card key={i} className={i === index ? 'activeChat' : ''} onClick={() => this.changeChat(chat, i)}>
-                            <Card.Content>
-                                <div style={{ position: 'relative' }}>
-                                    <h3>{chat.user_name}</h3>
-                                    <p>
-                                        {
-                                            chat.messages ?
-                                                chat.messages.length > 0 ?
-                                                    (chat.messages[chat.messages.length - 1].from === 'user' ? chat.user_name.split(' ')[0] : 'C5') + ': ' + chat.messages[chat.messages.length - 1].msg :
-                                                    'No hay mensajes que mostrar' :
-                                                'No hay mensajes que mostrar'
-                                        }
-                                    </p>
-                                    {
-                                        chat.c5Unread !== undefined && chat.c5Unread !== 0 ?
-                                            <div className='notificationNumber'>
-                                                <p>{chat.c5Unread}</p>
-                                            </div>
-                                            :
-                                            null
-                                    }
-                                </div>
-                            </Card.Content>
-                        </Card>
-                    )}
-                </div>
-                <div className='col-8 messages'>
-                    {!loading && chatId !== '' && fireChats[index] ?
-                        <div className='cameraView'>
-                            <h2 className='fire'>Alarma Fuego</h2>
-                            {this._renderMapAndCamera(fireChats)}
-                            <br />
-                            {this._renderInfoUserChat(fireChats, index)}
-                        </div>
-                        : null}
-                    {this._renderChatInterface(fireChats, index)}
-                </div>
-            </div>
+    _renderChat = () => {
+        const {loading, chatId, index, chats, type} = this.state
+        return(
+            <>
+                {!loading && chatId !== '' && chats[index] ?
+                    <div className='cameraView'>
+                        <h2 className={type}>Chat C5</h2>
+                        {this._renderMapAndCamera(chats, index)}
+                        <br />
+                        {this._renderInfoUserChat(chats, index)}
+                    </div>
+                    : null}
+                {this._renderChatInterface(chats, index)}
+            </>
         )
     }
 
-    _renderChatPolice = () => {
-        const { policeChats } = this.props
-        const { index, loading, chatId } = this.state
-        return (
-            <div className='row' style={{ height: '80vh', width: '95vw' }}>
-                <div className='col-4 userList'>
-                    <h3>Lista de Mensajes</h3>
-                    {policeChats.map((chat, i) =>
-                        <Card key={i} className={i === index ? 'activeChat' : ''} onClick={() => this.changeChat(chat, i)}>
-                            <Card.Content>
-                                <div style={{ position: 'relative' }}>
-                                    <h3>{chat.user_name}</h3>
-                                    <p>
-                                        {
-                                            chat.messages ?
-                                                chat.messages.length > 0 ?
-                                                    (chat.messages[chat.messages.length - 1].from === 'user' ? chat.user_name.split(' ')[0] : 'C5') + ': ' + chat.messages[chat.messages.length - 1].msg :
-                                                    'No hay mensajes que mostrar' :
-                                                'No hay mensajes que mostrar'
-                                        }
-                                    </p>
-                                    {
-                                        chat.c5Unread !== undefined && chat.c5Unread !== 0 ?
-                                            <div className='notificationNumber'>
-                                                <p>{chat.c5Unread}</p>
-                                            </div>
-                                            :
-                                            null
-                                    }
-                                </div>
-                            </Card.Content>
-                        </Card>
-                    )}
-                </div>
-                <div className='col-8 messages'>
-                    {!loading && chatId !== '' && policeChats[index] ?
-                        <div className='cameraView'>
-                            <h2 className='police'>Alarma Policia</h2>
-                            {this._renderMapAndCamera(policeChats)}
-                            <br />
-                            {this._renderInfoUserChat(policeChats, index)}
-                        </div>
-                        : null}
-                    {this._renderChatInterface(policeChats, index)}
-                </div>
-            </div>
-        )
-    }
-
-    _renderChatMedic = () => {
-        const { medicChats } = this.props
-        const { index, loading, chatId } = this.state
-        return (
-            <div className='row' style={{ height: '80vh', width: '95vw' }}>
-                <div className='col-4 userList'>
-                    <h3>Lista de Mensajes</h3>
-                    {medicChats.map((chat, i) =>
-                        <Card key={i} className={i === index ? 'activeChat' : ''} onClick={() => this.changeChat(chat, i)}>
-                            <Card.Content>
-                                <div style={{ position: 'relative' }}>
-                                    <h3>{chat.user_name}</h3>
-                                    <p>
-                                        {
-                                            chat.messages ?
-                                                chat.messages.length > 0 ?
-                                                    (chat.messages[chat.messages.length - 1].from === 'user' ? chat.user_name.split(' ')[0] : 'C5') + ': ' + chat.messages[chat.messages.length - 1].msg :
-                                                    'No hay mensajes que mostrar' :
-                                                'No hay mensajes que mostrar'
-                                        }
-                                    </p>
-                                    {
-                                        chat.c5Unread !== undefined && chat.c5Unread !== 0 ?
-                                            <div className='notificationNumber'>
-                                                <p>{chat.c5Unread}</p>
-                                            </div>
-                                            :
-                                            null
-                                    }
-                                </div>
-                            </Card.Content>
-                        </Card>
-                    )}
-                </div>
-                <div className='col-8 messages'>
-                    {!loading && chatId !== '' && medicChats[index] ?
-                        <div className='cameraView'>
-                            <h2 className='medic'>Alarma Medica</h2>
-                            {this._renderMapAndCamera(medicChats)}
-                            <br />
-                            {this._renderInfoUserChat(medicChats, index)}
-                        </div>
-                        : null}
-                    {this._renderChatInterface(medicChats, index)}
-                </div>
-            </div>
-        )
-    }
-
-    _renderMapAndCamera = (chats) => {
+    _renderMapAndCamera = (chats, index) => {
         const { camData } = this.state
         return (
             <div className='row' style={{ height: '70%' }}>
                 <div className='col' style={{ height: '100%' }}>
-                    <MapContainer
-                        options={{
-                            center: { lat: parseFloat(chats[0].user_cam.google_cordenate.split(',')[0]), lng: parseFloat(chats[0].user_cam.google_cordenate.split(',')[1]) },
-                            zoom: 15,
-                            mapTypeId: 'roadmap',
-                            zoomControl: false,
-                            mapTypeControl: false,
-                            streetViewControl: false,
-                            fullscreenControl: false,
-                            openConfirm: false,
-                            typeConfirm: false,
-                            openSelection: false,
-                            checked: ''
-                        }}
-                        onMapLoad={this._onMapLoad}
-                    />
+                    {chats[index].user_cam.google_cordenate !== undefined ?                     
+                        <MapContainer
+                            options={{
+                                center: { lat: parseFloat(chats[index].user_cam.google_cordenate.split(',')[0]), lng: parseFloat(chats[index].user_cam.google_cordenate.split(',')[1]) },
+                                zoom: 15,
+                                mapTypeId: 'roadmap',
+                                zoomControl: false,
+                                mapTypeControl: false,
+                                streetViewControl: false,
+                                fullscreenControl: false,
+                                openConfirm: false,
+                                typeConfirm: false,
+                                openSelection: false,
+                                checked: ''
+                            }}
+                            onMapLoad={this.onMapLoad}
+                        />
+                    :
+                        <MapContainer
+                            options={{
+                                center: { lat: parseFloat(chats[index].location.latitude), lng: parseFloat(chats[index].location.longitude) },
+                                zoom: 15,
+                                mapTypeId: 'roadmap',
+                                zoomControl: false,
+                                mapTypeControl: false,
+                                streetViewControl: false,
+                                fullscreenControl: false,
+                                openConfirm: false,
+                                typeConfirm: false,
+                                openSelection: false,
+                                checked: ''
+                            }}
+                            onMapLoad={this.onMapLoad}
+                        />
+                    }
                 </div>
                 <div className='col camContainerChatDiv' style={{ height: '100%' }}>
                     {camData !== undefined ?
@@ -377,11 +256,23 @@ class ChatNew extends Component {
                                 <p>{value.msg}</p>
                                 <small>{value.dateTime.toDate ? value.dateTime.toDate().toLocaleString() : null}</small>
                             </div>)
-                        : loading === true ? 'Cargando...' : 'No se ha seleccionado ningun chat' : loading === true ? 'Cargando...' : 'No se ha seleccionado ningun chat'}
+                        : loading === true ?
+                        <>  
+                            <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered}/> 
+                            <p style={{position: "fixed", top: '56%', left: '62%'}}>Cargando chat</p>
+                        </> :
+                            <p style={{position: "fixed", top: '50%', left: '60%'}}>No se ha seleccionado ningun chat</p> : 
+                        loading === true ? 
+                        <>
+                            <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered}/>
+                            <p style={{position: "fixed", top: '56%', left: '62%'}}>Cargando chat</p>
+                        </>:
+                            <p style={{position: "fixed", top: '50%', left: '60%'}}>No se ha seleccionado ningun chat</p>
+                        }
 
                 </div>
                 {
-                    chatId !== '' ?
+                    chatId !== '' && chats[index] ?
                         <div className="messages_send_box">
                             <div style={{ position: "relative", width: "98%" }} >
                                 <textarea
@@ -405,17 +296,26 @@ class ChatNew extends Component {
         )
     }
 
-    _onMapLoad = (map) => {
+    onMapLoad = (map, lat, lng) => {
         const { chats } = this.props
-        // const { index } = this.state
-        const index = 0
-        const coords = { lat: parseFloat(chats[index].user_cam.google_cordenate.split(',')[0]), lng: parseFloat(chats[index].user_cam.google_cordenate.split(',')[1]) }
-        this.setState({ map: map })
-        new window.google.maps.Marker({
-            position: coords,
-            map: map,
-            title: chats[index].user_nicename,
-        });
+        const { index } = this.state
+        if(chats[index].user_cam.google_cordenate !== undefined){
+            const coords = { lat: parseFloat(chats[index].user_cam.google_cordenate.split(',')[0]), lng: parseFloat(chats[index].user_cam.google_cordenate.split(',')[1]) }
+            this.setState({ map: map })
+            new window.google.maps.Marker({
+                position: coords,
+                map: map,
+                title: chats[index].user_nicename,
+            });
+        } else {
+            const coords = { lat: parseFloat(chats[index].location.latitude), lng: parseFloat(chats[index].location.longitude) }
+            this.setState({ map: map })
+            new window.google.maps.Marker({
+                position: coords,
+                map: map,
+                title: chats[index].user_nicename,
+            });
+        }
     }
 
     changeChat = (chat, i) => {
@@ -426,7 +326,7 @@ class ChatNew extends Component {
             camData: undefined
         });
         setTimeout(() => {
-            this._changeUserCam(chat)
+            this.changeUserCam(chat)
             this.props.stopNotification()
             ref.doc(chat.id).update({ c5Unread: 0 }).then(() => {
                 this.setState({ text: '', from: 'Chat C5' })
@@ -443,7 +343,7 @@ class ChatNew extends Component {
         }, 1000)
     }
 
-    _changeUserCam = (chat) => {
+    changeUserCam = (chat) => {
         Axios.get(constants.base_url + ':' + constants.apiPort + '/admin/users/' + chat.user_creation).then(response => {
             if (response.status === 200) {
                 if (response.data.success) {
@@ -498,3 +398,16 @@ class ChatNew extends Component {
 }
 
 export default ChatNew
+
+const styles = {
+    badge: {
+      paddingLeft: 3,
+      paddingRight: 3,
+      borderRadius: 3,
+      fontSize: 10,
+      paddingTop: 2,
+      paddingBottom: 2
+    },
+    tab: { backgroundColor: "#dadada", borderWidth: 0, borderColor: "#dadada" },
+    centered: {  position: "fixed", top: '50%', left: '65%'}
+  }

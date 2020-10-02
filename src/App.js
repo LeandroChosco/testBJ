@@ -47,7 +47,10 @@ import { MESSAGES_COLLECTION } from "./Api/sos";
 import ChatNew from './pages/ChatNew';
 var io = sailsIOClient(socketIOClient);
 
-// const ioAlarm = socketIOClient('http://localhost:3000')
+//Socket para servicio de alarmas
+const ioAlarmSocket = socketIOClient('http://ec2-18-191-81-252.us-east-2.compute.amazonaws.com:3000/c5')
+// const ioAlarmSocket = socketIOClient('http://localhost:3000/c5')
+
 
 
 
@@ -104,8 +107,6 @@ class App extends Component {
     },
     stateSos: [],
     datosAlcaldia: [],
-
-
   }
 
 
@@ -173,14 +174,6 @@ class App extends Component {
           }
         })
       }
-      notification.addNotification({
-        title: 'Alarma Activada',
-        message: "Fuego",
-        level: 'error',
-        action: {
-          label: 'Ver detalles',
-        }
-      })
       // setTimeout(() => {
       //   this.setState({newCovidState: false})
       // }, 500);
@@ -328,7 +321,6 @@ class App extends Component {
         })
       })
     })
-
     /*
     --- matches reales ----
     let io;
@@ -475,7 +467,6 @@ class App extends Component {
       }
       if (this.state.showNotification && !this.state.fisrtTimeChat && !this.state.callIsGoing) {
         this.showNot('Mensaje de usuario', 'Nuevo mensaje de usuario', 'success', 'Ver detalles', 3, 0)
-        this.showNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Fuego', 'error', 'Ir a chat', 3, 0)
         this.setState({ reproducirSonido: true })
       }
       if (this.state.fisrtTimeChat)
@@ -563,7 +554,27 @@ class App extends Component {
       this.setState({ callIsGoing: false })
     })
 
-    // }    
+
+    // Socket desarollo conectado a alarma
+
+    ioAlarmSocket.on('connect', () => {
+      this.showNot('Conectado a XTUN API', 'Connection ID: ' + ioAlarmSocket.id, 'success', 'OK', 1, 0)
+      ioAlarmSocket.on('activeAlarm', ({active, alarm}) => {
+        if(alarm === 'medical' && active === true){
+          this.showNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Medico', 'error', 'Ir a chat', 3, 0)
+        }
+        if(alarm === 'police' && active === true){
+          this.showNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 3, 0)
+        }
+        if(alarm === 'fire' && active === true){
+          this.showNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Fuego', 'error', 'Ir a chat', 3, 0)
+        }
+      })
+    })
+
+    ioAlarmSocket.on('connect_error', () => {
+      // this.showNot('Desconectado de XTUN API', 'Error', 'error', 'OK', 3, 0)
+    })
 
   }
 
@@ -621,10 +632,11 @@ class App extends Component {
           label: label,
           callback: () =>
             action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/chat') :
-              action === 5 ? window.open(window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/') + 'detalles/emergency/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
-                action === 2 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/denuncia/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
-                  action === 4 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/soporte/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
-                    this.seeMatch(action)
+            action === 5 ? window.open(window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/') + 'detalles/emergency/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
+            action === 2 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/denuncia/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
+            action === 4 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/soporte/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
+            action === 1 ? null :
+              this.seeMatch(action)
         }
       });
     }
@@ -867,6 +879,7 @@ class App extends Component {
                   policeChats={this.state.policeChats}
                   medicChats={this.state.medicChats}
                   stopNotification={() => this.setState({ stopNotification: true })}
+                  socket={ioAlarmSocket}
                 />
                 : <div />
             )}
