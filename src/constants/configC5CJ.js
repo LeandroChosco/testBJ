@@ -10,8 +10,8 @@ var firebaseConfig = {
   appId: "1:959359457942:web:cff036937c7515fa"
   };
 
-var firebaseC5cuajimalpa = firebase
+var firebaseC5Benito = firebase
 
-firebaseC5cuajimalpa.initializeApp(firebaseConfig,'c5cuajimalpa')
+firebaseC5Benito.initializeApp(firebaseConfig,'c5benito')
 
-export default firebaseC5cuajimalpa
+export default firebaseC5Benito

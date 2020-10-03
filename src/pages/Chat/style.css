@@ -24,7 +24,6 @@
 
 .messagesContainer{
     position: absolute;
-    top:55%;
     left: 0;
     right: 0;
     bottom: 10vh;
@@ -138,7 +137,7 @@
 
 #sendbutton{
     position: absolute;
-    right: 0;
+    right: 30px;
     top: 0;    
     bottom:0;  
     margin:auto;  
@@ -167,6 +166,24 @@
 
 .Chat.C5{
     background-color: #ffaa20;
+    border-radius: 15px;
+    color: white;
+}
+
+.Médico {
+    background-color: #28df99;
+    border-radius: 15px;
+    color: white;
+}
+
+.Fuego {
+    background-color: #cd0a0a;
+    border-radius: 15px;
+    color: white;
+}
+
+.Policia {
+    background-color: #0f4c75;
     border-radius: 15px;
     color: white;
 }
