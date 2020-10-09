@@ -22,7 +22,6 @@ import firebase from './constants/config';
 import firebaseC5 from './constants/configC5';
 import Matches from './components/Matches';
 import DetailsEmergency from './pages/DetailsEmergency';
-import Chat from './pages/Chat';
 import ModalCall from './components/ModalCall';
 import DetailsComplaiment from './pages/DetailsComplaiment';
 import Tickets from './pages/Tickets';
@@ -44,7 +43,11 @@ import sailsIOClient from "sails.io.js";
 import SosView from "./pages/SOSview/index";
 import firebaseSos from "./constants/configSOS";
 import { MESSAGES_COLLECTION } from "./Api/sos";
+
+
 import ChatNew from './pages/ChatNew';
+import Chat from './pages/ChatPlus/index'
+
 var io = sailsIOClient(socketIOClient);
 
 //Socket para servicio de alarmas
@@ -75,9 +78,6 @@ class App extends Component {
     support: [],
     fisrtTimeChat: true,
     chats: [],
-    fireChats: [],
-    policeChats: [],
-    medicChats: [],
     chatSelected: null,
     showNotification: false,
     fisrtTime: true,
@@ -415,11 +415,8 @@ class App extends Component {
           value.id = v.id
           return value
         })
-        const fireChats = chats.filter(e => e.alarmType === 'Fuego')
-        const policeChats = chats.filter(e => e.alarmType === 'Policia')
-        const medicChats = chats.filter(e => e.alarmType === 'Médico')
-        const chatsC5 = chats.filter(e => !e.alarmType)
-        this.setState({ chats: chatsC5, fireChats, policeChats, medicChats })
+
+        this.setState({ chats })
       })
 
 
@@ -549,15 +546,15 @@ class App extends Component {
 
     ioAlarmSocket.on('connect', () => {
       this.showNot('Conectado a XTUN API', 'Connection ID: ' + ioAlarmSocket.id, 'success', 'OK', 1, 0)
-      ioAlarmSocket.on('activeAlarm', ({active, alarm}) => {
-        if(alarm === 'medical' && active === true){
-          this.showNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Medico', 'error', 'Ir a chat', 3, 0)
+      ioAlarmSocket.on('alarmListener', ({alarm, chatId}) => {
+        if(alarm === 'medical'){
+          this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Medico', 'error', 'Ir a chat', 3, chatId)
         }
-        if(alarm === 'police' && active === true){
-          this.showNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 3, 0)
+        if(alarm === 'police'){
+          this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 2, chatId)
         }
-        if(alarm === 'fire' && active === true){
-          this.showNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Fuego', 'error', 'Ir a chat', 3, 0)
+        if(alarm === 'fire'){
+          this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Fuego', 'error', 'Ir a chat', 1, chatId)
         }
       })
     })
@@ -611,6 +608,26 @@ class App extends Component {
     }
   }
 
+  showAlarmNot = (title, message, type, label, action, id) => {
+    const chatId = id
+    const notification = this.refs.notificationSystem;
+    if (notification && !this.state.callIsGoing) {
+      notification.addNotification({
+        title: title,
+        message: message,
+        level: type,
+        action: {
+          label: label,
+          callback: () =>
+            action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/1/${chatId}`) : // Fuego
+            action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/2/${chatId}`) : // Policia
+            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/3/${chatId}`) : // Medico
+            this.seeMatch(action)
+        }
+      });
+    }
+  }
+
   showNot = (title, message, type, label, action, id) => {
     const notification = this.refs.notificationSystem;
     if (notification && !this.state.stopNotification && !this.state.callIsGoing) {
@@ -621,7 +638,7 @@ class App extends Component {
         action: {
           label: label,
           callback: () =>
-            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/chat') :
+            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat`):
             action === 5 ? window.open(window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/') + 'detalles/emergency/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
             action === 2 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/denuncia/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
             action === 4 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/soporte/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
@@ -859,21 +876,18 @@ class App extends Component {
           <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route
-            path="/chat"
+            path="/chat/:alarmIndex?/:chatId?"
             exact
             render={(props) => (
-              this.state.chats.length !== 0 ?
-                <ChatNew
+                <Chat
                   chats={this.state.chats}
-                  fireChats={this.state.fireChats}
-                  policeChats={this.state.policeChats}
-                  medicChats={this.state.medicChats}
-                  stopNotification={() => this.setState({ stopNotification: true })}
-                  socket={ioAlarmSocket}
+                  {...props}
+                  stopNotification={() =>
+                    this.setState({ stopNotification: true })
+                  }
                 />
-                : <div />
             )}
-          />
+            />
           <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/dashboard" exact render={(props) => <Dashboard showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />

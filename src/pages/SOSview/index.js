@@ -474,7 +474,7 @@ class Chat extends Component {
             });
           this.setState({ firebaseSub: unsub });
         } else {
-          this.state.firebaseSub();
+          // this.state.firebaseSub();
         }
         refSOS
           .doc(chat.id)
