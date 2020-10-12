@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Icon, Button, Input, Dropdown, Tab } from "semantic-ui-react";
+import { Card, Icon, Button, Input, Dropdown, Tab, IconGroup } from "semantic-ui-react";
 
 import "./style.css";
 // import firebaseC5 from "../../constants/configC5";
@@ -13,6 +13,7 @@ import _ from 'lodash'
 
 import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION } from "../../Api/sos";
 import firebaseSos from "../../constants/configSOS";
+import { support } from "jszip";
 
 // const ref = firebaseC5.app("c5cuajimalpa").firestore().collection("messages");
 
@@ -179,10 +180,10 @@ class Chat extends Component {
   }
 
   render() {
-    const { chats } = this.state;
-    const { chatId, index, from, loading, tracking } = this.state;
+    const { tabIndex } = this.props.match.params
+    const { chats, chatId, index, from, loading, tracking } = this.state;
     if (index !== undefined && chatId === "" && chats.length > 0) {
-      this.setState({ chatId: chats[index].id });
+      this.setState({ chatId: null });
     }
     const chatSelected = chats && chats[index]
 
@@ -197,7 +198,11 @@ class Chat extends Component {
       >
         <div className="row fullHeight">
           <div className="col-4 userList">
-            <Tab menu={{ pointing: true }} panes={this.panes} onTabChange={(t, i) => {
+            <Tab 
+              menu={{ pointing: true }} 
+              panes={this.panes}
+              defaultActiveIndex={tabIndex ? tabIndex : 0}
+              onTabChange={(t, i) => {
               const { chats } = this.props
               const { index } = this.state
               let newChats = chats.filter(c => c.trackingType === FILTERSOPTIONS[i.activeIndex]);
@@ -206,7 +211,7 @@ class Chat extends Component {
                 this.setState({ from: selected ? selected : "Error getting data" })
               }
               let newIndex = index > newChats.length - 1 ? 0 : index
-              this.setState({ chats: newChats, activeIndex: i.activeIndex, index: newIndex })
+              this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null })
             }} />
           </div>
           <div className="col-8 messages">
@@ -331,7 +336,7 @@ class Chat extends Component {
                     <div
                       key={ref}
                       className={
-                        value.from === "Soporte" || value.from === "C2 base blindar" ? "support" : "user"
+                        value.from === "user" ? "user" : "support"
                       }
                       ref={
                         ref === chats[index].messages.length - 1
@@ -429,62 +434,77 @@ class Chat extends Component {
     this.setState({ map, marker: _marker });
   };
 
-  changeChat = (chat, i) => {
-
-    this.setState(
-      { chatId: "", loading: true, camData: undefined },
-      async () => {
-        this.props.stopNotification();
-        const trackingInformation = await getTracking(chat.trackingId);
-
-        let newData = trackingInformation.data.data();
-
-        newData = {
-          ...newData,
-          id: trackingInformation.data.id,
-        };
-
-        this.setState({
-          chatId: chat.id,
-          messages: chat.messages,
-          index: i,
-          from: newData.SOSType, //
-          tracking: newData,
-          loading: false,
-          personalInformation: newData.userInformation, //
-          pointCoords: [], //
-        });
-
-        if (chat.active) {
-          const unsub = firebaseSos
-            .app("sos")
-            .firestore()
-            .collection(SOS_COLLECTION)
-            .onSnapshot((docs) => {
-              const track_changes = docs.docChanges();
-              if (track_changes.length === 1) {
-                const updatedChatId = track_changes[0].doc.id;
-                const track_data = track_changes[0].doc.data();
-                if (chat.trackingId === updatedChatId) {
-                  if (chat.active) {
-                    this.setState({ tracking: track_data });
+  changeChat = (chat, i, flag = true) => {
+    console.log('chat', chat);
+    if(flag){
+      this.props.history.push(`/sos/${this.state.activeIndex}/${chat.id}`)
+    }
+    if(chat === undefined && i === -1){
+      this.props.history.push('/sos')
+    } else {
+      this.getMessages(chat.id)
+      this.setState(
+        { loading: true, camData: undefined },
+        async () => {
+          this.props.stopNotification();
+          const trackingInformation = await getTracking(chat.trackingId);
+  
+          let newData = trackingInformation.data.data();
+  
+          newData = {
+            ...newData,
+            id: trackingInformation.data.id,
+          };
+  
+          this.setState({
+            // chatId: chat.id,
+            // messages: chat.messages,
+            index: i,
+            from: newData.SOSType, //
+            tracking: newData,
+            loading: false,
+            personalInformation: newData.userInformation, //
+            pointCoords: [], //
+          });
+  
+          if (chat.active) {
+            const unsub = firebaseSos
+              .app("sos")
+              .firestore()
+              .collection(SOS_COLLECTION)
+              .onSnapshot((docs) => {
+                const track_changes = docs.docChanges();
+                if (track_changes.length === 1) {
+                  const updatedChatId = track_changes[0].doc.id;
+                  const track_data = track_changes[0].doc.data();
+                  if (chat.trackingId === updatedChatId) {
+                    if (chat.active) {
+                      this.setState({ tracking: track_data });
+                    }
                   }
                 }
-              }
+              });
+            this.setState({ firebaseSub: unsub });
+          } else {
+            // this.state.firebaseSub();
+          }
+          refSOS
+            .doc(chat.id)
+            .update({ c5Unread: 0 })
+            .then(() => {
+              this.setState({ text: "" });
             });
-          this.setState({ firebaseSub: unsub });
-        } else {
-          // this.state.firebaseSub();
         }
-        refSOS
-          .doc(chat.id)
-          .update({ c5Unread: 0 })
-          .then(() => {
-            this.setState({ text: "" });
-          });
-      }
-    );
+      );
+    }
   };
+
+  getMessages = (chatId) => {
+   this.messageListener = refSOS.doc(chatId).onSnapshot(snapShot => {
+    console.log(snapShot.get('messages'), chatId);
+     this.setState({messages: snapShot.get('messages'), chatId})
+   }) 
+  }
 
   checkKey = (event) => {
     var key = window.event.keyCode;
@@ -554,22 +574,22 @@ class Chat extends Component {
 
   sendMessage = () => {
     if (this.state.text === "") return;
+    const {chatId, messages} = this.state
 
-    let messages = this.props.chats[this.state.index].messages;
-    messages = messages.map((message) => {
-      message.dateTime = message.dateTime.toDate();
-      return message;
-    });
-    messages.push({
-      from: "C2 base blindar",
+    let messagesAux = messages.map((e) => e)
+
+    messagesAux.push({
+      from: "support",
       dateTime: new Date(),
-      msg: this.state.text, //msg
-    });
-    this.props.stopNotification();
+      msg: this.state.text
+    })
+
+    this.props.stopNotification()
+
     refSOS
-      .doc(this.state.chatId)
+      .doc(chatId)
       .update({
-        messages: messages,
+        messages: messagesAux,
         from: "Chat C5",
         userUnread: this.props.chats[this.state.index].userUnread
           ? this.props.chats[this.state.index].userUnread + 1
@@ -584,64 +604,15 @@ class Chat extends Component {
   };
 
   async componentDidMount() {
-    // const obj = {
-    //   SOSType: "Robo",
-    // };
-    // const data = await getSOS(obj);
-    // console.log("hey", data);
+    const {tabIndex} = this.props.match.params
 
-    // const track = await getTracking();
-
-    // console.log("hey", track);
     if (this.props.chats) {
-      this.setState({ chats: this.props.chats })
-    }
-    if (
-      this.props.location.hash !== "" &&
-      this.state.index !== 0 &&
-      this.state.hashUsed === false
-    ) {
-      if (this.props.chats[0] !== undefined) {
-        //this.setState({index:0, from:this.props.chats[0].from})
-        this._changeUserCam(this.props.chats[0]);
-        this.setState({
-          index: 0,
-          from: this.props.chats[0].from,
-          chatId: this.props.chats[0].id,
-          hashUsed: true,
-        });
+      if(tabIndex){
+        this.setState({ chats: this.props.chats, activeIndex: tabIndex })
+      } else {
+        this.setState({ chats: this.props.chats })
       }
     }
-    if (this.props.location.search !== "") {
-      let params = this.QueryStringToJSON(this.props.location.search);
-      if (this.props.chats.length > 0) {
-        let i;
-        this.props.chats.forEach((chat, index) => {
-          if (chat.user_creation === params.u) {
-            i = index;
-          }
-        });
-
-        if (this.state.index !== i && this.state.fisrt.u !== params.u) {
-          this._changeUserCam(this.props.chats[i]);
-          this.setState({
-            index: i,
-            fisrt: params,
-            from: this.props.chats[i].from,
-            chatId: this.props.chats[i].id,
-          });
-        }
-      }
-    }
-    if (
-      this.state.index !== undefined &&
-      this.props.chats[this.state.index] !== undefined
-    ) {
-      if (this.state.from !== this.props.chats[this.state.index].from) {
-        this.setState({ from: this.props.chats[this.state.index].from });
-      }
-    }
-
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
@@ -660,57 +631,42 @@ class Chat extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { tabIndex, chatId } = this.props.match.params 
     const { chats: chatsPrev } = prevProps
     const { chats } = this.props
     if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
       this.setState({ chats: chats })
-    }
-    if (
-      this.props.location.hash !== "" &&
-      this.state.index !== 0 &&
-      this.state.hashUsed === false
-    ) {
-      if (this.props.chats[0] !== undefined) {
-        this.setState({ index: 0, from: this.props.chats[0].from });
-        this._changeUserCam(this.props.chats[0]);
-        this.setState({
-          index: 0,
-          // from: this.props.chats[0].from,
-          chatId: this.props.chats[0].id,
-          hashUsed: true,
-        });
-      }
-    }
-    if (this.props.location.search !== "") {
-      let params = this.QueryStringToJSON(this.props.location.search);
-      if (this.props.chats.length > 0) {
-        let i;
-        this.props.chats.forEach((chat, index) => {
-          if (chat.user_creation === params.u) {
-            i = index;
+      switch (parseInt(tabIndex)) {
+        case 0:
+          const chatsMedic = this.props.chats.filter(e => e.trackingType === "Emergencia Médica")
+          this.setState({ chats: chatsMedic})
+          if(chatId){
+            const indexMedic = chatsMedic.findIndex(e => e.id === chatId)
+            this.changeChat(chatsMedic[indexMedic], indexMedic, false)
+          }  
+        break;
+        case 1:
+          const chatsSeguridad = this.props.chats.filter(e => e.trackingType === "Seguridad")
+          this.setState({ chats: chatsSeguridad})
+          if(chatId){
+            const indexSeguridad = chatsSeguridad.findIndex(e => e.id === chatId)
+            this.changeChat(chatsSeguridad[indexSeguridad], indexSeguridad, false)
+          }  
+        break;
+        case 2: 
+          const chatsCivil = this.props.chats.filter(e => e.trackingType === "Protección Civil")
+          this.setState({ chats: chatsCivil})
+          if(chatId){
+            const indexCivil = chatsCivil.findIndex(e => e.id === chatId)
+            this.changeChat(chatsCivil[indexCivil], indexCivil, false)
           }
-        });
-
-        if (this.state.index !== i && this.state.fisrt.u !== params.u) {
-          this._changeUserCam(this.props.chats[i]);
-          this.setState({
-            index: i,
-            fisrt: params,
-            // from: this.props.chats[i].from,
-            chatId: this.props.chats[i].id,
-          });
-        }
+        break;  
+        default:
+          const chats = this.props.chats.filter(e => e.trackingType === "Emergencia Médica")
+          this.setState({ chats: chats})
+        break;
       }
     }
-    // if (
-    //   this.state.index !== undefined &&
-    //   this.props.chats[this.state.index] !== undefined
-    // ) {
-    //   if (this.state.from !== this.props.chats[this.state.index].from) {
-    //     // this.setState({ from: this.props.chats[this.state.index].from });
-    //   }
-    // }
-
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }

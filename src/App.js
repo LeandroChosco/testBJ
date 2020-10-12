@@ -45,7 +45,6 @@ import firebaseSos from "./constants/configSOS";
 import { MESSAGES_COLLECTION } from "./Api/sos";
 
 
-import ChatNew from './pages/ChatNew';
 import Chat from './pages/ChatPlus/index'
 
 var io = sailsIOClient(socketIOClient);
@@ -345,17 +344,23 @@ class App extends Component {
           !this.state.fisrtTimeChat &&
           !this.state.callIsGoing
         ) {
-          this.showNot(
-            "Mensaje de usuario",
-            "Nuevo mensaje de usuario",
-            "success",
-            "Ver detalles",
-            3,
-            0
-          );
-          this.setState({ reproducirSonido: true });
-          // if(changes[0].doc._hasPendingWrites === false)
-          //   this.setState({reproducirSonido: true})
+          const indexSos = docs.docs.findIndex(e => e.id === changes[0].doc.id)          
+          if(indexSos != -1){
+            switch (docs.docs[indexSos].data().trackingType) {
+              case 'Emergencia Médica':
+                this.showSOSNot("SOS - Notificación", "Nuevo mensaje de usuario", "success", "Ver detalles", 0, docs.docs[indexSos].data().trackingId);
+              break;
+              case 'Seguridad':
+                this.showSOSNot("SOS - Notificación", "Nuevo mensaje de usuario", "success", "Ver detalles", 1, docs.docs[indexSos].data().trackingId);
+              break;
+              case 'Protección Civil':
+                this.showSOSNot("SOS - Notificación", "Nuevo mensaje de usuario", "success", "Ver detalles", 2, docs.docs[indexSos].data().trackingId);
+              break;
+              default:
+                break;
+            }
+            this.setState({ reproducirSonido: true });
+          }
         }
         if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
         var chats = docs.docs.map((v) => {
@@ -363,10 +368,6 @@ class App extends Component {
           value.lastModification = new Date(
             value.lastModification.toDate()
           ).toLocaleString();
-          // value.messages = value.messages.map(message =>{
-          //   message.dateTime = new Date(message.dateTime.toDate()).toLocaleString()
-          //   return message
-          //})
           value.id = v.id;
           return value;
         });
@@ -401,7 +402,7 @@ class App extends Component {
             'Nuevo mensaje de usuario', 
             'success', 
             'Ver detalles', 
-            3, 
+            0, 
             0
           )
           this.setState({ reproducirSonido: true })
@@ -545,7 +546,7 @@ class App extends Component {
     // Socket desarollo conectado a alarma
 
     ioAlarmSocket.on('connect', () => {
-      this.showNot('Conectado a XTUN API', 'Connection ID: ' + ioAlarmSocket.id, 'success', 'OK', 1, 0)
+      // this.showNot('Conectado a XTUN API', 'Connection ID: ' + ioAlarmSocket.id, 'success', 'OK', 1, 0)
       ioAlarmSocket.on('alarmListener', ({alarm, chatId}) => {
         if(alarm === 'medical'){
           this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Medico', 'error', 'Ir a chat', 3, chatId)
@@ -622,7 +623,27 @@ class App extends Component {
             action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/1/${chatId}`) : // Fuego
             action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/2/${chatId}`) : // Policia
             action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/3/${chatId}`) : // Medico
-            this.seeMatch(action)
+            null
+        }
+      });
+    }
+  }
+
+  showSOSNot = (title, message, type, label, action, id) => {
+    const chatId = id
+    const notification = this.refs.notificationSystem;
+    if (notification && !this.state.callIsGoing) {
+      notification.addNotification({
+        title: title,
+        message: message,
+        level: type,
+        action: {
+          label: label,
+          callback: () =>
+            action === 0 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/0/${chatId}`) : // Fuego
+            action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/1/${chatId}`) : // Policia
+            action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/2/${chatId}`) : // Medico
+            null
         }
       });
     }
@@ -638,12 +659,12 @@ class App extends Component {
         action: {
           label: label,
           callback: () =>
-            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat`):
+            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos`):
             action === 5 ? window.open(window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/') + 'detalles/emergency/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
             action === 2 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/denuncia/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
             action === 4 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/soporte/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
-            action === 1 ? null :
-              this.seeMatch(action)
+            action === 0 ? null :
+            this.seeMatch(action)
         }
       });
     }
@@ -851,7 +872,7 @@ class App extends Component {
           }
           />
           <Route
-            path="/sos"
+            path="/sos/:tabIndex?/:chatId?"
             exact
             render={(props) => (
               <SosView

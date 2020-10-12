@@ -463,48 +463,28 @@ class Chat extends Component {
     }
   };
 
-  changeUserCam = (chat) => {
-    Axios.get(constants.base_url + ':' + constants.apiPort + '/admin/users/' + chat.user_creation).then(response => {
-        if (response.status === 200) {
-            if (response.data.success) {
-                const data = response.data.data
-                this.setState({
-                    camData: data.UserToCameras[0] == undefined ? undefined : {
-                        extraData: {
-                            num_cam: data.UserToCameras[0] !== undefined ? data.UserToCameras[0].Camare.num_cam : null,
-                            cameraID: data.UserToCameras[0] !== undefined ? data.UserToCameras[0].Camare.num_cam : null,
-                            //webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
-                            isHls: true,
-                            url: data.UserToCameras[0] !== undefined ? 'http://' + data.UserToCameras[0].Camare.UrlStreamMediaServer.ip_url_ms + ':' + data.UserToCameras[0].Camare.UrlStreamMediaServer.output_port + data.UserToCameras[0].Camare.UrlStreamMediaServer.name + data.UserToCameras[0].Camare.channel : null,
-                            dataCamValue: data.UserToCameras[0] !== undefined ? data.UserToCameras[0].Camare : null
-                        }
-                    }
-                })
-            }
-        }
-    })
- }
-
- getUserInfo = (chat) => {
-   const {user_cam, alarm, alarmType} = chat
-    if(user_cam.active !== undefined && alarm && alarmType){
-      this.setState({
-        personalInformation: {
-          cellPhone: user_cam.cellPhone,
-          address: `
-            ${user_cam.street ? user_cam.street : '-'}, 
-            ${user_cam.number ? '#' + user_cam.number : '#' },
-            ${user_cam.town ? user_cam.town : '-' },
-            ${user_cam.township ? user_cam.township : '-' },
-            ${user_cam.state ? user_cam.state : '-' },
-            `,
-          alarmType,
-          description: `${alarm.description ? alarm.description : '-'}`,
-          alarmSN: `${alarm.serial_number}`
-        },
-      })
-    } 
- }
+  getUserInfo = (chat) => {
+    if(chat){
+      const {user_cam, alarm, alarmType} = chat
+        if(user_cam.active !== undefined && alarm && alarmType){
+          this.setState({
+            personalInformation: {
+              cellPhone: user_cam.cellPhone,
+              address: `
+                ${user_cam.street ? user_cam.street : '-'}, 
+                ${user_cam.number ? '#' + user_cam.number : '#' },
+                ${user_cam.town ? user_cam.town : '-' },
+                ${user_cam.township ? user_cam.township : '-' },
+                ${user_cam.state ? user_cam.state : '-' },
+                `,
+              alarmType,
+              description: `${alarm.description ? alarm.description : '-'}`,
+              alarmSN: `${alarm.serial_number}`
+            },
+          })
+        } 
+    }
+  }
 
   changeChat = (chat, i, flag = true) => {
     this.getUserInfo(chat)
@@ -518,7 +498,7 @@ class Chat extends Component {
       this.setState(
         { loading: true, camData: undefined},
         () => {
-          // this.changeUserCam(chat)
+          this._changeUserCam(chat)
           this.props.stopNotification();
   
           this.setState({
@@ -560,6 +540,7 @@ class Chat extends Component {
   };
 
   _changeUserCam = (chat) => {
+    console.log('on changeuserCam', chat)
     Axios.get(
       constants.base_url +
       ":" +
@@ -567,6 +548,7 @@ class Chat extends Component {
       "/admin/users/" +
       chat.user_creation
     ).then((response) => {
+      console.log('response changeusercam', response.data)
       if (response.status === 200) {
         if (response.data.success) {
           const data = response.data.data;
@@ -607,7 +589,7 @@ class Chat extends Component {
           });
         }
       }
-    });
+    }).catch(err => console.log(err))
   };
 
   closeChat = () => {
@@ -735,7 +717,6 @@ class Chat extends Component {
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
-
 }
 
 export default Chat;
