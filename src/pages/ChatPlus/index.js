@@ -189,7 +189,6 @@ class Chat extends Component {
   render() {
     const { alarmIndex } = this.props.match.params
     const { chats, chatId, index, loading, camData, personalInformation } = this.state
-    console.log(chats[index]);
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
     }

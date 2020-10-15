@@ -348,13 +348,13 @@ class App extends Component {
           if(indexSos != -1){
             switch (docs.docs[indexSos].data().trackingType) {
               case 'Emergencia Médica':
-                this.showSOSNot("SOS - Notificación", "Nuevo mensaje de usuario", "success", "Ver detalles", 0, docs.docs[indexSos].data().trackingId);
+                this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changes[0].doc.id);
               break;
               case 'Seguridad':
-                this.showSOSNot("SOS - Notificación", "Nuevo mensaje de usuario", "success", "Ver detalles", 1, docs.docs[indexSos].data().trackingId);
+                this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changes[0].doc.id);
               break;
               case 'Protección Civil':
-                this.showSOSNot("SOS - Notificación", "Nuevo mensaje de usuario", "success", "Ver detalles", 2, docs.docs[indexSos].data().trackingId);
+                this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changes[0].doc.id);
               break;
               default:
                 break;
@@ -397,14 +397,14 @@ class App extends Component {
           !this.state.fisrtTimeChat && 
           !this.state.callIsGoing
           ) {
-          this.showNot(
-            'Mensaje de usuario', 
-            'Nuevo mensaje de usuario', 
-            'success', 
-            'Ver detalles', 
-            0, 
-            0
-          )
+          // this.showNot(
+          //   'Mensaje de usuario', 
+          //   'Nuevo mensaje de usuario', 
+          //   'success', 
+          //   'Ver detalles', 
+          //   0, 
+          //   0
+          // )
           this.setState({ reproducirSonido: true })
         }
         if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })

@@ -13,6 +13,8 @@ import _ from 'lodash'
 
 import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION } from "../../Api/sos";
 import firebaseSos from "../../constants/configSOS";
+import FadeLoader from "react-spinners/FadeLoader";
+
 import { support } from "jszip";
 
 // const ref = firebaseC5.app("c5cuajimalpa").firestore().collection("messages");
@@ -302,14 +304,6 @@ class Chat extends Component {
                             className="row textContainer"
                             style={{ paddingTop: 0 }}
                           >
-                            {/* <div style={{ fontSize: 13 }} className="col">
-                              <b>Dirección: </b>
-                              {chats[index].user_cam.street}{" "}
-                              {chats[index].user_cam.number},{" "}
-                              {chats[index].user_cam.town},{" "}
-                              {chats[index].user_cam.township},{" "}
-                              {chats[index].user_cam.state}
-                            </div> */}
                           </div>
                         </div>
                         <div className="col-4" style={{ margin: "auto" }}>
@@ -357,12 +351,19 @@ class Chat extends Component {
                       </small>
                     </div>
                   ))
-                  : loading === true
-                    ? "Cargando..."
-                    : "No se ha seleccionado ningun chat"
-                : loading === true
-                  ? "Cargando..."
-                  : "No se ha seleccionado ningun chat"}
+                  : loading === true ?
+                  <>  
+                      <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered}/> 
+                      <p style={{position: "fixed", top: '56%', left: '62%'}}>Cargando chat</p>
+                  </> :
+                      <p style={{position: "fixed", top: '50%', left: '60%'}}>No se ha seleccionado ningun chat</p> : 
+                  loading === true ? 
+                  <>
+                      <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered}/>
+                      <p style={{position: "fixed", top: '56%', left: '62%'}}>Cargando chat</p>
+                  </>:
+                      <p style={{position: "fixed", top: '50%', left: '60%'}}>No se ha seleccionado ningun chat</p>
+                  }
             </div>
             {chatId !== "" ? (
               <div className="messages_send_box">
@@ -435,7 +436,6 @@ class Chat extends Component {
   };
 
   changeChat = (chat, i, flag = true) => {
-    console.log('chat', chat);
     if(flag){
       this.props.history.push(`/sos/${this.state.activeIndex}/${chat.id}`)
     }
@@ -492,7 +492,7 @@ class Chat extends Component {
             .doc(chat.id)
             .update({ c5Unread: 0 })
             .then(() => {
-              this.setState({ text: "" });
+              this.setState({ text: "",  from: 'Chat C5' });
             });
         }
       );
@@ -514,57 +514,6 @@ class Chat extends Component {
     } else {
       return true;
     }
-  };
-
-  _changeUserCam = (chat) => {
-    Axios.get(
-      constants.base_url +
-      ":" +
-      constants.apiPort +
-      "/admin/users/" +
-      chat.user_creation
-    ).then((response) => {
-      if (response.status === 200) {
-        if (response.data.success) {
-          const data = response.data.data;
-          this.setState({
-            camData:
-              data.UserToCameras[0] === undefined
-                ? undefined
-                : {
-                  extraData: {
-                    num_cam:
-                      data.UserToCameras[0] !== undefined
-                        ? data.UserToCameras[0].Camare.num_cam
-                        : null,
-                    cameraID:
-                      data.UserToCameras[0] !== undefined
-                        ? data.UserToCameras[0].Camare.num_cam
-                        : null,
-                    //webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
-                    isHls: true,
-                    url:
-                      data.UserToCameras[0] !== undefined
-                        ? "http://" +
-                        data.UserToCameras[0].Camare.UrlStreamMediaServer
-                          .ip_url_ms +
-                        ":" +
-                        data.UserToCameras[0].Camare.UrlStreamMediaServer
-                          .output_port +
-                        data.UserToCameras[0].Camare.UrlStreamMediaServer
-                          .name +
-                        data.UserToCameras[0].Camare.channel
-                        : null,
-                    dataCamValue:
-                      data.UserToCameras[0] !== undefined
-                        ? data.UserToCameras[0].Camare
-                        : null,
-                  },
-                },
-          });
-        }
-      }
-    });
   };
 
   closeChat = () => {
