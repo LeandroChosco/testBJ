@@ -106,6 +106,8 @@ class App extends Component {
     },
     stateSos: [],
     datosAlcaldia: [],
+    chatFirebase: undefined,
+    indexSos: undefined
   }
 
 
@@ -344,22 +346,24 @@ class App extends Component {
           !this.state.fisrtTimeChat &&
           !this.state.callIsGoing
         ) {
-          const indexSos = docs.docs.findIndex(e => e.id === changes[0].doc.id)          
+          const indexSos = docs.docs.findIndex(e => e.id === changes[0].doc.id)
           if(indexSos != -1){
-            switch (docs.docs[indexSos].data().trackingType) {
-              case 'Emergencia Médica':
-                this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changes[0].doc.id);
-              break;
-              case 'Seguridad':
-                this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changes[0].doc.id);
-              break;
-              case 'Protección Civil':
-                this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changes[0].doc.id);
-              break;
-              default:
+            if(this.state.indexSos !== indexSos){
+              switch (docs.docs[indexSos].data().trackingType) {
+                case 'Emergencia Médica':
+                  this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changes[0].doc.id);
                 break;
+                case 'Seguridad':
+                  this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changes[0].doc.id);
+                break;
+                case 'Protección Civil':
+                  this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changes[0].doc.id);
+                break;
+                default:
+                  break;
+              }
+              this.setState({ reproducirSonido: true , indexSos});
             }
-            this.setState({ reproducirSonido: true });
           }
         }
         if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
@@ -380,35 +384,15 @@ class App extends Component {
         .collection('messages')
         .orderBy('lastModification', 'desc')
         .onSnapshot(docs => {
-        let changes = docs.docChanges()
-        if (changes.length === 1) {
-          let index = changes[0].oldIndex
-          let data = changes[0].doc.data()
-          if (this.state.chats[index]) {
-            if (
-              this.state.chats[index].messages.length === data.messages.length
-              ) {
-                this.setState({ stopNotification: true })
-              }
+          if (
+            this.state.showNotification && 
+            !this.state.fisrtTimeChat && 
+            !this.state.callIsGoing
+            ) {
+            this.setState({ reproducirSonido: true })
           }
-        }
-        if (
-          this.state.showNotification && 
-          !this.state.fisrtTimeChat && 
-          !this.state.callIsGoing
-          ) {
-          // this.showNot(
-          //   'Mensaje de usuario', 
-          //   'Nuevo mensaje de usuario', 
-          //   'success', 
-          //   'Ver detalles', 
-          //   0, 
-          //   0
-          // )
-          this.setState({ reproducirSonido: true })
-        }
         if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
-        var chats = docs.docs.map(v => {
+        const chats = docs.docs.map(v => {
           let value = v.data()
           value.lastModification = new Date(
             value.lastModification.toDate()
@@ -903,6 +887,8 @@ class App extends Component {
                 <Chat
                   chats={this.state.chats}
                   {...props}
+                  userInfo={this.state.userInfo}
+                  chatFirebase = {this.state.chatFirebase}
                   stopNotification={() =>
                     this.setState({ stopNotification: true })
                   }

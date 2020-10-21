@@ -72,7 +72,8 @@ class Chat extends Component {
     marker: null,
     firebaseSub: null,
     tabIndex: 0,
-    messages: []
+    messages: [],
+    flagUpdate: 0
   };
   panes = [
     {
@@ -217,7 +218,6 @@ class Chat extends Component {
                   let selected = newChats.length !== 0 && newChats[index] ? newChats[index].alarmType : newChats[0].alarmType;
                   this.setState({ from: selected ? selected : "Error getting data" })
                 }
-                let newIndex = index > newChats.length - 1 ? 0 : index
                 this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null })
               }} />
           </div>
@@ -520,9 +520,13 @@ class Chat extends Component {
         }
       )
     }
-  };
+  }
 
   getMessages = (chatId) => {
+    // const {chatFirebase, chats} = this.props
+    // const indexChat = chats.findIndex(e => e.id === chatId)
+    // console.log(indexChat, chats[indexChat] );
+    // this.setState({messages: chats[indexChat].messages, chatId})
     this.messageListener = refSOS.doc(chatId).onSnapshot(snapShot => {
       this.setState({messages: snapShot.get('messages'), chatId})
     })
@@ -539,13 +543,13 @@ class Chat extends Component {
   };
 
   _changeUserCam = (chat) => {
-    console.log('on changeuserCam', chat)
+    console.log('on changeuserCam', chat, this.props.userInfo)
     Axios.get(
-      constants.base_url +
+      constants.sails_url +
       ":" +
-      constants.apiPort +
-      "/admin/users/" +
-      chat.user_creation
+      constants.sailsPort +
+      "/user/getDataByIdentifier?email=" +
+      "root@energetika.com"
     ).then((response) => {
       console.log('response changeusercam', response.data)
       if (response.status === 200) {
@@ -553,36 +557,22 @@ class Chat extends Component {
           const data = response.data.data;
           this.setState({
             camData:
-              data.UserToCameras[0] === undefined
+              data === undefined
                 ? undefined
                 : {
                   extraData: {
-                    num_cam:
-                      data.UserToCameras[0] !== undefined
-                        ? data.UserToCameras[0].Camare.num_cam
-                        : null,
-                    cameraID:
-                      data.UserToCameras[0] !== undefined
-                        ? data.UserToCameras[0].Camare.num_cam
-                        : null,
-                    //webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
+                    num_cam: data.Camare[0].num_cam,
+                    cameraID: data.Camare[0].num_cam,
                     isHls: true,
                     url:
-                      data.UserToCameras[0] !== undefined
-                        ? "http://" +
-                        data.UserToCameras[0].Camare.UrlStreamMediaServer
-                          .ip_url_ms +
+                        "http://" +
+                        data.Camare[0].UrlStreamMediaServer.ip_url_ms +
                         ":" +
-                        data.UserToCameras[0].Camare.UrlStreamMediaServer
-                          .output_port +
-                        data.UserToCameras[0].Camare.UrlStreamMediaServer
-                          .name +
-                        data.UserToCameras[0].Camare.channel
-                        : null,
+                        data.Camare[0].UrlStreamMediaServer.output_port +
+                        data.Camare[0].UrlStreamMediaServer.name +
+                        data.Camare[0].channel,
                     dataCamValue:
-                      data.UserToCameras[0] !== undefined
-                        ? data.UserToCameras[0].Camare
-                        : null,
+                      data.Camare
                   },
                 },
           });
@@ -601,11 +591,7 @@ class Chat extends Component {
     if (this.state.text === "") return;
     const {chatId, messages} = this.state
 
-    let messagesAux = messages.map((e) => {
-      // console.log(typeof e.dateTime);
-      // e.dateTime = e.dateTime.toDate();
-      return e;
-    });
+    let messagesAux = messages.map(e => e)
 
     messagesAux.push({
       from: "support",
@@ -633,7 +619,7 @@ class Chat extends Component {
       });
   };
 
-  async componentDidMount() {    
+  componentDidMount() {    
     const { alarmIndex } = this.props.match.params
 
     if (this.props.chats) {
@@ -664,55 +650,57 @@ class Chat extends Component {
     const {alarmIndex, chatId} = this.props.match.params
     const { chats: chatsPrev } = prevProps
     const { chats } = this.props
-    if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-      this.setState({ chats: chats })
-        switch (parseInt(alarmIndex)) {
-          case 0:
-              const chatsC5 = this.props.chats.filter(e => !e.alarmType)
-              this.setState({ chats: chatsC5 })
-              if(chatId){
-                const indexC5 = chatsC5.findIndex(e => e.id === chatId)
-                this.changeChat(chatsC5[indexC5], indexC5, false)
-              }
-              // if(this.state.beforeChange){
-              // }
-          break;
-          case 1: 
-              const fireChats = this.props.chats.filter(e => e.alarmType === 'Fuego')
-              this.setState({ chats: fireChats})
-              if(chatId){
-              const indexFire = fireChats.findIndex(e => e.id === chatId)
-              this.changeChat(fireChats[indexFire], indexFire, false)
+    if(this.state.flagUpdate === 0){
+      if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
+        this.setState({ chats: chats })
+          switch (parseInt(alarmIndex)) {
+            case 0:
+                const chatsC5 = this.props.chats.filter(e => !e.alarmType)
+                this.setState({ chats: chatsC5, flagUpdate: 1 })
+                if(chatId){
+                  const indexC5 = chatsC5.findIndex(e => e.id === chatId)
+                  this.changeChat(chatsC5[indexC5], indexC5, false)
                 }
-              // if(this.state.beforeChange){
-              // }
-          break;
-          case 2:
-              const policeChats = this.props.chats.filter(e => e.alarmType === 'Policia')
-              this.setState({ chats: policeChats })
-              if(chatId){
-              const indexPolice = policeChats.findIndex(e => e.id === chatId)
-              this.changeChat(policeChats[indexPolice], indexPolice, false)
-                }
-              // if(this.state.beforeChange){
-              // }
-          break;
-          case 3:
-              const medicChats = this.props.chats.filter(e => e.alarmType === 'Médico')
-              this.setState({ chats: medicChats })
-              if(chatId){
-              const indexMedic = medicChats.findIndex(e => e.id === chatId)
-              this.changeChat(medicChats[indexMedic], indexMedic, false)
-                }
-              // if(this.state.beforeChange){
-              // }
-          break;
-          default:
-              const chats = this.props.chats.filter(e => !e.alarmType)
-              this.setState({ chats })
-          break;
+                // if(this.state.beforeChange){
+                // }
+            break;
+            case 1: 
+                const fireChats = this.props.chats.filter(e => e.alarmType === 'Fuego')
+                this.setState({ chats: fireChats, flagUpdate: 1})
+                if(chatId){
+                const indexFire = fireChats.findIndex(e => e.id === chatId)
+                this.changeChat(fireChats[indexFire], indexFire, false)
+                  }
+                // if(this.state.beforeChange){
+                // }
+            break;
+            case 2:
+                const policeChats = this.props.chats.filter(e => e.alarmType === 'Policia')
+                this.setState({ chats: policeChats, flagUpdate: 1})
+                if(chatId){
+                const indexPolice = policeChats.findIndex(e => e.id === chatId)
+                this.changeChat(policeChats[indexPolice], indexPolice, false)
+                  }
+                // if(this.state.beforeChange){
+                // }
+            break;
+            case 3:
+                const medicChats = this.props.chats.filter(e => e.alarmType === 'Médico')
+                this.setState({ chats: medicChats, flagUpdate: 1})
+                if(chatId){
+                const indexMedic = medicChats.findIndex(e => e.id === chatId)
+                this.changeChat(medicChats[indexMedic], indexMedic, false)
+                  }
+                // if(this.state.beforeChange){
+                // }
+            break;
+            default:
+                const chats = this.props.chats.filter(e => !e.alarmType)
+                this.setState({ chats , flagUpdate: 1})
+            break;
+        }
       }
-    }
+    } 
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
@@ -729,5 +717,8 @@ const styles = {
     paddingTop: 2,
     paddingBottom: 2
   },
-  tab: { backgroundColor: "#dadada", borderWidth: 0, borderColor: "#dadada" }
+  tab: { backgroundColor: "#dadada", borderWidth: 0, borderColor: "#dadada" },
+  centered: {
+    left: '51%'
+  }
 }

@@ -71,7 +71,8 @@ class Chat extends Component {
     personalInformation: {},
     optionSelected: "name",
     marker: null,
-    firebaseSub: null
+    firebaseSub: null,
+    flagUpdate: 0
   };
   panes = [
     {
@@ -212,121 +213,124 @@ class Chat extends Component {
                 let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
                 this.setState({ from: selected ? selected : "Error getting data" })
               }
-              let newIndex = index > newChats.length - 1 ? 0 : index
               this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null })
             }} />
           </div>
-          <div className="col-8 messages">
-            {!loading && chatId !== "" && chats[index] ? (
-              <div className="cameraView">
-                <h2
-                  className={"Chat C5"}
-                  style={{
-                    textAlign: "center",
-                    backgroundColor: COLORS[chats[index].trackingType],
-                    height: "10%"
-                  }}
-                >
-                  {from}
-                </h2>
-                <div className="row" style={{ height: "70%" }}>
-                  <div
-                    className="col"
-                    style={{ height: "100%", width: "100%" }}
+          <div className="col-8">
+            <div className="messages" style={{height: '88%'}}>
+              {!loading && chatId !== "" && chats[index] ? (
+                <div className="cameraView">
+                  <h2
+                    className={"Chat C5"}
+                    style={{
+                      textAlign: "center",
+                      backgroundColor: COLORS[chats[index].trackingType],
+                      height: "5%"
+                    }}
                   >
-                    {Object.keys(tracking).length !== 0 && tracking.pointCoords && (
-                      <MapContainer
-                        options={{
-                          center: {
-                            lat: parseFloat(
-                              tracking.pointCoords[
-                                tracking.pointCoords.length - 1
-                              ].latitude
-                            ),
-                            lng: parseFloat(
-                              tracking.pointCoords[
-                                tracking.pointCoords.length - 1
-                              ].longitude
-                            ),
-                          },
-                          zoom: 15,
-                          mapTypeId: "roadmap",
-                          zoomControl: false,
-                          mapTypeControl: false,
-                          streetViewControl: false,
-                          fullscreenControl: false,
-                          openConfirm: false,
-                          typeConfirm: false,
-                          openSelection: false,
-                          checked: "",
-                        }}
-                        coordsPath={tracking.pointCoords}
-                        onMapLoad={this._onMapLoad}
-                      />
-                    )}
+                    {from}
+                  </h2>
+                  <div className="row" style={{ height: "70%", margin: 0 }}>
+                    <div
+                      className="col"
+                      style={{ height: "100%" }}
+                    >
+                      {Object.keys(tracking).length !== 0 && tracking.pointCoords && (
+                        <MapContainer
+                          options={{
+                            center: {
+                              lat: parseFloat(
+                                tracking.pointCoords[
+                                  tracking.pointCoords.length - 1
+                                ].latitude
+                              ),
+                              lng: parseFloat(
+                                tracking.pointCoords[
+                                  tracking.pointCoords.length - 1
+                                ].longitude
+                              ),
+                            },
+                            zoom: 15,
+                            mapTypeId: "roadmap",
+                            zoomControl: false,
+                            mapTypeControl: false,
+                            streetViewControl: false,
+                            fullscreenControl: false,
+                            openConfirm: false,
+                            typeConfirm: false,
+                            openSelection: false,
+                            checked: "",
+                          }}
+                          coordsPath={tracking.pointCoords}
+                          onMapLoad={this._onMapLoad}
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="row" style={{ height: "20%", width: '100%', margin: 0, marginTop: '5px'}}>
+                    <Card style={{ width: "100%" }}>
+                      <Card.Content>
+                        <div className="row">
+                          <div className="col-8">
+                            <div className="row" style={{padding: '5px'}}>
+                              <div
+                                className="col-6"
+                                style={{ fontSize: 13, paddingRight: 0 }}
+                              >
+                                <b>Nombre: </b>
+                                {chats[index].user_name}
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: 13,
+                                  paddingLeft: 0,
+                                  paddingRight: 0,
+                                }}
+                                className="col-3"
+                              >
+                                <b>Celular: </b>
+                                {this.state.personalInformation.Contact.phone}
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: 13,
+                                  paddingLeft: 0,
+                                  paddingRight: 0,
+                                }}
+                                className="col-3"
+                              ></div>
+                            </div>
+                            <div
+                              className="row textContainer"
+                              style={{ paddingTop: 0 }}
+                            >
+                            </div>
+                          </div>
+                          <div className="col-4" style={{ margin: "auto" }}>
+                            <Button
+                              color="red"
+                              style={{ width: "80%", alignItems: "center" }}
+                              className="ui button"
+                              onClick={this.closeChat}
+                              style={{margin: '5px'}}
+                              disabled={textareaDisabled}
+                            >
+                              <Icon name="taxi" />
+                              Enviar unidad
+                            </Button>
+                          </div>
+                        </div>
+                      </Card.Content>
+                    </Card>
                   </div>
                 </div>
-
-                <div className="row" style={{ paddingTop: 15, height: "20%" }}>
-                  <Card style={{ width: "100%" }}>
-                    <Card.Content style={{ padding: 0 }}>
-                      <div className="row">
-                        <div className="col-8">
-                          <div className="row textContainer">
-                            <div
-                              style={{ fontSize: 13, paddingRight: 0 }}
-                              className="col-6"
-                            >
-                              <b>Nombre: </b>
-                              {chats[index].user_name}
-                            </div>
-                            <div
-                              style={{
-                                fontSize: 13,
-                                paddingLeft: 0,
-                                paddingRight: 0,
-                              }}
-                              className="col-3"
-                            >
-                              <b>Celular: </b>
-                              {this.state.personalInformation.Contact.phone}
-                            </div>
-                            <div
-                              style={{
-                                fontSize: 13,
-                                paddingLeft: 0,
-                                paddingRight: 0,
-                              }}
-                              className="col-3"
-                            ></div>
-                          </div>
-                          <div
-                            className="row textContainer"
-                            style={{ paddingTop: 0 }}
-                          >
-                          </div>
-                        </div>
-                        <div className="col-4" style={{ margin: "auto" }}>
-                          <Button
-                            color="red"
-                            style={{ width: "80%", alignItems: "center" }}
-                            className="ui button"
-                            onClick={this.closeChat}
-                          >
-                            <Icon name="taxi" />
-                            Mandar unidad
-                          </Button>
-                        </div>
-                      </div>
-                    </Card.Content>
-                  </Card>
-                </div>
-              </div>
-            ) : null}
+              ) : null}
+            </div>
             <div className="messagesContainer" id="messagesContainer">
               {!loading && chatId !== "" && chats[index]
                 ? chats[index].messages
-                  ? chats[index].messages.map((value, ref) => (
+                  ? this.state.messages.map((value, ref) => (
                     <div
                       key={ref}
                       className={
@@ -365,7 +369,7 @@ class Chat extends Component {
                       <p style={{position: "fixed", top: '50%', left: '60%'}}>No se ha seleccionado ningun chat</p>
                   }
             </div>
-            {chatId !== "" ? (
+            {chatId !== "" && chats[index] ? (
               <div className="messages_send_box">
                 {!textareaDisabled ?
                   <div style={{ position: "relative" }}>
@@ -501,7 +505,6 @@ class Chat extends Component {
 
   getMessages = (chatId) => {
    this.messageListener = refSOS.doc(chatId).onSnapshot(snapShot => {
-    console.log(snapShot.get('messages'), chatId);
      this.setState({messages: snapShot.get('messages'), chatId})
    }) 
   }
@@ -580,40 +583,43 @@ class Chat extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { flagUpdate } = this.state
     const { tabIndex, chatId } = this.props.match.params 
     const { chats: chatsPrev } = prevProps
     const { chats } = this.props
-    if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-      this.setState({ chats: chats })
-      switch (parseInt(tabIndex)) {
-        case 0:
-          const chatsMedic = this.props.chats.filter(e => e.trackingType === "Emergencia Médica")
-          this.setState({ chats: chatsMedic})
-          if(chatId){
-            const indexMedic = chatsMedic.findIndex(e => e.id === chatId)
-            this.changeChat(chatsMedic[indexMedic], indexMedic, false)
-          }  
-        break;
-        case 1:
-          const chatsSeguridad = this.props.chats.filter(e => e.trackingType === "Seguridad")
-          this.setState({ chats: chatsSeguridad})
-          if(chatId){
-            const indexSeguridad = chatsSeguridad.findIndex(e => e.id === chatId)
-            this.changeChat(chatsSeguridad[indexSeguridad], indexSeguridad, false)
-          }  
-        break;
-        case 2: 
-          const chatsCivil = this.props.chats.filter(e => e.trackingType === "Protección Civil")
-          this.setState({ chats: chatsCivil})
-          if(chatId){
-            const indexCivil = chatsCivil.findIndex(e => e.id === chatId)
-            this.changeChat(chatsCivil[indexCivil], indexCivil, false)
-          }
-        break;  
-        default:
-          const chats = this.props.chats.filter(e => e.trackingType === "Emergencia Médica")
-          this.setState({ chats: chats})
-        break;
+    if(flagUpdate === 0){
+      if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
+        this.setState({ chats: chats })
+        switch (parseInt(tabIndex)) {
+          case 0:
+            const chatsMedic = this.props.chats.filter(e => e.trackingType === "Emergencia Médica")
+            this.setState({ chats: chatsMedic, flagUpdate: 1})
+            if(chatId){
+              const indexMedic = chatsMedic.findIndex(e => e.id === chatId)
+              this.changeChat(chatsMedic[indexMedic], indexMedic, false)
+            }  
+          break;
+          case 1:
+            const chatsSeguridad = this.props.chats.filter(e => e.trackingType === "Seguridad")
+            this.setState({ chats: chatsSeguridad, flagUpdate: 1})
+            if(chatId){
+              const indexSeguridad = chatsSeguridad.findIndex(e => e.id === chatId)
+              this.changeChat(chatsSeguridad[indexSeguridad], indexSeguridad, false)
+            }  
+          break;
+          case 2: 
+            const chatsCivil = this.props.chats.filter(e => e.trackingType === "Protección Civil")
+            this.setState({ chats: chatsCivil, flagUpdate: 1})
+            if(chatId){
+              const indexCivil = chatsCivil.findIndex(e => e.id === chatId)
+              this.changeChat(chatsCivil[indexCivil], indexCivil, false)
+            }
+          break;  
+          default:
+            const chats = this.props.chats.filter(e => e.trackingType === "Emergencia Médica")
+            this.setState({ chats: chats, flagUpdate: 1})
+          break;
+        }
       }
     }
     var messageBody = document.querySelector("#messagesContainer");
@@ -632,5 +638,8 @@ const styles = {
     paddingTop: 2,
     paddingBottom: 2
   },
-  tab: { backgroundColor: "#dadada", borderWidth: 0, borderColor: "#dadada" }
+  tab: { backgroundColor: "#dadada", borderWidth: 0, borderColor: "#dadada" },
+  centered: {
+    left: '51%'
+  }
 }

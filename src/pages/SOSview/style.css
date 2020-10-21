@@ -20,23 +20,28 @@
     background-color: #fafafa;
 }
 
+.messages{
+    margin-top: 15px;
+    width: 93%;
+    height: 88%;
+    /* border-style: dotted;
+    border-color: red; */
+}
 
 
 .messagesContainer{
+    height: 34%;
+    width: 91%;
     position: absolute;
-    top:55%;
-    left: 0;
-    right: 0;
-    bottom: 10vh;
-    padding: 15px;
-    padding-top: 0;
+    top: 55%;
     overflow-x: hidden;
-    overflow-y: auto; 
+    overflow-y: auto;
+    margin: 0;
 }
 
 .cameraView{
-    height: 50%;
-    padding-top: 15px;
+    height: 57%;
+    width: 100%;
 }
 
 .cameraView >.row>.col >.card{
@@ -119,12 +124,10 @@
 
 .messages_send_box{
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    left: 0;
+    width: 92%;
     height: 10vh;
-    background-color: #c0c0c0;   
-    padding:5px;     
+    background-color: #c0c0c0;
+    padding: 5px;    
 }
 
 #messsageTextarea{
