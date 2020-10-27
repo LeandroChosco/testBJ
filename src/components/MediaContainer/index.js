@@ -214,37 +214,18 @@ class MediaContainer extends Component {
   };
 
   _deleteFile = () => {
-    console.log(this.props);
-    console.log(
-      constants.base_url +
-        ":" +
-        constants.apiPort +
-        "/cams/" +
-        this.props.cam.id +
-        "/" +
-        this.props.value.id +
-        "/1/V2"
-    );
-    Axios.delete(
-      constants.base_url +
-        ":" +
-        constants.apiPort +
-        "/cams/" +
-        this.props.cam.id +
-        "/" +
-        this.props.value.id +
-        "/1/V2"
-    ).then(response => {
-      console.log("eliminando archivo");
-      console.log(response);
-      if (response.data.success) {
-        this.setState({ modal: false, display: "none" });
-        this.props.reloadData(this.props.cam);
-      } else {
-        alert("Error al eliminar imagen");
-      }
-    });
-  };
+    //console.log(this.props.cam)
+    Axios.delete(constants.sails_url+':'+constants.sailsPort+'/cams/' + this.props.cam.id + '/' + this.props.value.id + '/1/V2').then(response => {          
+            // console.log("eliminando archivo")
+            if (response.data.success ) {
+                this.setState({modal:false, display:'none'})
+                this.props.reloadData(this.props.cam)
+            } else {
+                alert('Error al eliminar imagen')
+            }
+        })
+}
+
 }
 
 export default MediaContainer;
