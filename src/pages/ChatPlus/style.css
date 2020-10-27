@@ -123,7 +123,8 @@
 }*/
 
 .messages_send_box{
-    position: absolute;
+    position: fixed;
+    bottom: 0px;
     width: 92%;
     height: 10vh;
     background-color: #c0c0c0;
@@ -197,4 +198,6 @@
     text-align: center;
     padding: 2%;
     font-weight: bold;
+    position: fixed;
+    bottom: 0px;
 }
