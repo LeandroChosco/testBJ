@@ -7,7 +7,7 @@ import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants';
 import MapContainer from '../../components/MapContainer';
 import Axios from 'axios';
-const ref = firebaseC5.app('c5cuajimalpa').firestore().collection('messages')
+const ref = firebaseC5.app('c5benito').firestore().collection('messages')
 class Chat extends Component {
   state = {
     messages: [],

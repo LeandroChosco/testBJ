@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { Modal, ListGroup } from 'react-bootstrap';
-import { Checkbox, Dimmer, Loader, Image, Segment, Button, Icon } from 'semantic-ui-react'
+import { Modal } from 'react-bootstrap';
+import { Image, Segment, Button, Icon } from 'semantic-ui-react'
 import ModalViewCam  from '../ModalViewCam'
 import './style.css'
 import conections from '../../conections';
@@ -83,14 +83,14 @@ class ModalAddCams extends Component{
     }
 
     _loadCameras = () => {
-        let aux = []
+        
         conections.loadCamsCuadrantes(this.props.name_cuadrante.id)
             .then((response) => {
                 console.log('camaras cuadrantesss', response)
                 this.setState({loading:false, auxCams:response.data.data.map(item =>{
                     item.camara = 'Camara '+item.num_cam
                     item.direccion = item.street+' '+item.number+', '+item.township+', '+item.town+', '+item.state
-                    if(item.RelCuadranteCams.length != 0){
+                    if(item.RelCuadranteCams.length !== 0){
                         item.RelCuadranteCams.map(cam =>{
                             if(cam.id_cuadrante === this.props.name_cuadrante.id){
                                 if(cam.activo)
@@ -98,6 +98,7 @@ class ModalAddCams extends Component{
                                 else
                                     item.selected = false
                             }
+                            return cam;
                         })
                     }else{
                         item.selected = false
@@ -120,6 +121,7 @@ class ModalAddCams extends Component{
                     if(item.selected){
                         auxSelection.push(item.id)
                     }
+                    return item;
                 })
 
                 //console.log('seleccionCheckbox',auxSelection)
@@ -135,7 +137,7 @@ class ModalAddCams extends Component{
     }
 
     _viewCam = (cam) =>{
-        //console.log('cammmm',cam)
+        console.log('cammmm',cam)
         this.setState({showModalView: true, camare: cam})
     }
 
@@ -201,6 +203,7 @@ class ModalAddCams extends Component{
             if(!found){
                 aux.push({id:data.id,selected:isSelect})
             }
+            return data;
         })
 
         let cams = this.state.auxCams
@@ -210,8 +213,10 @@ class ModalAddCams extends Component{
                 if (cam.id === data.id) {
                     cam.selected = isSelect
                 }
-                return cam
+                return data;
+                
             })
+            return cam;
         })
 
         this.setState({selection: aux, auxCams:cams})
@@ -225,7 +230,7 @@ class ModalAddCams extends Component{
             cams:this.state.selection
         }
         console.log('dataAdd',camsAdd)
-        if(this.state.selection.length != 0){
+        if(this.state.selection.length !== 0){
             conections.addCamsCuadrante(camsAdd).then((response) =>{
                 console.log('resAdd',response)
                  this.props.hide(this.props.name_cuadrante.id)

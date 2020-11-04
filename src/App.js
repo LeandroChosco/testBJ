@@ -17,12 +17,11 @@ import Details from './pages/Details';
 import MobileHelp from './pages/CamaraForMobile';
 import conections from './conections';
 import Welcome from './pages/Welcome';
-import firebaseC5cuajimalpa from './constants/configC5CJ'
+import firebaseC5Benito from './constants/configC5CJ'
 import firebase from './constants/config';
 import firebaseC5 from './constants/configC5';
 import Matches from './components/Matches';
 import DetailsEmergency from './pages/DetailsEmergency';
-import Chat from './pages/Chat';
 import ModalCall from './components/ModalCall';
 import DetailsComplaiment from './pages/DetailsComplaiment';
 import Tickets from './pages/Tickets';
@@ -44,7 +43,10 @@ import sailsIOClient from "sails.io.js";
 import SosView from "./pages/SOSview/index";
 import firebaseSos from "./constants/configSOS";
 import { MESSAGES_COLLECTION } from "./Api/sos";
-import ChatNew from './pages/ChatNew';
+
+
+import Chat from './pages/ChatPlus/index'
+
 var io = sailsIOClient(socketIOClient);
 
 //Socket para servicio de alarmas
@@ -75,9 +77,6 @@ class App extends Component {
     support: [],
     fisrtTimeChat: true,
     chats: [],
-    fireChats: [],
-    policeChats: [],
-    medicChats: [],
     chatSelected: null,
     showNotification: false,
     fisrtTime: true,
@@ -107,27 +106,13 @@ class App extends Component {
     },
     stateSos: [],
     datosAlcaldia: [],
+    chatFirebase: undefined,
+    indexSos: undefined
   }
 
 
   async componentDidMount() {
 
-    // const socket = socketIOClient("http://95.216.37.253:3011");
-    // socket.on("messages", data => {
-    //   console.log("Socket Connect")
-    //   console.log(data);
-    // });
-    // const socket = io('http://95.216.37.253:3011');
-    // socket.on('connect', function(){console.log("conectado")});
-    // socket.on('event', function(data){console.log("event", data)}); 
-    // const socket = socketIOClient('http://95.216.37.253:3011');
-    // socket.on("messages", this.checkCall);
-    // setTimeout(()=>this.checkCall(),5000)
-    // socket.on('messages', (data) => {
-    //   console.log("socket")
-    //   console.log(data);
-    //   setTimeout(()=>this.checkCall(data),5000)
-    // });
     io.sails.url = constants.sails_url + ':' + constants.sailsPort;
     io.socket.get('/termicfiles', (data) => {
       console.log("Al socket get")
@@ -179,11 +164,6 @@ class App extends Component {
       // }, 500);
     })
 
-    // ioAlarm.on('connect', console.log('conectado a XtunAPI'))
-    // const notification = this.refs.notificationSystem;
-
-
-
     soundManager.soundManager.setup({ ignoreMobileRestrictions: true });
     if (window.location.pathname.includes('mobile_help')) {
       this.setState({ showHeader: false })
@@ -217,8 +197,7 @@ class App extends Component {
           data.id = i.id;
           return data;
         });
-
-        this.setState({ stateSos: chatSOS });
+        this.setState({ stateSos: chatSOS })
       })
     }
 
@@ -270,42 +249,45 @@ class App extends Component {
       this.setState({ newCovidState: false })
     }
   }
+
   _alertaCovidState = () => {
     if (this.state.alertaCovidState) {
       this.setState({ alertaCovidState: false })
     }
   }
 
-  loadData = () => {
-    // if (process.env.NODE_ENV==='production'||true) {
-    // --- matches planchados ---
-    conections.getMatchAPI().then(docs => {
-      if (this.state.matches.length !== docs.data.length && this.state.showNotification && !this.state.fisrtTime) {
-        this.showNot(
-          "Match",
-          "Nuevo match detectado",
-          "warning",
-          "ver match",
-          0
-        );
-      }
-      if (this.state.fisrtTime) {
-        this.setState({ fisrtTime: false });
-      }
-      this.setState({
-        matches: docs.data.map(v => {
-          let value = v
-          if (value.dateTime) {
-            value.dateTime = new Date(
-              value.dateTime
-            ).toLocaleString();
-          } else {
-            value.dateTime = value.date;
-          }
-          return value
+  loadData = () => {         
+    if (process.env.NODE_ENV==='production'||true) {
+      // --- matches planchados ---
+    console.log("dentro del load data")
+      conections.getMatchAPI().then(docs=>{
+        if(this.state.matches.length !== docs.data.length && this.state.showNotification && !this.state.fisrtTime){
+          this.showNot(
+            "Match",
+            "Nuevo match detectado",
+            "warning",
+            "ver match",
+            0
+          );
+        }
+        if(this.state.fisrtTime){
+          this.setState({fisrtTime: false});
+        }
+        this.setState({
+          matches: docs.data.map(v =>{
+            let value = v
+            if(value.dateTime){
+              value.dateTime = new Date(
+                value.dateTime
+              ).toLocaleString();
+            } else{
+              value.dateTime = value.date;
+            }
+            return value
+          })
         })
       })
-    });
+    }
 
     firebase.firestore().collection('matches').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.matches.length !== docs.size && this.state.showNotification && !this.state.fisrtTime) {
@@ -364,17 +346,25 @@ class App extends Component {
           !this.state.fisrtTimeChat &&
           !this.state.callIsGoing
         ) {
-          this.showNot(
-            "Mensaje de usuario",
-            "Nuevo mensaje de usuario",
-            "success",
-            "Ver detalles",
-            3,
-            0
-          );
-          this.setState({ reproducirSonido: true });
-          // if(changes[0].doc._hasPendingWrites === false)
-          //   this.setState({reproducirSonido: true})
+          const indexSos = docs.docs.findIndex(e => e.id === changes[0].doc.id)
+          if(indexSos != -1){
+            if(this.state.indexSos !== indexSos){
+              switch (docs.docs[indexSos].data().trackingType) {
+                case 'Emergencia Médica':
+                  this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changes[0].doc.id);
+                break;
+                case 'Seguridad':
+                  this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changes[0].doc.id);
+                break;
+                case 'Protección Civil':
+                  this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changes[0].doc.id);
+                break;
+                default:
+                  break;
+              }
+              this.setState({ reproducirSonido: true , indexSos});
+            }
+          }
         }
         if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
         var chats = docs.docs.map((v) => {
@@ -382,16 +372,37 @@ class App extends Component {
           value.lastModification = new Date(
             value.lastModification.toDate()
           ).toLocaleString();
-          // value.messages = value.messages.map(message =>{
-          //   message.dateTime = new Date(message.dateTime.toDate()).toLocaleString()
-          //   return message
-          //})
           value.id = v.id;
           return value;
         });
         this.setState({ stateSos: chats });
       });
-    // .get();
+
+      firebaseC5Benito
+        .app('c5benito')
+        .firestore()
+        .collection('messages')
+        .orderBy('lastModification', 'desc')
+        .onSnapshot(docs => {
+          if (
+            this.state.showNotification && 
+            !this.state.fisrtTimeChat && 
+            !this.state.callIsGoing
+            ) {
+            this.setState({ reproducirSonido: true })
+          }
+        if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
+        const chats = docs.docs.map(v => {
+          let value = v.data()
+          value.lastModification = new Date(
+            value.lastModification.toDate()
+            ).toLocaleString()
+          value.id = v.id
+          return value
+        })
+
+        this.setState({ chats })
+      })
 
 
 
@@ -450,45 +461,6 @@ class App extends Component {
           return value
         })
       })
-    })
-
-
-    firebaseC5cuajimalpa.app('c5cuajimalpa').firestore().collection('messages').orderBy('lastModification', 'desc').onSnapshot(docs => {
-      // console.log( docs.docChanges())
-      let changes = docs.docChanges()
-      if (changes.length === 1) {
-        let index = changes[0].oldIndex
-        let data = changes[0].doc.data()
-        if (this.state.chats[index]) {
-          if (this.state.chats[index].messages.length === data.messages.length) {
-            this.setState({ stopNotification: true })
-          }
-        }
-      }
-      if (this.state.showNotification && !this.state.fisrtTimeChat && !this.state.callIsGoing) {
-        this.showNot('Mensaje de usuario', 'Nuevo mensaje de usuario', 'success', 'Ver detalles', 3, 0)
-        this.setState({ reproducirSonido: true })
-      }
-      if (this.state.fisrtTimeChat)
-        this.setState({ fisrtTimeChat: false })
-      var chats = docs.docs.map(v => {
-        let value = v.data()
-        value.lastModification = new Date(value.lastModification.toDate()).toLocaleString()
-        // value.messages = value.messages.map(message =>{
-        //   message.dateTime = new Date(message.dateTime.toDate()).toLocaleString()
-        //   return message
-        //})
-        value.id = v.id
-        return value
-      })
-      const fireChats = chats.filter(e => e.alarmType === 'Fuego')
-      const policeChats = chats.filter(e => e.alarmType === 'Policia')
-      const medicChats = chats.filter(e => e.alarmType === 'Médico')
-      const chatsC5 = chats.filter(e => !e.alarmType)
-      //No quitar es para ayudara QA    
-      console.log("CHATS: ", chatsC5)
-      this.setState({ chats: chatsC5, fireChats, policeChats, medicChats })
-      // console.log('Chats medic', this.state.medicChats)
     })
 
     firebaseC5.app('c5virtual').firestore().collection('calls').orderBy('dateTime', 'desc').onSnapshot(docs => {
@@ -558,16 +530,16 @@ class App extends Component {
     // Socket desarollo conectado a alarma
 
     ioAlarmSocket.on('connect', () => {
-      this.showNot('Conectado a XTUN API', 'Connection ID: ' + ioAlarmSocket.id, 'success', 'OK', 1, 0)
-      ioAlarmSocket.on('activeAlarm', ({active, alarm}) => {
-        if(alarm === 'medical' && active === true){
-          this.showNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Medico', 'error', 'Ir a chat', 3, 0)
+      // this.showNot('Conectado a XTUN API', 'Connection ID: ' + ioAlarmSocket.id, 'success', 'OK', 1, 0)
+      ioAlarmSocket.on('alarmListener', ({alarm, chatId}) => {
+        if(alarm === 'medical'){
+          this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Medico', 'error', 'Ir a chat', 3, chatId)
         }
-        if(alarm === 'police' && active === true){
-          this.showNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 3, 0)
+        if(alarm === 'police'){
+          this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 2, chatId)
         }
-        if(alarm === 'fire' && active === true){
-          this.showNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Fuego', 'error', 'Ir a chat', 3, 0)
+        if(alarm === 'fire'){
+          this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Fuego', 'error', 'Ir a chat', 1, chatId)
         }
       })
     })
@@ -621,6 +593,46 @@ class App extends Component {
     }
   }
 
+  showAlarmNot = (title, message, type, label, action, id) => {
+    const chatId = id
+    const notification = this.refs.notificationSystem;
+    if (notification && !this.state.callIsGoing) {
+      notification.addNotification({
+        title: title,
+        message: message,
+        level: type,
+        action: {
+          label: label,
+          callback: () =>
+            action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/1/${chatId}`) : // Fuego
+            action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/2/${chatId}`) : // Policia
+            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/3/${chatId}`) : // Medico
+            null
+        }
+      });
+    }
+  }
+
+  showSOSNot = (title, message, type, label, action, id) => {
+    const chatId = id
+    const notification = this.refs.notificationSystem;
+    if (notification && !this.state.callIsGoing) {
+      notification.addNotification({
+        title: title,
+        message: message,
+        level: type,
+        action: {
+          label: label,
+          callback: () =>
+            action === 0 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/0/${chatId}`) : // Fuego
+            action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/1/${chatId}`) : // Policia
+            action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/2/${chatId}`) : // Medico
+            null
+        }
+      });
+    }
+  }
+
   showNot = (title, message, type, label, action, id) => {
     const notification = this.refs.notificationSystem;
     if (notification && !this.state.stopNotification && !this.state.callIsGoing) {
@@ -631,12 +643,12 @@ class App extends Component {
         action: {
           label: label,
           callback: () =>
-            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/chat') :
+            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos`):
             action === 5 ? window.open(window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/') + 'detalles/emergency/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
             action === 2 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/denuncia/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
             action === 4 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/soporte/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
-            action === 1 ? null :
-              this.seeMatch(action)
+            action === 0 ? null :
+            this.seeMatch(action)
         }
       });
     }
@@ -844,7 +856,7 @@ class App extends Component {
           }
           />
           <Route
-            path="/sos"
+            path="/sos/:tabIndex?/:chatId?"
             exact
             render={(props) => (
               <SosView
@@ -869,21 +881,20 @@ class App extends Component {
           <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route
-            path="/chat"
+            path="/chat/:alarmIndex?/:chatId?"
             exact
             render={(props) => (
-              this.state.chats.length !== 0 ?
-                <ChatNew
+                <Chat
                   chats={this.state.chats}
-                  fireChats={this.state.fireChats}
-                  policeChats={this.state.policeChats}
-                  medicChats={this.state.medicChats}
-                  stopNotification={() => this.setState({ stopNotification: true })}
-                  socket={ioAlarmSocket}
+                  {...props}
+                  userInfo={this.state.userInfo}
+                  chatFirebase = {this.state.chatFirebase}
+                  stopNotification={() =>
+                    this.setState({ stopNotification: true })
+                  }
                 />
-                : <div />
             )}
-          />
+            />
           <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/dashboard" exact render={(props) => <Dashboard showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />

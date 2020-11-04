@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Icon, Button, Input, Dropdown, Tab } from "semantic-ui-react";
+import { Card, Icon, Button, Input, Dropdown, Tab, IconGroup } from "semantic-ui-react";
 
 import "./style.css";
 // import firebaseC5 from "../../constants/configC5";
@@ -13,6 +13,9 @@ import _ from 'lodash'
 
 import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION } from "../../Api/sos";
 import firebaseSos from "../../constants/configSOS";
+import FadeLoader from "react-spinners/FadeLoader";
+
+import { support } from "jszip";
 
 // const ref = firebaseC5.app("c5cuajimalpa").firestore().collection("messages");
 
@@ -68,7 +71,8 @@ class Chat extends Component {
     personalInformation: {},
     optionSelected: "name",
     marker: null,
-    firebaseSub: null
+    firebaseSub: null,
+    flagUpdate: 0
   };
   panes = [
     {
@@ -179,10 +183,10 @@ class Chat extends Component {
   }
 
   render() {
-    const { chats } = this.state;
-    const { chatId, index, from, loading, tracking } = this.state;
+    const { tabIndex } = this.props.match.params
+    const { chats, chatId, index, from, loading, tracking } = this.state;
     if (index !== undefined && chatId === "" && chats.length > 0) {
-      this.setState({ chatId: chats[index].id });
+      this.setState({ chatId: null });
     }
     const chatSelected = chats && chats[index]
 
@@ -197,7 +201,11 @@ class Chat extends Component {
       >
         <div className="row fullHeight">
           <div className="col-4 userList">
-            <Tab menu={{ pointing: true }} panes={this.panes} onTabChange={(t, i) => {
+            <Tab 
+              menu={{ pointing: true }} 
+              panes={this.panes}
+              defaultActiveIndex={tabIndex ? tabIndex : 0}
+              onTabChange={(t, i) => {
               const { chats } = this.props
               const { index } = this.state
               let newChats = chats.filter(c => c.trackingType === FILTERSOPTIONS[i.activeIndex]);
@@ -205,133 +213,128 @@ class Chat extends Component {
                 let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
                 this.setState({ from: selected ? selected : "Error getting data" })
               }
-              let newIndex = index > newChats.length - 1 ? 0 : index
-              this.setState({ chats: newChats, activeIndex: i.activeIndex, index: newIndex })
+              this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null })
             }} />
           </div>
-          <div className="col-8 messages">
-            {!loading && chatId !== "" && chats[index] ? (
-              <div className="cameraView">
-                <h2
-                  className={"Chat C5"}
-                  style={{
-                    textAlign: "center",
-                    backgroundColor: COLORS[chats[index].trackingType],
-                    height: "10%"
-                  }}
-                >
-                  {from}
-                </h2>
-                <div className="row" style={{ height: "70%" }}>
-                  <div
-                    className="col"
-                    style={{ height: "100%", width: "100%" }}
+          <div className="col-8">
+            <div className="messages" style={{height: '88%'}}>
+              {!loading && chatId !== "" && chats[index] ? (
+                <div className="cameraView">
+                  <h2
+                    className={"Chat C5"}
+                    style={{
+                      textAlign: "center",
+                      backgroundColor: COLORS[chats[index].trackingType],
+                      height: "5%"
+                    }}
                   >
-                    {Object.keys(tracking).length !== 0 && tracking.pointCoords && (
-                      <MapContainer
-                        options={{
-                          center: {
-                            lat: parseFloat(
-                              tracking.pointCoords[
-                                tracking.pointCoords.length - 1
-                              ].latitude
-                            ),
-                            lng: parseFloat(
-                              tracking.pointCoords[
-                                tracking.pointCoords.length - 1
-                              ].longitude
-                            ),
-                          },
-                          zoom: 15,
-                          mapTypeId: "roadmap",
-                          zoomControl: false,
-                          mapTypeControl: false,
-                          streetViewControl: false,
-                          fullscreenControl: false,
-                          openConfirm: false,
-                          typeConfirm: false,
-                          openSelection: false,
-                          checked: "",
-                        }}
-                        coordsPath={tracking.pointCoords}
-                        onMapLoad={this._onMapLoad}
-                      />
-                    )}
+                    {from}
+                  </h2>
+                  <div className="row" style={{ height: "70%", margin: 0 }}>
+                    <div
+                      className="col"
+                      style={{ height: "100%" }}
+                    >
+                      {Object.keys(tracking).length !== 0 && tracking.pointCoords && (
+                        <MapContainer
+                          options={{
+                            center: {
+                              lat: parseFloat(
+                                tracking.pointCoords[
+                                  tracking.pointCoords.length - 1
+                                ].latitude
+                              ),
+                              lng: parseFloat(
+                                tracking.pointCoords[
+                                  tracking.pointCoords.length - 1
+                                ].longitude
+                              ),
+                            },
+                            zoom: 15,
+                            mapTypeId: "roadmap",
+                            zoomControl: false,
+                            mapTypeControl: false,
+                            streetViewControl: false,
+                            fullscreenControl: false,
+                            openConfirm: false,
+                            typeConfirm: false,
+                            openSelection: false,
+                            checked: "",
+                          }}
+                          coordsPath={tracking.pointCoords}
+                          onMapLoad={this._onMapLoad}
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="row" style={{ height: "20%", width: '100%', margin: 0, marginTop: '5px'}}>
+                    <Card style={{ width: "100%" }}>
+                      <Card.Content>
+                        <div className="row">
+                          <div className="col-8">
+                            <div className="row" style={{padding: '5px'}}>
+                              <div
+                                className="col-6"
+                                style={{ fontSize: 13, paddingRight: 0 }}
+                              >
+                                <b>Nombre: </b>
+                                {chats[index].user_name}
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: 13,
+                                  paddingLeft: 0,
+                                  paddingRight: 0,
+                                }}
+                                className="col-3"
+                              >
+                                <b>Celular: </b>
+                                {this.state.personalInformation.Contact.phone}
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: 13,
+                                  paddingLeft: 0,
+                                  paddingRight: 0,
+                                }}
+                                className="col-3"
+                              ></div>
+                            </div>
+                            <div
+                              className="row textContainer"
+                              style={{ paddingTop: 0 }}
+                            >
+                            </div>
+                          </div>
+                          <div className="col-4" style={{ margin: "auto" }}>
+                            <Button
+                              color="red"
+                              style={{ width: "80%", alignItems: "center" }}
+                              className="ui button"
+                              onClick={this.closeChat}
+                              style={{margin: '5px'}}
+                              disabled={textareaDisabled}
+                            >
+                              <Icon name="taxi" />
+                              Enviar unidad
+                            </Button>
+                          </div>
+                        </div>
+                      </Card.Content>
+                    </Card>
                   </div>
                 </div>
-
-                <div className="row" style={{ paddingTop: 15, height: "20%" }}>
-                  <Card style={{ width: "100%" }}>
-                    <Card.Content style={{ padding: 0 }}>
-                      <div className="row">
-                        <div className="col-8">
-                          <div className="row textContainer">
-                            <div
-                              style={{ fontSize: 13, paddingRight: 0 }}
-                              className="col-6"
-                            >
-                              <b>Nombre: </b>
-                              {chats[index].user_name}
-                            </div>
-                            <div
-                              style={{
-                                fontSize: 13,
-                                paddingLeft: 0,
-                                paddingRight: 0,
-                              }}
-                              className="col-3"
-                            >
-                              <b>Celular: </b>
-                              {this.state.personalInformation.Contact.phone}
-                            </div>
-                            <div
-                              style={{
-                                fontSize: 13,
-                                paddingLeft: 0,
-                                paddingRight: 0,
-                              }}
-                              className="col-3"
-                            ></div>
-                          </div>
-                          <div
-                            className="row textContainer"
-                            style={{ paddingTop: 0 }}
-                          >
-                            {/* <div style={{ fontSize: 13 }} className="col">
-                              <b>Dirección: </b>
-                              {chats[index].user_cam.street}{" "}
-                              {chats[index].user_cam.number},{" "}
-                              {chats[index].user_cam.town},{" "}
-                              {chats[index].user_cam.township},{" "}
-                              {chats[index].user_cam.state}
-                            </div> */}
-                          </div>
-                        </div>
-                        <div className="col-4" style={{ margin: "auto" }}>
-                          <Button
-                            color="red"
-                            style={{ width: "80%", alignItems: "center" }}
-                            className="ui button"
-                            onClick={this.closeChat}
-                          >
-                            <Icon name="taxi" />
-                            Mandar unidad
-                          </Button>
-                        </div>
-                      </div>
-                    </Card.Content>
-                  </Card>
-                </div>
-              </div>
-            ) : null}
+              ) : null}
+            </div>
             <div className="messagesContainer" id="messagesContainer">
               {!loading && chatId !== "" && chats[index]
                 ? chats[index].messages
-                  ? chats[index].messages.map((value, ref) => (
+                  ? this.state.messages.map((value, ref) => (
                     <div
                       key={ref}
                       className={
-                        value.from === "Soporte" || value.from === "C2 base blindar" ? "support" : "user"
+                        value.from === "user" ? "user" : "support"
                       }
                       ref={
                         ref === chats[index].messages.length - 1
@@ -352,14 +355,21 @@ class Chat extends Component {
                       </small>
                     </div>
                   ))
-                  : loading === true
-                    ? "Cargando..."
-                    : "No se ha seleccionado ningun chat"
-                : loading === true
-                  ? "Cargando..."
-                  : "No se ha seleccionado ningun chat"}
+                  : loading === true ?
+                  <>  
+                      <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered}/> 
+                      <p style={{position: "fixed", top: '56%', left: '62%'}}>Cargando chat</p>
+                  </> :
+                      <p style={{position: "fixed", top: '50%', left: '60%'}}>No se ha seleccionado ningun chat</p> : 
+                  loading === true ? 
+                  <>
+                      <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered}/>
+                      <p style={{position: "fixed", top: '56%', left: '62%'}}>Cargando chat</p>
+                  </>:
+                      <p style={{position: "fixed", top: '50%', left: '60%'}}>No se ha seleccionado ningun chat</p>
+                  }
             </div>
-            {chatId !== "" ? (
+            {chatId !== "" && chats[index] ? (
               <div className="messages_send_box">
                 {!textareaDisabled ?
                   <div style={{ position: "relative" }}>
@@ -429,62 +439,75 @@ class Chat extends Component {
     this.setState({ map, marker: _marker });
   };
 
-  changeChat = (chat, i) => {
-
-    this.setState(
-      { chatId: "", loading: true, camData: undefined },
-      async () => {
-        this.props.stopNotification();
-        const trackingInformation = await getTracking(chat.trackingId);
-
-        let newData = trackingInformation.data.data();
-
-        newData = {
-          ...newData,
-          id: trackingInformation.data.id,
-        };
-
-        this.setState({
-          chatId: chat.id,
-          messages: chat.messages,
-          index: i,
-          from: newData.SOSType, //
-          tracking: newData,
-          loading: false,
-          personalInformation: newData.userInformation, //
-          pointCoords: [], //
-        });
-
-        if (chat.active) {
-          const unsub = firebaseSos
-            .app("sos")
-            .firestore()
-            .collection(SOS_COLLECTION)
-            .onSnapshot((docs) => {
-              const track_changes = docs.docChanges();
-              if (track_changes.length === 1) {
-                const updatedChatId = track_changes[0].doc.id;
-                const track_data = track_changes[0].doc.data();
-                if (chat.trackingId === updatedChatId) {
-                  if (chat.active) {
-                    this.setState({ tracking: track_data });
+  changeChat = (chat, i, flag = true) => {
+    if(flag){
+      this.props.history.push(`/sos/${this.state.activeIndex}/${chat.id}`)
+    }
+    if(chat === undefined && i === -1){
+      this.props.history.push('/sos')
+    } else {
+      this.getMessages(chat.id)
+      this.setState(
+        { loading: true, camData: undefined },
+        async () => {
+          this.props.stopNotification();
+          const trackingInformation = await getTracking(chat.trackingId);
+  
+          let newData = trackingInformation.data.data();
+  
+          newData = {
+            ...newData,
+            id: trackingInformation.data.id,
+          };
+  
+          this.setState({
+            // chatId: chat.id,
+            // messages: chat.messages,
+            index: i,
+            from: newData.SOSType, //
+            tracking: newData,
+            loading: false,
+            personalInformation: newData.userInformation, //
+            pointCoords: [], //
+          });
+  
+          if (chat.active) {
+            const unsub = firebaseSos
+              .app("sos")
+              .firestore()
+              .collection(SOS_COLLECTION)
+              .onSnapshot((docs) => {
+                const track_changes = docs.docChanges();
+                if (track_changes.length === 1) {
+                  const updatedChatId = track_changes[0].doc.id;
+                  const track_data = track_changes[0].doc.data();
+                  if (chat.trackingId === updatedChatId) {
+                    if (chat.active) {
+                      this.setState({ tracking: track_data });
+                    }
                   }
                 }
-              }
+              });
+            this.setState({ firebaseSub: unsub });
+          } else {
+            // this.state.firebaseSub();
+          }
+          refSOS
+            .doc(chat.id)
+            .update({ c5Unread: 0 })
+            .then(() => {
+              this.setState({ text: "",  from: 'Chat C5' });
             });
-          this.setState({ firebaseSub: unsub });
-        } else {
-          this.state.firebaseSub();
         }
-        refSOS
-          .doc(chat.id)
-          .update({ c5Unread: 0 })
-          .then(() => {
-            this.setState({ text: "" });
-          });
-      }
-    );
+      );
+    }
   };
+
+  getMessages = (chatId) => {
+   this.messageListener = refSOS.doc(chatId).onSnapshot(snapShot => {
+     this.setState({messages: snapShot.get('messages'), chatId})
+   }) 
+  }
 
   checkKey = (event) => {
     var key = window.event.keyCode;
@@ -496,57 +519,6 @@ class Chat extends Component {
     }
   };
 
-  _changeUserCam = (chat) => {
-    Axios.get(
-      constants.base_url +
-      ":" +
-      constants.apiPort +
-      "/admin/users/" +
-      chat.user_creation
-    ).then((response) => {
-      if (response.status === 200) {
-        if (response.data.success) {
-          const data = response.data.data;
-          this.setState({
-            camData:
-              data.UserToCameras[0] === undefined
-                ? undefined
-                : {
-                  extraData: {
-                    num_cam:
-                      data.UserToCameras[0] !== undefined
-                        ? data.UserToCameras[0].Camare.num_cam
-                        : null,
-                    cameraID:
-                      data.UserToCameras[0] !== undefined
-                        ? data.UserToCameras[0].Camare.num_cam
-                        : null,
-                    //webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
-                    isHls: true,
-                    url:
-                      data.UserToCameras[0] !== undefined
-                        ? "http://" +
-                        data.UserToCameras[0].Camare.UrlStreamMediaServer
-                          .ip_url_ms +
-                        ":" +
-                        data.UserToCameras[0].Camare.UrlStreamMediaServer
-                          .output_port +
-                        data.UserToCameras[0].Camare.UrlStreamMediaServer
-                          .name +
-                        data.UserToCameras[0].Camare.channel
-                        : null,
-                    dataCamValue:
-                      data.UserToCameras[0] !== undefined
-                        ? data.UserToCameras[0].Camare
-                        : null,
-                  },
-                },
-          });
-        }
-      }
-    });
-  };
-
   closeChat = () => {
     /*let {chats} = this.props
      */
@@ -554,22 +526,22 @@ class Chat extends Component {
 
   sendMessage = () => {
     if (this.state.text === "") return;
+    const {chatId, messages} = this.state
 
-    let messages = this.props.chats[this.state.index].messages;
-    messages = messages.map((message) => {
-      message.dateTime = message.dateTime.toDate();
-      return message;
-    });
-    messages.push({
-      from: "C2 base blindar",
+    let messagesAux = messages.map((e) => e)
+
+    messagesAux.push({
+      from: "support",
       dateTime: new Date(),
-      msg: this.state.text, //msg
-    });
-    this.props.stopNotification();
+      msg: this.state.text
+    })
+
+    this.props.stopNotification()
+
     refSOS
-      .doc(this.state.chatId)
+      .doc(chatId)
       .update({
-        messages: messages,
+        messages: messagesAux,
         from: "Chat C5",
         userUnread: this.props.chats[this.state.index].userUnread
           ? this.props.chats[this.state.index].userUnread + 1
@@ -584,64 +556,15 @@ class Chat extends Component {
   };
 
   async componentDidMount() {
-    // const obj = {
-    //   SOSType: "Robo",
-    // };
-    // const data = await getSOS(obj);
-    // console.log("hey", data);
+    const {tabIndex} = this.props.match.params
 
-    // const track = await getTracking();
-
-    // console.log("hey", track);
     if (this.props.chats) {
-      this.setState({ chats: this.props.chats })
-    }
-    if (
-      this.props.location.hash !== "" &&
-      this.state.index !== 0 &&
-      this.state.hashUsed === false
-    ) {
-      if (this.props.chats[0] !== undefined) {
-        //this.setState({index:0, from:this.props.chats[0].from})
-        this._changeUserCam(this.props.chats[0]);
-        this.setState({
-          index: 0,
-          from: this.props.chats[0].from,
-          chatId: this.props.chats[0].id,
-          hashUsed: true,
-        });
+      if(tabIndex){
+        this.setState({ chats: this.props.chats, activeIndex: tabIndex })
+      } else {
+        this.setState({ chats: this.props.chats })
       }
     }
-    if (this.props.location.search !== "") {
-      let params = this.QueryStringToJSON(this.props.location.search);
-      if (this.props.chats.length > 0) {
-        let i;
-        this.props.chats.forEach((chat, index) => {
-          if (chat.user_creation === params.u) {
-            i = index;
-          }
-        });
-
-        if (this.state.index !== i && this.state.fisrt.u !== params.u) {
-          this._changeUserCam(this.props.chats[i]);
-          this.setState({
-            index: i,
-            fisrt: params,
-            from: this.props.chats[i].from,
-            chatId: this.props.chats[i].id,
-          });
-        }
-      }
-    }
-    if (
-      this.state.index !== undefined &&
-      this.props.chats[this.state.index] !== undefined
-    ) {
-      if (this.state.from !== this.props.chats[this.state.index].from) {
-        this.setState({ from: this.props.chats[this.state.index].from });
-      }
-    }
-
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
@@ -660,57 +583,45 @@ class Chat extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { flagUpdate } = this.state
+    const { tabIndex, chatId } = this.props.match.params 
     const { chats: chatsPrev } = prevProps
     const { chats } = this.props
-    if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-      this.setState({ chats: chats })
-    }
-    if (
-      this.props.location.hash !== "" &&
-      this.state.index !== 0 &&
-      this.state.hashUsed === false
-    ) {
-      if (this.props.chats[0] !== undefined) {
-        this.setState({ index: 0, from: this.props.chats[0].from });
-        this._changeUserCam(this.props.chats[0]);
-        this.setState({
-          index: 0,
-          // from: this.props.chats[0].from,
-          chatId: this.props.chats[0].id,
-          hashUsed: true,
-        });
-      }
-    }
-    if (this.props.location.search !== "") {
-      let params = this.QueryStringToJSON(this.props.location.search);
-      if (this.props.chats.length > 0) {
-        let i;
-        this.props.chats.forEach((chat, index) => {
-          if (chat.user_creation === params.u) {
-            i = index;
-          }
-        });
-
-        if (this.state.index !== i && this.state.fisrt.u !== params.u) {
-          this._changeUserCam(this.props.chats[i]);
-          this.setState({
-            index: i,
-            fisrt: params,
-            // from: this.props.chats[i].from,
-            chatId: this.props.chats[i].id,
-          });
+    if(flagUpdate === 0){
+      if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
+        this.setState({ chats: chats })
+        switch (parseInt(tabIndex)) {
+          case 0:
+            const chatsMedic = this.props.chats.filter(e => e.trackingType === "Emergencia Médica")
+            this.setState({ chats: chatsMedic, flagUpdate: 1})
+            if(chatId){
+              const indexMedic = chatsMedic.findIndex(e => e.id === chatId)
+              this.changeChat(chatsMedic[indexMedic], indexMedic, false)
+            }  
+          break;
+          case 1:
+            const chatsSeguridad = this.props.chats.filter(e => e.trackingType === "Seguridad")
+            this.setState({ chats: chatsSeguridad, flagUpdate: 1})
+            if(chatId){
+              const indexSeguridad = chatsSeguridad.findIndex(e => e.id === chatId)
+              this.changeChat(chatsSeguridad[indexSeguridad], indexSeguridad, false)
+            }  
+          break;
+          case 2: 
+            const chatsCivil = this.props.chats.filter(e => e.trackingType === "Protección Civil")
+            this.setState({ chats: chatsCivil, flagUpdate: 1})
+            if(chatId){
+              const indexCivil = chatsCivil.findIndex(e => e.id === chatId)
+              this.changeChat(chatsCivil[indexCivil], indexCivil, false)
+            }
+          break;  
+          default:
+            const chats = this.props.chats.filter(e => e.trackingType === "Emergencia Médica")
+            this.setState({ chats: chats, flagUpdate: 1})
+          break;
         }
       }
     }
-    // if (
-    //   this.state.index !== undefined &&
-    //   this.props.chats[this.state.index] !== undefined
-    // ) {
-    //   if (this.state.from !== this.props.chats[this.state.index].from) {
-    //     // this.setState({ from: this.props.chats[this.state.index].from });
-    //   }
-    // }
-
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
@@ -727,5 +638,8 @@ const styles = {
     paddingTop: 2,
     paddingBottom: 2
   },
-  tab: { backgroundColor: "#dadada", borderWidth: 0, borderColor: "#dadada" }
+  tab: { backgroundColor: "#dadada", borderWidth: 0, borderColor: "#dadada" },
+  centered: {
+    left: '51%'
+  }
 }
