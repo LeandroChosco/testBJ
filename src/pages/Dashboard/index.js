@@ -518,12 +518,14 @@ class Dashboard extends Component {
       loadingCamsGrid:true
     })
     conections.dashboardCams().then(response => {
-      const data = response.data;      
+      const data = response.data; 
+      console.log('datilla: ', data)     
       this.setState({
         loadingCams:false,
         dataCams:[
           {name:'Activas',value:data.active},
           {name:'Inactivas',value:data.deactive},
+          {name:'Desconectadas',value:data.disconnected}
         ],
         installed_by_moth:data.installed_by_moth.map(v=>{v.fecha =moment(v.fecha).format('MMM-YYYY'); return v}),
         installed_last_moth:data.installed_last_moth.map(v=>{v.fecha =moment(v.fecha).format('DD-MM-YYYY'); return v})

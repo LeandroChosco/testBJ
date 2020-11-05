@@ -51,9 +51,11 @@ class Analysis extends Component {
         id_cam:0,
         panes: [
             { menuItem: 'En linea', render: () => <Tab.Pane attached={false}>{this._renderOnlineTab()}</Tab.Pane> },
-            { menuItem: 'Fuera de linea', render: () => <Tab.Pane attached={false}>{this._renderOfflineTab()}</Tab.Pane> },            
+            { menuItem: 'Fuera de linea', render: () => <Tab.Pane attached={false}>{this._renderOfflineTab()}</Tab.Pane> }, 
+            { menuItem: 'Desconectadas', render: () => <Tab.Pane attached={false}>{this._renderDisconnectedTab()}</Tab.Pane> },           
         ],
-        offlineCamaras: []
+        offlineCamaras: [],
+        disconnectedCameras: []
     }
 
   render() {
@@ -78,6 +80,34 @@ class Analysis extends Component {
             
         </div>
     );
+  }
+
+  _renderDisconnectedTab = () => {
+    return (
+        <div>
+            <GridCameraDisplay
+                        ref='myChild'
+                        error={this.state.error}
+                        loading={this.state.loading}
+                        places = {this.state.disconnectedCameras}
+                        toggleControlsBottom = {this._toggleControlsBottom}
+                        recordignToggle={this._recordignToggle}
+                        loadingRcord={this.state.loadingRcord}
+                        isRecording={this.state.isRecording}
+                        recordingCams={this.state.recordingCams}
+                        recordingProcess={this.state.recordingProcess}
+                        loadingSnap={this.state.loadingSnap}
+                        downloadFiles={this._downloadFiles}
+                        loadingFiles={this.state.loadingFiles}
+                        makeReport={this._makeReport}
+                        moduleActions={this.state.moduleActions}
+                        matches={this.props.matches}
+                        snapShot={this._snapShot}
+                        changeStatus={this._chageCamStatus}
+                        showMatches={this.props.showMatches}
+                        propsIniciales={this.props}/>
+        </div>
+    )
   }
 
   _renderOfflineTab = () => {
@@ -488,6 +518,7 @@ class Analysis extends Component {
                 const camaras = response.data
                 let auxCamaras = []
                 let offlineCamaras = []
+                let disconnectedCameras = []
                 let actualCamera = {}
                 let title = ''
                 let idCamera = null
@@ -574,6 +605,36 @@ class Analysis extends Component {
                     })
                 });
 
+                conections.getCamsOffline().then((res)=>{
+                    let indexFail = 1
+                    const disconnected = res.data
+                    console.log('disconnected',disconnected);
+                    disconnected.map((valueoff)=>{
+                        if(valueoff.active === 0){
+                            disconnectedCameras.push({
+                                id:valueoff.id,
+                                num_cam:indexFail,
+                                lat:valueoff.google_cordenate.split(',')[0],
+                                lng:valueoff.google_cordenate.split(',')[1],
+                                name: valueoff.street +' '+ valueoff.number + ', ' + valueoff.township+ ', ' + valueoff.town+ ', ' + valueoff.state + ' #cam' + valueoff.num_cam,
+                                isHls:true,
+                                url: 'http://' + valueoff.UrlStreamMediaServer.ip_url_ms + ':' + valueoff.UrlStreamMediaServer.output_port + valueoff.UrlStreamMediaServer.name + valueoff.channel,
+                                real_num_cam:valueoff.num_cam<10?('0'+valueoff.num_cam.toString()):valueoff.num_cam.toString(),
+                                camera_number:valueoff.num_cam,
+                                dataCamValue: valueoff
+                            })   
+                            indexFail++
+                        }  
+                        return true;
+                    })
+                });
+
+                if(idCamera== null){
+                    this.setState({places:auxCamaras,disconnectedCameras:disconnectedCameras,loading: false,error:undefined})
+                } else {
+                    this.setState({places:auxCamaras,disconnectedCameras:disconnectedCameras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera},error:undefined})
+                    this.setState({displayTipe:3})
+                }
 
                 if(idCamera== null){
                     this.setState({places:auxCamaras,offlineCamaras:offlineCamaras,loading: false,error:undefined})
