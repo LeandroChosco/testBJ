@@ -195,7 +195,18 @@ class Chat extends Component {
     }
     const chatSelected = chats && chats[index]
 
-    const textareaDisabled = chatSelected && chatSelected.active !== undefined ? !chatSelected.active : true;
+    let textareaDisabled = null;
+    if (chatSelected) {
+      if (typeof chatSelected.active === 'undefined') {
+        textareaDisabled = false;
+      } else {
+        if (chatSelected.active === 0) {
+          textareaDisabled = true;
+        } else {
+          textareaDisabled = false;
+        }
+      }
+    }
     return (
       <div
         className={
@@ -543,42 +554,66 @@ class Chat extends Component {
   };
 
   _changeUserCam = (chat) => {
-    console.log('on changeuserCam', chat, this.props.userInfo)
-    Axios.get(
-      constants.sails_url +
-      ":" +
-      constants.sailsPort +
-      "/user/getDataByIdentifier?email=" +
-      "root@energetika.com"
-    ).then((response) => {
-      console.log('response changeusercam', response.data)
-      if (response.status === 200) {
-        if (response.data.success) {
-          const data = response.data.data;
-          this.setState({
-            camData:
-              data === undefined
-                ? undefined
-                : {
-                  extraData: {
-                    num_cam: data.Camare[0].num_cam,
-                    cameraID: data.Camare[0].num_cam,
-                    isHls: true,
-                    url:
-                        "http://" +
-                        data.Camare[0].UrlStreamMediaServer.ip_url_ms +
-                        ":" +
-                        data.Camare[0].UrlStreamMediaServer.output_port +
-                        data.Camare[0].UrlStreamMediaServer.name +
-                        data.Camare[0].channel,
-                    dataCamValue:
-                      data.Camare
-                  },
-                },
-          });
-        }
-      }
-    }).catch(err => console.log(err))
+    // console.log('on changeuserCam', chat, this.props.userInfo)
+    if (chat.user_cam) {
+      const { user_cam } = chat;
+      this.setState({
+        camData: {
+          extraData: {
+            num_cam: user_cam.num_cam,
+            cameraID: user_cam.num_cam,
+            isHls: true,
+            url:
+              "http://" +
+              user_cam.UrlStreamMediaServer.ip_url_ms +
+              ":" +
+              user_cam.UrlStreamMediaServer.output_port +
+              user_cam.UrlStreamMediaServer.name +
+              user_cam.channel,
+            dataCamValue: user_cam
+          },
+        },
+      });
+    } else {
+      this.setState({
+        camData: undefined
+      })
+    }
+    // Axios.get(
+    //   constants.sails_url +
+    //   ":" +
+    //   constants.sailsPort +
+    //   "/user/getDataByIdentifier?email=" +
+    //   "root@energetika.com"
+    // ).then((response) => {
+    //   console.log('response changeusercam', response.data)
+    //   if (response.status === 200) {
+    //     if (response.data.success) {
+    //       const data = response.data.data;
+    //       this.setState({
+    //         camData:
+    //           data === undefined
+    //             ? undefined
+    //             : {
+    //               extraData: {
+    //                 num_cam: data.Camare[0].num_cam,
+    //                 cameraID: data.Camare[0].num_cam,
+    //                 isHls: true,
+    //                 url:
+    //                   "http://" +
+    //                   data.Camare[0].UrlStreamMediaServer.ip_url_ms +
+    //                   ":" +
+    //                   data.Camare[0].UrlStreamMediaServer.output_port +
+    //                   data.Camare[0].UrlStreamMediaServer.name +
+    //                   data.Camare[0].channel,
+    //                 dataCamValue:
+    //                   data.Camare
+    //               },
+    //             },
+    //       });
+    //     }
+    //   }
+    // }).catch(err => console.log(err))
   };
 
   closeChat = () => {
