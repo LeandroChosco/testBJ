@@ -26,16 +26,16 @@ const refSOS = firebaseSos
 
 
 const COLORS = {
-  "Emergencia Medica": "#9EE8A7",
+  "Seguridad": "#FFB887",
+  "Protección Civil": "#E29EE8",
+  "Emergencia Médica": "#9EE8A7",
   "Proteccion Policial": "#FFB887",
-  "Proteccion Civil": "#E29EE8",
-  "Seguridad": "#FFB887"
 }
 
 const FILTERSOPTIONS = [
-  "Emergencia Médica",
   "Seguridad",
   "Protección Civil",
+  "Emergencia Médica",
 ]
 
 const SEARCHOPTIONS = [
@@ -76,10 +76,6 @@ class Chat extends Component {
   };
   panes = [
     {
-      menuItem: 'Emergencia Medica',
-      render: () => <Tab.Pane attached={false} style={styles.tab} > {this.renderListChats("Emergencia Medica")}</Tab.Pane>,
-    },
-    {
       menuItem: 'Seguridad',
       render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("Seguridad")}</Tab.Pane>,
     },
@@ -87,6 +83,10 @@ class Chat extends Component {
       menuItem: 'Proteccion Civil',
       render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("Proteccion Civil")}</Tab.Pane>,
     },
+    {
+      menuItem: 'Emergencia Medica',
+      render: () => <Tab.Pane attached={false} style={styles.tab} > {this.renderListChats("Emergencia Medica")}</Tab.Pane>,
+    }
   ]
 
 
@@ -201,23 +201,23 @@ class Chat extends Component {
       >
         <div className="row fullHeight">
           <div className="col-4 userList">
-            <Tab 
-              menu={{ pointing: true }} 
+            <Tab
+              menu={{ pointing: true }}
               panes={this.panes}
-              defaultActiveIndex={tabIndex ? tabIndex : 0}
+              defaultActiveIndex={Number(tabIndex) || 0}
               onTabChange={(t, i) => {
-              const { chats } = this.props
-              const { index } = this.state
-              let newChats = chats.filter(c => c.trackingType === FILTERSOPTIONS[i.activeIndex]);
-              if (index !== undefined) {
-                let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
-                this.setState({ from: selected ? selected : "Error getting data" })
-              }
-              this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null })
-            }} />
+                const { chats } = this.props
+                const { index } = this.state
+                let newChats = chats.filter(c => c.trackingType === FILTERSOPTIONS[i.activeIndex]);
+                if (index !== undefined) {
+                  let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
+                  this.setState({ from: selected ? selected : "Error getting data" })
+                }
+                this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null })
+              }} />
           </div>
           <div className="col-8">
-            <div className="messages" style={{height: '88%'}}>
+            <div className="messages" style={{ height: '88%' }}>
               {!loading && chatId !== "" && chats[index] ? (
                 <div className="cameraView">
                   <h2
@@ -225,7 +225,7 @@ class Chat extends Component {
                     style={{
                       textAlign: "center",
                       backgroundColor: COLORS[chats[index].trackingType],
-                      height: "5%"
+                      height: "30px"
                     }}
                   >
                     {from}
@@ -268,12 +268,12 @@ class Chat extends Component {
                     </div>
                   </div>
 
-                  <div className="row" style={{ height: "20%", width: '100%', margin: 0, marginTop: '5px'}}>
+                  <div className="row" style={{ height: "20%", width: '100%', margin: 0, marginTop: '5px' }}>
                     <Card style={{ width: "100%" }}>
                       <Card.Content>
                         <div className="row">
                           <div className="col-8">
-                            <div className="row" style={{padding: '5px'}}>
+                            <div className="row" style={{ padding: '5px' }}>
                               <div
                                 className="col-6"
                                 style={{ fontSize: 13, paddingRight: 0 }}
@@ -313,12 +313,25 @@ class Chat extends Component {
                               style={{ width: "80%", alignItems: "center" }}
                               className="ui button"
                               onClick={this.closeChat}
-                              style={{margin: '5px'}}
+                              style={{ margin: '5px' }}
                               disabled={textareaDisabled}
                             >
                               <Icon name="taxi" />
                               Enviar unidad
                             </Button>
+                            <br />
+                            <Button
+                              size='small'
+                              icon
+                              labelPosition='left'
+                              color="green"
+                              onClick={this.closeChat}
+                              style={{ margin: '5px' }}
+                              disabled={textareaDisabled}
+                            >
+                              <Icon name="phone" />
+                                Marcar Ciudadano
+                              </Button>
                           </div>
                         </div>
                       </Card.Content>
@@ -356,18 +369,18 @@ class Chat extends Component {
                     </div>
                   ))
                   : loading === true ?
-                  <>  
-                      <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered}/> 
-                      <p style={{position: "fixed", top: '56%', left: '62%'}}>Cargando chat</p>
-                  </> :
-                      <p style={{position: "fixed", top: '50%', left: '60%'}}>No se ha seleccionado ningun chat</p> : 
-                  loading === true ? 
+                    <>
+                      <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
+                      <p style={{ position: "fixed", top: '56%', left: '62%' }}>Cargando chat</p>
+                    </> :
+                    <p style={{ position: "fixed", top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p> :
+                loading === true ?
                   <>
-                      <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered}/>
-                      <p style={{position: "fixed", top: '56%', left: '62%'}}>Cargando chat</p>
-                  </>:
-                      <p style={{position: "fixed", top: '50%', left: '60%'}}>No se ha seleccionado ningun chat</p>
-                  }
+                    <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
+                    <p style={{ position: "fixed", top: '56%', left: '62%' }}>Cargando chat</p>
+                  </> :
+                  <p style={{ position: "fixed", top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p>
+              }
             </div>
             {chatId !== "" && chats[index] ? (
               <div className="messages_send_box">
@@ -440,10 +453,10 @@ class Chat extends Component {
   };
 
   changeChat = (chat, i, flag = true) => {
-    if(flag){
+    if (flag) {
       this.props.history.push(`/sos/${this.state.activeIndex}/${chat.id}`)
     }
-    if(chat === undefined && i === -1){
+    if (chat === undefined && i === -1) {
       this.props.history.push('/sos')
     } else {
       this.getMessages(chat.id)
@@ -452,14 +465,14 @@ class Chat extends Component {
         async () => {
           this.props.stopNotification();
           const trackingInformation = await getTracking(chat.trackingId);
-  
+
           let newData = trackingInformation.data.data();
-  
+
           newData = {
             ...newData,
             id: trackingInformation.data.id,
           };
-  
+
           this.setState({
             // chatId: chat.id,
             // messages: chat.messages,
@@ -470,7 +483,7 @@ class Chat extends Component {
             personalInformation: newData.userInformation, //
             pointCoords: [], //
           });
-  
+
           if (chat.active) {
             const unsub = firebaseSos
               .app("sos")
@@ -496,7 +509,7 @@ class Chat extends Component {
             .doc(chat.id)
             .update({ c5Unread: 0 })
             .then(() => {
-              this.setState({ text: "",  from: 'Chat C5' });
+              this.setState({ text: "" });
             });
         }
       );
@@ -504,9 +517,9 @@ class Chat extends Component {
   };
 
   getMessages = (chatId) => {
-   this.messageListener = refSOS.doc(chatId).onSnapshot(snapShot => {
-     this.setState({messages: snapShot.get('messages'), chatId})
-   }) 
+    this.messageListener = refSOS.doc(chatId).onSnapshot(snapShot => {
+      this.setState({ messages: snapShot.get('messages'), chatId })
+    })
   }
 
   checkKey = (event) => {
@@ -526,7 +539,7 @@ class Chat extends Component {
 
   sendMessage = () => {
     if (this.state.text === "") return;
-    const {chatId, messages} = this.state
+    const { chatId, messages } = this.state
 
     let messagesAux = messages.map((e) => e)
 
@@ -556,13 +569,15 @@ class Chat extends Component {
   };
 
   async componentDidMount() {
-    const {tabIndex} = this.props.match.params
+    const { tabIndex } = this.props.match.params
 
     if (this.props.chats) {
-      if(tabIndex){
-        this.setState({ chats: this.props.chats, activeIndex: tabIndex })
+      if (tabIndex) {
+        const filtered = this.props.chats.filter(item => item.trackingType === FILTERSOPTIONS[tabIndex]);
+        this.setState({ chats: filtered, activeIndex: tabIndex })
       } else {
-        this.setState({ chats: this.props.chats })
+        const filtered = this.props.chats.filter(item => item.trackingType === FILTERSOPTIONS[this.state.activeIndex]);
+        this.setState({ chats: filtered })
       }
     }
     var messageBody = document.querySelector("#messagesContainer");
@@ -584,41 +599,42 @@ class Chat extends Component {
 
   componentDidUpdate(prevProps) {
     const { flagUpdate } = this.state
-    const { tabIndex, chatId } = this.props.match.params 
+    const { tabIndex, chatId } = this.props.match.params
     const { chats: chatsPrev } = prevProps
     const { chats } = this.props
-    if(flagUpdate === 0){
+    if (flagUpdate === 0) {
       if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-        this.setState({ chats: chats })
+        this.setState({ chats })
+        console.log("PREVIO AL SWITCH: ", tabIndex)
         switch (parseInt(tabIndex)) {
           case 0:
-            const chatsMedic = this.props.chats.filter(e => e.trackingType === "Emergencia Médica")
-            this.setState({ chats: chatsMedic, flagUpdate: 1})
-            if(chatId){
+            const chatsMedic = this.props.chats.filter(e => e.trackingType === FILTERSOPTIONS[Number(tabIndex)])
+            this.setState({ chats: chatsMedic, flagUpdate: 1 })
+            if (chatId) {
               const indexMedic = chatsMedic.findIndex(e => e.id === chatId)
               this.changeChat(chatsMedic[indexMedic], indexMedic, false)
-            }  
-          break;
+            }
+            break;
           case 1:
-            const chatsSeguridad = this.props.chats.filter(e => e.trackingType === "Seguridad")
-            this.setState({ chats: chatsSeguridad, flagUpdate: 1})
-            if(chatId){
+            const chatsSeguridad = this.props.chats.filter(e => e.trackingType === FILTERSOPTIONS[Number(tabIndex)])
+            this.setState({ chats: chatsSeguridad, flagUpdate: 1 })
+            if (chatId) {
               const indexSeguridad = chatsSeguridad.findIndex(e => e.id === chatId)
               this.changeChat(chatsSeguridad[indexSeguridad], indexSeguridad, false)
-            }  
-          break;
-          case 2: 
-            const chatsCivil = this.props.chats.filter(e => e.trackingType === "Protección Civil")
-            this.setState({ chats: chatsCivil, flagUpdate: 1})
-            if(chatId){
+            }
+            break;
+          case 2:
+            const chatsCivil = this.props.chats.filter(e => e.trackingType === FILTERSOPTIONS[Number(tabIndex)])
+            this.setState({ chats: chatsCivil, flagUpdate: 1 })
+            if (chatId) {
               const indexCivil = chatsCivil.findIndex(e => e.id === chatId)
               this.changeChat(chatsCivil[indexCivil], indexCivil, false)
             }
-          break;  
+            break;
           default:
-            const chats = this.props.chats.filter(e => e.trackingType === "Emergencia Médica")
-            this.setState({ chats: chats, flagUpdate: 1})
-          break;
+            const chats = this.props.chats.filter(e => e.trackingType === FILTERSOPTIONS[this.state.activeIndex])
+            this.setState({ chats, flagUpdate: 1 })
+            break;
         }
       }
     }
