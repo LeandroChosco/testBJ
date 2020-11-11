@@ -29,6 +29,7 @@ import DetailsSupport from './pages/DetailsSupport';
 import Dashboard from './pages/Dashboard';
 import Cuadrantes from './pages/Cuadrantes'
 import Sospechosos from "./pages/Sospechosos";
+import AlarmChat from "./pages/AlarmChat/index";
 import constants from './constants/constants';
 import Sound from 'react-sound';
 import sonido from './assets/tonos/notificacion.mp3'
@@ -256,12 +257,12 @@ class App extends Component {
     }
   }
 
-  loadData = () => {         
-    if (process.env.NODE_ENV==='production'||true) {
+  loadData = () => {
+    if (process.env.NODE_ENV === 'production' || true) {
       // --- matches planchados ---
-    console.log("dentro del load data")
-      conections.getMatchAPI().then(docs=>{
-        if(this.state.matches.length !== docs.data.length && this.state.showNotification && !this.state.fisrtTime){
+      console.log("dentro del load data")
+      conections.getMatchAPI().then(docs => {
+        if (this.state.matches.length !== docs.data.length && this.state.showNotification && !this.state.fisrtTime) {
           this.showNot(
             "Match",
             "Nuevo match detectado",
@@ -270,17 +271,17 @@ class App extends Component {
             0
           );
         }
-        if(this.state.fisrtTime){
-          this.setState({fisrtTime: false});
+        if (this.state.fisrtTime) {
+          this.setState({ fisrtTime: false });
         }
         this.setState({
-          matches: docs.data.map(v =>{
+          matches: docs.data.map(v => {
             let value = v
-            if(value.dateTime){
+            if (value.dateTime) {
               value.dateTime = new Date(
                 value.dateTime
               ).toLocaleString();
-            } else{
+            } else {
               value.dateTime = value.date;
             }
             return value
@@ -347,22 +348,22 @@ class App extends Component {
           !this.state.callIsGoing
         ) {
           const indexSos = docs.docs.findIndex(e => e.id === changes[0].doc.id)
-          if(indexSos != -1){
-            if(this.state.indexSos !== indexSos){
+          if (indexSos != -1) {
+            if (this.state.indexSos !== indexSos) {
               switch (docs.docs[indexSos].data().trackingType) {
                 case 'Emergencia Médica':
                   this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changes[0].doc.id);
-                break;
+                  break;
                 case 'Seguridad':
                   this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changes[0].doc.id);
-                break;
+                  break;
                 case 'Protección Civil':
                   this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changes[0].doc.id);
-                break;
+                  break;
                 default:
                   break;
               }
-              this.setState({ reproducirSonido: true , indexSos});
+              this.setState({ reproducirSonido: true, indexSos });
             }
           }
         }
@@ -378,25 +379,25 @@ class App extends Component {
         this.setState({ stateSos: chats });
       });
 
-      firebaseC5Benito
-        .app('c5benito')
-        .firestore()
-        .collection('messages')
-        .orderBy('lastModification', 'desc')
-        .onSnapshot(docs => {
-          if (
-            this.state.showNotification && 
-            !this.state.fisrtTimeChat && 
-            !this.state.callIsGoing
-            ) {
-            this.setState({ reproducirSonido: true })
-          }
+    firebaseC5Benito
+      .app('c5benito')
+      .firestore()
+      .collection('messages')
+      .orderBy('lastModification', 'desc')
+      .onSnapshot(docs => {
+        if (
+          this.state.showNotification &&
+          !this.state.fisrtTimeChat &&
+          !this.state.callIsGoing
+        ) {
+          this.setState({ reproducirSonido: true })
+        }
         if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
         const chats = docs.docs.map(v => {
           let value = v.data()
           value.lastModification = new Date(
             value.lastModification.toDate()
-            ).toLocaleString()
+          ).toLocaleString()
           value.id = v.id
           return value
         })
@@ -531,14 +532,14 @@ class App extends Component {
 
     ioAlarmSocket.on('connect', () => {
       // this.showNot('Conectado a XTUN API', 'Connection ID: ' + ioAlarmSocket.id, 'success', 'OK', 1, 0)
-      ioAlarmSocket.on('alarmListener', ({alarm, chatId}) => {
-        if(alarm === 'medical'){
+      ioAlarmSocket.on('alarmListener', ({ alarm, chatId }) => {
+        if (alarm === 'medical') {
           this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Medico', 'error', 'Ir a chat', 3, chatId)
         }
-        if(alarm === 'police'){
+        if (alarm === 'police') {
           this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 2, chatId)
         }
-        if(alarm === 'fire'){
+        if (alarm === 'fire') {
           this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Fuego', 'error', 'Ir a chat', 1, chatId)
         }
       })
@@ -605,9 +606,9 @@ class App extends Component {
           label: label,
           callback: () =>
             action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/1/${chatId}`) : // Fuego
-            action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/2/${chatId}`) : // Policia
-            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/3/${chatId}`) : // Medico
-            null
+              action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/2/${chatId}`) : // Policia
+                action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/3/${chatId}`) : // Medico
+                  null
         }
       });
     }
@@ -625,9 +626,9 @@ class App extends Component {
           label: label,
           callback: () =>
             action === 0 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/0/${chatId}`) : // Fuego
-            action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/1/${chatId}`) : // Policia
-            action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/2/${chatId}`) : // Medico
-            null
+              action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/1/${chatId}`) : // Policia
+                action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/2/${chatId}`) : // Medico
+                  null
         }
       });
     }
@@ -643,12 +644,12 @@ class App extends Component {
         action: {
           label: label,
           callback: () =>
-            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos`):
-            action === 5 ? window.open(window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/') + 'detalles/emergency/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
-            action === 2 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/denuncia/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
-            action === 4 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/soporte/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
-            action === 0 ? null :
-            this.seeMatch(action)
+            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos`) :
+              action === 5 ? window.open(window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/') + 'detalles/emergency/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
+                action === 2 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/denuncia/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
+                  action === 4 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/soporte/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
+                    action === 0 ? null :
+                      this.seeMatch(action)
         }
       });
     }
@@ -884,23 +885,38 @@ class App extends Component {
             path="/chat/:alarmIndex?/:chatId?"
             exact
             render={(props) => (
-                <Chat
-                  chats={this.state.chats}
-                  {...props}
-                  userInfo={this.state.userInfo}
-                  chatFirebase = {this.state.chatFirebase}
-                  stopNotification={() =>
-                    this.setState({ stopNotification: true })
-                  }
-                />
+              <Chat
+                chats={this.state.chats.filter(item => !item.alarmType)}
+                {...props}
+                userInfo={this.state.userInfo}
+                chatFirebase={this.state.chatFirebase}
+                stopNotification={() =>
+                  this.setState({ stopNotification: true })
+                }
+              />
             )}
-            />
+          />
           <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/dashboard" exact render={(props) => <Dashboard showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path='/personas' exact render={(props) => <Sospechosos showMatches={this.state.showMatches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this - this._toggleControls} />} />
           <Route path="/covid" exact render={(props) => <Covid alertaCovidState={this.state.alertaCovidState} _alertaCovidState={this._alertaCovidState} _newCovidItem={this._newCovidItem} newCovidState={this.state.newCovidState} newCovidItem={this.state.newCovidItem} alertaCovid={this.state.alertaCovid} showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
+          <Route
+            path="/alarm/:alarmIndex?/:chatId?"
+            exact
+            render={(props) => (
+              <AlarmChat
+                chats={this.state.chats.filter(item => item.alarmType)}
+                {...props}
+                userInfo={this.state.userInfo}
+                chatFirebase={this.state.chatFirebase}
+                stopNotification={() =>
+                  this.setState({ stopNotification: true })
+                }
+              />
+            )}
+          />
         </div>
         {this.state.cameraControl ? <CameraControls camera={this.state.cameraInfo} toggleControls={this._toggleControls} active={this.state.cameraControl} /> : null}
         <NotificationSystem ref='notificationSystem' />
