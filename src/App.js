@@ -260,7 +260,6 @@ class App extends Component {
   loadData = () => {
     if (process.env.NODE_ENV === 'production' || true) {
       // --- matches planchados ---
-      console.log("dentro del load data")
       conections.getMatchAPI().then(docs => {
         if (this.state.matches.length !== docs.data.length && this.state.showNotification && !this.state.fisrtTime) {
           this.showNot(
@@ -350,18 +349,17 @@ class App extends Component {
           const indexSos = docs.docs.findIndex(e => e.id === changes[0].doc.id)
           if (indexSos != -1) {
             if (this.state.indexSos !== indexSos) {
-              console.log("ENTRA DE NUEVO PARA EL SWITCH");
-              console.log(docs.docs[indexSos].data().trackingType)
-              console.log(docs.docs[indexSos].id)
+              console.log("SI ENTRO A LA NOTIFICACION DE ALERTA SOS");
+              console.log(docs.docs[indexSos].data().trackingType);
               switch (docs.docs[indexSos].data().trackingType) {
-                case 'Emergencia Médica':
-                  this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changes[0].doc.id);
-                  break;
                 case 'Seguridad':
-                  this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changes[0].doc.id);
+                  this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changes[0].doc.id);
                   break;
                 case 'Protección Civil':
-                  this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changes[0].doc.id);
+                  this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changes[0].doc.id);
+                  break;
+                case 'Emergencia Médica':
+                  this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changes[0].doc.id);
                   break;
                 default:
                   break;
@@ -389,8 +387,6 @@ class App extends Component {
       .orderBy('lastModification', 'desc')
       .onSnapshot(docs => {
         let changes = docs.docChanges();
-        console.log("CHANGE ON SNAPSHOT *******");
-        console.log(changes);
         if (changes.length === 1) {
           let index = changes[0].oldIndex;
           let data = changes[0].doc.data();
@@ -407,15 +403,16 @@ class App extends Component {
           !this.state.fisrtTimeChat &&
           !this.state.callIsGoing
         ) {
-          this.showNot(
-            'Mensaje de usuario',
-            'Nuevo mensaje de usuario',
-            'success',
-            'Ver detalles',
-            0,
-            changes[0].doc.id
-          );
-          this.setState({ reproducirSonido: true });
+          this.setState({ reproducirSonido: true }, () => {
+            this.showNot(
+              'Mensaje de usuario',
+              'Nuevo mensaje de usuario',
+              'success',
+              'Ver detalles',
+              0,
+              changes[0].doc.id
+            );
+          });
         }
         if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
         const chats = docs.docs.map(v => {
@@ -650,9 +647,9 @@ class App extends Component {
         action: {
           label: label,
           callback: () =>
-            action === 0 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/0/${chatId}`) : // Fuego
-              action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/1/${chatId}`) : // Policia
-                action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/2/${chatId}`) : // Medico
+            action === 0 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/0/${chatId}`) : // Seguridad
+              action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/1/${chatId}`) : // Protección civil
+                action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/2/${chatId}`) : // Emergencia médica
                   null
         }
       });
