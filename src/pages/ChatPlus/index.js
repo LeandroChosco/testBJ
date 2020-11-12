@@ -201,7 +201,7 @@ class Chat extends Component {
   }
 
   render() {
-    const { alarmIndex } = this.props.match.params
+    const { alarmIndex, tabIndex } = this.props.match.params
     const { chats, chatId, index, loading, camData, personalInformation } = this.state
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
@@ -233,7 +233,7 @@ class Chat extends Component {
             <Tab
               menu={{ pointing: true }}
               panes={this.panes}
-              defaultActiveIndex={0}
+              defaultActiveIndex={tabIndex ? tabIndex : 0}
               onTabChange={(t, i) => {
                 const { chats } = this.props
                 const { index } = this.state;

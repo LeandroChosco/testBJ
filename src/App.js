@@ -350,6 +350,9 @@ class App extends Component {
           const indexSos = docs.docs.findIndex(e => e.id === changes[0].doc.id)
           if (indexSos != -1) {
             if (this.state.indexSos !== indexSos) {
+              console.log("ENTRA DE NUEVO PARA EL SWITCH");
+              console.log(docs.docs[indexSos].data().trackingType)
+              console.log(docs.docs[indexSos].id)
               switch (docs.docs[indexSos].data().trackingType) {
                 case 'Emergencia Médica':
                   this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changes[0].doc.id);
@@ -385,12 +388,34 @@ class App extends Component {
       .collection('messages')
       .orderBy('lastModification', 'desc')
       .onSnapshot(docs => {
+        let changes = docs.docChanges();
+        console.log("CHANGE ON SNAPSHOT *******");
+        console.log(changes);
+        if (changes.length === 1) {
+          let index = changes[0].oldIndex;
+          let data = changes[0].doc.data();
+          if (this.state.chats[index]) {
+            if (
+              this.state.chats[index].messages.length === data.messages.length
+            ) {
+              this.setState({ stopNotification: true });
+            }
+          }
+        }
         if (
           this.state.showNotification &&
           !this.state.fisrtTimeChat &&
           !this.state.callIsGoing
         ) {
-          this.setState({ reproducirSonido: true })
+          this.showNot(
+            'Mensaje de usuario',
+            'Nuevo mensaje de usuario',
+            'success',
+            'Ver detalles',
+            0,
+            changes[0].doc.id
+          );
+          this.setState({ reproducirSonido: true });
         }
         if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
         const chats = docs.docs.map(v => {
@@ -533,14 +558,14 @@ class App extends Component {
     ioAlarmSocket.on('connect', () => {
       // this.showNot('Conectado a XTUN API', 'Connection ID: ' + ioAlarmSocket.id, 'success', 'OK', 1, 0)
       ioAlarmSocket.on('alarmListener', ({ alarm, chatId }) => {
-        if (alarm === 'medical') {
-          this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Medico', 'error', 'Ir a chat', 3, chatId)
-        }
         if (alarm === 'police') {
-          this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 2, chatId)
+          this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 0, chatId)
         }
         if (alarm === 'fire') {
           this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Fuego', 'error', 'Ir a chat', 1, chatId)
+        }
+        if (alarm === 'medical') {
+          this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Medico', 'error', 'Ir a chat', 2, chatId)
         }
       })
     })
@@ -605,9 +630,9 @@ class App extends Component {
         action: {
           label: label,
           callback: () =>
-            action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/1/${chatId}`) : // Fuego
-              action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/2/${chatId}`) : // Policia
-                action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/3/${chatId}`) : // Medico
+            action === 0 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/alarm/0/${chatId}`) : // Fuego
+              action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/alarm/1/${chatId}`) : // Policia
+                action === 2 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/alarm/2/${chatId}`) : // Medico
                   null
         }
       });
@@ -648,7 +673,7 @@ class App extends Component {
               action === 5 ? window.open(window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/') + 'detalles/emergency/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
                 action === 2 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/denuncia/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
                   action === 4 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/soporte/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
-                    action === 0 ? null :
+                    action === 0 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/0/${id}`) :
                       this.seeMatch(action)
         }
       });
