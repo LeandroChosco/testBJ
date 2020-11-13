@@ -163,7 +163,7 @@ class Chat extends Component {
                         : "No hay mensajes que mostart"
                       : "No hay mensajes que mostart"}
                   </p> :
-                  <p>Ticket Id: {chat.id}</p>
+                  <p></p>
               }
 
               {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (

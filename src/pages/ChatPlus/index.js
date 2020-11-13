@@ -54,13 +54,7 @@ class Chat extends Component {
     camData: undefined,
     loading: false,
     hashUsed: false,
-    personalInformation: {
-      cellPhone: null,
-      address: null,
-      alarmType: null,
-      description: null,
-      alarmSN: null
-    },
+    personalInformation: {},
     optionSelected: "name",
     marker: null,
     firebaseSub: null,
@@ -181,7 +175,7 @@ class Chat extends Component {
                             : "No hay mensajes que mostrar"
                           : "No hay mensajes que mostrar"}
                       </p> :
-                      <p>Ticket Id: {chat.id}</p>
+                      <p></p>
                   }
 
                   {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
@@ -321,7 +315,7 @@ class Chat extends Component {
                           <div className="col-8">
                             <div className="row" style={{ padding: '5px' }}>
                               <div className="col-6" style={{ fontSize: 13, paddingRight: 0 }}>
-                                <b>Nombre: </b> {chats[index].user_name}
+                      <b>Nombre: </b> {chats[index].user_name}
                               </div>
                               <div
                                 className="col-3"
@@ -331,12 +325,12 @@ class Chat extends Component {
                                   paddingRight: 0,
                                 }}
                               >
-                                <b>Celular: </b> {personalInformation.cellPhone ? personalInformation.cellPhone : ''}
+                                <b>Celular: </b> {chats[index].user_cam.phone}
                               </div>
                             </div>
                             <div className="row" style={{ padding: '5px' }}>
                               <div className="col-12" style={{ fontSize: 13, paddingRight: 0 }}>
-                                <b>Dirección: </b>{personalInformation.address ? personalInformation.address : ''}
+                                <b>Dirección: </b>{chats[index].user_cam.street} {chats[index].user_cam.number}, {chats[index].user_cam.town}, {chats[index].user_cam.township}
                               </div>
                             </div>
                             {personalInformation.alarmType ?
@@ -553,6 +547,71 @@ class Chat extends Component {
       )
     }
   }
+
+  /* changeChat = (chat, i, flag = true) => {
+    if (flag) {
+      this.props.history.push(`/sos/${this.state.activeIndex}/${chat.id}`)
+    }
+    if (chat === undefined && i === -1) {
+      this.props.history.push('/sos')
+    } else {
+      this.getMessages(chat.id)
+      this.setState(
+        { loading: true, camData: undefined },
+        async () => {
+          this.props.stopNotification();
+          const trackingInformation = await getTracking(chat.trackingId);
+
+          let newData = trackingInformation.data.data();
+
+          newData = {
+            ...newData,
+            id: trackingInformation.data.id,
+          };
+
+          this.setState({
+            // chatId: chat.id,
+            // messages: chat.messages,
+            index: i,
+            from: newData.SOSType, //
+            tracking: newData,
+            loading: false,
+            personalInformation: newData.userInformation, //
+            pointCoords: [], //
+          });
+
+          if (chat.active) {
+            const unsub = firebaseSos
+              .app("sos")
+              .firestore()
+              .collection(SOS_COLLECTION)
+              .onSnapshot((docs) => {
+                const track_changes = docs.docChanges();
+                if (track_changes.length === 1) {
+                  const updatedChatId = track_changes[0].doc.id;
+                  const track_data = track_changes[0].doc.data();
+                  if (chat.trackingId === updatedChatId) {
+                    if (chat.active) {
+                      this.setState({ tracking: track_data });
+                    }
+                  }
+                }
+              });
+            this.setState({ firebaseSub: unsub });
+          } else {
+            // this.state.firebaseSub();
+          }
+          refSOS
+            .doc(chat.id)
+            .update({ c5Unread: 0 })
+            .then(() => {
+              this.setState({ text: '', from: 'Chat C5' })
+            })
+        }
+      );
+    }
+  }; */
+
 
   getMessages = (chatId) => {
     // const {chatFirebase, chats} = this.props
