@@ -153,7 +153,7 @@ _saveFile = () => {
     http.open('GET', this.state.complaint.url);
     http.responseType = 'blob';
     http.onreadystatechange = function() {
-        if (this.readyState == this.DONE) {
+        if (this.readyState === this.DONE) {
             callback(this);
         }
     };
@@ -176,8 +176,8 @@ _saveFile = () => {
     var http = new XMLHttpRequest();
     http.open('HEAD', this.state.complaint.url);
     http.onreadystatechange = function() {
-        if (this.readyState == this.DONE) {
-            callback(this.status != 404 && this.status !=0);
+        if (this.readyState === this.DONE) {
+            callback(this.status !== 404 && this.status !== 0);
         }
     };
     http.send();    

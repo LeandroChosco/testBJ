@@ -45,6 +45,8 @@
     "react-toasts": "^3.0.3",
     "react-tree-graph": "^5.0.0",
     "recharts": "^1.8.5",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "sails.io.js": "^1.2.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.86.0",
@@ -69,7 +71,8 @@
     "BPPD": "react-scripts build && git add . && git commit -m'build para despliege' && git push && ssh admin@95.216.37.253 'cd public_html/c5virtual_desarrollo && git pull && exit'",
     "deploy_production": "react-scripts build && git add . && git commit -m'build para despliege produccion' && git push && ssh admin@95.216.37.253 'cd public_html/c5virtual && git pull && exit'",
     "deploy:dev": "react-scripts build && aws s3 sync build/ s3://adminc5bj-new-dev",
-    "deploy:prod": "react-scripts build && aws s3 sync build/ s3://adminc5bj"
+    "deploy:prod": "react-scripts build && aws s3 sync build/ s3://adminc5bj",
+    "deploy:current_dev": "react-scripts build && aws s3 sync build/ s3://adminc5bj-dev"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -7,7 +7,7 @@ import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "./style.css";
-import constants from "../../constants/constants";
+// import constants from "../../constants/constants";
 import conections from "../../conections";
 import videojs from "video.js";
 
@@ -81,7 +81,6 @@ class Map extends Component {
               moduleActions={moduleActions}
               marker={marker}
               height={"300px"}
-              showButtons
               showExternal
               hideButton={
                 marker.extraData.dataCamValue.tipo_camara === 2 ||
@@ -162,7 +161,7 @@ class Map extends Component {
       let index = 1;
       camaras.map(value => {
         if (value.active === 1 && value.flag_streaming === 1) {
-          if (value.google_cordenate != "") {
+          if (value.google_cordenate !== "") {
             center_lat =
               center_lat + parseFloat(value.google_cordenate.split(",")[0]);
             center_lng =

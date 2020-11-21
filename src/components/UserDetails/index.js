@@ -10,7 +10,7 @@ const UserDetailsComponent = props => {
     let userFound = false;
     //console.log('dataUser',dataUser);
     props.propsIniciales.chats.forEach(chat => {
-      if (chat.user_creation == dataUser.u_user_id) {
+      if (chat.user_creation === dataUser.u_user_id) {
         userFound = true;
         props.propsIniciales.history.push("/chat?f=2&u=" + dataUser.u_user_id);
       }

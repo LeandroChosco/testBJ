@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
-
+import { camsReducer, limitZoneReducer } from './cameras.reducers';
 export const rootReducer = combineReducers({
-    cams:camerasReducer
+    cams: camsReducer,
+    limit_zone: limitZoneReducer,
 });

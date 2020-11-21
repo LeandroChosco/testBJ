@@ -4,9 +4,9 @@ import { Card, Icon, Button, Input, Dropdown, Tab } from "semantic-ui-react";
 import "./style.css";
 // import firebaseC5 from "../../constants/configC5";
 import CameraStream from "../../components/CameraStream";
-import constants from "../../constants/constants";
+// import constants from "../../constants/constants";
 import MapContainer from "../../components/MapContainer";
-import Axios from "axios";
+// import Axios from "axios";
 import moment from 'moment'
 import _ from 'lodash'
 
@@ -59,7 +59,6 @@ class Chat extends Component {
     marker: null,
     firebaseSub: null,
     tabIndex: 0,
-    messages: [],
     flagUpdate: 0
   };
   panes = this.props.history.location.pathname.includes("chat") ? [
@@ -699,7 +698,7 @@ class Chat extends Component {
 
   componentDidMount() {
     const { alarmIndex } = this.props.match.params
-
+    console.log(this.props.location)
     if (this.props.chats) {
       if (alarmIndex) {
         this.setState({ chats: this.props.chats, activeIndex: alarmIndex })
@@ -761,7 +760,7 @@ class Chat extends Component {
     const { chats } = this.props
     if (this.state.flagUpdate === 0) {
       if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-        this.setState({ chats: chats })
+        this.setState({ chats })
         switch (parseInt(alarmIndex)) {
           case 0:
             const chatsC5 = this.props.chats.filter(e => !e.alarmType)

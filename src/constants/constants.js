@@ -7,7 +7,13 @@ const base_url =
   "http://18.222.228.237";
 const webSocketPort = "20";
 /* const sails_url = "http://prod.adminc5.bj.sails.energetikadevelepment.com"; */
-const sails_url = "http://3.134.88.220";
+
+//Prod
+// const sails_url = "http://3.134.88.220";
+
+
+//Dev
+const sails_url = "http://18.191.101.241";
 /* const sails_url = "http://localhost"; */
 const apiPort = "3000";
 const sailsPort = "1337";
