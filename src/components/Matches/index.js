@@ -8,7 +8,7 @@ import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 
-import { Icon } from "semantic-ui-react";
+// import { Icon } from "semantic-ui-react";
 
 class Matches extends Component {
   state = {

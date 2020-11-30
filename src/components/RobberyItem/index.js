@@ -98,7 +98,7 @@ class RobberyItem extends React.Component {
     let userFound = false;
     //console.log('dataUser',dataUser);
     this.props.propsIniciales.forEach(chat => {
-      if (chat.user_creation == user_id) {
+      if (chat.user_creation === user_id) {
         userFound = true;
         this.props.history.push("/chat?f=2&u=" + user_id);
       }

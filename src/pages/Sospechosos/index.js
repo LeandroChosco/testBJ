@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tab } from 'semantic-ui-react'
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
@@ -9,19 +9,19 @@ import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css
 import './style.css'
 import ModalAddSospechoso from '../../components/ModalAddSospechoso';
 import conections from '../../conections';
-import * as moment from 'moment';
+// import * as moment from 'moment';
 
-const Sospechosos = ({showMatches}) => {
+const Sospechosos = ({ showMatches }) => {
     const [sospechosos, actualizarSospechosos] = useState([]);
     const [empleados, actualizarEmpleados] = useState([]);
     const [desconocidos, actualizarDesconocidos] = useState([]);
     const [matches, actualizarMatches] = useState([]);
 
-    useEffect(()=>{
+    useEffect(() => {
         listarPersonas()
         listarDesconocidos()
         listarMatches()
-    },[]);
+    }, []);
 
     const panes = [
         {
@@ -40,7 +40,7 @@ const Sospechosos = ({showMatches}) => {
             menuItem: 'Detecciones',
             render: () => <Tab.Pane attached={false}>{renderMatches()}</Tab.Pane>,
         }
-      ]
+    ]
     const [showModal, actualizarShowModal] = useState(false);
     const columnsSospechos = [{
         dataField: "id_match",
@@ -48,48 +48,48 @@ const Sospechosos = ({showMatches}) => {
         filter: textFilter({
             placeholder: 'Buscar Id'
         })
-      },{
+    }, {
         dataField: "nombre",
         text: 'Nombre',
         filter: textFilter({
             placeholder: 'Buscar Nombre'
         })
-      },{
+    }, {
         dataField: "edad",
         text: 'Edad',
         filter: textFilter({
             placeholder: 'Buscar Edad'
         })
-      },{
+    }, {
         dataField: "sexo",
         text: 'Sexo',
         filter: textFilter({
             placeholder: 'Buscar Sexo'
         })
-      },{
+    }, {
         dataField: "date",
         text: 'Fecha de Registro',
         filter: textFilter({
             placeholder: 'Buscar Fecha'
         })
-      },{
+    }, {
         dataField: "señas_particulares",
         text: 'Señas particulares'
-      },{
+    }, {
         dataField: "ultima_vez",
         text: 'Visto por ultima vez'
-      },{
+    }, {
         dataField: "motivo",
         text: 'Motivo de busqueda'
-      },{
+    }, {
         dataField: "comentario",
         text: 'Comentario'
-      },{
+    }, {
         dataField: 'foto',
-        formatter:(cel,row) => showImgs(cel,row) ,
+        formatter: (cel, row) => showImgs(cel, row),
         text: 'Fotografía',
-        style:{
-            textAlign:'center'
+        style: {
+            textAlign: 'center'
         }
     }];
 
@@ -99,72 +99,72 @@ const Sospechosos = ({showMatches}) => {
         filter: textFilter({
             placeholder: 'Buscar Id'
         })
-      },{
+    }, {
         dataField: "nombre",
         text: 'Nombre',
         filter: textFilter({
             placeholder: 'Buscar Nombre'
         })
-      },{
+    }, {
         dataField: "edad",
         text: 'Edad',
         filter: textFilter({
             placeholder: 'Buscar Edad'
         })
-      },{
+    }, {
         dataField: "sexo",
         text: 'Sexo',
         filter: textFilter({
             placeholder: 'Buscar Sexo'
         })
-      },{
+    }, {
         dataField: "date",
         text: 'Fecha de Registro',
         filter: textFilter({
             placeholder: 'Buscar Fecha'
         })
-      },{
+    }, {
         dataField: "puesto",
         text: 'Puesto',
         filter: textFilter({
             placeholder: 'Buscar Puesto'
         })
-      },{
+    }, {
         dataField: "comentario",
         text: 'Comentario'
-      },{
+    }, {
         dataField: 'foto',
-        formatter:(cel,row) => showImgs(cel,row) ,
+        formatter: (cel, row) => showImgs(cel, row),
         text: 'Fotografía',
-        style:{
-            textAlign:'center'
+        style: {
+            textAlign: 'center'
         }
     }];
-    
+
     const columnsDesconocidos = [{
         dataField: "Age",
         text: 'Edad',
         filter: textFilter({
             placeholder: 'Buscar Edad'
         })
-      },{
+    }, {
         dataField: 'Gender',
         text: 'Sexo',
         filter: textFilter({
             placeholder: 'Buscar Sexo'
         })
-      },{
+    }, {
         dataField: "DwellTime",
         text: 'Fecha detección',
         filter: textFilter({
             placeholder: 'Buscar Fecha'
         })
-      },{
+    }, {
         dataField: 'faceImage',
-        formatter:(cel,row) => showImgsDesconocidos(cel,row) ,
+        formatter: (cel, row) => showImgsDesconocidos(cel, row),
         text: 'Fotografía',
-        style:{
-            textAlign:'center'
+        style: {
+            textAlign: 'center'
         }
     }];
 
@@ -174,33 +174,33 @@ const Sospechosos = ({showMatches}) => {
         filter: textFilter({
             placeholder: 'Buscar Edad'
         })
-      },{
+    }, {
         dataField: 'Gender',
         text: 'Sexo',
         filter: textFilter({
             placeholder: 'Buscar Sexo'
         })
-      },{
+    }, {
         dataField: "DwellTime",
         text: 'Fecha detección',
         filter: textFilter({
             placeholder: 'Buscar Fecha'
         })
-      },{
+    }, {
         dataField: 'faceImage',
-        formatter:(cel,row) => showImgsDesconocidos(cel,row) ,
+        formatter: (cel, row) => showImgsDesconocidos(cel, row),
         text: 'Fotografía',
-        style:{
-            textAlign:'center'
+        style: {
+            textAlign: 'center'
         }
     }]
-    
-    const listarPersonas = () =>{
-        conections.getPersons().then(res =>{
-            if(res.status === 200){
+
+    const listarPersonas = () => {
+        conections.getPersons().then(res => {
+            if (res.status === 200) {
                 let resPersons = res.data
                 //console.log('resPersons',resPersons)
-                if(resPersons.success){
+                if (resPersons.success) {
                     actualizarSospechosos(resPersons.data.sospechosos);
                     actualizarEmpleados(resPersons.data.empleados);
                 }
@@ -208,14 +208,14 @@ const Sospechosos = ({showMatches}) => {
         })
     }
 
-    const listarDesconocidos = () =>{
-        conections.getDesconocidos().then(res =>{
-            if(res.status === 200){
+    const listarDesconocidos = () => {
+        conections.getDesconocidos().then(res => {
+            if (res.status === 200) {
                 let resDesconocidos = res.data
                 //console.log('resDesconocidos',resDesconocidos)
-                if(resDesconocidos.success){
-                    resDesconocidos.data.desconocidos.map(item => {
-                        if(item.Gender === 'Male')
+                if (resDesconocidos.success) {
+                    resDesconocidos.data.desconocidos.forEach(item => {
+                        if (item.Gender === 'Male')
                             item.Gender = 'masculino'
                         else
                             item.Gender = 'femenino'
@@ -227,14 +227,14 @@ const Sospechosos = ({showMatches}) => {
         })
     }
 
-    const listarMatches = () =>{
-        conections.getDetecciones().then(res =>{
-            if(res.status === 200){
+    const listarMatches = () => {
+        conections.getDetecciones().then(res => {
+            if (res.status === 200) {
                 let resMatches = res.data
                 //console.log('resMatches',resMatches)
-                if(resMatches.success){
+                if (resMatches.success) {
                     resMatches.data.matches.map(item => {
-                        if(item.Gender === 'Male')
+                        if (item.Gender === 'Male')
                             item.Gender = 'masculino'
                         else
                             item.Gender = 'femenino'
@@ -245,20 +245,20 @@ const Sospechosos = ({showMatches}) => {
         })
     }
 
-    const  showImgs = (cell,row) =>{
-        return(
+    const showImgs = (cell, row) => {
+        return (
             <img className="styleImg" src={row.foto} alt="img" />
         )
     }
 
-    const  showImgsDesconocidos = (cell,row) =>{
-        return(
-            <img className="styleImg" src={'data:image/jpeg;base64,'+row.faceImage} alt="img" />
+    const showImgsDesconocidos = (cell, row) => {
+        return (
+            <img className="styleImg" src={'data:image/jpeg;base64,' + row.faceImage} alt="img" />
         )
     }
 
-    const renderSospechosos = () =>{
-        return(
+    const renderSospechosos = () => {
+        return (
             <div className="containerTable">
                 <div className="row containerTitle">
                     <div className="col">
@@ -271,13 +271,13 @@ const Sospechosos = ({showMatches}) => {
                             <p>No hay personas de interes que mostrar</p>
                         </div>
                     </div>
-                :<BootstrapTable className="styleTable" keyField='id' data={ sospechosos } columns={ columnsSospechos } pagination={paginationFactory()} filter={filterFactory()} />}
+                    : <BootstrapTable className="styleTable" keyField='id' data={sospechosos} columns={columnsSospechos} pagination={paginationFactory()} filter={filterFactory()} />}
             </div>
         )
     }
 
-    const renderEmpleados = () =>{
-        return(
+    const renderEmpleados = () => {
+        return (
             <div className="containerTable">
                 <div className="row containerTitle">
                     <div className="col">
@@ -290,15 +290,15 @@ const Sospechosos = ({showMatches}) => {
                             <p>No hay personal que mostrar</p>
                         </div>
                     </div>
-                :<BootstrapTable className="styleTable" keyField='id' data={ empleados } columns={ columnsEmpleados } pagination={paginationFactory()} filter={filterFactory()} />}
-                
-                
+                    : <BootstrapTable className="styleTable" keyField='id' data={empleados} columns={columnsEmpleados} pagination={paginationFactory()} filter={filterFactory()} />}
+
+
             </div>
         )
     }
-    
-    const renderDesconocidos = () =>{
-        return(
+
+    const renderDesconocidos = () => {
+        return (
             <div className="containerTable">
                 <div className="row containerTitle">
                     <div className="col">
@@ -311,15 +311,15 @@ const Sospechosos = ({showMatches}) => {
                             <p>No hay desconocidos que mostrar</p>
                         </div>
                     </div>
-                :<BootstrapTable className="styleTable" keyField='id' data={ desconocidos } columns={ columnsDesconocidos } pagination={paginationFactory()} filter={filterFactory()} />}
-                
-                
+                    : <BootstrapTable className="styleTable" keyField='id' data={desconocidos} columns={columnsDesconocidos} pagination={paginationFactory()} filter={filterFactory()} />}
+
+
             </div>
         )
     }
 
-    const renderMatches = () =>{
-        return(
+    const renderMatches = () => {
+        return (
             <div className="containerTable">
                 <div className="row containerTitle">
                     <div className="col">
@@ -332,35 +332,35 @@ const Sospechosos = ({showMatches}) => {
                             <p>No hay detecciones que mostrar</p>
                         </div>
                     </div>
-                :<BootstrapTable className="styleTable" keyField='id' data={ empleados } columns={ columnsMatches } pagination={paginationFactory()} filter={filterFactory()} />}
-                
-                
+                    : <BootstrapTable className="styleTable" keyField='id' data={empleados} columns={columnsMatches} pagination={paginationFactory()} filter={filterFactory()} />}
+
+
             </div>
         )
     }
 
-    const hideModal = (accion) =>{
+    const hideModal = (accion) => {
         actualizarShowModal(false)
-        if(accion){
+        if (accion) {
             listarPersonas()
         }
 
     }
 
-    return ( 
+    return (
         <div className={!showMatches ? "hide-matches" : "show-matches"}>
-                <div className="col containerBtn" style={{paddingRight: !showMatches ? '40px' : '0px'}}>
-                    <input type="button" className="btn btnAdd" value="Agregar Nuevo" onClick={()=> actualizarShowModal(true)}/>
-                </div>
-            
+            <div className="col containerBtn" style={{ paddingRight: !showMatches ? '40px' : '0px' }}>
+                <input type="button" className="btn btnAdd" value="Agregar Nuevo" onClick={() => actualizarShowModal(true)} />
+            </div>
+
             <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
-            
-            {showModal?
-                <ModalAddSospechoso modal={showModal} hide={(accion)=>hideModal(accion)} ></ModalAddSospechoso>
-                :null
+
+            {showModal ?
+                <ModalAddSospechoso modal={showModal} hide={(accion) => hideModal(accion)} ></ModalAddSospechoso>
+                : null
             }
         </div>
-     );
+    );
 }
- 
+
 export default Sospechosos;

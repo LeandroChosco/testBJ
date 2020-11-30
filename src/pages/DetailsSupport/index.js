@@ -4,7 +4,7 @@ import MapContainer from "../../components/MapContainer/index.js";
 import firebaseC5cuajimalpa from "../../constants/configC5CJ";
 import { Navbar } from "react-bootstrap";
 import conections from "../../conections";
-import CameraStream from "../../components/CameraStream";
+// import CameraStream from "../../components/CameraStream";
 import { Button } from "semantic-ui-react";
 const mapOptions = {
   center: { lat: 19.45943, lng: -99.208588 },

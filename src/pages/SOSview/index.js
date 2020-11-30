@@ -184,13 +184,25 @@ class Chat extends Component {
 
   render() {
     const { tabIndex } = this.props.match.params
-    const { chats, chatId, index, from, loading, tracking } = this.state;
+    const { chats, chatId, index, from, loading, tracking, messages } = this.state;
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
     }
-    const chatSelected = chats && chats[index]
 
-    const textareaDisabled = chatSelected && chatSelected.active !== undefined ? !chatSelected.active : true;
+    const chatSelected = chats.find(item => item.id === chatId);
+
+    let textareaDisabled = null;
+    if (chatSelected) {
+      if (typeof chatSelected.active === 'undefined') {
+        textareaDisabled = false;
+      } else {
+        if (chatSelected.active === 0) {
+          textareaDisabled = true;
+        } else {
+          textareaDisabled = false;
+        }
+      }
+    }
     return (
       <div
         className={
@@ -518,7 +530,14 @@ class Chat extends Component {
 
   getMessages = (chatId) => {
     this.messageListener = refSOS.doc(chatId).onSnapshot(snapShot => {
-      this.setState({ messages: snapShot.get('messages'), chatId })
+      const chat_data = snapShot.data();
+      chat_data['id'] = snapShot.id;
+      const current_chat = [...this.state.chats];
+      const chat_index = current_chat.findIndex(item => item.id === chatId);
+      if (chat_index >= 0) {
+        current_chat[chat_index] = chat_data;
+      }
+      this.setState({ messages: snapShot.get('messages'), chatId, chats: current_chat })
     })
   }
 
@@ -604,8 +623,7 @@ class Chat extends Component {
     const { chats } = this.props
     if (flagUpdate === 0) {
       if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-        this.setState({ chats })
-        console.log("PREVIO AL SWITCH: ", tabIndex)
+        this.setState({ chats });
         switch (parseInt(tabIndex)) {
           case 0:
             const chatsMedic = this.props.chats.filter(e => e.trackingType === FILTERSOPTIONS[Number(tabIndex)])

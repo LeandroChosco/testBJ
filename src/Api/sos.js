@@ -35,7 +35,6 @@ export const getTracking = async (id) => {
 
     const request = await trackingRef.doc(id);
     const getData = await request.get();
-    console.log("getTracking", request);
 
     return {
       data: getData,
