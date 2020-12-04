@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Card, Icon, Button, Input, Dropdown, Tab } from 'semantic-ui-react';
+import ReactPlayer from 'react-player';
 import moment from 'moment';
 import _ from 'lodash';
 
 import './style.css';
 import firebase from '../../constants/configSOS';
-import VideoPlayer from '../../components/VideoPlayer';
 import MapContainer from '../../components/MapContainer';
 import { COMPLAINT_COLLECTION } from '../../Api/sos';
 
@@ -111,26 +111,40 @@ class Complaint extends Component {
 										</div>
 										<div className="col camContainerComplaintDiv" style={styles.allHeight}>
 											<Card style={styles.fileContainer}>
-												<Card.Content style={styles.divCenter}>
+												<Card.Content
+													style={
+														complaints[actIdx].report_asset ? complaints[actIdx]
+															.report_asset[0].type === 'image' ? (
+															styles.divCenter
+														) : null : (
+															styles.divCenter
+														)
+													}
+												>
 													{complaints[actIdx].report_asset ? complaints[actIdx]
 														.report_asset[0].type === 'image' ? (
-															<img
-																style={styles.file}
-																src={complaints[actIdx].report_asset[0].path} // TODO cambiar si es mas de una imagen
-															/>
-														) : (
-															<VideoPlayer
-																id={actIdx}
-																src={complaints[actIdx].report_asset[0].path}
-															/>
-														) : (
-															<div>
-																<p className="big-letter">No hay archivos que mostrar</p>
-																<div align="center">
-																	<i className="fa fa-image fa-5x" />
-																</div>
+														<img
+															style={styles.file}
+															src={complaints[actIdx].report_asset[0].path} // TODO cambiar si es mas de una imagen
+														/>
+													) : (
+														<ReactPlayer
+															url={complaints[actIdx].report_asset[0].path}
+															light={true}
+															playing={true}
+															controls={true}
+															style={{ backgroundColor: '#000' }}
+															width='100%'
+															height='30vh'
+														/>
+													) : (
+														<div>
+															<p className="big-letter">No hay archivos que mostrar</p>
+															<div align="center">
+																<i className="fa fa-image fa-5x" />
 															</div>
-														)}
+														</div>
+													)}
 												</Card.Content>
 											</Card>
 										</div>
