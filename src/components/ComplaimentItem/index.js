@@ -1,43 +1,84 @@
-import React from 'react'
-import { Card } from 'semantic-ui-react';
+import React from 'react';
+import { Card, Divider } from 'semantic-ui-react';
+import moment from 'moment';
+
 export default class ComplaimentItem extends React.Component {
-    
-    render(){
-        return(
-            <div style={{padding:2}}>
-            <Card className='cardmatchComtainer' onClick={this._godetails}>
-            <Card.Content>      
-                <Card.Description>
-                    <div className =" imageContainer row">                        
-                        <div className = 'col-12 limitlines' align='left'> 
-                            <div align='right'>
-                                {this.props.info?this.props.info.dateTime?this.props.info.dateTime.toDate().toLocaleString():'25-03-2019 14:35':'25-03-2019 14:35'}
-                            </div>
-                            <div>
-                                <p>
-                                    <b>Nueva denuncia: </b>{this.props.info.description}
-                                    <br/>
-                                    <b>Ubicación: </b>{this.props.info.position}
-                                </p>                                
-                            </div>                            
-                        </div>
-                    </div>                     
-                </Card.Description>
-            </Card.Content>            
-        </Card></div>)
-    }
+	state = {
+		description: ''
+	};
 
-    componentDidMount(){
-        
+	componentDidMount() {
+		let { info } = this.props;
+		let description = info.report_detail.qja_desc_queja;
+		let reverseDescription = [ ...String(description) ].reverse().join('');
+		let firstIndex = reverseDescription.indexOf('/');
+		let getSecondblock = reverseDescription.substr(firstIndex + 1, reverseDescription.length - 1);
+		let secondIndex = getSecondblock.indexOf('/');
+		let printDescription = getSecondblock.substr(secondIndex + 1, reverseDescription.length - 1);
+		let reinvestDescription = [ ...String(printDescription) ].reverse().join('');
+		this.setState({ description: reinvestDescription });
+	}
 
-    }
+	render() {
+		const { info } = this.props;
+		let { description } = this.state;
+		return (
+			<Card style={{ marginTop: '10px', padding: 0, width: '100%' }} onClick={this._godetails}>
+				<Card.Content style={{ paddingBottom: 0 }}>
+					<Card.Description>
+						<div className="row" style={{ fontSize: '.8rem', position: 'relative' }}>
+							<div className="col-12" align="left">
+								<div align="right">{moment(info.fecha_creacion).format('DD-MM-YYYY HH:mm')}</div>
+								{info.es_anonimo ? null : (
+									<div className="row">
+										<div className="col-5">
+											<b>Nombre:</b>
+										</div>
+										<div className="col-7">{`${info.user.firstname} ${info.user.lastname}`}</div>
+									</div>
+								)}
+								<Divider />
+								<div className="row">
+									<div className="col-5">
+										<b>Descripción:</b>
+									</div>
+									<div className="col-7">{description}</div>
+								</div>
+								<Divider />
+								<div className="row">
+									<div className="col-5">
+										<b>Prefolio:</b>
+									</div>
+									<div className="col-7">{info.prefolio}</div>
+								</div>
+								<div align="right" style={{ fontSize: '1.2rem' }}>
+									<span
+										className={
+											info.estado_queja === 'Pendiente' ? (
+												'badge badge-warning'
+											) : (
+												'badge badge-success'
+											)
+										}
+									>
+										{info.estado_queja === 'Pendiente' ? 'No Antentido' : 'Atentido'}
+									</span>
+								</div>
+							</div>
+						</div>
+					</Card.Description>
+				</Card.Content>
+			</Card>
+		);
+	}
 
-    _godetails = () => {
-        if(this.props.toggleControls){
-            this.props.toggleControls() 
-        }
-        
-        window.open(window.location.href.replace(window.location.pathname,'/').replace(window.location.search,'').replace(window.location.hash,'') + 'detalles/denuncia/' + this.props.info.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500')
-
-    }
+	_godetails = () => {
+		if (this.props.toggleControls) {
+			this.props.toggleControls();
+		}
+		return (window.location.href = window.location.href
+			.replace(window.location.search, '')
+			.replace(window.location.hash, '')
+			.replace(window.location.pathname, `/servicios/${this.props.info.id}`));
+	};
 }

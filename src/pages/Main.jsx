@@ -30,6 +30,7 @@ import Dashboard from './Dashboard';
 import Cuadrantes from './Cuadrantes'
 import Sospechosos from "./Sospechosos";
 import AlarmChat from "./AlarmChat/index";
+import Complaint from "./Complaint";
 import constants from '../constants/constants';
 import Sound from 'react-sound';
 import sonido from '../assets/tonos/notificacion.mp3';
@@ -43,7 +44,7 @@ import socketIOClient from "socket.io-client";
 import sailsIOClient from "sails.io.js";
 import SosView from "./SOSview/index";
 import firebaseSos from "../constants/configSOS";
-import { MESSAGES_COLLECTION } from "../Api/sos";
+import { MESSAGES_COLLECTION, COMPLAINT_COLLECTION } from "../Api/sos";
 
 
 import Chat from './ChatPlus/index'
@@ -109,7 +110,8 @@ class Main extends Component {
         stateSos: [],
         datosAlcaldia: {},
         chatFirebase: undefined,
-        indexSos: undefined
+        indexSos: undefined,
+        complaints:[]
     }
 
 
@@ -341,6 +343,40 @@ class Main extends Component {
      
         */
         //  this.state.datosAlcaldia.length > 0 && 
+        firebaseSos
+            .app('sos')
+            .firestore()
+            .collection(COMPLAINT_COLLECTION)
+            //  .where("c5_admin_clave", "==", this.state.datosAlcaldia[0].clave_municipal)
+            .orderBy('fecha_modificacion', 'desc')
+            .onSnapshot((docs) => {
+                let { complaints, showNotification, callIsGoing } = this.state;
+                if (complaints.length > 0) {
+                    let changes = docs.docChanges();
+                    if (changes.length > 0 && changes.length < 5) {
+                        const CREATED_ID = changes[0].doc.id;
+                        if (changes[0].type === 'added') {
+                            let founded = complaints.find((item) => item.id === CREATED_ID);
+                            if (!founded) {
+                                if (showNotification && !callIsGoing) {
+                                    this.setState({ reproducirSonido: true });
+                                    this.showComplaintNot(
+                                        'Solicitud de servicios',
+                                        'Nueva solicitud de servicios',
+                                        'info',
+                                        'Ver detalles',
+                                        CREATED_ID
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+
+                let newComplaints = docs.docs.map((doc) => ({id: doc.id, ...doc.data()}));
+                this.setState({ complaints: newComplaints });
+            });
+
         firebaseSos
             .app("sos")
             .firestore()
@@ -718,6 +754,25 @@ class Main extends Component {
         return window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos/${action}/${chatId}`)
     }
 
+    showComplaintNot =(title, message, type, label, id)=>{
+      const notification = this.refs.notificationSystem;
+      if (notification && !this.state.callIsGoing) {
+          notification.addNotification({
+              title: title,
+              message: message,
+              level: type,
+              action: {
+                  label: label,
+                  callback: () => this.handleComplaintsRedirect(id)
+              }
+          });
+      }
+    }
+
+    handleComplaintsRedirect = (complaintId) => {
+      return window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/servicios/${complaintId}`)
+    }
+
     showNot = (title, message, type, label, action, id) => {
         const notification = this.refs.notificationSystem;
         if (notification && !this.state.stopNotification && !this.state.callIsGoing) {
@@ -920,6 +975,7 @@ class Main extends Component {
                             complaiments={this.state.complaiments}
                             calls={this.state.calls}
                             alertaCovid={this.state.alertaCovidTmp}
+                            complaints={this.state.complaints}
                         />
                         : null
                     }
@@ -995,6 +1051,17 @@ class Main extends Component {
                                 stopNotification={() =>
                                     this.setState({ stopNotification: true })
                                 }
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/servicios/:complaintId?"
+                        exact
+                        render={(props) => (
+                            <Complaint
+                                {...props}
+                                complaints={this.state.complaints}    
+                                userInfo={this.state.userInfo}
                             />
                         )}
                     />
