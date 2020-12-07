@@ -83,7 +83,22 @@ class CameraStream extends Component {
                             <Row>
                                 <Col lg={6}>
                                     <div className="camHolder">
-                                        {this.props.marker.extraData.isRtmp ? <RtmpPlayer height={this.props.height} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} /> : this.props.marker.extraData.isHls ? <HlsPlayer height={this.props.height} width={this.props.width} src={this.props.marker.extraData.url} num_cam={this.props.marker.extraData.num_cam} /> : <canvas id={'camcanvasstreamer' + this.state.cameraID} ref="camRef" style={{ width: '100%', height: this.props.height ? this.props.height : '100%' }}></canvas>}
+                                        {this.props.marker.extraData.isRtmp ? 
+                                        <RtmpPlayer 
+                                        height={this.props.height} 
+                                        src={this.props.marker.extraData.url} 
+                                        num_cam={this.props.marker.extraData.num_cam} /> 
+                                        : this.props.marker.extraData.isHls ? 
+                                        <HlsPlayer 
+                                        height={this.props.height} 
+                                        width={this.props.width} 
+                                        src={this.props.marker.extraData.url} 
+                                        num_cam={this.props.marker.extraData.num_cam} /> 
+                                        : <canvas 
+                                            id={'camcanvasstreamer' + this.state.cameraID} 
+                                            ref="camRef" 
+                                            style={{ width: '100%', height: this.props.height ? this.props.height : '100%' }}>
+                                        </canvas>}
                                     </div>
                                 </Col>
                                 <Col lg={6}>
