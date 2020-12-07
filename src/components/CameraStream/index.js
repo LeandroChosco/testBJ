@@ -4,7 +4,7 @@ import './style.css'
 import MediaContainer from '../MediaContainer';
 import constants from '../../constants/constants'
 import conections from '../../conections'
-import { Button, Form, Label, TextArea, Radio, Tab } from 'semantic-ui-react';
+import { Button, Form, Label, TextArea, Radio, Tab, Icon } from 'semantic-ui-react';
 import Chips from 'react-chips'
 import RtmpPlayer from '../RtmpPlayer'
 import JSZipUtils from 'jszip-utils'
@@ -71,8 +71,11 @@ class CameraStream extends Component {
 
     lastDecode = null
     tryReconect = false
+
+    
+    
+    
     render() {
-        console.log(this.props.marker.extraData);
         return (
             <Card style={{ display: this.state.display }}>
                 {this.props.horizontal ?
@@ -102,7 +105,7 @@ class CameraStream extends Component {
                     </Card.Body> :
                     <Card.Body>
                         {this.props.hideTitle ? null : <Card.Title>
-                            <div align='left'><i className='fa fa-video-camera'></i>  Camara {this.state.num_cam} {this.props.marker.extraData.dataCamValue === undefined ? null : this.props.marker.extraData.dataCamValue.tipo_camara === 2 ? <i>, Tipo: PTZ</i> : null} {this.props.marker.extraData.tipo_camara === undefined ? null : this.props.marker.extraData.tipo_camara === 2 ? <i>, Tipo: PTZ</i> : null}</div>
+                            <div align='left'><i className='fa fa-video-camera'></i>  Camaras {this.state.num_cam} {this.props.marker.extraData.dataCamValue === undefined ? null : this.props.marker.extraData.dataCamValue.tipo_camara === 2 ? <i>, Tipo: PTZ </i> : null} {this.props.marker.extraData.tipo_camara === undefined ? null : this.props.marker.extraData.tipo_camara === 2 ? <i>, Tipo: PTZ</i> : null}</div>
                         </Card.Title>}
                         {this.state.showData ?
                             <div className="row dataHolder p10">
@@ -180,9 +183,11 @@ class CameraStream extends Component {
                                     : null
                             }
                             {
-                                this.props.hideButton ? null
-                                    : <Button onClick={() => this.setState({ showModalMoreInformation: true })} className="ml-2 mt-1">Más información</Button>
+                                this.props.hideButton ? null 
+                                : <><br></br><Button onClick={() => this.setState({ showModalMoreInformation: true })} className="ml-2 mt-1">Más información</Button></>
                             }
+
+                            {this.props.marker.extraData.dataCamValue === undefined ? null : this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <i><Button onClick={() => this.Clicked(this.props.marker.extraData.dataCamValue.dns)}><Icon name='sliders horizontal' /></Button></i> : null}
 
                             {this.state.showModalMoreInformation ?
                                 <ModalMoreInformation dataCamValue={this.props.marker.extraData.dataCamValue} propsIniciales={this.props.propsIniciales} modal={this.state.showModalMoreInformation} hide={() => this.setState({ showModalMoreInformation: false })} cam_id={this.state.cameraID} data_cam={this.state.cameraName}></ModalMoreInformation>
@@ -351,6 +356,12 @@ class CameraStream extends Component {
 
     _goToCuadrante = (id_cuadrante) => {
         window.location.assign(window.location.href.replace(window.location.pathname, '').replace(window.location.search, '').replace(window.location.hash, '') + '/cuadrantes/' + id_cuadrante)
+    }
+
+    Clicked = (dns) => {
+
+        window.open("http://" + dns, 'Ficha de Incidencias', 'height=600,width=1200');
+
     }
 
     onChange = chips => {
