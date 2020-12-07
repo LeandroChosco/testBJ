@@ -7,7 +7,7 @@ import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "./style.css";
-import constants from "../../constants/constants";
+// import constants from "../../constants/constants";
 import conections from "../../conections";
 import videojs from "video.js";
 
@@ -81,21 +81,16 @@ class Map extends Component {
               moduleActions={moduleActions}
               marker={marker}
               height={"300px"}
-              showButtons
               showExternal
               hideButton={
-                marker.extraData.dataCamValue.tipo_camara === 2 ||
-                marker.extraData.dataCamValue.tipo_camara === 3 ||
-                marker.extraData.dataCamValue.tipo_camara === 4
-                  ? true
-                  : false
-              }
-              showButtons={
-                marker.extraData.dataCamValue.tipo_camara === 2 ||
-                marker.extraData.dataCamValue.tipo_camara === 3 ||
-                marker.extraData.dataCamValue.tipo_camara === 4
+                marker.extraData.dataCamValue.control === 0 
                   ? false
                   : true
+              }
+              showButtons={
+                marker.extraData.dataCamValue.control === 1
+                  ? true
+                  : false
               }
             />,
             document.getElementById("infoWindow" + e.extraData.id)
@@ -153,7 +148,7 @@ class Map extends Component {
       element.setMap(null);
     }
     conections.getAllCams().then(data => {
-      // console.log("Marker: ", data.data);
+       console.log("Marker: ", data.data);
       const camaras = data.data;
       let auxCamaras = [];
       let center_lat = 0;
@@ -162,7 +157,7 @@ class Map extends Component {
       let index = 1;
       camaras.map(value => {
         if (value.active === 1 && value.flag_streaming === 1) {
-          if (value.google_cordenate != "") {
+          if (value.google_cordenate !== "") {
             center_lat =
               center_lat + parseFloat(value.google_cordenate.split(",")[0]);
             center_lng =

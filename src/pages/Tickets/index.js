@@ -3,7 +3,7 @@ import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
-import constants from '../../constants/constants';
+// import constants from '../../constants/constants';
 import conections from '../../conections';
 
 

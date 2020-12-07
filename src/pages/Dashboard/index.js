@@ -17,11 +17,11 @@ import {
   Bar,
   LabelList,  
   ComposedChart,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
+  // RadarChart,
+  // PolarGrid,
+  // PolarAngleAxis,
+  // PolarRadiusAxis,
+  // Radar,
   Text
 } from 'recharts';
 import ColorScheme from 'color-scheme'
@@ -35,9 +35,9 @@ import happyEmoji from '../../assets/images/emojis/feliz.png'
 import angryEmoji from '../../assets/images/emojis/enojado.png'
 import surpriseEmoji from '../../assets/images/emojis/sorprendido.png'
 import { Tab } from 'semantic-ui-react'
-import socketIOClient from 'socket.io-client';
-import sailsIOClient from 'sails.io.js';
-import constants from '../../constants/constants';
+// import socketIOClient from 'socket.io-client';
+// import sailsIOClient from 'sails.io.js';
+// import constants from '../../constants/constants';
 import * as moment from 'moment'
 
 const scm = new ColorScheme();
@@ -124,7 +124,7 @@ class Dashboard extends Component {
     }
 
   renderCamsDashboard() {
-    const c = shuffle(COLORS);
+    // const c = shuffle(COLORS);
     return (
         <div className='container-flex'>
           <div className='row'>
@@ -383,27 +383,27 @@ class Dashboard extends Component {
                  
             <ul className="cardlist">
               <li>
-                <img src={neutralEmoji} width='20%'></img>
+                <img alt="Neutral" src={neutralEmoji} width='20%'></img>
                 <h4>Neutral</h4>
             {this.state.personsMood[0].total}
               </li>
               <li>
-              <img src={surpriseEmoji} width='20%'></img>
+              <img alt="Sorprendido" src={surpriseEmoji} width='20%'></img>
             <h4>Sorprendido</h4>
               {this.state.personsMood[1].total}
               </li>
               <li>
-              <img src={sadEmoji} width='20%'></img>
+              <img alt="Triste" src={sadEmoji} width='20%'></img>
             <h4>Triste</h4> 
               {this.state.personsMood[2].total}
               </li>
               <li>
-              <img src={happyEmoji} width='20%'></img>
+              <img alt="Feliz" src={happyEmoji} width='20%'></img>
             <h4>Feliz</h4>
               {this.state.personsMood[3].total}
               </li>
               <li>
-              <img src={angryEmoji} width='20%'></img>
+              <img alt="Enojado" src={angryEmoji} width='20%'></img>
             <h4>Enojado</h4>
               {this.state.personsMood[4].total}
               </li>
@@ -518,12 +518,14 @@ class Dashboard extends Component {
       loadingCamsGrid:true
     })
     conections.dashboardCams().then(response => {
-      const data = response.data;      
+      const data = response.data; 
+      console.log('datilla: ', data)     
       this.setState({
         loadingCams:false,
         dataCams:[
           {name:'Activas',value:data.active},
           {name:'Inactivas',value:data.deactive},
+          {name:'Desconectadas',value:data.disconnected}
         ],
         installed_by_moth:data.installed_by_moth.map(v=>{v.fecha =moment(v.fecha).format('MMM-YYYY'); return v}),
         installed_last_moth:data.installed_last_moth.map(v=>{v.fecha =moment(v.fecha).format('DD-MM-YYYY'); return v})
@@ -704,23 +706,23 @@ function customLabel(p){
     )
 }
 
-function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
+// function shuffle(array) {
+//   var currentIndex = array.length, temporaryValue, randomIndex;
 
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
+//   // While there remain elements to shuffle...
+//   while (0 !== currentIndex) {
 
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
+//     // Pick a remaining element...
+//     randomIndex = Math.floor(Math.random() * currentIndex);
+//     currentIndex -= 1;
 
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
+//     // And swap it with the current element.
+//     temporaryValue = array[currentIndex];
+//     array[currentIndex] = array[randomIndex];
+//     array[randomIndex] = temporaryValue;
+//   }
 
-  return array;
-}
+//   return array;
+// }
 
 export default Dashboard;

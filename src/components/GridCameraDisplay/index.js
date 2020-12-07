@@ -127,9 +127,10 @@ class GridCameraDisplay extends Component {
                         <Button basic disabled={this.state.loadingSnap||this.state.loadingRcord||this.props.loadingFiles||this.state.restarting||this.state.recordingCams.indexOf(this.state.selectedCamera)>-1} circular onClick={()=>this.props.makeReport(this.state.selectedCamera)}> <i className="fa fa-warning"></i></Button>
                         {/* <Button basic circular disabled={this.state.loadingSnap||this.state.loadingRcord||this.props.loadingFiles||this.state.restarting||this.state.recordingCams.indexOf(this.state.selectedCamera)>-1} onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button> */}
                         <Button basic circular onClick={()=>this.props.changeStatus(this.state.selectedCamera)}> <i className="fa fa-exchange"></i></Button>
+                        {this.state.selectedCamera.dataCamValue === undefined ? null : this.state.selectedCamera.dataCamValue.tipo_camara === 2 && this.state.selectedCamera.dataCamValue.dns != null ? <i><Button basic circular onClick={() => this.Clicked(this.state.selectedCamera.dataCamValue.dns)}><i className="fa fa-sliders"></i></Button></i> : null}
                 </div>
                 <div className='col-5'>
-                    <b>Camara {this.state.selectedCamera.num_cam}</b> {this.state.selectedCamera.name} 
+                    <b>Camara  {console.log('la camara', this.state.selectedCamera), this.state.selectedCamera.num_cam}</b> {this.state.selectedCamera.name} 
                 </div>
                 <div className='col-3'>                    
                     <Button onClick={()=>this._openCameraInfo(false)} className='pull-right' primary> { this.state.autoplay?'':'Ocultar controles'} <i className={ this.state.autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}></i></Button>                
@@ -249,6 +250,12 @@ class GridCameraDisplay extends Component {
     
     );
   }
+
+  Clicked = (dns) => {
+
+    window.open("http://" + dns, 'Ficha de Incidencias', 'height=600,width=1200');
+
+}
 
     _snapShot = (camera) => {
         this.setState({loadingSnap:true})

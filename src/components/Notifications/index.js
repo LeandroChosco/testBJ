@@ -88,17 +88,17 @@ class Notifications extends Component {
             onClick={this.handleClick}
           >
             <Icon name="dropdown" />
-            Denuncias
+            Solicitud de servicios
           </Accordion.Title>
           <Accordion.Content
             active={activeIndex === 2}
             style={{ overflowY: "auto", overflowX: "hidden", height: "100%" }}
           >
             <div align="center">
-              {this.props.complaiments.map((value, index) => (
+              {this.props.complaints.map((value, index) => (
                 <ComplaimentItem key={index} info={value} />
               ))}
-              {this.props.complaiments.length === 0 ? "No hay denuncias" : null}
+              {this.props.complaints.length === 0 ? "No hay solicitudes de servicios" : null}
             </div>
           </Accordion.Content>
 

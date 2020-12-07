@@ -1,0 +1,62 @@
+.app-container {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	top: 51px;
+}
+
+.fullHeight {
+	bottom: 0;
+	right: 0;
+	left: 0;
+	position: absolute;
+	background-color: #fafafa;
+}
+
+.listContainer {
+	height: 100%;
+	background-color: #dadada;
+	padding: 25px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.listContainer > .card {
+	width: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.mainContainer {
+	margin-top: 15px;
+	width: 93%;
+	height: 95%;
+}
+
+.mapContainer {
+	height: 57%;
+	width: 100%;
+}
+
+.mapContainer > .row > .col > .card {
+	height: 100% !important;
+}
+
+.mapContainer > .row > .col > .card > .card-body {
+	height: 100% !important;
+}
+
+.mapContainer > .row > .card > .card-body > .dataHolder {
+	height: 100% !important;
+}
+
+.titleContainer {
+	background-color: #ffaa20;
+	border-radius: 15px;
+	color: white;
+}
+
+.activeComplaint {
+	background-color: #afafaf !important;
+}

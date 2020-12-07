@@ -4,9 +4,9 @@ import { Card, Icon, Button, Input, Dropdown, Tab } from "semantic-ui-react";
 import "./style.css";
 // import firebaseC5 from "../../constants/configC5";
 import CameraStream from "../../components/CameraStream";
-import constants from "../../constants/constants";
+// import constants from "../../constants/constants";
 import MapContainer from "../../components/MapContainer";
-import Axios from "axios";
+// import Axios from "axios";
 import moment from 'moment'
 import _ from 'lodash'
 
@@ -26,13 +26,6 @@ const COLORS = {
   "Policia": "#0f4c75",
   "Médico": "#28df99",
 }
-
-const FILTERSOPTIONS = [
-    undefined,
-    "Fuego",
-    "Policia",
-    "Médico",
-]
 
 const SEARCHOPTIONS = [
   {
@@ -61,38 +54,45 @@ class Chat extends Component {
     camData: undefined,
     loading: false,
     hashUsed: false,
-    personalInformation: {
-      cellPhone: null,
-      address: null,
-      alarmType: null,
-      description: null,
-      alarmSN: null
-    },
+    personalInformation: {},
     optionSelected: "name",
     marker: null,
     firebaseSub: null,
     tabIndex: 0,
-    messages: [],
     flagUpdate: 0
   };
-  panes = [
+  panes = this.props.history.location.pathname.includes("chat") ? [
     {
       menuItem: 'C5',
       render: () => <Tab.Pane attached={false} style={styles.tab} > {this.renderListChats("C5")}</Tab.Pane>,
     },
-    {
-      menuItem: 'Fuego',
-      render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("fire")}</Tab.Pane>,
-    },
-    {
-      menuItem: 'Policia',
-      render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("police")}</Tab.Pane>,
-    },
-    {
-        menuItem: 'Medico',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("medic")}</Tab.Pane>,
-      },
   ]
+    :
+    [
+      {
+        menuItem: 'Policia',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("Policia")}</Tab.Pane>,
+      },
+      {
+        menuItem: 'Fuego',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("Fuego")}</Tab.Pane>,
+      },
+      {
+        menuItem: 'Medico',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("Médico")}</Tab.Pane>,
+      },
+    ];
+
+  FILTERSOPTIONS = this.props.history.location.pathname.includes("chat") ?
+    [
+      undefined
+    ]
+    :
+    [
+      "Policia",
+      "Fuego",
+      "Médico",
+    ]
 
 
   filterAction = (event) => {
@@ -101,7 +101,10 @@ class Chat extends Component {
     const { chats: chatsProps } = this.props
     const { optionSelected, searching } = this.state
     this.setState({ searching: value.trim() }, () => {
-      const filterData = chatsProps.filter(c => c.trackingType === FILTERSOPTIONS[activeIndex])
+      let filterData = chatsProps;
+      if (this.props.history.location.pathname.includes("alarm")) {
+        filterData = chatsProps.filter(c => c.alarmType === this.FILTERSOPTIONS[activeIndex])
+      }
       let expresion = new RegExp(`${searching}.*`, "i");
       if (searching.trim().length !== 0) {
         let newFilterSearch
@@ -115,7 +118,10 @@ class Chat extends Component {
         this.setState({ chats: newFilterSearch })
       }
       if (value.trim().length === 0) {
-        let newChats = this.props.chats.filter(c => c.trackingType === FILTERSOPTIONS[this.state.activeIndex])
+        let newChats = chatsProps;
+        if (this.props.history.location.pathname.includes("alarm")) {
+          newChats = chatsProps.filter(c => c.alarmType === this.FILTERSOPTIONS[activeIndex])
+        }
         this.setState({ chats: newChats })
       }
     });
@@ -128,74 +134,85 @@ class Chat extends Component {
   renderListChats = (type) => {
     const { index, chats } = this.state;
     return (
-    <div >
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <Input placeholder="Buscar alertas" style={{ flex: 2 }} onChange={this.filterAction}></Input>
-        <Dropdown
-          placeholder='Buscar por'
-          fluid
-          selection
-          options={SEARCHOPTIONS}
-          defaultValue="name"
-          onChange={this.handleChangeOption}
-          style={{ flex: 1 }}
-        />
+      <div >
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Input placeholder="Buscar alertas" style={{ flex: 2 }} onChange={this.filterAction}></Input>
+          <Dropdown
+            placeholder='Buscar por'
+            fluid
+            selection
+            options={SEARCHOPTIONS}
+            defaultValue="name"
+            onChange={this.handleChangeOption}
+            style={{ flex: 1 }}
+          />
 
-      </div>
-      <div style={{height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px'}}>
-        {chats.map((chat, i) => (
-          <Card
-            className={i === index ? "activeChat" : ""}
-            style={{ width: "100%" }}
-            key={i}
-            onClick={() => this.changeChat(chat, i)}
-          >
-            <Card.Content>
-              <div style={{ position: "relative" }}>
-                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{moment(moment(chat.create_at)).format('DD-MM-YYYY, h:mm a')}</p></div>
-                {
+        </div>
+        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
+          {chats.map((chat, i) => (
+            <Card
+              className={i === index ? "activeChat" : ""}
+              style={{ width: "100%" }}
+              key={i}
+              onClick={() => this.changeChat(chat, i)}
+            >
+              <Card.Content>
+                <div style={{ position: "relative" }}>
+                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{moment(moment(chat.create_at)).format('DD-MM-YYYY, h:mm a')}</p></div>
+                  {
 
-                  chat.active !== undefined && chat.active ?
-                    <p>
-                      {chat.messages
-                        ? chat.messages.length > 0
-                          ? (chat.messages[chat.messages.length - 1].from ===
-                            "user"
-                            ? chat.user_name.split(" ")[0]
-                            : "C5") +
-                          ": " +
-                          chat.messages[chat.messages.length - 1].msg //msg
-                          : "No hay mensajes que mostrar"
-                        : "No hay mensajes que mostrar"}
-                    </p> :
-                    <p>Ticket Id: {chat.id}</p>
-                }
+                    chat.active !== undefined && chat.active ?
+                      <p>
+                        {chat.messages
+                          ? chat.messages.length > 0
+                            ? (chat.messages[chat.messages.length - 1].from ===
+                              "user"
+                              ? chat.user_name.split(" ")[0]
+                              : "C5") +
+                            ": " +
+                            chat.messages[chat.messages.length - 1].msg //msg
+                            : "No hay mensajes que mostrar"
+                          : "No hay mensajes que mostrar"}
+                      </p> :
+                      <p></p>
+                  }
 
-                {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                  <div className="notificationNumber" style={{ marginTop: 15 }}>
-                    <p>{chat.c5Unread}</p>
+                  {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
+                    <div className="notificationNumber" style={{ marginTop: 15 }}>
+                      <p>{chat.c5Unread}</p>
+                    </div>
+                  ) : null}
+                  <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                    <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
                   </div>
-                ) : null}
-                <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                  <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
                 </div>
-              </div>
-            </Card.Content>
-          </Card>
-        ))}
-      </div>
-    </div>)
+              </Card.Content>
+            </Card>
+          ))}
+        </div>
+      </div>)
   }
 
   render() {
-    const { alarmIndex } = this.props.match.params
+    const { alarmIndex, tabIndex } = this.props.match.params
     const { chats, chatId, index, loading, camData, personalInformation } = this.state
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
     }
-    const chatSelected = chats && chats[index]
+    const chatSelected = chats && chats[index];
 
-    const textareaDisabled = chatSelected && chatSelected.active !== undefined ? !chatSelected.active : true;
+    let textareaDisabled = null;
+    if (chatSelected) {
+      if (typeof chatSelected.active === 'undefined') {
+        textareaDisabled = false;
+      } else {
+        if (chatSelected.active === 0) {
+          textareaDisabled = true;
+        } else {
+          textareaDisabled = false;
+        }
+      }
+    }
     return (
       <div
         className={
@@ -206,19 +223,19 @@ class Chat extends Component {
       >
         <div className="row fullHeight">
           <div className="col-4 userList">
-            <Tab 
-              menu={{ pointing: true }} 
-              panes={this.panes} 
-              defaultActiveIndex={ alarmIndex ? alarmIndex : 0 } 
+            <Tab
+              menu={{ pointing: true }}
+              panes={this.panes}
+              defaultActiveIndex={tabIndex ? tabIndex : 0}
               onTabChange={(t, i) => {
                 const { chats } = this.props
-                const { index } = this.state
-                let newChats = chats.filter(e => e.alarmType === FILTERSOPTIONS[i.activeIndex])
+                const { index } = this.state;
+                let newChats = chats.filter(e => e.alarmType === this.FILTERSOPTIONS[i.activeIndex])
                 if (index !== undefined) {
                   let selected = newChats.length !== 0 && newChats[index] ? newChats[index].alarmType : newChats[0].alarmType;
                   this.setState({ from: selected ? selected : "Error getting data" })
                 }
-                this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null })
+                this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null, tabIndex: i.activeIndex })
               }} />
           </div>
           <div className="col-8">
@@ -230,7 +247,7 @@ class Chat extends Component {
                     style={{
                       textAlign: "center",
                       backgroundColor: COLORS[chats[index].alarmType ? chats[index].alarmType : 'c5'],
-                      height: "5%"
+                      height: "30px"
                     }}
                   >
                     {chats[index].alarmType ? chats[index].alarmType : 'Chat C5'}
@@ -238,9 +255,9 @@ class Chat extends Component {
                   <div className="row" style={{ height: "70%", margin: 0 }}>
                     <div
                       className="col"
-                      style={{ height: "100%"}}
+                      style={{ height: "100%" }}
                     >
-                      {chats[index].user_cam.google_cordenate !== undefined ? 
+                      {chats[index].user_cam.google_cordenate !== undefined ?
                         <MapContainer
                           options={{
                             center: { lat: parseFloat(chats[index].user_cam.google_cordenate.split(',')[0]), lng: parseFloat(chats[index].user_cam.google_cordenate.split(',')[1]) },
@@ -256,48 +273,48 @@ class Chat extends Component {
                             checked: ''
                           }}
                           onMapLoad={this._onMapLoad}
-                        /> 
+                        />
                         :
                         <MapContainer
                           options={{
-                              center: { lat: parseFloat(chats[index].location.latitude), lng: parseFloat(chats[index].location.longitude) },
-                              zoom: 15,
-                              mapTypeId: 'roadmap',
-                              zoomControl: false,
-                              mapTypeControl: false,
-                              streetViewControl: false,
-                              fullscreenControl: false,
-                              openConfirm: false,
-                              typeConfirm: false,
-                              openSelection: false,
-                              checked: ''
+                            center: { lat: parseFloat(chats[index].location.latitude), lng: parseFloat(chats[index].location.longitude) },
+                            zoom: 15,
+                            mapTypeId: 'roadmap',
+                            zoomControl: false,
+                            mapTypeControl: false,
+                            streetViewControl: false,
+                            fullscreenControl: false,
+                            openConfirm: false,
+                            typeConfirm: false,
+                            openSelection: false,
+                            checked: ''
                           }}
                           onMapLoad={this._onMapLoad}
                         />
-                    }
+                      }
                     </div>
                     <div className='col camContainerChatDiv' style={{ height: '100%' }}>
                       {camData !== undefined ?
-                          <CameraStream
-                              style={{ height: '100%' }}
-                              hideTitle
-                              height='100%'
-                              hideButton
-                              propsIniciales={this.props}
-                              marker={camData}
-                          />
-                      : null}
+                        <CameraStream
+                          style={{ height: '100%' }}
+                          hideTitle
+                          height='100%'
+                          hideButton
+                          propsIniciales={this.props}
+                          marker={camData}
+                        />
+                        : null}
                     </div>
                   </div>
 
-                  <div className="row" style={{ height: "20%", width: '100%', margin: 0, marginTop: '5px'}}>
+                  <div className="row" style={{ height: "20%", width: '100%', margin: 0, marginTop: '5px' }}>
                     <Card style={{ width: "100%" }}>
                       <Card.Content>
                         <div className="row">
                           <div className="col-8">
-                            <div className="row" style={{padding: '5px'}}>
+                            <div className="row" style={{ padding: '5px' }}>
                               <div className="col-6" style={{ fontSize: 13, paddingRight: 0 }}>
-                                <b>Nombre: </b> {chats[index].user_name}
+                      <b>Nombre: </b> {chats[index].user_name}
                               </div>
                               <div
                                 className="col-3"
@@ -307,53 +324,53 @@ class Chat extends Component {
                                   paddingRight: 0,
                                 }}
                               >
-                                <b>Celular: </b> {personalInformation.cellPhone ? personalInformation.cellPhone : ''}
+                                <b>Celular: </b> {chats[index].user_cam.phone}
                               </div>
                             </div>
-                            <div className="row" style={{padding: '5px'}}>
+                            <div className="row" style={{ padding: '5px' }}>
                               <div className="col-12" style={{ fontSize: 13, paddingRight: 0 }}>
-                                <b>Dirección: </b>{personalInformation.address ? personalInformation.address : ''}
+                                <b>Dirección: </b>{chats[index].user_cam.street} {chats[index].user_cam.number}, {chats[index].user_cam.town}, {chats[index].user_cam.township}
                               </div>
                             </div>
-                            {personalInformation.alarmType ? 
-                              <div className="row" style={{padding: '5px'}}>
+                            {personalInformation.alarmType ?
+                              <div className="row" style={{ padding: '5px' }}>
                                 <div className="col-6" style={{ fontSize: 13, paddingRight: 0 }}>
                                   <b>Descripción: </b>{personalInformation.description ? personalInformation.description : ''}
                                 </div>
-                                  <div className="col-3" style={{ fontSize: 13, paddingLeft: 0, paddingRight: 0}}>
-                                    <b>Alarma: </b> {personalInformation.alarmType ? personalInformation.alarmType : ''}
-                                  </div>
-                                  <div className="col-3" style={{ fontSize: 13, paddingLeft: 0, paddingRight: 0}}>
-                                    <b>Alarma NS: </b> {personalInformation.alarmSN ? personalInformation.alarmSN : ''}
-                                  </div>
+                                <div className="col-3" style={{ fontSize: 13, paddingLeft: 0, paddingRight: 0 }}>
+                                  <b>Alarma: </b> {personalInformation.alarmType ? personalInformation.alarmType : ''}
+                                </div>
+                                <div className="col-3" style={{ fontSize: 13, paddingLeft: 0, paddingRight: 0 }}>
+                                  <b>Alarma NS: </b> {personalInformation.alarmSN ? personalInformation.alarmSN : ''}
+                                </div>
                               </div>
-                              : null  
+                              : null
                             }
                           </div>
                           <div className="col-4" style={{ margin: "auto" }}>
-                              <Button
-                                size='small'
-                                icon
-                                labelPosition='left'
-                                color="red"
-                                onClick={this.closeChat}
-                                style={{margin: '5px'}}
-                                disabled={textareaDisabled}
-                              >
-                                <Icon name="taxi" />
+                            <Button
+                              size='small'
+                              icon
+                              labelPosition='left'
+                              color="red"
+                              onClick={this.closeChat}
+                              style={{ margin: '5px' }}
+                              disabled={textareaDisabled}
+                            >
+                              <Icon name="taxi" />
                                 Enviar unidad
                               </Button>
-                              <br />
-                              <Button
-                                size='small'
-                                icon
-                                labelPosition='left'
-                                color="green"
-                                onClick={this.closeChat}
-                                style={{margin: '5px'}}
-                                disabled={textareaDisabled}
-                              >
-                                <Icon name="phone" />
+                            <br />
+                            <Button
+                              size='small'
+                              icon
+                              labelPosition='left'
+                              color="green"
+                              onClick={this.closeChat}
+                              style={{ margin: '5px' }}
+                              disabled={textareaDisabled}
+                            >
+                              <Icon name="phone" />
                                 Marcar Ciudadano
                               </Button>
                           </div>
@@ -370,7 +387,7 @@ class Chat extends Component {
                       <div
                         key={ref}
                         className={
-                          value.from === "user"? "user" : "support"
+                          value.from === "user" ? "user" : "support"
                         }
                         ref={
                           ref === chats[index].messages.length - 1
@@ -392,18 +409,18 @@ class Chat extends Component {
                       </div>
                     ))
                     : loading === true ?
-                        <>  
-                            <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered}/> 
-                            <p style={{position: "fixed", top: '56%', left: '62%'}}>Cargando chat</p>
-                        </> :
-                            <p style={{position: "fixed", top: '50%', left: '60%'}}>No se ha seleccionado ningun chat</p> : 
-                        loading === true ? 
-                        <>
-                            <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered}/>
-                            <p style={{position: "fixed", top: '56%', left: '62%'}}>Cargando chat</p>
-                        </>:
-                            <p style={{position: "fixed", top: '50%', left: '60%'}}>No se ha seleccionado ningun chat</p>
-                        }
+                      <>
+                        <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
+                        <p style={{ position: "fixed", top: '56%', left: '62%' }}>Cargando chat</p>
+                      </> :
+                      <p style={{ position: "fixed", top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p> :
+                  loading === true ?
+                    <>
+                      <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
+                      <p style={{ position: "fixed", top: '56%', left: '62%' }}>Cargando chat</p>
+                    </> :
+                    <p style={{ position: "fixed", top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p>
+                }
               </div>
               {chatId !== "" && chats[index] ? (
                 <div className="messages_send_box">
@@ -443,63 +460,71 @@ class Chat extends Component {
   _onMapLoad = (map) => {
     const { chats } = this.props
     const { index } = this.state
-    if(chats[index].user_cam.google_cordenate !== undefined){
-        const coords = { lat: parseFloat(chats[index].user_cam.google_cordenate.split(',')[0]), lng: parseFloat(chats[index].user_cam.google_cordenate.split(',')[1]) }
-        this.setState({ map: map })
-        new window.google.maps.Marker({
-            position: coords,
-            map: map,
-            title: chats[index].user_nicename,
-        });
+    if (chats[index].user_cam.google_cordenate !== undefined) {
+      const coords = { lat: parseFloat(chats[index].user_cam.google_cordenate.split(',')[0]), lng: parseFloat(chats[index].user_cam.google_cordenate.split(',')[1]) }
+      this.setState({ map: map })
+      new window.google.maps.Marker({
+        position: coords,
+        map: map,
+        title: chats[index].user_nicename,
+      });
     } else {
-        const coords = { lat: parseFloat(chats[index].location.latitude), lng: parseFloat(chats[index].location.longitude) }
-        this.setState({ map: map })
-        new window.google.maps.Marker({
-            position: coords,
-            map: map,
-            title: chats[index].user_nicename,
-        });
+      const coords = { lat: parseFloat(chats[index].location.latitude), lng: parseFloat(chats[index].location.longitude) }
+      this.setState({ map: map })
+      new window.google.maps.Marker({
+        position: coords,
+        map: map,
+        title: chats[index].user_nicename,
+      });
     }
   };
 
   getUserInfo = (chat) => {
-    if(chat){
-      const {user_cam, alarm, alarmType} = chat
-        if(user_cam.active !== undefined && alarm && alarmType){
-          this.setState({
-            personalInformation: {
-              cellPhone: user_cam.cellPhone,
-              address: `
+    if (chat) {
+      const { user_cam, alarm, alarmType } = chat
+      if (user_cam.active !== undefined && alarm && alarmType) {
+        this.setState({
+          personalInformation: {
+            cellPhone: user_cam.cellPhone,
+            address: `
                 ${user_cam.street ? user_cam.street : '-'}, 
-                ${user_cam.number ? '#' + user_cam.number : '#' },
-                ${user_cam.town ? user_cam.town : '-' },
-                ${user_cam.township ? user_cam.township : '-' },
-                ${user_cam.state ? user_cam.state : '-' },
+                ${user_cam.number ? '#' + user_cam.number : '#'},
+                ${user_cam.town ? user_cam.town : '-'},
+                ${user_cam.township ? user_cam.township : '-'},
+                ${user_cam.state ? user_cam.state : '-'},
                 `,
-              alarmType,
-              description: `${alarm.description ? alarm.description : '-'}`,
-              alarmSN: `${alarm.serial_number}`
-            },
-          })
-        } 
+            alarmType,
+            description: `${alarm.description ? alarm.description : '-'}`,
+            alarmSN: `${alarm.serial_number}`
+          },
+        })
+      }
     }
   }
 
   changeChat = (chat, i, flag = true) => {
     this.getUserInfo(chat)
-    if(flag){
-      this.props.history.push(`/chat/${this.state.activeIndex}/${chat.id}`)
+    if (flag) {
+      if (this.props.history.location.pathname.includes("chat")) {
+        this.props.history.push(`/chat/${this.state.activeIndex}/${chat.id}`)
+      } else {
+        this.props.history.push(`/alarm/${this.state.activeIndex}/${chat.id}`)
+      }
     }
-    if(chat === undefined && i === -1){
-      this.props.history.push('/chat')
+    if (chat === undefined && i === -1) {
+      if (this.props.history.location.pathname.includes("chat")) {
+        this.props.history.push('/chat')
+      } else {
+        this.props.history.push('/alarm')
+      }
     } else {
       this.getMessages(chat.id)
       this.setState(
-        { loading: true, camData: undefined},
+        { loading: true, camData: undefined },
         () => {
           this._changeUserCam(chat)
           this.props.stopNotification();
-  
+
           this.setState({
             // chatId: chat.id,
             // messages: chat.messages,
@@ -509,26 +534,90 @@ class Chat extends Component {
             alarmType: chat.alarmType,
             alarm: chat.alarm
           })
-  
+
           refSOS
-              .doc(chat.id)
-              .update({ c5Unread: 0 })
-              .then(() => {
+            .doc(chat.id)
+            .update({ c5Unread: 0 })
+            .then(() => {
               this.setState({ text: '', from: 'Chat C5' })
-          })
-  
+            })
+
         }
       )
     }
   }
 
+  /* changeChat = (chat, i, flag = true) => {
+    if (flag) {
+      this.props.history.push(`/sos/${this.state.activeIndex}/${chat.id}`)
+    }
+    if (chat === undefined && i === -1) {
+      this.props.history.push('/sos')
+    } else {
+      this.getMessages(chat.id)
+      this.setState(
+        { loading: true, camData: undefined },
+        async () => {
+          this.props.stopNotification();
+          const trackingInformation = await getTracking(chat.trackingId);
+
+          let newData = trackingInformation.data.data();
+
+          newData = {
+            ...newData,
+            id: trackingInformation.data.id,
+          };
+
+          this.setState({
+            // chatId: chat.id,
+            // messages: chat.messages,
+            index: i,
+            from: newData.SOSType, //
+            tracking: newData,
+            loading: false,
+            personalInformation: newData.userInformation, //
+            pointCoords: [], //
+          });
+
+          if (chat.active) {
+            const unsub = firebaseSos
+              .app("sos")
+              .firestore()
+              .collection(SOS_COLLECTION)
+              .onSnapshot((docs) => {
+                const track_changes = docs.docChanges();
+                if (track_changes.length === 1) {
+                  const updatedChatId = track_changes[0].doc.id;
+                  const track_data = track_changes[0].doc.data();
+                  if (chat.trackingId === updatedChatId) {
+                    if (chat.active) {
+                      this.setState({ tracking: track_data });
+                    }
+                  }
+                }
+              });
+            this.setState({ firebaseSub: unsub });
+          } else {
+            // this.state.firebaseSub();
+          }
+          refSOS
+            .doc(chat.id)
+            .update({ c5Unread: 0 })
+            .then(() => {
+              this.setState({ text: '', from: 'Chat C5' })
+            })
+        }
+      );
+    }
+  }; */
+
+
   getMessages = (chatId) => {
     // const {chatFirebase, chats} = this.props
     // const indexChat = chats.findIndex(e => e.id === chatId)
-    // console.log(indexChat, chats[indexChat] );
     // this.setState({messages: chats[indexChat].messages, chatId})
     this.messageListener = refSOS.doc(chatId).onSnapshot(snapShot => {
-      this.setState({messages: snapShot.get('messages'), chatId})
+      this.setState({ messages: snapShot.get('messages'), chatId })
     })
   }
 
@@ -543,42 +632,30 @@ class Chat extends Component {
   };
 
   _changeUserCam = (chat) => {
-    console.log('on changeuserCam', chat, this.props.userInfo)
-    Axios.get(
-      constants.sails_url +
-      ":" +
-      constants.sailsPort +
-      "/user/getDataByIdentifier?email=" +
-      "root@energetika.com"
-    ).then((response) => {
-      console.log('response changeusercam', response.data)
-      if (response.status === 200) {
-        if (response.data.success) {
-          const data = response.data.data;
-          this.setState({
-            camData:
-              data === undefined
-                ? undefined
-                : {
-                  extraData: {
-                    num_cam: data.Camare[0].num_cam,
-                    cameraID: data.Camare[0].num_cam,
-                    isHls: true,
-                    url:
-                        "http://" +
-                        data.Camare[0].UrlStreamMediaServer.ip_url_ms +
-                        ":" +
-                        data.Camare[0].UrlStreamMediaServer.output_port +
-                        data.Camare[0].UrlStreamMediaServer.name +
-                        data.Camare[0].channel,
-                    dataCamValue:
-                      data.Camare
-                  },
-                },
-          });
-        }
-      }
-    }).catch(err => console.log(err))
+    if (chat.user_cam) {
+      const { user_cam } = chat;
+      this.setState({
+        camData: {
+          extraData: {
+            num_cam: user_cam.num_cam,
+            cameraID: user_cam.num_cam,
+            isHls: true,
+            url:
+              "http://" +
+              user_cam.UrlStreamMediaServer.ip_url_ms +
+              ":" +
+              user_cam.UrlStreamMediaServer.output_port +
+              user_cam.UrlStreamMediaServer.name +
+              user_cam.channel,
+            dataCamValue: user_cam
+          },
+        },
+      });
+    } else {
+      this.setState({
+        camData: undefined
+      })
+    }
   };
 
   closeChat = () => {
@@ -587,9 +664,9 @@ class Chat extends Component {
   };
 
   sendMessage = () => {
-    
+
     if (this.state.text === "") return;
-    const {chatId, messages} = this.state
+    const { chatId, messages } = this.state
 
     let messagesAux = messages.map(e => e)
 
@@ -619,15 +696,16 @@ class Chat extends Component {
       });
   };
 
-  componentDidMount() {    
+  componentDidMount() {
     const { alarmIndex } = this.props.match.params
-
+    console.log(this.props.location)
     if (this.props.chats) {
-        if(alarmIndex){
-          this.setState({ chats: this.props.chats, activeIndex: alarmIndex })
-        } else {
-          this.setState({ chats: this.props.chats })
-        }
+      if (alarmIndex) {
+        this.setState({ chats: this.props.chats, activeIndex: alarmIndex })
+      } else {
+        const filtered_chats = this.props.chats.filter(item => item.alarmType === this.FILTERSOPTIONS[this.state.tabIndex]);
+        this.setState({ chats: filtered_chats })
+      }
     }
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
@@ -646,61 +724,96 @@ class Chat extends Component {
     return JSON.parse(JSON.stringify(result));
   }
 
+  componentWillUnmount() {
+    this.setState({
+      messages: [],
+      chats: [],
+      activeIndex: 0,
+      chatId: "",
+      text: "",
+      from: "",
+      fisrt: {},
+      searching: "",
+      tracking: {},
+      camData: undefined,
+      loading: false,
+      hashUsed: false,
+      personalInformation: {
+        cellPhone: null,
+        address: null,
+        alarmType: null,
+        description: null,
+        alarmSN: null
+      },
+      optionSelected: "name",
+      marker: null,
+      firebaseSub: null,
+      tabIndex: 0,
+      messages: [],
+      flagUpdate: 0
+    });
+  }
+
   componentDidUpdate(prevProps) {
-    const {alarmIndex, chatId} = this.props.match.params
+    const { alarmIndex, chatId } = this.props.match.params
     const { chats: chatsPrev } = prevProps
     const { chats } = this.props
-    if(this.state.flagUpdate === 0){
+    if (this.state.flagUpdate === 0) {
       if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-        this.setState({ chats: chats })
-          switch (parseInt(alarmIndex)) {
-            case 0:
-                const chatsC5 = this.props.chats.filter(e => !e.alarmType)
-                this.setState({ chats: chatsC5, flagUpdate: 1 })
-                if(chatId){
-                  const indexC5 = chatsC5.findIndex(e => e.id === chatId)
-                  this.changeChat(chatsC5[indexC5], indexC5, false)
-                }
-                // if(this.state.beforeChange){
-                // }
+        this.setState({ chats })
+        switch (parseInt(alarmIndex)) {
+          case 0:
+            const chatsC5 = this.props.chats.filter(e => !e.alarmType)
+            this.setState({ chats: chatsC5, flagUpdate: 1 })
+            if (chatId) {
+              const indexC5 = chatsC5.findIndex(e => e.id === chatId)
+              this.changeChat(chatsC5[indexC5], indexC5, false)
+            }
+            // if(this.state.beforeChange){
+            // }
             break;
-            case 1: 
-                const fireChats = this.props.chats.filter(e => e.alarmType === 'Fuego')
-                this.setState({ chats: fireChats, flagUpdate: 1})
-                if(chatId){
-                const indexFire = fireChats.findIndex(e => e.id === chatId)
-                this.changeChat(fireChats[indexFire], indexFire, false)
-                  }
-                // if(this.state.beforeChange){
-                // }
+          case 1:
+            const fireChats = this.props.chats.filter(e => e.alarmType === 'Fuego')
+            this.setState({ chats: fireChats, flagUpdate: 1 })
+            if (chatId) {
+              const indexFire = fireChats.findIndex(e => e.id === chatId)
+              this.changeChat(fireChats[indexFire], indexFire, false)
+            }
+            // if(this.state.beforeChange){
+            // }
             break;
-            case 2:
-                const policeChats = this.props.chats.filter(e => e.alarmType === 'Policia')
-                this.setState({ chats: policeChats, flagUpdate: 1})
-                if(chatId){
-                const indexPolice = policeChats.findIndex(e => e.id === chatId)
-                this.changeChat(policeChats[indexPolice], indexPolice, false)
-                  }
-                // if(this.state.beforeChange){
-                // }
+          case 2:
+            const policeChats = this.props.chats.filter(e => e.alarmType === 'Policia')
+            this.setState({ chats: policeChats, flagUpdate: 1 })
+            if (chatId) {
+              const indexPolice = policeChats.findIndex(e => e.id === chatId)
+              this.changeChat(policeChats[indexPolice], indexPolice, false)
+            }
+            // if(this.state.beforeChange){
+            // }
             break;
-            case 3:
-                const medicChats = this.props.chats.filter(e => e.alarmType === 'Médico')
-                this.setState({ chats: medicChats, flagUpdate: 1})
-                if(chatId){
-                const indexMedic = medicChats.findIndex(e => e.id === chatId)
-                this.changeChat(medicChats[indexMedic], indexMedic, false)
-                  }
-                // if(this.state.beforeChange){
-                // }
+          case 3:
+            const medicChats = this.props.chats.filter(e => e.alarmType === 'Médico')
+            this.setState({ chats: medicChats, flagUpdate: 1 })
+            if (chatId) {
+              const indexMedic = medicChats.findIndex(e => e.id === chatId)
+              this.changeChat(medicChats[indexMedic], indexMedic, false)
+            }
+            // if(this.state.beforeChange){
+            // }
             break;
-            default:
-                const chats = this.props.chats.filter(e => !e.alarmType)
-                this.setState({ chats , flagUpdate: 1})
+          default:
+            let chats = [];
+            if (this.props.history.location.pathname.includes("chat")) {
+              chats = this.props.chats.filter(e => !e.alarmType)
+            } else {
+              chats = this.props.chats.filter(e => e.alarmType === this.FILTERSOPTIONS[this.state.tabIndex])
+            }
+            this.setState({ chats, flagUpdate: 1 })
             break;
         }
       }
-    } 
+    }
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }

@@ -2,6 +2,7 @@ import firebase from "../constants/configSOS";
 
 export const SOS_COLLECTION = "tracking";
 export const MESSAGES_COLLECTION = "messages";
+export const COMPLAINT_COLLECTION = "complaint";
 
 export const getSOS = async (param) => {
   const { SOSType } = param;
@@ -35,7 +36,6 @@ export const getTracking = async (id) => {
 
     const request = await trackingRef.doc(id);
     const getData = await request.get();
-    console.log("getTracking", request);
 
     return {
       data: getData,
