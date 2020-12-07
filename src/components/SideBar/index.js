@@ -33,6 +33,7 @@ class SideBar extends Component {
         }
         camaras.map(value => {
           if (value.active === 1 && value.flag_streaming === 1) {
+            console.log("valusito", value)
             auxCamaras.push({
               id: value.id,
               num_cam: index,

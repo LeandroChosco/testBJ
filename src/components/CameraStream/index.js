@@ -202,7 +202,6 @@ class CameraStream extends Component {
                                 : <><br></br><Button onClick={() => this.setState({ showModalMoreInformation: true })} className="ml-2 mt-1">Más información</Button></>
                             }
 
-                            {this.props.marker.extraData.dataCamValue === undefined ? null : this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <i><Button onClick={() => this.Clicked(this.props.marker.extraData.dataCamValue.dns)}><Icon name='sliders horizontal' /></Button></i> : null}
 
                             {this.state.showModalMoreInformation ?
                                 <ModalMoreInformation dataCamValue={this.props.marker.extraData.dataCamValue} propsIniciales={this.props.propsIniciales} modal={this.state.showModalMoreInformation} hide={() => this.setState({ showModalMoreInformation: false })} cam_id={this.state.cameraID} data_cam={this.state.cameraName}></ModalMoreInformation>
@@ -213,6 +212,7 @@ class CameraStream extends Component {
                         }
                         {this.props.showButtons ?
                             <Card.Footer>
+                            
                                 {this.props.moduleActions ? this.props.moduleActions.btnsnap ? <Button basic disabled={this.state.photos.length >= 5 || this.state.loadingSnap || this.state.isLoading || this.state.isRecording || this.state.restarting || this.state.loadingFiles} loading={this.state.loadingSnap} onClick={this._snapShot}><i className='fa fa-camera'></i></Button> : null : null}
                                 {/*<Button basic disabled={this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} onClick={this._togglePlayPause}><i className={this.state.isPlay?'fa fa-pause':'fa fa-play'}></i></Button>*/}
                                 {this.props.moduleActions ? this.props.moduleActions.btnrecord ? <Button basic disabled={this.state.videos.length >= 5 || this.state.loadingSnap || this.state.isLoading || this.state.restarting || this.state.loadingFiles} loading={this.state.isLoading} onClick={() => this.recordignToggle()}><i className={this.state.isRecording ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }}></i></Button> : null : null}
@@ -221,6 +221,7 @@ class CameraStream extends Component {
                                 {this.props.showExternal ? <Button basic disabled={this.state.loadingSnap || this.state.isLoading || this.state.isRecording || this.state.restarting || this.state.loadingFiles} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + this.state.data.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button> : null}
                                 <Button basic disabled={this.state.loadingSnap || this.state.isLoading || this.state.isRecording || this.state.restarting || this.state.loadingFiles} onClick={() => this.setState({ modalProblem: true })}> <i className="fa fa-warning"></i></Button>
                                 <Button basic onClick={this._chageCamStatus}> <i className="fa fa-exchange"></i></Button>
+                                {this.props.marker.extraData.dataCamValue === undefined ? null : this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <i><Button onClick={() => this.Clicked(this.props.marker.extraData.dataCamValue.dns)}><i className="fa fa-sliders"></i></Button></i> : null}
                                 {/*<Button basic disabled={this.state.loadingSnap||this.state.isLoading||this.state.isRecording||this.state.restarting||this.state.loadingFiles} onClick={this._restartCamStream}> <i className={!this.state.restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button>*/}
                             </Card.Footer> :
                             null}

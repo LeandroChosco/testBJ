@@ -83,18 +83,14 @@ class Map extends Component {
               height={"300px"}
               showExternal
               hideButton={
-                marker.extraData.dataCamValue.tipo_camara === 2 ||
-                marker.extraData.dataCamValue.tipo_camara === 3 ||
-                marker.extraData.dataCamValue.tipo_camara === 4
-                  ? true
-                  : false
-              }
-              showButtons={
-                marker.extraData.dataCamValue.tipo_camara === 2 ||
-                marker.extraData.dataCamValue.tipo_camara === 3 ||
-                marker.extraData.dataCamValue.tipo_camara === 4
+                marker.extraData.dataCamValue.control === 0 
                   ? false
                   : true
+              }
+              showButtons={
+                marker.extraData.dataCamValue.control === 1
+                  ? true
+                  : false
               }
             />,
             document.getElementById("infoWindow" + e.extraData.id)
@@ -152,7 +148,7 @@ class Map extends Component {
       element.setMap(null);
     }
     conections.getAllCams().then(data => {
-      // console.log("Marker: ", data.data);
+       console.log("Marker: ", data.data);
       const camaras = data.data;
       let auxCamaras = [];
       let center_lat = 0;
