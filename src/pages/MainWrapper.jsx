@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+
+import { getLimitsCam } from '../store/reducers/Cameras/actions';
 import Main from './Main';
-import { getLimitsCam } from '../store/actions/cameras.actions';
 
 const MainWrapper = () => {
     const dispatch = useDispatch();

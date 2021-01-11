@@ -220,38 +220,38 @@ export default {
         return Axios.get( constants.sails_url+':'+constants.sailsPort + '/limits-zone/')
     },
 
-    createPersons: (data) => {
-        return Axios.post(
-          "http://prod.adminc5.mh.sails.energetikadevelepment.com:1337" +
-            "/create/persons/",
-          data
-        );
-      },
-      getPersons: (type) => {
-        if (type)
-          return Axios.get(
-            "http://prod.adminc5.mh.sails.energetikadevelepment.com:1337" +
-              "/getPersons/?type=" +
-              type
-          );
-        else
-          return Axios.get(
-            "http://prod.adminc5.mh.sails.energetikadevelepment.com:1337" +
-              "/getPersons/"
-          );
-      },
-      getDesconocidos: () => {
-        return Axios.get(
-          "http://prod.adminc5.mh.sails.energetikadevelepment.com:1337" +
-            "/getUnknow/?limit=50"
-        );
-      },
-      getDetecciones: () => {
-        return Axios.get(
-          "http://prod.adminc5.mh.sails.energetikadevelepment.com:1337" +
-            "/getMatches/"
-        );
-      },
+    // createPersons: (data) => {
+    //     return Axios.post(
+    //       "http://prod.adminc5.mh.sails.energetikadevelepment.com:1337" +
+    //         "/create/persons/",
+    //       data
+    //     );
+    //   },
+    //   getPersons: (type) => {
+    //     if (type)
+    //       return Axios.get(
+    //         "http://prod.adminc5.mh.sails.energetikadevelepment.com:1337" +
+    //           "/getPersons/?type=" +
+    //           type
+    //       );
+    //     else
+    //       return Axios.get(
+    //         "http://prod.adminc5.mh.sails.energetikadevelepment.com:1337" +
+    //           "/getPersons/"
+    //       );
+    //   },
+    //   getDesconocidos: () => {
+    //     return Axios.get(
+    //       "http://prod.adminc5.mh.sails.energetikadevelepment.com:1337" +
+    //         "/getUnknow/?limit=50"
+    //     );
+    //   },
+    //   getDetecciones: () => {
+    //     return Axios.get(
+    //       "http://prod.adminc5.mh.sails.energetikadevelepment.com:1337" +
+    //         "/getMatches/"
+    //     );
+    //   },
     
 
     getMatchAPI: data =>{
@@ -346,12 +346,26 @@ export default {
 
     postChangeChat: data => {
         return Axios.post(constants.sails_url+':'+constants.sailsPort+'/update/change/',data);
-    }
-    
+    },
 
 
+    postChangeChat: data => {
+        return Axios.post(constants.sails_url+':'+constants.sailsPort+'/update/change/',data);
+    },
 
-    
+    // Snapshots Qnap
+    getQnapImages: () => {
+		return Axios.get(`${constants.sails_url}:${constants.sailsPort}/qnap/images`);
+	},
+	createQnapImage: (data) => {
+		return Axios.post(`${constants.sails_url}:${constants.sailsPort}/qnap/create/image`, data);
+	},
+	deleteImage: (data) => {
+		return Axios.post(`${constants.sails_url}:${constants.sailsPort}/qnap/delete/image`, data);
+	},
+	getQnapImageByUserId: (params) => {
+		return Axios.get(`${constants.sails_url}:${constants.sailsPort}/qnap/images/${params.camera}/user/${params.user}`);
+	}
 }
 
 

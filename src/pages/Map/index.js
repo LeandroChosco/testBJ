@@ -1,15 +1,22 @@
-import React, { Component } from "react";
-import MapContainer from "../../components/MapContainer";
-import CameraStream from "../../components/CameraStream";
-import { render } from "react-dom";
-import { JellyfishSpinner } from "react-spinners-kit";
-import "../../assets/styles/util.css";
-import "../../assets/styles/main.css";
-import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
-import "./style.css";
+import React, { Component } from 'react';
+import { Provider, connect } from 'react-redux';
+import { render } from 'react-dom';
+
+import { JellyfishSpinner } from 'react-spinners-kit';
+import { store } from '../../store';
+
+import videojs from 'video.js';
+import conections from '../../conections';
+import MapContainer from '../../components/MapContainer';
+import CameraStream from '../../components/CameraStream';
+
+import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
+
+import '../../assets/styles/util.css';
+import '../../assets/styles/main.css';
+import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
+import './style.css';
 // import constants from "../../constants/constants";
-import conections from "../../conections";
-import videojs from "video.js";
 
 const mapOptions = {
   center: { lat: 19.45943, lng: -99.208588 },
@@ -63,36 +70,38 @@ class Map extends Component {
     this._loadCams();
   };
   createInfoWindow = (e, map) => {
-    console.log(map);
+    // console.log(map);
     const infoWindow = new window.google.maps.InfoWindow({
       content:
         '<div id="infoWindow' + e.extraData.id + '" class="windowpopinfo"/>',
       position: { lat: e.position.lat(), lng: e.position.lng() }
     });
     const propsIniciales = this.props;
-    console.log("PROPS: ", this.propsIniciales);
+    // console.log("PROPS: ", this.propsIniciales);
     infoWindow.addListener(
       "domready",
       (function(marker, render, moduleActions) {
         return function() {
           render(
-            <CameraStream
-              propsIniciales={propsIniciales}
-              moduleActions={moduleActions}
-              marker={marker}
-              height={"300px"}
-              showExternal
-              hideButton={
-                marker.extraData.dataCamValue.control === 0 
-                  ? false
-                  : true
-              }
-              showButtons={
-                marker.extraData.dataCamValue.control === 1
-                  ? true
-                  : false
-              }
-            />,
+            <Provider store={store}>
+              <CameraStream
+                propsIniciales={propsIniciales}
+                moduleActions={moduleActions}
+                marker={marker}
+                height={"300px"}
+                showExternal
+                hideButton={
+                  marker.extraData.dataCamValue.control === 0 
+                    ? false
+                    : true
+                }
+                showButtons={
+                  marker.extraData.dataCamValue.control === 1
+                    ? true
+                    : false
+                }
+              />        
+            </Provider>,
             document.getElementById("infoWindow" + e.extraData.id)
           );
         };
@@ -100,11 +109,11 @@ class Map extends Component {
     );
     infoWindow.open(map);
     const i = setInterval(() => {
-      console.log(
-        "infoWindow is bound to map: " + (infoWindow.getMap() ? true : false)
-      );
-      console.log(infoWindow);
+      // console.log("infoWindow is bound to map: " + (infoWindow.getMap() ? true : false));
       if (!infoWindow.getMap()) {
+        if (e && e.extraData) this._destroyFileVideos(e.extraData)
+
+
         infoWindow.close();
         clearInterval(i);
         if (e.extraData.isRtmp) {
@@ -113,6 +122,28 @@ class Map extends Component {
       }
     }, 1000);
   };
+  _destroyFileVideos = async (camera) => {
+    if (camera.dataCamValue && camera.dataCamValue.qnap_server_id && camera.dataCamValue.qnap_channel) {
+      let { ptcl, host, port, user, pass } = camera.dataCamValue.qnap_server_id;
+      let url = `${ptcl}${host}${port ? `:${port}` : null}`;
+      await this.props.getQvrFileStationAuthLogin({ url, user, pass });
+
+      let { QvrFileStationAuth: auth } = this.props.QvrFileStationAuth;
+      let { QvrFileStationShareLink: listShare } = this.props.QvrFileStationShareLink;
+      if (auth && auth.authSid && listShare && listShare.data) {
+        let findListShare = listShare.data.filter((l) => l.cam_id === camera.id);
+        if (findListShare && findListShare.length > 0) {
+          for (const list of findListShare) {
+            let params = { url, sid: auth.authSid, file_total: list.links.length, ssid: list.ssid };
+            await this.props.getQvrFileStationDeleteShareLink(params);
+          }
+          this.props.QvrFileStationShareLink.QvrFileStationShareLink.data = listShare.data.filter((l) => l.cam_id !== camera.id);
+        }
+      }
+
+      await this.props.getQvrFileStationAuthLogout({ url });
+    }
+	};
 
   componentDidMount() {
     // console.log(this.props);
@@ -138,6 +169,20 @@ class Map extends Component {
   }
 
   componentWillUnmount() {
+    // Destroy Qnap Link Shared
+    let { markers } = this.state;
+    let { QvrFileStationShareLink: listShare } = this.props.QvrFileStationShareLink;
+    if (listShare && listShare.data && listShare.data.length > 0) {
+      let findCameras = [];
+      for (const list of listShare.data) {
+        let findCamera = markers.find((c) => c.extraData.id === list.cam_id);
+        if (findCamera && !findCameras.includes(findCamera)) {
+          findCameras.push(findCamera)
+          this._destroyFileVideos(findCamera.extraData);          
+        }
+      }
+    }
+
     window.removeEventListener("restartCamEvent", this._loadCameras, false);
   }
 
@@ -148,7 +193,7 @@ class Map extends Component {
       element.setMap(null);
     }
     conections.getAllCams().then(data => {
-       console.log("Marker: ", data.data);
+      // console.log("Marker: ", data.data);
       const camaras = data.data;
       let auxCamaras = [];
       let center_lat = 0;
@@ -252,4 +297,15 @@ class Map extends Component {
   };
 }
 
-export default Map;
+const mapStateToProps = (state) => ({
+  QvrFileStationAuth: state.QvrFileStationAuth,
+  QvrFileStationShareLink: state.QvrFileStationShareLink
+});
+
+const mapDispatchToProps = (dispatch) => ({
+	getQvrFileStationAuthLogin: (params) => dispatch(QvrFileStationActions.getQvrFileStationAuthLogin(params)),
+	getQvrFileStationAuthLogout: (params) => dispatch(QvrFileStationActions.getQvrFileStationAuthLogout(params)),
+	getQvrFileStationDeleteShareLink: (params) => dispatch(QvrFileStationActions.getQvrFileStationDeleteShareLink(params))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Map);
