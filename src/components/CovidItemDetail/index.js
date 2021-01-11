@@ -1,27 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Image, Header, Button, Radio } from "semantic-ui-react";
+import { Image } from "semantic-ui-react";
 
 import "./style.css";
 import MapContainer from "../../components/MapContainer/index.js";
-import { Modal, Navbar } from "react-bootstrap";
+import { Navbar } from "react-bootstrap";
 import conections from "../../conections";
 import constants from "../../constants/constants";
 import CovidTree from "../../pages/CovidTree";
 import { Tab } from "semantic-ui-react";
-
-const mapOptions = {
-  center: { lat: 19.45943, lng: -99.208588 },
-  zoom: 15,
-  mapTypeId: "roadmap",
-  zoomControl: false,
-  mapTypeControl: false,
-  streetViewControl: false,
-  fullscreenControl: false,
-  openConfirm: false,
-  typeConfirm: false,
-  openSelection: false,
-  checked: ""
-};
 
 const CovidItemDetail = props => {
   const mapOptions = {
@@ -55,7 +41,7 @@ const CovidItemDetail = props => {
   useEffect(() => {
     console.log(props);
     let data = camDataPeticion();
-    // console.log(data);
+    console.log(data);
   }, []);
 
   const camDataPeticion = () => {

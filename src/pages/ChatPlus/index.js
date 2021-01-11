@@ -194,7 +194,7 @@ class Chat extends Component {
   }
 
   render() {
-    const { alarmIndex, tabIndex } = this.props.match.params
+    const { tabIndex } = this.props.match.params
     const { chats, chatId, index, loading, camData, personalInformation } = this.state
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
@@ -749,7 +749,6 @@ class Chat extends Component {
       marker: null,
       firebaseSub: null,
       tabIndex: 0,
-      messages: [],
       flagUpdate: 0
     });
   }

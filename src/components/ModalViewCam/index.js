@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal} from 'react-bootstrap';
 import HlsPlayer from '../HlsPlayer'
 import './style.css'
-import conections from '../../conections';
+
 class ModalViewCam extends Component{
     state = {
     }
