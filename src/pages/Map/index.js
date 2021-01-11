@@ -73,8 +73,8 @@ class Map extends Component {
     console.log("PROPS: ", this.propsIniciales);
     infoWindow.addListener(
       "domready",
-      (function(marker, render, moduleActions) {
-        return function() {
+      (function (marker, render, moduleActions) {
+        return function () {
           render(
             <CameraStream
               propsIniciales={propsIniciales}
@@ -83,7 +83,7 @@ class Map extends Component {
               height={"300px"}
               showExternal
               hideButton={
-                marker.extraData.dataCamValue.control === 0 
+                marker.extraData.dataCamValue.control === 0
                   ? false
                   : true
               }
@@ -148,7 +148,6 @@ class Map extends Component {
       element.setMap(null);
     }
     conections.getAllCams().then(data => {
-       console.log("Marker: ", data.data);
       const camaras = data.data;
       let auxCamaras = [];
       let center_lat = 0;
@@ -184,11 +183,11 @@ class Map extends Component {
               url:
                 value.UrlStreamMediaServer !== null
                   ? "http://" +
-                    value.UrlStreamMediaServer.ip_url_ms +
-                    ":" +
-                    value.UrlStreamMediaServer.output_port +
-                    value.UrlStreamMediaServer.name +
-                    value.channel
+                  value.UrlStreamMediaServer.ip_url_ms +
+                  ":" +
+                  value.UrlStreamMediaServer.output_port +
+                  value.UrlStreamMediaServer.name +
+                  value.channel
                   : null,
               flag_color: value.flag_color,
               dataCamValue: value,
@@ -225,8 +224,8 @@ class Map extends Component {
           window.google.maps.event.addListener(
             marker[index],
             "click",
-            (function(marker, map, createInfoWindow) {
-              return function() {
+            (function (marker, map, createInfoWindow) {
+              return function () {
                 createInfoWindow(marker, map);
               };
             })(marker[index], this.state.map, this.createInfoWindow)
