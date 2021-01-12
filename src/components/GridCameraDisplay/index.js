@@ -9,7 +9,6 @@ import ReactPaginate from 'react-paginate';
 import moment from 'moment-timezone';
 
 import Match from '../Match';
-import QvrProUrl from '../../Api/QvrPro';
 import conections from '../../conections';
 import CameraStream from '../CameraStream';
 import AdvancedSearch from '../AdvancedSearch';
@@ -17,7 +16,6 @@ import MediaContainer from '../MediaContainer';
 import responseJson from '../../assets/json/suspects.json';
 
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
-import * as QvrProActions from '../../store/reducers/QvrPro/actions';
 import * as QvrFunctions from '../../functions/getQvrFunctions';
 
 import './style.css';
@@ -125,21 +123,21 @@ class GridCameraDisplay extends Component {
 					{/* <div className={!showMatches ? "hide-matches" : "show-matches"}> */}
 					<div className="row stiky-top">
 						<div className="col-4">
-							{moduleActions && moduleActions.btnsnap && (<Button basic circular disabled={ photos.length >= 5 || loadingSnap || loadingRcord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1 } loading={loadingSnap} onClick={() => this._snapShot(selectedCamera)}><i className="fa fa-camera" /></Button>)}
+							{moduleActions && moduleActions.btnsnap && (<Button basic circular disabled={ photos.length>=5||loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera) > -1 } loading={loadingSnap} onClick={() => this._snapShot(selectedCamera)}><i className="fa fa-camera" /></Button>)}
 							{/* <Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={this._playPause}><i className={isplay?'fa fa-pause':'fa fa-play'}></i></Button> */}
-							{moduleActions && moduleActions.btnrecord && (<Button basic circular disabled={/*videos.length >= 5 || */loadingSnap || loadingRcord || loadingFiles || restarting} loading={loadingRcord} onClick={() => this._recordignToggle(selectedCamera)}><i className={recordingCams.indexOf(selectedCamera) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button>)}
-							<Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={()=>window.open(window.location.href.replace(window.location.pathname,'/') + 'analisis/' + selectedCamera.id,'_blank','toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button>
-							<Button	basic	disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1||videosLoading||photosLoading||photos.length<=0||videos.length<=0} circular	onClick={() => this.props.downloadFiles(selectedCamera, { videos, photos, servidorMultimedia, isQnap: qnapServer && qnapChannel })}	loading={loadingFiles}><i className="fa fa-download" /></Button>
-							<Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={()=>this.props.makeReport(selectedCamera)}> <i className="fa fa-warning"></i></Button>
-							{/* <Button basic circular disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} onClick={this._restartCamStream}> <i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button> */}
-							<Button basic circular onClick={()=>this.props.changeStatus(selectedCamera)}> <i className="fa fa-exchange"></i></Button>
+							{moduleActions && moduleActions.btnrecord && (<Button basic circular disabled={videos.length>=5||loadingSnap||loadingRcord||loadingFiles||restarting} loading={loadingRcord} onClick={() => this._recordignToggle(selectedCamera)}><i className={recordingCams.indexOf(selectedCamera) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button>)}
+							<Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={() =>	window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + selectedCamera.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link"></i></Button>
+							<Button	basic	disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1||videosLoading||photosLoading||photos.length<=0||videos.length<=0} circular	onClick={() => this.props.downloadFiles(selectedCamera, { videos, photos, servidorMultimedia })}	loading={loadingFiles}><i className="fa fa-download" /></Button>
+							<Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={() => this.props.makeReport(selectedCamera)}><i className="fa fa-warning"></i></Button>
+							{/* <Button basic circular disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button> */}
+							<Button basic circular onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange"></i></Button>
 							{selectedCamera.dataCamValue === undefined ? null : selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.dns != null ? <i><Button basic circular onClick={() => this.Clicked(selectedCamera.dataCamValue.dns)}><i className="fa fa-sliders"></i></Button></i> : null}
 						</div>
 						<div className='col-5'>
-								<b>Camara  {/*console.log('la camara', selectedCamera, selectedCamera.num_cam)*/}</b> {selectedCamera.name}
+								<b>Camara</b> {selectedCamera.name}
 						</div>
 						<div className='col-3'>
-								<Button onClick={()=>this._openCameraInfo(false)} className='pull-right' primary> { autoplay?'':'Ocultar controles'} <i className={ autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}></i></Button>
+								<Button onClick={() => this._openCameraInfo(false)} className='pull-right' primary> { autoplay?'':'Ocultar controles'} <i className={ autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}></i></Button>
 						</div>
 					</div>
 					<div className={!autoplay ? 'row showfilesinfocameragrid' : 'row hidefiles'}>
@@ -280,7 +278,7 @@ class GridCameraDisplay extends Component {
 							src={list.relative_url}
 							reloadData={this._loadFiles}
 							// real_hour={video.real_hour}
-							isQnap={qnapServer && qnapChannel}
+							isQnap={false}
 							servidorMultimedia={servidorMultimedia}
 						/>
 					)}
@@ -298,39 +296,11 @@ class GridCameraDisplay extends Component {
 		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
 	};
 
-	_getGuidChannel = async (url, channel) => {
-		let data = null;
-		let channelIndex = QvrFunctions._getCleanIndexChannel(channel);
-		let { QvrProAuth: auth } = this.props.QvrProAuth;
-		if (auth && auth.authSid) {
-			await this.props.getQvrProCameraList({ url, sid: auth.authSid });
-			let { QvrProCameraList: list } = this.props.QvrProCameraList;
-			if (list.datas && list.datas.length > 0) {
-				let foundCamera = list.datas.find((d) => d.channel_index === channelIndex);
-				if (foundCamera) {
-					let foundStream = foundCamera.stream_state.find((s) => s.enable_normal_recording === 1);
-					data = {
-						guid: foundCamera.guid,
-						stream_id: foundStream ? foundStream.stream : null,
-						stream: foundStream ? (foundStream.stream + 1) : null
-					};
-				}
-			}
-		}
-		return data;
-	};
-
 	_snapShot = async (camera) => {
 		this.setState({ loadingSnap: true });
 		let { user_id } = this.state;
-		let response = {};
-		if (camera.dataCamValue && camera.dataCamValue.qnap_server_id && camera.dataCamValue.qnap_channel) {
-			let image_ts = moment().valueOf();
-			let name = moment(image_ts).format('YYYY-MM-DD HH:mm:ss')
-			response = await conections.createQnapImage({ name, time: image_ts, user_id, cam_id: camera.id });
-		} else {
-			response = await conections.snapShotV2(camera.id, user_id);
-		}
+
+		let response = await conections.snapShotV2(camera.id, user_id);
 		const data = response.data;
 		if (data.success) this._loadFiles(camera, false, false, false, true);
 		this.setState({ loadingSnap: false });
@@ -340,35 +310,14 @@ class GridCameraDisplay extends Component {
 		let response = {};
 		if (this.state.recordingCams.indexOf(selectedCamera) > -1) {
 			this.setState({ loadingRcord: true });
-	
-			if (selectedCamera.dataCamValue && selectedCamera.dataCamValue.qnap_server_id && selectedCamera.dataCamValue.qnap_channel) {
-				let { ptcl, host, port, user, pass } = selectedCamera.dataCamValue.qnap_server_id;
-				let url = `${ptcl}${host}${port ? `:${port}` : null}`;
-	
-				await this.props.getQvrProAuthLogin({ url, user, pass });
-				let { QvrProAuth: auth } = this.props.QvrProAuth;
-				if (auth && auth.authSid) {
-					let guidChannel = await this._getGuidChannel(url, selectedCamera.dataCamValue.qnap_channel);
-					let foundCamera = this.state.recordingProcess.find((r) => r.cam_id === selectedCamera.id);
-					if (guidChannel && foundCamera) {
-						let start_time = foundCamera.creation_time.valueOf();
-						let end_time = moment().valueOf();
-						let urlVideo = QvrProUrl.getUrlForRecording({ url, channel: guidChannel.guid, stream: guidChannel.stream, sid: auth.authSid, start_time, end_time });
-						window.open(urlVideo); // TODO descargar video
-						response.data = true;
-					}
-					await this.props.getQvrProAuthLogout({ url, sid: auth.authSid });
-				}
-			} else {
-				let process_id = 0;
-				this.state.recordingProcess.map((value) => {
-					if (value.cam_id === selectedCamera.id) process_id = value.process_id;
-					return true;
-				});
-				let r = await conections.stopRecordV2({ clave: process_id }, selectedCamera.id);
-				response = r.data;
-			}
-	
+			let process_id = 0;
+			this.state.recordingProcess.map((value) => {
+				if (value.cam_id === selectedCamera.id) process_id = value.process_id;
+				return true;
+			});
+
+			let r = await conections.stopRecordV2({ clave: process_id }, selectedCamera.id);
+			response = r.data;
 			if (response) {
 				let stateRecordingProcess = this.state.recordingProcess;
 				let stateRecordingCams = this.state.recordingCams;
@@ -378,13 +327,8 @@ class GridCameraDisplay extends Component {
 				if (response.success) this._loadFiles(selectedCamera, false, true, false, false);
 			}
 		} else {
-			if (selectedCamera.dataCamValue && selectedCamera.dataCamValue.qnap_server_id && selectedCamera.dataCamValue.qnap_channel) {
-				response.success = true;
-			} else {
-				let r = await conections.startRecordV2({}, selectedCamera.id);
-				response = r.data;
-			}
-	
+			let r = await conections.startRecordV2({}, selectedCamera.id);
+			response = r.data;
 			if (response && response.success === true) {
 				let recordingProcess = { cam_id: selectedCamera.id, process_id: response.clave, creation_time: moment() };
 				let stateRecordingProcess = this.state.recordingProcess;
@@ -404,7 +348,6 @@ class GridCameraDisplay extends Component {
 		if (this.state.recordingProcess.length > 0) {
 			let now = moment();
 			this.state.recordingProcess.map((value) => {
-				console.log('_checkLiveTimeRecording', 'this.state.recordingProcess');
 				if (now.diff(value.creation_time, 'minutes') > 10) {
 					conections.stopRecord({ record_proccess_id: value.process_id }).then((response) => {
 						let stateRecordingProcess = this.state.recordingProcess;
@@ -511,31 +454,6 @@ class GridCameraDisplay extends Component {
 		}
 	};
 
-	_searchFilePhotos = async () => {
-		this.setState({ photosLoading: true });
-		let { selectedCamera, user_id } = this.state;
-		let { ptcl, host, port, user, pass } = selectedCamera.dataCamValue.qnap_server_id;
-		let url = `${ptcl}${host}${port ? `:${port}` : null}`;
-		let photos = [];
-	
-		await this.props.getQvrProAuthLogin({ url, user, pass });
-		let { QvrProAuth: auth } = this.props.QvrProAuth;
-		if (auth && auth.authSid) {
-			let guidChannel = await this._getGuidChannel(url, selectedCamera.dataCamValue.qnap_channel);
-			let res = await conections.getQnapImageByUserId({ camera: selectedCamera.id, user: user_id });
-			photos = res.data.data;
-			if (guidChannel && photos && photos.length > 0) {
-				for (const p of photos) {
-					await this.props.getQvrProSnapshot({ url, channel: guidChannel.guid, sid: auth.authSid, image_ts: p.time });
-					let { QvrProSnapshot: snapshot } = this.props.QvrProSnapshot;
-					if (snapshot && snapshot.src) p.relative_url = snapshot.src;
-				}
-			}
-			await this.props.getQvrProAuthLogout({ url, sid: auth.authSid });
-		}
-		if (this.state.selectedCamera.id === selectedCamera.id) this.setState({ photos, photosLoading: false });
-	};
-
 	_destroyFileVideos = async (loading = false, setNewState = true, lastState = this.state.qnapServer) => {
 		if (setNewState) {
 			this.setState({
@@ -565,42 +483,33 @@ class GridCameraDisplay extends Component {
 		let { selectedCamera } = this.state;
 		let camera = cam && cam.id ? cam : selectedCamera;
 
+		if (onlyCurrent || onlyPhotos) {
+			this.setState({ videosLoading: true, photosLoading: true });
+			conections.getCamDataV2(camera.id)
+				.then((response) => {
+					this.setState({
+						videos: response.data.data.files_multimedia.videos,
+						photos: response.data.data.files_multimedia.photos,
+						servidorMultimedia: 'http://' + response.data.data.dns_ip,
+						videosLoading: false,
+						photosLoading: false
+					});
+				})
+				.catch((err) => {
+					this.setState({ videosLoading: false, photosLoading: false });
+				});
+		}
+
+		// History
 		if (camera.dataCamValue && camera.dataCamValue.qnap_server_id && camera.dataCamValue.qnap_channel) {
-			if (onlyPhotos) {
-				this._searchFilePhotos();
-			}
-			
-			if (onlyCurrent) {
-				// Current Videos
-				let stateNames = { loading: 'videosLoading', list: 'videos' };
+			if (onlyHistory) {
+				let stateNames = { loading: 'historyLoading', list: 'video_history' };
 				let currentDate = moment().startOf('date').format('YYYY-MM-DD');
 				this._searchFileVideos([ currentDate ], '00', '24', stateNames, 'DESC');
 			}
-			
-			if (onlyHistory) {
-				// History Videos
-				let stateNames = { loading: 'historyLoading', list: 'video_history' };
-				let lastDate = moment().subtract(1, 'd').format('YYYY-MM-DD');
-				this._searchFileVideos([ lastDate ], '00', '24', stateNames);
-			}
 		} else {
-			if (onlyCurrent || onlyPhotos) {
-				conections.getCamDataV2(camera.id)
-					.then((response) => {
-						this.setState({
-							videos: response.data.data.files_multimedia.videos,
-							photos: response.data.data.files_multimedia.photos,
-							servidorMultimedia: 'http://' + response.data.data.dns_ip
-						});
-						setTimeout(() => this.setState({ videosLoading: false, photosLoading: false }), 100);
-					})
-					.catch((err) => {
-						setTimeout(() => this.setState({ videosLoading: false, photosLoading: false }), 100);
-					});
-			}
-
 			if (onlyHistory) {
-				// History
+				this.setState({ historyLoading: true });
 				const last_day = DateTime.local().plus({ days: -1 }).setZone('America/Mexico_City').toISODate();
 				const current_day = DateTime.local().setZone('America/Mexico_City').toISODate();
 				const createArrDate = (arr) => {
@@ -746,13 +655,7 @@ class GridCameraDisplay extends Component {
 const mapStateToProps = (state) => ({
 	QvrFileStationAuth: state.QvrFileStationAuth,
 	QvrFileStationFileList: state.QvrFileStationFileList,
-	QvrFileStationShareLink: state.QvrFileStationShareLink,
-
-	QvrProAuth: state.QvrProAuth,
-	QvrProCameraList: state.QvrProCameraList,
-	QvrProSnapshot: state.QvrProSnapshot,
-	QvrProVideo: state.QvrProVideo,
-	QvrProCameraPTZ: state.QvrProCameraPTZ
+	QvrFileStationShareLink: state.QvrFileStationShareLink
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -760,14 +663,7 @@ const mapDispatchToProps = (dispatch) => ({
 	getQvrFileStationAuthLogout: (params) => dispatch(QvrFileStationActions.getQvrFileStationAuthLogout(params)),
 	getQvrFileStationFileList: (params) => dispatch(QvrFileStationActions.getQvrFileStationFileList(params)),
 	getQvrFileStationShareLink: (params) => dispatch(QvrFileStationActions.getQvrFileStationShareLink(params)),
-	getQvrFileStationDeleteShareLink: (params) => dispatch(QvrFileStationActions.getQvrFileStationDeleteShareLink(params)),
-
-	getQvrProAuthLogin: (params) => dispatch(QvrProActions.getQvrProAuthLogin(params)),
-	getQvrProAuthLogout: (params) => dispatch(QvrProActions.getQvrProAuthLogout(params)),
-	getQvrProSnapshot: (params) => dispatch(QvrProActions.getQvrProSnapshot(params)),
-	getQvrProCameraList: (params) => dispatch(QvrProActions.getQvrProCameraList(params)),
-	getQvrProVideo: (params) => dispatch(QvrProActions.getQvrProVideo(params)),
-	getQvrProCameraPTZ: (params) => dispatch(QvrProActions.getQvrProCameraPTZ(params))
+	getQvrFileStationDeleteShareLink: (params) => dispatch(QvrFileStationActions.getQvrFileStationDeleteShareLink(params))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GridCameraDisplay);

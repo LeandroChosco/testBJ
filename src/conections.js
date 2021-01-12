@@ -346,26 +346,7 @@ export default {
 
     postChangeChat: data => {
         return Axios.post(constants.sails_url+':'+constants.sailsPort+'/update/change/',data);
-    },
-
-
-    postChangeChat: data => {
-        return Axios.post(constants.sails_url+':'+constants.sailsPort+'/update/change/',data);
-    },
-
-    // Snapshots Qnap
-    getQnapImages: () => {
-		return Axios.get(`${constants.sails_url}:${constants.sailsPort}/qnap/images`);
-	},
-	createQnapImage: (data) => {
-		return Axios.post(`${constants.sails_url}:${constants.sailsPort}/qnap/create/image`, data);
-	},
-	deleteImage: (data) => {
-		return Axios.post(`${constants.sails_url}:${constants.sailsPort}/qnap/delete/image`, data);
-	},
-	getQnapImageByUserId: (params) => {
-		return Axios.get(`${constants.sails_url}:${constants.sailsPort}/qnap/images/${params.camera}/user/${params.user}`);
-	}
+    }
 }
 
 

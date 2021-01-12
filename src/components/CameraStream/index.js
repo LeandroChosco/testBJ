@@ -20,7 +20,6 @@ import constants from '../../constants/constants';
 import ModalMoreInformation from '../../components/ModalMoreInformation';
 
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
-import * as QvrProActions from '../../store/reducers/QvrPro/actions';
 import * as QvrFunctions from '../../functions/getQvrFunctions';
 
 import './style.css';
@@ -285,16 +284,16 @@ class CameraStream extends Component {
 						)}
 						{this.props.showButtons ? (
 							<Card.Footer>
-								{this.props.moduleActions ? this.props.moduleActions.btnsnap ? <Button basic disabled={photos.length >= 5 || loadingSnap || isLoading || isRecording || restarting || loadingFiles} loading={loadingSnap} onClick={() => this._snapShot(this.props.marker.extraData)}><i className='fa fa-camera'></i></Button> : null : null}
+								{this.props.moduleActions ? this.props.moduleActions.btnsnap ? <Button basic disabled={photos.length>=5||loadingSnap||isLoading||isRecording||restarting||loadingFiles} loading={loadingSnap} onClick={() => this._snapShot(this.props.marker.extraData)}><i className='fa fa-camera'></i></Button> : null : null}
 								{/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._togglePlayPause}><i className={isPlay?'fa fa-pause':'fa fa-play'}></i></Button>*/}
-								{this.props.moduleActions ? this.props.moduleActions.btnrecord ? <Button basic disabled={/*videos.length >= 5 ||*/ loadingSnap || isLoading || restarting || loadingFiles} loading={isLoading} onClick={() => this.recordignToggle()}><i className={isRecording ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }}></i></Button> : null : null}
-								<Button basic disabled={loadingFiles || loadingSnap || isLoading || restarting || videosLoading || photosLoading || photos.length<=0 || videos.length<=0 } loading={loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>
+								{this.props.moduleActions ? this.props.moduleActions.btnrecord ? <Button basic disabled={videos.length>=5||loadingSnap||isLoading||restarting||loadingFiles} loading={isLoading} onClick={() => this.recordignToggle()}><i className={isRecording ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }}></i></Button> : null : null}
+								<Button basic disabled={loadingFiles||loadingSnap||isLoading||restarting||videosLoading||photosLoading||photos.length<=0||videos.length<=0 } loading={loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>
 								{this.props.hideFileButton ? null : <Button className="pull-right" variant="outline-secondary" onClick={() => {this.setState({ showData: !showData })}}><i className={showData ? 'fa fa-video-camera' : 'fa fa-list'}></i></Button>}
-								{this.props.showExternal ? <Button basic disabled={loadingSnap || isLoading || isRecording || restarting || loadingFiles} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + data.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}> <i className="fa fa-external-link"></i></Button> : null}
-								<Button basic disabled={loadingSnap || isLoading || isRecording || restarting || loadingFiles} onClick={() => this.setState({ modalProblem: true })}> <i className="fa fa-warning"></i></Button>
-								<Button basic onClick={this._chageCamStatus}> <i className="fa fa-exchange"></i></Button>
+								{this.props.showExternal ? <Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + data.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link"></i></Button> : null}
+								<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={() => this.setState({ modalProblem: true })}><i className="fa fa-warning"></i></Button>
+								<Button basic onClick={this._chageCamStatus}><i className="fa fa-exchange"></i></Button>
 								{this.props.marker.extraData.dataCamValue === undefined ? null : this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <i><Button onClick={() => this.Clicked(this.props.marker.extraData.dataCamValue.dns)}><i className="fa fa-sliders"></i></Button></i> : null}
-								{/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._restartCamStream}> <i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button>*/}
+								{/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button>*/}
 							</Card.Footer>
 						) : null}
 					</Card.Body>
@@ -582,32 +581,16 @@ class CameraStream extends Component {
 	recordignToggle = () => {
 		if (this.state.isRecording) {
 			this.setState({ isLoading: true });
-			conections
-				.stopRecordV2(
-					{
-						clave: this.state.process_id
-					},
-					this.state.data.id
-				)
+			conections.stopRecordV2({ clave: this.state.process_id }, this.state.data.id)
 				.then((r) => {
 					const response = r.data;
-					// console.log(response)
-					if (response.success === true) {
-						this.setState({
-							isRecording: false,
-							isLoading: false,
-							modal: true,
-							recordMessage: response.msg
-						});
-						this._loadFiles({}, false, true, false, false);
-					} else {
-						this.setState({
-							isRecording: false,
-							isLoading: false,
-							modal: true,
-							recordMessage: response.msg
-						});
-					}
+					this.setState({
+						isRecording: false,
+						isLoading: false,
+						modal: true,
+						recordMessage: response.msg
+					});
+					if (response.success) this._loadFiles({}, false, true, false, false);
 				});
 		} else {
 			conections.startRecordV2({}, this.state.data.id).then((r) => {
@@ -723,39 +706,11 @@ class CameraStream extends Component {
 		});
 	};
 
-	_getGuidChannel = async (url, channel) => {
-		let data = null;
-		let channelIndex = QvrFunctions._getCleanIndexChannel(channel);
-		let { QvrProAuth: auth } = this.props.QvrProAuth;
-		if (auth && auth.authSid) {
-			await this.props.getQvrProCameraList({ url, sid: auth.authSid });
-			let { QvrProCameraList: list } = this.props.QvrProCameraList;
-			if (list.datas && list.datas.length > 0) {
-				let foundCamera = list.datas.find((d) => d.channel_index === channelIndex);
-				if (foundCamera) {
-					let foundStream = foundCamera.stream_state.find((s) => s.enable_normal_recording === 1);
-					data = {
-						guid: foundCamera.guid,
-						stream_id: foundStream ? foundStream.stream : null,
-						stream: foundStream ? (foundStream.stream + 1) : null
-					};
-				}
-			}
-		}
-		return data;
-	};
-
 	_snapShot = async (camera) => {
 		this.setState({ loadingSnap: true });
 		let { user_id } = this.state;
-		let response = {};
-		if (camera.dataCamValue && camera.dataCamValue.qnap_server_id && camera.dataCamValue.qnap_channel) {
-			let image_ts = moment().valueOf();
-			let name = moment(image_ts).format('YYYY-MM-DD HH:mm:ss')
-			response = await conections.createQnapImage({ name, time: image_ts, user_id, cam_id: camera.id });
-		} else {
-			response = await conections.snapShotV2(camera.id, user_id);
-		}
+
+		let response = await conections.snapShotV2(camera.id, user_id);
 		const data = response.data;
 		if (data.success) this._loadFiles(camera, false, false, false, true);
 		this.setState({ loadingSnap: false });
@@ -816,69 +771,37 @@ class CameraStream extends Component {
 		return searchVideos;
 	};
 
-	_searchFilePhotos = async () => {
-		this.setState({ photosLoading: true });
-		let { data: selectedCamera, user_id } = this.state;
-		let { ptcl, host, port, user, pass } = selectedCamera.dataCamValue.qnap_server_id;
-		let url = `${ptcl}${host}${port ? `:${port}` : null}`;
-		let photos = [];
-	
-		await this.props.getQvrProAuthLogin({ url, user, pass });
-		let { QvrProAuth: auth } = this.props.QvrProAuth;
-		if (auth && auth.authSid) {
-			let guidChannel = await this._getGuidChannel(url, selectedCamera.dataCamValue.qnap_channel);
-			let res = await conections.getQnapImageByUserId({ camera: selectedCamera.id, user: user_id });
-			photos = res.data.data;
-			if (guidChannel && photos && photos.length > 0) {
-				for (const p of photos) {
-					await this.props.getQvrProSnapshot({ url, channel: guidChannel.guid, sid: auth.authSid, image_ts: p.time });
-					let { QvrProSnapshot: snapshot } = this.props.QvrProSnapshot;
-					if (snapshot && snapshot.src) p.relative_url = snapshot.src;
-				}
-			}
-			await this.props.getQvrProAuthLogout({ url, sid: auth.authSid });
-		}	
-		if (this.state.data.id === selectedCamera.id) this.setState({ photos, photosLoading: false });
-	};
-
 	_loadFiles = async (cam, destroyFiles = false, onlyCurrent = false, onlyHistory = false, onlyPhotos = false) => {
 		let { data: selectedCamera } = this.state;
 		let camera = cam && cam.id ? cam : selectedCamera;
 
+		if (onlyCurrent || onlyPhotos) {
+			this.setState({ videosLoading: true, photosLoading: true });
+			conections.getCamDataV2(camera.id)
+				.then((response) => {
+					this.setState({
+						videos: response.data.data.files_multimedia.videos,
+						photos: response.data.data.files_multimedia.photos,
+						servidorMultimedia: 'http://' + response.data.data.dns_ip,
+						videosLoading: false,
+						photosLoading: false
+					});
+				})
+				.catch((err) => {
+					this.setState({ videosLoading: false, photosLoading: false });
+				});
+		}
+
+		// History
 		if (camera.dataCamValue && camera.dataCamValue.qnap_server_id && camera.dataCamValue.qnap_channel) {
-			if (onlyPhotos) {
-				this._searchFilePhotos();
-			}
-			
-			if (onlyCurrent) {
-				// Current Videos
-				let stateNames = { loading: 'videosLoading', list: 'videos' };
+			if (onlyHistory) {
+				let stateNames = { loading: 'historyLoading', list: 'video_history' };
 				let currentDate = moment().startOf('date').format('YYYY-MM-DD');
 				this._searchFileVideos([ currentDate ], '00', '24', stateNames, 'DESC');
 			}
-			
-			if (onlyHistory) {
-				// History Videos
-				let stateNames = { loading: 'historyLoading', list: 'video_history' };
-				let lastDate = moment().subtract(1, 'd').format('YYYY-MM-DD');
-				this._searchFileVideos([ lastDate ], '00', '24', stateNames);
-			}
 		} else {
-			if (onlyCurrent || onlyPhotos) {
-				conections.getCamDataV2(camera.id).then((response) => {
-					const data = response.data;
-					if (data.success)
-						this.setState({
-							videos: data.data.files_multimedia.videos,
-							photos: data.data.files_multimedia.photos,
-							servidorMultimedia: 'http://' + data.data.dns_ip,
-							videosLoading: false,
-							photosLoading: false
-						});
-				});
-			}
-
 			if (onlyHistory) {
+				this.setState({ historyLoading: true });
 				conections.getCamDataHistory(camera.id).then((response) => {
 					let resHistory = response.data;
 					if (resHistory.success) {
@@ -991,44 +914,24 @@ class CameraStream extends Component {
 
 	_downloadFiles = async () => {
 		this.setState({ loadingFiles: true });
-		let { videos, photos, servidorMultimedia: server, data: camera, qnapServer, qnapChannel } = this.state;
-		let isQnap = (qnapServer && qnapChannel);
+		let { videos, photos, servidorMultimedia: server, data: camera } = this.state;
 
 		let zip = new JSZip();
-		// Qnap Files
-		if (isQnap) {
-			if (photos && photos.length > 0) {
-				let imgZip = zip.folder('images');
-				photos.forEach((f) => {
-					let filename = f.name;
-					imgZip.file(filename, this.urlToPromise(`${f.relative_url}`), { binary: true });
-				});
-			}
-			if (videos && videos.length > 0) {
-				// let vdZip = zip.folder('videos');
-				// videos.forEach((vid) => {
-				// 	vid.videos.forEach((f) => {
-				// 		let filename = `${vid.fecha}-${f.real_hour}.mp4`;
-				// 		vdZip.file(filename, this.urlToPromise(`${f.path_video}&open=normal`), { binary: true });
-				// 	});
-				// });
-			}
-		// Normal Files
-		} else {
-			if (photos && photos.length > 0) {
-				let imgZip = zip.folder('photos');
-				photos.forEach((f) => {
-					let filename = f.name;
-					imgZip.file(filename, this.urlToPromise(`${server}:${constants.apiPort}/${f.relative_url}`), { binary: true });
-				});
-			}
-			if (videos && videos.length > 0) {
-				let vdZip = zip.folder('videos');
-				videos.forEach((f) => {
-					let filename = f.name;
-					vdZip.file(filename, this.urlToPromise(`${server}:${constants.apiPort}/${f.relative_url}`), { binary: true });
-				});
-			}
+		if (photos && photos.length > 0) {
+			let imgZip = zip.folder('photos');
+			photos.forEach((f) => {
+				let filename = f.name;
+				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				imgZip.file(filename, this.urlToPromise(url), { binary: true });
+			});
+		}
+		if (videos && videos.length > 0) {
+			let vdZip = zip.folder('videos');
+			videos.forEach((f) => {
+				let filename = f.name;
+				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				vdZip.file(filename, this.urlToPromise(url), { binary: true });
+			});
 		}
 
 		zip.generateAsync({ type: 'blob' }).then((content) => {
@@ -1082,13 +985,7 @@ class CameraStream extends Component {
 const mapStateToProps = (state) => ({
 	QvrFileStationAuth: state.QvrFileStationAuth,
 	QvrFileStationFileList: state.QvrFileStationFileList,
-	QvrFileStationShareLink: state.QvrFileStationShareLink,
-
-	QvrProAuth: state.QvrProAuth,
-	QvrProCameraList: state.QvrProCameraList,
-	QvrProSnapshot: state.QvrProSnapshot,
-	QvrProVideo: state.QvrProVideo,
-	QvrProCameraPTZ: state.QvrProCameraPTZ
+	QvrFileStationShareLink: state.QvrFileStationShareLink
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -1096,14 +993,7 @@ const mapDispatchToProps = (dispatch) => ({
 	getQvrFileStationAuthLogout: (params) => dispatch(QvrFileStationActions.getQvrFileStationAuthLogout(params)),
 	getQvrFileStationFileList: (params) => dispatch(QvrFileStationActions.getQvrFileStationFileList(params)),
 	getQvrFileStationShareLink: (params) => dispatch(QvrFileStationActions.getQvrFileStationShareLink(params)),
-	getQvrFileStationDeleteShareLink: (params) => dispatch(QvrFileStationActions.getQvrFileStationDeleteShareLink(params)),
-
-	getQvrProAuthLogin: (params) => dispatch(QvrProActions.getQvrProAuthLogin(params)),
-	getQvrProAuthLogout: (params) => dispatch(QvrProActions.getQvrProAuthLogout(params)),
-	getQvrProSnapshot: (params) => dispatch(QvrProActions.getQvrProSnapshot(params)),
-	getQvrProCameraList: (params) => dispatch(QvrProActions.getQvrProCameraList(params)),
-	getQvrProVideo: (params) => dispatch(QvrProActions.getQvrProVideo(params)),
-	getQvrProCameraPTZ: (params) => dispatch(QvrProActions.getQvrProCameraPTZ(params))
+	getQvrFileStationDeleteShareLink: (params) => dispatch(QvrFileStationActions.getQvrFileStationDeleteShareLink(params))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CameraStream);

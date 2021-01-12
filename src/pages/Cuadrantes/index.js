@@ -538,44 +538,25 @@ class Cuadrantes extends Component{
 		});
 	};
 
-    _downloadFiles = async (camera, { videos, photos, servidorMultimedia: server, isQnap = false }) => {
+    _downloadFiles = async (camera, { videos, photos, servidorMultimedia: server }) => {
 		this.setState({ loadingFiles: true });
 
 		let zip = new JSZip();
-		// Qnap Files
-		if (isQnap) {
-			if (photos && photos.length > 0) {
-				let imgZip = zip.folder('images');
-				photos.forEach((f) => {
-					let filename = f.name;
-					imgZip.file(filename, this.urlToPromise(`${f.relative_url}`), { binary: true });
-				});
-			}
-			if (videos && videos.length > 0) {
-				// let vdZip = zip.folder('videos');
-				// videos.forEach((vid) => {
-				// 	vid.videos.forEach((f) => {
-				// 		let filename = `${vid.fecha}-${f.real_hour}.mp4`;
-				// 		vdZip.file(filename, this.urlToPromise(`${f.path_video}&open=normal`), { binary: true });
-				// 	});
-				// });
-			}
-		// Normal Files
-		} else {
-			if (photos && photos.length > 0) {
-				let imgZip = zip.folder('photos');
-				photos.forEach((f) => {
-					let filename = f.name;
-					imgZip.file(filename, this.urlToPromise(`${server}:${constants.apiPort}/${f.relative_url}`), { binary: true });
-				});
-			}
-			if (videos && videos.length > 0) {
-				let vdZip = zip.folder('videos');
-				videos.forEach((f) => {
-					let filename = f.name;
-					vdZip.file(filename, this.urlToPromise(`${server}:${constants.apiPort}/${f.relative_url}`), { binary: true });
-				});
-			}
+		if (photos && photos.length > 0) {
+			let imgZip = zip.folder('photos');
+			photos.forEach((f) => {
+				let filename = f.name;
+				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				imgZip.file(filename, this.urlToPromise(url), { binary: true });
+			});
+		}
+		if (videos && videos.length > 0) {
+			let vdZip = zip.folder('videos');
+			videos.forEach((f) => {
+				let filename = f.name;
+				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				vdZip.file(filename, this.urlToPromise(url), { binary: true });
+			});
 		}
 
 		zip.generateAsync({ type: 'blob' }).then((content) => {

@@ -7,7 +7,6 @@ import ReactPlayer from 'react-player';
 import axios from 'axios';
 
 import constants from '../../constants/constants';
-import conections from '../../conections';
 
 class MediaContainer extends Component {
 	state = { modal: false, loading: false };
@@ -34,9 +33,8 @@ class MediaContainer extends Component {
 					{exists_image && (
 						<img
 							src={
-								isQnap ? src
-									: covid ? (`${constants.sails_url}:${constants.sails_port}/${value.path}/${value.name}`)
-										: (`${servidorMultimedia}:${constants.apiPort}/${src}`)
+								covid ? (`${constants.sails_url}:${constants.sails_port}/${value.path}/${value.name}`)
+									: (`${servidorMultimedia}:${constants.apiPort}/${src}`)
 							}
 							style={{ width: '100%' }}
 							alt="img"
@@ -83,9 +81,8 @@ class MediaContainer extends Component {
 							<img
 								id="imagecontainerfrommedia"
 								src={
-									isQnap ? src
-										: covid ? (`${constants.sails_url}:${constants.sails_port}/${value.path}/${value.name}`)
-											: (`${servidorMultimedia}:${constants.apiPort}/${src}`)
+									covid ? (`${constants.sails_url}:${constants.sails_port}/${value.path}/${value.name}`)
+										: (`${servidorMultimedia}:${constants.apiPort}/${src}`)
 								}
 								style={{ width: '100%' }}
 								crossOrigin={!isQnap}
@@ -122,10 +119,8 @@ class MediaContainer extends Component {
 	};
 	
 	_deleteFile = async () => {
-		let response = {};
-		let { isQnap, cam, value, exists_video, exists_image } = this.props;
-		if (isQnap) response = await conections.deleteImage({ id: value.id });
-		else response = await axios.delete(`${constants.sails_url}:${constants.sailsPort}/cams/${cam.id}/${value.id}/1/V2`);
+		let { cam, value, exists_video, exists_image } = this.props;
+		let response = await axios.delete(`${constants.sails_url}:${constants.sailsPort}/cams/${cam.id}/${value.id}/1/V2`);
 	
 		if (response.data && response.data.success) {
 			this.setState({ modal: false, display: 'none' });
