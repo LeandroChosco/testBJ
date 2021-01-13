@@ -41,8 +41,7 @@ var vis = (function() {
 })();
 class CameraStream extends Component {
 	state = {
-		user_id: 1, // TODO cambiar
-    activeIndex: 0,
+		activeIndex: 0,
 		cameraID: '',
 		cameraName: '',
 		data: {},
@@ -548,7 +547,6 @@ class CameraStream extends Component {
 			.sendTicket({
 				camera_id: this.state.data.id,
 				problem: this.state.problemDescription,
-				user_id: this.state.user_id,
 				phones: this.state.phones.join(),
 				mails: this.state.mails.join(),
 				type_report: this.state.typeReport
@@ -708,9 +706,7 @@ class CameraStream extends Component {
 
 	_snapShot = async (camera) => {
 		this.setState({ loadingSnap: true });
-		let { user_id } = this.state;
-
-		let response = await conections.snapShotV2(camera.id, user_id);
+		let response = await conections.snapShotV2(camera.id);
 		const data = response.data;
 		if (data.success) this._loadFiles(camera, false, false, false, true);
 		this.setState({ loadingSnap: false });

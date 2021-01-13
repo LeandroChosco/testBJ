@@ -19,7 +19,6 @@ import './style.css';
 
 class LoopCamerasDisplay extends Component {
 	state = {
-		user_id: 1, // TODO cambiar
 		activeIndex: 0,
 		markers: [],
 		slideIndex: 0,
@@ -240,9 +239,7 @@ class LoopCamerasDisplay extends Component {
 
 	_snapShot = async (camera) => {
 		this.setState({ loadingSnap: true });
-		let { user_id } = this.state;
-
-		let response = await conections.snapShotV2(camera.id, user_id);
+		let response = await conections.snapShotV2(camera.id);
 		const data = response.data;
 		if (data.success) this._loadFiles(camera, false, false, false, true);
 		this.setState({ loadingSnap: false });
