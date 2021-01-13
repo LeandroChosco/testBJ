@@ -81,7 +81,7 @@ class LoopCamerasDisplay extends Component {
 								{/* <Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={this._playPause}><i className={isplay?'fa fa-pause':'fa fa-play'}></i></Button> */}
 								{moduleActions?moduleActions.btnrecord?<Button basic circular disabled={videos.length>=5||restarting||loadingSnap||loadingFiles} onClick={() => this._recordignToggle(markers[slideIndex].extraData)}><i className={ recordingCams.indexOf(markers[slideIndex].extraData)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>:null:null}
 								<Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={() =>	window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + markers[slideIndex].extraData.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link"></i></Button>
-								<Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1||videosLoading||photosLoading||photos.length<=0||videos.length<=0} onClick={() => this.props.downloadFiles(markers[slideIndex].extraData, { videos, photos, servidorMultimedia })} loading={loadingFiles}><i className="fa fa-download"></i></Button>
+								<Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1||videosLoading||photosLoading||(photos.length<=0&&videos.length<=0)} onClick={() => this.props.downloadFiles(markers[slideIndex].extraData, { videos, photos, servidorMultimedia })} loading={loadingFiles}><i className="fa fa-download"></i></Button>
 								<Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={() => this.props.makeReport(markers[slideIndex].extraData)}><i className="fa fa-warning"></i></Button>
 								{/* <Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button> */}
 								<Button basic circular onClick={() => this.props.changeStatus(markers[slideIndex].extraData)}><i className="fa fa-exchange"></i></Button>
@@ -105,11 +105,11 @@ class LoopCamerasDisplay extends Component {
 											<MediaContainer
 												key={index}
 												value={value}
+												isQnap={false}
 												exists_image={true}
 												cam={selectedCamera}
 												src={value.relative_url}
 												reloadData={this._loadFiles}
-												isQnap={qnapServer && qnapChannel}
 												servidorMultimedia={servidorMultimedia}
 											/>
 										))}
@@ -192,15 +192,17 @@ class LoopCamerasDisplay extends Component {
 				<span className="sr-only">Loading...</span>
 			</Spinner>
 		) : videoList && videoList.length > 0 ? (
-			videoList.map((list, idx) => (
-				<div key={idx} className="row">
-					{hasDns || (list.fecha && list.hour) ? (
-						<div className="col-12">
-							<h4>{`${hasDns !== null ? list.videos[0].fecha : list.fecha} - ${hasDns !== null ? list.videos[0].hour : list.hour}`}</h4>
-						</div>
-					) : null}
-					{list.videos ? (
-						list.videos.map((video, vidx) => (
+			videoList[0].videos && videoList[0].videos.length > 0 ? 
+				videoList.map((list, idx) => (
+					<div key={idx} className="row">
+						{hasDns || (list.fecha && list.hour) ? (
+							<div className="col-12">
+								<h4>{`${hasDns !== null ? list.videos[0].fecha : list.fecha} - ${hasDns !== null
+									? list.videos[0].hour
+									: list.hour}`}</h4>
+							</div>
+						) : null}
+						{list.videos.map((video, vidx) => (
 							<MediaContainer
 								key={vidx}
 								value={video}
@@ -213,22 +215,25 @@ class LoopCamerasDisplay extends Component {
 								isQnap={qnapServer && qnapChannel}
 								servidorMultimedia={servidorMultimedia}
 							/>
-						))
-					) : (
+						))}
+					</div>
+				))
+			:
+				<div className="row">
+					{videoList.map((list, idx) => (
 						<MediaContainer
+							key={idx}
 							value={list}
+							isQnap={false}
 							dns_ip={hasDns && `http://${hasDns}`}
 							exists_video={true}
 							cam={selectedCamera}
 							src={list.relative_url}
 							reloadData={this._loadFiles}
-							// real_hour={video.real_hour}
-							isQnap={false}
 							servidorMultimedia={servidorMultimedia}
 						/>
-					)}
+					))}
 				</div>
-			))
 		) : showNoFiles ? (
 			<div align="center">
 				<p className="big-letter">No hay archivos que mostrar</p>
@@ -344,7 +349,7 @@ class LoopCamerasDisplay extends Component {
 				});
 			} else {
 				const time = setInterval(this.changeSlide, 5000);
-				await this._destroyFileVideos();
+				this._destroyFileVideos(true, true, this.state.qnapServer);
 				this.setState({ autoplay: true, interval: time, selectedCamera: {}, qnapServer: null, qnapChannel: null });
 			}
 		}
@@ -444,16 +449,18 @@ class LoopCamerasDisplay extends Component {
 			this.setState({ videosLoading: true, photosLoading: true });
 			conections.getCamDataV2(camera.id)
 				.then((response) => {
-					this.setState({
-						videos: response.data.data.files_multimedia.videos,
-						photos: response.data.data.files_multimedia.photos,
-						servidorMultimedia: 'http://' + response.data.data.dns_ip,
-						videosLoading: false,
-						photosLoading: false
-					});
+					if (camera.id === this.state.selectedCamera.id) {
+						this.setState({
+							videos: response.data.data.files_multimedia.videos,
+							photos: response.data.data.files_multimedia.photos,
+							servidorMultimedia: 'http://' + response.data.data.dns_ip,
+							videosLoading: false,
+							photosLoading: false
+						});
+					}
 				})
 				.catch((err) => {
-					this.setState({ videosLoading: false, photosLoading: false });
+					if (camera.id === this.state.selectedCamera.id) this.setState({ videosLoading: false, photosLoading: false });
 				});
 		}
 

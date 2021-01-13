@@ -56,7 +56,7 @@ class MediaContainer extends Component {
 						) : (
 							<div>
 								<Button basic onClick={this._saveFile}><i className="fa fa-download" /> Descargar</Button>
-								{!covid && !dns_ip && !exists_video && (
+								{!covid && !dns_ip && !isQnap && (
 									<Button basic negative onClick={this._deleteFile}><i className="fa fa-trash" /> Eliminar</Button>
 								)}
 							</div>
@@ -121,12 +121,11 @@ class MediaContainer extends Component {
 	_deleteFile = async () => {
 		let { cam, value, exists_video, exists_image } = this.props;
 		let response = await axios.delete(`${constants.sails_url}:${constants.sailsPort}/cams/${cam.id}/${value.id}/1/V2`);
-	
 		if (response.data && response.data.success) {
 			this.setState({ modal: false, display: 'none' });
 			this.props.reloadData(cam, false, exists_video, false, exists_image);
 		} else {
-			alert('Error al eliminar imagen');
+			alert(`Error al eliminar ${exists_image ? `imagen` : `video`}`);
 		}
 	};	
 }

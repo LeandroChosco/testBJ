@@ -543,7 +543,7 @@ class Cuadrantes extends Component{
 
 		let zip = new JSZip();
 		if (photos && photos.length > 0) {
-			let imgZip = zip.folder('photos');
+			let imgZip = zip.folder('images');
 			photos.forEach((f) => {
 				let filename = f.name;
 				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
