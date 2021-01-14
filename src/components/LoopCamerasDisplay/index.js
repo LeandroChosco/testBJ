@@ -148,7 +148,8 @@ class LoopCamerasDisplay extends Component {
 													historyLoading,
 													video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
 													true,
-													video_history[1] && video_history[1].length > 0 ? video_history[0] : null
+													video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
+													true
 												)}
 											</Tab.Pane>
 										)
@@ -193,7 +194,7 @@ class LoopCamerasDisplay extends Component {
 		</Spinner>
 	);
 
-	_renderVideoList = (loading, videoList, showNoFiles = true, hasDns = null) => {
+	_renderVideoList = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false) => {
 		let { hasMore, selectedCamera, qnapServer, qnapChannel, servidorMultimedia } = this.state;
 		return loading ? (
 			this._renderLoading()
@@ -222,7 +223,7 @@ class LoopCamerasDisplay extends Component {
 						))}
 					</div>
 				))}
-				{qnapServer && qnapChannel && hasMore && this._renderLoading()}
+				{qnapServer && qnapChannel && hasMore && isHistory && this._renderLoading()}
 			</div>
 		) : (
 			<div className="row">
