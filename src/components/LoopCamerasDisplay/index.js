@@ -17,8 +17,12 @@ import * as QvrFunctions from '../../functions/getQvrFunctions';
 
 import './style.css';
 
+const SHOW_HISTORY = 3;
 class LoopCamerasDisplay extends Component {
 	state = {
+		scroll: [],
+		hasMore: true,
+		scrollInitialDate: moment().startOf('date'),
 		activeIndex: 0,
 		markers: [],
 		slideIndex: 0,
@@ -96,9 +100,7 @@ class LoopCamerasDisplay extends Component {
 							Fotos
 							<div>
 								{photosLoading ? (
-									<Spinner animation="border" variant="info" role="status" size="xl">
-										<span className="sr-only">Loading...</span>
-									</Spinner>
+									this._renderLoading()
 								) : photos.length > 0 ? (
 									<div className="row">
 										{photos.map((value, index) => (
@@ -122,7 +124,7 @@ class LoopCamerasDisplay extends Component {
 								)}
 							</div>
 						</div>
-						<div className="col videos">
+						<div id="scrollVideo" className="col videos">
 							Videos
 							<Tab
 								align="center"
@@ -131,7 +133,7 @@ class LoopCamerasDisplay extends Component {
 								menu={{ secondary: true, pointing: true }}
 								panes={[
 									{
-										menuItem: 'Actuales',
+										menuItem: 'Grabaciones',
 										render: () => (
 											<Tab.Pane attached={false}>
 												{this._renderVideoList(videosLoading, videos)}
@@ -139,7 +141,7 @@ class LoopCamerasDisplay extends Component {
 										)
 									},
 									moduleActions && moduleActions.viewHistorial && {
-										menuItem: 'Historico',
+										menuItem: 'Ultimas 24 Horas',
 										render: () => (
 											<Tab.Pane attached={false}>
 												{this._renderVideoList(
@@ -156,7 +158,7 @@ class LoopCamerasDisplay extends Component {
 										render: () => (
 											<Tab.Pane attached={false}>
 												<AdvancedSearch
-													loading={searchLoading || videosLoading || historyLoading}
+													loading={searchLoading}
 													_searchFileVideos={this._searchFileVideos}
 												/>
 												{(isNewSearch || searchLoading) && <hr />}
@@ -185,21 +187,23 @@ class LoopCamerasDisplay extends Component {
 		);
 	}
 
+	_renderLoading = () => (
+		<Spinner animation="border" variant="info" role="status" size="xl">
+			<span className="sr-only">Loading...</span>
+		</Spinner>
+	);
+
 	_renderVideoList = (loading, videoList, showNoFiles = true, hasDns = null) => {
-		let { selectedCamera, qnapServer, qnapChannel, servidorMultimedia } = this.state;
+		let { hasMore, selectedCamera, qnapServer, qnapChannel, servidorMultimedia } = this.state;
 		return loading ? (
-			<Spinner animation="border" variant="info" role="status" size="xl">
-				<span className="sr-only">Loading...</span>
-			</Spinner>
-		) : videoList && videoList.length > 0 ? (
-			videoList[0].videos && videoList[0].videos.length > 0 ? 
-				videoList.map((list, idx) => (
+			this._renderLoading()
+		) : videoList && videoList.length > 0 ? videoList[0].videos && videoList[0].videos.length > 0 ? (
+			<div>
+				{videoList.map((list, idx) => (
 					<div key={idx} className="row">
 						{hasDns || (list.fecha && list.hour) ? (
 							<div className="col-12">
-								<h4>{`${hasDns !== null ? list.videos[0].fecha : list.fecha} - ${hasDns !== null
-									? list.videos[0].hour
-									: list.hour}`}</h4>
+								<h4>{`${hasDns !== null ? list.videos[0].fecha : list.fecha} - ${hasDns !== null ? list.videos[0].hour : list.hour}`}</h4>
 							</div>
 						) : null}
 						{list.videos.map((video, vidx) => (
@@ -217,23 +221,25 @@ class LoopCamerasDisplay extends Component {
 							/>
 						))}
 					</div>
-				))
-			:
-				<div className="row">
-					{videoList.map((list, idx) => (
-						<MediaContainer
-							key={idx}
-							value={list}
-							isQnap={false}
-							dns_ip={hasDns && `http://${hasDns}`}
-							exists_video={true}
-							cam={selectedCamera}
-							src={list.relative_url}
-							reloadData={this._loadFiles}
-							servidorMultimedia={servidorMultimedia}
-						/>
-					))}
-				</div>
+				))}
+				{qnapServer && qnapChannel && hasMore && this._renderLoading()}
+			</div>
+		) : (
+			<div className="row">
+				{videoList.map((list, idx) => (
+					<MediaContainer
+						key={idx}
+						value={list}
+						isQnap={false}
+						dns_ip={hasDns && `http://${hasDns}`}
+						exists_video={true}
+						cam={selectedCamera}
+						src={list.relative_url}
+						reloadData={this._loadFiles}
+						servidorMultimedia={servidorMultimedia}
+					/>
+				))}
+			</div>
 		) : showNoFiles ? (
 			<div align="center">
 				<p className="big-letter">No hay archivos que mostrar</p>
@@ -335,7 +341,7 @@ class LoopCamerasDisplay extends Component {
 		this.setState({ restarting: false });
 	};
 
-	_openCameraInfo = async (marker) => {
+	_openCameraInfo = (marker) => {
 		if (this.props.error === null || this.props.error === undefined) {
 			if (this.state.autoplay) {
 				clearInterval(this.state.interval);
@@ -355,10 +361,10 @@ class LoopCamerasDisplay extends Component {
 		}
 	};
 
-	_searchFileVideos = async (dates, startHour, endHour, stateNames, dir = 'ASC') => {
+	_searchFileVideos = async (dates, startHour, endHour, stateNames, setNewState = true) => {
 		let { selectedCamera, video_ssid, qnapServer, qnapChannel } = this.state;
 		let isNewSearch = stateNames.list === 'video_search';
-		this.setState({ [stateNames.loading]: true });
+		if (setNewState) this.setState({ [stateNames.loading]: true });
 
 		let searchVideos = {};
 		let allVideosList = [];
@@ -372,7 +378,7 @@ class LoopCamerasDisplay extends Component {
 		if (auth && auth.authSid) {
 			let mainPath = QvrFunctions._getPath(qnapChannel);
 			for (const dt of dates) {
-				let getParamsHours = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: lthDate === dates.length ? parseInt(endHour, 10) : '24', start: lthDate === 1 ? parseInt(startHour, 10) : '0', type: '0', dir };
+				let getParamsHours = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: lthDate === dates.length ? parseInt(endHour, 10) : '24', start: lthDate === 1 ? parseInt(startHour, 10) : '0', type: '0' };
 				await this.props.getQvrFileStationFileList(getParamsHours);
 				let { QvrFileStationFileList: listHours, success: sHours } = this.props.QvrFileStationFileList;
 
@@ -411,7 +417,8 @@ class LoopCamerasDisplay extends Component {
 			await this.props.getQvrFileStationAuthLogout({ url });
 		}
 		if (selectedCamera.id === this.state.selectedCamera.id) {
-			this.setState({ [stateNames.loading]: false, [stateNames.list]: searchVideos, isNewSearch, video_ssid });
+			if (setNewState) this.setState({ [stateNames.loading]: false, [stateNames.list]: searchVideos });
+			this.setState({ isNewSearch, video_ssid });
 			return searchVideos;
 		}
 	};
@@ -420,7 +427,8 @@ class LoopCamerasDisplay extends Component {
 		if (setNewState) {
 			this.setState({
 				activeIndex: 0, videos: [], video_history: [], photos: [], video_search: [], video_ssid: [],
-				videosLoading: loading, historyLoading: loading, photosLoading: loading, searchLoading: false, isNewSearch: false
+				videosLoading: loading, historyLoading: loading, photosLoading: loading, searchLoading: false, isNewSearch: false,
+				scroll: [], hasMore: true, scrollInitialDate: moment().startOf('date')
 			});
 		}
 		
@@ -440,37 +448,50 @@ class LoopCamerasDisplay extends Component {
 		}
 	};
 
+	_loadMoreHistory = async (isFirst = false) => {
+		let { scrollInitialDate, selectedCamera, video_history } = this.state;
+		let currentHour = parseInt(moment().format('HH'), 10);
+		let stateNames = { loading: 'historyLoading', list: 'video_history' };
+		let foundHistory = [];
+	
+		let dateInFormat = scrollInitialDate.format('YYYY-MM-DD');
+		if (isFirst) {
+			this.setState({ historyLoading: true });
+			foundHistory = await this._searchFileVideos([ dateInFormat ], currentHour - SHOW_HISTORY, currentHour, stateNames, false);
+			this.setState({ historyLoading: false });
+		} else if (video_history.length > 0) {
+			let idx = video_history.length - 1;
+			let hourEnd = parseInt(video_history[idx].videos[0].real_hour.slice(0, 2), 10);
+			if (hourEnd <= 0) {
+				dateInFormat = scrollInitialDate.subtract(1, 'd').format('YYYY-MM-DD');
+				hourEnd = 24;
+			}
+
+			let hourStart = hourEnd - SHOW_HISTORY;
+			if (!(moment().startOf('date') > moment(scrollInitialDate).startOf('date') && hourEnd < currentHour)) {
+				foundHistory = await this._searchFileVideos([ dateInFormat ], hourStart <= 0 ? 0 : hourStart, hourEnd, stateNames, false);
+			}
+		}
+	
+		if (selectedCamera.id === this.state.selectedCamera.id) {
+			if (foundHistory.length > 0) {
+				foundHistory.reverse();
+				foundHistory.forEach((d) => video_history.push(d));
+				this.setState({ video_history });
+			} else {
+				this.setState({ hasMore: false });
+			}
+		}
+	};
+
 	_loadFiles = async (cam, destroyFiles = false, onlyCurrent = false, onlyHistory = false, onlyPhotos = false) => {
 		if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos));
 		let { selectedCamera } = this.state;
 		let camera = cam && cam.id ? cam : selectedCamera;
 
-		if (onlyCurrent || onlyPhotos) {
-			this.setState({ videosLoading: true, photosLoading: true });
-			conections.getCamDataV2(camera.id)
-				.then((response) => {
-					if (camera.id === this.state.selectedCamera.id) {
-						this.setState({
-							videos: response.data.data.files_multimedia.videos,
-							photos: response.data.data.files_multimedia.photos,
-							servidorMultimedia: 'http://' + response.data.data.dns_ip,
-							videosLoading: false,
-							photosLoading: false
-						});
-					}
-				})
-				.catch((err) => {
-					if (camera.id === this.state.selectedCamera.id) this.setState({ videosLoading: false, photosLoading: false });
-				});
-		}
-
 		// History
 		if (camera.dataCamValue && camera.dataCamValue.qnap_server_id && camera.dataCamValue.qnap_channel) {
-			if (onlyHistory) {
-				let stateNames = { loading: 'historyLoading', list: 'video_history' };
-				let currentDate = moment().startOf('date').format('YYYY-MM-DD');
-				this._searchFileVideos([ currentDate ], '00', '24', stateNames, 'DESC');
-			}
+			if (onlyHistory) this._loadMoreHistory(true);
 		} else {
 			if (onlyHistory) {
 				this.setState({ historyLoading: true });
@@ -515,12 +536,48 @@ class LoopCamerasDisplay extends Component {
 			}) 
 			*/
 		}
+
+		// Current
+		if (onlyCurrent || onlyPhotos) {
+			this.setState({ videosLoading: true, photosLoading: true });
+			try {
+				let response = await conections.getCamDataV2(camera.id);
+				if (camera.id === this.state.selectedCamera.id) {
+					if (response.data) {
+						this.setState({
+							videos: response.data.data.files_multimedia.videos,
+							photos: response.data.data.files_multimedia.photos,
+							servidorMultimedia: 'http://' + response.data.data.dns_ip
+						});
+					}
+					this.setState({ videosLoading: false, photosLoading: false });
+				}
+			} catch(err) {
+				if (camera.id === this.state.selectedCamera.id) {
+					this.setState({ videosLoading: false, photosLoading: false });
+				}
+			}
+		}
 	};
 
-	async componentWillUnmount() {
+	componentWillUnmount() {
 		clearInterval(this.state.interval);
-		await this._destroyFileVideos();
+		this._destroyFileVideos();
+		document.getElementById('scrollVideo').removeEventListener('scroll', this._infiniteScroll, false);
 	}
+
+	_infiniteScroll = (event) => {
+		let { activeIndex, video_history, qnapServer, qnapChannel, scroll, hasMore } = this.state;
+		let divScroll = document.getElementById('scrollVideo');
+		let isDown = divScroll.scrollHeight - divScroll.scrollTop <= divScroll.offsetHeight;
+		if (
+			activeIndex === 1 && video_history.length > 0 && isDown && qnapServer &&
+			qnapChannel && !scroll.includes(divScroll.scrollHeight) && hasMore
+		) {
+			scroll.push(divScroll.scrollHeight);
+			this._loadMoreHistory();
+		}
+	};
 
 	componentDidMount() {
 		let markersForLoop = [];
@@ -555,6 +612,7 @@ this.setState({interval: time,markers:markersForLoop, height:height})
 
 		// --- matches planchados ---
 		this.setState({ interval: time, markers: markersForLoop, height: height, matches: cameras });
+		document.getElementById('scrollVideo').addEventListener('scroll', this._infiniteScroll, false);
 	}
 
 	changeSlide = async () => {
