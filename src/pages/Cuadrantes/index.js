@@ -1,21 +1,25 @@
 import React, { Component, Fragment } from 'react';
-import { ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap'
+import { Input, Icon, TextArea, Form, Label, Button, Radio, Dropdown } from 'semantic-ui-react';
+import { ToggleButton, ToggleButtonGroup, Modal } from 'react-bootstrap';
+import { JellyfishSpinner } from 'react-spinners-kit';
+
+import JSZipUtils from 'jszip-utils';
+import saveAs from 'file-saver';
+import Chips from 'react-chips';
+import moment from 'moment';
+import JSZip from 'jszip';
+
+import conections from '../../conections';
+import constants from '../../constants/constants';
+import CameraStream from '../../components/CameraStream';
+import ModalAddCams from '../../components/ModalAddCams';
+import GridCameraDisplay from '../../components/GridCameraDisplay';
+import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
+
+import './style.css';
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
-import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
-import './style.css'
-import { Input, Icon, TextArea, Form, Label, Button, Radio, Dropdown } from 'semantic-ui-react'
-import  ModalAddCams  from '../../components/ModalAddCams'
-import conections from '../../conections';
-import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
-import GridCameraDisplay from '../../components/GridCameraDisplay';
-import CameraStream from '../../components/CameraStream';
-import constants from '../../constants/constants'
-import moment from 'moment'
-import JSZip from 'jszip'
-import saveAs from 'file-saver'
-import Chips from 'react-chips'
-import { JellyfishSpinner } from "react-spinners-kit";
+import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
 
 class Cuadrantes extends Component{
     state = {
@@ -525,55 +529,42 @@ class Cuadrantes extends Component{
         this.props.toggleControls(marker)
     }
 
-    _downloadFiles = (camera,{videos,images, servidorMultimedia}) => {
-        this.setState({loadingFiles:true})
-        var zip = new JSZip();
-        var imgs = zip.folder('images')
-        if(images.length !== 0 && videos.length !== 0){
-            images.forEach((url)=>{
-                var filename = url.name;
-                imgs.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
-            });
-            var vds = zip.folder('videos')
-            videos.forEach((url)=>{
-                var filename = url.name;
-                vds.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
-            });
-            zip.generateAsync({type:"blob"}).then((content) => {
-                // see FileSaver.js
-                this.setState({loadingFiles:false})
-                saveAs(content, "cam_"+camera.num_cam+".zip");
+    urlToPromise = (url) => {
+		return new Promise(function(resolve, reject) {
+			JSZipUtils.getBinaryContent(url, function(err, data) {
+				if (err) reject(err);
+				else resolve(data);
+			});
+		});
+	};
 
-            });
-        } else {
-            conections.getCamDataV2(camera.id)
-            .then(response => {
-                const data = response.data                
-                images = data.data.files_multimedia.photos
-                videos = data.data.files_multimedia.videos
-                if(images.length !== 0 && videos.length !== 0){
-                    images.forEach((url)=>{
-                        var filename = url.name;
-                        imgs.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
-                    });
-                    var vds = zip.folder('videos')
-                    videos.forEach((url)=>{
-                        var filename = url.name;
-                        vds.file(filename, this.urlToPromise(servidorMultimedia + ':' + constants.apiPort + '/' + url.relative_url ), {binary:true});
-                    });
-                    zip.generateAsync({type:"blob"}).then((content) => {
-                        // see FileSaver.js
-                        this.setState({loadingFiles:false})
-                        saveAs(content, "cam_"+camera.num_cam+".zip");
+    _downloadFiles = async (camera, { videos, photos, servidorMultimedia: server }) => {
+		this.setState({ loadingFiles: true });
 
-                    });
-                } else {
+		let zip = new JSZip();
+		if (photos && photos.length > 0) {
+			let imgZip = zip.folder('images');
+			photos.forEach((f) => {
+				let filename = f.name;
+				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				imgZip.file(filename, this.urlToPromise(url), { binary: true });
+			});
+		}
+		if (videos && videos.length > 0) {
+			let vdZip = zip.folder('videos');
+			videos.forEach((f) => {
+				let filename = f.name;
+				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				vdZip.file(filename, this.urlToPromise(url), { binary: true });
+			});
+		}
 
-                }
-
-            })
-        }
-    }
+		zip.generateAsync({ type: 'blob' }).then((content) => {
+			// see FileSaver.js
+			this.setState({ loadingFiles: false });
+			saveAs(content, `cam_${camera.num_cam}.zip`);
+		});
+	};
 
     _makeReport = (camera) => {        
         this.setState({modalProblem:true, cameraProblem:camera})

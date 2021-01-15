@@ -151,6 +151,11 @@ class Chat extends Component {
         <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
           {chats.map((chat, i) => {
             const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, h:mm a') : moment(chat.lastModification).format('DD-MM-YYYY, h:mm a');
+
+            let badgeNumber = 0;
+            if (this.state.chatId) {
+              badgeNumber = this.state.chatId === chat.id ? 0 : chat.c5Unread
+            }
             return (
               <Card
                 className={i === index ? "activeChat" : ""}
@@ -179,7 +184,7 @@ class Chat extends Component {
                         <p></p>
                     }
 
-                    {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
+                    {chat.c5Unread !== undefined && badgeNumber !== 0 ? (
                       <div className="notificationNumber" style={{ marginTop: 15 }}>
                         <p>{chat.c5Unread}</p>
                       </div>
@@ -197,12 +202,11 @@ class Chat extends Component {
   }
 
   render() {
-    const { alarmIndex, tabIndex } = this.props.match.params
+    const { alarmIndex } = this.props.match.params
     const { chats, chatId, index, loading, camData, personalInformation } = this.state
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
     }
-    console.log("EL INDEX DEL CHAT ES: ", index);
     const chatSelected = chats && chats[index];
 
     let textareaDisabled = null;
@@ -216,13 +220,13 @@ class Chat extends Component {
 
         } else {
           textareaDisabled = false;
-          if (chatId) {
-            const aux = [...this.state.messages];
-            const last = aux.pop();
-            if (last && last.msg === "Estoy bien.") {
-              textareaDisabled = true;
-            }
-          }
+          // if (chatId) {
+          //   const aux = this.state.messages.length > 0 && [...this.state.messages];
+          //   const last = aux.pop();
+          //   if (last && last.msg === "Estoy bien.") {
+          //     textareaDisabled = true;
+          //   }
+          // }
         }
       }
     }
@@ -243,11 +247,7 @@ class Chat extends Component {
               onTabChange={(t, i) => {
                 const { chats } = this.props
                 const { index } = this.state;
-                console.log(chats);
-                console.log(this.FILTERSOPTIONS[i.activeIndex]);
-                let newChats = chats.filter(e => e.alarmType === this.FILTERSOPTIONS[i.activeIndex])
-                console.log(newChats)
-                console.log(index)
+                let newChats = chats.filter(e => e.alarmType === this.FILTERSOPTIONS[i.activeIndex]);
                 if (index) {
                   let selected = newChats.length !== 0 && newChats[index] ? newChats[index].alarmType : newChats[0].alarmType;
                   this.setState({ from: selected ? selected : "Error getting data" })
@@ -400,7 +400,7 @@ class Chat extends Component {
               <div className="messagesContainer" id="messagesContainer">
                 {!loading && chatId !== "" && chats[index]
                   ? chats[index].messages
-                    ? this.state.messages.map((value, ref) => (
+                    ? this.state.messages !== undefined && this.state.messages.map((value, ref) => (
                       <div
                         key={ref}
                         className={
@@ -527,6 +527,12 @@ class Chat extends Component {
       } else {
         this.props.history.push(`/alarm/${this.state.activeIndex}/${chat.id}`)
       }
+      refSOS
+        .doc(chat.id)
+        .update({ c5Unread: 0 })
+        .then(() => {
+          this.setState({ from: 'Chat C5' })
+        })
     }
     if (chat === undefined && i === -1) {
       if (this.props.history.location.pathname.includes("chat")) {
@@ -551,14 +557,12 @@ class Chat extends Component {
             alarmType: chat.alarmType,
             alarm: chat.alarm
           })
-
           refSOS
             .doc(chat.id)
             .update({ c5Unread: 0 })
             .then(() => {
               this.setState({ text: '', from: 'Chat C5' })
             })
-
         }
       )
     }
@@ -714,9 +718,7 @@ class Chat extends Component {
   };
 
   componentDidMount() {
-    const { alarmIndex } = this.props.match.params
-    console.log(this.props.location)
-    console.log(alarmIndex)
+    const { alarmIndex } = this.props.match.params;
     if (this.props.chats) {
       if (alarmIndex) {
         this.setState({ chats: this.props.chats, activeIndex: alarmIndex })
@@ -767,16 +769,16 @@ class Chat extends Component {
       marker: null,
       firebaseSub: null,
       tabIndex: 0,
-      messages: [],
       flagUpdate: 0
     });
   }
-
+  30084094
   componentDidUpdate(prevProps) {
     const { alarmIndex, chatId } = this.props.match.params
     const { chats: chatsPrev } = prevProps
     const { chats } = this.props
-    if (this.state.flagUpdate === 0) {
+    // if (this.state.flagUpdate === 0) {
+    if (chatsPrev !== chats) {
       if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
         this.setState({ chats })
         switch (parseInt(alarmIndex)) {
@@ -811,8 +813,6 @@ class Chat extends Component {
             break;
           case 2:
             const medicChats = this.props.chats.filter(e => e.alarmType === 'Médico' || e.alarmType === 'medico')
-            console.log("DID UPDATE CHAT");
-            console.log(medicChats)
             this.setState({ chats: medicChats, flagUpdate: 1 })
             if (chatId) {
               const indexMedic = medicChats.findIndex(e => e.id === chatId)
@@ -833,6 +833,7 @@ class Chat extends Component {
         }
       }
     }
+    // }
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }

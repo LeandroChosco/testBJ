@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap'
+import { ToggleButton, ToggleButtonGroup } from 'react-bootstrap'
 import { Icon, Tab } from 'semantic-ui-react'
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
@@ -10,7 +10,6 @@ import GridCovidDisplay from '../../components/GridCovidDisplay';
 import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants'
 import { JellyfishSpinner } from "react-spinners-kit";
-import JSZipUtils from 'jszip-utils'
 import conections from '../../conections'
 
 import {
@@ -239,7 +238,7 @@ class Analysis extends Component {
     });
     let covidTmp = [];
     this.props.alertaCovid.forEach(element => {
-      if (element.camData[0].termic_type == 1) {
+      if (element.camData[0].termic_type === 1) {
         covidTmp.push(element);
       }
     });
@@ -358,11 +357,11 @@ class Analysis extends Component {
                 let title = ''
                 let idCamera = null
                 let index = 1
-                let indexFail = 1
+                // let indexFail = 1
                 camaras.map(value=>{
                     if (value.active === 1 && value.flag_streaming === 1 && value.tipo_camara === 4) {
                         // console.log(value)
-                        let url = 'rtmp://18.212.185.68/live/cam';                                               
+                        // let url = 'rtmp://18.212.185.68/live/cam';                                               
                         auxCamaras.push({
                             id:value.id,
                             num_cam:index,
@@ -379,7 +378,7 @@ class Analysis extends Component {
                         })                       
                         index = index + 1
                         // console.log(this.state.id_cam)
-                        if(this.state.id_cam !=0){
+                        if(this.state.id_cam !== 0){
                            if (parseInt(this.state.id_cam) === value.id) {                           
                                 title= value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
                                 actualCamera = {
@@ -421,9 +420,9 @@ class Analysis extends Component {
             conections.stopRecord({
                 record_proccess_id:value.process_id
             },value.cam_id)
-            .then((r) => {
-                const response = r.data                
-            })
+            // .then((r) => {
+            //     const response = r.data                
+            // })
             return value;
         })
     }

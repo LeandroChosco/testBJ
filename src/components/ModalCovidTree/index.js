@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Card, Image } from "semantic-ui-react";
+import { Image } from "semantic-ui-react";
 import { Modal, Button } from "react-bootstrap";
 
 const imageUrl =

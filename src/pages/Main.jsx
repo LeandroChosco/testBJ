@@ -53,7 +53,7 @@ import Chat from './ChatPlus/index'
 var io = sailsIOClient(socketIOClient);
 
 //Socket para servicio de alarmas
-const ioAlarmSocket = socketIOClient('http://ec2-18-191-81-252.us-east-2.compute.amazonaws.com:3000/c5')
+// const ioAlarmSocket = socketIOClient('http://ec2-18-191-81-252.us-east-2.compute.amazonaws.com:3000/c5')
 // const ioAlarmSocket = socketIOClient('http://localhost:3000/c5')
 
 
@@ -116,17 +116,6 @@ class Main extends Component {
 
 
   componentDidMount() {
-    // firebaseSos
-    //   .app("sos")
-    //   .firestore()
-    //   .collection('alarms')
-    //   // .where("c5_admin_clave", "==", alcaldia.clave_municipal)
-    //   .orderBy("createdAt", "desc")
-    //   .get()
-    //   .then(docs => {
-    //     console.log("ALARMS COMPONENT DID MOUNT")
-    //     console.log(docs.docs.length)
-    //   });
     firebaseC5Benito
       .app('c5benito')
       .firestore()
@@ -146,15 +135,16 @@ class Main extends Component {
           this.setState({ chats });
         }
       });
-
     io.sails.url = `${constants.sails_url}:${constants.sailsPort}`;
     io.socket.get('/termicfiles', (data) => {
       let covidTmp = [];
-      data.data.forEach(element => {
-        if (element.camData[0].termic_type === 1) {
-          covidTmp.push(element);
-        }
-      });
+      if (data && data.data) {
+        data.data.forEach(element => {
+          if (element.camData[0].termic_type === 1) {
+            covidTmp.push(element);
+          }
+        });
+      }
       this.setState({ alertaCovidd: data.data, alertaCovid: data.data, alertaCovidTmp: covidTmp, alertaCovidState: true })
     })
     io.socket.on('foo', (data) => {
@@ -212,11 +202,11 @@ class Main extends Component {
     const { limits: prevLimits } = prevProps;
     const { limits } = this.props;
     if (prevLimits !== limits) {
-      if (limits && limits.id) {
+      if (limits && limits.data && limits.data.id) {
         this.setState({
-          datosAlcaldia: limits
+          datosAlcaldia: limits.data
         })
-        // const { clave_municipal } = limits;
+        // const { clave_municipal } = limits.data;
         firebaseSos
           .app("sos")
           .firestore()
@@ -508,14 +498,30 @@ class Main extends Component {
                 !this.state.callIsGoing
               ) {
                 this.setState({ reproducirSonido: true, chats, stopNotification: false });
-                this.showNot(
-                  'Mensaje de usuario',
-                  'Nuevo mensaje de usuario',
-                  'success',
-                  'Ver detalles',
-                  0,
-                  changes[0].doc.id
-                );
+                if (typeof data.alarmType === 'string') {
+                  switch (data.alarmType) {
+                    case 'Policia':
+                      this.showAlarmNot('Activacion de Alarma', 'Nuevo mensaje - Policia', 'error', 'Ir a chat', 0, changes[0].doc.id)
+                      break;
+                    case 'Fuego':
+                      this.showAlarmNot('Activacion de Alarma', 'Nuevo mensaje - Fuego', 'error', 'Ir a chat', 1, changes[0].doc.id)
+                      break;
+                    case 'Médico':
+                      this.showAlarmNot('Activacion de Alarma', 'Nuevo mensaje - Médico', 'error', 'Ir a chat', 2, changes[0].doc.id)
+                      break;
+                    default:
+                      break;
+                  }
+                } else {
+                  this.showNot(
+                    'Mensaje de usuario',
+                    'Nuevo mensaje de usuario',
+                    'success',
+                    'Ver detalles',
+                    0,
+                    changes[0].doc.id
+                  );
+                }
               }
             }
           }
@@ -690,25 +696,6 @@ class Main extends Component {
 
         }
       });
-    // ioAlarmSocket.on('connect', () => {
-    //   // this.showNot('Conectado a XTUN API', 'Connection ID: ' + ioAlarmSocket.id, 'success', 'OK', 1, 0)
-    //   ioAlarmSocket.on('alarmListener', ({ alarm, chatId }) => {
-    //     if (alarm === 'police') {
-    //       this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 0, chatId)
-    //     }
-    //     if (alarm === 'fire') {
-    //       this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Fuego', 'error', 'Ir a chat', 1, chatId)
-    //     }
-    //     if (alarm === 'medical') {
-    //       this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Medico', 'error', 'Ir a chat', 2, chatId)
-    //     }
-    //   })
-    // })
-
-    // ioAlarmSocket.on('connect_error', () => {
-    //   // this.showNot('Desconectado de XTUN API', 'Error', 'error', 'OK', 3, 0)
-    // })
-
   }
 
   notificationRoute = () => {
@@ -824,11 +811,11 @@ class Main extends Component {
         action: {
           label: label,
           callback: () =>
-            action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos`) :
-              action === 5 ? window.open(window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/') + 'detalles/emergency/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
-                action === 2 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/denuncia/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
+            action === 0 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/0/${id}`) :
+              action === 2 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/denuncia/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
+                action === 3 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/sos`) :
                   action === 4 ? window.open(window.location.href.replace(window.location.pathname, '/').replace(window.location.search, '').replace(window.location.hash, '') + 'detalles/soporte/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
-                    action === 0 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/0/${id}`) :
+                    action === 5 ? window.open(window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, '/') + 'detalles/emergency/' + id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1,width=650,height=500') :
                       this.seeMatch(action)
         }
       });
@@ -1115,8 +1102,8 @@ class Main extends Component {
   }
 }
 
-const mapStateToProps = ({ limit_zone: { limits } }) => ({
-  limits
+const mapStateToProps = (state) => ({
+  limits: state.limits
 });
 
 const mapDispatchToProps = dispatch => ({

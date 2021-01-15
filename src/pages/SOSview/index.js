@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Card, Icon, Button, Input, Dropdown, Tab, IconGroup } from "semantic-ui-react";
+import { Card, Icon, Button, Input, Dropdown, Tab } from "semantic-ui-react";
 
 import "./style.css";
 // import firebaseC5 from "../../constants/configC5";
 // import CameraStream from "../../components/CameraStream";
-import constants from "../../constants/constants";
+// import constants from "../../constants/constants";
 import MapContainer from "../../components/MapContainer";
-import Axios from "axios";
+// import Axios from "axios";
 import moment from 'moment'
 import _ from 'lodash'
 // fireSOS
@@ -15,7 +15,7 @@ import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION } from "../../Api/sos"
 import firebaseSos from "../../constants/configSOS";
 import FadeLoader from "react-spinners/FadeLoader";
 
-import { support } from "jszip";
+// import { support } from "jszip";
 
 // const ref = firebaseC5.app("c5cuajimalpa").firestore().collection("messages");
 
@@ -178,13 +178,14 @@ class Chat extends Component {
             </div>
           </Card.Content>
         </Card>
-      ))}
+      )
+      )}
     </div>)
   }
 
   render() {
     const { tabIndex } = this.props.match.params
-    const { chats, chatId, index, from, loading, tracking, messages } = this.state;
+    const { chats, chatId, index, from, loading, tracking } = this.state;
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
     }
@@ -221,8 +222,21 @@ class Chat extends Component {
                 const { chats } = this.props
                 const { index } = this.state
                 let newChats = chats.filter(c => c.trackingType === FILTERSOPTIONS[i.activeIndex]);
+                let selected = null;
                 if (index !== undefined) {
-                  let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
+                  if (newChats.length !== 0 && newChats[index]) {
+                    selected = newChats[index].trackingType;
+                    if (typeof newChats[index].panic_button_uuid === 'string' && selected === 'Seguridad') {
+                      selected += ' botón físico';
+                    } else {
+                      if (selected === 'Seguridad') {
+                        selected += ' botón virtual';
+                      }
+                    }
+                  } else {
+                    selected = newChats[0].trackingType;
+                  }
+                  // let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
                   this.setState({ from: selected ? selected : "Error getting data" })
                 }
                 this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null })
@@ -322,10 +336,9 @@ class Chat extends Component {
                           <div className="col-4" style={{ margin: "auto" }}>
                             <Button
                               color="red"
-                              style={{ width: "80%", alignItems: "center" }}
+                              style={{ width: "80%", alignItems: "center", margin: '5px' }}
                               className="ui button"
                               onClick={this.closeChat}
-                              style={{ margin: '5px' }}
                               disabled={textareaDisabled}
                             >
                               <Icon name="taxi" />
@@ -484,12 +497,12 @@ class Chat extends Component {
             ...newData,
             id: trackingInformation.data.id,
           };
-
+          const aux = newData.SOSType && newData.SOSType === 'Seguridad' ? newData.panic_button_uuid !== null ? `${newData.SOSType} botón físico` : `${newData.SOSType} botón virtual` : newData.SOSType;
           this.setState({
             // chatId: chat.id,
             // messages: chat.messages,
             index: i,
-            from: newData.SOSType, //
+            from: aux, //
             tracking: newData,
             loading: false,
             personalInformation: newData.userInformation, //

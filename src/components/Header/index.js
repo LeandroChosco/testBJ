@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Navbar, NavDropdown, Button, Nav, DropdownButton, Dropdown } from "react-bootstrap";
+import { Navbar, NavDropdown, Button, Nav } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
@@ -207,13 +207,13 @@ class Header extends Component {
                                       ? "fa fa-id-card"
                                       : value.id === 7
                                         ? "fa fa-user-md"
-                                        : value.id == 8
+                                        : value.id === 8
                                           ? "fa fa-comments"
-                                          : value.id == 9
+                                          : value.id === 9
                                             ? "fa fa-home"
-                                            : value.id == 10
+                                            : value.id === 10
                                               ? "fa fa-taxi"
-                                              : value.id == 11
+                                              : value.id === 11
                                                 ? "fa fa-bullhorn"
                                                 : null
                         }

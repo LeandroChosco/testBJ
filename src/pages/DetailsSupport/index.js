@@ -266,7 +266,7 @@ class DetailsSupport extends Component {
               if (res.status === 200) {
                 const data = res.data;
                 if (data.success) {
-                  if (data.data != null) {
+                  if (data.data !== null) {
                     this.setState({ ticket: data.data });
                   }
                 }
