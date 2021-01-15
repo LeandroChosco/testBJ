@@ -178,7 +178,8 @@ class Chat extends Component {
             </div>
           </Card.Content>
         </Card>
-      ))}
+      )
+      )}
     </div>)
   }
 
@@ -221,8 +222,21 @@ class Chat extends Component {
                 const { chats } = this.props
                 const { index } = this.state
                 let newChats = chats.filter(c => c.trackingType === FILTERSOPTIONS[i.activeIndex]);
+                let selected = null;
                 if (index !== undefined) {
-                  let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
+                  if (newChats.length !== 0 && newChats[index]) {
+                    selected = newChats[index].trackingType;
+                    if (typeof newChats[index].panic_button_uuid === 'string' && selected === 'Seguridad') {
+                      selected += ' botón físico';
+                    } else {
+                      if (selected === 'Seguridad') {
+                        selected += ' botón virtual';
+                      }
+                    }
+                  } else {
+                    selected = newChats[0].trackingType;
+                  }
+                  // let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
                   this.setState({ from: selected ? selected : "Error getting data" })
                 }
                 this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null })
@@ -483,12 +497,12 @@ class Chat extends Component {
             ...newData,
             id: trackingInformation.data.id,
           };
-
+          const aux = newData.SOSType && newData.SOSType === 'Seguridad' ? newData.panic_button_uuid !== null ? `${newData.SOSType} botón físico` : `${newData.SOSType} botón virtual` : newData.SOSType;
           this.setState({
             // chatId: chat.id,
             // messages: chat.messages,
             index: i,
-            from: newData.SOSType, //
+            from: aux, //
             tracking: newData,
             loading: false,
             personalInformation: newData.userInformation, //

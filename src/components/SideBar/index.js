@@ -33,7 +33,7 @@ class SideBar extends Component {
         }
         camaras.map(value => {
           if (value.active === 1 && value.flag_streaming === 1) {
-            console.log("valusito", value)
+            // console.log("valusito", value)
             auxCamaras.push({
               id: value.id,
               num_cam: index,
@@ -56,11 +56,11 @@ class SideBar extends Component {
               url:
                 value.UrlStreamMediaServer !== null
                   ? "http://" +
-                    value.UrlStreamMediaServer.ip_url_ms +
-                    ":" +
-                    value.UrlStreamMediaServer.output_port +
-                    value.UrlStreamMediaServer.name +
-                    value.channel
+                  value.UrlStreamMediaServer.ip_url_ms +
+                  ":" +
+                  value.UrlStreamMediaServer.output_port +
+                  value.UrlStreamMediaServer.name +
+                  value.channel
                   : null,
               dataCamValue: value,
               tipo_camara: value.tipo_camara

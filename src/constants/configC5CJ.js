@@ -8,10 +8,19 @@ var firebaseConfig = {
   storageBucket: "",
   messagingSenderId: "959359457942",
   appId: "1:959359457942:web:cff036937c7515fa"
-  };
+};
+// var firebaseConfig = {
+//   apiKey: 'AIzaSyBMKleAhkM-RbHMft-sBIOezloY9mOPUxk',
+//   authDomain: 'devradarsos.firebaseapp.com',
+//   databaseURL: 'https://devradarsos.firebaseio.com',
+//   projectId: 'devradarsos',
+//   storageBucket: 'devradarsos.appspot.com',
+//   messagingSenderId: '191185099682',
+//   appId: '1:191185099682:android:508b531d956f4a016bf0fb'
+// }
 
 var firebaseC5Benito = firebase
 
-firebaseC5Benito.initializeApp(firebaseConfig,'c5benito')
+firebaseC5Benito.initializeApp(firebaseConfig, 'c5benito')
 
 export default firebaseC5Benito
