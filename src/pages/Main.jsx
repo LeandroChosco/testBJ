@@ -139,11 +139,13 @@ class Main extends Component {
         io.sails.url = `${constants.sails_url}:${constants.sailsPort}`;
         io.socket.get('/termicfiles', (data) => {
             let covidTmp = [];
-            data.data.forEach(element => {
-                if (element.camData[0].termic_type === 1) {
-                    covidTmp.push(element);
-                }
-            });
+            if(data && data.data) {
+                data.data.forEach(element => {
+                    if (element.camData[0].termic_type === 1) {
+                        covidTmp.push(element);
+                    }
+                });
+            }
             this.setState({ alertaCovidd: data.data, alertaCovid: data.data, alertaCovidTmp: covidTmp, alertaCovidState: true })
         })
         io.socket.on('foo', (data) => {
@@ -201,11 +203,11 @@ class Main extends Component {
         const { limits: prevLimits } = prevProps;
         const { limits } = this.props;
         if (prevLimits !== limits) {
-            if (limits && limits.id) {
+            if (limits && limits.data && limits.data.id) {
                 this.setState({
-                    datosAlcaldia: limits
+                    datosAlcaldia: limits.data
                 })
-                // const { clave_municipal } = limits;
+                // const { clave_municipal } = limits.data;
                 firebaseSos
                     .app("sos")
                     .firestore()
@@ -1074,8 +1076,8 @@ class Main extends Component {
     }
 }
 
-const mapStateToProps = ({ limit_zone: { limits } }) => ({
-    limits
+const mapStateToProps = (state) => ({
+    limits: state.limits
 });
 
 const mapDispatchToProps = dispatch => ({

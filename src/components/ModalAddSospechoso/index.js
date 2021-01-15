@@ -1,6 +1,6 @@
 import React, {Fragment, useState} from 'react';
 import { Modal } from 'react-bootstrap';
-import { Button, Checkbox, Form, Select } from 'semantic-ui-react';
+import { Button, Form, Select } from 'semantic-ui-react';
 import './style.css';
 import conections from '../../conections';
 

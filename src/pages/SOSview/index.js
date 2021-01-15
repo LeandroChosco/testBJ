@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Card, Icon, Button, Input, Dropdown, Tab, IconGroup } from "semantic-ui-react";
+import { Card, Icon, Button, Input, Dropdown, Tab } from "semantic-ui-react";
 
 import "./style.css";
 // import firebaseC5 from "../../constants/configC5";
 // import CameraStream from "../../components/CameraStream";
-import constants from "../../constants/constants";
+// import constants from "../../constants/constants";
 import MapContainer from "../../components/MapContainer";
-import Axios from "axios";
+// import Axios from "axios";
 import moment from 'moment'
 import _ from 'lodash'
 // fireSOS
@@ -15,7 +15,7 @@ import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION } from "../../Api/sos"
 import firebaseSos from "../../constants/configSOS";
 import FadeLoader from "react-spinners/FadeLoader";
 
-import { support } from "jszip";
+// import { support } from "jszip";
 
 // const ref = firebaseC5.app("c5cuajimalpa").firestore().collection("messages");
 
@@ -184,7 +184,7 @@ class Chat extends Component {
 
   render() {
     const { tabIndex } = this.props.match.params
-    const { chats, chatId, index, from, loading, tracking, messages } = this.state;
+    const { chats, chatId, index, from, loading, tracking } = this.state;
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
     }
@@ -322,10 +322,9 @@ class Chat extends Component {
                           <div className="col-4" style={{ margin: "auto" }}>
                             <Button
                               color="red"
-                              style={{ width: "80%", alignItems: "center" }}
+                              style={{ width: "80%", alignItems: "center", margin: '5px' }}
                               className="ui button"
                               onClick={this.closeChat}
-                              style={{ margin: '5px' }}
                               disabled={textareaDisabled}
                             >
                               <Icon name="taxi" />
