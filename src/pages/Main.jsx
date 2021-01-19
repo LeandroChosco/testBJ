@@ -501,13 +501,13 @@ class Main extends Component {
                 if (typeof data.alarmType === 'string') {
                   switch (data.alarmType) {
                     case 'Policia':
-                      this.showAlarmNot('Activacion de Alarma', 'Nuevo mensaje - Policia', 'error', 'Ir a chat', 0, changes[0].doc.id)
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Policia', 'success', 'Ir a chat', 0, changes[0].doc.id)
                       break;
                     case 'Fuego':
-                      this.showAlarmNot('Activacion de Alarma', 'Nuevo mensaje - Fuego', 'error', 'Ir a chat', 1, changes[0].doc.id)
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Fuego', 'success', 'Ir a chat', 1, changes[0].doc.id)
                       break;
                     case 'Médico':
-                      this.showAlarmNot('Activacion de Alarma', 'Nuevo mensaje - Médico', 'error', 'Ir a chat', 2, changes[0].doc.id)
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Médico', 'success', 'Ir a chat', 2, changes[0].doc.id)
                       break;
                     default:
                       break;
