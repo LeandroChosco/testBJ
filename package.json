@@ -12,6 +12,7 @@
     "fast-xml-parser": "^3.17.5",
     "file-saver": "^2.0.1",
     "firebase": "^6.6.2",
+    "form-data": "^2.3.3",
     "google-maps-react": "^2.0.2",
     "jsmpeg": "^1.0.0",
     "jsmpeg-player": "^3.0.3",

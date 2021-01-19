@@ -68,3 +68,8 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+### API CORS-ANYWHERE
+La siguiente api sirve como intermediario para las solicitudes hacia otras api's y y evitar problemas con Cors.
+- Repositorio original : https://github.com/Rob--W/cors-anywhere
+- url del servicio: https://no-cors-app.herokuapp.com/
