@@ -220,13 +220,6 @@ class Chat extends Component {
 
         } else {
           textareaDisabled = false;
-          // if (chatId) {
-          //   const aux = this.state.messages.length > 0 && [...this.state.messages];
-          //   const last = aux.pop();
-          //   if (last && last.msg === "Estoy bien.") {
-          //     textareaDisabled = true;
-          //   }
-          // }
         }
       }
     }
@@ -772,7 +765,7 @@ class Chat extends Component {
       flagUpdate: 0
     });
   }
-  30084094
+
   componentDidUpdate(prevProps) {
     const { alarmIndex, chatId } = this.props.match.params
     const { chats: chatsPrev } = prevProps
@@ -780,7 +773,9 @@ class Chat extends Component {
     // if (this.state.flagUpdate === 0) {
     if (chatsPrev !== chats) {
       if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-        this.setState({ chats })
+        if (chatsPrev.length !== chats.length) {
+          this.setState({ chats })
+        }
         switch (parseInt(alarmIndex)) {
           case 0:
             if (this.props.history.location.pathname.includes("chat")) {
@@ -828,6 +823,7 @@ class Chat extends Component {
             } else {
               chats = this.props.chats.filter(e => e.alarmType === this.FILTERSOPTIONS[this.state.tabIndex])
             }
+            console.log("EN EL DEFAULT")
             this.setState({ chats, flagUpdate: 1 })
             break;
         }

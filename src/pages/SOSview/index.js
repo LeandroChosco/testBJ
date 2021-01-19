@@ -138,47 +138,51 @@ class Chat extends Component {
 
       </div>
 
-      {chats.map((chat, i) => (
-        <Card
-          className={i === index ? "activeChat" : ""}
-          style={{ width: "100%" }}
-          key={i}
-          onClick={() => this.changeChat(chat, i)}
-        >
-          <Card.Content>
-            <div style={{ position: "relative" }}>
-              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{moment(moment(chat.create_at)).format('DD-MM-YYYY, h:mm a')}</p></div>
-              {
+      {chats.map((chat, i) => {
+        const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, h:mm a') : typeof chat.lastModification === 'string' ? moment(chat.lastModification).format('DD-MM-YYYY, h:mm a') : moment(chat.lastModification.toDate()).format('DD-MM-YYYY, h:mm a');
 
-                chat.active !== undefined && chat.active ?
-                  <p>
-                    {chat.messages
-                      ? chat.messages.length > 0
-                        ? (chat.messages[chat.messages.length - 1].from ===
-                          "user"
-                          ? chat.user_name.split(" ")[0]
-                          : "C5") +
-                        ": " +
-                        chat.messages[chat.messages.length - 1].msg //msg
-                        : "No hay mensajes que mostart"
-                      : "No hay mensajes que mostart"}
-                  </p> :
-                  <p></p>
-              }
+        return (
+          <Card
+            className={i === index ? "activeChat" : ""}
+            style={{ width: "100%" }}
+            key={i}
+            onClick={() => this.changeChat(chat, i)}
+          >
+            <Card.Content>
+              <div style={{ position: "relative" }}>
+                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{date}</p></div>
+                {
 
-              {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                <div className="notificationNumber" style={{ marginTop: 15 }}>
-                  <p>{chat.c5Unread}</p>
+                  chat.active !== undefined && chat.active ?
+                    <p>
+                      {chat.messages
+                        ? chat.messages.length > 0
+                          ? (chat.messages[chat.messages.length - 1].from ===
+                            "user"
+                            ? chat.user_name.split(" ")[0]
+                            : "C5") +
+                          ": " +
+                          chat.messages[chat.messages.length - 1].msg //msg
+                          : "No hay mensajes que mostart"
+                        : "No hay mensajes que mostart"}
+                    </p> :
+                    <p></p>
+                }
+
+                {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
+                  <div className="notificationNumber" style={{ marginTop: 15 }}>
+                    <p>{chat.c5Unread}</p>
+                  </div>
+                ) : null}
+                <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                  {/* <small style={{ ...styles.badge, backgroundColor: COLORS[chat.trackingType], }}> <strong>{chat.trackingType}</strong> </small> */}
+                  <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
                 </div>
-              ) : null}
-              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                {/* <small style={{ ...styles.badge, backgroundColor: COLORS[chat.trackingType], }}> <strong>{chat.trackingType}</strong> </small> */}
-                <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
               </div>
-            </div>
-          </Card.Content>
-        </Card>
-      )
+            </Card.Content>
+          </Card>
+        )
+      }
       )}
     </div>)
   }
