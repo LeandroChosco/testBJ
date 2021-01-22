@@ -9,8 +9,8 @@
 }
 
 .outer {
-	width: 250px;
-	height: 250px;
+	width: 230px;
+	height: 230px;
 	border-radius: 50%;
 	position: relative;
 	background-color: #e0e1e2;
@@ -37,9 +37,10 @@
 
 @media (max-width: 1650px) {
 	.main-container {
-		height: 100%;
-		width: 260px;
-		overflow-x: scroll;
+		height: 350px;
+		width: 240px;
+		overflow-x: auto;
+		overflow-y: hidden;
 	}
 
 	.buttons {
