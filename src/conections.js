@@ -251,6 +251,16 @@ export default {
 	},
 	postChangeChat: (data) => {
 		return Axios.post(constants.sails_url + ':' + constants.sailsPort + '/update/change/', data);
+	},
+	// Opciones PTZ
+	getProfilePTZ: (data) => {
+		return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/get/profile', data);
+	},
+	continuousMovePTZ: (data) => {
+		return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/continuous/move/ptz', data);
+	},
+	stopPTZ: (data) => {
+		return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/stop/ptz', data);
 	}
 };
 

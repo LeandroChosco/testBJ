@@ -39,6 +39,7 @@
   animation-iteration-count: infinite;
 }
 
+.ptzgrid,
 .snapshotsgrid,
 .videosgrid {
   height: 100%;
@@ -49,6 +50,8 @@
   background-color: white;
   height: 100%;
 }
+
+.ptzgrid,
 .snapshotsgrid,
 .videosgrid,
 .matchesgrid {

@@ -9,6 +9,7 @@ import ReactPaginate from 'react-paginate';
 import moment from 'moment-timezone';
 
 import Match from '../Match';
+import ControlPTZ from '../ControlPTZ';
 import conections from '../../conections';
 import CameraStream from '../CameraStream';
 import AdvancedSearch from '../AdvancedSearch';
@@ -65,11 +66,12 @@ class GridCameraDisplay extends Component {
 		historyLoading: false,
 		searchLoading: false,
 		isNewSearch: false,
-		photosLoading: false
+		photosLoading: false,
+		showPTZ: false
 	};
 
 	render() {
-		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search } = this.state;
+		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ } = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, matches } = this.props;
 		return (
 			<div className="gridCameraContainer" align="center">
@@ -134,7 +136,8 @@ class GridCameraDisplay extends Component {
 							<Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={() => this.props.makeReport(selectedCamera)}><i className="fa fa-warning"></i></Button>
 							{/* <Button basic circular disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button> */}
 							<Button basic circular onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange"></i></Button>
-							{selectedCamera.dataCamValue === undefined ? null : selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.dns != null ? <i><Button basic circular onClick={() => this.Clicked(selectedCamera.dataCamValue.dns)}><i className="fa fa-sliders"></i></Button></i> : null}
+							{/* {selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.dns != null ? <Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-sliders"></i></Button> : null} */}
+							<Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-sliders"></i></Button>
 						</div>
 						<div className='col-5'>
 								<b>Camara</b> {selectedCamera.name}
@@ -144,6 +147,14 @@ class GridCameraDisplay extends Component {
 						</div>
 					</div>
 					<div className={!autoplay ? 'row showfilesinfocameragrid' : 'row hidefiles'}>
+						{showPTZ && 
+							<div className="col ptzgrid">
+								Controles
+								<ControlPTZ
+									camera={selectedCamera}
+								/>
+							</div>
+						}
 						<div className="col snapshotsgrid">
 							Fotos
 							<div>
@@ -301,10 +312,6 @@ class GridCameraDisplay extends Component {
 				<i className="fa fa-image fa-5x" />
 			</div>
 		) : null;
-	};
-
-	Clicked = (dns) => {
-		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
 	};
 
 	_snapShot = async (camera) => {
@@ -469,7 +476,7 @@ class GridCameraDisplay extends Component {
 			this.setState({
 				activeIndex: 0, videos: [], video_history: [], photos: [], video_search: [], video_ssid: [],
 				videosLoading: loading, historyLoading: loading, photosLoading: loading, searchLoading: false, isNewSearch: false,
-				scroll: [], hasMore: true, scrollInitialDate: moment().startOf('date')
+				scroll: [], hasMore: true, scrollInitialDate: moment().startOf('date'), showPTZ: false
 			});
 		}
 		
