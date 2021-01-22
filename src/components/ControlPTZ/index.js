@@ -160,9 +160,9 @@ export default ControlPTZ;
 
 const styles = {
 	icon: { fontSize: '18px', position: 'absolute' },
-	plus: { top: '4%', left: '42%' },
-	minus: { top: '77%', left: '42%' },
-	left: { top: '41%', left: '3%' },
-	right: { top: '41%', left: '78%' },
+	plus: { top: '4%', left: '41%' },
+	minus: { top: '77%', left: '41%' },
+	left: { top: '41%', left: '2%' },
+	right: { top: '41%', left: '77%' },
 	button: { fontSize: '18px', margin: '1px' }
 };
