@@ -253,6 +253,9 @@ export default {
 		return Axios.post(constants.sails_url + ':' + constants.sailsPort + '/update/change/', data);
 	},
 	// Opciones PTZ
+	newOnvifDevice: (data) => {
+		return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/new/device', data);
+	},
 	getProfilePTZ: (data) => {
 		return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/get/profile', data);
 	},
