@@ -1,4 +1,6 @@
-.main-container {
+.map-container,
+.main-container,
+.match-container {
 	height: 90%;
 	width: 100%;
 	display: flex;
@@ -6,6 +8,12 @@
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-evenly;
+}
+
+.map-container {
+	width: 240px;
+	overflow-x: auto;
+	overflow-y: hidden;
 }
 
 .outer {
@@ -30,22 +38,45 @@
 	transition: all 0.5s ease-out;
 }
 
-.buttons {
+.map-buttons {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.main-buttons,
+.match-buttons {
 	display: flex;
 	flex-direction: column;
 }
 
 @media (max-width: 1650px) {
-	.main-container {
+	.match-container {
 		height: 350px;
 		width: 240px;
 		overflow-x: auto;
 		overflow-y: hidden;
 	}
 
-	.buttons {
+	.match-buttons {
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
+	}
+}
+
+@media (max-width: 1200px) {
+	.main-buttons {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+}
+
+@media (max-width: 930px) {
+	.main-container {
+		width: 240px;
+		overflow-x: auto;
+		overflow-y: hidden;
 	}
 }

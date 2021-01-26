@@ -8,22 +8,26 @@ import conections from '../../conections';
 import './style.css';
 
 const TIMEOUT = [ 0.3, 0.6, 0.9 ];
-const ControlPTZ = (/*props*/) => {
+const ControlPTZ = (props) => {
 	const [ ip, setIp ] = useState(null);
 	const [ profile, setProfile ] = useState('');
 	const [ loading, setLoading ] = useState(true);
 	const [ startTime, setStartTime ] = useState(null);
 	const [ timeout, setTimeout ] = useState(TIMEOUT[0]);
+	const [ styleMap, setStyleMap ] = useState(false);
+	const [ styleMatch, setStyleMatch ] = useState(false);
 
 	useEffect(() => {
 		async function fetchData() {
-			// let { camera } = props;
+			let { /*camera,*/ isInMap, hasMatch } = props;
 			// console.log('inDidMount', camera);
 			let params = { ip: '172.31.86.15', user: 'admin', pass: 'ENGTK2010!' };
 			await conections.newOnvifDevice(params);
 			let dataProfile = await conections.getProfilePTZ(params);
 			params.ProfileToken = dataProfile.data ? dataProfile.data.token : '';
 			setIp(params.ip);
+			setStyleMap(isInMap);
+			setStyleMatch(hasMatch);
 			setProfile(params.ProfileToken);
 			setLoading(false);
 		}
@@ -84,7 +88,7 @@ const ControlPTZ = (/*props*/) => {
 					</Spinner>
 				</div>
 			) : (
-				<div className="main-container">
+				<div className={styleMap ? 'map-container' : styleMatch ? 'match-container' : 'main-container'}>
 					<div className="outer">
 						<div className="inner" />
 						<Button
@@ -118,7 +122,7 @@ const ControlPTZ = (/*props*/) => {
 					</div>
 					<div>
 						Velocidades
-						<div className="buttons">
+						<div className={styleMap ? 'map-buttons' : styleMatch ? 'match-buttons' : 'main-buttons'}>
 							<Button
 								content="x1"
 								style={styles.button}
