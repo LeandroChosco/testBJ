@@ -86,14 +86,15 @@ class CameraStream extends Component {
 		restarting: false,
 		servidorMultimedia: '',
 		showModalMoreInformation: false,
-		showPTZ: false
+		showPTZ: false,
+		reloadCamPTZ: false
 	};
 
 	lastDecode = null;
 	tryReconect = false;
 
 	render() {
-		let { activeIndex, display, num_cam, cameraID, cameraName, showData, photos, data, qnapServer, qnapChannel, servidorMultimedia, photosLoading, videosLoading, videos, historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, loadingSnap, isLoading, isRecording, restarting, loadingFiles, modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription, showPTZ } = this.state;
+		let { activeIndex, display, num_cam, cameraID, cameraName, showData, photos, data, qnapServer, qnapChannel, servidorMultimedia, photosLoading, videosLoading, videos, historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, loadingSnap, isLoading, isRecording, restarting, loadingFiles, modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription, showPTZ, reloadCamPTZ } = this.state;
     return (
 			<Card style={{ display: display }}>
 				{this.props.horizontal ? (
@@ -111,6 +112,7 @@ class CameraStream extends Component {
 											/>
 										) : this.props.marker.extraData.isHls ? (
 											<HlsPlayer
+												reload={this.props.showExternal || this.props.showFilesBelow ? reloadCamPTZ : this.props.reloadCamPTZ}
 												height={this.props.height}
 												width={this.props.width}
 												src={this.props.marker.extraData.url}
@@ -162,6 +164,7 @@ class CameraStream extends Component {
 											camera={data}
 											isInMap={true}
 											hasMatch={false}
+											_reloadCamPTZ={this._changeReloadCamPTZ}
 										/>
 									</div>
 								}
@@ -251,6 +254,7 @@ class CameraStream extends Component {
 									/>
 								) : this.props.marker.extraData.isHls ? (
 									<HlsPlayer
+										reload={this.props.showExternal || this.props.showFilesBelow ? reloadCamPTZ : this.props.reloadCamPTZ}
 										height={this.props.height}
 										width={this.props.width}
 										src={this.props.marker.extraData.url}
@@ -321,6 +325,7 @@ class CameraStream extends Component {
 									camera={data}
 									isInMap={false}
 									hasMatch={false}
+									_reloadCamPTZ={this._changeReloadCamPTZ}
 								/>
 							</div>
 						}
@@ -487,6 +492,11 @@ class CameraStream extends Component {
 			</Card>
 		);		
 	}
+
+	_changeReloadCamPTZ = () => {
+		this.setState({ reloadCamPTZ: true });
+		setTimeout(() => this.setState({ reloadCamPTZ: false }), 1000);
+	};
 
 	_renderLoading = () => (
 		<Spinner animation="border" variant="info" role="status" size="xl">

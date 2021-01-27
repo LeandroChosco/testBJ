@@ -67,11 +67,12 @@ class GridCameraDisplay extends Component {
 		searchLoading: false,
 		isNewSearch: false,
 		photosLoading: false,
-		showPTZ: false
+		showPTZ: false,
+		reloadCamPTZ: false
 	};
 
 	render() {
-		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ } = this.state;
+		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, reloadCamPTZ } = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, matches } = this.props;
 		return (
 			<div className="gridCameraContainer" align="center">
@@ -84,6 +85,7 @@ class GridCameraDisplay extends Component {
 									ref={'camrefgrid' + value.extraData.id}
 									key={value.extraData.id}
 									marker={value}
+									reloadCamPTZ={selectedCamera === value.extraData ? reloadCamPTZ : false}
 								/>
 							</Col>
 						) : null
@@ -154,6 +156,7 @@ class GridCameraDisplay extends Component {
 									camera={selectedCamera}
 									isInMap={false}
 									hasMatch={true}
+									_reloadCamPTZ={this._changeReloadCamPTZ}
 								/>
 							</div>
 						}
@@ -254,6 +257,11 @@ class GridCameraDisplay extends Component {
 			</div>
 		);
 	}
+
+	_changeReloadCamPTZ = () => {
+		this.setState({ reloadCamPTZ: true });
+		setTimeout(() => this.setState({ reloadCamPTZ: false }), 1000);
+	};
 
 	_renderLoading = () => (
 		<Spinner animation="border" variant="info" role="status" size="xl">
