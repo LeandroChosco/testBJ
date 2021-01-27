@@ -16,15 +16,19 @@ const ControlPTZ = (props) => {
 	const [ timeout, setTimeout ] = useState(TIMEOUT[0]);
 	const [ styleMap, setStyleMap ] = useState(false);
 	const [ styleMatch, setStyleMatch ] = useState(false);
+	const [ errorMessage, setErrorMessage ] = useState('');
 
 	useEffect(() => {
 		async function fetchData() {
-			let { /*camera,*/ isInMap, hasMatch } = props;
-			// console.log('inDidMount', camera);
-			let params = { ip: '172.31.86.15', user: 'admin', pass: 'ENGTK2010!' };
+			let { camera, isInMap, hasMatch } = props;
+			let camIp = camera.num_cam % 2 === 0 ? '187.188.114.131' : '172.31.86.15';
+			let camPort = camera.num_cam % 2 === 0 ? '9704' : null;
+			let params = { ip: camIp, port: camPort, user: 'admin', pass: 'ENGTK2010!' };
 			await conections.newOnvifDevice(params);
 			let dataProfile = await conections.getProfilePTZ(params);
 			params.ProfileToken = dataProfile.data ? dataProfile.data.token : '';
+			if (!params.ProfileToken || params.ProfileToken === '') 
+				setErrorMessage('No se encontraron los recursos necesarios para poder controlar la camara.');
 			setIp(params.ip);
 			setStyleMap(isInMap);
 			setStyleMatch(hasMatch);
@@ -81,7 +85,11 @@ const ControlPTZ = (props) => {
 
 	return (
 		<>
-			{loading ? (
+			{errorMessage !== '' ? (
+				<div>
+					{errorMessage}
+				</div>
+			) : loading ? (
 				<div>
 					<Spinner animation="border" variant="info" role="status" size="xl">
 						<span className="sr-only">Loading...</span>
@@ -122,6 +130,8 @@ const ControlPTZ = (props) => {
 					</div>
 					<div>
 						Velocidades
+						<br />
+						{ip}
 						<div className={styleMap ? 'map-buttons' : styleMatch ? 'match-buttons' : 'main-buttons'}>
 							<Button
 								content="x1"

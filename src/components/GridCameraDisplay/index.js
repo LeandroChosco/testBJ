@@ -137,7 +137,7 @@ class GridCameraDisplay extends Component {
 							{/* <Button basic circular disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/></Button> */}
 							<Button basic circular onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange"/></Button>
 							{/* {selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.dns != null ? <Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-sliders"/></Button> : null} */}
-							<Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-sliders"/></Button>
+							{selectedCamera.num_cam <= 2 ? <Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-sliders"/></Button> : null}
 						</div>
 						<div className='col-5'>
 								<b>Camara</b> {selectedCamera.name}
