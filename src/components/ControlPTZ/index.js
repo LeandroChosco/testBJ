@@ -21,9 +21,7 @@ const ControlPTZ = (props) => {
 	useEffect(() => {
 		async function fetchData() {
 			let { camera, isInMap, hasMatch } = props;
-			let camIp = camera.num_cam % 2 === 0 ? '187.188.114.131' : '172.31.86.15';
-			let camPort = camera.num_cam % 2 === 0 ? '9704' : null;
-			let params = { ip: camIp, port: camPort, user: 'admin', pass: 'ENGTK2010!' };
+			let params = { ip: camera.dataCamValue.dns };
 			await conections.newOnvifDevice(params);
 			let dataProfile = await conections.getProfilePTZ(params);
 			params.ProfileToken = dataProfile.data ? dataProfile.data.token : '';
@@ -134,8 +132,6 @@ const ControlPTZ = (props) => {
 					</div>
 					<div>
 						Velocidades
-						<br />
-						{ip}
 						<div className={styleMap ? 'map-buttons' : styleMatch ? 'match-buttons' : 'main-buttons'}>
 							<Button
 								content="x1"
