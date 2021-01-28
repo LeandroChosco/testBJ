@@ -8,10 +8,10 @@ class HlsPlayer extends Component {
 		this._loadPlayer();
 	}
 	componentDidUpdate(prevProps) {
-		const { src: srcPrev } = prevProps;
-		const { src } = this.props;
-		if (srcPrev !== src) {
-      let { player } = this.state;
+		const { src: srcPrev, reload: reloadPrev } = prevProps;
+		const { src, reload } = this.props;
+		if (srcPrev !== src || (reload && (reloadPrev !== reload))) {
+			let { player } = this.state;
       if (player) player.destroy();
       this._loadPlayer();
     }

@@ -1,85 +1,96 @@
-.holderOfSlides>div>.card>.card-body>.camHolder {
-    height: 90% !important;
+.holderOfSlides > div > .card > .card-body > .camHolder {
+	height: 90% !important;
 }
 
-
-.holderOfSlides>div>.card{
-    height: 100% !important;    
-}
-.holderOfSlides>div>.card>.card-body {
-    height: 100% !important;    
-}
-.holderOfSlides{
-    overflow: hidden;
-    display: block;    
-    width: 100%;
+.holderOfSlides > div > .card {
+	height: 100% !important;
 }
 
-.camControl{
-    position: fixed;
-    bottom: 0;
-    background-color: lightgray;
-    width: 100%;
-    padding-right: 70px;
-}
-.showfiles{
-    height: 50%;
-    overflow-y: hidden;
-}
-.hidefiles{
-    height: 0;
+.holderOfSlides > div > .card > .card-body {
+	height: 100% !important;
 }
 
-.hiddenCameraNotshow{
-    display: block;
-}
-.ui.card{
-    height: auto !important;
-}
-.stiky-top{
-    position: sticky;
-}
-.recording{
-    animation: opacityOnAndOff;
-    animation-duration: 1s;
-    animation-delay: 0s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
+.holderOfSlides {
+	overflow: hidden;
+	display: block;
+	width: 100%;
 }
 
-.showfilesinfocamera{
-    background-color: white;
-    height: 100%;
-}
-.snapshots,.videos,.matches{
-    height: 100%;
-    overflow-y: auto;
-}
-
-.errorContainer{
-    position: absolute;
-    top:40%;
-    font-size: 1.5em;
-    color: red;
-    height: 100%;
-    margin: auto;
-}
-.big-letter{
-    font-size: 1.5rem;
-    font-weight: 100;
+.camControl {
+	position: fixed;
+	bottom: 0;
+	background-color: lightgray;
+	width: 100%;
+	padding-right: 70px;
 }
 
-.fa-5x{
-    font-weight: 100 !important;    
+.showfiles {
+	height: 50%;
+	overflow-y: hidden;
 }
+
+.hidefiles {
+	height: 0;
+}
+
+.hiddenCameraNotshow {
+	display: block;
+}
+
+.ui.card {
+	height: auto !important;
+}
+
+.stiky-top {
+	position: sticky;
+}
+
+.recording {
+	animation: opacityOnAndOff;
+	animation-duration: 1s;
+	animation-delay: 0s;
+	animation-fill-mode: forwards;
+	animation-iteration-count: infinite;
+}
+
+.showfilesinfocamera {
+	background-color: white;
+	height: 100%;
+}
+
+.snapshots,
+.videos,
+.matches {
+	height: 100%;
+	overflow-y: auto;
+}
+
+.errorContainer {
+	position: absolute;
+	top: 40%;
+	font-size: 1.5em;
+	color: red;
+	height: 100%;
+	margin: auto;
+}
+
+.big-letter {
+	font-size: 1.5rem;
+	font-weight: 100;
+}
+
+.fa-5x {
+	font-weight: 100 !important;
+}
+
 @keyframes opacityOnAndOff {
-    0% {
-        opacity: 0;
-    }
-    50%{
-      opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
 }

@@ -678,7 +678,7 @@ class Main extends Component {
           const doc_data = doc_change.map(item => ({ id: item.doc.id, data: item.doc.data() }));
           if (doc_data.length > 0) {
             doc_data.forEach(d => {
-              const { id, data } = d;
+              const { data } = d;
               if (data && data.chatId) {
                 const { police, fire, medical } = data.alarmedStatus;
                 if (police) {

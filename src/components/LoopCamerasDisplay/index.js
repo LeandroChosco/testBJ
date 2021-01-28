@@ -6,6 +6,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import moment from 'moment-timezone';
 
 import Match from '../Match';
+import ControlPTZ from '../ControlPTZ';
 import conections from '../../conections';
 import CameraStream from '../CameraStream';
 import AdvancedSearch from '../AdvancedSearch';
@@ -49,7 +50,9 @@ class LoopCamerasDisplay extends Component {
 		isNewSearch: false,
 		recordingCams: [],
 		recordingProcess: [],
-		loadingRcord: false
+		loadingRcord: false,
+		showPTZ: false,
+		reloadCamPTZ: false
 	};
 
 	_showCameraInfo() {
@@ -57,7 +60,7 @@ class LoopCamerasDisplay extends Component {
 	}
 
 	render() {
-		let { activeIndex, markers, slideIndex, autoplay, photos, videos, video_history, video_search, selectedCamera, qnapServer, qnapChannel, height, servidorMultimedia, loadingSnap, videosLoading, historyLoading, searchLoading, photosLoading, isNewSearch, recordingCams, restarting } = this.state
+		let { activeIndex, markers, slideIndex, autoplay, photos, videos, video_history, video_search, selectedCamera, qnapServer, qnapChannel, height, servidorMultimedia, loadingSnap, videosLoading, historyLoading, searchLoading, photosLoading, isNewSearch, recordingCams, restarting, showPTZ, reloadCamPTZ } = this.state
 		let { error, propsIniciales, moduleActions, loadingFiles, matches } = this.props
 		return (
 			<div className="holderOfSlides">
@@ -72,6 +75,7 @@ class LoopCamerasDisplay extends Component {
 									marker={value}
 									height={'100%'}
 									width={'75%'}
+									reloadCamPTZ={reloadCamPTZ}
 								/>
 							</div>
 						) : null
@@ -81,21 +85,33 @@ class LoopCamerasDisplay extends Component {
 					{markers[slideIndex] ? (
 						<div className="row stiky-top">
 							<div className="col-8">
-								{moduleActions?moduleActions.btnsnap?<Button basic circular disabled={photos.length>=5||restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} loading={loadingSnap} onClick={() => this._snapShot(markers[slideIndex].extraData)}><i className='fa fa-camera'></i></Button>:null:null}
-								{/* <Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={this._playPause}><i className={isplay?'fa fa-pause':'fa fa-play'}></i></Button> */}
-								{moduleActions?moduleActions.btnrecord?<Button basic circular disabled={videos.length>=5||restarting||loadingSnap||loadingFiles} onClick={() => this._recordignToggle(markers[slideIndex].extraData)}><i className={ recordingCams.indexOf(markers[slideIndex].extraData)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}></i></Button>:null:null}
-								<Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={() =>	window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + markers[slideIndex].extraData.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link"></i></Button>
-								<Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1||videosLoading||photosLoading||(photos.length<=0&&videos.length<=0)} onClick={() => this.props.downloadFiles(markers[slideIndex].extraData, { videos, photos, servidorMultimedia })} loading={loadingFiles}><i className="fa fa-download"></i></Button>
-								<Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={() => this.props.makeReport(markers[slideIndex].extraData)}><i className="fa fa-warning"></i></Button>
-								{/* <Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button> */}
-								<Button basic circular onClick={() => this.props.changeStatus(markers[slideIndex].extraData)}><i className="fa fa-exchange"></i></Button>
+								{moduleActions?moduleActions.btnsnap?<Button basic circular disabled={photos.length>=5||restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} loading={loadingSnap} onClick={() => this._snapShot(markers[slideIndex].extraData)}><i className='fa fa-camera'/></Button>:null:null}
+								{/* <Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={this._playPause}><i className={isplay?'fa fa-pause':'fa fa-play'}/></Button> */}
+								{moduleActions?moduleActions.btnrecord?<Button basic circular disabled={videos.length>=5||restarting||loadingSnap||loadingFiles} onClick={() => this._recordignToggle(markers[slideIndex].extraData)}><i className={ recordingCams.indexOf(markers[slideIndex].extraData)>-1?'fa fa-stop-circle recording':'fa fa-stop-circle'} style={{color:'red'}}/></Button>:null:null}
+								<Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={() =>	window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + markers[slideIndex].extraData.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link"/></Button>
+								<Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1||videosLoading||photosLoading||(photos.length<=0&&videos.length<=0)} onClick={() => this.props.downloadFiles(markers[slideIndex].extraData, { videos, photos, servidorMultimedia })} loading={loadingFiles}><i className="fa fa-download"/></Button>
+								<Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={() => this.props.makeReport(markers[slideIndex].extraData)}><i className="fa fa-warning"/></Button>
+								{/* <Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/></Button> */}
+								<Button basic circular onClick={() => this.props.changeStatus(markers[slideIndex].extraData)}><i className="fa fa-exchange"/></Button>
+								{markers[slideIndex].extraData.dataCamValue && markers[slideIndex].extraData.dataCamValue.tipo_camara === 2 && markers[slideIndex].extraData.dataCamValue.dns != null ? <Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-sliders"/></Button> : null}
 							</div>
 							<div className="col-4">
-								<Button onClick={() => this._openCameraInfo(markers[slideIndex])} className='pull-right' primary><i className={ autoplay?'fa fa-square':'fa fa-play'}></i> { autoplay?'Parar loop':'Continuar loop'} <i className={ autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}></i></Button>
+								<Button onClick={() => this._openCameraInfo(markers[slideIndex])} className='pull-right' primary><i className={ autoplay?'fa fa-square':'fa fa-play'}></i> { autoplay?'Parar loop':'Continuar loop'} <i className={ autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}/></Button>
 							</div>
 						</div>
 					) : null}
 					<div className={!autoplay ? 'row showfilesinfocamera' : 'row hidefiles'}>
+						{showPTZ && 
+							<div className="col ptz">
+								Controles
+								<ControlPTZ
+									camera={selectedCamera}
+									isInMap={false}
+									hasMatch={true}
+									_reloadCamPTZ={this._changeReloadCamPTZ}
+								/>
+							</div>
+						}
 						<div className="col snapshots">
 							Fotos
 							<div>
@@ -187,6 +203,11 @@ class LoopCamerasDisplay extends Component {
 			</div>
 		);
 	}
+
+	_changeReloadCamPTZ = () => {
+		this.setState({ reloadCamPTZ: true });
+		setTimeout(() => this.setState({ reloadCamPTZ: false }), 1000);
+	};
 
 	_renderLoading = () => (
 		<Spinner animation="border" variant="info" role="status" size="xl">
