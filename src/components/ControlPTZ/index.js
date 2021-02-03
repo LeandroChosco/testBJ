@@ -27,10 +27,8 @@ const ControlPTZ = (props) => {
 			params.ProfileToken = dataProfile.data ? dataProfile.data.token : '';
 			if (!params.ProfileToken || params.ProfileToken === '') 
 				setErrorMessage('No se encontraron los recursos necesarios para poder controlar la camara.');
-			else {
+			else
 				props._reloadCamPTZ();
-				setInterval(() => props._reloadCamPTZ(), 90000); //Refresh stream every 1.5min
-			}
 			setIp(params.ip);
 			setStyleMap(isInMap);
 			setStyleMatch(hasMatch);
