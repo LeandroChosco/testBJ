@@ -93,7 +93,8 @@ class LoopCamerasDisplay extends Component {
 								<Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={() => this.props.makeReport(markers[slideIndex].extraData)}><i className="fa fa-warning"/></Button>
 								{/* <Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/></Button> */}
 								<Button basic circular onClick={() => this.props.changeStatus(markers[slideIndex].extraData)}><i className="fa fa-exchange"/></Button>
-								{markers[slideIndex].extraData.dataCamValue && markers[slideIndex].extraData.dataCamValue.tipo_camara === 2 && markers[slideIndex].extraData.dataCamValue.dns != null ? <Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-sliders"/></Button> : null}
+								{markers[slideIndex].extraData.dataCamValue && markers[slideIndex].extraData.dataCamValue.tipo_camara === 2 && markers[slideIndex].extraData.dataCamValue.dns != null ? <Button basic circular onClick={() => this.Clicked(markers[slideIndex].extraData.dataCamValue.dns)}><i className="fa fa-sliders"/></Button> : null}
+								{markers[slideIndex].extraData.dataCamValue && markers[slideIndex].extraData.dataCamValue.tipo_camara === 2 && markers[slideIndex].extraData.dataCamValue.dns != null ? <Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows"/></Button> : null}
 							</div>
 							<div className="col-4">
 								<Button onClick={() => this._openCameraInfo(markers[slideIndex])} className='pull-right' primary><i className={ autoplay?'fa fa-square':'fa fa-play'}></i> { autoplay?'Parar loop':'Continuar loop'} <i className={ autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}/></Button>
@@ -203,6 +204,10 @@ class LoopCamerasDisplay extends Component {
 			</div>
 		);
 	}
+
+	Clicked = (dns) => {
+		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
+	};
 
 	_changeReloadCamPTZ = () => {
 		this.setState({ reloadCamPTZ: true });

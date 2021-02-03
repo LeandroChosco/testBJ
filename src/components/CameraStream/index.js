@@ -310,7 +310,8 @@ class CameraStream extends Component {
 								{this.props.showExternal ? <Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + data.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link"/></Button> : null}
 								<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={() => this.setState({ modalProblem: true })}><i className="fa fa-warning"/></Button>
 								<Button basic onClick={this._chageCamStatus}><i className="fa fa-exchange"/></Button>
-								{this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <Button basic onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-sliders"/></Button> : null}
+								{this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <Button basic onClick={() => this.Clicked(this.props.marker.extraData.dataCamValue.dns)}><i className="fa fa-sliders"/></Button> : null}
+								{this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <Button basic onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows"/></Button> : null}
 								{/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/></Button>*/}
 							</Card.Footer>
 						) : null}
@@ -492,6 +493,10 @@ class CameraStream extends Component {
 			</Card>
 		);		
 	}
+
+	Clicked = (dns) => {
+		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
+	};
 
 	_changeReloadCamPTZ = () => {
 		this.setState({ reloadCamPTZ: true });
