@@ -3,20 +3,20 @@ import constants from './constants/constants';
 
 export default {
 	getOnTermicPhotoData: (name) => {
-		return Axios.get(constants.sails_url + ':' + constants.sails_port + '/termicfiles-one/' + name);
+		return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/termicfiles-one/' + name);
 	},
 	getDesconocidos: () => {
-		return Axios.get(constants.sails_url + ':' + constants.sails_port + '/getUnknow/?limit=50');
+		return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/getUnknow/?limit=50');
 	},
 	getDetecciones: () => {
-		return Axios.get(constants.sails_url + ':' + constants.sails_port + +'/getMatches/');
+		return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/getMatches/');
 	},
 	createPersons: (data) => {
-		return Axios.post(constants.sails_url + ':' + constants.sails_port + '/create/persons/', data);
+		return Axios.post(constants.sails_url + ':' + constants.sailsPort + '/create/persons/', data);
 	},
 	getPersons: (type) => {
-		if (type) return Axios.get(constants.sails_url + ':' + constants.sails_port + '/getPersons/?type=' + type);
-		else return Axios.get(constants.sails_url + ':' + constants.sails_port + '/getPersons/');
+		if (type) return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/getPersons/?type=' + type);
+		else return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/getPersons/');
 	},
 	makeLogin: (data) => {
 		return Axios.post(constants.sails_url + ':' + constants.sailsPort + '/login', data);
