@@ -149,52 +149,60 @@ class Chat extends Component {
 
         </div>
         <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
-          {chats.map((chat, i) => (
-            <Card
-              className={i === index ? "activeChat" : ""}
-              style={{ width: "100%" }}
-              key={i}
-              onClick={() => this.changeChat(chat, i)}
-            >
-              <Card.Content>
-                <div style={{ position: "relative" }}>
-                  <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{moment(moment(chat.create_at)).format('DD-MM-YYYY, h:mm a')}</p></div>
-                  {
+          {chats.map((chat, i) => {
+            const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, h:mm a') : moment(chat.lastModification).format('DD-MM-YYYY, h:mm a');
 
-                    chat.active !== undefined && chat.active ?
-                      <p>
-                        {chat.messages
-                          ? chat.messages.length > 0
-                            ? (chat.messages[chat.messages.length - 1].from ===
-                              "user"
-                              ? chat.user_name.split(" ")[0]
-                              : "C5") +
-                            ": " +
-                            chat.messages[chat.messages.length - 1].msg //msg
-                            : "No hay mensajes que mostrar"
-                          : "No hay mensajes que mostrar"}
-                      </p> :
-                      <p></p>
-                  }
+            let badgeNumber = 0;
+            if (this.state.chatId) {
+              badgeNumber = this.state.chatId === chat.id ? 0 : chat.c5Unread
+            }
+            return (
+              <Card
+                className={i === index ? "activeChat" : ""}
+                style={{ width: "100%" }}
+                key={i}
+                onClick={() => this.changeChat(chat, i)}
+              >
+                <Card.Content>
+                  <div style={{ position: "relative" }}>
+                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{date}</p></div>
+                    {
 
-                  {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                    <div className="notificationNumber" style={{ marginTop: 15 }}>
-                      <p>{chat.c5Unread}</p>
+                      chat.active !== undefined && chat.active ?
+                        <p>
+                          {chat.messages
+                            ? chat.messages.length > 0
+                              ? (chat.messages[chat.messages.length - 1].from ===
+                                "user"
+                                ? chat.user_name.split(" ")[0]
+                                : "C5") +
+                              ": " +
+                              chat.messages[chat.messages.length - 1].msg //msg
+                              : "No hay mensajes que mostrar"
+                            : "No hay mensajes que mostrar"}
+                        </p> :
+                        <p></p>
+                    }
+
+                    {chat.c5Unread !== undefined && badgeNumber !== 0 ? (
+                      <div className="notificationNumber" style={{ marginTop: 15 }}>
+                        <p>{chat.c5Unread}</p>
+                      </div>
+                    ) : null}
+                    <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                      <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
                     </div>
-                  ) : null}
-                  <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                    <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
                   </div>
-                </div>
-              </Card.Content>
-            </Card>
-          ))}
+                </Card.Content>
+              </Card>
+            )
+          })}
         </div>
       </div>)
   }
 
   render() {
-    const { alarmIndex, tabIndex } = this.props.match.params
+    const { alarmIndex } = this.props.match.params
     const { chats, chatId, index, loading, camData, personalInformation } = this.state
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
@@ -202,12 +210,14 @@ class Chat extends Component {
     const chatSelected = chats && chats[index];
 
     let textareaDisabled = null;
+
     if (chatSelected) {
       if (typeof chatSelected.active === 'undefined') {
         textareaDisabled = false;
       } else {
         if (chatSelected.active === 0) {
           textareaDisabled = true;
+
         } else {
           textareaDisabled = false;
         }
@@ -226,12 +236,12 @@ class Chat extends Component {
             <Tab
               menu={{ pointing: true }}
               panes={this.panes}
-              defaultActiveIndex={tabIndex ? tabIndex : 0}
+              defaultActiveIndex={alarmIndex ? alarmIndex : 0}
               onTabChange={(t, i) => {
                 const { chats } = this.props
                 const { index } = this.state;
-                let newChats = chats.filter(e => e.alarmType === this.FILTERSOPTIONS[i.activeIndex])
-                if (index !== undefined) {
+                let newChats = chats.filter(e => e.alarmType === this.FILTERSOPTIONS[i.activeIndex]);
+                if (index) {
                   let selected = newChats.length !== 0 && newChats[index] ? newChats[index].alarmType : newChats[0].alarmType;
                   this.setState({ from: selected ? selected : "Error getting data" })
                 }
@@ -314,7 +324,7 @@ class Chat extends Component {
                           <div className="col-8">
                             <div className="row" style={{ padding: '5px' }}>
                               <div className="col-6" style={{ fontSize: 13, paddingRight: 0 }}>
-                      <b>Nombre: </b> {chats[index].user_name}
+                                <b>Nombre: </b> {chats[index].user_name}
                               </div>
                               <div
                                 className="col-3"
@@ -383,7 +393,7 @@ class Chat extends Component {
               <div className="messagesContainer" id="messagesContainer">
                 {!loading && chatId !== "" && chats[index]
                   ? chats[index].messages
-                    ? this.state.messages.map((value, ref) => (
+                    ? this.state.messages !== undefined && this.state.messages.map((value, ref) => (
                       <div
                         key={ref}
                         className={
@@ -510,6 +520,12 @@ class Chat extends Component {
       } else {
         this.props.history.push(`/alarm/${this.state.activeIndex}/${chat.id}`)
       }
+      refSOS
+        .doc(chat.id)
+        .update({ c5Unread: 0 })
+        .then(() => {
+          this.setState({ from: 'Chat C5' })
+        })
     }
     if (chat === undefined && i === -1) {
       if (this.props.history.location.pathname.includes("chat")) {
@@ -534,14 +550,12 @@ class Chat extends Component {
             alarmType: chat.alarmType,
             alarm: chat.alarm
           })
-
           refSOS
             .doc(chat.id)
             .update({ c5Unread: 0 })
             .then(() => {
               this.setState({ text: '', from: 'Chat C5' })
             })
-
         }
       )
     }
@@ -697,8 +711,7 @@ class Chat extends Component {
   };
 
   componentDidMount() {
-    const { alarmIndex } = this.props.match.params
-    console.log(this.props.location)
+    const { alarmIndex } = this.props.match.params;
     if (this.props.chats) {
       if (alarmIndex) {
         this.setState({ chats: this.props.chats, activeIndex: alarmIndex })
@@ -749,7 +762,6 @@ class Chat extends Component {
       marker: null,
       firebaseSub: null,
       tabIndex: 0,
-      messages: [],
       flagUpdate: 0
     });
   }
@@ -758,16 +770,28 @@ class Chat extends Component {
     const { alarmIndex, chatId } = this.props.match.params
     const { chats: chatsPrev } = prevProps
     const { chats } = this.props
-    if (this.state.flagUpdate === 0) {
+    // if (this.state.flagUpdate === 0) {
+    if (chatsPrev !== chats) {
       if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-        this.setState({ chats })
+        if (chatsPrev.length !== chats.length) {
+          this.setState({ chats })
+        }
         switch (parseInt(alarmIndex)) {
           case 0:
-            const chatsC5 = this.props.chats.filter(e => !e.alarmType)
-            this.setState({ chats: chatsC5, flagUpdate: 1 })
-            if (chatId) {
-              const indexC5 = chatsC5.findIndex(e => e.id === chatId)
-              this.changeChat(chatsC5[indexC5], indexC5, false)
+            if (this.props.history.location.pathname.includes("chat")) {
+              const chatsC5 = this.props.chats.filter(e => !e.alarmType)
+              this.setState({ chats: chatsC5, flagUpdate: 1 })
+              if (chatId) {
+                const indexC5 = chatsC5.findIndex(e => e.id === chatId)
+                this.changeChat(chatsC5[indexC5], indexC5, false)
+              }
+            } else {
+              const policeChats = this.props.chats.filter(e => e.alarmType === 'Policia')
+              this.setState({ chats: policeChats, flagUpdate: 1 })
+              if (chatId) {
+                const indexPolice = policeChats.findIndex(e => e.id === chatId)
+                this.changeChat(policeChats[indexPolice], indexPolice, false)
+              }
             }
             // if(this.state.beforeChange){
             // }
@@ -783,17 +807,7 @@ class Chat extends Component {
             // }
             break;
           case 2:
-            const policeChats = this.props.chats.filter(e => e.alarmType === 'Policia')
-            this.setState({ chats: policeChats, flagUpdate: 1 })
-            if (chatId) {
-              const indexPolice = policeChats.findIndex(e => e.id === chatId)
-              this.changeChat(policeChats[indexPolice], indexPolice, false)
-            }
-            // if(this.state.beforeChange){
-            // }
-            break;
-          case 3:
-            const medicChats = this.props.chats.filter(e => e.alarmType === 'Médico')
+            const medicChats = this.props.chats.filter(e => e.alarmType === 'Médico' || e.alarmType === 'medico')
             this.setState({ chats: medicChats, flagUpdate: 1 })
             if (chatId) {
               const indexMedic = medicChats.findIndex(e => e.id === chatId)
@@ -809,11 +823,13 @@ class Chat extends Component {
             } else {
               chats = this.props.chats.filter(e => e.alarmType === this.FILTERSOPTIONS[this.state.tabIndex])
             }
+            console.log("EN EL DEFAULT")
             this.setState({ chats, flagUpdate: 1 })
             break;
         }
       }
     }
+    // }
     var messageBody = document.querySelector("#messagesContainer");
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }

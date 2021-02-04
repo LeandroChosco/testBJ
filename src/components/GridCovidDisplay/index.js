@@ -1,19 +1,13 @@
 import React, { Component } from "react";
 import CameraStream from "../CameraStream";
 import { Row, Col } from "react-bootstrap";
-import { Button, Select, Tab } from "semantic-ui-react";
+import { Button, Select } from "semantic-ui-react";
 import responseJson from "../../assets/json/suspects.json";
 import "./style.css";
-import Match from "../Match";
-import MediaContainer from "../MediaContainer";
 import CovidItem from "../CovidItem";
 import ReactPaginate from "react-paginate";
-import conections from "../../conections";
-import moment from "moment-timezone";
-import { DateTime } from "luxon";
 import Spinner from "react-bootstrap/Spinner";
-import constants from "../../constants/constants";
-import CovidChart from "../CovidChart";
+
 const countryOptions = [
   {
     key: 5,
@@ -310,7 +304,7 @@ class GridCameraDisplay extends Component {
       let arrAux = [...this.props.alertaCovid];
 
       arrAux.forEach(element => {
-        if (element.cam_id == cam.id) {
+        if (element.cam_id === cam.id) {
           auxCovidFile.push(element);
         }
       });
@@ -386,7 +380,7 @@ class GridCameraDisplay extends Component {
     if (this.props.newCovidState === true) {
       this.props._newCovidItem();
       if (
-        this.state.selectedCamera != {} &&
+        this.state.selectedCamera !== {} &&
         this.props.newCovidItem.cam_id === this.state.selectedCamera.id
       ) {
         console.log(this.state.selectedCamera);
@@ -401,7 +395,7 @@ class GridCameraDisplay extends Component {
 
   componentDidMount() {
     // console.log("PROPS", this.props);
-    // if (this.props.newCovidState == true) {
+    // if (this.props.newCovidState === true) {
     // let tmpArr = [...this.state.alertaCovid]
     // tmpArr.unshift(data.data)
     // console.log("NUEVA NOTIFICACION");

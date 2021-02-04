@@ -65,12 +65,12 @@ class Chat extends Component {
       if (this.props.chats.length > 0) {
         let i
         this.props.chats.forEach((chat, index) => {
-          if (chat.user_creation == params.u) {
+          if (chat.user_creation === params.u) {
             i = index
           }
         })
 
-        if (this.state.index != i && this.state.fisrt.u !== params.u) {
+        if (this.state.index !== i && this.state.fisrt.u !== params.u) {
           this._changeUserCam(this.props.chats[i])
           this.setState({ index: i, fisrt: params, from: this.props.chats[i].from, chatId: this.props.chats[i].id })
 
@@ -78,7 +78,7 @@ class Chat extends Component {
       }
     }
     if (this.state.index !== undefined && this.props.chats[this.state.index] !== undefined) {
-      if (this.state.from != this.props.chats[this.state.index].from) {
+      if (this.state.from !== this.props.chats[this.state.index].from) {
         this.setState({ from: this.props.chats[this.state.index].from })
       }
     }
@@ -284,7 +284,7 @@ class Chat extends Component {
           const data = response.data.data
           console.log('data', data)
           this.setState({
-            camData: data.UserToCameras[0] == undefined ? undefined : {
+            camData: data.UserToCameras[0] === undefined ? undefined : {
               extraData: {
                 num_cam: data.UserToCameras[0] !== undefined ? data.UserToCameras[0].Camare.num_cam : null,
                 cameraID: data.UserToCameras[0] !== undefined ? data.UserToCameras[0].Camare.num_cam : null,
@@ -381,12 +381,12 @@ class Chat extends Component {
       if (this.props.chats.length > 0) {
         let i
         this.props.chats.forEach((chat, index) => {
-          if (chat.user_creation == params.u) {
+          if (chat.user_creation === params.u) {
             i = index
           }
         })
 
-        if (this.state.index != i && this.state.fisrt.u !== params.u) {
+        if (this.state.index !== i && this.state.fisrt.u !== params.u) {
           this._changeUserCam(this.props.chats[i])
           this.setState({ index: i, fisrt: params, from: this.props.chats[i].from, chatId: this.props.chats[i].id })
 
@@ -394,7 +394,7 @@ class Chat extends Component {
       }
     }
     if (this.state.index !== undefined && this.props.chats[this.state.index] !== undefined) {
-      if (this.state.from != this.props.chats[this.state.index].from) {
+      if (this.state.from !== this.props.chats[this.state.index].from) {
         this.setState({ from: this.props.chats[this.state.index].from })
       }
     }

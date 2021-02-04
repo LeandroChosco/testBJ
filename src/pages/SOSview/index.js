@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Card, Icon, Button, Input, Dropdown, Tab, IconGroup } from "semantic-ui-react";
+import { Card, Icon, Button, Input, Dropdown, Tab } from "semantic-ui-react";
 
 import "./style.css";
 // import firebaseC5 from "../../constants/configC5";
 // import CameraStream from "../../components/CameraStream";
-import constants from "../../constants/constants";
+// import constants from "../../constants/constants";
 import MapContainer from "../../components/MapContainer";
-import Axios from "axios";
+// import Axios from "axios";
 import moment from 'moment'
 import _ from 'lodash'
 // fireSOS
@@ -15,7 +15,7 @@ import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION } from "../../Api/sos"
 import firebaseSos from "../../constants/configSOS";
 import FadeLoader from "react-spinners/FadeLoader";
 
-import { support } from "jszip";
+// import { support } from "jszip";
 
 // const ref = firebaseC5.app("c5cuajimalpa").firestore().collection("messages");
 
@@ -138,53 +138,58 @@ class Chat extends Component {
 
       </div>
 
-      {chats.map((chat, i) => (
-        <Card
-          className={i === index ? "activeChat" : ""}
-          style={{ width: "100%" }}
-          key={i}
-          onClick={() => this.changeChat(chat, i)}
-        >
-          <Card.Content>
-            <div style={{ position: "relative" }}>
-              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{moment(moment(chat.create_at)).format('DD-MM-YYYY, h:mm a')}</p></div>
-              {
+      {chats.map((chat, i) => {
+        const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, h:mm a') : typeof chat.lastModification === 'string' ? moment(chat.lastModification).format('DD-MM-YYYY, h:mm a') : moment(chat.lastModification.toDate()).format('DD-MM-YYYY, h:mm a');
 
-                chat.active !== undefined && chat.active ?
-                  <p>
-                    {chat.messages
-                      ? chat.messages.length > 0
-                        ? (chat.messages[chat.messages.length - 1].from ===
-                          "user"
-                          ? chat.user_name.split(" ")[0]
-                          : "C5") +
-                        ": " +
-                        chat.messages[chat.messages.length - 1].msg //msg
-                        : "No hay mensajes que mostart"
-                      : "No hay mensajes que mostart"}
-                  </p> :
-                  <p></p>
-              }
+        return (
+          <Card
+            className={i === index ? "activeChat" : ""}
+            style={{ width: "100%" }}
+            key={i}
+            onClick={() => this.changeChat(chat, i)}
+          >
+            <Card.Content>
+              <div style={{ position: "relative" }}>
+                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{date}</p></div>
+                {
 
-              {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                <div className="notificationNumber" style={{ marginTop: 15 }}>
-                  <p>{chat.c5Unread}</p>
+                  chat.active !== undefined && chat.active ?
+                    <p>
+                      {chat.messages
+                        ? chat.messages.length > 0
+                          ? (chat.messages[chat.messages.length - 1].from ===
+                            "user"
+                            ? chat.user_name.split(" ")[0]
+                            : "C5") +
+                          ": " +
+                          chat.messages[chat.messages.length - 1].msg //msg
+                          : "No hay mensajes que mostart"
+                        : "No hay mensajes que mostart"}
+                    </p> :
+                    <p></p>
+                }
+
+                {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
+                  <div className="notificationNumber" style={{ marginTop: 15 }}>
+                    <p>{chat.c5Unread}</p>
+                  </div>
+                ) : null}
+                <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                  {/* <small style={{ ...styles.badge, backgroundColor: COLORS[chat.trackingType], }}> <strong>{chat.trackingType}</strong> </small> */}
+                  <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
                 </div>
-              ) : null}
-              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                {/* <small style={{ ...styles.badge, backgroundColor: COLORS[chat.trackingType], }}> <strong>{chat.trackingType}</strong> </small> */}
-                <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
               </div>
-            </div>
-          </Card.Content>
-        </Card>
-      ))}
+            </Card.Content>
+          </Card>
+        )
+      }
+      )}
     </div>)
   }
 
   render() {
     const { tabIndex } = this.props.match.params
-    const { chats, chatId, index, from, loading, tracking, messages } = this.state;
+    const { chats, chatId, index, from, loading, tracking } = this.state;
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
     }
@@ -221,8 +226,21 @@ class Chat extends Component {
                 const { chats } = this.props
                 const { index } = this.state
                 let newChats = chats.filter(c => c.trackingType === FILTERSOPTIONS[i.activeIndex]);
+                let selected = null;
                 if (index !== undefined) {
-                  let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
+                  if (newChats.length !== 0 && newChats[index]) {
+                    selected = newChats[index].trackingType;
+                    if (typeof newChats[index].panic_button_uuid === 'string' && selected === 'Seguridad') {
+                      selected += ' botón físico';
+                    } else {
+                      if (selected === 'Seguridad') {
+                        selected += ' botón virtual';
+                      }
+                    }
+                  } else {
+                    selected = newChats[0].trackingType;
+                  }
+                  // let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
                   this.setState({ from: selected ? selected : "Error getting data" })
                 }
                 this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null })
@@ -322,10 +340,9 @@ class Chat extends Component {
                           <div className="col-4" style={{ margin: "auto" }}>
                             <Button
                               color="red"
-                              style={{ width: "80%", alignItems: "center" }}
+                              style={{ width: "80%", alignItems: "center", margin: '5px' }}
                               className="ui button"
                               onClick={this.closeChat}
-                              style={{ margin: '5px' }}
                               disabled={textareaDisabled}
                             >
                               <Icon name="taxi" />
@@ -484,12 +501,12 @@ class Chat extends Component {
             ...newData,
             id: trackingInformation.data.id,
           };
-
+          const aux = newData.SOSType && newData.SOSType === 'Seguridad' ? newData.panic_button_uuid !== null ? `${newData.SOSType} botón físico` : `${newData.SOSType} botón virtual` : newData.SOSType;
           this.setState({
             // chatId: chat.id,
             // messages: chat.messages,
             index: i,
-            from: newData.SOSType, //
+            from: aux, //
             tracking: newData,
             loading: false,
             personalInformation: newData.userInformation, //

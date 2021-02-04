@@ -1,9 +1,30 @@
 import React, {Fragment, useState} from 'react';
 import { Modal } from 'react-bootstrap';
-import { Button, Checkbox, Form, Select } from 'semantic-ui-react';
+import { Button, Form, Select } from 'semantic-ui-react';
 import './style.css';
 import conections from '../../conections';
+import axios from 'axios';
+import { CircleSpinner	} from "react-spinners-kit";
+import  FormData  from 'form-data';
 
+const access = {
+  "ApiKey": "A33317CF-6751-4803-8F92-B0F8DE840B1A",
+  "ApiSecret": "FVXqUdLtWaED/qb/i6Te++zklBwYJ8wvfAjmDmlXuLkdgULJ6m1RSGBoEDAGclGqmmjm4T6pLC9OzkeP594GOQ==",
+  "CustomerId": "f99222d6-a2c6-420d-b87e-b605fadd836b"
+}
+
+const styles = {
+  spinner:{
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    justifyContent: 'center',
+    alignItems: 'center', 
+    display:"flex"
+  }
+}
 const ModalAddSospechoso = ({modal, hide}) => {
     const [img64, actualizarImg64] = useState(null);
     const [typePersona, actualizaTypePersona] = useState('sospechoso');
@@ -16,7 +37,9 @@ const ModalAddSospechoso = ({modal, hide}) => {
         motivo:'',
         puesto: '',
         comentario:''
-    })
+    });
+    const [imageInfo, setImageInfo]= useState();
+    const [isLoading, setIsloading]= useState(false);
 
     const sexOptions = [
         { key: 'masculino', value: 'masculino', text: 'Masculino' },
@@ -26,6 +49,7 @@ const ModalAddSospechoso = ({modal, hide}) => {
     const changeFile = e =>{
         let imgUpload = e.target.files[0]
         let reader = new FileReader();
+        setImageInfo(imgUpload);
         reader.readAsDataURL(imgUpload);
         reader.onloadend = () => {
             actualizarImg64(reader.result);
@@ -55,14 +79,59 @@ const ModalAddSospechoso = ({modal, hide}) => {
             data.puesto = dataForm.puesto
         }
 
+        setIsloading(true);
         conections.createPersons(data).then(res =>{
             if(res.status === 200){
                 let resCreate = res.data;
                 if(resCreate.success){
-                    hide('crear')
+                    vsblty(dataForm);
+                  }
                 }
-            }
-        })
+              }, (error)=>{
+                console.log("error create person -->>", error)
+              })
+    }
+
+    const vsblty = async (dataForm)=>{
+      const file = new FormData();
+        
+      try{
+      const option= {
+        headers:{
+         "Content-Type": "application/json; charset=utf-8",
+        },
+          ApiKey:  access.ApiKey,
+          ApiSecret: access.ApiSecret,
+          CustomerId: access.CustomerId
+      }
+
+      let proxyUrl =`https://no-cors-app.herokuapp.com/`
+      const ulrAuth =  `https://apivnext.vsblty.net/api/Auth/Authenticate`
+      const getToken = await axios.post(proxyUrl + ulrAuth,option);
+      let token = getToken.data.AccessToken;
+      file.append("photo", imageInfo );
+      let confidenceMatch = 56;
+      let modality="Edge";
+      let urlImg = `https://apivnext.vsblty.net/api/FacialRecognitionGroup/CreatePerson/${access.CustomerId}/${dataForm.nombre}/${confidenceMatch}/${modality}`
+         fetch(proxyUrl + urlImg, {
+           method:"POST",
+           headers:{Authorization: token},
+           body:file
+         }).then(response => response.json())
+         .then(response => {
+           if(response.Success){
+            hide('crear');
+            setIsloading(false);
+           }
+             console.log("response --->", response);
+         })
+         .catch(error => {
+             console.log("upload error --->", error);
+         });
+      }catch(error){
+        console.log("error auth -->>", error)
+      }
+  
     }
 
     const changeInfo = (event, data) =>{
@@ -90,7 +159,7 @@ const ModalAddSospechoso = ({modal, hide}) => {
             <Form onSubmit={addPersona}>
                 <Form.Group inline>
                     <Form.Radio
-                        label='Sopechoso'
+                        label='Persona de interés'
                         value='sospechoso'
                         checked={typePersona === 'sospechoso'}
                         onChange={changeType}
@@ -215,9 +284,16 @@ const ModalAddSospechoso = ({modal, hide}) => {
                             AGREGAR {typePersona.toUpperCase()}
                     </Button>
                 </div>
-            </Form>
-            </Modal.Body>
-        </Modal>
+                </Form>
+                </Modal.Body>
+                {
+                isLoading&&
+                  <div style={styles.spinner}>
+                <CircleSpinner	 size={30} color="#D7DBDD" loading={isLoading} />
+                </div>
+                 }
+                </Modal>
+
      );
 }
  

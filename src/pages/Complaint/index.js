@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Card, Icon, Button, Input, Dropdown, Tab } from 'semantic-ui-react';
 import ReactPlayer from 'react-player';
 import moment from 'moment';
-import _ from 'lodash';
 
 import './style.css';
 import firebase from '../../constants/configSOS';
@@ -126,6 +125,7 @@ class Complaint extends Component {
 														<img
 															style={styles.file}
 															src={complaints[actIdx].report_asset[0].path} // TODO cambiar si es mas de una imagen
+															alt="img"
 														/>
 													) : (
 														<ReactPlayer
