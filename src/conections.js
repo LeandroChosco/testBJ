@@ -9,7 +9,7 @@ export default {
 		return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/getUnknow/?limit=50');
 	},
 	getDetecciones: () => {
-		return Axios.get(constants.sails_url + ':' + constants.sailsPort + +'/getMatches/');
+		return Axios.get(constants.sails_url + ':' + constants.sailsPort +'/getMatches/');
 	},
 	createPersons: (data) => {
 		return Axios.post(constants.sails_url + ':' + constants.sailsPort + '/create/persons/', data);
