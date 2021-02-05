@@ -21,7 +21,7 @@ const ControlPTZ = (props) => {
 	useEffect(() => {
 		async function fetchData() {
 			let { camera, isInMap, hasMatch } = props;
-			let params = { ip: camera.dataCamValue.dns };
+			let params = { ip: camera.dataCamValue.camera_ip };
 			await conections.newOnvifDevice(params);
 			let dataProfile = await conections.getProfilePTZ(params);
 			params.ProfileToken = dataProfile.data ? dataProfile.data.token : '';
