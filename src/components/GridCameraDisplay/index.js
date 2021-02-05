@@ -9,6 +9,7 @@ import ReactPaginate from 'react-paginate';
 import moment from 'moment-timezone';
 
 import Match from '../Match';
+import ControlPTZ from '../ControlPTZ';
 import conections from '../../conections';
 import CameraStream from '../CameraStream';
 import AdvancedSearch from '../AdvancedSearch';
@@ -65,11 +66,13 @@ class GridCameraDisplay extends Component {
 		historyLoading: false,
 		searchLoading: false,
 		isNewSearch: false,
-		photosLoading: false
+		photosLoading: false,
+		showPTZ: false,
+		reloadCamPTZ: false
 	};
 
 	render() {
-		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search } = this.state;
+		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, reloadCamPTZ } = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, matches } = this.props;
 		return (
 			<div className="gridCameraContainer" align="center">
@@ -82,6 +85,7 @@ class GridCameraDisplay extends Component {
 									ref={'camrefgrid' + value.extraData.id}
 									key={value.extraData.id}
 									marker={value}
+									reloadCamPTZ={selectedCamera === value.extraData ? reloadCamPTZ : false}
 								/>
 							</Col>
 						) : null
@@ -126,24 +130,36 @@ class GridCameraDisplay extends Component {
 					{/* <div className={!showMatches ? "hide-matches" : "show-matches"}> */}
 					<div className="row stiky-top">
 						<div className="col-4">
-							{moduleActions && moduleActions.btnsnap && (<Button basic circular disabled={ photos.length>=5||loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera) > -1 } loading={loadingSnap} onClick={() => this._snapShot(selectedCamera)}><i className="fa fa-camera" /></Button>)}
-							{/* <Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={this._playPause}><i className={isplay?'fa fa-pause':'fa fa-play'}></i></Button> */}
-							{moduleActions && moduleActions.btnrecord && (<Button basic circular disabled={videos.length>=5||loadingSnap||loadingRcord||loadingFiles||restarting} loading={loadingRcord} onClick={() => this._recordignToggle(selectedCamera)}><i className={recordingCams.indexOf(selectedCamera) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button>)}
-							<Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={() =>	window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + selectedCamera.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link"></i></Button>
-							<Button	basic	disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1||videosLoading||photosLoading||(photos.length<=0&&videos.length<=0)} circular	onClick={() => this.props.downloadFiles(selectedCamera, { videos, photos, servidorMultimedia })}	loading={loadingFiles}><i className="fa fa-download" /></Button>
-							<Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={() => this.props.makeReport(selectedCamera)}><i className="fa fa-warning"></i></Button>
-							{/* <Button basic circular disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button> */}
-							<Button basic circular onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange"></i></Button>
-							{selectedCamera.dataCamValue === undefined ? null : selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.dns != null ? <i><Button basic circular onClick={() => this.Clicked(selectedCamera.dataCamValue.dns)}><i className="fa fa-sliders"></i></Button></i> : null}
+							{moduleActions && moduleActions.btnsnap && (<Button basic circular disabled={ photos.length>=5||loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera) > -1 } loading={loadingSnap} onClick={() => this._snapShot(selectedCamera)}><i className="fa fa-camera"/></Button>)}
+							{/* <Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={this._playPause}><i className={isplay?'fa fa-pause':'fa fa-play'}/></Button> */}
+							{moduleActions && moduleActions.btnrecord && (<Button basic circular disabled={videos.length>=5||loadingSnap||loadingRcord||loadingFiles||restarting} loading={loadingRcord} onClick={() => this._recordignToggle(selectedCamera)}><i className={recordingCams.indexOf(selectedCamera) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }}/></Button>)}
+							<Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={() =>	window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + selectedCamera.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link"/></Button>
+							<Button	basic	disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1||videosLoading||photosLoading||(photos.length<=0&&videos.length<=0)} circular	onClick={() => this.props.downloadFiles(selectedCamera, { videos, photos, servidorMultimedia })}	loading={loadingFiles}><i className="fa fa-download"/></Button>
+							<Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={() => this.props.makeReport(selectedCamera)}><i className="fa fa-warning"/></Button>
+							{/* <Button basic circular disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/></Button> */}
+							<Button basic circular onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange"/></Button>
+							{selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.dns != null ? <Button basic circular onClick={() => this.Clicked(selectedCamera.dataCamValue.dns)}><i className="fa fa-sliders"/></Button> : null}
+							{selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.camera_ip != null ? <Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows"/></Button> : null}
 						</div>
 						<div className='col-5'>
 								<b>Camara</b> {selectedCamera.name}
 						</div>
 						<div className='col-3'>
-								<Button onClick={() => this._openCameraInfo(false)} className='pull-right' primary> { autoplay?'':'Ocultar controles'} <i className={ autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}></i></Button>
+								<Button onClick={() => this._openCameraInfo(false)} className='pull-right' primary> { autoplay?'':'Ocultar controles'} <i className={ autoplay?'fa fa-chevron-up':'fa fa-chevron-down'}/></Button>
 						</div>
 					</div>
 					<div className={!autoplay ? 'row showfilesinfocameragrid' : 'row hidefiles'}>
+						{showPTZ && 
+							<div className="col ptzgrid">
+								Controles
+								<ControlPTZ
+									camera={selectedCamera}
+									isInMap={false}
+									hasMatch={true}
+									_reloadCamPTZ={this._changeReloadCamPTZ}
+								/>
+							</div>
+						}
 						<div className="col snapshotsgrid">
 							Fotos
 							<div>
@@ -242,6 +258,15 @@ class GridCameraDisplay extends Component {
 		);
 	}
 
+	Clicked = (dns) => {
+		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
+	};
+
+	_changeReloadCamPTZ = () => {
+		this.setState({ reloadCamPTZ: true });
+		setTimeout(() => this.setState({ reloadCamPTZ: false }), 1000);
+	};
+
 	_renderLoading = () => (
 		<Spinner animation="border" variant="info" role="status" size="xl">
 			<span className="sr-only">Loading...</span>
@@ -301,10 +326,6 @@ class GridCameraDisplay extends Component {
 				<i className="fa fa-image fa-5x" />
 			</div>
 		) : null;
-	};
-
-	Clicked = (dns) => {
-		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
 	};
 
 	_snapShot = async (camera) => {
@@ -469,7 +490,7 @@ class GridCameraDisplay extends Component {
 			this.setState({
 				activeIndex: 0, videos: [], video_history: [], photos: [], video_search: [], video_ssid: [],
 				videosLoading: loading, historyLoading: loading, photosLoading: loading, searchLoading: false, isNewSearch: false,
-				scroll: [], hasMore: true, scrollInitialDate: moment().startOf('date')
+				scroll: [], hasMore: true, scrollInitialDate: moment().startOf('date'), showPTZ: false
 			});
 		}
 		

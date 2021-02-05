@@ -13,6 +13,7 @@ import JSZip from 'jszip';
 
 import HlsPlayer from '../HlsPlayer';
 import RtmpPlayer from '../RtmpPlayer';
+import ControlPTZ from '../ControlPTZ';
 import conections from '../../conections';
 import AdvancedSearch from '../AdvancedSearch';
 import MediaContainer from '../MediaContainer';
@@ -84,14 +85,16 @@ class CameraStream extends Component {
 		mails: [],
 		restarting: false,
 		servidorMultimedia: '',
-		showModalMoreInformation: false
+		showModalMoreInformation: false,
+		showPTZ: false,
+		reloadCamPTZ: false
 	};
 
 	lastDecode = null;
 	tryReconect = false;
 
 	render() {
-		let { activeIndex, display, num_cam, cameraID, cameraName, showData, photos, data, qnapServer, qnapChannel, servidorMultimedia, photosLoading, videosLoading, videos, historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, loadingSnap, isLoading, isRecording, restarting, loadingFiles, modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription } = this.state;
+		let { activeIndex, display, num_cam, cameraID, cameraName, showData, photos, data, qnapServer, qnapChannel, servidorMultimedia, photosLoading, videosLoading, videos, historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, loadingSnap, isLoading, isRecording, restarting, loadingFiles, modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription, showPTZ, reloadCamPTZ } = this.state;
     return (
 			<Card style={{ display: display }}>
 				{this.props.horizontal ? (
@@ -109,6 +112,7 @@ class CameraStream extends Component {
 											/>
 										) : this.props.marker.extraData.isHls ? (
 											<HlsPlayer
+												reload={this.props.showExternal || this.props.showFilesBelow ? reloadCamPTZ : this.props.reloadCamPTZ}
 												height={this.props.height}
 												width={this.props.width}
 												src={this.props.marker.extraData.url}
@@ -153,6 +157,17 @@ class CameraStream extends Component {
 						)}
 						{showData ? (
 							<div className="row dataHolder p10">
+								{showPTZ && 
+									<div className="col ptz">
+										Controles
+										<ControlPTZ
+											camera={data}
+											isInMap={true}
+											hasMatch={false}
+											_reloadCamPTZ={this._changeReloadCamPTZ}
+										/>
+									</div>
+								}
 								<div className="col snapshots">
 									Fotos
 									<div>
@@ -239,6 +254,7 @@ class CameraStream extends Component {
 									/>
 								) : this.props.marker.extraData.isHls ? (
 									<HlsPlayer
+										reload={this.props.showExternal || this.props.showFilesBelow ? reloadCamPTZ : this.props.reloadCamPTZ}
 										height={this.props.height}
 										width={this.props.width}
 										src={this.props.marker.extraData.url}
@@ -286,22 +302,34 @@ class CameraStream extends Component {
 						)}
 						{this.props.showButtons ? (
 							<Card.Footer>
-								{this.props.moduleActions ? this.props.moduleActions.btnsnap ? <Button basic disabled={photos.length>=5||loadingSnap||isLoading||isRecording||restarting||loadingFiles} loading={loadingSnap} onClick={() => this._snapShot(this.props.marker.extraData)}><i className='fa fa-camera'></i></Button> : null : null}
-								{/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._togglePlayPause}><i className={isPlay?'fa fa-pause':'fa fa-play'}></i></Button>*/}
-								{this.props.moduleActions ? this.props.moduleActions.btnrecord ? <Button basic disabled={videos.length>=5||loadingSnap||isLoading||restarting||loadingFiles} loading={isLoading} onClick={() => this.recordignToggle()}><i className={isRecording ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }}></i></Button> : null : null}
-								<Button basic disabled={loadingFiles||loadingSnap||isLoading||restarting||videosLoading||photosLoading||(photos.length<=0&&videos.length<=0)} loading={loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'></i></Button>
-								{this.props.hideFileButton ? null : <Button className="pull-right" variant="outline-secondary" onClick={() => {this.setState({ showData: !showData })}}><i className={showData ? 'fa fa-video-camera' : 'fa fa-list'}></i></Button>}
-								{this.props.showExternal ? <Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + data.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link"></i></Button> : null}
-								<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={() => this.setState({ modalProblem: true })}><i className="fa fa-warning"></i></Button>
-								<Button basic onClick={this._chageCamStatus}><i className="fa fa-exchange"></i></Button>
-								{this.props.marker.extraData.dataCamValue === undefined ? null : this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <i><Button onClick={() => this.Clicked(this.props.marker.extraData.dataCamValue.dns)}><i className="fa fa-sliders"></i></Button></i> : null}
-								{/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}></i></Button>*/}
+								{this.props.moduleActions ? this.props.moduleActions.btnsnap ? <Button basic disabled={photos.length>=5||loadingSnap||isLoading||isRecording||restarting||loadingFiles} loading={loadingSnap} onClick={() => this._snapShot(this.props.marker.extraData)}><i className='fa fa-camera'/></Button> : null : null}
+								{/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._togglePlayPause}><i className={isPlay?'fa fa-pause':'fa fa-play'}/></Button>*/}
+								{this.props.moduleActions ? this.props.moduleActions.btnrecord ? <Button basic disabled={videos.length>=5||loadingSnap||isLoading||restarting||loadingFiles} loading={isLoading} onClick={() => this.recordignToggle()}><i className={isRecording ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }}/></Button> : null : null}
+								<Button basic disabled={loadingFiles||loadingSnap||isLoading||restarting||videosLoading||photosLoading||(photos.length<=0&&videos.length<=0)} loading={loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download'/></Button>
+								{this.props.hideFileButton ? null : <Button className="pull-right" variant="outline-secondary" onClick={() => {this.setState({ showData: !showData })}}><i className={showData ? 'fa fa-video-camera' : 'fa fa-list'}/></Button>}
+								{this.props.showExternal ? <Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + data.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link"/></Button> : null}
+								<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={() => this.setState({ modalProblem: true })}><i className="fa fa-warning"/></Button>
+								<Button basic onClick={this._chageCamStatus}><i className="fa fa-exchange"/></Button>
+								{this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <Button basic onClick={() => this.Clicked(this.props.marker.extraData.dataCamValue.dns)}><i className="fa fa-sliders"/></Button> : null}
+								{this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.camera_ip != null ? <Button basic onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows"/></Button> : null}
+								{/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/></Button>*/}
 							</Card.Footer>
 						) : null}
 					</Card.Body>
 				)}
 				{this.props.showFilesBelow ? (
 					<div className="row dataHolder p10">
+						{showPTZ && 
+							<div className="col ptz">
+								Controles
+								<ControlPTZ
+									camera={data}
+									isInMap={false}
+									hasMatch={false}
+									_reloadCamPTZ={this._changeReloadCamPTZ}
+								/>
+							</div>
+						}
 						<div className="col snapshots">
 							Fotos
 							<div>
@@ -466,6 +494,15 @@ class CameraStream extends Component {
 		);		
 	}
 
+	Clicked = (dns) => {
+		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
+	};
+
+	_changeReloadCamPTZ = () => {
+		this.setState({ reloadCamPTZ: true });
+		setTimeout(() => this.setState({ reloadCamPTZ: false }), 1000);
+	};
+
 	_renderLoading = () => (
 		<Spinner animation="border" variant="info" role="status" size="xl">
 			<span className="sr-only">Loading...</span>
@@ -536,10 +573,6 @@ class CameraStream extends Component {
 				'/cuadrantes/' +
 				id_cuadrante
 		);
-	};
-
-	Clicked = (dns) => {
-		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
 	};
 
 	onChange = (chips) => {
