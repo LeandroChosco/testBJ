@@ -17,18 +17,31 @@ const ControlPTZ = (props) => {
 	const [ styleMap, setStyleMap ] = useState(false);
 	const [ styleMatch, setStyleMatch ] = useState(false);
 	const [ errorMessage, setErrorMessage ] = useState('');
+	const [ disabledButtons, setDisabledButtons ] = useState({ x: false, y: false, z: false });
 
 	useEffect(() => {
 		async function fetchData() {
 			let { camera, isInMap, hasMatch } = props;
 			let params = { ip: camera.dataCamValue.camera_ip };
-			await conections.newOnvifDevice(params);
+			let dataDevice = await conections.newOnvifDevice(params);
 			let dataProfile = await conections.getProfilePTZ(params);
 			params.ProfileToken = dataProfile.data ? dataProfile.data.token : '';
-			if (!params.ProfileToken || params.ProfileToken === '') 
+			if (!params.ProfileToken || params.ProfileToken === '')
 				setErrorMessage('No se encontraron los recursos necesarios para poder controlar la camara.');
-			else
+			else {
+				if (dataDevice.data) {
+					let rangePtz = dataDevice.data && dataDevice.data.current_profile &&
+						dataDevice.data.current_profile.ptz && dataDevice.data.current_profile.ptz.range;
+					if (rangePtz) {
+						let disabled = { x: false, y: false, z: false };
+						disabled.x = (!rangePtz.x.min && !rangePtz.x.max) || rangePtz.x.min === rangePtz.x.max;
+						disabled.y = (!rangePtz.y.min && !rangePtz.y.max) || rangePtz.y.min === rangePtz.y.max;
+						disabled.z = (!rangePtz.z.min && !rangePtz.z.max) || rangePtz.z.min === rangePtz.z.max;
+						setDisabledButtons(disabled);
+					}
+				}
 				props._reloadCamPTZ();
+			}
 			setIp(params.ip);
 			setStyleMap(isInMap);
 			setStyleMatch(hasMatch);
@@ -54,17 +67,19 @@ const ControlPTZ = (props) => {
 		let name = event.target.name;
 		if (!name) {
 			let data = event.target.className.split(' ');
-			name = data[1];
+			name = data[1] === 'icon' ? data[0] : data[1];
 		}
 		return name;
-	};
+	};	
 	const getDirection = (direction) => {
 		let m = { x: 0, y: 0, z: 0 };
 		switch (direction) {
+			case 'up': m.y = timeout; break;
+			case 'down': m.y = -timeout; break;
+			case 'right': m.x = timeout; break;
+			case 'left': m.x = -timeout; break;
 			case 'plus': m.z = timeout; break;
 			case 'minus': m.z = -timeout; break;
-			case 'left': m.x = -timeout; break;
-			case 'right': m.x = timeout; break;
 			default: break;
 		}
 		return m;
@@ -98,20 +113,43 @@ const ControlPTZ = (props) => {
 			) : (
 				<div className={styleMap ? 'map-container' : styleMatch ? 'match-container' : 'main-container'}>
 					<div className="outer">
-						<div className="inner" />
+						<div className="inner">
+							<div className="inner-left" style={{ ...styles.icon, ...styles.circleminus }}>
+								<Button
+									{...bind}
+									circular
+									name="minus"
+									icon="search minus"
+									style={{ ...styles.icon, ...styles.minus }}
+									disabled={disabledButtons.z}
+								/>
+							</div>
+							<div className="inner-right" style={{ ...styles.icon, ...styles.circleplus }}>
+								<Button
+									{...bind}
+									circular
+									name="plus"
+									icon="search plus"
+									style={{ ...styles.icon, ...styles.plus }}
+									disabled={disabledButtons.z}
+								/>
+							</div>
+						</div>
 						<Button
 							{...bind}
 							circular
-							name="plus"
-							icon="search plus"
-							style={{ ...styles.icon, ...styles.plus }}
+							name="up"
+							icon="arrow up"
+							style={{ ...styles.icon, ...styles.up }}
+							disabled={disabledButtons.y}
 						/>
 						<Button
 							{...bind}
 							circular
-							name="minus"
-							icon="search minus"
-							style={{ ...styles.icon, ...styles.minus }}
+							name="down"
+							icon="arrow down"
+							style={{ ...styles.icon, ...styles.down }}
+							disabled={disabledButtons.y}
 						/>
 						<Button
 							{...bind}
@@ -119,6 +157,7 @@ const ControlPTZ = (props) => {
 							name="left"
 							icon="arrow left"
 							style={{ ...styles.icon, ...styles.left }}
+							disabled={disabledButtons.x}
 						/>
 						<Button
 							{...bind}
@@ -126,6 +165,7 @@ const ControlPTZ = (props) => {
 							name="right"
 							icon="arrow right"
 							style={{ ...styles.icon, ...styles.right }}
+							disabled={disabledButtons.x}
 						/>
 					</div>
 					<div>
@@ -161,9 +201,13 @@ export default ControlPTZ;
 
 const styles = {
 	icon: { fontSize: '18px', position: 'absolute' },
-	plus: { top: '4%', left: '41%' },
-	minus: { top: '77%', left: '41%' },
-	left: { top: '41%', left: '2%' },
-	right: { top: '41%', left: '77%' },
+	circleplus: { top: '24%', left: '50.5%' },
+	circleminus: { top: '24%', left: '23.5%' },
+	plus: { left: '6%' },
+	minus: { left: '10.5%' },
+	up: { top: '2%', left: '40%' },
+	down: { top: '78%', left: '40%' },
+	left: { top: '40.5%', left: '1.5%' },
+	right: { top: '40.5%', left: '78.5%' },
 	button: { fontSize: '18px', margin: '1px' }
 };
