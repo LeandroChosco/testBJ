@@ -19,23 +19,31 @@
 .outer {
 	width: 230px;
 	height: 230px;
-	border-radius: 50%;
 	position: relative;
+	border-radius: 50%;
 	background-color: #e0e1e2;
-	margin: 10px;
-	cursor: pointer;
 }
 
-.inner {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 50%;
-	height: 50%;
-	border-radius: 50%;
-	background-color: #fafafa;
-	transform: translate(-50%, -50%);
-	transition: all 0.5s ease-out;
+.inner-left,
+.inner-right {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 60px;
+	padding: 0.1px;
+	height: calc(60px * 2);
+	border: 1px solid #fafafa;
+	background-color: #e0e1e2;
+}
+
+.inner-left {
+	border-bottom-left-radius: calc(60px * 2);
+	border-top-left-radius: calc(60px * 2);
+}
+
+.inner-right {
+	border-bottom-right-radius: calc(60px * 2);
+	border-top-right-radius: calc(60px * 2);
 }
 
 .map-buttons {
