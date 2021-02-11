@@ -4,49 +4,28 @@ import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
 import './style.css'
 import conections from '../../conections';
-import {
-  PieChart, 
-  Pie, 
-  Legend, 
-  Tooltip, 
-  Cell, 
-  ResponsiveContainer,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Bar,
-  LabelList,  
-  ComposedChart,
-  // RadarChart,
-  // PolarGrid,
-  // PolarAngleAxis,
-  // PolarRadiusAxis,
-  // Radar,
-  Text
-} from 'recharts';
-import ColorScheme from 'color-scheme'
-import { ClassicSpinner } from "react-spinners-kit";
+import { Text } from 'recharts';
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
 import CardBody from '../../components/Card/CardBody';
-import neutralEmoji from '../../assets/images/emojis/neutral.png'
-import sadEmoji from '../../assets/images/emojis/triste.png'
-import happyEmoji from '../../assets/images/emojis/feliz.png'
-import angryEmoji from '../../assets/images/emojis/enojado.png'
-import surpriseEmoji from '../../assets/images/emojis/sorprendido.png'
 import { Tab } from 'semantic-ui-react'
 // import socketIOClient from 'socket.io-client';
 // import sailsIOClient from 'sails.io.js';
 // import constants from '../../constants/constants';
-import * as moment from 'moment'
-
-const scm = new ColorScheme();
-const COLORS =  scm.from_hue(235)
-  .scheme('analogic')
-  .distance(0.3)
-  .add_complement(false)
-  .variation('pastel')
-  .web_safe(false).colors();
+import * as moment from 'moment';
+import CameraPerPerson from '../../components/Dashboard/cameraPerPerson';
+import PeoplePerDay from '../../components/Dashboard/persons';
+import Loading from '../../components/Loading/index';
+import IntalledLastMonth from '../../components/Dashboard/camerasInstalledLastMonth';
+import AgeDetected from '../../components/Dashboard/ageDetected';
+import PersonsMood from '../../components/Dashboard/personsMood';
+import GenderDetected from '../../components/Dashboard/genderDetected';
+import DataCams from '../../components/Dashboard/dataCams';
+import CamsInstalledByMonth from '../../components/Dashboard/camsInstalledByMonth';
+import DataTickets from '../../components/Dashboard/dataTickets';
+import DataTicketsPerUser from '../../components/Dashboard/dataTicketsPerUser';
+import AttendedVSclosed from '../../components/Dashboard/attendedVScloded';
+import LastCreadedCams from '../../components/Dashboard/lastCreatedCams';
 
 
   const MOODS = {
@@ -62,356 +41,194 @@ const COLORS =  scm.from_hue(235)
     "Contemptuous":"Desprecio",
   }
 
+const style = {
+  height: {
+    height: '100%'
+  },
+  adjustX: {
+    height: '100%',
+    overflowX: "auto"
+  }
+}
+
 class Dashboard extends Component {
 
-    state = {    
-      loadingCams: true,
-      dataCams: [],
-      loadingTickets: true,
-      dataTickets:[],
-      dataTotalTickets:[],
-      dataTicketsPerUser:{
-        closed:[],
-        attended:[],
-        created:[]
+  state = {    
+    loadingCams: true,
+    dataCams: [],
+    loadingTickets: true,
+    dataTickets:[],
+    dataTotalTickets:[],
+    dataTicketsPerUser:{
+      closed:[],
+      attended:[],
+      created:[]
+    },
+    loadTotalRecognition:true,
+    loadRecognitionAges:true,
+    loadingRecognitionPerDay:true,
+    loadingRecognitionMood:true,
+    loadingCamsGrid:true,
+    personsMood:[
+      {
+        "mood": "Feliz",
+        "total": 25,          
+        "fullMark": 100
       },
-      loadTotalRecognition:true,
-      loadRecognitionAges:true,
-      loadingRecognitionPerDay:true,
-      loadingRecognitionMood:true,
-      loadingCamsGrid:true,
-      personsMood:[
-        {
-          "mood": "Feliz",
-          "total": 25,          
-          "fullMark": 100
-        },
-        {
-          "mood": "Enojado",
-          "total": 55,          
-          "fullMark": 100
-        },
-        {
-          "mood": "Triste",
-          "total": 65,          
-          "fullMark": 100
-        },
-        {
-          "mood": "Neutral",
-          "total": 52,          
-          "fullMark": 100
-        },
-        {
-          "mood": "Procupado",
-          "total": 60,          
-          "fullMark": 100
-        },
-        {
-          "mood": "Ansioso",
-          "total": 90,          
-          "fullMark": 100
-        }
-      ],
-      genderDetected:[],
-      agesDetected:[],
-      personsperDay:[],
-      attendedVSclosed: [],
-      panes: [
-        { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
-        { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
-        { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboard()}</Tab.Pane> },
-      ]
-    }
+      {
+        "mood": "Enojado",
+        "total": 55,          
+        "fullMark": 100
+      },
+      {
+        "mood": "Triste",
+        "total": 65,          
+        "fullMark": 100
+      },
+      {
+        "mood": "Neutral",
+        "total": 52,          
+        "fullMark": 100
+      },
+      {
+        "mood": "Procupado",
+        "total": 60,          
+        "fullMark": 100
+      },
+      {
+        "mood": "Ansioso",
+        "total": 90,          
+        "fullMark": 100
+      }
+    ],
+    genderDetected:[],
+    agesDetected:[],
+    personsperDay:[],
+    attendedVSclosed: [],
+    panes: [
+      { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
+      { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
+      { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboard()}</Tab.Pane> },
+    ]
+  }
 
   renderCamsDashboard() {
     // const c = shuffle(COLORS);
     return (
-        <div className='container-flex'>
-          <div className='row'>
+      <div className='container-flex'>
+        <div className='row'>
           <div className='col chart overflow table-responsive' align='center'>
-          {
-              this.state.loadingCamsGrid?
-              <ClassicSpinner 
-                loading={true}
-                size={40}
-                color="#686769"
-              />:
-            
-            this.state.lastCreatedCams?
-              <div>
-                <table className="table table-striped stiky">
-                  <thead>
-                    <tr>
-                      <th>Estatus</th>
-                      <th>Numero de camara</th>
-                      <th>Dirección</th>
-                      <th>Fecha Instalación</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {this.state.lastCreatedCams.map?this.state.lastCreatedCams.map((value,index)=>
-                    <tr key={index} >
-                      <td><div className={'state'+value.flag_streaming}>&nbsp;</div></td>
-                      <td >{value.num_cam}</td>
-                      <td >{value.street} {value.number}, {value.town}, {value.township}, {value.state}</td>
-                      <td >{new Date(value.date_creation).toLocaleString()}</td>
-                    </tr>
-                  ):<tr><td colSpan='4' align='center'>Sin datos que mostrar</td></tr>}
-                  </tbody>
-                </table>                                
-              </div>
-              :null}
-
-            </div>
-            <div className='col chart' align='center'>
-              <h3>Estatus de camaras</h3>
             {
-              this.state.loadingCams?
-                <ClassicSpinner 
-                  loading={true}
-                  size={40}
-                  color="#686769"
-                />:
-                <ResponsiveContainer>
-                  <PieChart>
-                    <Legend />
-                    <Pie  data={this.state.dataCams} dataKey="value" nameKey="name" label>
-                    {
-                      this.state.dataCams.map((entry, index) => <Cell key={`cell-${index}`} fill={'#'+COLORS[index%COLORS.length]} />)
-                    }
-                    </Pie>                
-                    <Tooltip/>
-                  </PieChart>
-                </ResponsiveContainer>
-            }
-            </div>            
+              this.state.loadingCamsGrid ?
+                <Loading />
+                :
+                this.state.lastCreatedCams ?
+                  <LastCreadedCams lastCreatedCams={this.state.lastCreatedCams} />
+                  : null}
+
           </div>
-          <div className="row">
-            <div className='col-6 chart'align='center'>
-              <h3>Camara  instaladas por mes</h3>
-              {
-                this.state.loadingCams?
-                  <ClassicSpinner 
-                    loading={true}
-                    size={40}
-                    color="#686769"
-                  />:<ResponsiveContainer>
-                  <ComposedChart                   
-                    data={this.state.installed_by_moth}                    
-                    margin={{
-                      top: 5, right: 30, left: 20, bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="fecha" />
-                    <YAxis allowDecimals={false}/>
-                    <Tooltip />      
-                    <Legend />              
-                    <Bar dataKey="total" fill={'#'+COLORS[2]}/>                  
-                  </ComposedChart>
-                </ResponsiveContainer>  
-              }
-              </div>
-              <div className='col-6 chart'align='center'>
-              <h3>Camara instaladas Ultimo mes</h3>
-              {
-                this.state.loadingCams?
-                  <ClassicSpinner 
-                    loading={true}
-                    size={40}
-                    color="#686769"
-                  />:<ResponsiveContainer>
-                  <ComposedChart                   
-                    data={this.state.installed_last_moth}                    
-                    margin={{
-                      top: 5, right: 30, left: 20, bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="fecha" />
-                    <YAxis allowDecimals={false}/>
-                    <Tooltip />      
-                    <Legend />              
-                    <Bar dataKey="total" fill={'#'+COLORS[0]}/>                  
-                  </ComposedChart>
-                </ResponsiveContainer>  
-              }
-              </div>
+          <div className='col chart' align='center'>
+            <h3>Estatus de camaras</h3>
+            {
+              this.state.loadingCams ?
+                <Loading />
+                :
+                <DataCams dataCams={this.state.dataCams} />
+            }
           </div>
         </div>
+        <div className="row">
+          <div className='col-6 chart' align='center'>
+            <h3>Camara  instaladas por mes</h3>
+            {
+              this.state.loadingCams ?
+                <Loading />
+                :
+                <CamsInstalledByMonth installed_by_moth={this.state.installed_by_moth} />
+            }
+          </div>
+          <div className='col-6 chart' align='center'>
+            <h3>Camara instaladas Ultimo mes</h3>
+            {
+              this.state.loadingCams ?
+                <Loading />
+                :
+                <IntalledLastMonth installed_last_moth={this.state.installed_last_moth} />
+            }
+          </div>
+        </div>
+      </div>
     );
   }
 
 
   renderTicketsDashboard() {
     return (
-        <div className='container-flex'>
-          <div className='row'>            
-            <div className='col chart' align='center'>
+      <div className='container-flex'>
+        <div className='row'>
+          <div className='col chart' align='center'>
             <h3>Estatus de tickets</h3>
             {
-              this.state.loadingTickets?
-              <ClassicSpinner 
-                loading={true}
-                size={40}
-                color="#686769"
-              />:
-                <ResponsiveContainer>
-                  <PieChart>
-                    <Legend />
-                    <Pie  data={this.state.dataTickets} outerRadius={95} dataKey="value" nameKey="name" >
-                    {
-                      this.state.dataTickets.map((entry, index) => <Cell key={`cell-${index}`} fill={'#'+COLORS[index % COLORS.length]} />)
-                    }
-                    </Pie> 
-                    <Pie data={this.state.dataTotalTickets} dataKey="value" innerRadius={100} outerRadius={110} fill={"#" + COLORS[COLORS.length-1]} label />               
-                    <Tooltip/>
-                  </PieChart>
-                </ResponsiveContainer>
+              this.state.loadingTickets ?
+                <Loading />
+                :
+                <DataTickets dataTickets={this.state.dataTickets} dataTotalTickets={this.state.dataTotalTickets} />
             }
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col-6 chart2x' align='center'>
-              <h3>Tickets creados por usuario</h3>
-            {
-              this.state.loadingTickets?
-              <ClassicSpinner 
-                loading={true}
-                size={40}
-                color="#686769"
-              />:
-                <ResponsiveContainer>
-                  <ComposedChart                   
-                    data={this.state.dataTicketsPerUser.created}
-                    layout='vertical'
-                    margin={{
-                      top: 5, right: 30, left: 20, bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis  type="number"/>
-                    <YAxis 
-                      dataKey="name" 
-                      type="category"
-                      hide={true}                      
-                    />
-                    <Tooltip />                    
-                    <Bar barSize={30} dataKey="total" fill="#8884d8" >
-                      <LabelList 
-                        dataKey="name"  
-                        position="right" 
-                        fill='#000' 
-                        
-                        content={customLabel}                         
-                      />
-                    {
-                      this.state.dataTicketsPerUser.created.map((entry, index) => <Cell key={`cell-${index}`} fill={'#'+COLORS[index%COLORS.length]} />)
-                    }
-                    </Bar>                    
-                  </ComposedChart>
-                </ResponsiveContainer>
-            }
-            </div>           
-            <div className='col-6 chart2x' align='center'>
-              <h3>Tickets atendidos y cerrados por usuario</h3>
-            {
-              this.state.loadingTickets?
-                <ClassicSpinner 
-                  loading={true}
-                  size={40}
-                  color="#686769"
-                />:
-                <ResponsiveContainer>
-                  <ComposedChart                   
-                    data={this.state.attendedVSclosed}                    
-                    margin={{
-                      top: 5, right: 30, left: 20, bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis/>
-                    <Tooltip />      
-                    <Legend />              
-                    <Bar barSize={30} dataKey="Cerrados" fill={'#'+COLORS[0%COLORS.length]} />
-                    <Bar  barSize={30} dataKey="Proceso" fill={'#'+COLORS[1%COLORS.length]} />                   
-                  </ComposedChart>
-                </ResponsiveContainer>
-            }
-            </div>       
           </div>
         </div>
+        <div className='row'>
+          <div className='col-6 chart2x' align='center'>
+            <h3>Tickets creados por usuario</h3>
+            {
+              this.state.loadingTickets ?
+                <Loading />
+                :
+                <DataTicketsPerUser dataTicketsPerUser={this.state.dataTicketsPerUser} customLabel={customLabel} />
+            }
+          </div>
+          <div className='col-6 chart2x' align='center'>
+            <h3>Tickets atendidos y cerrados por usuario</h3>
+            {
+              this.state.loadingTickets ?
+                <Loading />
+                :
+                <AttendedVSclosed attendedVSclosed={this.state.attendedVSclosed} />
+            }
+          </div>
+        </div>
+      </div>
     );
   }
 
   renderRecognitionDashboard() {
+    const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons } = this.state;
+
     return (
       <div className='container-flex'>
         <div className='row'>
           <div className='col-6 chart' align='center'>
-            {
-              this.state.loadTotalRecognition ?
-                <ClassicSpinner
-                  loading={true}
-                  size={40}
-                  color="#686769"
-                /> :
-                <Card  style={{ width: '45rem', height: '20rem' }}>
-                  <CardHeader color="blue">
-                <h4 className="pt-2">Personas detectadas</h4>
+            <Card style={style.height}>
+              <CardHeader>
+                <h3 className="pt-2">Personas detectadas</h3>
               </CardHeader>
-                <ResponsiveContainer>
-                  <PieChart>
-                    <Legend />
-                    <Pie innerRadius={60} outerRadius={80} paddingAngle={5} fill="#8884d8" data={this.state.genderDetected} dataKey="value" nameKey="name" >
-                      {
-                        this.state.dataTickets.map((entry, index) => <Cell key={`cell-${index}`} fill={'#' + COLORS[index % COLORS.length]} />)
-                      }
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer></Card>}
-                  
+              {
+                this.state.loadTotalRecognition ?
+                  <Loading />
+                  :
+                  <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
+              }
+            </Card>
+
           </div>
           <div className='col-6 chart' align='center'>
-            <Card  style={{ width: '45rem', height: '20rem' }}>
-            <CardHeader color="blue">
-                <h4 className="pt-2">Estado de Animo</h4><br></br><br></br>
+            <Card style={style.adjustX}>
+              <CardHeader>
+                <h3 className="pt-2">Estado de Animo</h3><br></br><br></br>
               </CardHeader>
               <CardBody>
-                 
-            <ul className="cardlist">
-              <li>
-                <img alt="Neutral" src={neutralEmoji} width='20%'></img>
-                <h4>Neutral</h4>
-            {this.state.personsMood[0].total}
-              </li>
-              <li>
-              <img alt="Sorprendido" src={surpriseEmoji} width='20%'></img>
-            <h4>Sorprendido</h4>
-              {this.state.personsMood[1].total}
-              </li>
-              <li>
-              <img alt="Triste" src={sadEmoji} width='20%'></img>
-            <h4>Triste</h4> 
-              {this.state.personsMood[2].total}
-              </li>
-              <li>
-              <img alt="Feliz" src={happyEmoji} width='20%'></img>
-            <h4>Feliz</h4>
-              {this.state.personsMood[3].total}
-              </li>
-              <li>
-              <img alt="Enojado" src={angryEmoji} width='20%'></img>
-            <h4>Enojado</h4>
-              {this.state.personsMood[4].total}
-              </li>
-            </ul>
+                <PersonsMood personsMood={this.state.personsMood} />
               </CardBody>
-
-</Card>
-
+            </Card>
             {/* {
               this.state.loadingRecognitionMood ?
                 <ClassicSpinner
@@ -429,66 +246,60 @@ class Dashboard extends Component {
                     <Tooltip />
                   </RadarChart>
                 </ResponsiveContainer>} */}
+
           </div>
         </div>
         <div className='row'>
           <div className='col-6 chart' align='center'>
-            <h3>Rango de edades</h3>           
-            {
-              this.state.loadRecognitionAges?
-                <ClassicSpinner 
-                  loading={true}
-                  size={40}
-                  color="#686769"
-                />:<ResponsiveContainer>
-              <ComposedChart                   
-                data={this.state.agesDetected}                    
-                margin={{
-                  top: 5, right: 30, left: 20, bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis/>
-                <Tooltip />      
-                <Legend />              
-                <Bar dataKey="Mujeres" fill={'#'+COLORS[0]} />
-                <Bar dataKey="total" fill={'#'+COLORS[1]}  />                
-                <Bar dataKey="Hombres" fill={'#'+COLORS[2]} />
-              </ComposedChart>
-              </ResponsiveContainer>}          
-          </div> 
+            <Card style={style.height}>
+              <CardHeader>
+                <h3>Rango de edades</h3>
+              </CardHeader>
+              {
+                this.state.loadRecognitionAges ?
+                  <Loading />
+                  :
+                  <AgeDetected agesDetected={this.state.agesDetected} />
+              }
+            </Card>
+          </div>
           <div className='col-6 chart' align='center'>
-            <h3>Personas por dia</h3>           
-            {
-              this.state.loadingRecognitionPerDay?
-                <ClassicSpinner 
-                  loading={true}
-                  size={40}
-                  color="#686769"
-                />:<ResponsiveContainer>
-              <ComposedChart                   
-                data={this.state.personsperDay}                    
-                margin={{
-                  top: 5, right: 30, left: 20, bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis/>
-                <Tooltip />      
-                <Legend />                              
-                <Bar dataKey="total" fill={'#'+COLORS[1]}  />                
-              </ComposedChart>
-              </ResponsiveContainer>  }        
-          </div>            
+            <Card style={style.height}>
+              <CardHeader>
+                <h3>Personas detectadas en cada cámara</h3>
+              </CardHeader>
+              {
+                loadingPeoplePerCamera ?
+                  <Loading />
+                  :
+                  <CameraPerPerson data={personsPerCamera} />
+              }
+            </Card>
+          </div>
         </div>
+        {
+          <div className="row">
+            <div className='col-12 chart' align='center' >
+              <Card style={style.height}>
+                <CardHeader>
+                  <h3>Personas por dia</h3>
+                </CardHeader>
+                {
+                  loadingPersons ?
+                    <Loading />
+                    :
+                    <PeoplePerDay data={persons} />
+                }
+              </Card>
+            </div>
+          </div>
+        }
       </div>
     )
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
         <div className={this.props.showMatches ? "hide-matches" : "show-matches"}>
 
@@ -499,46 +310,50 @@ class Dashboard extends Component {
     )
   }
 
-  componentWillUnmount(){    
+  componentWillUnmount() {
     if (this.state.io) {
       if (this.state.io.socket.isConnected()) {
-        this.state.io.socket.disconnect(); 
-      }      
+        this.state.io.socket.disconnect();
+      }
     }
   }
 
   loadData = () => {
     this.setState({
-      loadingCams:true,
-      loadingTickets:true,
-      loadTotalRecognition:true,
-      loadRecognitionAges:true,
-      loadingRecognitionPerDay:true,
-      loadingRecognitionMood:true,
-      loadingCamsGrid:true
+      loadingCams: true,
+      loadingTickets: true,
+      loadTotalRecognition: true,
+      loadRecognitionAges: true,
+      loadingRecognitionPerDay: true,
+      loadingRecognitionMood: true,
+      loadingCamsGrid: true,
+      loadingPeoplePerCamera: true,
+      loadingPersons: true
     })
     conections.dashboardCams().then(response => {
-      const data = response.data; 
-      console.log('datilla: ', data)     
+      const data = response.data;
+      console.log('datilla: ', data)
       this.setState({
-        loadingCams:false,
-        dataCams:[
-          {name:'Activas',value:data.active},
-          {name:'Inactivas',value:data.deactive},
-          {name:'Desconectadas',value:data.disconnected}
+        loadingCams: false,
+        dataCams: [
+          { name: 'Activas', value: data.active },
+          { name: 'Inactivas', value: data.deactive },
+          { name: 'Desconectadas', value: data.disconnected }
         ],
-        installed_by_moth:data.installed_by_moth.map(v=>{v.fecha =moment(v.fecha).format('MMM-YYYY'); return v}),
-        installed_last_moth:data.installed_last_moth.map(v=>{v.fecha =moment(v.fecha).format('DD-MM-YYYY'); return v})
+        installed_by_moth: data.installed_by_moth.map(v => { v.fecha = moment(v.fecha).format('MMM-YYYY'); return v }),
+        installed_last_moth: data.installed_last_moth.map(v => { v.fecha = moment(v.fecha).format('DD-MM-YYYY'); return v })
       })
     })
     conections.dashboardTickets().then(this.processTicketsData)
     conections.dashboardTotalRecognition().then(this.processDetected)
     conections.dashboardRecognitionAges().then(this.processAges)
-    conections.dashboardRecognitionPerDay('?enddate='+moment().format('YYYY-MM-DD')+'&startdate='+moment().add(-15,'days').format('YYYY-MM-DD')).then(this.processPerDay)
+    conections.dashboardRecognitionPerDay('?enddate=' + moment().format('YYYY-MM-DD') + '&startdate=' + moment().add(-15, 'days').format('YYYY-MM-DD')).then(this.processPerDay)
     conections.dashboardRecognitionMood().then(this.processMood)
-    conections.loadCams().then(this.lastCreatedCams).catch(err=>{
-      console.log('Cargando camaras',err)
+    conections.loadCams().then(this.lastCreatedCams).catch(err => {
+      console.log('Cargando camaras', err)
     })
+    conections.dashboardCameraPerPerson().then(this.getPersonsPerCamera);
+    conections.dashboardPersons().then(this.getPersons);
     /*let io;
     if (socketIOClient.sails) {
       io = socketIOClient;
@@ -554,102 +369,131 @@ class Dashboard extends Component {
   }
 
   processMood = (response) => {
-    let data =  []
-    let indexes =  []
-    response.data.data.map(v=>{
+    let data = []
+    let indexes = []
+    response.data.data.map(v => {
       v.mood = MOODS[v.mood] ? MOODS[v.mood] : v.mood
-      if (indexes.indexOf(v.mood)>-1) {
+      if (indexes.indexOf(v.mood) > -1) {
         data[indexes.indexOf(v.mood)].percentage = (v.percentage + data[indexes.indexOf(v.mood)].percentage) / 2
       } else {
         data.push(v)
         indexes.push(v.mood)
       }
       return v;
-    })    
-    console.log('mood data',data)
-    this.setState({personsMood:data,loadingRecognitionMood:false})
+    })
+    // console.log('mood data',data)
+    this.setState({ personsMood: data, loadingRecognitionMood: false })
   }
-  
+
   processPerDay = (response) => {
-    const data = response.data.data    
-    this.setState({personsperDay:data,loadingRecognitionPerDay:false})
+    const data = response.data.data
+    this.setState({ personsperDay: data, loadingRecognitionPerDay: false })
   }
 
   processDetected = (response) => {
     const data = response.data.data
     this.setState({
-      genderDetected:[
+      genderDetected: [
         {
-          name:'Mujer',
-          value:data.women_detected
-        },{
-          name:'Hombre',
-          value:data.men_detected
+          name: 'Mujer',
+          value: data.women_detected
+        }, {
+          name: 'Hombre',
+          value: data.men_detected
         }
       ],
-      loadTotalRecognition:false
-    })    
-  } 
+      loadTotalRecognition: false
+    })
+  }
 
   processAges = (response) => {
     const data = response.data.data
     this.setState({
-      agesDetected:[
+      agesDetected: [
         {
-          name:'-18',
-          total:data.total_under_18,
-          Hombres:data.men_under_18,
-          Mujeres:data.women_under_18
-        },{
-          name:'18-30',
-          total:data.total_between_18_30,
-          Hombres:data.men_between_18_30,
-          Mujeres:data.women_between_18_30
-        },{
-          name:'31-50',
-          total:data.total_between_31_50,
-          Hombres:data.men_between_31_50,
-          Mujeres:data.women_between_31_50
-        },{
-          name:'50+',
-          total:data.total_over_50,
-          Hombres:data.men_over_50,
-          Mujeres:data.women_over_50
+          name: '-18',
+          total: data.total_under_18,
+          Hombres: data.men_under_18,
+          Mujeres: data.women_under_18
+        }, {
+          name: '18-30',
+          total: data.total_between_18_30,
+          Hombres: data.men_between_18_30,
+          Mujeres: data.women_between_18_30
+        }, {
+          name: '31-50',
+          total: data.total_between_31_50,
+          Hombres: data.men_between_31_50,
+          Mujeres: data.women_between_31_50
+        }, {
+          name: '50+',
+          total: data.total_over_50,
+          Hombres: data.men_over_50,
+          Mujeres: data.women_over_50
         }
       ],
-      loadRecognitionAges:false
+      loadRecognitionAges: false
     })
   }
 
-  componentDidMount() {    
-    this.loadData()           
+  componentDidMount() {
+    this.loadData()
   }
 
-  lastCreatedCams = (response) => {    
-    const data = response.data    
-    this.setState({lastCreatedCams:data,loadingCamsGrid:false})
+  lastCreatedCams = (response) => {
+    const data = response.data
+    this.setState({ lastCreatedCams: data, loadingCamsGrid: false })
   }
 
+  getPersonsPerCamera = (response) => {
+    const data = response.data;
+    let newData = [];
+    if (data && data.results) {
+      let { results } = data;
+      results.map((item) => {
+        newData.push({
+          x: item.camera,
+          y: item.total_face
+        });
+      });
+      this.setState({ personsPerCamera: newData, loadingPeoplePerCamera: false });
+    };
+
+  }
+
+  getPersons = (response) => {
+    const data = response.data;
+    let newData = [];
+    if (data && data.data) {
+      data.data.map((item) => {
+        newData.push({
+          fecha: item.date,
+          total: item.total
+        });
+      });
+      this.setState({ persons: newData, loadingPersons: false });
+    };
+  }
 
   processTicketsData = (response) => {
-    const dataTickets = response.data;     
+    const dataTickets = response.data;
     const ticketStatus = [{
-      name:'Abiertos', value:dataTickets.open
-    },{
-      name:'En proceso', value:dataTickets.process
-    },{
-      name:'Cerrados', value:dataTickets.closed
+      name: 'Abiertos', value: dataTickets.open
+    }, {
+      name: 'En proceso', value: dataTickets.process
+    }, {
+      name: 'Cerrados', value: dataTickets.closed
     }]
     const totaltickets = [{
-      name:'Total', value:dataTickets.total
+      name: 'Total', value: dataTickets.total
     }]
-    
 
-    let attendedVSclosed = dataTickets.total_closed_tickets_by_user.map(v=>{
+
+    let attendedVSclosed = dataTickets.total_closed_tickets_by_user.map(v => {
       let found = false
       v.Cerrados = parseInt(v.total.toString());
-      for (let index = 0; index <  dataTickets.total_attended_tickets_by_user.length; index++) {
-        const element =  dataTickets.total_attended_tickets_by_user[index];
+      for (let index = 0; index < dataTickets.total_attended_tickets_by_user.length; index++) {
+        const element = dataTickets.total_attended_tickets_by_user[index];
         if (element.name === v.name) {
           found = true;
           v.Proceso = element.total;
@@ -662,48 +506,48 @@ class Dashboard extends Component {
       delete v.total
       return v;
     })
-    dataTickets.total_attended_tickets_by_user.map(v=>{
-      let found = false        
-      for (let index = 0; index <  attendedVSclosed.length; index++) {
-        const element =  attendedVSclosed[index];
+    dataTickets.total_attended_tickets_by_user.map(v => {
+      let found = false
+      for (let index = 0; index < attendedVSclosed.length; index++) {
+        const element = attendedVSclosed[index];
         if (element.name === v.name) {
-          found = true;      
-          break;      
+          found = true;
+          break;
         }
       }
       if (!found) {
-        attendedVSclosed.push({name:v.name,Cerrados:0,Proceso:v.total})
+        attendedVSclosed.push({ name: v.name, Cerrados: 0, Proceso: v.total })
       }
       return v;
-    })    
+    })
     this.setState({
-      loadingTickets:false, 
-      dataTickets:ticketStatus,
-      dataTotalTickets:totaltickets,
-      dataTicketsPerUser:{
-        created:dataTickets.total_created_tickets_by_user,
-        attended:dataTickets.total_attended_tickets_by_user,
-        closed:dataTickets.total_closed_tickets_by_user
+      loadingTickets: false,
+      dataTickets: ticketStatus,
+      dataTotalTickets: totaltickets,
+      dataTicketsPerUser: {
+        created: dataTickets.total_created_tickets_by_user,
+        attended: dataTickets.total_attended_tickets_by_user,
+        closed: dataTickets.total_closed_tickets_by_user
       },
-      attendedVSclosed:attendedVSclosed
+      attendedVSclosed: attendedVSclosed
     });
   }
 
 }
 
-function customLabel(p){      
-    return(      
-        <Text 
-          fontSizeAdjust='true'           
-          verticalAnchor='middle'
-          width={300}
-          height={p.height}                              
-          x={p.x+5}
-          y={p.y+10}
-        >
-            {p.value}
-        </Text>      
-    )
+function customLabel(p) {
+  return (
+    <Text
+      fontSizeAdjust='true'
+      verticalAnchor='middle'
+      width={300}
+      height={p.height}
+      x={p.x + 5}
+      y={p.y + 10}
+    >
+      {p.value}
+    </Text>
+  )
 }
 
 // function shuffle(array) {
