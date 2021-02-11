@@ -120,6 +120,12 @@ export default {
   dashboardRecognitionMood: () => {
     return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/dashboard/mood');
   },
+  dashboardCameraPerPerson : () =>{
+    return Axios.get(`${constants.sails_url}:${constants.sailsPort}/dashboard/numberofpeoplepercamera`);
+  },
+  dashboardPersons:()=>{
+    return Axios.get(`${constants.sails_url}:${constants.sailsPort}/dashboard/person`)
+  },
   loadCams: () => {
     return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/cams?sort=num_cam asc&active=1&limit=1000&populate=false');
   },
