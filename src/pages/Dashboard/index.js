@@ -28,18 +28,18 @@ import AttendedVSclosed from '../../components/Dashboard/attendedVScloded';
 import LastCreadedCams from '../../components/Dashboard/lastCreatedCams';
 
 
-  const MOODS = {
-    "Happy":"Feliz",
-    "Happiness":"Feliz",
-    "Sad":"Triste",
-    "Sadness":"Triste",
-    "Angry":"Enojado",
-    "Anger":"Enojado",
-    "Surprised":"Sorprendido",
-    "Surprise":"Sorprendido",
-    "Disgusted":"Disgustado",
-    "Contemptuous":"Desprecio",
-  }
+const MOODS = {
+  "Happy": "Feliz",
+  "Happiness": "Feliz",
+  "Sad": "Triste",
+  "Sadness": "Triste",
+  "Angry": "Enojado",
+  "Anger": "Enojado",
+  "Surprised": "Sorprendido",
+  "Surprise": "Sorprendido",
+  "Disgusted": "Disgustado",
+  "Contemptuous": "Desprecio",
+}
 
 const style = {
   height: {
@@ -53,57 +53,62 @@ const style = {
 
 class Dashboard extends Component {
 
-  state = {    
+  state = {
     loadingCams: true,
     dataCams: [],
     loadingTickets: true,
-    dataTickets:[],
-    dataTotalTickets:[],
-    dataTicketsPerUser:{
-      closed:[],
-      attended:[],
-      created:[]
+    dataTickets: [],
+    dataTotalTickets: [],
+    dataTicketsPerUser: {
+      closed: [],
+      attended: [],
+      created: []
     },
-    loadTotalRecognition:true,
-    loadRecognitionAges:true,
-    loadingRecognitionPerDay:true,
-    loadingRecognitionMood:true,
-    loadingCamsGrid:true,
-    personsMood:[
+    loadTotalRecognition: true,
+    loadRecognitionAges: true,
+    loadingRecognitionPerDay: true,
+    loadingRecognitionMood: true,
+    loadingCamsGrid: true,
+    personsMood: [
       {
-        "mood": "Feliz",
-        "total": 25,          
+        "mood": "Neutral",
+        "total": 0,
         "fullMark": 100
       },
       {
-        "mood": "Enojado",
-        "total": 55,          
+        "mood": "Sorprendido",
+        "total": 0,
         "fullMark": 100
       },
       {
         "mood": "Triste",
-        "total": 65,          
+        "total": 0,
         "fullMark": 100
       },
       {
-        "mood": "Neutral",
-        "total": 52,          
+        "mood": "Feliz",
+        "total": 0,
         "fullMark": 100
       },
       {
-        "mood": "Procupado",
-        "total": 60,          
-        "fullMark": 100
-      },
-      {
-        "mood": "Ansioso",
-        "total": 90,          
+        "mood": "Enojado",
+        "total": 0,
         "fullMark": 100
       }
+      // {
+      //   "mood": "Procupado",
+      //   "total": 0,
+      //   "fullMark": 100
+      // },
+      // {
+      //   "mood": "Ansioso",
+      //   "total": 0,
+      //   "fullMark": 100
+      // }
     ],
-    genderDetected:[],
-    agesDetected:[],
-    personsperDay:[],
+    genderDetected: [],
+    agesDetected: [],
+    personsperDay: [],
     attendedVSclosed: [],
     panes: [
       { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
@@ -371,18 +376,29 @@ class Dashboard extends Component {
   processMood = (response) => {
     let data = []
     let indexes = []
-    response.data.data.map(v => {
-      v.mood = MOODS[v.mood] ? MOODS[v.mood] : v.mood
-      if (indexes.indexOf(v.mood) > -1) {
-        data[indexes.indexOf(v.mood)].percentage = (v.percentage + data[indexes.indexOf(v.mood)].percentage) / 2
-      } else {
-        data.push(v)
-        indexes.push(v.mood)
+    response.data.data.forEach(v => {
+      if (v && v.mood !== "") {
+        v.mood = MOODS[v.mood] ? MOODS[v.mood] : v.mood
+        if (indexes.indexOf(v.mood) > -1) {
+          data[indexes.indexOf(v.mood)].percentage = (v.percentage + data[indexes.indexOf(v.mood)].percentage) / 2
+        } else {
+          data.push(v)
+          indexes.push(v.mood)
+        }
       }
-      return v;
+    });
+
+    const personsMood_copy = [...this.state.personsMood];
+    const aux = personsMood_copy.map(item => {
+      const found = data.find(d => d.mood === item.mood);
+      if (found) {
+        return found;
+      } else {
+        item['percentage'] = null;
+        return item;
+      }
     })
-    // console.log('mood data',data)
-    this.setState({ personsMood: data, loadingRecognitionMood: false })
+    this.setState({ personsMood: aux, loadingRecognitionMood: false })
   }
 
   processPerDay = (response) => {
