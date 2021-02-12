@@ -770,7 +770,7 @@ class CameraStream extends Component {
 		this.setState({ loadingSnap: false });
 	};
 
-  _searchFileVideos = async (dates, startHour, endHour, stateNames, setNewState = true) => {
+  _searchFileVideos = async (dates, startHour, endHour, stateNames, setNewState = true, searchFileHours = false) => {
 		let { qnapServer, qnapChannel } = this.state;
 		let isNewSearch = stateNames.list === 'video_search';
 		if (setNewState) this.setState({ [stateNames.loading]: true });
@@ -787,17 +787,33 @@ class CameraStream extends Component {
 		if (auth && auth.authSid) {
 			let mainPath = QvrFunctions._getPath(qnapChannel);
 			for (const dt of dates) {
-				let getParamsHours = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: lthDate === dates.length ? parseInt(endHour, 10) : '24', start: lthDate === 1 ? parseInt(startHour, 10) : '0', type: '0' };
+				let getFistHourParams = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: 1, start: 0, type: '0' };
+				await this.props.getQvrFileStationFileList(getFistHourParams);
+				let { QvrFileStationFileList: firstHour } = this.props.QvrFileStationFileList;
+				let initialHour = firstHour.datas && firstHour.datas[0] ? parseInt(firstHour.datas[0].filename, 10) : 0;
+				if (searchFileHours) return initialHour;
+
+				let newEndHour = lthDate === dates.length ? parseInt(endHour, 10) : 24;
+				let newStartHour = lthDate === 1 ? parseInt(startHour, 10) : 0;
+				if (initialHour !== 0) {
+					if (newEndHour < initialHour) newEndHour = 0;
+					else {
+						newEndHour = newEndHour - initialHour;
+						newStartHour = newStartHour > initialHour ? newStartHour - initialHour : 0;
+					}
+				}
+
+				let getParamsHours = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: newEndHour, start: newStartHour, type: '0' };
 				await this.props.getQvrFileStationFileList(getParamsHours);
 				let { QvrFileStationFileList: listHours, success: sHours } = this.props.QvrFileStationFileList;
 
 				if (sHours && listHours && listHours.total > 0) {
 					for (const hr of listHours.datas) {
-						if (parseInt(hr.filename, 10) < parseInt(endHour, 10)) {
+						if (parseInt(hr.filename, 10) < (lthDate === dates.length ? parseInt(endHour, 10) : 24)) {
 							let getParamsVideo = { url, sid: auth.authSid, path: `${mainPath}/${dt}/${hr.filename}`, limit: '2', start: '0', type: '2' };
 							await this.props.getQvrFileStationFileList(getParamsVideo);
 							let { QvrFileStationFileList: listVideos, success: sVideos } = this.props.QvrFileStationFileList;
-							if (sVideos && listVideos && listVideos.total > 0)  for (const v of listVideos.datas) allVideosList.push(`${dt}/${hr.filename}/${v.filename}`);
+							if (sVideos && listVideos && listVideos.total > 0) for (const v of listVideos.datas) allVideosList.push(`${dt}/${hr.filename}/${v.filename}`);
 						}
 					}
 				}
@@ -835,11 +851,11 @@ class CameraStream extends Component {
 		let dateInFormat = scrollInitialDate.format('YYYY-MM-DD');
 		if (isFirst) {
 			this.setState({ historyLoading: true });
-			foundHistory = await this._searchFileVideos([ dateInFormat ], currentHour - SHOW_HISTORY, currentHour, stateNames, false);
+			let fileHour = await this._searchFileVideos([ dateInFormat ], 0, 24, stateNames, false, true);
+			if (fileHour !== 0) this.setState({ hasMore: false });
+			else if (document.getElementById(`scrollVideo#${data.id}`)) document.getElementById(`scrollVideo#${data.id}`).addEventListener('scroll', this._infiniteScroll, false);
+			foundHistory = await this._searchFileVideos([ dateInFormat ], fileHour !== 0 ? 0 : currentHour - SHOW_HISTORY, currentHour, stateNames, false);
 			this.setState({ historyLoading: false });
-			if (document.getElementById(`scrollVideo#${data.id}`)) {
-				document.getElementById(`scrollVideo#${data.id}`).addEventListener('scroll', this._infiniteScroll, false);
-			}
 		} else if (video_history.length > 0) {
 			let idx = video_history.length - 1;
 			let hourEnd = parseInt(video_history[idx].videos[0].real_hour.slice(0, 2), 10);
