@@ -271,7 +271,7 @@ class Dashboard extends Component {
           <div className='col-6 chart' align='center'>
             <Card style={style.height}>
               <CardHeader>
-                <h3>Personas detectadas en cada cámara</h3>
+                <h3>Conteo de personas por cámara últimos 15 días</h3>
               </CardHeader>
               {
                 loadingPeoplePerCamera ?
@@ -287,7 +287,7 @@ class Dashboard extends Component {
             <div className='col-12 chart' align='center' >
               <Card style={style.height}>
                 <CardHeader>
-                  <h3>Personas por dia</h3>
+                  <h3>Conteo de personas por día últimos 90 días </h3>
                 </CardHeader>
                 {
                   loadingPersons ?
