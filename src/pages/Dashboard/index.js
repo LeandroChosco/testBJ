@@ -47,7 +47,11 @@ const style = {
   },
   adjustX: {
     height: '100%',
-    overflowX: "auto"
+    overflowX: "auto",
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }
 
@@ -206,34 +210,40 @@ class Dashboard extends Component {
   }
 
   renderRecognitionDashboard() {
-    const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons } = this.state;
+    const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons, loadingRecognitionMood } = this.state;
 
     return (
       <div className='container-flex'>
         <div className='row'>
           <div className='col-6 chart' align='center'>
-            <Card style={style.height}>
-              <CardHeader>
-                <h3 className="pt-2">Personas detectadas</h3>
-              </CardHeader>
-              {
-                this.state.loadTotalRecognition ?
-                  <Loading />
-                  :
-                  <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
-              }
-            </Card>
+
+          <Card style={style.height}>
+          <CardHeader>
+          <h3 className="pt-2">Personas detectadas</h3>
+        </CardHeader>          {
+            this.state.loadTotalRecognition ?
+              <Loading />
+              :
+              <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
+          }
+        </Card>
+
 
           </div>
           <div className='col-6 chart' align='center'>
-            <Card style={style.adjustX}>
-              <CardHeader>
-                <h3 className="pt-2">Estado de Animo</h3><br></br><br></br>
-              </CardHeader>
-              <CardBody>
-                <PersonsMood personsMood={this.state.personsMood} />
-              </CardBody>
-            </Card>
+          <Card style={style.adjustX}>
+          <CardHeader>
+            <h3 className="pt-2">Estado de Animo</h3><br></br><br></br>
+          </CardHeader>
+          <CardBody>
+         {
+          this.state.loadingRecognitionMood ?
+          <Loading />
+          :
+           <PersonsMood personsMood={this.state.personsMood} />
+          }
+          </CardBody>
+        </Card>
             {/* {
               this.state.loadingRecognitionMood ?
                 <ClassicSpinner
@@ -256,49 +266,36 @@ class Dashboard extends Component {
         </div>
         <div className='row'>
           <div className='col-6 chart' align='center'>
-            <Card style={style.height}>
-              <CardHeader>
-                <h3>Rango de edades</h3>
-              </CardHeader>
-              {
-                this.state.loadRecognitionAges ?
+          <h3>Rango de edades</h3>
+            {
+              this.state.loadRecognitionAges ?
                   <Loading />
-                  :
-                  <AgeDetected agesDetected={this.state.agesDetected} />
-              }
-            </Card>
+                :
+                <AgeDetected agesDetected={this.state.agesDetected} />
+            }
           </div>
           <div className='col-6 chart' align='center'>
-            <Card style={style.height}>
-              <CardHeader>
-                <h3>Conteo de personas por cámara últimos 15 días</h3>
-              </CardHeader>
-              {
-                loadingPeoplePerCamera ?
-                  <Loading />
-                  :
-                  <CameraPerPerson data={personsPerCamera} />
-              }
-            </Card>
+          <h3>Conteo de personas por cámara últimos 90 días</h3>
+            {
+              loadingPeoplePerCamera ?
+                <Loading />
+                :
+                <CameraPerPerson data={personsPerCamera} />
+            }
           </div>
         </div>
-        {
-          <div className="row">
-            <div className='col-12 chart' align='center' >
-              <Card style={style.height}>
-                <CardHeader>
-                  <h3>Conteo de personas por día últimos 90 días </h3>
-                </CardHeader>
-                {
-                  loadingPersons ?
-                    <Loading />
-                    :
-                    <PeoplePerDay data={persons} />
-                }
-              </Card>
-            </div>
+
+        <div className="row">
+          <div className='col-12 chart' align='center' >
+          <h3>Conteo de personas por día últimos 90 días </h3>
+            {
+              loadingPersons ?
+                  <Loading />
+                :
+                <PeoplePerDay data={persons} />
+            }
           </div>
-        }
+        </div>
       </div>
     )
   }
@@ -337,7 +334,7 @@ class Dashboard extends Component {
     })
     conections.dashboardCams().then(response => {
       const data = response.data;
-      console.log('datilla: ', data)
+      // console.log('datilla: ', data)
       this.setState({
         loadingCams: false,
         dataCams: [
@@ -468,7 +465,7 @@ class Dashboard extends Component {
       let { results } = data;
       results.map((item) => {
         newData.push({
-          x: item.camera,
+          x: item.camera_name,
           y: item.total_face
         });
       });
