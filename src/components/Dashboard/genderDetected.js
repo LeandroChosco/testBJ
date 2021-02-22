@@ -1,35 +1,130 @@
-import React from 'react';
-import ColorScheme from 'color-scheme';
+import React, { useEffect, useState } from 'react';
+import Chart from 'react-apexcharts'
 import {
-  PieChart,
-  Pie,
-  Legend,
-  Tooltip,
-  Cell,
   ResponsiveContainer
 } from 'recharts';
 
-const scm = new ColorScheme();
-const COLORS = scm.from_hue(235)
-  .scheme('analogic')
-  .distance(0.3)
-  .add_complement(false)
-  .variation('pastel')
-  .web_safe(false).colors();
+const styles = {
+  noData: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: "flex"
+  }
+}
 
 const GenderDetected = (props) => {
-const {genderDetected, dataTickets } = props;
+  const { genderDetected, dataTickets } = props;
+  const [options, setOptions] = useState();
+  const [series, setSeries] = useState();
+
+  useEffect(() => {
+    let xAxis = [], yAxis = [];
+    if (genderDetected.length > 0) {
+      genderDetected.map((item) => {
+        xAxis.push(item.name);
+        yAxis.push(item.value)
+      })
+      let options = {
+        labels: xAxis,
+        chart: {
+          toolbar: {
+            show: true,
+            offsetX: 0,
+            offsetY: 0,
+            tools: {
+              download: true,
+              selection: false,
+              zoom: false,
+              zoomin: false,
+              zoomout: false,
+              pan: false,
+              customIcons: []
+            },
+            export: {
+              csv: {
+                filename: 'Personas detectadas',
+                columnDelimiter: ',',
+                headerCategory: 'Personas detectadas',
+                headerValue: 'Total'
+              },
+              svg: {
+                filename: 'Personas detectadas',
+              },
+              png: {
+                filename: 'Personas detectadas',
+              }
+            },
+          },
+        },
+        
+        colors: ['#fbc028', '#248FFB'],
+        legend: {
+          show: true,
+          showForSingleSeries: false,
+          showForNullSeries: true,
+          showForZeroSeries: true,
+          position: 'bottom',
+          horizontalAlign: 'center', 
+          floating: false,
+          fontSize: '14px',
+          fontFamily: 'Helvetica, Arial',
+          fontWeight: 400,
+          formatter: undefined,
+          inverseOrder: false,
+          width: undefined,
+          height: undefined,
+          tooltipHoverFormatter: undefined,
+          offsetX: 0,
+          offsetY: 0,
+          labels: {
+              colors: undefined,
+              useSeriesColors: false
+          },
+          markers: {
+              width: 12,
+              height: 12,
+              strokeWidth: 0,
+              strokeColor: '#fff',
+              fillColors: undefined,
+              radius: 12,
+              customHTML: undefined,
+              onClick: undefined,
+              offsetX: 0,
+              offsetY: 0
+          },
+          itemMargin: {
+              horizontal: 5,
+              vertical: 0
+          },
+          onItemClick: {
+              toggleDataSeries: true
+          },
+          
+      }
+    }
+
+      let series = yAxis
+      setOptions(options);
+      setSeries(series)
+    }
+  }, [])
+
   return (
     <ResponsiveContainer >
-      <PieChart>
-        <Legend />
-        <Pie innerRadius={60} outerRadius={80} paddingAngle={5} fill="#8884d8" data={genderDetected} dataKey="value" nameKey="name" >
-          {
-            dataTickets.map((entry, index) => <Cell key={`cell-${index}`} fill={'#' + COLORS[index % COLORS.length]} />)
-          }
-        </Pie>
-        <Tooltip />
-      </PieChart>
+      
+        {
+          options && series  ? 
+          <Chart options={options} series={series} type="donut" height={320} />
+          :
+          <div style={styles.noData}>No hay datos dispononibles</div>
+
+        }
+ 
     </ResponsiveContainer>
   )
 }

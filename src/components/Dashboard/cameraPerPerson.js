@@ -36,7 +36,7 @@ const CameraPerPerson = (props) => {
             <XAxis type="category" dataKey="x" name="Cámara" />
             <YAxis type="number" dataKey="y" name="Personas" />
             <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-            <Scatter name="camaras" data={data} fill= '#3F51B5'>
+            <Scatter name="camaras" data={data} fill= '#1ab7ea'>
             </Scatter>
           </ScatterChart>
           :
