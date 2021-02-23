@@ -9,11 +9,11 @@ const webSocketPort = "20";
 /* const sails_url = "http://prod.adminc5.bj.sails.energetikadevelepment.com"; */
 
 //Prod
-// const sails_url = "http://3.134.88.220";
+ const sails_url = "http://3.134.88.220";
 
 
 //Dev
-const sails_url = "http://18.191.101.241";
+/* const sails_url = "http://18.191.101.241"; */
 /* const sails_url = "http://localhost"; */
 const apiPort = "3000";
 const sailsPort = "1337";
