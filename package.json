@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@videojs/http-streaming": "^1.10.6",
+    "apexcharts": "^3.25.0",
     "axios": "^0.18.0",
     "bootstrap": "^4.5.0",
     "clappr": "^0.3.11",

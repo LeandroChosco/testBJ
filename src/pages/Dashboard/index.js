@@ -405,49 +405,57 @@ class Dashboard extends Component {
 
   processDetected = (response) => {
     const data = response.data.data
-    this.setState({
-      genderDetected: [
-        {
-          name: 'Mujer',
-          value: data.women_detected
-        }, {
-          name: 'Hombre',
-          value: data.men_detected
-        }
-      ],
-      loadTotalRecognition: false
-    })
+    if(Object.keys(data).length > 0){
+      this.setState({
+        genderDetected: [
+          {
+            name: 'Mujer',
+            value: data.women_detected
+          }, {
+            name: 'Hombre',
+            value: data.men_detected
+          }
+        ],
+        loadTotalRecognition: false
+      })
+    }else{
+      this.setState({genderDetected:[], loadTotalRecognition: false })
+    }
   }
 
   processAges = (response) => {
     const data = response.data.data
-    this.setState({
-      agesDetected: [
-        {
-          name: '-18',
-          total: data.total_under_18,
-          Hombres: data.men_under_18,
-          Mujeres: data.women_under_18
-        }, {
-          name: '18-30',
-          total: data.total_between_18_30,
-          Hombres: data.men_between_18_30,
-          Mujeres: data.women_between_18_30
-        }, {
-          name: '31-50',
-          total: data.total_between_31_50,
-          Hombres: data.men_between_31_50,
-          Mujeres: data.women_between_31_50
-        }, {
-          name: '50+',
-          total: data.total_over_50,
-          Hombres: data.men_over_50,
-          Mujeres: data.women_over_50
-        }
-      ],
-      loadRecognitionAges: false
-    })
-  }
+    if(Object.keys(data).length > 0){
+      this.setState({
+        agesDetected: [
+          {
+            name: '-18',
+            total: data.total_under_18,
+            Hombres: data.men_under_18,
+            Mujeres: data.women_under_18
+          }, {
+            name: '18-30',
+            total: data.total_between_18_30,
+            Hombres: data.men_between_18_30,
+            Mujeres: data.women_between_18_30
+          }, {
+            name: '31-50',
+            total: data.total_between_31_50,
+            Hombres: data.men_between_31_50,
+            Mujeres: data.women_between_31_50
+          }, {
+            name: '50+',
+            total: data.total_over_50,
+            Hombres: data.men_over_50,
+            Mujeres: data.women_over_50
+          }
+        ],
+        loadRecognitionAges: false
+      })
+    }else{
+      this.setState({agesDetected:[], loadRecognitionAges: false })
+    }
+    }
 
   componentDidMount() {
     this.loadData()
