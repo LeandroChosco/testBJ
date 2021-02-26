@@ -12,6 +12,7 @@ import moment from 'moment';
 import JSZip from 'jszip';
 
 import HlsPlayer from '../HlsPlayer';
+import WssPlayer from '../WssPlayer';
 import RtmpPlayer from '../RtmpPlayer';
 import ControlPTZ from '../ControlPTZ';
 import conections from '../../conections';
@@ -108,6 +109,13 @@ class CameraStream extends Component {
 											<RtmpPlayer
 												height={this.props.height}
 												src={this.props.marker.extraData.url}
+												num_cam={this.props.marker.extraData.num_cam}
+											/>
+										) : this.props.marker.extraData.dataCamValue.amazon_arn_channel ? (
+											<WssPlayer
+												channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
+												height={this.props.height}
+												width={this.props.width}
 												num_cam={this.props.marker.extraData.num_cam}
 											/>
 										) : this.props.marker.extraData.isHls ? (
@@ -250,6 +258,13 @@ class CameraStream extends Component {
 									<RtmpPlayer
 										height={this.props.height}
 										src={this.props.marker.extraData.url}
+										num_cam={this.props.marker.extraData.num_cam}
+									/>
+								) : this.props.marker.extraData.dataCamValue.amazon_arn_channel ? (
+									<WssPlayer
+										channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
+									 	height={this.props.height}
+										width={this.props.width}
 										num_cam={this.props.marker.extraData.num_cam}
 									/>
 								) : this.props.marker.extraData.isHls ? (

@@ -278,7 +278,7 @@ class Chat extends Component {
   }
 
   _changeUserCam = (chat) => {
-    Axios.get(constants.base_url + ':' + constants.apiPort + '/admin/users/' + chat.user_creation).then(response => {
+    Axios.get(constants.sails_url + ':' + constants.apiPort + '/admin/users/' + chat.user_creation).then(response => {
       if (response.status === 200) {
         if (response.data.success) {
           const data = response.data.data

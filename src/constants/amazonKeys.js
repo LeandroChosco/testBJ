@@ -1,0 +1,5 @@
+export default {
+	REGION: 'us-east-1',
+	ACCESS_KEY_ID: 'AKIATHM56K3YFKZIHQFR',
+	SECRET_ACCESS_KEY: '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'
+};

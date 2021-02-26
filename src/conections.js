@@ -33,19 +33,19 @@ export default {
   /*
   snapShot: (camara_id) => {
     const user_id = getUserID();
-    return Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/screenshot/' + camara_id + '/?user_id=' + user_id);
+    return Axios.post(constants.sails_url + ':' + constants.apiPort + '/control-cams/screenshot/' + camara_id + '/?user_id=' + user_id);
   },
   stopRecord: (data, camera_id) => {
     const user_id = getUserID();
-    return Axios.put(constants.base_url + ':' + constants.apiPort + '/control-cams/stop-record/' + camera_id + '/?user_id=' + user_id, data);
+    return Axios.put(constants.sails_url + ':' + constants.apiPort + '/control-cams/stop-record/' + camera_id + '/?user_id=' + user_id, data);
   },
   startRecord: (data, camera_id) => {
     const user_id = getUserID();
-    return Axios.post(constants.base_url + ':' + constants.apiPort + '/control-cams/start-record/' + camera_id + '/?user_id=' + user_id, data);
+    return Axios.post(constants.sails_url + ':' + constants.apiPort + '/control-cams/start-record/' + camera_id + '/?user_id=' + user_id, data);
   },
   getCamData: (camera_id) => {
     const user_id = getUserID();
-    return Axios.get(constants.base_url + ':' + constants.apiPort + '/control-cams/' + camera_id + '/data/?user_id=' + user_id);
+    return Axios.get(constants.sails_url + ':' + constants.apiPort + '/control-cams/' + camera_id + '/data/?user_id=' + user_id);
   },
   */
   // Nuevos endpoint para menejor de media
@@ -64,12 +64,6 @@ export default {
   deleteMedia: (camera_id, media_id) => {
     return Axios.delete(constants.sails_url + ':' + constants.sailsPort + '/cams/' + camera_id + '/' + media_id + '/1/V2');
   },
-  /*
-  getCamDataV2: (camera_id) => {
-    const user_id = getUserID();
-    return Axios.get(constants.base_url + ':' + constants.apiPort + '/cams/' + camera_id + '/dataV2?user_id=' + user_id);
-  },
-  */
   // Nuevos endpoints con salis
   getCamDataV2: (camera_id) => {
     const user_id = getUserID();
@@ -96,11 +90,11 @@ export default {
   // Endpoint para ticket en pingüino
   toProcess: (data) => {
     data.user_id = getUserID();
-    return Axios.put(constants.base_url + ':' + constants.apiPort + '/tickets/toProcess', data);
+    return Axios.put(constants.sails_url + ':' + constants.apiPort + '/tickets/toprocess/', data);
   },
   toClose: (data) => {
     data.user_id = getUserID();
-    return Axios.put(constants.base_url + ':' + constants.apiPort + '/tickets/toClose', data);
+    return Axios.put(constants.sails_url + ':' + constants.apiPort + '/tickets/toclose/', data);
   },
   dashboardCams: () => {
     return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/dashboard/cams');
@@ -168,21 +162,6 @@ export default {
   getLimitsCam: () => {
     return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/limits-zone/');
   },
-  /*
-  createPersons: (data) => {
-    return Axios.post('http://prod.adminc5.mh.sails.energetikadevelepment.com:1337' + '/create/persons/', data);
-  },
-  getPersons: (type) => {
-    if (type) return Axios.get('http://prod.adminc5.mh.sails.energetikadevelepment.com:1337' + '/getPersons/?type=' + type);
-    else return Axios.get('http://prod.adminc5.mh.sails.energetikadevelepment.com:1337' + '/getPersons/');
-  },
-  getDesconocidos: () => {
-    return Axios.get('http://prod.adminc5.mh.sails.energetikadevelepment.com:1337' + '/getUnknow/?limit=50');
-  },
-  getDetecciones: () => {
-    return Axios.get('http://prod.adminc5.mh.sails.energetikadevelepment.com:1337' + '/getMatches/');
-  },
-  */
   getMatchAPI: (data) => {
     if (data !== undefined) {
       return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/getmatch/?id_match=' + data);
