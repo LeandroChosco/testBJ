@@ -829,7 +829,7 @@ class CameraStream extends Component {
 				
 				await this.props.getQvrFileStationShareLink(sharedParams);
 				let { QvrFileStationShareLink: listShare } = this.props.QvrFileStationShareLink;
-				searchVideos = QvrFunctions._getCleanListVideos(listShare.links);
+				searchVideos = QvrFunctions._getCleanListVideos(listShare.links, url);
 
 				listShare.cam_id = this.state.data.id;
 				lastPropsShare.data.push(listShare);
