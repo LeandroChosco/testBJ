@@ -487,7 +487,7 @@ class GridCameraDisplay extends Component {
 				let sharedParams = { url, host, sid: auth.authSid, path: mainPath, files: allVideosList, expire_time };
 				await this.props.getQvrFileStationShareLink(sharedParams);
 				let { QvrFileStationShareLink: listShare } = this.props.QvrFileStationShareLink;
-				searchVideos = QvrFunctions._getCleanListVideos(listShare.links);
+				searchVideos = QvrFunctions._getCleanListVideos(listShare.links, url);
 
 				if (listShare && listShare.ssid) video_ssid.push({ ssid: listShare.ssid, total: listShare.total });
 				this.props.QvrFileStationShareLink.QvrFileStationShareLink.ssid = video_ssid;
