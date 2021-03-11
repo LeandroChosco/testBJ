@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
-import * as KNSFunctions from '../../functions/getAmazonKinesis';
+import * as KNSFunctions from '../../functions/getAmazonKinesisWss';
 
 class WssPlayer extends Component {
 	constructor(props) {

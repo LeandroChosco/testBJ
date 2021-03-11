@@ -14,14 +14,16 @@ class ModalViewCam extends Component {
 					<p>Camara {dataCam.num_cam}</p>
 				</Modal.Header>
 				<Modal.Body style={{ height: '400px' }}>
-					{dataCam.amazon_arn_channel ? (
+					{!dataCam.is_amazon_stream && dataCam.amazon_arn_channel ? (
 						<WssPlayer
 							channelARN={dataCam.amazon_arn_channel}
+							region={dataCam.amazon_region}
 							num_cam={dataCam.num_cam}
 						/>
 					) : (
 						<HlsPlayer
-							reload={false}
+							channelARN={dataCam.amazon_arn_channel}
+							region={dataCam.amazon_region}
 							src={`http://${dataCam.UrlStreamMediaServer.ip_url_ms}:${dataCam.UrlStreamMediaServer
 								.output_port}${dataCam.UrlStreamMediaServer.name}${dataCam.channel}`}
 							num_cam={dataCam.num_cam}

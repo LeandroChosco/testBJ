@@ -51,8 +51,7 @@ class LoopCamerasDisplay extends Component {
 		recordingCams: [],
 		recordingProcess: [],
 		loadingRcord: false,
-		showPTZ: false,
-		reloadCamPTZ: false
+		showPTZ: false
 	};
 
 	_showCameraInfo() {
@@ -60,7 +59,7 @@ class LoopCamerasDisplay extends Component {
 	}
 
 	render() {
-		let { activeIndex, markers, slideIndex, autoplay, photos, videos, video_history, video_search, selectedCamera, qnapServer, qnapChannel, height, servidorMultimedia, loadingSnap, videosLoading, historyLoading, searchLoading, photosLoading, isNewSearch, recordingCams, restarting, showPTZ, reloadCamPTZ } = this.state
+		let { activeIndex, markers, slideIndex, autoplay, photos, videos, video_history, video_search, selectedCamera, qnapServer, qnapChannel, height, servidorMultimedia, loadingSnap, videosLoading, historyLoading, searchLoading, photosLoading, isNewSearch, recordingCams, restarting, showPTZ } = this.state
 		let { error, propsIniciales, moduleActions, loadingFiles, matches } = this.props
 		return (
 			<div className="holderOfSlides">
@@ -75,7 +74,6 @@ class LoopCamerasDisplay extends Component {
 									marker={value}
 									height={'100%'}
 									width={'75%'}
-									reloadCamPTZ={reloadCamPTZ}
 								/>
 							</div>
 						) : null
@@ -109,7 +107,6 @@ class LoopCamerasDisplay extends Component {
 									camera={selectedCamera}
 									isInMap={false}
 									hasMatch={true}
-									_reloadCamPTZ={this._changeReloadCamPTZ}
 								/>
 							</div>
 						}
@@ -207,11 +204,6 @@ class LoopCamerasDisplay extends Component {
 
 	Clicked = (dns) => {
 		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
-	};
-
-	_changeReloadCamPTZ = () => {
-		this.setState({ reloadCamPTZ: true });
-		setTimeout(() => this.setState({ reloadCamPTZ: false }), 1000);
 	};
 
 	_renderLoading = () => (
