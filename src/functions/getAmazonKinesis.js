@@ -20,13 +20,16 @@ export const GetHlsStream = async (props) => {
 	try {
 		KNS_VIDEO_CONTENT.endpoint = new AWS.Endpoint(ENDPOINT_RESPONSE.DataEndpoint);
 		const HLS_RESPONSE = await KNS_VIDEO_CONTENT.getHLSStreamingSessionURL({
-			ContainerFormat: 'FRAGMENTED_MP4',
-			DiscontinuityMode: 'ALWAYS',
-			DisplayFragmentTimestamp: 'NEVER',
-			Expires: 43200,
-			HLSFragmentSelector: null,
-			MaxMediaPlaylistFragmentResults: 1,
-			PlaybackMode: 'LIVE',
+			ContainerFormat: 'MPEG_TS', // FRAGMENTED_MP4 | MPEG_TS
+			DiscontinuityMode: 'ALWAYS', // ALWAYS | NEVER | ON_DISCONTINUITY
+			DisplayFragmentTimestamp: 'NEVER', // ALWAYS | NEVER
+			Expires: 43200, // 300 - 43200
+			// HLSFragmentSelector: {
+			// 	FragmentSelectorType: 'SERVER_TIMESTAMP', // PRODUCER_TIMESTAMP | SERVER_TIMESTAMP
+			// 	TimestampRange: { EndTimestamp: number, StartTimestamp: number }
+			// },
+			// MaxMediaPlaylistFragmentResults: null, // 1 - 5000
+			PlaybackMode: 'LIVE', // LIVE | LIVE_REPLAY | ON_DEMAND
 			StreamARN: CHANNEL_ARN,
 			StreamName: null
 		}).promise();

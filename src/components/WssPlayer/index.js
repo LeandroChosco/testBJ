@@ -101,7 +101,7 @@ class WssPlayer extends Component {
 		viewer.signalingClient.open();
 
 		setTimeout(() => {
-			if (!this.state.showVideo) {
+			if (!this.state.showVideo && this.state.error === '') {
 				this.setState({ error: 'Error: No se ha podido conectar con el stream.' });
 				KNSFunctions.StopViewer(viewer);
 			}
