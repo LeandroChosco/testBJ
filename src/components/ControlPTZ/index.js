@@ -40,7 +40,6 @@ const ControlPTZ = (props) => {
 						setDisabledButtons(disabled);
 					}
 				}
-				props._reloadCamPTZ();
 			}
 			setIp(params.ip);
 			setStyleMap(isInMap);

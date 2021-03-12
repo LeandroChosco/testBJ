@@ -366,7 +366,7 @@ class Dashboard extends Component {
       io = sailsIOClient(socketIOClient);
     }
     this.setState({io:io})    
-    io.sails.url = constants.base_url+':1337';
+    io.sails.url = constants.sails_url+':1337';
     io.socket.get('/cams?sort=num_cam asc&active=1&limit=10000', this.lastCreatedCams) */
   }
 

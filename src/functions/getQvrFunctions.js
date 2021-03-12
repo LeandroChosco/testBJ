@@ -14,12 +14,18 @@ export function _getTextSplit(str) {
 	return { fecha, searchFor, hour, real_hour };
 }
 
-export function _getCleanListVideos(arrList) {
+export function _getCleanListVideos(arrList, serverUrl) {
 	let hours = [], allVideos = [];
-	if(arrList && arrList.length > 0) {
+	if (arrList && arrList.length > 0) {
+		arrList.forEach((hist) => {
+			let splitUrlLink = hist.link_url.split('/');
+			let newLinkUrl = `${serverUrl}/${splitUrlLink[ splitUrlLink.length - 1 ]}`;
+			hist.link_url = newLinkUrl;
+		});
+
 		arrList.forEach((hist) => {
 			let htsSplit = _getTextSplit(hist.filename);
-	
+
 			if (!hours.includes(htsSplit.searchFor)) {
 				hours.push(htsSplit.searchFor);
 				let foundHours = arrList.filter((a) => a.filename.includes(htsSplit.searchFor));
