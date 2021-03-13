@@ -338,7 +338,7 @@ class Main extends Component {
       io = sailsIOClient(socketIOClient);
     }
     this.setState({io:io})          
-    io.sails.url = constants.base_url+':1337';
+    io.sails.url = constants.sails_url+':1337';
     io.socket.get('/matchApi', this.matchesApiHandler)
     io.socket.on('/matchApi', this.matchesApiHandler)
  

@@ -1,43 +1,55 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Clappr from 'clappr';
 
-class HlsPlayer extends Component {
-	state = { player: undefined };
+import Spinner from 'react-bootstrap/Spinner';
+import * as KNSFunctions from '../../functions/getAmazonKinesis';
 
-	componentDidMount() {
-		this._loadPlayer();
-	}
-	componentDidUpdate(prevProps) {
-		const { src: srcPrev, reload: reloadPrev } = prevProps;
-		const { src, reload } = this.props;
-		if (srcPrev !== src || (reload && (reloadPrev !== reload))) {
-			let { player } = this.state;
-      if (player) player.destroy();
-      this._loadPlayer();
-    }
-	}
-	componentWillUnmount() {
-		let { player } = this.state;
-		if (player) player.destroy();
-	}
+const HlsPlayer = (props) => {
+	const [ src, setSrc ] = useState(null);
+	const [ player, setPlayer ] = useState(null);
+	const [ loading, setLoading ] = useState(false);
+	const [ amazonSrc, setAmazonSrc ] = useState(null);
 
-	render() {
-		let { num_cam, height: hProps } = this.props;
-		return <div id={'player' + num_cam} style={{ height: hProps ? hProps : '100%' }} />;
-	}
+	useEffect(() => {
+		setLoading(true);
+		if (!props.channelARN) {
+			setSrc(props.src);
+			_handleCreatePlayer(props.src);
+		} else KNSFunctions.GetHlsStream(props).then((res) => setAmazonSrc(res));
+	}, []);
+	useEffect(() => {
+		if (amazonSrc) {
+			if (amazonSrc.HLSStreamingSessionURL) {
+				setSrc(amazonSrc.HLSStreamingSessionURL);
+				_handleCreatePlayer(amazonSrc.HLSStreamingSessionURL);
+			} else _handleCreatePlayer(props.src);
+		}
+	}, [ amazonSrc ]);
+	useEffect(() => {
+		if (player !== null) {
+			_loadPlayer();
+			setLoading(false);
+		}
+		return () => {
+			if (player) player.destroy();
+		};
+	}, [ player ]);
 
-	_loadPlayer = () => {
-		let { height: hProps, width: wProps, src, num_cam } = this.props;
+	// Functions
+	const _handleCreatePlayer = async (src = null) => {
+		if (player) await player.destroy();
+		await _newPlayer(src);
+	};
+	const _newPlayer = (src) => {
 		let height = {};
-		if (hProps) height.height = hProps;
 		let width = { width: '100%' };
-		if (wProps) width.width = wProps;
-		console.log('url', src);
-		var player = new Clappr.Player({
+		if (props.height) height.height = props.height;
+		if (props.width) width.width = props.width;
+		let newPlayer = new Clappr.Player({
 			// this is an example url - for this to work you'll need to generate fresh token
 			source: src,
 			//source  : 'http://34.235.144.27:8080/hls/camp01.m3u8',
-			parentId: '#player' + num_cam,
+			parentId: '#player' + props.num_cam,
 			...width,
 			...height,
 			autoPlay: true,
@@ -93,18 +105,38 @@ class HlsPlayer extends Component {
 			},
 			preload: 'metadata'
 		});
-
+		setPlayer(newPlayer);
+	};
+	const _loadPlayer = () => {
 		player.on(Clappr.Events.PLAYER_ERROR, (err) => {
 			console.log('error en el player', err);
 			console.log('error en el player code', err.code);
-			if (err.code === 'hls:3' || err.code === 'hls:networkError_levelLoadTimeOut' || err.code === 'hls:networkError_manifestLoadTimeOut') {
-				console.log('network error');
+			if (
+				err.code === 'hls:3' ||
+				err.code === 'hls:networkError_levelLoadTimeOut' ||
+				err.code === 'hls:networkError_manifestLoadTimeOut'
+			) {
+				console.log('network error', src);
 				player.load(src);
 				player.play();
 			}
 		});
-		this.setState({ player: player });
 	};
-}
+
+	return (
+		<div>
+			<div
+				className={loading ? 'd-none' : null}
+				id={`player${props.num_cam}`}
+				style={{ height: props.height ? props.height : '100%' }}
+			/>
+			{loading && (
+				<Spinner animation="border" variant="info" role="status" size="xl">
+					<span className="sr-only">Loading...</span>
+				</Spinner>
+			)}
+		</div>
+	);
+};
 
 export default HlsPlayer;

@@ -55,7 +55,6 @@ const style = {
   }
 }
 
-
 class Dashboard extends Component {
 
   state = {
@@ -218,33 +217,33 @@ class Dashboard extends Component {
         <div className='row'>
           <div className='col-6 chart' align='center'>
 
-          <Card style={style.height}>
-          <CardHeader>
-          <h3 className="pt-2">Personas detectadas</h3>
-        </CardHeader>          {
-            this.state.loadTotalRecognition ?
-              <Loading />
-              :
-              <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
-          }
-        </Card>
+            <Card style={style.height}>
+              <CardHeader>
+                <h3 className="pt-2">Personas detectadas</h3>
+              </CardHeader>          {
+                this.state.loadTotalRecognition ?
+                  <Loading />
+                  :
+                  <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
+              }
+            </Card>
 
 
           </div>
           <div className='col-6 chart' align='center'>
-          <Card style={style.adjustX}>
-          <CardHeader>
-            <h3 className="pt-2">Estado de Animo</h3><br></br><br></br>
-          </CardHeader>
-          <CardBody>
-         {
-          this.state.loadingRecognitionMood ?
-          <Loading />
-          :
-           <PersonsMood personsMood={this.state.personsMood} />
-          }
-          </CardBody>
-        </Card>
+            <Card style={style.adjustX}>
+              <CardHeader>
+                <h3 className="pt-2">Estado de Animo</h3><br></br><br></br>
+              </CardHeader>
+              <CardBody>
+                {
+                  this.state.loadingRecognitionMood ?
+                    <Loading />
+                    :
+                    <PersonsMood personsMood={this.state.personsMood} />
+                }
+              </CardBody>
+            </Card>
             {/* {
               this.state.loadingRecognitionMood ?
                 <ClassicSpinner
@@ -267,16 +266,16 @@ class Dashboard extends Component {
         </div>
         <div className='row'>
           <div className='col-6 chart' align='center'>
-          <h3>Rango de edades</h3>
+            <h3>Rango de edades</h3>
             {
               this.state.loadRecognitionAges ?
-                  <Loading />
+                <Loading />
                 :
                 <AgeDetected agesDetected={this.state.agesDetected} />
             }
           </div>
           <div className='col-6 chart' align='center'>
-          <h3>Conteo de personas por cámara últimos 90 días</h3>
+            <h3>Conteo de personas por cámara últimos 90 días</h3>
             {
               loadingPeoplePerCamera ?
                 <Loading />
@@ -288,10 +287,10 @@ class Dashboard extends Component {
 
         <div className="row">
           <div className='col-12 chart' align='center' >
-          <h3>Conteo de personas por día últimos 90 días </h3>
+            <h3>Conteo de personas por día últimos 90 días </h3>
             {
               loadingPersons ?
-                  <Loading />
+                <Loading />
                 :
                 <PeoplePerDay data={persons} />
             }
@@ -301,8 +300,8 @@ class Dashboard extends Component {
     )
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
         <div className={this.props.showMatches ? "hide-matches" : "show-matches"}>
 
@@ -313,23 +312,23 @@ class Dashboard extends Component {
     )
   }
 
-  componentWillUnmount(){    
+  componentWillUnmount() {
     if (this.state.io) {
       if (this.state.io.socket.isConnected()) {
-        this.state.io.socket.disconnect(); 
-      }      
+        this.state.io.socket.disconnect();
+      }
     }
   }
 
   loadData = () => {
     this.setState({
-      loadingCams:true,
-      loadingTickets:true,
-      loadTotalRecognition:true,
-      loadRecognitionAges:true,
-      loadingRecognitionPerDay:true,
-      loadingRecognitionMood:true,
-      loadingCamsGrid:true,
+      loadingCams: true,
+      loadingTickets: true,
+      loadTotalRecognition: true,
+      loadRecognitionAges: true,
+      loadingRecognitionPerDay: true,
+      loadingRecognitionMood: true,
+      loadingCamsGrid: true,
       loadingPeoplePerCamera: true,
       loadingPersons: true
     })
@@ -337,11 +336,11 @@ class Dashboard extends Component {
       const data = response.data;
       // console.log('datilla: ', data)
       this.setState({
-        loadingCams:false,
-        dataCams:[
-          {name:'Activas',value:data.active},
-          {name:'Inactivas',value:data.deactive},
-          {name:'Desconectadas',value:data.disconnected}
+        loadingCams: false,
+        dataCams: [
+          { name: 'Activas', value: data.active },
+          { name: 'Inactivas', value: data.deactive },
+          { name: 'Desconectadas', value: data.disconnected }
         ],
         installed_by_moth: data.installed_by_moth.map(v => { v.fecha = moment(v.fecha).format('MMM-YYYY'); return v }),
         installed_last_moth: data.installed_last_moth.map(v => { v.fecha = moment(v.fecha).format('DD-MM-YYYY'); return v })
@@ -367,7 +366,7 @@ class Dashboard extends Component {
       io = sailsIOClient(socketIOClient);
     }
     this.setState({io:io})    
-    io.sails.url = constants.base_url+':1337';
+    io.sails.url = constants.sails_url+':1337';
     io.socket.get('/cams?sort=num_cam asc&active=1&limit=10000', this.lastCreatedCams) */
   }
 
@@ -406,7 +405,7 @@ class Dashboard extends Component {
 
   processDetected = (response) => {
     const data = response.data.data
-    if(Object.keys(data).length > 0){
+    if (Object.keys(data).length > 0) {
       this.setState({
         genderDetected: [
           {
@@ -419,14 +418,14 @@ class Dashboard extends Component {
         ],
         loadTotalRecognition: false
       })
-    }else{
-      this.setState({genderDetected:[], loadTotalRecognition: false })
+    } else {
+      this.setState({ genderDetected: [], loadTotalRecognition: false })
     }
   }
 
   processAges = (response) => {
     const data = response.data.data
-    if(Object.keys(data).length > 0){
+    if (Object.keys(data).length > 0) {
       this.setState({
         agesDetected: [
           {
@@ -453,10 +452,10 @@ class Dashboard extends Component {
         ],
         loadRecognitionAges: false
       })
-    }else{
-      this.setState({agesDetected:[], loadRecognitionAges: false })
+    } else {
+      this.setState({ agesDetected: [], loadRecognitionAges: false })
     }
-    }
+  }
 
   componentDidMount() {
     this.loadData()
@@ -538,38 +537,38 @@ class Dashboard extends Component {
         }
       }
       if (!found) {
-        attendedVSclosed.push({name:v.name,Cerrados:0,Proceso:v.total})
+        attendedVSclosed.push({ name: v.name, Cerrados: 0, Proceso: v.total })
       }
       return v;
-    })    
+    })
     this.setState({
-      loadingTickets:false, 
-      dataTickets:ticketStatus,
-      dataTotalTickets:totaltickets,
-      dataTicketsPerUser:{
-        created:dataTickets.total_created_tickets_by_user,
-        attended:dataTickets.total_attended_tickets_by_user,
-        closed:dataTickets.total_closed_tickets_by_user
+      loadingTickets: false,
+      dataTickets: ticketStatus,
+      dataTotalTickets: totaltickets,
+      dataTicketsPerUser: {
+        created: dataTickets.total_created_tickets_by_user,
+        attended: dataTickets.total_attended_tickets_by_user,
+        closed: dataTickets.total_closed_tickets_by_user
       },
-      attendedVSclosed:attendedVSclosed
+      attendedVSclosed: attendedVSclosed
     });
   }
 
 }
 
-function customLabel(p){      
-    return(      
-        <Text 
-          fontSizeAdjust='true'           
-          verticalAnchor='middle'
-          width={300}
-          height={p.height}                              
-          x={p.x+5}
-          y={p.y+10}
-        >
-            {p.value}
-        </Text>      
-    )
+function customLabel(p) {
+  return (
+    <Text
+      fontSizeAdjust='true'
+      verticalAnchor='middle'
+      width={300}
+      height={p.height}
+      x={p.x + 5}
+      y={p.y + 10}
+    >
+      {p.value}
+    </Text>
+  )
 }
 
 // function shuffle(array) {

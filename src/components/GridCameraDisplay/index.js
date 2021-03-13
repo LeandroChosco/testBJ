@@ -67,12 +67,11 @@ class GridCameraDisplay extends Component {
 		searchLoading: false,
 		isNewSearch: false,
 		photosLoading: false,
-		showPTZ: false,
-		reloadCamPTZ: false
+		showPTZ: false
 	};
 
 	render() {
-		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, reloadCamPTZ } = this.state;
+		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ } = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, matches } = this.props;
 		return (
 			<div className="gridCameraContainer" align="center">
@@ -85,7 +84,6 @@ class GridCameraDisplay extends Component {
 									ref={'camrefgrid' + value.extraData.id}
 									key={value.extraData.id}
 									marker={value}
-									reloadCamPTZ={selectedCamera === value.extraData ? reloadCamPTZ : false}
 								/>
 							</Col>
 						) : null
@@ -156,7 +154,6 @@ class GridCameraDisplay extends Component {
 									camera={selectedCamera}
 									isInMap={false}
 									hasMatch={true}
-									_reloadCamPTZ={this._changeReloadCamPTZ}
 								/>
 							</div>
 						}
@@ -260,11 +257,6 @@ class GridCameraDisplay extends Component {
 
 	Clicked = (dns) => {
 		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
-	};
-
-	_changeReloadCamPTZ = () => {
-		this.setState({ reloadCamPTZ: true });
-		setTimeout(() => this.setState({ reloadCamPTZ: false }), 1000);
 	};
 
 	_renderLoading = () => (
@@ -423,7 +415,7 @@ class GridCameraDisplay extends Component {
 		this.setState({ start: data.selected * this.state.limit });
 	};
 
-	_searchFileVideos = async (dates, startHour, endHour, stateNames, setNewState = true) => {
+	_searchFileVideos = async (dates, startHour, endHour, stateNames, setNewState = true, searchFileHours = false) => {
 		let { selectedCamera, video_ssid, qnapServer, qnapChannel } = this.state;
 		let isNewSearch = stateNames.list === 'video_search';
 		if (setNewState) this.setState({ [stateNames.loading]: true });
@@ -431,26 +423,42 @@ class GridCameraDisplay extends Component {
 		let searchVideos = {};
 		let allVideosList = [];
 		let lthDate = 1;
-		
+
 		let { ptcl, host, port, user, pass } = qnapServer;
 		let url = `${ptcl}${host}${port ? `:${port}` : null}`;
 		await this.props.getQvrFileStationAuthLogin({ url, user, pass });
-		
+
 		let { QvrFileStationAuth: auth } = this.props.QvrFileStationAuth;
 		if (auth && auth.authSid) {
 			let mainPath = QvrFunctions._getPath(qnapChannel);
 			for (const dt of dates) {
-				let getParamsHours = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: lthDate === dates.length ? parseInt(endHour, 10) : '24', start: lthDate === 1 ? parseInt(startHour, 10) : '0', type: '0' };
+				let getFistHourParams = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: 1, start: 0, type: '0' };
+				await this.props.getQvrFileStationFileList(getFistHourParams);
+				let { QvrFileStationFileList: firstHour } = this.props.QvrFileStationFileList;
+				let initialHour = firstHour.datas && firstHour.datas[0] ? parseInt(firstHour.datas[0].filename, 10) : 0;
+				if (searchFileHours) return initialHour;
+
+				let newEndHour = lthDate === dates.length ? parseInt(endHour, 10) : 24;
+				let newStartHour = lthDate === 1 ? parseInt(startHour, 10) : 0;
+				if (initialHour !== 0) {
+					if (newEndHour < initialHour) newEndHour = 0;
+					else {
+						newEndHour = newEndHour - initialHour;
+						newStartHour = newStartHour > initialHour ? newStartHour - initialHour : 0;
+					}
+				}
+
+				let getParamsHours = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: newEndHour, start: newStartHour, type: '0' };
 				await this.props.getQvrFileStationFileList(getParamsHours);
 				let { QvrFileStationFileList: listHours, success: sHours } = this.props.QvrFileStationFileList;
 
 				if (sHours && listHours && listHours.total > 0) {
 					for (const hr of listHours.datas) {
-						if (parseInt(hr.filename, 10) < parseInt(endHour, 10)) {
+						if (parseInt(hr.filename, 10) < (lthDate === dates.length ? parseInt(endHour, 10) : 24)) {
 							let getParamsVideo = { url, sid: auth.authSid, path: `${mainPath}/${dt}/${hr.filename}`, limit: '2', start: '0', type: '2' };
 							await this.props.getQvrFileStationFileList(getParamsVideo);
 							let { QvrFileStationFileList: listVideos, success: sVideos } = this.props.QvrFileStationFileList;
-							if (sVideos && listVideos && listVideos.total > 0)  for (const v of listVideos.datas) allVideosList.push(`${dt}/${hr.filename}/${v.filename}`);
+							if (sVideos && listVideos && listVideos.total > 0) for (const v of listVideos.datas) allVideosList.push(`${dt}/${hr.filename}/${v.filename}`);
 						}
 
 						if (selectedCamera.id !== this.state.selectedCamera.id) {
@@ -471,7 +479,7 @@ class GridCameraDisplay extends Component {
 				let sharedParams = { url, host, sid: auth.authSid, path: mainPath, files: allVideosList, expire_time };
 				await this.props.getQvrFileStationShareLink(sharedParams);
 				let { QvrFileStationShareLink: listShare } = this.props.QvrFileStationShareLink;
-				searchVideos = QvrFunctions._getCleanListVideos(listShare.links);
+				searchVideos = QvrFunctions._getCleanListVideos(listShare.links, url);
 
 				if (listShare && listShare.ssid) video_ssid.push({ ssid: listShare.ssid, total: listShare.total });
 				this.props.QvrFileStationShareLink.QvrFileStationShareLink.ssid = video_ssid;
@@ -519,7 +527,9 @@ class GridCameraDisplay extends Component {
 		let dateInFormat = scrollInitialDate.format('YYYY-MM-DD');
 		if (isFirst) {
 			this.setState({ historyLoading: true });
-			foundHistory = await this._searchFileVideos([ dateInFormat ], currentHour - SHOW_HISTORY, currentHour, stateNames, false);
+			let fileHour = await this._searchFileVideos([ dateInFormat ], 0, 24, stateNames, false, true);
+			if (fileHour !== 0) this.setState({ hasMore: false });
+			foundHistory = await this._searchFileVideos([ dateInFormat ], fileHour !== 0 ? 0 : currentHour - SHOW_HISTORY, currentHour, stateNames, false);
 			this.setState({ historyLoading: false });
 		} else if (video_history.length > 0) {
 			let idx = video_history.length - 1;
