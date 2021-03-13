@@ -217,33 +217,33 @@ class Dashboard extends Component {
         <div className='row'>
           <div className='col-6 chart' align='center'>
 
-          <Card style={style.height}>
-          <CardHeader>
-          <h3 className="pt-2">Personas detectadas</h3>
-        </CardHeader>          {
-            this.state.loadTotalRecognition ?
-              <Loading />
-              :
-              <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
-          }
-        </Card>
+            <Card style={style.height}>
+              <CardHeader>
+                <h3 className="pt-2">Personas detectadas</h3>
+              </CardHeader>          {
+                this.state.loadTotalRecognition ?
+                  <Loading />
+                  :
+                  <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
+              }
+            </Card>
 
 
           </div>
           <div className='col-6 chart' align='center'>
-          <Card style={style.adjustX}>
-          <CardHeader>
-            <h3 className="pt-2">Estado de Animo</h3><br></br><br></br>
-          </CardHeader>
-          <CardBody>
-         {
-          this.state.loadingRecognitionMood ?
-          <Loading />
-          :
-           <PersonsMood personsMood={this.state.personsMood} />
-          }
-          </CardBody>
-        </Card>
+            <Card style={style.adjustX}>
+              <CardHeader>
+                <h3 className="pt-2">Estado de Animo</h3><br></br><br></br>
+              </CardHeader>
+              <CardBody>
+                {
+                  this.state.loadingRecognitionMood ?
+                    <Loading />
+                    :
+                    <PersonsMood personsMood={this.state.personsMood} />
+                }
+              </CardBody>
+            </Card>
             {/* {
               this.state.loadingRecognitionMood ?
                 <ClassicSpinner
@@ -266,16 +266,16 @@ class Dashboard extends Component {
         </div>
         <div className='row'>
           <div className='col-6 chart' align='center'>
-          <h3>Rango de edades</h3>
+            <h3>Rango de edades</h3>
             {
               this.state.loadRecognitionAges ?
-                  <Loading />
+                <Loading />
                 :
                 <AgeDetected agesDetected={this.state.agesDetected} />
             }
           </div>
           <div className='col-6 chart' align='center'>
-          <h3>Conteo de personas por cámara últimos 90 días</h3>
+            <h3>Conteo de personas por cámara últimos 90 días</h3>
             {
               loadingPeoplePerCamera ?
                 <Loading />
@@ -287,10 +287,10 @@ class Dashboard extends Component {
 
         <div className="row">
           <div className='col-12 chart' align='center' >
-          <h3>Conteo de personas por día últimos 90 días </h3>
+            <h3>Conteo de personas por día últimos 90 días </h3>
             {
               loadingPersons ?
-                  <Loading />
+                <Loading />
                 :
                 <PeoplePerDay data={persons} />
             }
@@ -405,7 +405,7 @@ class Dashboard extends Component {
 
   processDetected = (response) => {
     const data = response.data.data
-    if(Object.keys(data).length > 0){
+    if (Object.keys(data).length > 0) {
       this.setState({
         genderDetected: [
           {
@@ -418,14 +418,14 @@ class Dashboard extends Component {
         ],
         loadTotalRecognition: false
       })
-    }else{
-      this.setState({genderDetected:[], loadTotalRecognition: false })
+    } else {
+      this.setState({ genderDetected: [], loadTotalRecognition: false })
     }
   }
 
   processAges = (response) => {
     const data = response.data.data
-    if(Object.keys(data).length > 0){
+    if (Object.keys(data).length > 0) {
       this.setState({
         agesDetected: [
           {
@@ -452,10 +452,10 @@ class Dashboard extends Component {
         ],
         loadRecognitionAges: false
       })
-    }else{
-      this.setState({agesDetected:[], loadRecognitionAges: false })
+    } else {
+      this.setState({ agesDetected: [], loadRecognitionAges: false })
     }
-    }
+  }
 
   componentDidMount() {
     this.loadData()
