@@ -44,8 +44,9 @@ export function _getCleanListVideos(arrList, serverUrl) {
 	return allVideos;
 }
 
-export function _getPath(channel, date, hour, video) {
-	let path = `/QVRProRecording/File/Standard_Format/${channel}/Normal02`;
+export function _getPath(channel, normal, date, hour, video) {
+	let path = `/QVRProRecording/File/Standard_Format/${channel}`;
+	if (normal) path += `/${normal}`;
 	if (date) path += `/${date}`;
 	if (hour) path += `/${hour}`;
 	if (video) path += `/${video}`;
