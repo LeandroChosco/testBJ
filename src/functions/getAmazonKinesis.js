@@ -25,8 +25,11 @@ export const GetHlsStream = async (props) => {
 			DisplayFragmentTimestamp: 'NEVER', // ALWAYS | NEVER
 			Expires: 43200, // 300 - 43200
 			// HLSFragmentSelector: {
-			// 	FragmentSelectorType: 'SERVER_TIMESTAMP', // PRODUCER_TIMESTAMP | SERVER_TIMESTAMP
-			// 	TimestampRange: { EndTimestamp: number, StartTimestamp: number }
+			// 	FragmentSelectorType: 'PRODUCER_TIMESTAMP', // PRODUCER_TIMESTAMP | SERVER_TIMESTAMP
+			// 	TimestampRange: {
+			// 		EndTimestamp: moment().unix(),
+			// 		StartTimestamp: moment().startOf('day').unix()
+			// 	}
 			// },
 			// MaxMediaPlaylistFragmentResults: null, // 1 - 5000
 			PlaybackMode: 'LIVE', // LIVE | LIVE_REPLAY | ON_DEMAND
