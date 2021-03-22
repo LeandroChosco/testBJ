@@ -430,7 +430,12 @@ class GridCameraDisplay extends Component {
 
 		let { QvrFileStationAuth: auth } = this.props.QvrFileStationAuth;
 		if (auth && auth.authSid) {
-			let mainPath = QvrFunctions._getPath(qnapChannel);
+			let normalPath = QvrFunctions._getPath(qnapChannel);
+			let getFistHourParams = { url, sid: auth.authSid, path: normalPath, limit: 1, start: 0, type: '0' };
+			await this.props.getQvrFileStationFileList(getFistHourParams);
+			let { QvrFileStationFileList: normalList } = this.props.QvrFileStationFileList;
+			let normal = normalList.datas && normalList.datas[0] ? normalList.datas[0].filename : 'Normal01';
+			let mainPath = QvrFunctions._getPath(qnapChannel, normal);
 			for (const dt of dates) {
 				let getFistHourParams = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: 1, start: 0, type: '0' };
 				await this.props.getQvrFileStationFileList(getFistHourParams);
