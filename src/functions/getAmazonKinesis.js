@@ -1,8 +1,6 @@
 import AWS from 'aws-sdk';
 import KEYS from '../constants/amazonKeys';
 
-import moment from 'moment-timezone';
-
 export const GetHlsStream = async (props) => {
 	// Get signaling channel ARN
 	const CONF = {
@@ -33,7 +31,7 @@ export const GetHlsStream = async (props) => {
 			// 		StartTimestamp: moment().startOf('day').unix()
 			// 	}
 			// },
-			// MaxMediaPlaylistFragmentResults: 2000, // 1 - 5000
+			// MaxMediaPlaylistFragmentResults: null, // 1 - 5000
 			PlaybackMode: 'LIVE', // LIVE | LIVE_REPLAY | ON_DEMAND
 			StreamARN: CHANNEL_ARN,
 			StreamName: null
