@@ -207,9 +207,9 @@ class GridCameraDisplay extends Component {
 											<Tab.Pane attached={false}>
 												{this._renderVideoList(
 													historyLoading,
-													video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
+													video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
 													true,
-													video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
+													video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
 													true
 												)}
 											</Tab.Pane>
@@ -422,7 +422,7 @@ class GridCameraDisplay extends Component {
 
 		let searchVideos = {};
 		let allVideosList = [];
-		let lthDate = 1;
+		let lthDate = [];
 
 		let { ptcl, host, port, user, pass } = qnapServer;
 		let url = `${ptcl}${host}${port ? `:${port}` : null}`;
@@ -430,52 +430,53 @@ class GridCameraDisplay extends Component {
 
 		let { QvrFileStationAuth: auth } = this.props.QvrFileStationAuth;
 		if (auth && auth.authSid) {
-			let normalPath = QvrFunctions._getPath(qnapChannel);
-			let getFistHourParams = { url, sid: auth.authSid, path: normalPath, limit: 1, start: 0, type: '0' };
+			let mainPath = QvrFunctions._getPath(qnapChannel);
+			let getFistHourParams = { url, sid: auth.authSid, path: mainPath, limit: 3, start: 0, type: '0' };
 			await this.props.getQvrFileStationFileList(getFistHourParams);
-			let { QvrFileStationFileList: normalList } = this.props.QvrFileStationFileList;
-			let normal = normalList.datas && normalList.datas[0] ? normalList.datas[0].filename : 'Normal01';
-			let mainPath = QvrFunctions._getPath(qnapChannel, normal);
-			for (const dt of dates) {
-				let getFistHourParams = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: 1, start: 0, type: '0' };
-				await this.props.getQvrFileStationFileList(getFistHourParams);
-				let { QvrFileStationFileList: firstHour } = this.props.QvrFileStationFileList;
-				let initialHour = firstHour.datas && firstHour.datas[0] ? parseInt(firstHour.datas[0].filename, 10) : 0;
-				if (searchFileHours) return initialHour;
-
-				let newEndHour = lthDate === dates.length ? parseInt(endHour, 10) : 24;
-				let newStartHour = lthDate === 1 ? parseInt(startHour, 10) : 0;
-				if (initialHour !== 0) {
-					if (newEndHour < initialHour) newEndHour = 0;
-					else {
-						newEndHour = newEndHour - initialHour;
-						newStartHour = newStartHour > initialHour ? newStartHour - initialHour : 0;
-					}
-				}
-
-				let getParamsHours = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: newEndHour, start: newStartHour, type: '0' };
-				await this.props.getQvrFileStationFileList(getParamsHours);
-				let { QvrFileStationFileList: listHours, success: sHours } = this.props.QvrFileStationFileList;
-
-				if (sHours && listHours && listHours.total > 0) {
-					for (const hr of listHours.datas) {
-						if (parseInt(hr.filename, 10) < (lthDate === dates.length ? parseInt(endHour, 10) : 24)) {
-							let getParamsVideo = { url, sid: auth.authSid, path: `${mainPath}/${dt}/${hr.filename}`, limit: '2', start: '0', type: '2' };
-							await this.props.getQvrFileStationFileList(getParamsVideo);
-							let { QvrFileStationFileList: listVideos, success: sVideos } = this.props.QvrFileStationFileList;
-							if (sVideos && listVideos && listVideos.total > 0) for (const v of listVideos.datas) allVideosList.push(`${dt}/${hr.filename}/${v.filename}`);
+			let { QvrFileStationFileList: listNormal, success: sNormal } = this.props.QvrFileStationFileList;
+			if (sNormal && listNormal && listNormal.total > 0) {
+				for (const nl of listNormal.datas) {
+					for (const dt of dates) {
+						if (!lthDate.includes(dt)) lthDate.push(dt);
+						let getFistHourParams = { url, sid: auth.authSid, path: `${mainPath}/${nl.filename}/${dt}`, limit: 1, start: 0, type: '0' };
+						await this.props.getQvrFileStationFileList(getFistHourParams);
+						let { QvrFileStationFileList: firstHour } = this.props.QvrFileStationFileList;
+						let initialHour = firstHour.datas && firstHour.datas[0] ? parseInt(firstHour.datas[0].filename, 10) : 0;
+						let newEndHour = lthDate.length === dates.length ? parseInt(endHour, 10) : 24;
+						let newStartHour = lthDate.length === 1 ? parseInt(startHour, 10) : 0;
+						if (initialHour !== 0) {
+							if (newEndHour < initialHour) newEndHour = 0;
+							else {
+								newEndHour = newEndHour - initialHour;
+								newStartHour = newStartHour > initialHour ? newStartHour - initialHour : 0;
+							}
 						}
 
+						let getParamsHours = { url, sid: auth.authSid, path: `${mainPath}/${nl.filename}/${dt}`, limit: newEndHour, start: newStartHour, type: '0' };
+						await this.props.getQvrFileStationFileList(getParamsHours);
+						let { QvrFileStationFileList: listHours, success: sHours } = this.props.QvrFileStationFileList;
+
+						if (sHours && listHours && listHours.total > 0) {
+							if (searchFileHours) return initialHour;
+							for (const hr of listHours.datas) {
+								if (parseInt(hr.filename, 10) < (lthDate.length === dates.length ? parseInt(endHour, 10) : 24)) {
+									let getParamsVideo = { url, sid: auth.authSid, path: `${mainPath}/${nl.filename}/${dt}/${hr.filename}`, limit: '2', start: '0', type: '2' };
+									await this.props.getQvrFileStationFileList(getParamsVideo);
+									let { QvrFileStationFileList: listVideos, success: sVideos } = this.props.QvrFileStationFileList;
+									if (sVideos && listVideos && listVideos.total > 0) for (const v of listVideos.datas) allVideosList.push(`${nl.filename}/${dt}/${hr.filename}/${v.filename}`);
+								}
+
+								if (selectedCamera.id !== this.state.selectedCamera.id) {
+									await this._destroyFileVideos(false, false, qnapServer);
+									break;
+								}
+							}
+						}
 						if (selectedCamera.id !== this.state.selectedCamera.id) {
 							await this._destroyFileVideos(false, false, qnapServer);
 							break;
 						}
 					}
-				}
-				lthDate++;
-				if (selectedCamera.id !== this.state.selectedCamera.id) {
-					await this._destroyFileVideos(false, false, qnapServer);
-					break;
 				}
 			}
 
@@ -533,7 +534,7 @@ class GridCameraDisplay extends Component {
 		if (isFirst) {
 			this.setState({ historyLoading: true });
 			let fileHour = await this._searchFileVideos([ dateInFormat ], 0, 24, stateNames, false, true);
-			if (fileHour !== 0) this.setState({ hasMore: false });
+      if (fileHour !== 0) this.setState({ hasMore: false });
 			foundHistory = await this._searchFileVideos([ dateInFormat ], fileHour !== 0 ? 0 : currentHour - SHOW_HISTORY, currentHour, stateNames, false);
 			this.setState({ historyLoading: false });
 		} else if (video_history.length > 0) {
@@ -591,28 +592,30 @@ class GridCameraDisplay extends Component {
 					return nuevoObjeto;
 				};
 	
-				conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam)
-					.then((response) => {
-						let resHistory = response.data;
-						if (resHistory.data.items.length > 0) {
-							let dns_ip = resHistory.data.dns_ip;
-							if (resHistory.success) {
-								let dates = createArrDate(resHistory.data.items);
-								let hours_last_day = createArrHour(dates[last_day].videos);
-								let hours_current_day = createArrHour(dates[current_day].videos);
-								this.setState({ video_history: [ dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse() ], historyLoading: false });
-								setTimeout(() => this.spinnerif(), 400);
-							} else {
-								this.setState({ video_history: null, historyLoading: false });
-								this.spinnerif();
-							}
+				try {
+					let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam);
+					let resHistory = response.data;
+					if (resHistory.data.items.length > 0) {
+						let dns_ip = resHistory.data.dns_ip;
+						if (resHistory.success) {
+							let dates = createArrDate(resHistory.data.items);
+							let hours_last_day = createArrHour(dates[last_day].videos);
+							let hours_current_day = createArrHour(dates[current_day].videos);
+							this.setState({ video_history: [ dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse() ], historyLoading: false });
+							setTimeout(() => this.spinnerif(), 400);
 						} else {
-							this.setState({ video_history: null, historyLoading: false });
+							this.setState({ video_history: [], historyLoading: false });
 							this.spinnerif();
 						}
-					});
+					} else {
+						this.setState({ video_history: [], historyLoading: false });
+						this.spinnerif();
+					}
+				} catch(err) {
+					this.setState({ video_history: [], historyLoading: false });
+				}
 			}
-		}
+		};
 
 		// Current
 		if (onlyCurrent || onlyPhotos) {
