@@ -65,7 +65,7 @@ class ModalAddCams extends Component{
                         <Fragment>
                             <BootstrapTable keyField='id' data={ this.state.auxCams } columns={ columns } pagination={paginationFactory()} filter={filterFactory()} selectRow={ selectRow } />
                             <div style={{textAlign:'center', padding:0, marginTop:10}} className="col">
-                                <Button style={{width:'360px',marginLeft:'30px'}} onClick={this._addCam} disabled={this.state.selection.length === 0}>Agregar<Icon style={{marginLeft:'3px'}} name='add' /></Button>
+                                <Button style={{width:'360px',marginLeft:'30px'}} onClick={this._addCam} disabled={this.state.selection.length === 0}>Actualizar<Icon style={{marginLeft:'3px'}} name='add' /></Button>
                                 {/* <Button style={{fontSize:'16px'}} onClick={this._addCam} disabled={this.state.selection.length === 0} circular icon='add' /> */}
                             </div>
                             </Fragment>
