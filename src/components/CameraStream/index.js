@@ -797,8 +797,8 @@ class CameraStream extends Component {
 		let { QvrFileStationAuth: auth } = this.props.QvrFileStationAuth;
 		if (auth && auth.authSid) {
 			let mainPath = QvrFunctions._getPath(qnapChannel);
-			let getFistHourParams = { url, sid: auth.authSid, path: mainPath, limit: 3, start: 0, type: '0' };
-			await this.props.getQvrFileStationFileList(getFistHourParams);
+			let getNormalParams = { url, sid: auth.authSid, path: mainPath, limit: 3, start: 0, type: '0' };
+			await this.props.getQvrFileStationFileList(getNormalParams);
 			let { QvrFileStationFileList: listNormal, success: sNormal } = this.props.QvrFileStationFileList;
 			if (sNormal && listNormal && listNormal.total > 0) {
 				for (const nl of listNormal.datas) {

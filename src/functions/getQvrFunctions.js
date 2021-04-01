@@ -34,7 +34,7 @@ export function _getCleanListVideos(arrList, serverUrl) {
 					let fndSplit = _getTextSplit(found.filename);
 					videosByHours.videos.push({
 						real_hour: fndSplit.real_hour,
-						path_video: hist.link_url
+						path_video: found.link_url
 					});
 				});
 				allVideos.push(videosByHours);
