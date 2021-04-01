@@ -206,12 +206,12 @@ class Main extends Component {
         this.setState({
           datosAlcaldia: limits.data
         })
-        // const { clave_municipal } = limits.data;
+        const { clave_municipal } = limits.data;
         firebaseSos
           .app("sos")
           .firestore()
           .collection(MESSAGES_COLLECTION)
-          // .where("c5_admin_clave", "==", alcaldia.clave_municipal)
+          .where("c5_admin_clave", "==", clave_municipal)
           .orderBy("lastModification", "desc")
           .get()
           .then(docs => {
@@ -224,6 +224,7 @@ class Main extends Component {
               return data;
             });
             this.setState({ stateSos: chatSOS })
+            this.loadData()
           });
       }
     }
@@ -343,12 +344,102 @@ class Main extends Component {
     io.socket.on('/matchApi', this.matchesApiHandler)
  
     */
-    //  this.state.datosAlcaldia.length > 0 && 
+    if (this.state.datosAlcaldia && this.state.datosAlcaldia.clave_municipal) {
+      firebaseSos
+        .app("sos")
+        .firestore()
+        .collection(MESSAGES_COLLECTION)
+        .where("c5_admin_clave", "==", this.state.datosAlcaldia.clave_municipal)
+        .orderBy("lastModification", "desc")
+        .onSnapshot((docs) => {
+          if (this.state.stateSos.length > 0) {
+            let changes = docs.docChanges();
+            if (changes.length > 0 && changes.length < 5) {
+              const changed_data = changes[0].doc.data();
+              const changed_id = changes[0].doc.id;
+              if (changes[0].type === "added") {
+
+                let founded = this.state.stateSos.find(item => item.id === changed_id);
+                if (!founded) {
+                  if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+                  changed_data['id'] = changed_id;
+                  this.setState(prevState => ({
+                    stateSos: prevState.stateSos.concat(changed_data)
+                  }));
+                  if (
+                    this.state.showNotification &&
+                    !this.state.fisrtTimeChat &&
+                    !this.state.callIsGoing
+                  ) {
+                    this.setState({ reproducirSonido: true });
+                    switch (changed_data.trackingType) {
+                      case 'Seguridad':
+                        this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                        break;
+                      case 'Protección Civil':
+                        this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+                        break;
+                      case 'Emergencia Médica':
+                        this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
+                        break;
+                      default:
+                        break;
+                    }
+                  }
+                }
+              } else {
+                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+                const find_conv_index = this.state.stateSos.findIndex(item => item.id === changed_id);
+                let aux_sos_chat = [...this.state.stateSos];
+                let aux_obj = Object.assign(changed_data, {});
+                if (find_conv_index >= 0) {
+                  if (this.state.stateSos[find_conv_index].messages.length !== changed_data.messages.length) {
+                    const aux_array = [...changed_data.messages];
+                    const current_message = aux_array.pop();
+                    aux_obj = {
+                      ...aux_obj,
+                      lastModification: new Date(aux_obj.lastModification.toDate()).toLocaleString(),
+                      id: changed_id
+                    }
+                    aux_sos_chat[find_conv_index] = aux_obj;
+                    this.setState({
+                      stateSos: aux_sos_chat
+                    }, () => {
+                      if (
+                        this.state.showNotification &&
+                        !this.state.fisrtTimeChat &&
+                        !this.state.callIsGoing
+                      ) {
+                        if (current_message && current_message.from.includes("user")) {
+                          this.setState({ reproducirSonido: true });
+                          switch (changed_data.trackingType) {
+                            case 'Seguridad':
+                              this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                              break;
+                            case 'Protección Civil':
+                              this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+                              break;
+                            case 'Emergencia Médica':
+                              this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
+                              break;
+                            default:
+                              break;
+                          }
+                        }
+                      }
+                    });
+                  }
+                }
+              }
+            }
+          }
+        });
+    }
+
     firebaseSos
       .app('sos')
       .firestore()
       .collection(COMPLAINT_COLLECTION)
-      //  .where("c5_admin_clave", "==", this.state.datosAlcaldia[0].clave_municipal)
       .orderBy('fecha_modificacion', 'desc')
       .onSnapshot((docs) => {
         let { complaints, showNotification, callIsGoing } = this.state;
@@ -376,96 +467,6 @@ class Main extends Component {
 
         let newComplaints = docs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         this.setState({ complaints: newComplaints });
-      });
-
-    firebaseSos
-      .app("sos")
-      .firestore()
-      .collection(MESSAGES_COLLECTION)
-      //  .where("c5_admin_clave", "==", this.state.datosAlcaldia[0].clave_municipal)
-      .orderBy("lastModification", "desc")
-      .onSnapshot((docs) => {
-        if (this.state.stateSos.length > 0) {
-          let changes = docs.docChanges();
-          if (changes.length > 0 && changes.length < 5) {
-            const changed_data = changes[0].doc.data();
-            const changed_id = changes[0].doc.id;
-            if (changes[0].type === "added") {
-
-              let founded = this.state.stateSos.find(item => item.id === changed_id);
-              if (!founded) {
-                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
-                changed_data['id'] = changed_id;
-                this.setState(prevState => ({
-                  stateSos: prevState.stateSos.concat(changed_data)
-                }));
-                if (
-                  this.state.showNotification &&
-                  !this.state.fisrtTimeChat &&
-                  !this.state.callIsGoing
-                ) {
-                  this.setState({ reproducirSonido: true });
-                  switch (changed_data.trackingType) {
-                    case 'Seguridad':
-                      this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
-                      break;
-                    case 'Protección Civil':
-                      this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
-                      break;
-                    case 'Emergencia Médica':
-                      this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
-                      break;
-                    default:
-                      break;
-                  }
-                }
-              }
-            } else {
-              if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
-              const find_conv_index = this.state.stateSos.findIndex(item => item.id === changed_id);
-              let aux_sos_chat = [...this.state.stateSos];
-              let aux_obj = Object.assign(changed_data, {});
-              if (find_conv_index >= 0) {
-                if (this.state.stateSos[find_conv_index].messages.length !== changed_data.messages.length) {
-                  const aux_array = [...changed_data.messages];
-                  const current_message = aux_array.pop();
-                  aux_obj = {
-                    ...aux_obj,
-                    lastModification: new Date(aux_obj.lastModification.toDate()).toLocaleString(),
-                    id: changed_id
-                  }
-                  aux_sos_chat[find_conv_index] = aux_obj;
-                  this.setState({
-                    stateSos: aux_sos_chat
-                  }, () => {
-                    if (
-                      this.state.showNotification &&
-                      !this.state.fisrtTimeChat &&
-                      !this.state.callIsGoing
-                    ) {
-                      if (current_message && current_message.from.includes("user")) {
-                        this.setState({ reproducirSonido: true });
-                        switch (changed_data.trackingType) {
-                          case 'Seguridad':
-                            this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
-                            break;
-                          case 'Protección Civil':
-                            this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
-                            break;
-                          case 'Emergencia Médica':
-                            this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
-                            break;
-                          default:
-                            break;
-                        }
-                      }
-                    }
-                  });
-                }
-              }
-            }
-          }
-        }
       });
 
     firebaseC5Benito
