@@ -190,7 +190,6 @@ class Chat extends Component {
                       </div>
                     ) : null}
                     <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                      <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
                     </div>
                   </div>
                 </Card.Content>
@@ -305,15 +304,14 @@ class Chat extends Component {
                     </div>
                     <div className='col camContainerChatDiv' style={{ height: '100%' }}>
                       {camData !== undefined ?
+                      
                         <CameraStream
-                          style={{ height: '100%' }}
                           hideTitle
-                          height='100%'
-                          hideButton
+                          height='250px'
                           propsIniciales={this.props}
-                          marker={camData}
+                          marker={console.log("camdata", camData), camData}
                         />
-                        : null}
+                        : <p>Sin camara asignada...</p>}
                     </div>
                   </div>
 
@@ -358,31 +356,7 @@ class Chat extends Component {
                             }
                           </div>
                           <div className="col-4" style={{ margin: "auto" }}>
-                            <Button
-                              size='small'
-                              icon
-                              labelPosition='left'
-                              color="red"
-                              onClick={this.closeChat}
-                              style={{ margin: '5px' }}
-                              disabled={textareaDisabled}
-                            >
-                              <Icon name="taxi" />
-                                Enviar unidad
-                              </Button>
-                            <br />
-                            <Button
-                              size='small'
-                              icon
-                              labelPosition='left'
-                              color="green"
-                              onClick={this.closeChat}
-                              style={{ margin: '5px' }}
-                              disabled={textareaDisabled}
-                            >
-                              <Icon name="phone" />
-                                Marcar Ciudadano
-                              </Button>
+                           
                           </div>
                         </div>
                       </Card.Content>
@@ -646,11 +620,13 @@ class Chat extends Component {
   };
 
   _changeUserCam = (chat) => {
-    if (chat.user_cam) {
+    if (Object.keys(chat.user_cam).length !== 0) {
       const { user_cam } = chat;
       this.setState({
         camData: {
+
           extraData: {
+
             num_cam: user_cam.num_cam,
             cameraID: user_cam.num_cam,
             isHls: true,
@@ -662,7 +638,9 @@ class Chat extends Component {
               user_cam.UrlStreamMediaServer.name +
               user_cam.channel,
             dataCamValue: user_cam
+          
           },
+          
         },
       });
     } else {

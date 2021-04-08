@@ -148,7 +148,7 @@ class Chat extends Component {
                     height="100%"
                     hideButton
                     propsIniciales={this.props}
-                    marker={camData} /> : null}
+                    marker={camData} /> : <p>Loading.....gffgf</p>}
                 </div>
 
               </div>
