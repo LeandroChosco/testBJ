@@ -7,10 +7,11 @@ export function _getCleanIndexChannel(channel) {
 export function _getTextSplit(str) {
 	let d = str.split('/');
 	let fecha = d[6];
-	let hour = `${d[7]}:00`;
+	let h = parseInt(d[7], 10) < 10 ? `0${parseInt(d[7], 10)}` : parseInt(d[7], 10);
+	let hour = `${h}:00`;
 	let searchFor = `${d[6]}/${d[7]}/`;
 	let dh = d[8].split('-');
-	let real_hour = `${dh[1].slice(0, 2)}:${dh[1].slice(2, 4)}`;
+	let real_hour = `${h}:${dh[1].slice(2, 4)}`;
 	return { fecha, searchFor, hour, real_hour };
 }
 
