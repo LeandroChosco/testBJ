@@ -338,29 +338,9 @@ class Chat extends Component {
                             </div>
                           </div>
                           <div className="col-4" style={{ margin: "auto" }}>
-                            <Button
-                              color="red"
-                              style={{ width: "80%", alignItems: "center", margin: '5px' }}
-                              className="ui button"
-                              onClick={this.closeChat}
-                              disabled={textareaDisabled}
-                            >
-                              <Icon name="taxi" />
-                              Enviar unidad
-                            </Button>
+                            
                             <br />
-                            <Button
-                              size='small'
-                              icon
-                              labelPosition='left'
-                              color="green"
-                              onClick={this.closeChat}
-                              style={{ margin: '5px' }}
-                              disabled={textareaDisabled}
-                            >
-                              <Icon name="phone" />
-                                Marcar Ciudadano
-                              </Button>
+                           
                           </div>
                         </div>
                       </Card.Content>

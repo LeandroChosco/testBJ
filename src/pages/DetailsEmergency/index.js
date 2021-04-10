@@ -142,9 +142,7 @@ const mapOptions= {
             :null:null}
 
                 <div align="center" className="col-6" style={{margin: 'auto'}} >
-                    <Button color="red" style={{width: '200px'}} class="ui button">
-                    <Icon name='taxi' />Mandar unidad
-                    </Button>
+                    
                 </div> 
             </div>        
         </div>

@@ -182,9 +182,7 @@ class Chat extends Component {
                           : null}
                       </div>
                       <div className="col-4" style={{ margin: 'auto' }} >
-                        <Button color="red" style={{ width: '80%', alignItems: 'center', }} className="ui button" onClick={this.closeChat}>
-                          <Icon name='taxi' />Mandar unidad
-                                </Button>
+                        
                       </div>
                     </div>
 
