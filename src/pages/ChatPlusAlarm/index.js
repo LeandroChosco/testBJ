@@ -40,7 +40,7 @@ const SEARCHOPTIONS = [
   },
 ]
 
-class Chat extends Component {
+class ChatAlarm extends Component {
   state = {
     messages: [],
     chats: [],
@@ -190,7 +190,7 @@ class Chat extends Component {
                       </div>
                     ) : null}
                     <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                    {/* <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : null}</strong> </small></div> */}
+                    <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
                     </div>
                   </div>
                 </Card.Content>
@@ -814,7 +814,7 @@ class Chat extends Component {
   }
 }
 
-export default Chat;
+export default ChatAlarm;
 
 const styles = {
   badge: {

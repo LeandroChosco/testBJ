@@ -298,7 +298,7 @@ class Analysis extends Component {
                         changeStatus={this._chageCamStatus}
                         propsIniciales={this.props}/>)
         case 3:
-            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450}  hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
+            return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height="250px"  hideFileButton showFilesBelow moduleActions={this.state.moduleActions}/></div>)
         default:
            return null
     }
@@ -359,8 +359,8 @@ class Analysis extends Component {
                 let index = 1
                 // let indexFail = 1
                 camaras.map(value=>{
-                    if (value.active === 1 && value.flag_streaming === 1 && value.tipo_camara === 4) {
-                        // console.log(value)
+                    if (value.active === 1 && value.tipo_camara === 4) {
+                         console.log("value", value)
                         // let url = 'rtmp://18.212.185.68/live/cam';                                               
                         auxCamaras.push({
                             id:value.id,

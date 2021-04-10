@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Chat from '../ChatPlus/index';
+import ChatAlarm from '../ChatPlusAlarm';
 
 
 class AlarmChat extends Component {
@@ -11,7 +11,7 @@ class AlarmChat extends Component {
     render() {
         return (
             <>
-                < Chat {...this.props} />
+                < ChatAlarm {...this.props} />
             </>
         )
     }
