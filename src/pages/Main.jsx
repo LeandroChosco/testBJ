@@ -132,6 +132,7 @@ class Main extends Component {
             value.id = v.id;
             return value;
           });
+
           this.setState({ chats });
         }
       });
@@ -211,7 +212,7 @@ class Main extends Component {
           .app("sos")
           .firestore()
           .collection(MESSAGES_COLLECTION)
-          .where("c5_admin_clave", "==", clave_municipal)
+          // .where("c5_admin_clave", "==", clave_municipal)
           .orderBy("lastModification", "desc")
           .get()
           .then(docs => {
@@ -349,7 +350,7 @@ class Main extends Component {
         .app("sos")
         .firestore()
         .collection(MESSAGES_COLLECTION)
-        .where("c5_admin_clave", "==", this.state.datosAlcaldia.clave_municipal)
+        // .where("c5_admin_clave", "==", this.state.datosAlcaldia.clave_municipal)
         .orderBy("lastModification", "desc")
         .onSnapshot((docs) => {
           if (this.state.stateSos.length > 0) {
