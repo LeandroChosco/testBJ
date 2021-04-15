@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import "./style.css";
 import MapContainer from "../../components/MapContainer/index.js";
-import firebaseC5cuajimalpa from "../../constants/configC5CJ";
+import firebaseC5Benito from "../../constants/configC5CJ";
 import { Navbar } from "react-bootstrap";
 import conections from "../../conections";
 // import CameraStream from "../../components/CameraStream";
@@ -192,8 +192,8 @@ class DetailsSupport extends Component {
       if (res.status === 200) {
         const data = res.data;
         if (data.success) {
-          firebaseC5cuajimalpa
-            .app("c5cuajimalpa")
+          firebaseC5Benito
+            .app("cc5benito")
             .firestore()
             .collection("support")
             .doc(this.props.match.params.id)
@@ -226,8 +226,8 @@ class DetailsSupport extends Component {
       if (res.status === 200) {
         const data = res.data;
         if (data.success) {
-          firebaseC5cuajimalpa
-            .app("c5cuajimalpa")
+          firebaseC5Benito
+            .app("c5benito")
             .firestore()
             .collection("support")
             .doc(this.props.match.params.id)
@@ -245,8 +245,8 @@ class DetailsSupport extends Component {
 
   componentDidMount() {
     //console.log(this.props.match.params.id)
-    firebaseC5cuajimalpa
-      .app("c5cuajimalpa")
+    firebaseC5Benito
+      .app("c5benito")
       .firestore()
       .collection("support")
       .doc(this.props.match.params.id)

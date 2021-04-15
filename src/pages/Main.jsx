@@ -572,7 +572,7 @@ class Main extends Component {
       })
     })
 
-    firebaseC5.app('c5virtual').firestore().collection('support').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    firebaseC5Benito.app('c5benito').firestore().collection('support').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.support.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeSupport) {
         this.showNot('Solicitud de soporte', 'Nueva solicitud de soporte generada', 'info', 'Ver detalles', 4, docs.docs[0].id)
       }
