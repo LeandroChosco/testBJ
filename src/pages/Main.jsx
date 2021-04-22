@@ -552,7 +552,7 @@ class Main extends Component {
 
 
 
-    firebaseC5.app('c5virtual').firestore().collection('help').orderBy('dateTime', 'desc').onSnapshot(docs => {
+      firebaseC5Benito.app('c5benito').firestore().collection('help').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.sos.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeHelp) {
         this.showNot('SOS', 'Nueva alerta de ayuda generada', 'error', 'Ver detalles', 5, docs.docs[docs.docs.length - 1].id)
         this.setState({ reproducirSonido: true })
@@ -592,7 +592,7 @@ class Main extends Component {
     })
 
 
-    firebaseC5.app('c5virtual').firestore().collection('complaints').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    firebaseC5Benito.app('c5benito').firestore().collection('complaints').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.complaiments.length !== docs.size && this.state.showNotification && !this.state.fisrtTimecomplaiments) {
         this.showNot('Nueva denuncia', 'Se ha recibido una nueva denuncia', 'info', 'Ver detalles', 2, docs.docs[0].id)
         this.setState({ reproducirSonido: true })
@@ -608,7 +608,7 @@ class Main extends Component {
       })
     })
 
-    firebaseC5.app('c5virtual').firestore().collection('calls').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    firebaseC5Benito.app('c5benito').firestore().collection('calls').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.showNotification && !this.state.fisrtTimeCall && !this.state.callIsGoing) {
         const notification = this.refs.notificationSystem;
         this.setState({ stopNotification: true })
@@ -721,7 +721,7 @@ class Main extends Component {
       const notification = this.refs.notificationSystem;
       if (notification) {
         this.setState({ stopNotification: true })
-        firebaseC5.app('c5virtual').firestore().collection('calls').add({ ...data, status: 1, dateTime: new Date() }).then(doc => {
+        firebaseC5Benito.app('c5benito').firestore().collection('calls').add({ ...data, status: 1, dateTime: new Date() }).then(doc => {
           notification.addNotification({
             title: 'Llama entrante de ' + data.user_nicename,
             message: 'Se registro una llamada entrante',
