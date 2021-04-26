@@ -1,6 +1,7 @@
 // Produccion
 // const sails_url = 'http://prod.adminc5.bj.sails.energetikadevelepment.com';
 const sails_url = "http://3.21.75.143";
+const express_url = "http://3.15.181.186"
 
 //Dev
 //const sails_url = "http://18.191.101.241";
@@ -11,6 +12,7 @@ const sailsPort = "1337";
 const ptzPort = "3001";
 
 export default {
+  express_url,
   sails_url,
   apiPort,
   webSocketPort,

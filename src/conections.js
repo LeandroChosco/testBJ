@@ -90,11 +90,11 @@ export default {
   // Endpoint para ticket en pingüino
   toProcess: (data) => {
     data.user_id = getUserID();
-    return Axios.put(constants.sails_url + ':' + constants.apiPort + '/tickets/toprocess/', data);
+    return Axios.put(constants.sails_url + ':' + constants.sailsPort + '/tickets/toprocess/', data);
   },
   toClose: (data) => {
     data.user_id = getUserID();
-    return Axios.put(constants.sails_url + ':' + constants.apiPort + '/tickets/toclose/', data);
+    return Axios.put(constants.sails_url + ':' + constants.sailsPort + '/tickets/toclose/', data);
   },
   dashboardCams: () => {
     return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/dashboard/cams');
