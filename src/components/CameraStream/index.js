@@ -50,6 +50,7 @@ class CameraStream extends Component {
 		activeIndex: 0,
 		cameraID: '',
 		cameraName: '',
+		entrecalles: '',
 		data: {},
 		webSocket: null,
 		player: null,
@@ -94,7 +95,7 @@ class CameraStream extends Component {
 	tryReconect = false;
 
 	render() {
-		let { activeIndex, display, num_cam, cameraID, cameraName, showData, photos, data, qnapServer, qnapChannel, servidorMultimedia, photosLoading, videosLoading, videos, historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, loadingSnap, isLoading, isRecording, restarting, loadingFiles, modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription, showPTZ } = this.state;
+		let { activeIndex, display, num_cam, cameraID, cameraName, entrecalles, showData, photos, data, qnapServer, qnapChannel, servidorMultimedia, photosLoading, videosLoading, videos, historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, loadingSnap, isLoading, isRecording, restarting, loadingFiles, modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription, showPTZ } = this.state;
     return (
 			<Card style={{ display: display }}>
 				{this.props.horizontal ? (
@@ -156,7 +157,7 @@ class CameraStream extends Component {
 						{this.props.hideTitle ? null : (
 							<Card.Title>
 								<div align="left">
-									<i className="fa fa-video-camera" /> Camaras {num_cam}{' '}
+									<i className="fa fa-video-camera" /> Camara {num_cam}{' '}
 									{this.props.marker.extraData.dataCamValue === undefined || this.props.marker.extraData.tipo_camara === undefined ? null :
 										this.props.marker.extraData.dataCamValue.tipo_camara === 2 || this.props.marker.extraData.tipo_camara === 2 ? (
 										<i>, Tipo: PTZ </i>
@@ -289,7 +290,16 @@ class CameraStream extends Component {
 						</div>
 						{this.props.hideText ? null : (
 							<div align="left">
-								{cameraName}
+								
+								{cameraName && !this.props.hideInfo  ? <p>
+									Direccion: {cameraName}
+								 </p>  : null}
+			
+								
+								 {entrecalles && !this.props.hideInfo ? <p>
+									Entre Calles: {entrecalles}
+								 </p>  : null}
+								
 								{data.rel_cuadrante ? data.rel_cuadrante.length !== 0 ? (
 									data.rel_cuadrante.map(
 										(item) =>
@@ -669,7 +679,7 @@ class CameraStream extends Component {
 	};
 
 	componentDidMount() {
-		//   console.log(this.props)
+		   console.log('props', this.props)
 		if (this.props.marker.extraData === undefined) {
 			this.setState({ data: {}, qnapServer: null, qnapChannel: null });
 			return false;
@@ -678,6 +688,7 @@ class CameraStream extends Component {
     this.setState({
 			cameraName: this.props.marker.title,
 			num_cam: this.props.marker.extraData.num_cam,
+			entrecalles: this.props.marker.extraData.dataCamValue.entrecalles,
 			cameraID: this.props.marker.extraData.id,
       data: this.props.marker.extraData,
       qnapServer: this.props.marker.extraData.dataCamValue.qnap_server_id,
