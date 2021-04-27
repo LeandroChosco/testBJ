@@ -193,7 +193,7 @@ class DetailsSupport extends Component {
         const data = res.data;
         if (data.success) {
           firebaseC5Benito
-            .app("cc5benito")
+            .app("c5benito")
             .firestore()
             .collection("support")
             .doc(this.props.match.params.id)
