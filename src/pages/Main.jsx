@@ -82,7 +82,7 @@ class Main extends Component {
     chats: [],
     chatSelected: null,
     showNotification: false,
-    fisrtTime: true,
+    fisrtTime: false,
     fisrtTimeHelp: true,
     fisrtTimeSupport: true,
     firebase: {},
@@ -232,7 +232,7 @@ class Main extends Component {
   }
 
   //  ----- matches reales ----
-  sortConvs = (a, b) => {
+  /* sortConvs = (a, b) => {
     if (b.DwellTime < a.DwellTime) {
       return -1;
     }
@@ -240,9 +240,9 @@ class Main extends Component {
       return 1;
     }
     return 0;
-  }
+  } */
 
-  matchesApiHandler = (event) => {
+  /* matchesApiHandler = (event) => {
     if (event.length !== undefined) {
       let data = event.sort(this.sortConvs)
       this.setState({ matches: data })
@@ -268,7 +268,7 @@ class Main extends Component {
         this.setState({ matches: data })
       }
     }
-  }
+  } */
 
   _newCovidItem = () => {
     if (this.state.newCovidState) {
@@ -314,7 +314,7 @@ class Main extends Component {
       })
     }
 
-    firebase.firestore().collection('matches').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    /* firebaseC5Benito.firestore().collection('matches').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.matches.length !== docs.size && this.state.showNotification && !this.state.fisrtTime) {
         this.showNot('Match', 'Nuevo match detectado', 'warning', 'Ver match', 0)
       }
@@ -327,7 +327,7 @@ class Main extends Component {
           return value
         })
       })
-    })
+    }) */
     /*
     --- matches reales ----
     let io;
