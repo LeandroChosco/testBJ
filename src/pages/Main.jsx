@@ -622,7 +622,7 @@ class Main extends Component {
         call = true
         //firebaseC5.app('c5cuajimalpa').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
         notification.addNotification({
-          title: 'Llama entrante de ' + docs.docs[0].data().user_nicename,
+          title: 'Llama entrante de ' + docs && docs.docs.length > 0 && docs.docs[0].data().user_nicename,
           message: 'Se registro una llamada entrante',
           level: 'error',
           action: {
