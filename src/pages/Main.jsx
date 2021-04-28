@@ -128,7 +128,7 @@ class Main extends Component {
             let value = v.data();
             value.lastModification = new Date(
               value.lastModification.toDate()
-            ).toLocaleString();
+            ).toString();
             value.id = v.id;
             return value;
           });
@@ -220,7 +220,7 @@ class Main extends Component {
               let data = i.data();
               data.lastModification = new Date(
                 data.lastModification.toDate()
-              ).toLocaleString();
+              ).toString();
               data.id = i.id;
               return data;
             });
@@ -304,7 +304,7 @@ class Main extends Component {
             if (value.dateTime) {
               value.dateTime = new Date(
                 value.dateTime
-              ).toLocaleString();
+              ).toString();
             } else {
               value.dateTime = value.date;
             }
@@ -323,7 +323,7 @@ class Main extends Component {
       this.setState({
         matches: docs.docs.map(v => {
           let value = v.data()
-          value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          value.dateTime = new Date(value.dateTime.toDate()).toString()
           return value
         })
       })
@@ -399,7 +399,7 @@ class Main extends Component {
                     const current_message = aux_array.pop();
                     aux_obj = {
                       ...aux_obj,
-                      lastModification: new Date(aux_obj.lastModification.toDate()).toLocaleString(),
+                      lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
                       id: changed_id
                     }
                     aux_sos_chat[find_conv_index] = aux_obj;
@@ -489,7 +489,7 @@ class Main extends Component {
                 let value = v.data()
                 value.lastModification = new Date(
                   value.lastModification.toDate()
-                ).toLocaleString()
+                ).toString()
                 value.id = v.id
                 return value
               });
@@ -541,7 +541,7 @@ class Main extends Component {
           //     let value = v.data()
           //     value.lastModification = new Date(
           //         value.lastModification.toDate()
-          //     ).toLocaleString()
+          //     ).toString()
           //     value.id = v.id
           //     return value
           // })
@@ -552,7 +552,7 @@ class Main extends Component {
 
 
 
-      firebaseC5Benito.app('c5benito').firestore().collection('help').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    firebaseC5Benito.app('c5benito').firestore().collection('help').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.sos.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeHelp) {
         this.showNot('SOS', 'Nueva alerta de ayuda generada', 'error', 'Ver detalles', 5, docs.docs[docs.docs.length - 1].id)
         this.setState({ reproducirSonido: true })
@@ -563,7 +563,7 @@ class Main extends Component {
         sos: docs.docs.map(v => {
           let value = v.data();
           if (value.dateTime.toDate)
-            value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+            value.dateTime = new Date(value.dateTime.toDate()).toString()
           else
             value.dateTime = value.date
           value.id = v.id
@@ -582,7 +582,7 @@ class Main extends Component {
         support: docs.docs.map(v => {
           let value = v.data()
           if (value.dateTime.toDate)
-            value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+            value.dateTime = new Date(value.dateTime.toDate()).toString()
           else
             value.dateTime = value.date
           value.id = v.id
