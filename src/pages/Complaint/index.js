@@ -76,7 +76,7 @@ class Complaint extends Component {
 								}
 							]}
 							defaultActiveIndex={0}
-							onTabChange={() => {}}
+							onTabChange={() => { }}
 						/>
 					</div>
 					<div className="col-8">
@@ -228,7 +228,7 @@ class Complaint extends Component {
 															<div className="row">
 																<div className="col" style={styles.text}>
 																	<b>Fecha de creación: </b>
-																	{moment(moment(complaints[actIdx].fecha_creacion)).format('DD-MM-YYYY, h:mm a')}
+																	{moment(moment(complaints[actIdx].fecha_creacion)).format('DD-MM-YYYY, hh:mm')}
 																</div>
 																<div className="col" style={styles.text}>
 																	&nbsp;
@@ -254,12 +254,12 @@ class Complaint extends Component {
 									</div>
 								</div>
 							) : null
-							// loading === true ? (
-							// 	'Cargando...'
-							// ) : (
-							// 	'No se ha seleccionado ninguna solicitud de servicio'
-							// )
-						  }
+								// loading === true ? (
+								// 	'Cargando...'
+								// ) : (
+								// 	'No se ha seleccionado ninguna solicitud de servicio'
+								// )
+							}
 						</div>
 					</div>
 				</div>
@@ -284,7 +284,7 @@ class Complaint extends Component {
 						selection
 						options={SEARCH_OPTIONS}
 						defaultValue={SEARCH_OPTIONS[0].value}
-						onChange={() => {}}
+						onChange={() => { }}
 						style={styles.flex1}
 					/>
 				</div>
@@ -302,7 +302,7 @@ class Complaint extends Component {
 										<h4>
 											{complaint.es_anonimo ? (`Anonimo`) : (`${complaint.user.firstname} ${complaint.user.lastname}`)}
 										</h4>
-										<p>{moment(moment(complaint.fecha_creacion)).format('DD-MM-YYYY, h:mm a')}</p>
+										<p>{moment(moment(complaint.fecha_creacion)).format('DD-MM-YYYY, hh:mm')}</p>
 									</div>
 									<div style={styles.list}>
 										{complaint.read ? <b>&nbsp;</b> : <b style={styles.newCard}>Nuevo</b>}
@@ -354,12 +354,12 @@ class Complaint extends Component {
 		});
 	};
 	_getDescription = (description) => {
-		let reverseDescription = [ ...String(description) ].reverse().join('');
+		let reverseDescription = [...String(description)].reverse().join('');
 		let firstIndex = reverseDescription.indexOf('/');
 		let getSecondblock = reverseDescription.substr(firstIndex + 1, reverseDescription.length - 1);
 		let secondIndex = getSecondblock.indexOf('/');
 		let printDescription = getSecondblock.substr(secondIndex + 1, reverseDescription.length - 1);
-		let reinvestDescription = [ ...String(printDescription) ].reverse().join('');
+		let reinvestDescription = [...String(printDescription)].reverse().join('');
 		return reinvestDescription;
 	};
 	_changeComplaint = (complaint, actIdx, flag = true) => {

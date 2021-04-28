@@ -111,7 +111,7 @@ class ChatAlarm extends Component {
         if (optionSelected === "alertType") {
           newFilterSearch = filterData.filter(c => c.trackingType && expresion.test(c.trackingType))
         } else if (optionSelected === "date") {
-          newFilterSearch = filterData.filter(c => expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, h:mm a')))
+          newFilterSearch = filterData.filter(c => expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, hh:mm')))
         } else if (optionSelected === "name") {
           newFilterSearch = filterData.filter(c => expresion.test(c.user_name))
         }
@@ -150,7 +150,7 @@ class ChatAlarm extends Component {
         </div>
         <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
           {chats.map((chat, i) => {
-            const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, h:mm a') : moment(chat.lastModification).format('DD-MM-YYYY, h:mm a');
+            const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, hh:mm') : moment(chat.lastModification).format('DD-MM-YYYY, hh:mm');
 
             let badgeNumber = 0;
             if (this.state.chatId) {
@@ -190,7 +190,7 @@ class ChatAlarm extends Component {
                       </div>
                     ) : null}
                     <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                    <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
+                      <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
                     </div>
                   </div>
                 </Card.Content>
@@ -305,7 +305,7 @@ class ChatAlarm extends Component {
                     </div>
                     <div className='col camContainerChatDiv' style={{ height: '100%' }}>
                       {camData !== undefined ?
-                      
+
                         <CameraStream
                           hideTitle
                           height='250px'
@@ -357,7 +357,7 @@ class ChatAlarm extends Component {
                             }
                           </div>
                           <div className="col-4" style={{ margin: "auto" }}>
-                           
+
                           </div>
                         </div>
                       </Card.Content>
@@ -639,9 +639,9 @@ class ChatAlarm extends Component {
               user_cam.UrlStreamMediaServer.name +
               user_cam.channel,
             dataCamValue: user_cam
-          
+
           },
-          
+
         },
       });
     } else {

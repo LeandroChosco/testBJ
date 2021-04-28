@@ -127,7 +127,7 @@ class Chat extends Component {
         } else if (optionSelected === "date") {
           newFilterSearch = filterData.filter((c) =>
             expresion.test(
-              moment(moment(c.create_at)).format("DD-MM-YYYY, h:mm a")
+              moment(moment(c.create_at)).format("DD-MM-YYYY, hh:mm")
             )
           );
         } else if (optionSelected === "name") {
@@ -181,10 +181,11 @@ class Chat extends Component {
           }}
         >
           {chats.map((chat, i) => {
+            console.log(chat.lastModification, moment(chat.lastModification).toDate());
             const date =
               chat && chat.create_at
-                ? moment(chat.create_at).format("DD-MM-YYYY, h:mm a")
-                : moment(chat.lastModification).format("DD-MM-YYYY, h:mm a");
+                ? moment(chat.create_at).format("DD-MM-YYYY, HH:MM")
+                : moment(chat.lastModification).format("DD-MM-YYYY HH:MM");
 
             let badgeNumber = 0;
             if (this.state.chatId) {
