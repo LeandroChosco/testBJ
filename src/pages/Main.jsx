@@ -611,17 +611,17 @@ class Main extends Component {
     firebaseC5Benito.app('c5benito').firestore().collection('calls').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.showNotification && !this.state.fisrtTimeCall && !this.state.callIsGoing) {
         const notification = this.refs.notificationSystem;
-        this.setState({ stopNotification: true })
-        this.setState({ callIsGoing: true })
-        this.setState({ reproducirSonido: true })
+        this.setState({ stopNotification: false })
+        this.setState({ callIsGoing: false })
+        this.setState({ reproducirSonido: false })
         if (call) {
           call = false
           this.setState({ callIsGoing: false })
           return
         }
-        call = true
+        call = false
         //firebaseC5.app('c5cuajimalpa').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
-        notification.addNotification({
+        /* notification.addNotification({
           title: 'Llama entrante de ' + docs && docs.docs.length > 0 && docs.docs[0].data().user_nicename,
           message: 'Se registro una llamada entrante',
           level: 'error',
@@ -651,7 +651,7 @@ class Main extends Component {
 
 
           }
-        });
+        }); */
         this.setState({ callIsGoing: false })
       }
       if (this.state.fisrtTimeCall)
