@@ -111,7 +111,7 @@ class ChatAlarm extends Component {
         if (optionSelected === "alertType") {
           newFilterSearch = filterData.filter(c => c.trackingType && expresion.test(c.trackingType))
         } else if (optionSelected === "date") {
-          newFilterSearch = filterData.filter(c => expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, hh:mm')))
+          newFilterSearch = filterData.filter(c => expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, HH:mm:ss')))
         } else if (optionSelected === "name") {
           newFilterSearch = filterData.filter(c => expresion.test(c.user_name))
         }
@@ -150,7 +150,7 @@ class ChatAlarm extends Component {
         </div>
         <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
           {chats.map((chat, i) => {
-            const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, hh:mm') : moment(chat.lastModification).format('DD-MM-YYYY, hh:mm');
+            const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, HH:mm:ss') : moment(chat.lastModification).format('DD-MM-YYYY, HH:mm:ss');
 
             let badgeNumber = 0;
             if (this.state.chatId) {
@@ -388,7 +388,7 @@ class ChatAlarm extends Component {
                         <p>{value.msg}</p>
                         <small>
                           {value.dateTime.toDate
-                            ? value.dateTime.toDate().toLocaleString()
+                            ? moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
                             : null}
                         </small>
                       </div>

@@ -103,7 +103,7 @@ class Chat extends Component {
         if (optionSelected === "alertType") {
           newFilterSearch = filterData.filter(c => c.trackingType && expresion.test(c.trackingType))
         } else if (optionSelected === "date") {
-          newFilterSearch = filterData.filter(c => expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, hh:mm')))
+          newFilterSearch = filterData.filter(c => expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, HH:mm:ss')))
         } else if (optionSelected === "name") {
           newFilterSearch = filterData.filter(c => expresion.test(c.user_name))
         }
@@ -139,7 +139,7 @@ class Chat extends Component {
       </div>
 
       {chats.map((chat, i) => {
-        const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, hh:mm') : typeof chat.lastModification === 'string' ? moment(chat.lastModification).format('DD-MM-YYYY, hh:mm') : moment(chat.lastModification.toDate()).format('DD-MM-YYYY, hh:mm');
+        const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, HH:mm:ss') : typeof chat.lastModification === 'string' ? moment(chat.lastModification).format('DD-MM-YYYY, HH:mm:ss') : moment(chat.lastModification.toDate()).format('DD-MM-YYYY, HH:mm:ss');
 
         return (
           <Card
@@ -372,7 +372,7 @@ class Chat extends Component {
                       <p>{value.msg}</p>
                       <small>
                         {value.dateTime.toDate
-                          ? value.dateTime.toDate().toLocaleString()
+                          ? moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
                           : null}
                       </small>
                     </div>
