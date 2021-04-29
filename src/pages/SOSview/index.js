@@ -140,7 +140,6 @@ class Chat extends Component {
 
       {chats.map((chat, i) => {
         const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, HH:mm:ss') : typeof chat.lastModification === 'string' ? moment(chat.lastModification).format('DD-MM-YYYY, HH:mm:ss') : moment(chat.lastModification.toDate()).format('DD-MM-YYYY, HH:mm:ss');
-
         return (
           <Card
             className={i === index ? "activeChat" : ""}

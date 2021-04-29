@@ -364,9 +364,11 @@ class Main extends Component {
                 if (!founded) {
                   if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
                   changed_data['id'] = changed_id;
-                  this.setState(prevState => ({
-                    stateSos: prevState.stateSos.concat(changed_data)
-                  }));
+                  let aux_chat_sos = [...this.state.stateSos];
+                  aux_chat_sos.unshift(changed_data)
+                  this.setState({
+                    stateSos: aux_chat_sos
+                  });
                   if (
                     this.state.showNotification &&
                     !this.state.fisrtTimeChat &&
@@ -527,27 +529,27 @@ class Main extends Component {
                 }
               }
             }
-          }else{
-            const {chats} = this.state;
+          } else {
+            const { chats } = this.state;
             if (changes[0].type === "added" && chats.length > 0) {
               let founded = this.state.chats.find(item => item.id === changed_id);
-              
-              if(!founded){
+
+              if (!founded) {
                 if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
                 const chats = docs.docs.map(v => {
                   let value = v.data()
                   value.lastModification = new Date(
                     value.lastModification.toDate()
-                  ).toLocaleString()
+                  ).toString()
                   value.id = v.id
                   return value
                 });
                 this.setState({ reproducirSonido: true, chats, stopNotification: false });
-                if(
+                if (
                   this.state.showNotification &&
                   !this.state.fisrtTimeChat &&
                   !this.state.callIsGoing
-                ){
+                ) {
                   this.showNot(
                     'Mensaje de usuario',
                     'Nuevo mensaje de usuario',
@@ -555,8 +557,8 @@ class Main extends Component {
                     'Ver detalles',
                     0,
                     changes[0].doc.id
-                    );
-                  }
+                  );
+                }
               }
             }
           }
