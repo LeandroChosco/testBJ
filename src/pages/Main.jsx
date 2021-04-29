@@ -480,6 +480,7 @@ class Main extends Component {
         if (changes.length > 0) {
           const index = changes[0].oldIndex;
           const data = changes[0].doc.data();
+          const changed_id = changes[0].doc.id;
           if (this.state.chats[index]) {
             if (this.state.chats[index].messages.length === data.messages.length) {
               this.setState({ stopNotification: true });
@@ -524,6 +525,38 @@ class Main extends Component {
                     changes[0].doc.id
                   );
                 }
+              }
+            }
+          }else{
+            const {chats} = this.state;
+            if (changes[0].type === "added" && chats.length > 0) {
+              let founded = this.state.chats.find(item => item.id === changed_id);
+              
+              if(!founded){
+                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+                const chats = docs.docs.map(v => {
+                  let value = v.data()
+                  value.lastModification = new Date(
+                    value.lastModification.toDate()
+                  ).toLocaleString()
+                  value.id = v.id
+                  return value
+                });
+                this.setState({ reproducirSonido: true, chats, stopNotification: false });
+                if(
+                  this.state.showNotification &&
+                  !this.state.fisrtTimeChat &&
+                  !this.state.callIsGoing
+                ){
+                  this.showNot(
+                    'Mensaje de usuario',
+                    'Nuevo mensaje de usuario',
+                    'success',
+                    'Ver detalles',
+                    0,
+                    changes[0].doc.id
+                    );
+                  }
               }
             }
           }
