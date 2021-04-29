@@ -182,7 +182,7 @@ class Chat extends Component {
                           : null}
                       </div>
                       <div className="col-4" style={{ margin: 'auto' }} >
-                        
+
                       </div>
                     </div>
 
@@ -198,7 +198,7 @@ class Chat extends Component {
               chats[index].messages.map((value, ref) =>
                 <div key={ref} className={value.from} ref={ref === chats[index].messages.length - 1 ? "message" : "message" + ref} id={ref === chats[index].messages.length - 1 ? "lastMessage" : "message" + ref}>
                   <p>{value.msg}</p>
-                  <small>{value.dateTime.toDate ? value.dateTime.toDate().toLocaleString() : null}</small>
+                  <small>{value.dateTime.toDate ? moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") : null}</small>
                 </div>)
               : loading === true ? 'Cargando...' : 'No se ha seleccionado ningun chat' : loading === true ? 'Cargando...' : 'No se ha seleccionado ningun chat'}
 

@@ -128,7 +128,7 @@ class Main extends Component {
             let value = v.data();
             value.lastModification = new Date(
               value.lastModification.toDate()
-            ).toLocaleString();
+            ).toString();
             value.id = v.id;
             return value;
           });
@@ -220,7 +220,7 @@ class Main extends Component {
               let data = i.data();
               data.lastModification = new Date(
                 data.lastModification.toDate()
-              ).toLocaleString();
+              ).toString();
               data.id = i.id;
               return data;
             });
@@ -304,7 +304,7 @@ class Main extends Component {
             if (value.dateTime) {
               value.dateTime = new Date(
                 value.dateTime
-              ).toLocaleString();
+              ).toString();
             } else {
               value.dateTime = value.date;
             }
@@ -323,7 +323,7 @@ class Main extends Component {
       this.setState({
         matches: docs.docs.map(v => {
           let value = v.data()
-          value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+          value.dateTime = new Date(value.dateTime.toDate()).toString()
           return value
         })
       })
@@ -364,9 +364,11 @@ class Main extends Component {
                 if (!founded) {
                   if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
                   changed_data['id'] = changed_id;
-                  this.setState(prevState => ({
-                    stateSos: prevState.stateSos.concat(changed_data)
-                  }));
+                  let aux_chat_sos = [...this.state.stateSos];
+                  aux_chat_sos.unshift(changed_data)
+                  this.setState({
+                    stateSos: aux_chat_sos
+                  });
                   if (
                     this.state.showNotification &&
                     !this.state.fisrtTimeChat &&
@@ -399,7 +401,7 @@ class Main extends Component {
                     const current_message = aux_array.pop();
                     aux_obj = {
                       ...aux_obj,
-                      lastModification: new Date(aux_obj.lastModification.toDate()).toLocaleString(),
+                      lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
                       id: changed_id
                     }
                     aux_sos_chat[find_conv_index] = aux_obj;
@@ -490,7 +492,7 @@ class Main extends Component {
                 let value = v.data()
                 value.lastModification = new Date(
                   value.lastModification.toDate()
-                ).toLocaleString()
+                ).toString()
                 value.id = v.id
                 return value
               });
@@ -527,27 +529,27 @@ class Main extends Component {
                 }
               }
             }
-          }else{
-            const {chats} = this.state;
+          } else {
+            const { chats } = this.state;
             if (changes[0].type === "added" && chats.length > 0) {
               let founded = this.state.chats.find(item => item.id === changed_id);
-              
-              if(!founded){
+
+              if (!founded) {
                 if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
                 const chats = docs.docs.map(v => {
                   let value = v.data()
                   value.lastModification = new Date(
                     value.lastModification.toDate()
-                  ).toLocaleString()
+                  ).toString()
                   value.id = v.id
                   return value
                 });
                 this.setState({ reproducirSonido: true, chats, stopNotification: false });
-                if(
+                if (
                   this.state.showNotification &&
                   !this.state.fisrtTimeChat &&
                   !this.state.callIsGoing
-                ){
+                ) {
                   this.showNot(
                     'Mensaje de usuario',
                     'Nuevo mensaje de usuario',
@@ -555,8 +557,8 @@ class Main extends Component {
                     'Ver detalles',
                     0,
                     changes[0].doc.id
-                    );
-                  }
+                  );
+                }
               }
             }
           }
@@ -574,7 +576,7 @@ class Main extends Component {
           //     let value = v.data()
           //     value.lastModification = new Date(
           //         value.lastModification.toDate()
-          //     ).toLocaleString()
+          //     ).toString()
           //     value.id = v.id
           //     return value
           // })
@@ -585,7 +587,7 @@ class Main extends Component {
 
 
 
-      firebaseC5Benito.app('c5benito').firestore().collection('help').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    firebaseC5Benito.app('c5benito').firestore().collection('help').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.sos.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeHelp) {
         this.showNot('SOS', 'Nueva alerta de ayuda generada', 'error', 'Ver detalles', 5, docs.docs[docs.docs.length - 1].id)
         this.setState({ reproducirSonido: true })
@@ -596,7 +598,7 @@ class Main extends Component {
         sos: docs.docs.map(v => {
           let value = v.data();
           if (value.dateTime.toDate)
-            value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+            value.dateTime = new Date(value.dateTime.toDate()).toString()
           else
             value.dateTime = value.date
           value.id = v.id
@@ -615,7 +617,7 @@ class Main extends Component {
         support: docs.docs.map(v => {
           let value = v.data()
           if (value.dateTime.toDate)
-            value.dateTime = new Date(value.dateTime.toDate()).toLocaleString()
+            value.dateTime = new Date(value.dateTime.toDate()).toString()
           else
             value.dateTime = value.date
           value.id = v.id

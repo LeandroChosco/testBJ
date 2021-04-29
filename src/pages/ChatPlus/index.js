@@ -62,42 +62,42 @@ class Chat extends Component {
   };
   panes = this.props.history.location.pathname.includes("chat")
     ? [
-        {
-          menuItem: "C5",
-          render: () => (
-            <Tab.Pane attached={false} style={styles.tab}>
-              {" "}
-              {this.renderListChats("C5")}
-            </Tab.Pane>
-          ),
-        },
-      ]
+      {
+        menuItem: "C5",
+        render: () => (
+          <Tab.Pane attached={false} style={styles.tab}>
+            {" "}
+            {this.renderListChats("C5")}
+          </Tab.Pane>
+        ),
+      },
+    ]
     : [
-        {
-          menuItem: "Policia",
-          render: () => (
-            <Tab.Pane attached={false} style={styles.tab}>
-              {this.renderListChats("Policia")}
-            </Tab.Pane>
-          ),
-        },
-        {
-          menuItem: "Fuego",
-          render: () => (
-            <Tab.Pane attached={false} style={styles.tab}>
-              {this.renderListChats("Fuego")}
-            </Tab.Pane>
-          ),
-        },
-        {
-          menuItem: "Medico",
-          render: () => (
-            <Tab.Pane attached={false} style={styles.tab}>
-              {this.renderListChats("Médico")}
-            </Tab.Pane>
-          ),
-        },
-      ];
+      {
+        menuItem: "Policia",
+        render: () => (
+          <Tab.Pane attached={false} style={styles.tab}>
+            {this.renderListChats("Policia")}
+          </Tab.Pane>
+        ),
+      },
+      {
+        menuItem: "Fuego",
+        render: () => (
+          <Tab.Pane attached={false} style={styles.tab}>
+            {this.renderListChats("Fuego")}
+          </Tab.Pane>
+        ),
+      },
+      {
+        menuItem: "Medico",
+        render: () => (
+          <Tab.Pane attached={false} style={styles.tab}>
+            {this.renderListChats("Médico")}
+          </Tab.Pane>
+        ),
+      },
+    ];
 
   FILTERSOPTIONS = this.props.history.location.pathname.includes("chat")
     ? [undefined]
@@ -127,7 +127,7 @@ class Chat extends Component {
         } else if (optionSelected === "date") {
           newFilterSearch = filterData.filter((c) =>
             expresion.test(
-              moment(moment(c.create_at)).format("DD-MM-YYYY, h:mm a")
+              moment(moment(c.create_at)).format("DD-MM-YYYY, HH:mm:ss")
             )
           );
         } else if (optionSelected === "name") {
@@ -183,8 +183,8 @@ class Chat extends Component {
           {chats.map((chat, i) => {
             const date =
               chat && chat.create_at
-                ? moment(chat.create_at).format("DD-MM-YYYY, h:mm a")
-                : moment(chat.lastModification).format("DD-MM-YYYY, h:mm a");
+                ? moment(chat.create_at).format("DD-MM-YYYY, HH:mm:ss")
+                : moment(chat.lastModification).format("DD-MM-YYYY, HH:mm:ss");
 
             let badgeNumber = 0;
             if (this.state.chatId) {
@@ -214,10 +214,10 @@ class Chat extends Component {
                           ? chat.messages.length > 0
                             ? (chat.messages[chat.messages.length - 1].from ===
                               "user"
-                                ? chat.user_name.split(" ")[0]
-                                : "C5") +
-                              ": " +
-                              chat.messages[chat.messages.length - 1].msg //msg
+                              ? chat.user_name.split(" ")[0]
+                              : "C5") +
+                            ": " +
+                            chat.messages[chat.messages.length - 1].msg //msg
                             : "No hay mensajes que mostrar"
                           : "No hay mensajes que mostrar"}
                       </p>
@@ -280,6 +280,7 @@ class Chat extends Component {
         }
       }
     }
+
     return (
       <div
         className={
@@ -328,7 +329,7 @@ class Chat extends Component {
                       textAlign: "center",
                       backgroundColor:
                         COLORS[
-                          chats[index].alarmType ? chats[index].alarmType : "c5"
+                        chats[index].alarmType ? chats[index].alarmType : "c5"
                         ],
                       height: "30px",
                     }}
@@ -537,7 +538,7 @@ class Chat extends Component {
                         <p>{value.msg}</p>
                         <small>
                           {value.dateTime.toDate
-                            ? value.dateTime.toDate().toLocaleString()
+                            ? moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
                             : null}
                         </small>
                       </div>
