@@ -33,6 +33,15 @@ class Header extends Component {
       .classList.remove("show");
     this.props.history.push("/servicios");
   };
+  _goTracking = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/seguimiento");
+  };
   _goFicha = () => {
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
@@ -188,7 +197,9 @@ class Header extends Component {
                                             ? this._goFicha
                                             : value.id === 11
                                               ? this._goComplaint
-                                              : null
+                                              : value.id === 12
+                                                ? this._goTracking
+                                                : null
                       }
                     >
                       <i
@@ -215,7 +226,9 @@ class Header extends Component {
                                               ? "fa fa-taxi"
                                               : value.id === 11
                                                 ? "fa fa-bullhorn"
-                                                : null
+                                                : value.id === 12
+                                                  ? "fa fa-male"
+                                                  : null
                         }
                       ></i>
                       {value.name.includes("Ficha") ? 'Policía' : value.name}

@@ -31,6 +31,7 @@ import Cuadrantes from './Cuadrantes'
 import Sospechosos from "./Sospechosos";
 import AlarmChat from "./AlarmChat/index";
 import Complaint from "./Complaint";
+import ChatTracking from "./ChatTracking";
 import constants from '../constants/constants';
 import Sound from 'react-sound';
 import sonido from '../assets/tonos/notificacion.mp3';
@@ -385,6 +386,12 @@ class Main extends Component {
                       case 'Emergencia Médica':
                         this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
                         break;
+                      case 'Seguimiento Por Hora':
+                        this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                        break;
+                      case 'Seguimiento Por Destino':
+                        this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+                        break;
                       default:
                         break;
                     }
@@ -424,6 +431,12 @@ class Main extends Component {
                               break;
                             case 'Emergencia Médica':
                               this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
+                              break;
+                            case 'tabIndextabIndex':
+                              this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                              break;
+                            case 'tabIndextabIndex':
+                              this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
                               break;
                             default:
                               break;
@@ -795,6 +808,25 @@ class Main extends Component {
     }
   }
 
+  showTrackingNot = (title, message, type, label, action, id) => {
+    const chatId = id
+    const notification = this.refs.notificationSystem;
+    if (notification && !this.state.callIsGoing) {
+      notification.addNotification({
+        title: title,
+        message: message,
+        level: type,
+        action: {
+          label: label,
+          callback: () =>
+            action === 0 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/seguimiento/0/${chatId}`) : // Hora
+              action === 1 ? window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/seguimiento/1/${chatId}`) : // Destino
+                null
+        }
+      });
+    }
+  };
+
   showSOSNot = (title, message, type, label, action, id) => {
     // const chatId = id
     const notification = this.refs.notificationSystem;
@@ -1127,6 +1159,17 @@ class Main extends Component {
                 {...props}
                 complaints={this.state.complaints}
                 userInfo={this.state.userInfo}
+              />
+            )}
+          />
+          <Route
+            path="/seguimiento/:tabIndex?/:chatId?"
+            exact
+            render={(props) => (
+              <ChatTracking
+                {...props}
+                chats={this.state.stateSos}
+                stopNotification={() => this.setState({ stopNotification: true }) }
               />
             )}
           />
