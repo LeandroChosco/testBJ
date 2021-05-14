@@ -21,8 +21,8 @@ export class MapContainer extends Component {
       if (res.status === 200) {
         if (res.data.success) {
           // console.log('data',dataLimit)
-          if(this.props.coordsPath && this.props.coordsPath.length > 0){
-            const coords = this.props.coordsPath.map(item => ({lat: item.latitude , lng: item.longitude}));
+          if (this.props.coordsPath && this.props.coordsPath.length > 0) {
+            const coords = this.props.coordsPath.map(item => ({ lat: item.latitude, lng: item.longitude }));
             const flightPath = new window.google.maps.Polyline({
               path: coords,
               geodesic: true,
@@ -33,7 +33,7 @@ export class MapContainer extends Component {
             flightPath.setMap(map);
           }
 
-          dataLimit.map(data => {
+          dataLimit.forEach(data => {
             var polygonCoord = data.coordenadas_limites;
             // Construct the polygon.
             var polygon = new window.google.maps.Polygon({
@@ -46,7 +46,7 @@ export class MapContainer extends Component {
             });
             polygon.setMap(map);
             var infoWindow = new window.google.maps.InfoWindow();
-            polygon.addListener("click", function(event) {
+            polygon.addListener("click", function (event) {
               var contentString = data.nombre;
 
               // Replace the info window's content and position.
@@ -89,20 +89,20 @@ export class MapContainer extends Component {
     const { coordsPath: prevCoordsPath } = prevProps;
     const { coordsPath, onMapLoad } = this.props;
     const { map } = this.state;
-    if(prevCoordsPath !== coordsPath){
-      if(this.state.map){
-        const coords = coordsPath.map(item => ({lat: item.latitude , lng: item.longitude}));
-            const flightPath = new window.google.maps.Polyline({
-              path: coords,
-              geodesic: true,
-              strokeColor: "#FF0000",
-              strokeOpacity: 1.0,
-              strokeWeight: 2
-            });
-            flightPath.setMap(map);
-            onMapLoad(map);
-          }
+    if (prevCoordsPath !== coordsPath) {
+      if (this.state.map) {
+        const coords = coordsPath.map(item => ({ lat: item.latitude, lng: item.longitude }));
+        const flightPath = new window.google.maps.Polyline({
+          path: coords,
+          geodesic: true,
+          strokeColor: "#FF0000",
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+        flightPath.setMap(map);
+        onMapLoad(map);
       }
+    }
   }
 
   render() {

@@ -18,8 +18,8 @@ import MobileHelp from './CamaraForMobile';
 import conections from '../conections';
 import Welcome from './Welcome';
 import firebaseC5Benito from '../constants/configC5CJ'
-import firebase from '../constants/config';
-import firebaseC5 from '../constants/configC5';
+// import firebase from '../constants/config';
+// import firebaseC5 from '../constants/configC5';
 import Matches from '../components/Matches';
 import DetailsEmergency from './DetailsEmergency';
 import ModalCall from '../components/ModalCall';
@@ -432,10 +432,10 @@ class Main extends Component {
                             case 'Emergencia Médica':
                               this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
                               break;
-                            case 'tabIndextabIndex':
+                            case 'Seguimiento Por Hora':
                               this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
                               break;
-                            case 'tabIndextabIndex':
+                            case 'Seguimiento Por Destino':
                               this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
                               break;
                             default:
@@ -658,7 +658,7 @@ class Main extends Component {
 
     firebaseC5Benito.app('c5benito').firestore().collection('calls').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.showNotification && !this.state.fisrtTimeCall && !this.state.callIsGoing) {
-        const notification = this.refs.notificationSystem;
+        // const notification = this.refs.notificationSystem;
         this.setState({ stopNotification: false })
         this.setState({ callIsGoing: false })
         this.setState({ reproducirSonido: false })
@@ -1169,7 +1169,7 @@ class Main extends Component {
               <ChatTracking
                 {...props}
                 chats={this.state.stateSos}
-                stopNotification={() => this.setState({ stopNotification: true }) }
+                stopNotification={() => this.setState({ stopNotification: true })}
               />
             )}
           />

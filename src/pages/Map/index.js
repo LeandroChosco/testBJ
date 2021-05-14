@@ -252,7 +252,7 @@ class Map extends Component {
       );
       this.setState({ loading: false, places: auxCamaras });
       let marker = [];
-      this.state.places.map((value, index) => {
+      this.state.places.forEach((value, index) => {
         if (value.lat && value.lng) {
           if (value.flag_color === null) {
             value.flag_color =

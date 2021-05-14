@@ -244,7 +244,7 @@ const Sospechosos = ({ showMatches }) => {
         let resMatches = res.data
         //console.log('resMatches',resMatches)
         if (resMatches.success) {
-          resMatches.data.matches.map(item => {
+          resMatches.data.matches.forEach(item => {
             if (item.Gender === 'Male')
               item.Gender = 'masculino'
             else

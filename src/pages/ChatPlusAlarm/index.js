@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Icon, Button, Input, Dropdown, Tab } from "semantic-ui-react";
+import { Card, Icon, Input, Dropdown, Tab } from "semantic-ui-react";
 
 import "./style.css";
 // import firebaseC5 from "../../constants/configC5";
@@ -310,7 +310,7 @@ class ChatAlarm extends Component {
                           hideTitle
                           height='250px'
                           propsIniciales={this.props}
-                          marker={console.log("camdata", camData), camData}
+                          marker={camData}
                         />
                         : <p>Sin camara asignada...</p>}
                     </div>
