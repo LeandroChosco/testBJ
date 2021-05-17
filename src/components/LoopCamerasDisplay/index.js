@@ -60,7 +60,7 @@ class LoopCamerasDisplay extends Component {
   }
 
   render() {
-    let { activeIndex, markers, slideIndex, autoplay, photos, videos, video_history, video_search, selectedCamera, qnapServer, qnapChannel, height, servidorMultimedia, loadingSnap, videosLoading, historyLoading, searchLoading, photosLoading, isNewSearch, recordingCams, restarting, showPTZ, reloadCamPTZ } = this.state
+    let { activeIndex, markers, slideIndex, autoplay, photos, videos, video_history, video_search, selectedCamera, qnapServer, qnapChannel, height, servidorMultimedia, loadingSnap, videosLoading, historyLoading, searchLoading, photosLoading, isNewSearch, recordingCams, restarting, showPTZ } = this.state
     let { error, propsIniciales, moduleActions, loadingFiles, matches } = this.props
     return (
       <div className="holderOfSlides">
@@ -70,7 +70,7 @@ class LoopCamerasDisplay extends Component {
             index === slideIndex ? (
               <div key={value.extraData.id} style={{ height: 'auto', width: '100%', paddign: '50%' }} align="center" className={index === slideIndex ? '' : 'hiddenCameraNotshow'}>
                 <CameraStream
-                  propsIniciales={this.props.propsIniciales} ref={'camrefgrid'+value.extraData.id} key={value.extraData.id} marker={value}
+                  propsIniciales={propsIniciales} ref={'camrefgrid' + value.extraData.id} key={value.extraData.id} marker={value}
                 />
               </div>
             ) : null
@@ -129,11 +129,11 @@ class LoopCamerasDisplay extends Component {
                     ))}
                   </div>
                 ) : (
-                      <div align="center">
-                        <p className="big-letter">No hay archivos que mostrar</p>
-                        <i className="fa fa-image fa-5x" />
-                      </div>
-                    )}
+                  <div align="center">
+                    <p className="big-letter">No hay archivos que mostrar</p>
+                    <i className="fa fa-image fa-5x" />
+                  </div>
+                )}
               </div>
             </div>
             <div id="scrollVideo" className="col videos">
@@ -247,27 +247,27 @@ class LoopCamerasDisplay extends Component {
         {qnapServer && qnapChannel && hasMore && isHistory && this._renderLoading()}
       </div>
     ) : (
-        <div className="row">
-          {videoList.map((list, idx) => (
-            <MediaContainer
-              key={idx}
-              value={list}
-              isQnap={false}
-              dns_ip={hasDns && `http://${hasDns}`}
-              exists_video={true}
-              cam={selectedCamera}
-              src={list.relative_url}
-              reloadData={this._loadFiles}
-              servidorMultimedia={servidorMultimedia}
-            />
-          ))}
-        </div>
-      ) : showNoFiles ? (
-        <div align="center">
-          <p className="big-letter">No hay archivos que mostrar</p>
-          <i className="fa fa-image fa-5x" />
-        </div>
-      ) : null;
+      <div className="row">
+        {videoList.map((list, idx) => (
+          <MediaContainer
+            key={idx}
+            value={list}
+            isQnap={false}
+            dns_ip={hasDns && `http://${hasDns}`}
+            exists_video={true}
+            cam={selectedCamera}
+            src={list.relative_url}
+            reloadData={this._loadFiles}
+            servidorMultimedia={servidorMultimedia}
+          />
+        ))}
+      </div>
+    ) : showNoFiles ? (
+      <div align="center">
+        <p className="big-letter">No hay archivos que mostrar</p>
+        <i className="fa fa-image fa-5x" />
+      </div>
+    ) : null;
   };
 
   _snapShot = async (camera) => {

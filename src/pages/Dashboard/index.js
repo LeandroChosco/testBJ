@@ -210,7 +210,7 @@ class Dashboard extends Component {
   }
 
   renderRecognitionDashboard() {
-    const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons, loadingRecognitionMood } = this.state;
+    const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons } = this.state;
 
     return (
       <div className='container-flex'>
@@ -471,7 +471,7 @@ class Dashboard extends Component {
     let newData = [];
     if (data && data.results) {
       let { results } = data;
-      results.map((item) => {
+      results.forEach((item) => {
         newData.push({
           x: item.camera_name,
           y: item.total_face
@@ -486,7 +486,7 @@ class Dashboard extends Component {
     const data = response.data;
     let newData = [];
     if (data && data.data) {
-      data.data.map((item) => {
+      data.data.forEach((item) => {
         newData.push({
           fecha: item.date,
           total: item.total
