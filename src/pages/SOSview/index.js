@@ -341,12 +341,45 @@ class Chat extends Component {
   }
 
   renderListChats = (type) => {
-    const { index, chats } = this.state;
+    const { index, chats, optionSelected } = this.state;
+    let critical_levels = [];
+    if (type.includes("Seguimiento")) {
+      if (!SEARCHOPTIONS.find(item => item.key === 'critical')) {
+        SEARCHOPTIONS.push({
+          key: 'critical',
+          text: 'Criticidad',
+          value: 'critical'
+        });
+      }
+      Object.keys(CRITICAL_COLORS).forEach(key => {
+        critical_levels.push({ key, text: CRITICAL_COLORS[key].name, value: key })
+      });
+    } else {
+      const index = SEARCHOPTIONS.findIndex(item => item.key === 'critical')
+      if (index > -1) {
+        SEARCHOPTIONS.splice(index, 1);
+        critical_levels = [];
+      }
+    }
 
     return (
       <div>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <Input placeholder="Buscar alertas" style={{ flex: 2 }} onChange={this.filterAction} />
+          {
+            optionSelected && optionSelected === 'critical' ?
+              <Dropdown
+                placeholder="Buscar por"
+                fluid
+                selection
+                clearable
+                options={critical_levels}
+                defaultValue={''}
+                onChange={this.criticalLevelFilter}
+                style={{ flex: 1 }}
+              />
+              :
+              <Input placeholder="Buscar alertas" style={{ flex: 2 }} onChange={this.filterAction} />
+          }
           <Dropdown
             placeholder="Buscar por"
             fluid
@@ -357,78 +390,75 @@ class Chat extends Component {
             style={{ flex: 1 }}
           />
         </div>
-
-        {chats.map((chat, i) => {
-          const critical_color = chat && chat.critical_state && chat.critical_state !== 0 ? CRITICAL_COLORS[chat.critical_state] : null;
-          if (critical_color !== null) {
-            console.log(chat.critical_state, critical_color.color)
-          }
-          const date =
-            chat && chat.create_at
-              ? moment(chat.create_at).format('DD-MM-YYYY, HH:mm:ss')
-              : typeof chat.lastModification === 'string'
-                ? moment(chat.lastModification).format('DD-MM-YYYY, HH:mm:ss')
-                : moment(chat.lastModification.toDate()).format('DD-MM-YYYY, HH:mm:ss');
-          return (
-            <Card
-              className={i === index ? 'activeChat' : ''}
-              style={critical_color !== null ? {
-                width: '100%',
-                margin: '20px 0 20px 0',
-                boxShadow: critical_color.boxShadow
-              } : {
-                width: '100%',
-              }}
-              key={i}
-              onClick={() => this.changeChat(chat, i)}
-            >
-              <Card.Content>
-                <div style={{ position: 'relative' }}>
-                  <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <h4>{chat.user_name}</h4> <p>{date}</p>
-                  </div>
-                  {chat.active !== undefined && chat.active ? (
-                    <p>
-                      {chat.messages ? chat.messages.length > 0 ? (
-                        (chat.messages[chat.messages.length - 1].from === 'user'
-                          ? chat.user_name.split(' ')[0]
-                          : 'C5') +
-                        ': ' +
-                        chat.messages[chat.messages.length - 1].msg //msg
-                      ) : (
-                        'No hay mensajes que mostart'
-                      ) : (
-                        'No hay mensajes que mostart'
-                      )}
-                    </p>
-                  ) : (
-                    <p />
-                  )}
-
-                  {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                    <div className="notificationNumber" style={{ marginTop: 15 }}>
-                      <p>{chat.c5Unread}</p>
+        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
+          {chats.map((chat, i) => {
+            const critical_color = chat && chat.critical_state && chat.critical_state !== 0 ? CRITICAL_COLORS[chat.critical_state] : null;
+            const date =
+              chat && chat.create_at
+                ? moment(chat.create_at).format('DD-MM-YYYY, HH:mm:ss')
+                : typeof chat.lastModification === 'string'
+                  ? moment(chat.lastModification).format('DD-MM-YYYY, HH:mm:ss')
+                  : moment(chat.lastModification.toDate()).format('DD-MM-YYYY, HH:mm:ss');
+            return (
+              <Card
+                className={i === index ? 'activeChat' : ''}
+                style={critical_color !== null ? {
+                  width: '100%',
+                  boxShadow: critical_color.boxShadow
+                } : {
+                  width: '100%',
+                }}
+                key={i}
+                onClick={() => this.changeChat(chat, i)}
+              >
+                <Card.Content>
+                  <div style={{ position: 'relative' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <h4>{chat.user_name}</h4> <p>{date}</p>
                     </div>
-                  ) : null}
-                  <div style={{ display: 'flex', justifyContent: critical_color !== null ? 'space-between' : 'flex-end', alignItems: 'center' }}>
-                    {
-                      critical_color !== null &&
-                      <small style={{ ...styles.badge, backgroundColor: critical_color.color }}><strong>{critical_color.name}</strong></small>
-                    }
-                    <div>
-                      {' '}
-                      <small style={{ ...styles.badge, marginLeft: 3, alignSelf: 'flex-end', display: 'flex' }}>
+                    {chat.active !== undefined && chat.active ? (
+                      <p>
+                        {chat.messages ? chat.messages.length > 0 ? (
+                          (chat.messages[chat.messages.length - 1].from === 'user'
+                            ? chat.user_name.split(' ')[0]
+                            : 'C5') +
+                          ': ' +
+                          chat.messages[chat.messages.length - 1].msg //msg
+                        ) : (
+                          'No hay mensajes que mostart'
+                        ) : (
+                          'No hay mensajes que mostart'
+                        )}
+                      </p>
+                    ) : (
+                      <p />
+                    )}
+
+                    {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
+                      <div className="notificationNumber" style={{ marginTop: 15 }}>
+                        <p>{chat.c5Unread}</p>
+                      </div>
+                    ) : null}
+                    <div style={{ display: 'flex', justifyContent: critical_color !== null ? 'space-between' : 'flex-end', alignItems: 'center' }}>
+                      {
+                        critical_color !== null &&
+                        <small style={{ ...styles.badge, backgroundColor: critical_color.color }}><strong>{critical_color.name}</strong></small>
+                      }
+                      <div>
                         {' '}
-                        <Icon name={chat.active ? 'clock' : 'checkmark'} />{' '}
-                        <strong>{chat.active ? 'Proceso' : 'Cerrado'}</strong>{' '}
-                      </small>
+                        <small style={{ ...styles.badge, marginLeft: 3, alignSelf: 'flex-end', display: 'flex' }}>
+                          {' '}
+                          <Icon name={chat.active ? 'clock' : 'checkmark'} />{' '}
+                          <strong>{chat.active ? 'Proceso' : 'Cerrado'}</strong>{' '}
+                        </small>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Card.Content>
-            </Card>
-          );
-        })}
+                </Card.Content>
+              </Card>
+            );
+          })}
+        </div>
       </div>
     );
   };
@@ -460,6 +490,22 @@ class Chat extends Component {
       }
     });
   };
+
+  criticalLevelFilter = (e, { value }) => {
+    const { activeIndex } = this.state;
+    const { chats: chatsProps } = this.props;
+    const filterData = chatsProps.filter((c) => c.trackingType === this.FILTERSOPTIONS[activeIndex]);
+    if (value.trim() !== '') {
+      let newFilterSearch = filterData.filter(data => data.critical_state === Number(value));
+      this.setState({
+        chats: newFilterSearch
+      });
+    } else {
+      this.setState({
+        chats: filterData
+      })
+    }
+  }
 
   handleChangeOption = (e, { value }) => this.setState({ optionSelected: value });
 
