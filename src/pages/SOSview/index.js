@@ -33,17 +33,20 @@ const CRITICAL_COLORS = {
   1: {
     name: 'Sin incidencias',
     color: 'rgba(76,187,23,0.5)',
-    boxShadow: '0 0 10px 0 rgb(76,187,23), 0 5px 10px 0 rgba(76,187,23,0.3)'
+    boxShadow: '0 0 10px 0 rgb(76,187,23), 0 5px 10px 0 rgba(76,187,23,0.3)',
+    map_marker: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
   },
   2: {
     name: 'Problemas',
     color: 'rgb(255,218,94)',
-    boxShadow: '0 0 10px 0 rgb(255,218,94), 0 5px 10px 0 rgba(255,218,94,0.3)'
+    boxShadow: '0 0 10px 0 rgb(255,218,94), 0 5px 10px 0 rgba(255,218,94,0.3)',
+    map_marker: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
   },
   3: {
     name: 'Crítico',
     color: 'rgba(255,0,0,0.5)',
-    boxShadow: '0 0 10px 0 rgb(255,0,0), 0 5px 10px 0 rgba(255,0,0,0.3)'
+    boxShadow: '0 0 10px 0 rgb(255,0,0), 0 5px 10px 0 rgba(255,0,0,0.3)',
+    map_marker: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
   }
 };
 
@@ -402,7 +405,7 @@ class Chat extends Component {
             return (
               <Card
                 className={i === index ? 'activeChat' : ''}
-                style={critical_color !== null ? {
+                style={critical_color !== null && type.includes("Seguimiento ") ? {
                   width: '100%',
                   boxShadow: critical_color.boxShadow
                 } : {
@@ -441,8 +444,8 @@ class Chat extends Component {
                     ) : null}
                     <div style={{ display: 'flex', justifyContent: critical_color !== null ? 'space-between' : 'flex-end', alignItems: 'center' }}>
                       {
-                        critical_color !== null &&
-                        <small style={{ ...styles.badge, backgroundColor: critical_color.color }}><strong>{critical_color.name}</strong></small>
+                        critical_color !== null && type.includes("Seguimiento") &&
+                        < small style={{ ...styles.badge, backgroundColor: critical_color.color }}><strong>{critical_color.name}</strong></small>
                       }
                       <div>
                         {' '}
@@ -459,7 +462,7 @@ class Chat extends Component {
             );
           })}
         </div>
-      </div>
+      </div >
     );
   };
 
@@ -512,33 +515,62 @@ class Chat extends Component {
   _onMapLoad = (map) => {
     const { chats } = this.props;
     const { index, tracking, marker } = this.state;
-    const coords = {
-      lat: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].latitude),
-      lng: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].longitude)
-    };
 
-    let _marker = null;
+    if (chats.length > 0 && chats[index].trackingType.includes("Seguimiento")) {
+      if (tracking.pointCoords.length > 0) {
+        tracking.pointCoords.forEach(pt => {
+          const position = { lat: parseFloat(pt.latitude), lng: parseFloat(pt.longitude) };
+          if (pt.critical_state && pt.critical_state !== 0) {
+            new window.google.maps.Marker({
+              position,
+              map,
+              title: chats[index].user_nicename,
+              icon: CRITICAL_COLORS[pt.critical_state].map_marker
+            })
+          }
+        })
+      }
 
-    if (!marker) {
-      _marker = new window.google.maps.Marker({
-        position: coords,
-        map: map,
-        title: chats[index].user_nicename
-      });
     } else {
-      if (tracking.active) {
-        _marker = Object.assign(marker, {});
-        _marker.setPosition(coords);
-        _marker.setMap(map);
-      } else {
+      const { pointCoords } = tracking;
+      const coords = {
+        lat: parseFloat(pointCoords[pointCoords.length - 1].latitude),
+        lng: parseFloat(pointCoords[pointCoords.length - 1].longitude)
+      };
+
+      let _marker = null;
+      if (!marker) {
         _marker = new window.google.maps.Marker({
           position: coords,
           map: map,
           title: chats[index].user_nicename
         });
+      } else {
+        if (tracking.active) {
+          if (chats[index].trackingType.includes("Seguimiento")) {
+            if (pointCoords[pointCoords.length - 1].critical_state !== 0) {
+              new window.google.maps.Marker({
+                position: coords,
+                map,
+                title: chats[index].user_nicename,
+                icon: CRITICAL_COLORS[pointCoords[pointCoords.length - 1].critical_state].map_marker
+              })
+            }
+          }
+
+          _marker = Object.assign(marker, {});
+          _marker.setPosition(coords);
+          _marker.setMap(map);
+        } else {
+          _marker = new window.google.maps.Marker({
+            position: coords,
+            map: map,
+            title: chats[index].user_nicename
+          });
+        }
       }
+      this.setState({ map, marker: _marker });
     }
-    this.setState({ map, marker: _marker });
   };
 
   changeChat = (chat, i, flag = true) => {
@@ -594,7 +626,9 @@ class Chat extends Component {
           });
           this.setState({ firebaseSub: unsub });
         } else {
-          // this.state.firebaseSub();
+          if (this.state.firebaseSub) {
+            this.state.firebaseSub();
+          }
         }
         refSOS.doc(chat.id).update({ c5Unread: 0 }).then(() => {
           this.setState({ text: '' });
