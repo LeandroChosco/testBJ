@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Navbar, NavDropdown, Button, Nav } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
+import { FaShoePrints } from 'react-icons/fa';
 import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
@@ -202,36 +203,38 @@ class Header extends Component {
                                                 : null
                       }
                     >
-                      <i
-                        className={
-                          value.id === 1
-                            ? "fa fa-video-camera"
-                            : value.id === 2
-                              ? "fa fa-simplybuilt"
-                              : value.id === 3
-                                ? "fa fa-comments"
-                                : value.id === 4
-                                  ? "fa fa-bar-chart"
-                                  : value.id === 5
-                                    ? "fa fa-object-ungroup"
-                                    : value.id === 6
-                                      ? "fa fa-id-card"
-                                      : value.id === 7
-                                        ? "fa fa-user-md"
-                                        : value.id === 8
-                                          ? "fa fa-comments"
-                                          : value.id === 9
-                                            ? "fa fa-home"
-                                            : value.id === 10
-                                              ? "fa fa-taxi"
-                                              : value.id === 11
-                                                ? "fa fa-bullhorn"
-                                                : value.id === 12
-                                                  ? "fa fa-male"
-                                                  : null
-                        }
-                      ></i>
-                      {value.name.includes("Ficha") ? 'Policía' : value.name}
+                      {value.id === 12 ? 
+                        <FaShoePrints />
+                      :
+                        <i
+                          className={
+                            value.id === 1
+                              ? "fa fa-video-camera"
+                              : value.id === 2
+                                ? "fa fa-simplybuilt"
+                                : value.id === 3
+                                  ? "fa fa-comments"
+                                  : value.id === 4
+                                    ? "fa fa-bar-chart"
+                                    : value.id === 5
+                                      ? "fa fa-object-ungroup"
+                                      : value.id === 6
+                                        ? "fa fa-id-card"
+                                        : value.id === 7
+                                          ? "fa fa-user-md"
+                                          : value.id === 8
+                                            ? "fa fa-comments"
+                                            : value.id === 9
+                                              ? "fa fa-home"
+                                              : value.id === 10
+                                                ? "fa fa-taxi"
+                                                : value.id === 11
+                                                  ? "fa fa-bullhorn"
+                                                    : null
+                          }
+                        ></i>
+                      }
+                      {value.name.includes("Ficha") ? 'Policía' : `${value.id === 12 ? " " : "" }${value.name}`}
                     </Button>
                   }
                 </Navbar.Text>

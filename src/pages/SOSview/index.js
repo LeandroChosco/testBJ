@@ -28,8 +28,8 @@ const SEARCHOPTIONS = [
   { key: 'name', text: 'Nombre de Usuario', value: 'name' },
   { key: 'date', text: 'Fecha', value: 'date' }
 ];
-
 const CRITICAL_COLORS = {
+  init: { map_marker: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' },
   1: {
     name: 'Sin incidencias',
     color: 'rgba(76,187,23,0.5)',
@@ -120,12 +120,12 @@ class Chat extends Component {
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
   componentDidUpdate(prevProps) {
-    const { flagUpdate, activeIndex } = this.state;
+    const { /*flagUpdate,*/ activeIndex } = this.state;
     const { tabIndex, chatId } = this.props.match.params;
     const { chats: chatsPrev } = prevProps;
     const { chats } = this.props;
 
-    if (flagUpdate === 0) {
+    // if (flagUpdate === 0) {
       if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
         if (chatsPrev.length !== chats.length) this.setState({ chats });
         const nameType = this.FILTERSOPTIONS[Number(tabIndex ? tabIndex : activeIndex)];
@@ -136,7 +136,7 @@ class Chat extends Component {
           this.changeChat(filteredChats[idxChat], idxChat, false);
         }
       }
-    }
+    // }
     let messageBody = document.querySelector('#messagesContainer');
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
@@ -526,12 +526,12 @@ class Chat extends Component {
         if (!tracking.active) {
           pointCoords.forEach((pt, idx) => {
             const position = { lat: parseFloat(pt.latitude), lng: parseFloat(pt.longitude) };
-            if (pt.critical_state && pt.critical_state !== 0) {
+            if ((pt.critical_state && pt.critical_state !== 0) || idx === 0) {
               let marker_data = {
                 position,
                 map,
                 title: chats[index].user_nicename,
-                icon: CRITICAL_COLORS[pt.critical_state].map_marker
+                icon: CRITICAL_COLORS[idx === 0 ? 'init' : pt.critical_state].map_marker
               }
               if (pt.critical_state && pt.critical_state === 3 && idx === pointCoords.length - 1) {
                 delete marker_data.icon;
@@ -539,7 +539,7 @@ class Chat extends Component {
 
               new window.google.maps.Marker(marker_data)
             }
-          })
+          });
 
           if (!pointCoords[pointCoords.length - 1].critical_state || pointCoords[pointCoords.length - 1].critical_state === 0)
             _marker = new window.google.maps.Marker({
