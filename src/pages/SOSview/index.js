@@ -181,7 +181,7 @@ class Chat extends Component {
                       }
                     }
                   } else {
-                    selected = newChats[0].trackingType;
+                    selected = newChats.length > 0 ? newChats[0].trackingType : null;
                   }
                   // let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
                   this.setState({ from: selected ? selected : 'Error getting data' });
