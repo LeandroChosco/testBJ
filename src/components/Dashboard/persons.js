@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ComposedChart, Bar
+  /*XAxis, YAxis, CartesianGrid, Tooltip,*/ ResponsiveContainer, /*Legend, ComposedChart, Bar*/
 } from 'recharts';
 
 import Chart from 'react-apexcharts'
@@ -26,7 +26,7 @@ const PeoplePerDay = (props) => {
   useEffect(() => {
     let xAxis = [], yAxis = [];
     if (data.length > 0) {
-      data.map((item) => {
+      data.forEach((item) => {
         xAxis.push(item.fecha);
         yAxis.push(item.total)
       })
@@ -44,7 +44,7 @@ const PeoplePerDay = (props) => {
               zoomin: false,
               zoomout: false,
               pan: true,
-              
+
               customIcons: []
             },
             export: {
@@ -85,8 +85,8 @@ const PeoplePerDay = (props) => {
           lineCap: 'butt',
           colors: undefined,
           width: 1,
-          dashArray: 0,      
-      }
+          dashArray: 0,
+        }
       };
 
       let newSerie = [{
@@ -102,10 +102,10 @@ const PeoplePerDay = (props) => {
   return (
     <ResponsiveContainer>
       {
-        data.length > 0  &&  options && series ?
-        <Chart options={options} series={series} type="bar" height={350} />
+        data.length > 0 && options && series ?
+          <Chart options={options} series={series} type="bar" height={350} />
           :
-        <div style={styles.noData}>No hay datos dispononibles</div>
+          <div style={styles.noData}>No hay datos dispononibles</div>
 
       }
     </ResponsiveContainer>

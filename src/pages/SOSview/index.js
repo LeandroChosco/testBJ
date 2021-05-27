@@ -1,220 +1,164 @@
-import React, { Component } from "react";
-import { Card, Icon, Button, Input, Dropdown, Tab } from "semantic-ui-react";
+import React, { Component } from 'react';
+import { Card, Icon, Input, Dropdown, Tab } from 'semantic-ui-react';
+import { Button } from 'react-bootstrap';
+import moment from 'moment';
+import _ from 'lodash';
+import './style.css';
 
-import "./style.css";
-// import firebaseC5 from "../../constants/configC5";
-// import CameraStream from "../../components/CameraStream";
-// import constants from "../../constants/constants";
-import MapContainer from "../../components/MapContainer";
-// import Axios from "axios";
-import moment from 'moment'
-import _ from 'lodash'
-// fireSOS
+import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION } from '../../Api/sos';
+import MapContainer from '../../components/MapContainer';
+import firebaseSos from '../../constants/configSOS';
+import FadeLoader from 'react-spinners/FadeLoader';
+import CustomizedSnackbars from '../../components/Snack/index';
+import connections from '../../conections';
 
-import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION } from "../../Api/sos";
-import firebaseSos from "../../constants/configSOS";
-import FadeLoader from "react-spinners/FadeLoader";
-
-// import { support } from "jszip";
-
-// const ref = firebaseC5.app("c5cuajimalpa").firestore().collection("messages");
-
-const refSOS = firebaseSos
-  .app("sos")
-  .firestore()
-  .collection(MESSAGES_COLLECTION);
-
+const refSOS = firebaseSos.app('sos').firestore().collection(MESSAGES_COLLECTION);
+const refTracking = firebaseSos.app('sos').firestore().collection(SOS_COLLECTION)
 
 const COLORS = {
-  "Seguridad": "#FFB887",
-  "Protección Civil": "#E29EE8",
-  "Emergencia Médica": "#9EE8A7",
-  "Proteccion Policial": "#FFB887",
-}
-
-const FILTERSOPTIONS = [
-  "Seguridad",
-  "Protección Civil",
-  "Emergencia Médica",
-]
+  Seguridad: '#FFB887',
+  'Protección Civil': '#E29EE8',
+  'Emergencia Médica': '#9EE8A7',
+  'Proteccion Policial': '#FFB887',
+  'Seguimiento Por Hora': '#00B4C0',
+  'Seguimiento Por Destino': '#00D2A6'
+};
 
 const SEARCHOPTIONS = [
-  {
-    key: 'name',
-    text: 'Nombre de Usuario',
-    value: 'name',
+  { key: 'name', text: 'Nombre de Usuario', value: 'name' },
+  { key: 'date', text: 'Fecha', value: 'date' }
+];
+const CRITICAL_COLORS = {
+  init: { map_marker: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' },
+  1: {
+    name: 'Sin incidencias',
+    color: 'rgba(76,187,23,0.5)',
+    boxShadow: '0 0 10px 0 rgb(76,187,23), 0 5px 10px 0 rgba(76,187,23,0.3)',
+    map_marker: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
   },
-  {
-    key: 'date',
-    text: 'Fecha',
-    value: 'date',
+  2: {
+    name: 'Problemas',
+    color: 'rgb(255,218,94)',
+    boxShadow: '0 0 10px 0 rgb(255,218,94), 0 5px 10px 0 rgba(255,218,94,0.3)',
+    map_marker: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
   },
-]
-
-
-
+  3: {
+    name: 'Crítico',
+    color: 'rgba(255,0,0,0.5)',
+    boxShadow: '0 0 10px 0 rgb(255,0,0), 0 5px 10px 0 rgba(255,0,0,0.3)',
+    map_marker: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+  }
+};
 
 class Chat extends Component {
-  state = {
-    messages: [],
-    chats: [],
-    activeIndex: 0,
-    chatId: "",
-    text: "",
-    from: "",
-    fisrt: {},
-    searching: "",
-    tracking: {},
-    camData: undefined,
-    loading: false,
-    hashUsed: false,
-    personalInformation: {},
-    optionSelected: "name",
-    marker: null,
-    firebaseSub: null,
-    flagUpdate: 0
-  };
-  panes = [
-    {
-      menuItem: 'Seguridad',
-      render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("Seguridad")}</Tab.Pane>,
-    },
-    {
-      menuItem: 'Proteccion Civil',
-      render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats("Proteccion Civil")}</Tab.Pane>,
-    },
-    {
-      menuItem: 'Emergencia Medica',
-      render: () => <Tab.Pane attached={false} style={styles.tab} > {this.renderListChats("Emergencia Medica")}</Tab.Pane>,
-    }
-  ]
-
-
-  filterAction = (event) => {
-    const { target: { value } } = event
-    const { activeIndex } = this.state;
-    const { chats: chatsProps } = this.props
-    const { optionSelected, searching } = this.state
-    this.setState({ searching: value.trim() }, () => {
-      const filterData = chatsProps.filter(c => c.trackingType === FILTERSOPTIONS[activeIndex])
-      let expresion = new RegExp(`${searching}.*`, "i");
-      if (searching.trim().length !== 0) {
-        let newFilterSearch
-        if (optionSelected === "alertType") {
-          newFilterSearch = filterData.filter(c => c.trackingType && expresion.test(c.trackingType))
-        } else if (optionSelected === "date") {
-          newFilterSearch = filterData.filter(c => expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, HH:mm:ss')))
-        } else if (optionSelected === "name") {
-          newFilterSearch = filterData.filter(c => expresion.test(c.user_name))
-        }
-        this.setState({ chats: newFilterSearch })
-      }
-      if (value.trim().length === 0) {
-        let newChats = this.props.chats.filter(c => c.trackingType === FILTERSOPTIONS[this.state.activeIndex])
-        this.setState({ chats: newChats })
-      }
-    });
-
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      messages: [],
+      chats: [],
+      activeIndex: 0,
+      chatId: '',
+      text: '',
+      from: '',
+      fisrt: {},
+      searching: '',
+      tracking: {},
+      camData: undefined,
+      loading: false,
+      hashUsed: false,
+      personalInformation: {},
+      optionSelected: 'name',
+      marker: null,
+      firebaseSub: null,
+      flagUpdate: 0,
+      open_snack: false,
+      snack_message: {}
+    };
   }
-
-  handleChangeOption = (e, { value }) => this.setState({ optionSelected: value })
-
-  renderListChats = (type) => {
-    const { index, chats } = this.state;
-
-    return (<div >
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <Input placeholder="Buscar alertas" style={{ flex: 2 }} onChange={this.filterAction}></Input>
-        <Dropdown
-          placeholder='Buscar por'
-          fluid
-          selection
-          options={SEARCHOPTIONS}
-          defaultValue="name"
-          onChange={this.handleChangeOption}
-          style={{ flex: 1 }}
-        />
-
-      </div>
-
-      {chats.map((chat, i) => {
-        const date = chat && chat.create_at ? moment(chat.create_at).format('DD-MM-YYYY, HH:mm:ss') : typeof chat.lastModification === 'string' ? moment(chat.lastModification).format('DD-MM-YYYY, HH:mm:ss') : moment(chat.lastModification.toDate()).format('DD-MM-YYYY, HH:mm:ss');
-        return (
-          <Card
-            className={i === index ? "activeChat" : ""}
-            style={{ width: "100%" }}
-            key={i}
-            onClick={() => this.changeChat(chat, i)}
-          >
-            <Card.Content>
-              <div style={{ position: "relative" }}>
-                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}><h4>{chat.user_name}</h4> <p>{date}</p></div>
-                {
-
-                  chat.active !== undefined && chat.active ?
-                    <p>
-                      {chat.messages
-                        ? chat.messages.length > 0
-                          ? (chat.messages[chat.messages.length - 1].from ===
-                            "user"
-                            ? chat.user_name.split(" ")[0]
-                            : "C5") +
-                          ": " +
-                          chat.messages[chat.messages.length - 1].msg //msg
-                          : "No hay mensajes que mostart"
-                        : "No hay mensajes que mostart"}
-                    </p> :
-                    <p></p>
-                }
-
-                {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                  <div className="notificationNumber" style={{ marginTop: 15 }}>
-                    <p>{chat.c5Unread}</p>
-                  </div>
-                ) : null}
-                <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                  {/* <small style={{ ...styles.badge, backgroundColor: COLORS[chat.trackingType], }}> <strong>{chat.trackingType}</strong> </small> */}
-                  <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : "Cerrado"}</strong> </small></div>
-                </div>
-              </div>
-            </Card.Content>
-          </Card>
-        )
+  panes = this.props.history.location.pathname.includes('sos')
+    ? [
+      {
+        menuItem: 'Seguridad',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguridad')}</Tab.Pane>
+      },
+      {
+        menuItem: 'Protección Civil',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Protección Civil')}</Tab.Pane>
+      },
+      {
+        menuItem: 'Emergencia Médica',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Emergencia Médica')}</Tab.Pane>
       }
-      )}
-    </div>)
+    ]
+    : [
+      {
+        menuItem: 'Por Hora',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Hora')}</Tab.Pane>
+      },
+      {
+        menuItem: 'Por Seguimiento',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Destino')}</Tab.Pane>
+      }
+    ];
+  FILTERSOPTIONS = this.props.history.location.pathname.includes('sos')
+    ? ['Seguridad', 'Protección Civil', 'Emergencia Médica']
+    : ['Seguimiento Por Hora', 'Seguimiento Por Destino'];
+
+  // LIFECYCLES
+  componentDidMount() {
+    const { tabIndex } = this.props.match.params;
+    let { activeIndex } = this.state;
+    let { chats } = this.props;
+    let filtered = [];
+
+    if (chats) {
+      if (tabIndex) filtered = chats.filter((item) => item.trackingType === this.FILTERSOPTIONS[tabIndex]);
+      else filtered = chats.filter((item) => item.trackingType === this.FILTERSOPTIONS[activeIndex]);
+      this.setState({ chats: filtered, activeIndex: tabIndex ? tabIndex : activeIndex });
+    }
+    let messageBody = document.querySelector('#messagesContainer');
+    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+  }
+  componentDidUpdate(prevProps) {
+    const { /*flagUpdate,*/ activeIndex } = this.state;
+    const { tabIndex, chatId } = this.props.match.params;
+    const { chats: chatsPrev } = prevProps;
+    const { chats } = this.props;
+
+    // if (flagUpdate === 0) {
+      if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
+        if (chatsPrev.length !== chats.length) this.setState({ chats });
+        const nameType = this.FILTERSOPTIONS[Number(tabIndex ? tabIndex : activeIndex)];
+        const filteredChats = chats.filter((e) => e.trackingType === nameType);
+        this.setState({ chats: filteredChats, flagUpdate: 1 });
+        if (chatId) {
+          const idxChat = filteredChats.findIndex((e) => e.id === chatId);
+          this.changeChat(filteredChats[idxChat], idxChat, false);
+        }
+      }
+    // }
+    let messageBody = document.querySelector('#messagesContainer');
+    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
 
   render() {
-    const { tabIndex } = this.props.match.params
+    const { tabIndex } = this.props.match.params;
     const { chats, chatId, index, from, loading, tracking } = this.state;
-    if (index !== undefined && chatId === "" && chats.length > 0) {
+    if (index !== undefined && chatId === '' && chats.length > 0) {
       this.setState({ chatId: null });
     }
 
-    const chatSelected = chats.find(item => item.id === chatId);
-
+    const chatSelected = chats.find((item) => item.id === chatId);
     let textareaDisabled = null;
     if (chatSelected) {
-      if (typeof chatSelected.active === 'undefined') {
-        textareaDisabled = false;
-      } else {
-        if (chatSelected.active === 0) {
-          textareaDisabled = true;
-        } else {
-          textareaDisabled = false;
-        }
+      if (typeof chatSelected.active === 'undefined') textareaDisabled = false;
+      else {
+        if (chatSelected.active === 0) textareaDisabled = true;
+        else textareaDisabled = false;
       }
     }
     return (
-      <div
-        className={
-          !this.props.showMatches
-            ? "hide-matches app-container"
-            : "show-matches app-container"
-        }
-      >
+      <div className={!this.props.showMatches ? 'hide-matches app-container' : 'show-matches app-container'}>
         <div className="row fullHeight">
           <div className="col-4 userList">
             <Tab
@@ -222,9 +166,9 @@ class Chat extends Component {
               panes={this.panes}
               defaultActiveIndex={Number(tabIndex) || 0}
               onTabChange={(t, i) => {
-                const { chats } = this.props
-                const { index } = this.state
-                let newChats = chats.filter(c => c.trackingType === FILTERSOPTIONS[i.activeIndex]);
+                const { chats } = this.props;
+                const { index } = this.state;
+                let newChats = chats.filter((c) => c.trackingType === this.FILTERSOPTIONS[i.activeIndex]);
                 let selected = null;
                 if (index !== undefined) {
                   if (newChats.length !== 0 && newChats[index]) {
@@ -240,73 +184,61 @@ class Chat extends Component {
                     selected = newChats[0].trackingType;
                   }
                   // let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
-                  this.setState({ from: selected ? selected : "Error getting data" })
+                  this.setState({ from: selected ? selected : 'Error getting data' });
                 }
-                this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null })
-              }} />
+                this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null });
+              }}
+            />
           </div>
           <div className="col-8">
             <div className="messages" style={{ height: '88%' }}>
-              {!loading && chatId !== "" && chats[index] ? (
+              {!loading && chatId !== '' && chats[index] ? (
                 <div className="cameraView">
                   <h2
-                    className={"Chat C5"}
+                    className={'Chat C5'}
                     style={{
-                      textAlign: "center",
+                      textAlign: 'center',
                       backgroundColor: COLORS[chats[index].trackingType],
-                      height: "30px"
+                      height: '30px'
                     }}
                   >
                     {from}
                   </h2>
-                  <div className="row" style={{ height: "70%", margin: 0 }}>
-                    <div
-                      className="col"
-                      style={{ height: "100%" }}
-                    >
-                      {Object.keys(tracking).length !== 0 && tracking.pointCoords && (
-                        <MapContainer
-                          options={{
-                            center: {
-                              lat: parseFloat(
-                                tracking.pointCoords[
-                                  tracking.pointCoords.length - 1
-                                ].latitude
-                              ),
-                              lng: parseFloat(
-                                tracking.pointCoords[
-                                  tracking.pointCoords.length - 1
-                                ].longitude
-                              ),
-                            },
-                            zoom: 15,
-                            mapTypeId: "roadmap",
-                            zoomControl: false,
-                            mapTypeControl: false,
-                            streetViewControl: false,
-                            fullscreenControl: false,
-                            openConfirm: false,
-                            typeConfirm: false,
-                            openSelection: false,
-                            checked: "",
-                          }}
-                          coordsPath={tracking.pointCoords}
-                          onMapLoad={this._onMapLoad}
-                        />
-                      )}
+                  <div className="row" style={{ height: '70%', margin: 0 }}>
+                    <div className="col" style={{ height: '100%' }}>
+                      {Object.keys(tracking).length !== 0 &&
+                        tracking.pointCoords && (
+                          <MapContainer
+                            options={{
+                              center: {
+                                lat: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].latitude),
+                                lng: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].longitude)
+                              },
+                              zoom: 15,
+                              mapTypeId: 'roadmap',
+                              zoomControl: false,
+                              mapTypeControl: false,
+                              streetViewControl: false,
+                              fullscreenControl: false,
+                              openConfirm: false,
+                              typeConfirm: false,
+                              openSelection: false,
+                              checked: ''
+                            }}
+                            coordsPath={tracking.pointCoords}
+                            onMapLoad={this._onMapLoad}
+                          />
+                        )}
                     </div>
                   </div>
 
-                  <div className="row" style={{ height: "20%", width: '100%', margin: 0, marginTop: '5px' }}>
-                    <Card style={{ width: "100%" }}>
+                  <div className="row" style={{ height: '20%', width: '100%', margin: 0, marginTop: '5px' }}>
+                    <Card style={{ width: '100%' }}>
                       <Card.Content>
                         <div className="row">
-                          <div className="col-8">
-                            <div className="row" style={{ padding: '5px' }}>
-                              <div
-                                className="col-6"
-                                style={{ fontSize: 13, paddingRight: 0 }}
-                              >
+                          <div className="col-12">
+                            <div className="row">
+                              <div className="col-4" style={{ fontSize: 13, paddingRight: 0 }}>
                                 <b>Nombre: </b>
                                 {chats[index].user_name}
                               </div>
@@ -314,9 +246,9 @@ class Chat extends Component {
                                 style={{
                                   fontSize: 13,
                                   paddingLeft: 0,
-                                  paddingRight: 0,
+                                  paddingRight: 0
                                 }}
-                                className="col-3"
+                                className="col-4"
                               >
                                 <b>Celular: </b>
                                 {this.state.personalInformation.Contact.phone}
@@ -326,21 +258,22 @@ class Chat extends Component {
                                   fontSize: 13,
                                   paddingLeft: 0,
                                   paddingRight: 0,
+                                  margin: 'auto'
                                 }}
-                                className="col-3"
-                              ></div>
+                                className="col-4"
+                              >
+                                {
+                                  chats[index].trackingType.includes("Seguimiento") && chats[index].active ?
+                                    <Button variant="warning" onClick={() => this.deactivateTracking(chats[index].id, chats[index].trackingId)} >Desactivar</Button>
+                                    : null
+                                }
+                              </div>
                             </div>
-                            <div
-                              className="row textContainer"
-                              style={{ paddingTop: 0 }}
-                            >
-                            </div>
+                            <div className="row textContainer" style={{ paddingTop: 0 }} />
                           </div>
-                          <div className="col-4" style={{ margin: "auto" }}>
-
+                          {/* <div className="col-4" style={{ margin: 'auto' }}>
                             <br />
-
-                          </div>
+                          </div> */}
                         </div>
                       </Card.Content>
                     </Card>
@@ -349,51 +282,40 @@ class Chat extends Component {
               ) : null}
             </div>
             <div className="messagesContainer" id="messagesContainer">
-              {!loading && chatId !== "" && chats[index]
-                ? chats[index].messages
-                  ? this.state.messages.map((value, ref) => (
-                    <div
-                      key={ref}
-                      className={
-                        value.from === "user" ? "user" : "support"
-                      }
-                      ref={
-                        ref === chats[index].messages.length - 1
-                          ? "message"
-                          : "message" + ref
-                      }
-                      id={
-                        ref === chats[index].messages.length - 1
-                          ? "lastMessage"
-                          : "message" + ref
-                      }
-                    >
-                      <p>{value.msg}</p>
-                      <small>
-                        {value.dateTime.toDate
-                          ? moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
-                          : null}
-                      </small>
-                    </div>
-                  ))
-                  : loading === true ?
-                    <>
-                      <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
-                      <p style={{ position: "fixed", top: '56%', left: '62%' }}>Cargando chat</p>
-                    </> :
-                    <p style={{ position: "fixed", top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p> :
-                loading === true ?
-                  <>
-                    <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
-                    <p style={{ position: "fixed", top: '56%', left: '62%' }}>Cargando chat</p>
-                  </> :
-                  <p style={{ position: "fixed", top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p>
-              }
+              {!loading && chatId !== '' && chats[index] ? chats[index].messages ? (
+                this.state.messages.map((value, ref) => (
+                  <div
+                    key={ref}
+                    className={value.from === 'user' ? 'user' : 'support'}
+                    ref={ref === chats[index].messages.length - 1 ? 'message' : 'message' + ref}
+                    id={ref === chats[index].messages.length - 1 ? 'lastMessage' : 'message' + ref}
+                  >
+                    <p>{value.msg}</p>
+                    <small>
+                      {value.dateTime.toDate ? moment(value.dateTime.toDate()).format('DD-MM-YYYY, HH:mm:ss') : null}
+                    </small>
+                  </div>
+                ))
+              ) : loading === true ? (
+                <>
+                  <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
+                  <p style={{ position: 'fixed', top: '56%', left: '62%' }}>Cargando chat</p>
+                </>
+              ) : (
+                <p style={{ position: 'fixed', top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p>
+              ) : loading === true ? (
+                <>
+                  <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
+                  <p style={{ position: 'fixed', top: '56%', left: '62%' }}>Cargando chat</p>
+                </>
+              ) : (
+                <p style={{ position: 'fixed', top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p>
+              )}
             </div>
-            {chatId !== "" && chats[index] ? (
+            {chatId !== '' && chats[index] ? (
               <div className="messages_send_box">
-                {!textareaDisabled ?
-                  <div style={{ position: "relative" }}>
+                {!textareaDisabled ? (
+                  <div style={{ position: 'relative' }}>
                     <textarea
                       disabled={textareaDisabled}
                       placeholder="Escriba su mensaje"
@@ -406,139 +328,331 @@ class Chat extends Component {
                       onChange={(event) => {
                         this.setState({ text: event.target.value });
                       }}
-                    ></textarea>
-                    <Icon
-                      name="send"
-                      id="sendbutton"
-                      onClick={this.sendMessage}
                     />
+                    <Icon name="send" id="sendbutton" onClick={this.sendMessage} />
                   </div>
-                  :
+                ) : (
                   <div className="closed-ticked">El ticket ya se encuentra cerrado</div>
-                }
+                )}
               </div>
             ) : null}
           </div>
         </div>
+        {this.state.open_snack && <CustomizedSnackbars message={this.state.snack_message} setOpenSnack={this.setOpenSnack} open={this.state.open_snack} />}
       </div>
     );
   }
 
+  renderListChats = (type) => {
+    const { index, chats, optionSelected } = this.state;
+    let critical_levels = [];
+    if (type.includes("Seguimiento")) {
+      if (!SEARCHOPTIONS.find(item => item.key === 'critical')) {
+        SEARCHOPTIONS.push({
+          key: 'critical',
+          text: 'Criticidad',
+          value: 'critical'
+        });
+      }
+      Object.keys(CRITICAL_COLORS).forEach(key => {
+        critical_levels.push({ key, text: CRITICAL_COLORS[key].name, value: key })
+      });
+    } else {
+      const index = SEARCHOPTIONS.findIndex(item => item.key === 'critical')
+      if (index > -1) {
+        SEARCHOPTIONS.splice(index, 1);
+        critical_levels = [];
+      }
+    }
+
+    return (
+      <div>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+          {
+            optionSelected && optionSelected === 'critical' ?
+              <Dropdown
+                placeholder="Buscar por"
+                fluid
+                selection
+                clearable
+                options={critical_levels}
+                defaultValue={''}
+                onChange={this.criticalLevelFilter}
+                style={{ flex: 1 }}
+              />
+              :
+              <Input placeholder="Buscar alertas" style={{ flex: 2 }} onChange={this.filterAction} />
+          }
+          <Dropdown
+            placeholder="Buscar por"
+            fluid
+            selection
+            options={SEARCHOPTIONS}
+            defaultValue="name"
+            onChange={this.handleChangeOption}
+            style={{ flex: 1 }}
+          />
+        </div>
+        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
+          {chats.map((chat, i) => {
+            const critical_color = chat && chat.critical_state && chat.critical_state !== 0 ? CRITICAL_COLORS[chat.critical_state] : null;
+            const date =
+              chat && chat.create_at
+                ? moment(chat.create_at).format('DD-MM-YYYY, HH:mm:ss')
+                : typeof chat.lastModification === 'string'
+                  ? moment(chat.lastModification).format('DD-MM-YYYY, HH:mm:ss')
+                  : moment(chat.lastModification.toDate()).format('DD-MM-YYYY, HH:mm:ss');
+            return (
+              <Card
+                className={i === index ? 'activeChat' : ''}
+                style={critical_color !== null && type.includes("Seguimiento ") ? {
+                  width: '100%',
+                  boxShadow: critical_color.boxShadow
+                } : {
+                  width: '100%',
+                }}
+                key={i}
+                onClick={() => this.changeChat(chat, i)}
+              >
+                <Card.Content>
+                  <div style={{ position: 'relative' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <h4>{chat.user_name}</h4> <p>{date}</p>
+                    </div>
+                    {chat.active !== undefined && chat.active ? (
+                      <p>
+                        {chat.messages ? chat.messages.length > 0 ? (
+                          (chat.messages[chat.messages.length - 1].from === 'user'
+                            ? chat.user_name.split(' ')[0]
+                            : 'C5') +
+                          ': ' +
+                          chat.messages[chat.messages.length - 1].msg //msg
+                        ) : (
+                          'No hay mensajes que mostart'
+                        ) : (
+                          'No hay mensajes que mostart'
+                        )}
+                      </p>
+                    ) : (
+                      <p />
+                    )}
+
+                    {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
+                      <div className="notificationNumber" style={{ marginTop: 15 }}>
+                        <p>{chat.c5Unread}</p>
+                      </div>
+                    ) : null}
+                    <div style={{ display: 'flex', justifyContent: critical_color !== null ? 'space-between' : 'flex-end', alignItems: 'center' }}>
+                      {
+                        critical_color !== null && type.includes("Seguimiento") &&
+                        < small style={{ ...styles.badge, backgroundColor: critical_color.color }}><strong>{critical_color.name}</strong></small>
+                      }
+                      <div>
+                        {' '}
+                        <small style={{ ...styles.badge, marginLeft: 3, alignSelf: 'flex-end', display: 'flex' }}>
+                          {' '}
+                          <Icon name={chat.active ? 'clock' : 'checkmark'} />{' '}
+                          <strong>{chat.active ? 'Proceso' : 'Cerrado'}</strong>{' '}
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </Card.Content>
+              </Card>
+            );
+          })}
+        </div>
+      </div >
+    );
+  };
+
+  filterAction = (event) => {
+    const { target: { value } } = event;
+    const { activeIndex } = this.state;
+    const { chats: chatsProps } = this.props;
+    const { optionSelected, searching } = this.state;
+    this.setState({ searching: value.trim() }, () => {
+      const filterData = chatsProps.filter((c) => c.trackingType === this.FILTERSOPTIONS[activeIndex]);
+      let expresion = new RegExp(`${searching}.*`, 'i');
+      if (searching.trim().length !== 0) {
+        let newFilterSearch;
+        if (optionSelected === 'alertType') {
+          newFilterSearch = filterData.filter((c) => c.trackingType && expresion.test(c.trackingType));
+        } else if (optionSelected === 'date') {
+          newFilterSearch = filterData.filter((c) =>
+            expresion.test(moment(moment(c.create_at)).format('DD-MM-YYYY, HH:mm:ss'))
+          );
+        } else if (optionSelected === 'name') {
+          newFilterSearch = filterData.filter((c) => expresion.test(c.user_name));
+        }
+        this.setState({ chats: newFilterSearch });
+      }
+      if (value.trim().length === 0) {
+        let newChats = this.props.chats.filter((c) => c.trackingType === this.FILTERSOPTIONS[this.state.activeIndex]);
+        this.setState({ chats: newChats });
+      }
+    });
+  };
+
+  criticalLevelFilter = (e, { value }) => {
+    const { activeIndex } = this.state;
+    const { chats: chatsProps } = this.props;
+    const filterData = chatsProps.filter((c) => c.trackingType === this.FILTERSOPTIONS[activeIndex]);
+    if (value.trim() !== '') {
+      let newFilterSearch = filterData.filter(data => data.critical_state === Number(value));
+      this.setState({
+        chats: newFilterSearch
+      });
+    } else {
+      this.setState({
+        chats: filterData
+      })
+    }
+  }
+
+  handleChangeOption = (e, { value }) => this.setState({ optionSelected: value });
+
   _onMapLoad = (map) => {
     const { chats } = this.props;
     const { index, tracking, marker } = this.state;
-    const coords = {
-      lat: parseFloat(
-        tracking.pointCoords[tracking.pointCoords.length - 1].latitude
-      ),
-      lng: parseFloat(
-        tracking.pointCoords[tracking.pointCoords.length - 1].longitude
-      ),
-    };
+    if (chats.length > 0 && chats[index].trackingType.includes("Seguimiento")) {
+      if (tracking.pointCoords.length > 0) {
+        const { pointCoords } = tracking;
+        // const lastPoint = pointCoords[pointCoords.length - 1];
+        // const coords = { lat: parseFloat(lastPoint.latitude), lng: parseFloat(lastPoint.longitude) };
+        let _marker = null;
+        pointCoords.forEach((pt, idx) => {
+          const position = { lat: parseFloat(pt.latitude), lng: parseFloat(pt.longitude) };
+          if ((pt.critical_state && pt.critical_state !== 0) || idx === 0) {
+            new window.google.maps.Marker({
+              position,
+              map,
+              title: chats[index].user_nicename,
+              icon: CRITICAL_COLORS[idx === 0 ? 'init' : pt.critical_state].map_marker
+            });
+          }
+        });
+        // if (lastPoint.critical_state !== 3) {
+        //   _marker = new window.google.maps.Marker({
+        //     position: coords,
+        //     map,
+        //     title: chats[index].user_nicename,
+        //     icon: CRITICAL_COLORS[3].map_marker
+        //   })
+        // }
+        this.setState({ map, marker: _marker });
+      }
 
-    let _marker = null;
-
-    if (!marker) {
-      _marker = new window.google.maps.Marker({
-        position: coords,
-        map: map,
-        title: chats[index].user_nicename,
-      });
     } else {
-      if (tracking.active) {
-        _marker = Object.assign(marker, {});
-        _marker.setPosition(coords)
-        _marker.setMap(map);
-      } else {
+      const { pointCoords } = tracking;
+      const coords = {
+        lat: parseFloat(pointCoords[pointCoords.length - 1].latitude),
+        lng: parseFloat(pointCoords[pointCoords.length - 1].longitude)
+      };
+
+      let _marker = null;
+      if (!marker) {
         _marker = new window.google.maps.Marker({
           position: coords,
           map: map,
-          title: chats[index].user_nicename,
+          title: chats[index].user_nicename
         });
+      } else {
+        if (tracking.active) {
+          _marker = Object.assign(marker, {});
+          _marker.setPosition(coords);
+          _marker.setMap(map);
+        } else {
+          _marker = new window.google.maps.Marker({
+            position: coords,
+            map: map,
+            title: chats[index].user_nicename
+          });
+        }
       }
+      this.setState({ map, marker: _marker });
     }
-    this.setState({ map, marker: _marker });
   };
 
   changeChat = (chat, i, flag = true) => {
+    let { history, stopNotification } = this.props;
+    const nameRoute = history.location.pathname.includes('/sos') ? 'sos' : 'seguimiento';
+
     if (flag) {
-      this.props.history.push(`/sos/${this.state.activeIndex}/${chat.id}`)
+      history.push(`/${nameRoute}/${this.state.activeIndex}/${chat.id}`);
     }
     if (chat === undefined && i === -1) {
-      this.props.history.push('/sos')
+      history.push(`/${nameRoute}`);
     } else {
-      this.getMessages(chat.id)
-      this.setState(
-        { loading: true, camData: undefined },
-        async () => {
-          this.props.stopNotification();
-          const trackingInformation = await getTracking(chat.trackingId);
+      this.getMessages(chat.id);
+      this.setState({ loading: true, camData: undefined }, async () => {
+        stopNotification();
+        const trackingInformation = await getTracking(chat.trackingId);
 
-          let newData = trackingInformation.data.data();
+        let newData = trackingInformation.data.data();
 
-          newData = {
-            ...newData,
-            id: trackingInformation.data.id,
-          };
-          const aux = newData.SOSType && newData.SOSType === 'Seguridad' ? newData.panic_button_uuid !== null ? `${newData.SOSType} botón físico` : `${newData.SOSType} botón virtual` : newData.SOSType;
-          this.setState({
-            // chatId: chat.id,
-            // messages: chat.messages,
-            index: i,
-            from: aux, //
-            tracking: newData,
-            loading: false,
-            personalInformation: newData.userInformation, //
-            pointCoords: [], //
-          });
+        newData = {
+          ...newData,
+          id: trackingInformation.data.id
+        };
+        const aux =
+          newData.SOSType && newData.SOSType === 'Seguridad'
+            ? newData.panic_button_uuid !== null
+              ? `${newData.SOSType} botón físico`
+              : `${newData.SOSType} botón virtual`
+            : newData.SOSType;
+        this.setState({
+          // chatId: chat.id,
+          // messages: chat.messages,
+          index: i,
+          from: aux, //
+          tracking: newData,
+          loading: false,
+          personalInformation: newData.userInformation, //
+          pointCoords: [] //
+        });
 
-          if (chat.active) {
-            const unsub = firebaseSos
-              .app("sos")
-              .firestore()
-              .collection(SOS_COLLECTION)
-              .onSnapshot((docs) => {
-                const track_changes = docs.docChanges();
-                if (track_changes.length === 1) {
-                  const updatedChatId = track_changes[0].doc.id;
-                  const track_data = track_changes[0].doc.data();
-                  if (chat.trackingId === updatedChatId) {
-                    if (chat.active) {
-                      this.setState({ tracking: track_data });
-                    }
-                  }
+        if (chat.active) {
+          const unsub = firebaseSos.app('sos').firestore().collection(SOS_COLLECTION).onSnapshot((docs) => {
+            const track_changes = docs.docChanges();
+            if (track_changes.length === 1) {
+              const updatedChatId = track_changes[0].doc.id;
+              const track_data = track_changes[0].doc.data();
+              if (chat.trackingId === updatedChatId) {
+                if (chat.active) {
+                  this.setState({ tracking: track_data });
                 }
-              });
-            this.setState({ firebaseSub: unsub });
-          } else {
-            // this.state.firebaseSub();
+              }
+            }
+          });
+          this.setState({ firebaseSub: unsub });
+        } else {
+          if (this.state.firebaseSub) {
+            this.state.firebaseSub();
           }
-          refSOS
-            .doc(chat.id)
-            .update({ c5Unread: 0 })
-            .then(() => {
-              this.setState({ text: "" });
-            });
         }
-      );
+        refSOS.doc(chat.id).update({ c5Unread: 0 }).then(() => {
+          this.setState({ text: '' });
+        });
+      });
     }
   };
 
   getMessages = (chatId) => {
-    this.messageListener = refSOS.doc(chatId).onSnapshot(snapShot => {
+    this.messageListener = refSOS.doc(chatId).onSnapshot((snapShot) => {
       const chat_data = snapShot.data();
       chat_data['id'] = snapShot.id;
       const current_chat = [...this.state.chats];
-      const chat_index = current_chat.findIndex(item => item.id === chatId);
+      const chat_index = current_chat.findIndex((item) => item.id === chatId);
       if (chat_index >= 0) {
         current_chat[chat_index] = chat_data;
       }
-      this.setState({ messages: snapShot.get('messages'), chatId, chats: current_chat })
-    })
-  }
+      this.setState({ messages: snapShot.get('messages'), chatId, chats: current_chat });
+    });
+  };
 
   checkKey = (event) => {
-    var key = window.event.keyCode;
+    let key = window.event.keyCode;
     if (key === 13) {
       this.sendMessage();
       return false;
@@ -553,107 +667,132 @@ class Chat extends Component {
   };
 
   sendMessage = () => {
-    if (this.state.text === "") return;
-    const { chatId, messages } = this.state
+    if (this.state.text === '') return;
+    const { chatId, messages } = this.state;
 
-    let messagesAux = messages.map((e) => e)
+    let messagesAux = messages.map((e) => e);
 
     messagesAux.push({
-      from: "support",
+      from: 'support',
       dateTime: new Date(),
       msg: this.state.text
-    })
+    });
 
-    this.props.stopNotification()
+    this.props.stopNotification();
 
     refSOS
       .doc(chatId)
       .update({
         messages: messagesAux,
-        from: "Chat C5",
+        from: 'Chat C5',
         userUnread: this.props.chats[this.state.index].userUnread
           ? this.props.chats[this.state.index].userUnread + 1
           : 1,
         policeUnread: this.props.chats[this.state.index].policeUnread
           ? this.props.chats[this.state.index].policeUnread + 1
-          : 1,
+          : 1
       })
       .then(() => {
-        this.setState({ text: "" });
+        this.setState({ text: '' });
       });
   };
 
-  async componentDidMount() {
-    const { tabIndex } = this.props.match.params
-
-    if (this.props.chats) {
-      if (tabIndex) {
-        const filtered = this.props.chats.filter(item => item.trackingType === FILTERSOPTIONS[tabIndex]);
-        this.setState({ chats: filtered, activeIndex: tabIndex })
-      } else {
-        const filtered = this.props.chats.filter(item => item.trackingType === FILTERSOPTIONS[this.state.activeIndex]);
-        this.setState({ chats: filtered })
-      }
-    }
-    var messageBody = document.querySelector("#messagesContainer");
-    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
-  }
-
   QueryStringToJSON(query) {
-    query = query.replace("?", "");
-    var pairs = query.split("&");
+    query = query.replace('?', '');
+    let pairs = query.split('&');
 
-    var result = {};
+    let result = {};
     pairs.forEach(function (pair) {
-      pair = pair.split("=");
-      result[pair[0]] = decodeURIComponent(pair[1] || "");
+      pair = pair.split('=');
+      result[pair[0]] = decodeURIComponent(pair[1] || '');
     });
 
     return JSON.parse(JSON.stringify(result));
   }
 
-  componentDidUpdate(prevProps) {
-    const { flagUpdate } = this.state
-    const { tabIndex, chatId } = this.props.match.params
-    const { chats: chatsPrev } = prevProps
-    const { chats } = this.props
-    if (flagUpdate === 0) {
-      if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-        this.setState({ chats });
-        switch (parseInt(tabIndex)) {
-          case 0:
-            const chatsMedic = this.props.chats.filter(e => e.trackingType === FILTERSOPTIONS[Number(tabIndex)])
-            this.setState({ chats: chatsMedic, flagUpdate: 1 })
-            if (chatId) {
-              const indexMedic = chatsMedic.findIndex(e => e.id === chatId)
-              this.changeChat(chatsMedic[indexMedic], indexMedic, false)
-            }
-            break;
-          case 1:
-            const chatsSeguridad = this.props.chats.filter(e => e.trackingType === FILTERSOPTIONS[Number(tabIndex)])
-            this.setState({ chats: chatsSeguridad, flagUpdate: 1 })
-            if (chatId) {
-              const indexSeguridad = chatsSeguridad.findIndex(e => e.id === chatId)
-              this.changeChat(chatsSeguridad[indexSeguridad], indexSeguridad, false)
-            }
-            break;
-          case 2:
-            const chatsCivil = this.props.chats.filter(e => e.trackingType === FILTERSOPTIONS[Number(tabIndex)])
-            this.setState({ chats: chatsCivil, flagUpdate: 1 })
-            if (chatId) {
-              const indexCivil = chatsCivil.findIndex(e => e.id === chatId)
-              this.changeChat(chatsCivil[indexCivil], indexCivil, false)
-            }
-            break;
-          default:
-            const chats = this.props.chats.filter(e => e.trackingType === FILTERSOPTIONS[this.state.activeIndex])
-            this.setState({ chats, flagUpdate: 1 })
-            break;
-        }
+  deactivateTracking(chatId, trackingId) {
+    const { profileId, alertId, pointCoords, initialLocation } = this.state.tracking;
+    let params = {
+      alertId,
+      profileId,
+      tracking_module: true
+    }
+    if (pointCoords && pointCoords.length > 0) {
+      const aux_array = [...pointCoords];
+      const { latitude, longitude } = aux_array.pop();
+      params = {
+        ...params,
+        latitude: String(latitude),
+        longitude: String(longitude)
+      }
+    } else {
+      const { latitude, longitude } = initialLocation;
+      params = {
+        ...params,
+        latitude: String(latitude),
+        longitude: String(longitude)
       }
     }
-    var messageBody = document.querySelector("#messagesContainer");
-    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+    connections.cancelRadarAlert(params)
+      .then(() => {
+        refTracking.doc(trackingId)
+          .update({
+            active: false,
+          })
+          .then(() => {
+            refSOS.doc(chatId)
+              .update({
+                active: 0
+              })
+              .then(() => {
+                this.setState({
+                  snack_message: {
+                    message: 'Alerta desactivada correctamente',
+                    severity: 'success'
+                  },
+                  open_snack: true
+                })
+              })
+              .catch(e => console.log(e))
+          })
+          .catch(e => console.log(e))
+      })
+      .catch(() => {
+        refTracking.doc(trackingId)
+          .update({
+            active: false,
+          })
+          .then(() => {
+            refSOS.doc(chatId)
+              .update({
+                active: 0
+              })
+              .then(() => {
+                this.setState({
+                  snack_message: {
+                    message: 'Alerta desactivada correctamente',
+                    severity: 'success'
+                  },
+                  open_snack: true
+                })
+              })
+              .catch(e => console.log(e))
+          })
+          .catch(e => console.log(e))
+      });
+  }
+
+  setOpenSnack = (state) => {
+    if (state) {
+      this.setState({
+        open_snack: state
+      })
+    } else {
+      this.setState({
+        open_snack: state,
+        snack_message: {}
+      });
+    }
   }
 }
 
@@ -668,8 +807,12 @@ const styles = {
     paddingTop: 2,
     paddingBottom: 2
   },
-  tab: { backgroundColor: "#dadada", borderWidth: 0, borderColor: "#dadada" },
+  tab: {
+    backgroundColor: '#dadada',
+    borderWidth: 0,
+    borderColor: '#dadada'
+  },
   centered: {
     left: '51%'
   }
-}
+};

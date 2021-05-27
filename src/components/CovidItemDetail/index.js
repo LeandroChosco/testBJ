@@ -41,7 +41,7 @@ const CovidItemDetail = props => {
   useEffect(() => {
     console.log(props);
     let data = camDataPeticion();
-    console.log(data);
+    console.log(data, geolocation);
   }, []);
 
   const camDataPeticion = () => {
