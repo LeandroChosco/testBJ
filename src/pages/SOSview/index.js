@@ -518,57 +518,28 @@ class Chat extends Component {
     if (chats.length > 0 && chats[index].trackingType.includes("Seguimiento")) {
       if (tracking.pointCoords.length > 0) {
         const { pointCoords } = tracking;
-        const coords = {
-          lat: parseFloat(pointCoords[pointCoords.length - 1].latitude),
-          lng: parseFloat(pointCoords[pointCoords.length - 1].longitude)
-        };
+        // const lastPoint = pointCoords[pointCoords.length - 1];
+        // const coords = { lat: parseFloat(lastPoint.latitude), lng: parseFloat(lastPoint.longitude) };
         let _marker = null;
-        if (!tracking.active) {
-          pointCoords.forEach((pt, idx) => {
-            const position = { lat: parseFloat(pt.latitude), lng: parseFloat(pt.longitude) };
-            if ((pt.critical_state && pt.critical_state !== 0) || idx === 0) {
-              let marker_data = {
-                position,
-                map,
-                title: chats[index].user_nicename,
-                icon: CRITICAL_COLORS[idx === 0 ? 'init' : pt.critical_state].map_marker
-              }
-              if (pt.critical_state && pt.critical_state === 3 && idx === pointCoords.length - 1) {
-                delete marker_data.icon;
-              }
-
-              new window.google.maps.Marker(marker_data)
-            }
-          });
-
-          if (!pointCoords[pointCoords.length - 1].critical_state || pointCoords[pointCoords.length - 1].critical_state === 0)
-            _marker = new window.google.maps.Marker({
-              position: coords,
-              map: map,
-              title: chats[index].user_nicename
+        pointCoords.forEach((pt, idx) => {
+          const position = { lat: parseFloat(pt.latitude), lng: parseFloat(pt.longitude) };
+          if ((pt.critical_state && pt.critical_state !== 0) || idx === 0) {
+            new window.google.maps.Marker({
+              position,
+              map,
+              title: chats[index].user_nicename,
+              icon: CRITICAL_COLORS[idx === 0 ? 'init' : pt.critical_state].map_marker
             });
-        } else {
-          if (!marker) {
-            _marker = new window.google.maps.Marker({
-              position: coords,
-              map: map,
-              title: chats[index].user_nicename
-            });
-          } else {
-            if (pointCoords[pointCoords.length - 1].critical_state && pointCoords[pointCoords.length - 1].critical_state !== 0) {
-              new window.google.maps.Marker({
-                position: coords,
-                map,
-                title: chats[index].user_nicename,
-                icon: CRITICAL_COLORS[pointCoords[pointCoords.length - 1].critical_state].map_marker
-              })
-            }
-
-            _marker = Object.assign(marker, {});
-            _marker.setPosition(coords);
-            _marker.setMap(map);
           }
-        }
+        });
+        // if (lastPoint.critical_state !== 3) {
+        //   _marker = new window.google.maps.Marker({
+        //     position: coords,
+        //     map,
+        //     title: chats[index].user_nicename,
+        //     icon: CRITICAL_COLORS[3].map_marker
+        //   })
+        // }
         this.setState({ map, marker: _marker });
       }
 

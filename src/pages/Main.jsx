@@ -208,7 +208,7 @@ class Main extends Component {
         this.setState({
           datosAlcaldia: limits.data
         })
-        const { clave_municipal } = limits.data;
+        // const { clave_municipal } = limits.data;
         firebaseSos
           .app("sos")
           .firestore()
