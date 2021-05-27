@@ -114,10 +114,10 @@ export default {
   dashboardRecognitionMood: () => {
     return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/dashboard/mood');
   },
-  dashboardCameraPerPerson : () =>{
+  dashboardCameraPerPerson: () => {
     return Axios.get(`${constants.sails_url}:${constants.sailsPort}/dashboard/numberofpeoplepercamera`);
   },
-  dashboardPersons:()=>{
+  dashboardPersons: () => {
     return Axios.get(`${constants.sails_url}:${constants.sailsPort}/dashboard/person`)
   },
   loadCams: () => {
@@ -238,18 +238,39 @@ export default {
     return Axios.post(constants.sails_url + ':' + constants.sailsPort + '/update/change/', data);
   },
   // Opciones PTZ
-	newOnvifDevice: (data) => {
-		return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/new/device', data);
-	},
-	getProfilePTZ: (data) => {
-		return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/get/profile', data);
-	},
-	continuousMovePTZ: (data) => {
-		return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/continuous/move/ptz', data);
-	},
-	stopPTZ: (data) => {
-		return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/stop/ptz', data);
-	}
+  newOnvifDevice: (data) => {
+    return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/new/device', data);
+  },
+  getProfilePTZ: (data) => {
+    return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/get/profile', data);
+  },
+  continuousMovePTZ: (data) => {
+    return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/continuous/move/ptz', data);
+  },
+  stopPTZ: (data) => {
+    return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/stop/ptz', data);
+  },
+  cancelRadarAlert: (params) => {
+    return Axios.post(constants.radar_backend, {
+      query:
+        `mutation ($alertId: Int!, $latitude: String!, $longitude: String!, $profileId: Int!, $tracking_module: Boolean) {
+            alertUpdate(
+              alertId: $alertId, 
+              latitude: $latitude, 
+              longitude: $longitude, 
+              profileId: $profileId, 
+              tracking_module: $tracking_module
+              ){
+              id
+              profile{
+                id
+              }
+              status
+            }
+          }`,
+      variables: params
+    });
+  }
 };
 
 function getUserID() {

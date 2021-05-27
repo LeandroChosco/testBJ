@@ -1,10 +1,10 @@
 import React from 'react';
 import {
   ScatterChart,
-   Scatter,
+  Scatter,
   XAxis, YAxis, CartesianGrid,
   Tooltip,
-  Cell, ResponsiveContainer
+  ResponsiveContainer
 } from 'recharts';
 
 const styles = {
@@ -32,11 +32,11 @@ const CameraPerPerson = (props) => {
               top: 20, right: 20, bottom: 20, left: 20,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3"/>
+            <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="category" dataKey="x" name="Cámara" />
             <YAxis type="number" dataKey="y" name="Personas" />
             <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-            <Scatter name="camaras" data={data} fill= '#1ab7ea'>
+            <Scatter name="camaras" data={data} fill='#1ab7ea'>
             </Scatter>
           </ScatterChart>
           :

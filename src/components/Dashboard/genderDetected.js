@@ -18,14 +18,14 @@ const styles = {
 }
 
 const GenderDetected = (props) => {
-  const { genderDetected, dataTickets } = props;
+  const { genderDetected } = props;
   const [options, setOptions] = useState();
   const [series, setSeries] = useState();
 
   useEffect(() => {
     let xAxis = [], yAxis = [];
     if (genderDetected.length > 0) {
-      genderDetected.map((item) => {
+      genderDetected.forEach((item) => {
         xAxis.push(item.name);
         yAxis.push(item.value)
       })
@@ -61,7 +61,7 @@ const GenderDetected = (props) => {
             },
           },
         },
-        
+
         colors: ['#fbc028', '#248FFB'],
         legend: {
           show: true,
@@ -69,7 +69,7 @@ const GenderDetected = (props) => {
           showForNullSeries: true,
           showForZeroSeries: true,
           position: 'bottom',
-          horizontalAlign: 'center', 
+          horizontalAlign: 'center',
           floating: false,
           fontSize: '14px',
           fontFamily: 'Helvetica, Arial',
@@ -82,31 +82,31 @@ const GenderDetected = (props) => {
           offsetX: 0,
           offsetY: 0,
           labels: {
-              colors: undefined,
-              useSeriesColors: false
+            colors: undefined,
+            useSeriesColors: false
           },
           markers: {
-              width: 12,
-              height: 12,
-              strokeWidth: 0,
-              strokeColor: '#fff',
-              fillColors: undefined,
-              radius: 12,
-              customHTML: undefined,
-              onClick: undefined,
-              offsetX: 0,
-              offsetY: 0
+            width: 12,
+            height: 12,
+            strokeWidth: 0,
+            strokeColor: '#fff',
+            fillColors: undefined,
+            radius: 12,
+            customHTML: undefined,
+            onClick: undefined,
+            offsetX: 0,
+            offsetY: 0
           },
           itemMargin: {
-              horizontal: 5,
-              vertical: 0
+            horizontal: 5,
+            vertical: 0
           },
           onItemClick: {
-              toggleDataSeries: true
+            toggleDataSeries: true
           },
-          
+
+        }
       }
-    }
 
       let series = yAxis
       setOptions(options);
@@ -116,15 +116,15 @@ const GenderDetected = (props) => {
 
   return (
     <ResponsiveContainer >
-      
-        {
-          options && series  ? 
+
+      {
+        options && series ?
           <Chart options={options} series={series} type="donut" height={320} />
           :
           <div style={styles.noData}>No hay datos dispononibles</div>
 
-        }
- 
+      }
+
     </ResponsiveContainer>
   )
 }

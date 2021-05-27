@@ -31,7 +31,7 @@ const AgeDetected = (props) => {
   useEffect(() => {
     let total = [], women = [], men = [], name = [];
     if (agesDetected.length > 0) {
-      agesDetected.map((item) => {
+      agesDetected.forEach((item) => {
         total.push(item.total);
         name.push(item.name);
         women.push(item.Mujeres);
@@ -90,8 +90,8 @@ const AgeDetected = (props) => {
           lineCap: 'butt',
           colors: undefined,
           width: 1.5,
-          dashArray: 0,      
-      }
+          dashArray: 0,
+        }
       };
 
       let newSerie = [
@@ -106,7 +106,7 @@ const AgeDetected = (props) => {
 
   return (
     <ResponsiveContainer>
-      { agesDetected.length  > 0  &&  options && series  ?
+      { agesDetected.length > 0 && options && series ?
         <Chart options={options} series={series} type="bar" height={350} />
         :
         <div style={styles.noData}>No hay datos dispononibles</div>
