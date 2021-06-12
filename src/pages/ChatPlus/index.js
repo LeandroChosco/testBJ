@@ -442,7 +442,7 @@ class Chat extends Component {
                             </div>
                             <div className="row" style={{ padding: "5px" }}>
                               <div
-                                className="col-12"
+                                className="col-6"
                                 style={{ fontSize: 13, paddingRight: 0 }}
                               >
                                 <b>Dirección: </b>
@@ -450,6 +450,16 @@ class Chat extends Component {
                                 {chats[index].user_cam.number},{" "}
                                 {chats[index].user_cam.town},{" "}
                                 {chats[index].user_cam.township}
+                              </div>
+                              <div
+                                className="col-3"
+                                style={{
+                                  fontSize: 13,
+                                  paddingLeft: 0,
+                                  paddingRight: 0,
+                                }}
+                              >
+                                <b>Cámara: </b> #cam{camData.extraData.num_cam}
                               </div>
                             </div>
                             <div className="row" style={{ padding: "5px" }}>
