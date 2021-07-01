@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Card, Icon, Input, Dropdown, Tab } from 'semantic-ui-react';
-import { Button } from 'react-bootstrap';
+import { Card, Icon, Button, Input, Dropdown, Tab } from 'semantic-ui-react';
+// import { Button } from 'react-bootstrap';
 import moment from 'moment';
 import _ from 'lodash';
 import './style.css';
 
-import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION } from '../../Api/sos';
+import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION, createDocPolice } from '../../Api/sos';
 import MapContainer from '../../components/MapContainer';
 import firebaseSos from '../../constants/configSOS';
 import FadeLoader from 'react-spinners/FadeLoader';
@@ -253,27 +253,39 @@ class Chat extends Component {
                                 <b>Celular: </b>
                                 {this.state.personalInformation.Contact.phone}
                               </div>
-                              <div
-                                style={{
-                                  fontSize: 13,
-                                  paddingLeft: 0,
-                                  paddingRight: 0,
-                                  margin: 'auto'
-                                }}
-                                className="col-4"
-                              >
-                                {
-                                  chats[index].trackingType.includes("Seguimiento") && chats[index].active ?
-                                    <Button variant="warning" onClick={() => this.deactivateTracking(chats[index].id, chats[index].trackingId)} >Desactivar</Button>
-                                    : null
-                                }
+                              <div className="col-4" style={{ margin: 'auto' }}>
+                                <Button
+                                  icon
+                                  size="small"
+                                  color="red"
+                                  labelPosition="left"
+                                  style={{ margin: '5px' }}
+                                  disabled={chats[index].policeId}
+                                  onClick={() => createDocPolice(chats[index].id, chats[index].trackingType)}
+                                >
+                                  <Icon inverted name="taxi" color="white" />
+                                  Mandar unidad
+                                </Button>
+                                {chats[index].trackingType.includes("Seguimiento") && chats[index].active ? (
+                                  <div>
+                                    <Button
+                                      icon
+                                      size="small"
+                                      color="yellow"
+                                      labelPosition="left"
+                                      onClick={() => this.deactivateTracking(chats[index].id, chats[index].trackingId)}
+                                      style={{ margin: '5px' }}
+                                    >
+                                      <Icon inverted name="close" color="white" />
+                                      Desactivar
+                                    </Button>
+                                  </div>
+                                ) : null}
+                                <br />
                               </div>
                             </div>
                             <div className="row textContainer" style={{ paddingTop: 0 }} />
                           </div>
-                          {/* <div className="col-4" style={{ margin: 'auto' }}>
-                            <br />
-                          </div> */}
                         </div>
                       </Card.Content>
                     </Card>
@@ -286,14 +298,20 @@ class Chat extends Component {
                 this.state.messages.map((value, ref) => (
                   <div
                     key={ref}
-                    className={value.from === 'user' ? 'user' : 'support'}
+                    className={value.from === 'user' ? 'user' : value.from === 'Policia' ? 'policia' : value.from === 'Sistema' ? 'sistema' : 'support'}
                     ref={ref === chats[index].messages.length - 1 ? 'message' : 'message' + ref}
                     id={ref === chats[index].messages.length - 1 ? 'lastMessage' : 'message' + ref}
                   >
-                    <p>{value.msg}</p>
-                    <small>
-                      {value.dateTime.toDate ? moment(value.dateTime.toDate()).format('DD-MM-YYYY, HH:mm:ss') : null}
-                    </small>
+                    <p>
+                      {chats[index].policeId && (value.from === 'user' || value.from === 'Policia' || value.from === 'Sistema') ? (
+                        <>{value.from === 'user' ? 'Ciudadano' : value.from}:<br /></>
+                      ) : null}
+                      {value.msg}
+                      <br />
+                      <small style={{ display: 'flex', justifyContent: 'right' }}>
+                        {value.dateTime.toDate ? moment(value.dateTime.toDate()).format('DD-MM-YYYY, HH:mm:ss') : null}
+                      </small>
+                    </p>
                   </div>
                 ))
               ) : loading === true ? (
