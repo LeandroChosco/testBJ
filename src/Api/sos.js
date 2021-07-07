@@ -29,11 +29,10 @@ export const getTracking = async (id) => {
   }
 };
 
-export const createDocPolice = async (messageId, trackingType) => {
+export const createDocPolice = async (messageId, trackingId, trackingType) => {
   try {
     const data = {
       policeList: [ { id: 1, status: null, reason: null } ],
-      policeName: 'Comandante Sanchez',
       policeIds: [ 1 ],
       pointCoords: [],
       messageId,
@@ -44,6 +43,7 @@ export const createDocPolice = async (messageId, trackingType) => {
 
     const policeId = police.id;
     await fireSos.collection(MESSAGES_COLLECTION).doc(messageId).update({ policeId });
+    await fireSos.collection(SOS_COLLECTION).doc(trackingId).update({ sendPolice: true });
 
     return { success: true, policeId };
   } catch (err) {

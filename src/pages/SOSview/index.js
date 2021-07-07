@@ -11,6 +11,7 @@ import firebaseSos from '../../constants/configSOS';
 import FadeLoader from 'react-spinners/FadeLoader';
 import CustomizedSnackbars from '../../components/Snack/index';
 import connections from '../../conections';
+import Strings from '../../constants/strings';
 
 const refSOS = firebaseSos.app('sos').firestore().collection(MESSAGES_COLLECTION);
 const refTracking = firebaseSos.app('sos').firestore().collection(SOS_COLLECTION)
@@ -253,36 +254,34 @@ class Chat extends Component {
                                 <b>Celular: </b>
                                 {this.state.personalInformation.Contact.phone}
                               </div>
-                              <div className="col-4" style={{ margin: 'auto' }}>
-                                <Button
-                                  icon
-                                  size="small"
-                                  color="red"
-                                  labelPosition="left"
-                                  style={{ margin: '5px' }}
-                                  disabled={chats[index].policeId}
-                                  onClick={() => createDocPolice(chats[index].id, chats[index].trackingType)}
-                                >
-                                  <Icon inverted name="taxi" color="white" />
-                                  Mandar unidad
-                                </Button>
-                                {chats[index].trackingType.includes("Seguimiento") && chats[index].active ? (
-                                  <div>
-                                    <Button
-                                      icon
-                                      size="small"
-                                      color="yellow"
-                                      labelPosition="left"
-                                      onClick={() => this.deactivateTracking(chats[index].id, chats[index].trackingId)}
-                                      style={{ margin: '5px' }}
-                                    >
-                                      <Icon inverted name="close" color="white" />
-                                      Desactivar
-                                    </Button>
-                                  </div>
-                                ) : null}
-                                <br />
-                              </div>
+                              {chats[index].active ? (
+                                <div className="col-4" style={{ margin: 'auto' }}>
+                                  <Button
+                                    icon
+                                    size="small"
+                                    color="red"
+                                    labelPosition="left"
+                                    style={{ margin: '5px' }}
+                                    disabled={chats[index].policeId}
+                                    onClick={() => createDocPolice(chats[index].id, chats[index].trackingId, chats[index].trackingType)}
+                                  >
+                                    <Icon inverted name="taxi" color="white" />
+                                    Mandar unidad
+                                  </Button>
+                                  <br />
+                                  <Button
+                                    icon
+                                    size="small"
+                                    color="yellow"
+                                    labelPosition="left"
+                                    onClick={() => this.deactivateTracking(chats[index].id, chats[index].trackingId, chats[index].trackingType.includes('Seguimiento'))}
+                                    style={{ margin: '5px' }}
+                                  >
+                                    <Icon inverted name="close" color="white" />
+                                    Desactivar
+                                  </Button>
+                                </div>
+                              ) : null}
                             </div>
                             <div className="row textContainer" style={{ paddingTop: 0 }} />
                           </div>
@@ -303,9 +302,7 @@ class Chat extends Component {
                     id={ref === chats[index].messages.length - 1 ? 'lastMessage' : 'message' + ref}
                   >
                     <p>
-                      {chats[index].policeId && (value.from === 'user' || value.from === 'Policia' || value.from === 'Sistema') ? (
-                        <>{value.from === 'user' ? 'Ciudadano' : value.from}:<br /></>
-                      ) : null}
+                      {chats[index].policeId && this.renderNameChat(chats[index], value)}
                       {value.msg}
                       <br />
                       <small style={{ display: 'flex', justifyContent: 'right' }}>
@@ -359,6 +356,21 @@ class Chat extends Component {
         {this.state.open_snack && <CustomizedSnackbars message={this.state.snack_message} setOpenSnack={this.setOpenSnack} open={this.state.open_snack} />}
       </div>
     );
+  }
+
+  renderNameChat = (chat, value) => {
+    const { police_name, user_name } = chat;
+    let name = null;
+    switch (value.from) {
+      case Strings.chat.base: name = 'Tú'; break;
+      case Strings.chat.blindaje: name = 'Tú'; break;
+      case Strings.chat.soporte: name = 'Tú'; break;
+      case Strings.chat.info: name = Strings.chat.info; break;
+      case Strings.chat.police: name = police_name; break;
+      default: name = user_name;
+    }
+
+    return (<>{name}:<br /></>);
   }
 
   renderListChats = (type) => {
@@ -728,13 +740,9 @@ class Chat extends Component {
     return JSON.parse(JSON.stringify(result));
   }
 
-  deactivateTracking(chatId, trackingId) {
+  deactivateTracking(chatId, trackingId, tracking_module) {
     const { profileId, alertId, pointCoords, initialLocation } = this.state.tracking;
-    let params = {
-      alertId,
-      profileId,
-      tracking_module: true
-    }
+    let params = { alertId, profileId, tracking_module }
     if (pointCoords && pointCoords.length > 0) {
       const aux_array = [...pointCoords];
       const { latitude, longitude } = aux_array.pop();
