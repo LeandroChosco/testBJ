@@ -33,6 +33,18 @@ class SideBar extends Component {
         }
         camaras.map(value => {
           if (value.active === 1 && value.flag_streaming === 1) {
+
+            var urlHistory = null
+            var urlHistoryPort = null
+
+            if ("urlhistory" in value){
+                urlHistory = value.urlhistory
+            }
+
+            if ("urlhistoryport" in value){
+                urlHistoryPort = value.urlhistoryport
+            }
+
             // console.log("valusito", value)
             auxCamaras.push({
               id: value.id,
@@ -63,7 +75,9 @@ class SideBar extends Component {
                   value.channel
                   : null,
               dataCamValue: value,
-              tipo_camara: value.tipo_camara
+              tipo_camara: value.tipo_camara,
+              urlHistory: urlHistory,
+              urlHistoryPort: urlHistoryPort
             });
             index++;
           }

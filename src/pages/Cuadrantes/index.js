@@ -389,6 +389,18 @@ class Cuadrantes extends Component{
                     camaras.map(value=>{
                         //console.log('camara',value)
                         if (value.active === 1 && value.flag_streaming === 1) {
+                            
+                            var urlHistory = null
+                            var urlHistoryPort = null
+
+                            if ("urlhistory" in value){
+                                urlHistory = value.urlhistory
+                            }
+
+                            if ("urlhistoryport" in value){
+                                urlHistoryPort = value.urlhistoryport
+                            }
+                            
                             //let url = 'rtmp://18.212.185.68/live/cam';                                               
                             auxCamaras.push({
                                 id:value.id,
@@ -398,7 +410,9 @@ class Cuadrantes extends Component{
                                 name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
                                 isHls:true,
                                 url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
-                                dataCamValue: value     
+                                dataCamValue: value,
+                                urlHistory: urlHistory,
+                                urlHistoryPort: urlHistoryPort
                             })                       
                             index = index +1
                             if(this.state.id_cam !== 0){

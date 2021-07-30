@@ -202,6 +202,18 @@ class Map extends Component {
       let index = 1;
       camaras.map(value => {
         if (value.active === 1 && value.flag_streaming === 1) {
+
+          var urlHistory = null
+          var urlHistoryPort = null
+
+          if ("urlhistory" in value){
+              urlHistory = value.urlhistory
+          }
+
+          if ("urlhistoryport" in value){
+              urlHistoryPort = value.urlhistoryport
+          }
+
           if (value.google_cordenate !== "") {
             center_lat =
               center_lat + parseFloat(value.google_cordenate.split(",")[0]);
@@ -238,7 +250,9 @@ class Map extends Component {
               flag_color: value.flag_color,
               dataCamValue: value,
               tipo_camara: value.tipo_camara,
-              fromMap: true
+              fromMap: true,
+              urlHistory: urlHistory,
+              urlHistoryPort: urlHistoryPort
             });
             index++;
           }
