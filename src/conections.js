@@ -238,17 +238,65 @@ export default {
     return Axios.post(constants.sails_url + ':' + constants.sailsPort + '/update/change/', data);
   },
   // Opciones PTZ
-  newOnvifDevice: (data) => {
-    return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/new/device', data);
+  newOnvifDevice: (urlhistory, urlhistoryport, data) => {
+
+    var getUrlHistory = "0.0.0.0"
+    var getUrlHistoryPort = "00"
+
+    if (urlhistory != null){
+      getUrlHistory = urlhistory.toString()
+    }
+
+    if (urlhistoryport != null){
+      getUrlHistoryPort = urlhistoryport.toString()
+    }
+
+    return Axios.post("http://" +getUrlHistory +':' +getUrlHistoryPort + '/onvif/new/device', data);
   },
-  getProfilePTZ: (data) => {
-    return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/get/profile', data);
+  getProfilePTZ: (urlhistory, urlhistoryport, data) => {
+
+    var getUrlHistory = "0.0.0.0"
+    var getUrlHistoryPort = "00"
+
+    if (urlhistory != null){
+      getUrlHistory = urlhistory.toString()
+    }
+
+    if (urlhistoryport != null){
+      getUrlHistoryPort = urlhistoryport.toString()
+    }
+
+    return Axios.post("http://" +getUrlHistory +':' +getUrlHistoryPort + '/onvif/get/profile', data);
   },
-  continuousMovePTZ: (data) => {
-    return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/continuous/move/ptz', data);
+  continuousMovePTZ: (urlhistory, urlhistoryport, data) => {
+
+    var getUrlHistory = "0.0.0.0"
+    var getUrlHistoryPort = "00"
+
+    if (urlhistory != null){
+      getUrlHistory = urlhistory.toString()
+    }
+
+    if (urlhistoryport != null){
+      getUrlHistoryPort = urlhistoryport.toString()
+    }
+
+    return Axios.post("http://" +getUrlHistory +':' +getUrlHistoryPort + '/onvif/continuous/move/ptz', data);
   },
-  stopPTZ: (data) => {
-    return Axios.post(constants.sails_url + ':' + constants.ptzPort + '/onvif/stop/ptz', data);
+  stopPTZ: (urlhistory, urlhistoryport, data) => {
+
+    var getUrlHistory = "0.0.0.0"
+    var getUrlHistoryPort = "00"
+
+    if (urlhistory != null){
+      getUrlHistory = urlhistory.toString()
+    }
+
+    if (urlhistoryport != null){
+      getUrlHistoryPort = urlhistoryport.toString()
+    }
+
+    return Axios.post("http://" +getUrlHistory +':' +getUrlHistoryPort + '/onvif/stop/ptz', data);
   },
   cancelRadarAlert: (params) => {
     return Axios.post(constants.radar_backend, {
