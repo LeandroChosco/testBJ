@@ -10,6 +10,8 @@ import './style.css';
 const TIMEOUT = [ 0.3, 0.6, 0.9 ];
 const ControlPTZ = (props) => {
 	const [ ip, setIp ] = useState(null);
+	const [ historyURL, sethistoryURL] = useState(null);
+	const [ historyURLPort, sethistoryURLPort] = useState(null);
 	const [ profile, setProfile ] = useState('');
 	const [ loading, setLoading ] = useState(true);
 	const [ startTime, setStartTime ] = useState(null);
@@ -23,8 +25,11 @@ const ControlPTZ = (props) => {
 		async function fetchData() {
 			let { camera, isInMap, hasMatch } = props;
 			let params = { ip: camera.dataCamValue.camera_ip };
-			let dataDevice = await conections.newOnvifDevice(params);
-			let dataProfile = await conections.getProfilePTZ(params);
+			let urlHistory = camera.urlHistory;
+			let urlHistoryPort = camera.urlHistoryPort;
+
+			let dataDevice = await conections.newOnvifDevice(urlHistory, urlHistoryPort, params);
+			let dataProfile = await conections.getProfilePTZ(urlHistory, urlHistoryPort, params);
 			params.ProfileToken = dataProfile.data ? dataProfile.data.token : '';
 			if (!params.ProfileToken || params.ProfileToken === '')
 				setErrorMessage('No se encontraron los recursos necesarios para poder controlar la camara.');
@@ -42,6 +47,8 @@ const ControlPTZ = (props) => {
 				}
 			}
 			setIp(params.ip);
+			sethistoryURL(urlHistory);
+			sethistoryURLPort(urlHistoryPort);
 			setStyleMap(isInMap);
 			setStyleMatch(hasMatch);
 			setProfile(params.ProfileToken);
@@ -89,12 +96,12 @@ const ControlPTZ = (props) => {
 		let vel = getDirection(direction);
 		let time = isLong ? 0 : moment().diff(startTime, 'seconds') + 1;
 		let params = { ip, ProfileToken: profile, Velocity: vel, Timeout: time };
-		conections.continuousMovePTZ(params);
+		conections.continuousMovePTZ(historyURL, historyURLPort, params);
 	};
 
 	const stop = () => {
 		let params = { ip, ProfileToken: profile, PanTilt: true, Zoom: true };
-		conections.stopPTZ(params);
+		conections.stopPTZ(historyURL, historyURLPort, params);
 	};
 
 	return (
