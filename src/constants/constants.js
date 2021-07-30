@@ -1,5 +1,5 @@
 // Produccion
-const sails_url = "http://3.21.75.143";
+const sails_url = "http://apibj.energetikatechnology.com";
 // const sails_url = 'http://prod.adminc5.bj.sails.energetikadevelepment.com';
 const radar_backend = "http://radar-backend-dev.us-east-2.elasticbeanstalk.com/graphql";
 const express_url = "http://3.15.181.186";
@@ -10,7 +10,7 @@ const express_url = "http://3.15.181.186";
 // const radar_backend = "http://radar-backend-test.us-east-1.elasticbeanstalk.com/graphql";
 const webSocketPort = '20';
 const apiPort = "3000";
-const sailsPort = "1337";
+const sailsPort = "80";
 const ptzPort = "3001";
 
 export default {
