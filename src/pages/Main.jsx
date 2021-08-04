@@ -45,7 +45,7 @@ import socketIOClient from "socket.io-client";
 import sailsIOClient from "sails.io.js";
 import SosView from "./SOSview/index";
 import firebaseSos from "../constants/configSOS";
-import { MESSAGES_COLLECTION, COMPLAINT_COLLECTION } from "../Api/sos";
+import { MESSAGES_COLLECTION, COMPLAINT_COLLECTION, POLICE_COLLECTION } from "../Api/sos";
 
 
 import Chat from './ChatPlus/index'
@@ -347,6 +347,60 @@ class Main extends Component {
  
     */
     if (this.state.datosAlcaldia && this.state.datosAlcaldia.clave_municipal) {
+      firebaseSos
+        .app('sos')
+        .firestore()
+        .collection(POLICE_COLLECTION)
+        .where('active', '==', true)
+        .where('clientId', '==', this.state.datosAlcaldia.clave_municipal)
+        .onSnapshot((snap) => {
+          let docsModified = snap.docChanges().filter((item) => item.type === 'modified');
+          if (docsModified.length > 0 && (snap.docs.length === 1 || docsModified.length !== snap.docs.length)) {
+            docsModified.map(async (d) => {
+              const { policeList, isAlarm, alarmType, trackingType, messageId, c5_notification, time } = d.doc.data();
+              const { status, reason } = policeList.pop();
+              if (c5_notification && status !== null) {
+                if (isAlarm) {
+                  switch (alarmType) {
+                    case 'Policia':
+                      this.showAlarmNot("Alarma Fisica - Policia", status ? `El policia a aceptado la incidencia. Tiempo estimado de llegada: ${time}` : `El policia asignado a rechazado la incidencia. Razon: ${reason}. Reasigna a otro policia.`, "error", "Ver detalles", 0, messageId);
+                      break;
+                    case 'Fuego':
+                      this.showAlarmNot("Alarma Fisica - Fuego", status ? `El policia a aceptado la incidencia. Tiempo estimado de llegada: ${time}` : `El policia asignado a rechazado la incidencia. Razon: ${reason}. Reasigna a otro policia.`, "error", "Ver detalles", 1, messageId);
+                      break;
+                    case 'Médico':
+                      this.showAlarmNot("Alarma Fisica - Médico", status ? `El policia a aceptado la incidencia. Tiempo estimado de llegada: ${time}` : `El policia asignado a rechazado la incidencia. Razon: ${reason}. Reasigna a otro policia.`, "error", "Ver detalles", 2, messageId);
+                      break;
+                    default:
+                      break;
+                  }
+                } else {
+                  switch (trackingType) {
+                    case 'Seguridad':
+                      this.showSOSNot("SOS - Seguridad", status ? `El policia a aceptado la incidencia. Tiempo estimado de llegada: ${time}` : `El policia asignado a rechazado la incidencia. Razon: ${reason}. Reasigna a otro policia.`, "error", "Ver detalles", 0, messageId);
+                      break;
+                    case 'Protección Civil':
+                      this.showSOSNot("SOS - Proteccion Civil", status ? `El policia a aceptado la incidencia. Tiempo estimado de llegada: ${time}` : `El policia asignado a rechazado la incidencia. Razon: ${reason}. Reasigna a otro policia.`, "error", "Ver detalles", 1, messageId);
+                      break;
+                    case 'Emergencia Médica':
+                      this.showSOSNot("SOS - Emergencia Medica", status ? `El policia a aceptado la incidencia. Tiempo estimado de llegada: ${time}` : `El policia asignado a rechazado la incidencia. Razon: ${reason}. Reasigna a otro policia.`, "error", "Ver detalles", 2, messageId);
+                      break;
+                    case 'Seguimiento Por Hora':
+                      this.showTrackingNot("Seguimiento - Por Hora", status ? `El policia a aceptado la incidencia. Tiempo estimado de llegada: ${time}` : `El policia asignado a rechazado la incidencia. Razon: ${reason}. Reasigna a otro policia.`, "error", "Ver detalles", 0, messageId);
+                      break;
+                    case 'Seguimiento Por Destino':
+                      this.showTrackingNot("Seguimiento - Por Destino", status ? `El policia a aceptado la incidencia. Tiempo estimado de llegada: ${time}` : `El policia asignado a rechazado la incidencia. Razon: ${reason}. Reasigna a otro policia.`, "error", "Ver detalles", 1, messageId);
+                      break;
+                    default:
+                      break;
+                  }
+                }
+                firebaseSos.app('sos').firestore().collection(POLICE_COLLECTION).doc(d.doc.id).update({ c5_notification: false });
+              }
+            });
+          }
+        });
+
       firebaseSos
         .app("sos")
         .firestore()
