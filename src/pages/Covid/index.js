@@ -237,11 +237,15 @@ class Analysis extends Component {
       loadingCovidGrid: true
     });
     let covidTmp = [];
-    this.props.alertaCovid.forEach(element => {
-      if (element.camData[0].termic_type === 1) {
-        covidTmp.push(element);
-      }
-    });
+    if (this.props.alertaCovid) {
+      this.props.alertaCovid.forEach(element => {
+        if (element.camData[0].termic_type === 1) {
+          covidTmp.push(element);
+        }
+      });
+    }else{
+      console.log('Sin informaciòn');
+    }
     setTimeout(() => {
       this.setState({
         imageLoading: false,
