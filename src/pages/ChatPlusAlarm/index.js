@@ -19,6 +19,8 @@ import CustomizedSnackbars from '../../components/Snack/index';
 
 import { POLICE_COLLECTION } from '../../Api/sos';
 
+import police_blue from '../../assets/images/icons/maps/police_blue.png';
+
 const refSOS = firebaseC5Benito.app('c5benito').firestore().collection('messages');
 const refPolice = firebaseSos.app('sos').firestore().collection(POLICE_COLLECTION);
 
@@ -127,7 +129,7 @@ class ChatAlarm extends Component {
 
   render() {
     const { alarmIndex } = this.props.match.params;
-    const { chats, chatId, index, loading, camData, personalInformation, mapPolice/*, showReport*/ } = this.state;
+    const { chats, chatId, index, loading, camData, personalInformation, mapPolice, policeMarker, policePolyline/*, showReport*/ } = this.state;
     if (index !== undefined && chatId === '' && chats.length > 0) this.setState({ chatId: null });
 
     const chatSelected = chats.find((item) => item.id === chatId);
@@ -195,6 +197,7 @@ class ChatAlarm extends Component {
                             checked: ''
                           }}
                           onMapLoad={this._onMapLoad}
+                          markersUnmount={{ policeMarker, policePolyline }}
                         />
                       ) : (
                         <MapContainer
@@ -215,6 +218,7 @@ class ChatAlarm extends Component {
                             checked: ''
                           }}
                           onMapLoad={this._onMapLoad}
+                          markersUnmount={{ policeMarker, policePolyline }}
                         />
                       )}
                     </div>
@@ -280,7 +284,7 @@ class ChatAlarm extends Component {
                                   {chats[index].police_name}
                                 </div>
                               )}
-                              {this.state.timePolice !== null && (
+                              {this.state.timePolice && (
                                 <div className='col' style={styles.text}>
                                   <b>Tiempo estimado de llegada de policia: </b>
                                   {this.state.timePolice}
@@ -592,9 +596,7 @@ class ChatAlarm extends Component {
 
   _onMapLoad = (map) => {
     const { chats } = this.props;
-    const { index, policePointCoords, policeMarker, policePolyline } = this.state;
-    if (policeMarker) policeMarker.setMap(null);
-    if (policePolyline) policePolyline.setMap(null);
+    const { index, policePointCoords } = this.state;
     if (policePointCoords) this._setPoliceMarker(policePointCoords, map);
 
     if (chats[index].user_cam.google_cordenate !== undefined) {
@@ -704,10 +706,8 @@ class ChatAlarm extends Component {
         } else {
           refPolice.doc(chat_data.policeId).get().then((snapPolice) => {
             const { pointCoords } = snapPolice.data();
-            const { policeMarker, policePolyline, map } = this.state;
+            const { map } = this.state;
 
-            if (policeMarker) policeMarker.setMap(null);
-            if (policePolyline) policePolyline.setMap(null);
             if (map) this._setPoliceMarker(pointCoords, map);
             this.setState({ policePointCoords: pointCoords });
           });
@@ -830,7 +830,7 @@ class ChatAlarm extends Component {
     const newMarker = new window.google.maps.Marker({
       position,
       map,
-      icon: { url: 'http://maps.google.com/mapfiles/ms/icons/police.png' },
+      icon: police_blue,
       title: 'police'
     });
     this.setState({ policeMarker: newMarker });

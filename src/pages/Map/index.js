@@ -15,14 +15,16 @@ import firebaseSos from '../../constants/configSOS';
 import { POLICE_TRACKING_COLLECTION } from '../../Api/sos';
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
 
+import police_blue from '../../assets/images/icons/maps/police_blue.png';
+import police_yellow from '../../assets/images/icons/maps/police_yellow.png';
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
 import './style.css';
 
 const MARKERS = {
-  police_available: 'http://maps.google.com/mapfiles/ms/icons/police.png',
-  police_unavailable: 'http://maps.google.com/mapfiles/ms/icons/police.png'
+  police_available: police_blue,
+  police_unavailable: police_yellow
 };
 const MAP_OPTIONS = {
   center: { lat: 19.45943, lng: -99.208588 },
@@ -327,7 +329,7 @@ class Map extends Component {
 
     markersPolice[policeId] = new window.google.maps.Marker({
       position: { lat: latitude, lng: longitude },
-      icon: { url: MARKERS[`police_${available ? '' : 'un'}available`] },
+      icon: MARKERS[`police_${available ? '' : 'un'}available`],
       map: map,
       title: police_name,
       extraData: { id, ...police, isPolice: true }

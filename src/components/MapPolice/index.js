@@ -8,13 +8,16 @@ import Loading from '../Loading';
 import firebaseSos from '../../constants/configSOS';
 import { POLICE_TRACKING_COLLECTION, getPoliceByMessage, createDocPolice } from '../../Api/sos';
 
+import shoes_red from '../../assets/images/icons/maps/shoes_red.png';
+import police_blue from '../../assets/images/icons/maps/police_blue.png';
+import police_yellow from '../../assets/images/icons/maps/police_yellow.png';
 import { styles } from './styles';
 import './style.css';
 
 const MARKERS = {
-  user: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-  available: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-  unavailable: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+  user: shoes_red,
+  available: police_blue,
+  unavailable: police_yellow
 };
 
 class MapPolice extends Component {
@@ -157,7 +160,7 @@ class MapPolice extends Component {
 
     markers[policeId] = new window.google.maps.Marker({
       position: { lat: latitude, lng: longitude },
-      icon: { url: MARKERS[`${available ? '' : 'un'}available`] },
+      icon: MARKERS[`${available ? '' : 'un'}available`],
       map: map,
       title: police_name,
       extraData: { id, ...police, stateList: foundPolice }
@@ -268,8 +271,8 @@ class MapPolice extends Component {
               this.setState({ loading: true });
               const data = await createDocPolice(incident, tracking, policeId, limits);
               this.setState({ loading: false });
-              if (data.success) _handlePoliceState();
-              else alert('No se ha podido asignar al policia');
+              _handlePoliceState();
+              if (!data.success) alert('Se ha asignado el policia, pero no hemos podido enviar la notificacion.');
             }}
             disabled={!available || disabled}
           >

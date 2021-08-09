@@ -17,6 +17,12 @@ import MapContainer from '../../components/MapContainer';
 // import CloseIncident from '../../components/CloseIncident';
 import CustomizedSnackbars from '../../components/Snack/index';
 
+import police_blue from '../../assets/images/icons/maps/police_blue.png';
+import shoes_green from '../../assets/images/icons/maps/shoes_green.png';
+import shoes_yellow from '../../assets/images/icons/maps/shoes_yellow.png';
+import shoes_red from '../../assets/images/icons/maps/shoes_red.png';
+import destination from '../../assets/images/icons/maps/destination.png';
+
 const refSOS = firebaseSos.app('sos').firestore().collection(MESSAGES_COLLECTION);
 const refTracking = firebaseSos.app('sos').firestore().collection(SOS_COLLECTION);
 const refPolice = firebaseSos.app('sos').firestore().collection(POLICE_COLLECTION);
@@ -35,24 +41,24 @@ const SEARCHOPTIONS = [
   { key: 'date', text: 'Fecha', value: 'date' }
 ];
 const CRITICAL_COLORS = {
-  init: { map_marker: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' },
+  init: { map_marker: shoes_green },
   1: {
     name: 'Sin incidencias',
     color: 'rgba(76,187,23,0.5)',
     boxShadow: '0 0 10px 0 rgb(76,187,23), 0 5px 10px 0 rgba(76,187,23,0.3)',
-    map_marker: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+    map_marker: shoes_green
   },
   2: {
     name: 'Problemas',
     color: 'rgb(255,218,94)',
     boxShadow: '0 0 10px 0 rgb(255,218,94), 0 5px 10px 0 rgba(255,218,94,0.3)',
-    map_marker: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+    map_marker: shoes_yellow
   },
   3: {
     name: 'Crítico',
     color: 'rgba(255,0,0,0.5)',
     boxShadow: '0 0 10px 0 rgb(255,0,0), 0 5px 10px 0 rgba(255,0,0,0.3)',
-    map_marker: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+    map_marker: shoes_red
   }
 };
 
@@ -157,7 +163,7 @@ class Chat extends Component {
 
   render() {
     const { tabIndex } = this.props.match.params;
-    const { chats, chatId, index, from, loading, tracking, mapPolice/*, showReport*/ } = this.state;
+    const { chats, chatId, index, from, loading, tracking, mapPolice, policeMarker, policePolyline, destinationMarker, /*, showReport*/ } = this.state;
     if (index !== undefined && chatId === '' && chats.length > 0) this.setState({ chatId: null });
 
     const chatSelected = chats.find((item) => item.id === chatId);
@@ -239,6 +245,7 @@ class Chat extends Component {
                           }}
                           coordsPath={tracking.pointCoords}
                           onMapLoad={this._onMapLoad}
+                          markersUnmount={{ policeMarker, policePolyline, destinationMarker }}
                         />
                       )}
                     </div>
@@ -275,6 +282,40 @@ class Chat extends Component {
                                 </div>
                               </div>
                             )}
+                            {tracking && tracking.time && (
+                              <div className='row'>
+                                {tracking.time.date && (
+                                  <div className='col' style={styles.text}>
+                                    <b>Fecha: </b>
+                                    {tracking.time.date}
+                                  </div>
+                                )}
+                                {tracking.time.dateStart && (
+                                  <div className='col' style={styles.text}>
+                                    <b>Fecha Inicio: </b>
+                                    {tracking.time.dateStart}
+                                  </div>
+                                )}
+                                <div className='col' style={styles.text}>
+                                  <b>Hora Inicio: </b>
+                                  {tracking.time.hourStart}
+                                </div>
+                                {tracking.time.dateEnd && (
+                                  <div className='col' style={styles.text}>
+                                    <b>Fecha Fin: </b>
+                                    {tracking.time.dateEnd}
+                                  </div>
+                                )}
+                                <div className='col' style={styles.text}>
+                                  <b>Hora Fin: </b>
+                                  {tracking.time.hourEnd}
+                                </div>
+                                <div className='col' style={styles.text}>
+                                  <b>Tiempo Total: </b>
+                                  {tracking.time.total}
+                                </div>
+                              </div>
+                            )}
                             <div className='row'>
                               {chats[index].police_name && (
                                 <div className='col' style={styles.text}>
@@ -282,7 +323,7 @@ class Chat extends Component {
                                   {chats[index].police_name}
                                 </div>
                               )}
-                              {this.state.timePolice !== null && (
+                              {this.state.timePolice && (
                                 <div className='col' style={styles.text}>
                                   <b>Tiempo estimado de llegada de policia: </b>
                                   {this.state.timePolice}
@@ -643,11 +684,8 @@ class Chat extends Component {
 
   _onMapLoad = (map) => {
     const { chats } = this.props;
-    const { index, tracking, marker, policePointCoords, policeMarker, policePolyline, destinationMarker } = this.state;
-    if (policeMarker) policeMarker.setMap(null);
-    if (policePolyline) policePolyline.setMap(null);
+    const { index, tracking, marker, policePointCoords } = this.state;
     if (policePointCoords) this._setPoliceMarker(policePointCoords, map);
-    if (destinationMarker) destinationMarker.setMap(null);
     if (tracking.place) this._setDestinationMarker(tracking.place, map);
 
     if (chats.length > 0 && chats[index].trackingType.includes('Seguimiento')) {
@@ -772,7 +810,7 @@ class Chat extends Component {
           let subPolice = refPolice.doc(chat_data.policeId).onSnapshot((snapPolice) => {
             const { time, pointCoords } = snapPolice.data();
             const { policeMarker, policePolyline, map } = this.state;
-  
+
             if (policeMarker) policeMarker.setMap(null);
             if (policePolyline) policePolyline.setMap(null);
             if (map) this._setPoliceMarker(pointCoords, map);
@@ -782,10 +820,8 @@ class Chat extends Component {
         } else {
           refPolice.doc(chat_data.policeId).get().then((snapPolice) => {
             const { pointCoords } = snapPolice.data();
-            const { policeMarker, policePolyline, map } = this.state;
+            const { map } = this.state;
 
-            if (policeMarker) policeMarker.setMap(null);
-            if (policePolyline) policePolyline.setMap(null);
             if (map) this._setPoliceMarker(pointCoords, map);
             this.setState({ policePointCoords: pointCoords });
           });
@@ -950,7 +986,7 @@ class Chat extends Component {
     const newMarker = new window.google.maps.Marker({
       position,
       map,
-      icon: { url: 'http://maps.google.com/mapfiles/ms/icons/police.png' },
+      icon: police_blue,
       title: 'police'
     });
     this.setState({ policeMarker: newMarker });
@@ -970,7 +1006,7 @@ class Chat extends Component {
     const { name, location: { latitude, longitude } } = place;
     const newMarker = new window.google.maps.Marker({
       position: { lat: latitude, lng: longitude },
-      icon: { url: 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png' },
+      icon: destination,
       map: map,
       title: name
     });
