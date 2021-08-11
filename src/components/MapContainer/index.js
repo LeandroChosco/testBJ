@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import conections from "../../conections";
-import "./style.css";
+import React, { Component } from 'react';
+import conections from '../../conections';
+import './style.css';
 
 export class MapContainer extends Component {
   constructor(props) {
@@ -9,31 +9,83 @@ export class MapContainer extends Component {
       map: null
     };
   }
-  onScriptLoad = () => {
-    const map = new window.google.maps.Map(
-      this.refs.mapDiv,
-      this.props.options
-    );
 
-    conections.getLimitsCam().then(res => {
+  componentDidMount() {
+    if (!window.google) {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      let key = 'AIzaSyCHiHNfeGxYKOZRj-57F957Xe08f64fLHo';
+      if (process.env.NODE_ENV === 'production') {
+        key = 'AIzaSyDVdmSf9QE5KdHNDCSrXwXr3N7QnHaujtg';
+      }
+      s.src = `https://maps.google.com/maps/api/js?key=${key}`;
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+      // Below is important.
+      //We cannot access google.maps until it's finished loading
+      s.addEventListener('load', (e) => {
+        this.onScriptLoad();
+      });
+    } else {
+      this.onScriptLoad();
+    }
+  }
+  componentDidUpdate(prevProps) {
+    const { coordsPath: prevCoordsPath } = prevProps;
+    const { coordsPath, onMapLoad } = this.props;
+    const { map } = this.state;
+    if (prevCoordsPath !== coordsPath) {
+      if (this.state.map) {
+        const coords = coordsPath.map((item) => ({ lat: item.latitude, lng: item.longitude }));
+        const flightPath = new window.google.maps.Polyline({
+          path: coords,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+        flightPath.setMap(map);
+        onMapLoad(map);
+      }
+    }
+  }
+  componentWillUnmount() {
+    const { markersUnmount } = this.props;
+    if (markersUnmount) {
+      const markers = Object.keys(markersUnmount);
+      markers.forEach((m) => {
+        if (this.props.markersUnmount[m]) this.props.markersUnmount[m].setMap(null);
+        this.props.markersUnmount[m] = null;
+      });
+    }
+  }
+
+  render() {
+    return <div style={{ width: '100%', height: '100%' }} ref='mapDiv' />;
+  }
+
+  onScriptLoad = () => {
+    const map = new window.google.maps.Map(this.refs.mapDiv, this.props.options);
+
+    conections.getLimitsCam().then((res) => {
       //console.log('limits', res)
       var dataLimit = res.data.data;
       if (res.status === 200) {
         if (res.data.success) {
           // console.log('data',dataLimit)
           if (this.props.coordsPath && this.props.coordsPath.length > 0) {
-            const coords = this.props.coordsPath.map(item => ({ lat: item.latitude, lng: item.longitude }));
+            const coords = this.props.coordsPath.map((item) => ({ lat: item.latitude, lng: item.longitude }));
             const flightPath = new window.google.maps.Polyline({
               path: coords,
               geodesic: true,
-              strokeColor: "#FF0000",
+              strokeColor: '#FF0000',
               strokeOpacity: 1.0,
               strokeWeight: 2
             });
             flightPath.setMap(map);
           }
 
-          dataLimit.forEach(data => {
+          dataLimit.forEach((data) => {
             var polygonCoord = data.coordenadas_limites;
             // Construct the polygon.
             var polygon = new window.google.maps.Polygon({
@@ -46,7 +98,7 @@ export class MapContainer extends Component {
             });
             polygon.setMap(map);
             var infoWindow = new window.google.maps.InfoWindow();
-            polygon.addListener("click", function (event) {
+            polygon.addListener('click', function(event) {
               var contentString = data.nombre;
 
               // Replace the info window's content and position.
@@ -63,51 +115,6 @@ export class MapContainer extends Component {
     this.props.onMapLoad(map);
     this.setState({ map });
   };
-
-  componentDidMount() {
-    if (!window.google) {
-      var s = document.createElement("script");
-      s.type = "text/javascript";
-      let key = "AIzaSyCHiHNfeGxYKOZRj-57F957Xe08f64fLHo";
-      if (process.env.NODE_ENV === "production") {
-        key = "AIzaSyDVdmSf9QE5KdHNDCSrXwXr3N7QnHaujtg";
-      }
-      s.src = `https://maps.google.com/maps/api/js?key=${key}`;
-      var x = document.getElementsByTagName("script")[0];
-      x.parentNode.insertBefore(s, x);
-      // Below is important.
-      //We cannot access google.maps until it's finished loading
-      s.addEventListener("load", e => {
-        this.onScriptLoad();
-      });
-    } else {
-      this.onScriptLoad();
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { coordsPath: prevCoordsPath } = prevProps;
-    const { coordsPath, onMapLoad } = this.props;
-    const { map } = this.state;
-    if (prevCoordsPath !== coordsPath) {
-      if (this.state.map) {
-        const coords = coordsPath.map(item => ({ lat: item.latitude, lng: item.longitude }));
-        const flightPath = new window.google.maps.Polyline({
-          path: coords,
-          geodesic: true,
-          strokeColor: "#FF0000",
-          strokeOpacity: 1.0,
-          strokeWeight: 2
-        });
-        flightPath.setMap(map);
-        onMapLoad(map);
-      }
-    }
-  }
-
-  render() {
-    return <div style={{ width: "100%", height: "100%" }} ref="mapDiv" />;
-  }
 }
 
 // function showArrays(event) {
