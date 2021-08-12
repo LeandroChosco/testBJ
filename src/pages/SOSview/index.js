@@ -1,19 +1,31 @@
 import React, { Component } from 'react';
-import { Card, Icon, Input, Dropdown, Tab } from 'semantic-ui-react';
-import { Button } from 'react-bootstrap';
+import { Card, Icon, Button, Input, Dropdown, Tab } from 'semantic-ui-react';
+import FadeLoader from 'react-spinners/FadeLoader';
+import firebase from 'firebase';
 import moment from 'moment';
 import _ from 'lodash';
 import './style.css';
 
-import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION } from '../../Api/sos';
-import MapContainer from '../../components/MapContainer';
-import firebaseSos from '../../constants/configSOS';
-import FadeLoader from 'react-spinners/FadeLoader';
-import CustomizedSnackbars from '../../components/Snack/index';
 import connections from '../../conections';
+import Strings from '../../constants/strings';
+import firebaseSos from '../../constants/configSOS';
+import { getTracking, MESSAGES_COLLECTION, SOS_COLLECTION, POLICE_COLLECTION } from '../../Api/sos';
+
+// COMPONENTS
+import MapPolice from '../../components/MapPolice';
+import MapContainer from '../../components/MapContainer';
+// import CloseIncident from '../../components/CloseIncident';
+import CustomizedSnackbars from '../../components/Snack/index';
+
+import police_blue from '../../assets/images/icons/maps/police_blue.png';
+import shoes_green from '../../assets/images/icons/maps/shoes_green.png';
+import shoes_yellow from '../../assets/images/icons/maps/shoes_yellow.png';
+import shoes_red from '../../assets/images/icons/maps/shoes_red.png';
+import destination from '../../assets/images/icons/maps/destination.png';
 
 const refSOS = firebaseSos.app('sos').firestore().collection(MESSAGES_COLLECTION);
-const refTracking = firebaseSos.app('sos').firestore().collection(SOS_COLLECTION)
+const refTracking = firebaseSos.app('sos').firestore().collection(SOS_COLLECTION);
+const refPolice = firebaseSos.app('sos').firestore().collection(POLICE_COLLECTION);
 
 const COLORS = {
   Seguridad: '#FFB887',
@@ -29,24 +41,24 @@ const SEARCHOPTIONS = [
   { key: 'date', text: 'Fecha', value: 'date' }
 ];
 const CRITICAL_COLORS = {
-  init: { map_marker: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' },
+  init: { map_marker: shoes_green },
   1: {
     name: 'Sin incidencias',
     color: 'rgba(76,187,23,0.5)',
     boxShadow: '0 0 10px 0 rgb(76,187,23), 0 5px 10px 0 rgba(76,187,23,0.3)',
-    map_marker: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+    map_marker: shoes_green
   },
   2: {
     name: 'Problemas',
     color: 'rgb(255,218,94)',
     boxShadow: '0 0 10px 0 rgb(255,218,94), 0 5px 10px 0 rgba(255,218,94,0.3)',
-    map_marker: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+    map_marker: shoes_yellow
   },
   3: {
     name: 'Crítico',
     color: 'rgba(255,0,0,0.5)',
     boxShadow: '0 0 10px 0 rgb(255,0,0), 0 5px 10px 0 rgba(255,0,0,0.3)',
-    map_marker: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+    map_marker: shoes_red
   }
 };
 
@@ -70,39 +82,47 @@ class Chat extends Component {
       optionSelected: 'name',
       marker: null,
       firebaseSub: null,
+      timePolice: null,
+      policeMarker: null,
+      policePolyline: null,
+      policePointCoords: null,
+      firebaseSubPolice: null,
+      destinationMarker: null,
       flagUpdate: 0,
       open_snack: false,
-      snack_message: {}
+      snack_message: {},
+      mapPolice: { show: false, incident: null, tracking: null },
+      // showReport: false
     };
   }
   panes = this.props.history.location.pathname.includes('sos')
     ? [
-      {
-        menuItem: 'Seguridad',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguridad')}</Tab.Pane>
-      },
-      {
-        menuItem: 'Protección Civil',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Protección Civil')}</Tab.Pane>
-      },
-      {
-        menuItem: 'Emergencia Médica',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Emergencia Médica')}</Tab.Pane>
-      }
-    ]
+        {
+          menuItem: 'Seguridad',
+          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguridad')}</Tab.Pane>
+        },
+        {
+          menuItem: 'Protección Civil',
+          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Protección Civil')}</Tab.Pane>
+        },
+        {
+          menuItem: 'Emergencia Médica',
+          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Emergencia Médica')}</Tab.Pane>
+        }
+      ]
     : [
-      {
-        menuItem: 'Por Hora',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Hora')}</Tab.Pane>
-      },
-      {
-        menuItem: 'Por Seguimiento',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Destino')}</Tab.Pane>
-      }
-    ];
+        {
+          menuItem: 'Por Hora',
+          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Hora')}</Tab.Pane>
+        },
+        {
+          menuItem: 'Por Seguimiento',
+          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Destino')}</Tab.Pane>
+        }
+      ];
   FILTERSOPTIONS = this.props.history.location.pathname.includes('sos')
-    ? ['Seguridad', 'Protección Civil', 'Emergencia Médica']
-    : ['Seguimiento Por Hora', 'Seguimiento Por Destino'];
+    ? [ 'Seguridad', 'Protección Civil', 'Emergencia Médica' ]
+    : [ 'Seguimiento Por Hora', 'Seguimiento Por Destino' ];
 
   // LIFECYCLES
   componentDidMount() {
@@ -126,16 +146,16 @@ class Chat extends Component {
     const { chats } = this.props;
 
     // if (flagUpdate === 0) {
-      if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
-        if (chatsPrev.length !== chats.length) this.setState({ chats });
-        const nameType = this.FILTERSOPTIONS[Number(tabIndex ? tabIndex : activeIndex)];
-        const filteredChats = chats.filter((e) => e.trackingType === nameType);
-        this.setState({ chats: filteredChats, flagUpdate: 1 });
-        if (chatId) {
-          const idxChat = filteredChats.findIndex((e) => e.id === chatId);
-          this.changeChat(filteredChats[idxChat], idxChat, false);
-        }
+    if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
+      if (chatsPrev.length !== chats.length) this.setState({ chats });
+      const nameType = this.FILTERSOPTIONS[Number(tabIndex ? tabIndex : activeIndex)];
+      const filteredChats = chats.filter((e) => e.trackingType === nameType);
+      this.setState({ chats: filteredChats, flagUpdate: 1 });
+      if (chatId) {
+        const idxChat = filteredChats.findIndex((e) => e.id === chatId);
+        this.changeChat(filteredChats[idxChat], idxChat, false);
       }
+    }
     // }
     let messageBody = document.querySelector('#messagesContainer');
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
@@ -143,10 +163,8 @@ class Chat extends Component {
 
   render() {
     const { tabIndex } = this.props.match.params;
-    const { chats, chatId, index, from, loading, tracking } = this.state;
-    if (index !== undefined && chatId === '' && chats.length > 0) {
-      this.setState({ chatId: null });
-    }
+    const { chats, chatId, index, from, loading, tracking, mapPolice, policeMarker, policePolyline, destinationMarker, /*, showReport*/ } = this.state;
+    if (index !== undefined && chatId === '' && chats.length > 0) this.setState({ chatId: null });
 
     const chatSelected = chats.find((item) => item.id === chatId);
     let textareaDisabled = null;
@@ -159,8 +177,8 @@ class Chat extends Component {
     }
     return (
       <div className={!this.props.showMatches ? 'hide-matches app-container' : 'show-matches app-container'}>
-        <div className="row fullHeight">
-          <div className="col-4 userList">
+        <div className='row fullHeight'>
+          <div className='col-4 userList'>
             <Tab
               menu={{ pointing: true }}
               panes={this.panes}
@@ -190,10 +208,10 @@ class Chat extends Component {
               }}
             />
           </div>
-          <div className="col-8">
-            <div className="messages" style={{ height: '88%' }}>
+          <div className='col-8'>
+            <div className='messages' style={{ height: '88%' }}>
               {!loading && chatId !== '' && chats[index] ? (
-                <div className="cameraView">
+                <div className='cameraView'>
                   <h2
                     className={'Chat C5'}
                     style={{
@@ -204,76 +222,169 @@ class Chat extends Component {
                   >
                     {from}
                   </h2>
-                  <div className="row" style={{ height: '70%', margin: 0 }}>
-                    <div className="col" style={{ height: '100%' }}>
+                  <div className='row' style={{ height: '70%', margin: 0 }}>
+                    <div className='col' style={{ height: '100%' }}>
                       {Object.keys(tracking).length !== 0 &&
-                        tracking.pointCoords && (
-                          <MapContainer
-                            options={{
-                              center: {
-                                lat: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].latitude),
-                                lng: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].longitude)
-                              },
-                              zoom: 15,
-                              mapTypeId: 'roadmap',
-                              zoomControl: false,
-                              mapTypeControl: false,
-                              streetViewControl: false,
-                              fullscreenControl: false,
-                              openConfirm: false,
-                              typeConfirm: false,
-                              openSelection: false,
-                              checked: ''
-                            }}
-                            coordsPath={tracking.pointCoords}
-                            onMapLoad={this._onMapLoad}
-                          />
-                        )}
+                      tracking.pointCoords && (
+                        <MapContainer
+                          options={{
+                            center: {
+                              lat: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].latitude),
+                              lng: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].longitude)
+                            },
+                            zoom: 15,
+                            mapTypeId: 'roadmap',
+                            zoomControl: false,
+                            mapTypeControl: false,
+                            streetViewControl: false,
+                            fullscreenControl: false,
+                            openConfirm: false,
+                            typeConfirm: false,
+                            openSelection: false,
+                            checked: ''
+                          }}
+                          coordsPath={tracking.pointCoords}
+                          onMapLoad={this._onMapLoad}
+                          markersUnmount={{ policeMarker, policePolyline, destinationMarker }}
+                        />
+                      )}
                     </div>
                   </div>
 
-                  <div className="row" style={{ height: '20%', width: '100%', margin: 0, marginTop: '5px' }}>
+                  <div className='row' style={{ height: '20%', width: '100%', margin: 0, marginTop: '5px' }}>
                     <Card style={{ width: '100%' }}>
                       <Card.Content>
-                        <div className="row">
-                          <div className="col-12">
-                            <div className="row">
-                              <div className="col-4" style={{ fontSize: 13, paddingRight: 0 }}>
+                        <div className='row'>
+                          <div className='col-9'>
+                            <div className='row'>
+                              <div className='col-6' style={styles.text}>
                                 <b>Nombre: </b>
                                 {chats[index].user_name}
                               </div>
-                              <div
-                                style={{
-                                  fontSize: 13,
-                                  paddingLeft: 0,
-                                  paddingRight: 0
-                                }}
-                                className="col-4"
-                              >
+                              <div className='col' style={styles.text}>
                                 <b>Celular: </b>
                                 {this.state.personalInformation.Contact.phone}
                               </div>
-                              <div
-                                style={{
-                                  fontSize: 13,
-                                  paddingLeft: 0,
-                                  paddingRight: 0,
-                                  margin: 'auto'
-                                }}
-                                className="col-4"
-                              >
-                                {
-                                  chats[index].trackingType.includes("Seguimiento") && chats[index].active ?
-                                    <Button variant="warning" onClick={() => this.deactivateTracking(chats[index].id, chats[index].trackingId)} >Desactivar</Button>
-                                    : null
-                                }
+                            </div>
+                            {tracking && tracking.place && (
+                              <div className='row'>
+                                <div className='col-6' style={styles.text}>
+                                  <b>Destino: </b>
+                                  {tracking.place.address}
+                                </div>
+                                <div className='col' style={styles.text}>
+                                  <b>Lugar: </b>
+                                  {tracking.place.name}
+                                </div>
+                                <div className='col' style={styles.text}>
+                                  <b>Modo: </b>
+                                  {tracking.place.mode}
+                                </div>
+                              </div>
+                            )}
+                            {tracking && tracking.time && (
+                              <div className='row'>
+                                {tracking.time.date && (
+                                  <div className='col' style={styles.text}>
+                                    <b>Fecha: </b>
+                                    {tracking.time.date}
+                                  </div>
+                                )}
+                                {tracking.time.dateStart && (
+                                  <div className='col' style={styles.text}>
+                                    <b>Fecha Inicio: </b>
+                                    {tracking.time.dateStart}
+                                  </div>
+                                )}
+                                <div className='col' style={styles.text}>
+                                  <b>Hora Inicio: </b>
+                                  {tracking.time.hourStart}
+                                </div>
+                                {tracking.time.dateEnd && (
+                                  <div className='col' style={styles.text}>
+                                    <b>Fecha Fin: </b>
+                                    {tracking.time.dateEnd}
+                                  </div>
+                                )}
+                                <div className='col' style={styles.text}>
+                                  <b>Hora Fin: </b>
+                                  {tracking.time.hourEnd}
+                                </div>
+                                <div className='col' style={styles.text}>
+                                  <b>Tiempo Total: </b>
+                                  {tracking.time.total}
+                                </div>
+                              </div>
+                            )}
+                            <div className='row'>
+                              {chats[index].police_name && (
+                                <div className='col' style={styles.text}>
+                                  <b>Policia: </b>
+                                  {chats[index].police_name}
+                                </div>
+                              )}
+                              {this.state.timePolice && (
+                                <div className='col' style={styles.text}>
+                                  <b>Tiempo estimado de llegada de policia: </b>
+                                  {this.state.timePolice}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          {chats[index].active ? (
+                            <div className='col'>
+                              <div className='row'>
+                                <Button
+                                  icon
+                                  size='small'
+                                  color='red'
+                                  labelPosition='left'
+                                  style={styles.buttonMargin}
+                                  disabled={chats[index].policeId}
+                                  onClick={() => this._handlePoliceState(true, chats[index], tracking)}
+                                >
+                                  <Icon inverted name='taxi' />
+                                  Mandar unidad
+                                </Button>
+                              </div>
+                              {/* <div className='row' style={styles.text}>
+                                Desactivar:
+                              </div> */}
+                              <div className='row'>
+                                {/* <Button.Group>
+                                  <Button
+                                    icon
+                                    size='small'
+                                    color='yellow'
+                                    labelPosition='left'
+                                    style={styles.buttonMargin}
+                                    onClick={() => this.setState({ showReport: true })}
+                                  >
+                                    <Icon inverted name='file alternate' />
+                                    Con Rep
+                                  </Button>
+                                  <Button.Or /> */}
+                                  <Button
+                                    icon
+                                    size='small'
+                                    color='yellow'
+                                    labelPosition='left'
+                                    style={styles.buttonMargin}
+                                    onClick={() =>
+                                      this.deactivateTracking(
+                                        chats[index].id,
+                                        chats[index].trackingId,
+                                        chats[index].trackingType.includes('Seguimiento')
+                                      )}
+                                  >
+                                    {/* <Icon inverted name='file excel' /> */}
+                                    <Icon inverted name='close' />
+                                    Desactivar{/* Sin Rep */}
+                                  </Button>
+                                {/* </Button.Group> */}
                               </div>
                             </div>
-                            <div className="row textContainer" style={{ paddingTop: 0 }} />
-                          </div>
-                          {/* <div className="col-4" style={{ margin: 'auto' }}>
-                            <br />
-                          </div> */}
+                          ) : null}
                         </div>
                       </Card.Content>
                     </Card>
@@ -281,19 +392,33 @@ class Chat extends Component {
                 </div>
               ) : null}
             </div>
-            <div className="messagesContainer" id="messagesContainer">
+            <div className='messagesContainer' id='messagesContainer'>
               {!loading && chatId !== '' && chats[index] ? chats[index].messages ? (
                 this.state.messages.map((value, ref) => (
                   <div
                     key={ref}
-                    className={value.from === 'user' ? 'user' : 'support'}
+                    className={
+                      value.from === 'user' ? (
+                        'user'
+                      ) : value.from === 'Policia' ? (
+                        'policia'
+                      ) : value.from === 'Sistema' ? (
+                        'sistema'
+                      ) : (
+                        'support'
+                      )
+                    }
                     ref={ref === chats[index].messages.length - 1 ? 'message' : 'message' + ref}
                     id={ref === chats[index].messages.length - 1 ? 'lastMessage' : 'message' + ref}
                   >
-                    <p>{value.msg}</p>
-                    <small>
-                      {value.dateTime.toDate ? moment(value.dateTime.toDate()).format('DD-MM-YYYY, HH:mm:ss') : null}
-                    </small>
+                    <p>
+                      {this.renderNameChat(chats[index], value)}
+                      {value.msg}
+                      <br />
+                      <small style={{ display: 'flex', justifyContent: 'right' }}>
+                        {value.dateTime.toDate ? moment(value.dateTime.toDate()).format('DD-MM-YYYY, HH:mm:ss') : null}
+                      </small>
+                    </p>
                   </div>
                 ))
               ) : loading === true ? (
@@ -313,52 +438,92 @@ class Chat extends Component {
               )}
             </div>
             {chatId !== '' && chats[index] ? (
-              <div className="messages_send_box">
+              <div className='messages_send_box'>
                 {!textareaDisabled ? (
                   <div style={{ position: 'relative' }}>
                     <textarea
                       disabled={textareaDisabled}
-                      placeholder="Escriba su mensaje"
-                      name="text"
-                      autoComplete="on"
-                      autoCorrect="on"
-                      id="messsageTextarea"
+                      placeholder='Escriba su mensaje'
+                      name='text'
+                      autoComplete='on'
+                      autoCorrect='on'
+                      id='messsageTextarea'
                       value={this.state.text}
                       onKeyPress={this.checkKey}
                       onChange={(event) => {
                         this.setState({ text: event.target.value });
                       }}
                     />
-                    <Icon name="send" id="sendbutton" onClick={this.sendMessage} />
+                    <Icon name='send' id='sendbutton' onClick={this.sendMessage} />
                   </div>
                 ) : (
-                  <div className="closed-ticked">El ticket ya se encuentra cerrado</div>
+                  <div className='closed-ticked'>El ticket ya se encuentra cerrado</div>
                 )}
               </div>
             ) : null}
           </div>
         </div>
-        {this.state.open_snack && <CustomizedSnackbars message={this.state.snack_message} setOpenSnack={this.setOpenSnack} open={this.state.open_snack} />}
+        {this.state.open_snack && (
+          <CustomizedSnackbars
+            message={this.state.snack_message}
+            setOpenSnack={this.setOpenSnack}
+            open={this.state.open_snack}
+          />
+        )}
+        {mapPolice && mapPolice.show && mapPolice.incident && (
+          <MapPolice
+            show={mapPolice.show}
+            incident={mapPolice.incident}
+            tracking={mapPolice.tracking}
+            _handlePoliceState={this._handlePoliceState}
+          />
+        )}
+        {/* {showReport && (
+          <CloseIncident
+            show={showReport}
+            incident={chats[index]}
+            setShow={(state) => this.setState({ showReport: state })}
+          />
+        )} */}
       </div>
     );
   }
 
+  renderNameChat = (chat, value) => {
+    const { police_name, user_name } = chat;
+    let name = null;
+    switch (value.from) {
+      case Strings.chat.base: name = 'Tú'; break;
+      case Strings.chat.blindaje: name = 'Tú'; break;
+      case Strings.chat.soporte: name = 'Tú'; break;
+      case Strings.chat.sistem: name = Strings.chat.info; break;
+      case Strings.chat.police: name = police_name; break;
+      default: name = user_name;
+    }
+
+    return (
+      <>
+        {name}:<br />
+      </>
+    );
+  };
+
   renderListChats = (type) => {
     const { index, chats, optionSelected } = this.state;
     let critical_levels = [];
-    if (type.includes("Seguimiento")) {
-      if (!SEARCHOPTIONS.find(item => item.key === 'critical')) {
+    if (type.includes('Seguimiento')) {
+      if (!SEARCHOPTIONS.find((item) => item.key === 'critical')) {
         SEARCHOPTIONS.push({
           key: 'critical',
           text: 'Criticidad',
           value: 'critical'
         });
       }
-      Object.keys(CRITICAL_COLORS).forEach(key => {
-        critical_levels.push({ key, text: CRITICAL_COLORS[key].name, value: key })
+      Object.keys(CRITICAL_COLORS).forEach((key) => {
+        critical_levels.push({ key, text: CRITICAL_COLORS[key].name, value: key });
       });
     } else {
-      const index = SEARCHOPTIONS.findIndex(item => item.key === 'critical')
+      const index = SEARCHOPTIONS.findIndex((item) => item.key === 'critical');
       if (index > -1) {
         SEARCHOPTIONS.splice(index, 1);
         critical_levels = [];
@@ -368,34 +533,34 @@ class Chat extends Component {
     return (
       <div>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
-          {
-            optionSelected && optionSelected === 'critical' ?
-              <Dropdown
-                placeholder="Buscar por"
-                fluid
-                selection
-                clearable
-                options={critical_levels}
-                defaultValue={''}
-                onChange={this.criticalLevelFilter}
-                style={{ flex: 1 }}
-              />
-              :
-              <Input placeholder="Buscar alertas" style={{ flex: 2 }} onChange={this.filterAction} />
-          }
+          {optionSelected && optionSelected === 'critical' ? (
+            <Dropdown
+              placeholder='Buscar por'
+              fluid
+              selection
+              clearable
+              options={critical_levels}
+              defaultValue={''}
+              onChange={this.criticalLevelFilter}
+              style={{ flex: 1 }}
+            />
+          ) : (
+            <Input placeholder='Buscar alertas' style={{ flex: 2 }} onChange={this.filterAction} />
+          )}
           <Dropdown
-            placeholder="Buscar por"
+            placeholder='Buscar por'
             fluid
             selection
             options={SEARCHOPTIONS}
-            defaultValue="name"
+            defaultValue='name'
             onChange={this.handleChangeOption}
             style={{ flex: 1 }}
           />
         </div>
         <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
           {chats.map((chat, i) => {
-            const critical_color = chat && chat.critical_state && chat.critical_state !== 0 ? CRITICAL_COLORS[chat.critical_state] : null;
+            const critical_color =
+              chat && chat.critical_state && chat.critical_state !== 0 ? CRITICAL_COLORS[chat.critical_state] : null;
             const date =
               chat && chat.create_at
                 ? moment(chat.create_at).format('DD-MM-YYYY, HH:mm:ss')
@@ -405,12 +570,13 @@ class Chat extends Component {
             return (
               <Card
                 className={i === index ? 'activeChat' : ''}
-                style={critical_color !== null && type.includes("Seguimiento ") ? {
-                  width: '100%',
-                  boxShadow: critical_color.boxShadow
-                } : {
-                  width: '100%',
-                }}
+                style={
+                  critical_color !== null && type.includes('Seguimiento ') ? (
+                    { width: '100%', boxShadow: critical_color.boxShadow }
+                  ) : (
+                    { width: '100%' }
+                  )
+                }
                 key={i}
                 onClick={() => this.changeChat(chat, i)}
               >
@@ -438,15 +604,23 @@ class Chat extends Component {
                     )}
 
                     {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                      <div className="notificationNumber" style={{ marginTop: 15 }}>
+                      <div className='notificationNumber' style={{ marginTop: 15 }}>
                         <p>{chat.c5Unread}</p>
                       </div>
                     ) : null}
-                    <div style={{ display: 'flex', justifyContent: critical_color !== null ? 'space-between' : 'flex-end', alignItems: 'center' }}>
-                      {
-                        critical_color !== null && type.includes("Seguimiento") &&
-                        < small style={{ ...styles.badge, backgroundColor: critical_color.color }}><strong>{critical_color.name}</strong></small>
-                      }
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: critical_color !== null ? 'space-between' : 'flex-end',
+                        alignItems: 'center'
+                      }}
+                    >
+                      {critical_color !== null &&
+                      type.includes('Seguimiento') && (
+                        <small style={{ ...styles.badge, backgroundColor: critical_color.color }}>
+                          <strong>{critical_color.name}</strong>
+                        </small>
+                      )}
                       <div>
                         {' '}
                         <small style={{ ...styles.badge, marginLeft: 3, alignSelf: 'flex-end', display: 'flex' }}>
@@ -462,7 +636,7 @@ class Chat extends Component {
             );
           })}
         </div>
-      </div >
+      </div>
     );
   };
 
@@ -499,27 +673,26 @@ class Chat extends Component {
     const { chats: chatsProps } = this.props;
     const filterData = chatsProps.filter((c) => c.trackingType === this.FILTERSOPTIONS[activeIndex]);
     if (value.trim() !== '') {
-      let newFilterSearch = filterData.filter(data => data.critical_state === Number(value));
-      this.setState({
-        chats: newFilterSearch
-      });
+      let newFilterSearch = filterData.filter((data) => data.critical_state === Number(value));
+      this.setState({ chats: newFilterSearch });
     } else {
-      this.setState({
-        chats: filterData
-      })
+      this.setState({ chats: filterData });
     }
-  }
+  };
 
   handleChangeOption = (e, { value }) => this.setState({ optionSelected: value });
 
   _onMapLoad = (map) => {
     const { chats } = this.props;
-    const { index, tracking, marker } = this.state;
-    if (chats.length > 0 && chats[index].trackingType.includes("Seguimiento")) {
+    const { index, tracking, marker, policePointCoords } = this.state;
+    if (tracking && tracking.active) {
+      if (chats[index].policeId && policePointCoords) this._setPoliceMarker(policePointCoords, map);
+      if (tracking.place) this._setDestinationMarker(tracking.place, map);
+    }
+
+    if (chats.length > 0 && chats[index].trackingType.includes('Seguimiento')) {
       if (tracking.pointCoords.length > 0) {
         const { pointCoords } = tracking;
-        // const lastPoint = pointCoords[pointCoords.length - 1];
-        // const coords = { lat: parseFloat(lastPoint.latitude), lng: parseFloat(lastPoint.longitude) };
         let _marker = null;
         pointCoords.forEach((pt, idx) => {
           const position = { lat: parseFloat(pt.latitude), lng: parseFloat(pt.longitude) };
@@ -532,17 +705,8 @@ class Chat extends Component {
             });
           }
         });
-        // if (lastPoint.critical_state !== 3) {
-        //   _marker = new window.google.maps.Marker({
-        //     position: coords,
-        //     map,
-        //     title: chats[index].user_nicename,
-        //     icon: CRITICAL_COLORS[3].map_marker
-        //   })
-        // }
         this.setState({ map, marker: _marker });
       }
-
     } else {
       const { pointCoords } = tracking;
       const coords = {
@@ -577,6 +741,7 @@ class Chat extends Component {
   changeChat = (chat, i, flag = true) => {
     let { history, stopNotification } = this.props;
     const nameRoute = history.location.pathname.includes('/sos') ? 'sos' : 'seguimiento';
+    if (this.state.timePolice) this.setState({ timePolice: null, policePointCoords: null });
 
     if (flag) {
       history.push(`/${nameRoute}/${this.state.activeIndex}/${chat.id}`);
@@ -590,26 +755,22 @@ class Chat extends Component {
         const trackingInformation = await getTracking(chat.trackingId);
 
         let newData = trackingInformation.data.data();
+        newData = { ...newData, id: trackingInformation.data.id };
 
-        newData = {
-          ...newData,
-          id: trackingInformation.data.id
-        };
         const aux =
           newData.SOSType && newData.SOSType === 'Seguridad'
             ? newData.panic_button_uuid !== null
               ? `${newData.SOSType} botón físico`
               : `${newData.SOSType} botón virtual`
             : newData.SOSType;
+
         this.setState({
-          // chatId: chat.id,
-          // messages: chat.messages,
           index: i,
-          from: aux, //
-          tracking: newData,
+          from: aux,
           loading: false,
-          personalInformation: newData.userInformation, //
-          pointCoords: [] //
+          pointCoords: [],
+          tracking: newData,
+          personalInformation: newData.userInformation
         });
 
         if (chat.active) {
@@ -627,9 +788,8 @@ class Chat extends Component {
           });
           this.setState({ firebaseSub: unsub });
         } else {
-          if (this.state.firebaseSub) {
-            this.state.firebaseSub();
-          }
+          if (this.state.firebaseSub) this.state.firebaseSub();
+          if (this.state.firebaseSubPolice) this.state.firebaseSubPolice();
         }
         refSOS.doc(chat.id).update({ c5Unread: 0 }).then(() => {
           this.setState({ text: '' });
@@ -639,13 +799,44 @@ class Chat extends Component {
   };
 
   getMessages = (chatId) => {
-    this.messageListener = refSOS.doc(chatId).onSnapshot((snapShot) => {
+    this.messageListener = refSOS.doc(chatId).onSnapshot(async (snapShot) => {
       const chat_data = snapShot.data();
       chat_data['id'] = snapShot.id;
-      const current_chat = [...this.state.chats];
+      const current_chat = [ ...this.state.chats ];
       const chat_index = current_chat.findIndex((item) => item.id === chatId);
-      if (chat_index >= 0) {
-        current_chat[chat_index] = chat_data;
+      if (chat_index >= 0) current_chat[chat_index] = chat_data;
+      if (this.state.firebaseSubPolice) await this.state.firebaseSubPolice();
+
+      if (chat_data.policeId) {
+        if (chat_data.active) {
+          let subPolice = refPolice.doc(chat_data.policeId).onSnapshot((snapPolice) => {
+            const { time, pointCoords } = snapPolice.data();
+            const { policeMarker, policePolyline, map } = this.state;
+
+            if (policeMarker) policeMarker.setMap(null);
+            if (policePolyline) policePolyline.setMap(null);
+            if (map) this._setPoliceMarker(pointCoords, map);
+            this.setState({ timePolice: time, policePointCoords: pointCoords });
+          });
+          this.setState({ firebaseSubPolice: subPolice });
+        } else {
+          refPolice.doc(chat_data.policeId).get().then((snapPolice) => {
+            const { pointCoords } = snapPolice.data();
+            const { map } = this.state;
+
+            if (map) this._setPoliceMarker(pointCoords, map);
+            this.setState({ policePointCoords: pointCoords });
+          });
+        }
+      }
+      if (chat_data.trackingId) {
+        refTracking.doc(chat_data.trackingId).get().then((snapTracking) => {
+          const { place } = snapTracking.data();
+          const { destinationMarker, map } = this.state;
+
+          if (destinationMarker) destinationMarker.setMap(null);
+          if (map && place) this._setDestinationMarker(place, map);
+        });
       }
       this.setState({ messages: snapShot.get('messages'), chatId, chats: current_chat });
     });
@@ -659,11 +850,6 @@ class Chat extends Component {
     } else {
       return true;
     }
-  };
-
-  closeChat = () => {
-    /*let {chats} = this.props
-     */
   };
 
   sendMessage = () => {
@@ -702,7 +888,7 @@ class Chat extends Component {
     let pairs = query.split('&');
 
     let result = {};
-    pairs.forEach(function (pair) {
+    pairs.forEach(function(pair) {
       pair = pair.split('=');
       result[pair[0]] = decodeURIComponent(pair[1] || '');
     });
@@ -710,39 +896,43 @@ class Chat extends Component {
     return JSON.parse(JSON.stringify(result));
   }
 
-  deactivateTracking(chatId, trackingId) {
+  deactivateTracking(chatId, trackingId, tracking_module) {
     const { profileId, alertId, pointCoords, initialLocation } = this.state.tracking;
-    let params = {
-      alertId,
-      profileId,
-      tracking_module: true
-    }
+    let params = { alertId, profileId, tracking_module };
     if (pointCoords && pointCoords.length > 0) {
-      const aux_array = [...pointCoords];
+      const aux_array = [ ...pointCoords ];
       const { latitude, longitude } = aux_array.pop();
       params = {
         ...params,
         latitude: String(latitude),
         longitude: String(longitude)
-      }
+      };
     } else {
       const { latitude, longitude } = initialLocation;
       params = {
         ...params,
         latitude: String(latitude),
         longitude: String(longitude)
-      }
+      };
     }
-    connections.cancelRadarAlert(params)
+    connections
+      .cancelRadarAlert(params)
       .then(() => {
-        refTracking.doc(trackingId)
+        refTracking
+          .doc(trackingId)
           .update({
-            active: false,
+            active: false
           })
           .then(() => {
-            refSOS.doc(chatId)
+            refSOS
+              .doc(chatId)
               .update({
-                active: 0
+                active: 0,
+                messages: firebase.firestore.FieldValue.arrayUnion({
+                  dateTime: new Date(),
+                  from: Strings.chat.sistem,
+                  msg: 'Se ha desactivado tu alerta.'
+                })
               })
               .then(() => {
                 this.setState({
@@ -751,22 +941,20 @@ class Chat extends Component {
                     severity: 'success'
                   },
                   open_snack: true
-                })
+                });
               })
-              .catch(e => console.log(e))
+              .catch((e) => console.log(e));
           })
-          .catch(e => console.log(e))
+          .catch((e) => console.log(e));
       })
       .catch(() => {
-        refTracking.doc(trackingId)
-          .update({
-            active: false,
-          })
+        refTracking
+          .doc(trackingId)
+          .update({ active: false })
           .then(() => {
-            refSOS.doc(chatId)
-              .update({
-                active: 0
-              })
+            refSOS
+              .doc(chatId)
+              .update({ active: 0 })
               .then(() => {
                 this.setState({
                   snack_message: {
@@ -774,26 +962,58 @@ class Chat extends Component {
                     severity: 'success'
                   },
                   open_snack: true
-                })
+                });
               })
-              .catch(e => console.log(e))
+              .catch((e) => console.log(e));
           })
-          .catch(e => console.log(e))
+          .catch((e) => console.log(e));
       });
   }
 
   setOpenSnack = (state) => {
     if (state) {
-      this.setState({
-        open_snack: state
-      })
+      this.setState({ open_snack: state });
     } else {
-      this.setState({
-        open_snack: state,
-        snack_message: {}
-      });
+      this.setState({ open_snack: state, snack_message: {} });
     }
-  }
+  };
+
+  _handlePoliceState = (show = false, incident = null, tracking = null) => {
+    this.setState({ mapPolice: { show, incident, tracking } });
+  };
+
+  _setPoliceMarker = (coords, map) => {
+    const path = coords.map((c) => ({ lat: c.latitude, lng: c.longitude }));
+    const position = [ ...path ].pop();
+    const newMarker = new window.google.maps.Marker({
+      position,
+      map,
+      icon: police_blue,
+      title: 'police'
+    });
+    this.setState({ policeMarker: newMarker });
+
+    const newPolyline = new window.google.maps.Polyline({
+      path,
+      map,
+      geodesic: true,
+      strokeColor: "#186dad",
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+    this.setState({ policePolyline: newPolyline });
+  };
+
+  _setDestinationMarker = (place, map) => {
+    const { name, location: { latitude, longitude } } = place;
+    const newMarker = new window.google.maps.Marker({
+      position: { lat: latitude, lng: longitude },
+      icon: destination,
+      map: map,
+      title: name
+    });
+    this.setState({ destinationMarker: newMarker });
+  };
 }
 
 export default Chat;
@@ -814,5 +1034,11 @@ const styles = {
   },
   centered: {
     left: '51%'
+  },
+  text: {
+    fontSize: 13
+  },
+  buttonMargin: {
+    margin: '2px 0px'
   }
 };

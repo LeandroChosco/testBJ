@@ -318,6 +318,46 @@ export default {
           }`,
       variables: params
     });
+  },
+  sendNotificationByProfile: (params) => {
+    return Axios.post(constants.radar_backend, {
+      query:
+        `mutation sendNotificationByProfile($profileId: Int!, $title: String!, $message: String!, $type: String!, $info: String!) {
+          sendNotificationByProfile(
+            profileId: $profileId
+            title: $title
+            message: $message
+            type: $type
+            info: $info
+          ) {
+            id
+          }
+        }`,
+      variables: params
+    });
+  },
+  getAllPoliceIncidentType: () => {
+    return Axios.post(constants.radar_backend, {
+      query:
+        `query {
+          getAllPoliceIncidentType {
+            id
+            name
+            can_write
+          }
+        }`
+    });
+  },
+  getAllPoliceSector: () => {
+    return Axios.post(constants.radar_backend, {
+      query:
+        `query {
+          getAllPoliceSector {
+            id
+            name
+          }
+        }`
+    });
   }
 };
 
