@@ -597,7 +597,9 @@ class ChatAlarm extends Component {
   _onMapLoad = (map) => {
     const { chats } = this.props;
     const { index, policePointCoords } = this.state;
-    if (policePointCoords) this._setPoliceMarker(policePointCoords, map);
+    if (chats[index] && chats[index].active) {
+      if (chats[index].policeId && policePointCoords) this._setPoliceMarker(policePointCoords, map);
+    }
 
     if (chats[index].user_cam.google_cordenate !== undefined) {
       const coords = {

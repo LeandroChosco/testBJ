@@ -295,7 +295,7 @@ class Map extends Component {
 
         // Added
         let docsAdded = snap.docChanges().filter((item) => item.type === 'added');
-        if (docsAdded.length > 0 && docsAdded.length !== snap.docs.length) {
+        if (docsAdded.length > 0 && ((docsAdded.length !== snap.docs.length) || snap.docs.length === 1)) {
           docsAdded.forEach((d) => {
             const { active, policeId } = d.doc.data();
             if (active) this._addMarker({ id: `pol-${policeId}`, ...d.doc.data() }, map);
@@ -304,7 +304,7 @@ class Map extends Component {
 
         // Modified
         let docsModified = snap.docChanges().filter((item) => item.type === 'modified');
-        if (docsModified.length > 0 && docsModified.length !== snap.docs.length) {
+        if (docsModified.length > 0 && ((docsModified.length !== snap.docs.length) || snap.docs.length === 1)) {
           docsModified.forEach((d) => {
             const { active, policeId } = d.doc.data();
             const marker = markersPolice[policeId];

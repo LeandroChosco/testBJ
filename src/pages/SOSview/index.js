@@ -685,8 +685,10 @@ class Chat extends Component {
   _onMapLoad = (map) => {
     const { chats } = this.props;
     const { index, tracking, marker, policePointCoords } = this.state;
-    if (policePointCoords) this._setPoliceMarker(policePointCoords, map);
-    if (tracking.place) this._setDestinationMarker(tracking.place, map);
+    if (tracking && tracking.active) {
+      if (chats[index].policeId && policePointCoords) this._setPoliceMarker(policePointCoords, map);
+      if (tracking.place) this._setDestinationMarker(tracking.place, map);
+    }
 
     if (chats.length > 0 && chats[index].trackingType.includes('Seguimiento')) {
       if (tracking.pointCoords.length > 0) {
