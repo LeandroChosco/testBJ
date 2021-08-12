@@ -225,6 +225,11 @@ class Map extends Component {
     const data = await conections.getAllCams();
     const camaras = data.data;
     const newPlaces = camaras.map((d, index) => {
+      let urlHistory = null;
+      let urlHistoryPort = null;
+      if ("urlhistory" in d) urlHistory = d.urlhistory
+      if ("urlhistoryport" in d) urlHistoryPort = d.urlhistoryport
+
       center_lat = center_lat + parseFloat(d.google_cordenate.split(',')[0]);
       center_lng = center_lng + parseFloat(d.google_cordenate.split(',')[1]);
       total = total + 1;
@@ -244,7 +249,9 @@ class Map extends Component {
         flag_color: d.flag_color ? d.flag_color : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
         dataCamValue: d,
         tipo_camara: d.tipo_camara,
-        fromMap: true
+        fromMap: true,
+        urlHistory: urlHistory,
+        urlHistoryPort: urlHistoryPort
       };
 
       if (value.lat && value.lng) {

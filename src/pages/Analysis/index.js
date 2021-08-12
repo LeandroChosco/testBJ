@@ -500,6 +500,18 @@ class Analysis extends Component {
 
 				camaras.map((value) => {
 					if (value.active === 1 && value.flag_streaming === 1) {
+
+						var urlHistory = null
+						var urlHistoryPort = null
+
+						if ("urlhistory" in value){
+							urlHistory = value.urlhistory
+						}
+
+						if ("urlhistoryport" in value){
+							urlHistoryPort = value.urlhistoryport
+						}
+
 						//let url = 'rtmp://18.212.185.68/live/cam';
 						auxCamaras.push({
 							id: value.id,
@@ -513,7 +525,9 @@ class Analysis extends Component {
 							real_num_cam:
 								value.num_cam < 10 ? '0' + value.num_cam.toString() : value.num_cam.toString(),
 							camera_number: value.num_cam,
-							dataCamValue: value
+							dataCamValue: value,
+							urlHistory: urlHistory,
+							urlHistoryPort: urlHistoryPort
 						});
 						index = index + 1;
 						if (this.state.id_cam !== 0) {

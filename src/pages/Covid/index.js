@@ -237,11 +237,15 @@ class Analysis extends Component {
       loadingCovidGrid: true
     });
     let covidTmp = [];
-    this.props.alertaCovid.forEach(element => {
-      if (element.camData[0].termic_type === 1) {
-        covidTmp.push(element);
-      }
-    });
+    if (this.props.alertaCovid) {
+      this.props.alertaCovid.forEach(element => {
+        if (element.camData[0].termic_type === 1) {
+          covidTmp.push(element);
+        }
+      });
+    }else{
+      console.log('Sin informaciòn');
+    }
     setTimeout(() => {
       this.setState({
         imageLoading: false,
@@ -361,6 +365,18 @@ class Analysis extends Component {
         camaras.map(value => {
           if (value.active === 1 && value.tipo_camara === 4) {
             console.log("value", value)
+
+            var urlHistory = null
+            var urlHistoryPort = null
+
+            if ("urlhistory" in value){
+                urlHistory = value.urlhistory
+            }
+
+            if ("urlhistoryport" in value){
+                urlHistoryPort = value.urlhistoryport
+            }
+
             // let url = 'rtmp://18.212.185.68/live/cam';                                               
             auxCamaras.push({
               id: value.id,
@@ -374,7 +390,9 @@ class Analysis extends Component {
               real_num_cam: value.num_cam < 10 ? ('0' + value.num_cam.toString()) : value.num_cam.toString(),
               camera_number: value.num_cam,
               dataCamValue: value,
-              tipo_camara: value.tipo_camara
+              tipo_camara: value.tipo_camara,
+              urlHistory: urlHistory,
+              urlHistoryPort: urlHistoryPort
             })
             index = index + 1
             // console.log(this.state.id_cam)
