@@ -15,8 +15,8 @@ import firebaseSos from '../../constants/configSOS';
 import { POLICE_TRACKING_COLLECTION } from '../../Api/sos';
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
 
-import police_blue from '../../assets/images/icons/maps/police_blue.png';
-import police_yellow from '../../assets/images/icons/maps/police_yellow.png';
+import police_blue from '../../assets/images/icons/maps/p1_blue_car.png';
+import police_yellow from '../../assets/images/icons/maps/p1_yellow_car.png';
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
@@ -53,7 +53,7 @@ class Map extends Component {
     if (!isValid) this.props.history.push('/welcome');
     try {
       this.setState({ moduleActions: JSON.parse(isValid.UserToModules[0].actions) });
-    } catch (e) {}
+    } catch (e) { }
 
     const navHeight = document.getElementsByTagName('nav')[0].scrollHeight;
     const documentHeight = window.innerHeight;
@@ -70,7 +70,7 @@ class Map extends Component {
     try {
       const { data: { id } } = limits;
       if (map && id && (limitsPrev !== limits || !unsub)) this._loadPolices();
-    } catch (e) {}
+    } catch (e) { }
   }
   componentWillUnmount() {
     const { unsub, markers } = this.state;
@@ -244,7 +244,7 @@ class Map extends Component {
         url:
           d.UrlStreamMediaServer !== null
             ? `http://${d.UrlStreamMediaServer.ip_url_ms}:${d.UrlStreamMediaServer.output_port}${d.UrlStreamMediaServer
-                .name}${d.channel}`
+              .name}${d.channel}`
             : null,
         flag_color: d.flag_color ? d.flag_color : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
         dataCamValue: d,

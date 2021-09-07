@@ -9,8 +9,8 @@ import firebaseSos from '../../constants/configSOS';
 import { POLICE_TRACKING_COLLECTION, getPoliceByMessage, createDocPolice } from '../../Api/sos';
 
 import shoes_red from '../../assets/images/icons/maps/shoes_red.png';
-import police_blue from '../../assets/images/icons/maps/police_blue.png';
-import police_yellow from '../../assets/images/icons/maps/police_yellow.png';
+import police_blue from '../../assets/images/icons/maps/p1_blue_car.png';
+import police_yellow from '../../assets/images/icons/maps/p1_yellow_car.png';
 import { styles } from './styles';
 import './style.css';
 
