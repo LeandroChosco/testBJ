@@ -19,7 +19,7 @@ import CustomizedSnackbars from '../../components/Snack/index';
 
 import { POLICE_COLLECTION } from '../../Api/sos';
 
-import police_blue from '../../assets/images/icons/maps/police_blue.png';
+import police_blue from '../../assets/images/icons/maps/p1_blue_car.png';
 
 const refSOS = firebaseC5Benito.app('c5benito').firestore().collection('messages');
 const refPolice = firebaseSos.app('sos').firestore().collection(POLICE_COLLECTION);
@@ -68,28 +68,28 @@ class ChatAlarm extends Component {
   };
   panes = this.props.history.location.pathname.includes('chat')
     ? [
-        {
-          menuItem: 'C5',
-          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('C5')}</Tab.Pane>
-        }
-      ]
+      {
+        menuItem: 'C5',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('C5')}</Tab.Pane>
+      }
+    ]
     : [
-        {
-          menuItem: 'Policia',
-          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Policia')}</Tab.Pane>
-        },
-        {
-          menuItem: 'Fuego',
-          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Fuego')}</Tab.Pane>
-        },
-        {
-          menuItem: 'Medico',
-          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Médico')}</Tab.Pane>
-        }
-      ];
+      {
+        menuItem: 'Policia',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Policia')}</Tab.Pane>
+      },
+      {
+        menuItem: 'Fuego',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Fuego')}</Tab.Pane>
+      },
+      {
+        menuItem: 'Medico',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Médico')}</Tab.Pane>
+      }
+    ];
   FILTERSOPTIONS = this.props.history.location.pathname.includes('chat')
-    ? [ undefined ]
-    : [ 'Policia', 'Fuego', 'Médico' ];
+    ? [undefined]
+    : ['Policia', 'Fuego', 'Médico'];
 
   componentDidMount() {
     const { alarmIndex: tabIndex } = this.props.match.params;
@@ -293,31 +293,31 @@ class ChatAlarm extends Component {
                             </div>
                           </div>
                           {this.props.history.location.pathname.includes('alarm') &&
-                          chats[index].active === 1 && (
-                            <div className='col'>
-                              <div className='row'>
-                                <Button
-                                  icon
-                                  size='small'
-                                  color='red'
-                                  labelPosition='left'
-                                  style={styles.buttonMargin}
-                                  disabled={chats[index].policeId}
-                                  onClick={() =>
-                                    this._handlePoliceState(true, chats[index], {
-                                      isAlarm: true,
-                                      pointCoords: [ chats[index].location ]
-                                    })}
-                                >
-                                  <Icon inverted name='taxi' />
-                                  Mandar unidad
-                                </Button>
-                              </div>
-                              {/* <div className='row' style={styles.text}>
+                            chats[index].active === 1 && (
+                              <div className='col'>
+                                <div className='row'>
+                                  <Button
+                                    icon
+                                    size='small'
+                                    color='red'
+                                    labelPosition='left'
+                                    style={styles.buttonMargin}
+                                    disabled={chats[index].policeId}
+                                    onClick={() =>
+                                      this._handlePoliceState(true, chats[index], {
+                                        isAlarm: true,
+                                        pointCoords: [chats[index].location]
+                                      })}
+                                  >
+                                    <Icon inverted name='taxi' />
+                                    Mandar unidad
+                                  </Button>
+                                </div>
+                                {/* <div className='row' style={styles.text}>
                                 Desactivar:
                               </div> */}
-                              <div className='row'>
-                                {/* <Button.Group>
+                                <div className='row'>
+                                  {/* <Button.Group>
                                   <Button
                                     icon
                                     size='small'
@@ -342,10 +342,10 @@ class ChatAlarm extends Component {
                                     <Icon inverted name='close' />
                                     Desactivar{/* Sin Rep */}
                                   </Button>
-                                {/* </Button.Group> */}
+                                  {/* </Button.Group> */}
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
                         </div>
                       </Card.Content>
                     </Card>
@@ -688,7 +688,7 @@ class ChatAlarm extends Component {
     this.messageListener = refSOS.doc(chatId).onSnapshot(async (snapShot) => {
       const chat_data = snapShot.data();
       chat_data['id'] = snapShot.id;
-      const current_chat = [ ...this.state.chats ];
+      const current_chat = [...this.state.chats];
       const chat_index = current_chat.findIndex((item) => item.id === chatId);
       if (chat_index >= 0) current_chat[chat_index] = chat_data;
       if (this.state.firebaseSubPolice) await this.state.firebaseSubPolice();
@@ -698,7 +698,7 @@ class ChatAlarm extends Component {
           let subPolice = refPolice.doc(chat_data.policeId).onSnapshot((snapPolice) => {
             const { time, pointCoords } = snapPolice.data();
             const { policeMarker, policePolyline, map } = this.state;
-  
+
             if (policeMarker) policeMarker.setMap(null);
             if (policePolyline) policePolyline.setMap(null);
             if (map) this._setPoliceMarker(pointCoords, map);
@@ -783,7 +783,7 @@ class ChatAlarm extends Component {
     let pairs = query.split('&');
 
     let result = {};
-    pairs.forEach(function(pair) {
+    pairs.forEach(function (pair) {
       pair = pair.split('=');
       result[pair[0]] = decodeURIComponent(pair[1] || '');
     });
@@ -828,7 +828,7 @@ class ChatAlarm extends Component {
 
   _setPoliceMarker = (coords, map) => {
     const path = coords.map((c) => ({ lat: c.latitude, lng: c.longitude }));
-    const position = [ ...path ].pop();
+    const position = [...path].pop();
     const newMarker = new window.google.maps.Marker({
       position,
       map,

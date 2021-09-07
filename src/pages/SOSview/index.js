@@ -17,7 +17,7 @@ import MapContainer from '../../components/MapContainer';
 // import CloseIncident from '../../components/CloseIncident';
 import CustomizedSnackbars from '../../components/Snack/index';
 
-import police_blue from '../../assets/images/icons/maps/police_blue.png';
+import police_blue from '../../assets/images/icons/maps/p1_blue_car.png';
 import shoes_green from '../../assets/images/icons/maps/shoes_green.png';
 import shoes_yellow from '../../assets/images/icons/maps/shoes_yellow.png';
 import shoes_red from '../../assets/images/icons/maps/shoes_red.png';
@@ -97,32 +97,32 @@ class Chat extends Component {
   }
   panes = this.props.history.location.pathname.includes('sos')
     ? [
-        {
-          menuItem: 'Seguridad',
-          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguridad')}</Tab.Pane>
-        },
-        {
-          menuItem: 'Protección Civil',
-          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Protección Civil')}</Tab.Pane>
-        },
-        {
-          menuItem: 'Emergencia Médica',
-          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Emergencia Médica')}</Tab.Pane>
-        }
-      ]
+      {
+        menuItem: 'Seguridad',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguridad')}</Tab.Pane>
+      },
+      {
+        menuItem: 'Protección Civil',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Protección Civil')}</Tab.Pane>
+      },
+      {
+        menuItem: 'Emergencia Médica',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Emergencia Médica')}</Tab.Pane>
+      }
+    ]
     : [
-        {
-          menuItem: 'Por Hora',
-          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Hora')}</Tab.Pane>
-        },
-        {
-          menuItem: 'Por Seguimiento',
-          render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Destino')}</Tab.Pane>
-        }
-      ];
+      {
+        menuItem: 'Por Hora',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Hora')}</Tab.Pane>
+      },
+      {
+        menuItem: 'Por Seguimiento',
+        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Destino')}</Tab.Pane>
+      }
+    ];
   FILTERSOPTIONS = this.props.history.location.pathname.includes('sos')
-    ? [ 'Seguridad', 'Protección Civil', 'Emergencia Médica' ]
-    : [ 'Seguimiento Por Hora', 'Seguimiento Por Destino' ];
+    ? ['Seguridad', 'Protección Civil', 'Emergencia Médica']
+    : ['Seguimiento Por Hora', 'Seguimiento Por Destino'];
 
   // LIFECYCLES
   componentDidMount() {
@@ -225,29 +225,29 @@ class Chat extends Component {
                   <div className='row' style={{ height: '70%', margin: 0 }}>
                     <div className='col' style={{ height: '100%' }}>
                       {Object.keys(tracking).length !== 0 &&
-                      tracking.pointCoords && (
-                        <MapContainer
-                          options={{
-                            center: {
-                              lat: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].latitude),
-                              lng: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].longitude)
-                            },
-                            zoom: 15,
-                            mapTypeId: 'roadmap',
-                            zoomControl: false,
-                            mapTypeControl: false,
-                            streetViewControl: false,
-                            fullscreenControl: false,
-                            openConfirm: false,
-                            typeConfirm: false,
-                            openSelection: false,
-                            checked: ''
-                          }}
-                          coordsPath={tracking.pointCoords}
-                          onMapLoad={this._onMapLoad}
-                          markersUnmount={{ policeMarker, policePolyline, destinationMarker }}
-                        />
-                      )}
+                        tracking.pointCoords && (
+                          <MapContainer
+                            options={{
+                              center: {
+                                lat: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].latitude),
+                                lng: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].longitude)
+                              },
+                              zoom: 15,
+                              mapTypeId: 'roadmap',
+                              zoomControl: false,
+                              mapTypeControl: false,
+                              streetViewControl: false,
+                              fullscreenControl: false,
+                              openConfirm: false,
+                              typeConfirm: false,
+                              openSelection: false,
+                              checked: ''
+                            }}
+                            coordsPath={tracking.pointCoords}
+                            onMapLoad={this._onMapLoad}
+                            markersUnmount={{ policeMarker, policePolyline, destinationMarker }}
+                          />
+                        )}
                     </div>
                   </div>
 
@@ -364,23 +364,23 @@ class Chat extends Component {
                                     Con Rep
                                   </Button>
                                   <Button.Or /> */}
-                                  <Button
-                                    icon
-                                    size='small'
-                                    color='yellow'
-                                    labelPosition='left'
-                                    style={styles.buttonMargin}
-                                    onClick={() =>
-                                      this.deactivateTracking(
-                                        chats[index].id,
-                                        chats[index].trackingId,
-                                        chats[index].trackingType.includes('Seguimiento')
-                                      )}
-                                  >
-                                    {/* <Icon inverted name='file excel' /> */}
-                                    <Icon inverted name='close' />
-                                    Desactivar{/* Sin Rep */}
-                                  </Button>
+                                <Button
+                                  icon
+                                  size='small'
+                                  color='yellow'
+                                  labelPosition='left'
+                                  style={styles.buttonMargin}
+                                  onClick={() =>
+                                    this.deactivateTracking(
+                                      chats[index].id,
+                                      chats[index].trackingId,
+                                      chats[index].trackingType.includes('Seguimiento')
+                                    )}
+                                >
+                                  {/* <Icon inverted name='file excel' /> */}
+                                  <Icon inverted name='close' />
+                                  Desactivar{/* Sin Rep */}
+                                </Button>
                                 {/* </Button.Group> */}
                               </div>
                             </div>
@@ -616,11 +616,11 @@ class Chat extends Component {
                       }}
                     >
                       {critical_color !== null &&
-                      type.includes('Seguimiento') && (
-                        <small style={{ ...styles.badge, backgroundColor: critical_color.color }}>
-                          <strong>{critical_color.name}</strong>
-                        </small>
-                      )}
+                        type.includes('Seguimiento') && (
+                          <small style={{ ...styles.badge, backgroundColor: critical_color.color }}>
+                            <strong>{critical_color.name}</strong>
+                          </small>
+                        )}
                       <div>
                         {' '}
                         <small style={{ ...styles.badge, marginLeft: 3, alignSelf: 'flex-end', display: 'flex' }}>
@@ -802,7 +802,7 @@ class Chat extends Component {
     this.messageListener = refSOS.doc(chatId).onSnapshot(async (snapShot) => {
       const chat_data = snapShot.data();
       chat_data['id'] = snapShot.id;
-      const current_chat = [ ...this.state.chats ];
+      const current_chat = [...this.state.chats];
       const chat_index = current_chat.findIndex((item) => item.id === chatId);
       if (chat_index >= 0) current_chat[chat_index] = chat_data;
       if (this.state.firebaseSubPolice) await this.state.firebaseSubPolice();
@@ -888,7 +888,7 @@ class Chat extends Component {
     let pairs = query.split('&');
 
     let result = {};
-    pairs.forEach(function(pair) {
+    pairs.forEach(function (pair) {
       pair = pair.split('=');
       result[pair[0]] = decodeURIComponent(pair[1] || '');
     });
@@ -900,7 +900,7 @@ class Chat extends Component {
     const { profileId, alertId, pointCoords, initialLocation } = this.state.tracking;
     let params = { alertId, profileId, tracking_module };
     if (pointCoords && pointCoords.length > 0) {
-      const aux_array = [ ...pointCoords ];
+      const aux_array = [...pointCoords];
       const { latitude, longitude } = aux_array.pop();
       params = {
         ...params,
@@ -984,7 +984,7 @@ class Chat extends Component {
 
   _setPoliceMarker = (coords, map) => {
     const path = coords.map((c) => ({ lat: c.latitude, lng: c.longitude }));
-    const position = [ ...path ].pop();
+    const position = [...path].pop();
     const newMarker = new window.google.maps.Marker({
       position,
       map,
