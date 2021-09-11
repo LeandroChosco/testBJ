@@ -174,7 +174,7 @@ class ChatAlarm extends Component {
                       height: '30px'
                     }}
                   >
-                    {chats[index].alarmType ? chats[index].alarmType : 'Chat C5'}
+                    {chats[index].alarmType ? chats[index].alarmType : 'Chat C5'} {chats[index].alarmType && (chats[index].is_sensor || chats[index].partial_armed || chats[index].away_armed ) && 'sensor activado'}
                   </h2>
                   <div className='row' style={{ height: '70%', margin: 0 }}>
                     <div className='col' style={{ height: '100%' }}>

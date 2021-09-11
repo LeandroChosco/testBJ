@@ -820,9 +820,9 @@ class Main extends Component {
             doc_data.forEach(d => {
               const { data } = d;
               if (data && data.chatId) {
-                const { police, fire, medical } = data.alarmedStatus;
-                if (police) {
-                  this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 0, data.chatId)
+                const { police, fire, medical,partial_armed, away_armed  } = data.alarmedStatus;
+                if (police || partial_armed || away_armed) {
+                  this.showAlarmNot('Activacion  de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 0, data.chatId)
                 }
                 if (fire) {
                   this.showAlarmNot('Activacion de Alarma', 'Nuevo solicitud de auxilio - Fuego', 'error', 'Ir a chat', 1, data.chatId)
