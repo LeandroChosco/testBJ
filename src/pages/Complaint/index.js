@@ -112,15 +112,14 @@ class Complaint extends Component {
                       <Card style={styles.fileContainer}>
                         <Card.Content
                           style={
-                            complaints[actIdx].report_asset ? complaints[actIdx]
-                              .report_asset[0].type === 'image' ? (
+                            (complaints[actIdx].report_asset && complaints[actIdx].report_asset.length > 0 ) ? complaints[actIdx].report_asset[0].type === 'image' ? (
                               styles.divCenter
                             ) : null : (
                               styles.divCenter
                             )
                           }
                         >
-                          {complaints[actIdx].report_asset ? complaints[actIdx]
+                          { complaints[actIdx].report_asset && complaints[actIdx].report_asset.length > 0 ? complaints[actIdx]
                             .report_asset[0].type === 'image' ? (
                             <img
                               style={styles.file}
