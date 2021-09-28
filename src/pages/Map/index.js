@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Provider, connect } from 'react-redux';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Dropdown } from 'react-bootstrap';
 import { render } from 'react-dom';
 import moment from 'moment';
 
@@ -17,6 +17,8 @@ import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/acti
 
 import police_blue from '../../assets/images/icons/maps/p1_blue_car.png';
 import police_yellow from '../../assets/images/icons/maps/p1_yellow_car.png';
+import funnel from '../../assets/images/icons/funnel.png';
+import deleteIcon from '../../assets/images/icons/delete.png';
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
@@ -45,7 +47,7 @@ class Map extends Component {
     unsub: null,
     markers: [],
     markersPolice: [],
-    moduleActions: {}
+    moduleActions: {},
   };
 
   componentDidMount() {
@@ -71,6 +73,9 @@ class Map extends Component {
       const { data: { id } } = limits;
       if (map && id && (limitsPrev !== limits || !unsub)) this._loadPolices();
     } catch (e) { }
+    // console.log('this._onMapLoad', this._onMapLoad);
+    // console.log('this.state.place', this.state.place);
+    // console.log('MAP_OPTIONS', this.state.map);
   }
   componentWillUnmount() {
     const { unsub, markers } = this.state;
@@ -99,6 +104,57 @@ class Map extends Component {
           <JellyfishSpinner size={250} color='#686769' loading={this.state.loading} />
         </div>
         <MapContainer options={MAP_OPTIONS} places={this.state.places} onMapLoad={this._onMapLoad} />
+        <div className='btn-filter'>
+        <Dropdown>
+          <Dropdown.Toggle variant="primary" id="dropdown-basic">
+            <img src={funnel} alt='funnel' />
+          </Dropdown.Toggle>
+          <Dropdown.Menu className='btn-filter__menu'>
+            <Dropdown.Item className='btn-filter__item'>
+              <img 
+                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/red-dot.png')} 
+                src={'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}
+                alt='Filter'
+              />
+            </Dropdown.Item>
+            <Dropdown.Item className='btn-filter__item'>
+              <img 
+                onClick={() => this._loadCams('https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png')} 
+                src={'https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png'} 
+                alt='Filter' 
+              />
+            </Dropdown.Item>
+            <Dropdown.Item className='btn-filter__item'>
+              <img 
+                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')} 
+                src={'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'} 
+                alt='Filter' 
+              />   
+            </Dropdown.Item>
+            <Dropdown.Item className='btn-filter__item'>
+              <img 
+                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/blue-dot.png')}
+                src={'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}
+                alt='Filter'
+              /> 
+            </Dropdown.Item>
+            <Dropdown.Item className='btn-filter__item'>
+              <img 
+                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/orange-dot.png')}
+                src={'http://maps.google.com/mapfiles/ms/icons/orange-dot.png'}
+                alt='Filter'
+              /> 
+            </Dropdown.Item>
+            <Dropdown.Item className='btn-filter__item'>
+              <img 
+                onClick={() => this._loadCams()}
+                src={deleteIcon}
+                alt='Delete filter'
+              /> 
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>          
+        </div>
       </div>
     );
   }
@@ -214,7 +270,8 @@ class Map extends Component {
       await this.props.getQvrFileStationAuthLogout({ url });
     }
   };
-  _loadCams = async () => {
+
+  _loadCams = async (filter) => {
     this.setState({ loading: true });
     let newMarkers = [], center_lat = 0, center_lng = 0, total = 0;
     for (let index = 0; index < this.state.markers.length; index++) {
@@ -224,7 +281,12 @@ class Map extends Component {
 
     const data = await conections.getAllCams();
     const camaras = data.data;
-    const newPlaces = camaras.map((d, index) => {
+    const search = filter &&
+      filter !== 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' 
+        ? camaras.filter( d => d.flag_color === filter)
+        : camaras.filter( d => d.flag_color === filter || d.flag_color === null)
+
+    const newPlaces = !filter ? camaras.map((d, index) => {
       let urlHistory = null;
       let urlHistoryPort = null;
       if ("urlhistory" in d) urlHistory = d.urlhistory
@@ -233,6 +295,57 @@ class Map extends Component {
       center_lat = center_lat + parseFloat(d.google_cordenate.split(',')[0]);
       center_lng = center_lng + parseFloat(d.google_cordenate.split(',')[1]);
       total = total + 1;
+      console.log(d.flag_color);
+      const value = {
+        id: d.id,
+        num_cam: index + 1,
+        lat: parseFloat(d.google_cordenate.split(',')[0]),
+        lng: parseFloat(d.google_cordenate.split(',')[1]),
+        name: `${d.street} ${d.number}, ${d.township}, ${d.town}, ${d.state} #cam${d.num_cam}`,
+        isHls: d.tipo_camara === 3 ? false : true,
+        url:
+          d.UrlStreamMediaServer !== null
+            ? `http://${d.UrlStreamMediaServer.ip_url_ms}:${d.UrlStreamMediaServer.output_port}${d.UrlStreamMediaServer
+              .name}${d.channel}`
+            : null,
+        flag_color: d.flag_color ? d.flag_color : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+        dataCamValue: d,
+        tipo_camara: d.tipo_camara,
+        fromMap: true,
+        urlHistory: urlHistory,
+        urlHistoryPort: urlHistoryPort
+      };      
+
+      if (value.lat && value.lng) {
+        newMarkers[index] = new window.google.maps.Marker({
+          position: { lat: value.lat, lng: value.lng },
+          icon: { url: value.flag_color },
+          map: this.state.map,
+          title: value.name,
+          extraData: value
+        });
+
+        window.google.maps.event.addListener(
+          newMarkers[index],
+          'click',
+          ((marker, currentMap, infoWindow) => {
+            return () => infoWindow(marker, currentMap);
+          })(newMarkers[index], this.state.map, this._createInfoWindow)
+        );
+      }
+
+      return value;
+    })
+    : search.map((d, index) => {
+      let urlHistory = null;
+      let urlHistoryPort = null;
+      if ("urlhistory" in d) urlHistory = d.urlhistory
+      if ("urlhistoryport" in d) urlHistoryPort = d.urlhistoryport
+
+      center_lat = center_lat + parseFloat(d.google_cordenate.split(',')[0]);
+      center_lng = center_lng + parseFloat(d.google_cordenate.split(',')[1]);
+      total = total + 1;
+
 
       const value = {
         id: d.id,
@@ -252,7 +365,7 @@ class Map extends Component {
         fromMap: true,
         urlHistory: urlHistory,
         urlHistoryPort: urlHistoryPort
-      };
+      };      
 
       if (value.lat && value.lng) {
         newMarkers[index] = new window.google.maps.Marker({
@@ -271,15 +384,17 @@ class Map extends Component {
           })(newMarkers[index], this.state.map, this._createInfoWindow)
         );
       }
+
       return value;
-    });
+    })
 
     center_lat = center_lat / total;
     center_lng = center_lng / total;
     this.state.map.setCenter(new window.google.maps.LatLng(center_lat, center_lng));
     this.setState({ loading: false, places: newPlaces, markers: newMarkers });
   };
-  _loadPolices = () => {
+  
+     _loadPolices = () => {
     const { map } = this.state;
     const { limits: { data: { clave_municipal } } } = this.props;
 
@@ -330,26 +445,28 @@ class Map extends Component {
 
     this.setState({ unsub: unsubPolice });
   };
+
   _addMarker = (police) => {
     const { map, markersPolice } = this.state;
     const { id, available, policeId, police_name, lastLocation: { latitude, longitude } } = police;
-
-    markersPolice[policeId] = new window.google.maps.Marker({
-      position: { lat: latitude, lng: longitude },
-      icon: MARKERS[`police_${available ? '' : 'un'}available`],
-      map: map,
-      title: police_name,
-      extraData: { id, ...police, isPolice: true }
-    });
-
-    window.google.maps.event.addListener(
-      markersPolice[policeId],
-      'click',
-      ((police, currentMap, infoWindow) => {
-        return () => infoWindow(police, currentMap);
-      })(markersPolice[policeId], map, this._createInfoWindow)
-    );
+    
+      markersPolice[policeId] = new window.google.maps.Marker({
+        position: { lat: latitude, lng: longitude },
+        icon: MARKERS[`police_${available ? '' : 'un'}available`],
+        map: map,
+        title: police_name,
+        extraData: { id, ...police, isPolice: true }
+      });
+  
+      window.google.maps.event.addListener(
+        markersPolice[policeId],
+        'click',
+        ((police, currentMap, infoWindow) => {
+          return () => infoWindow(police, currentMap);
+        })(markersPolice[policeId], map, this._createInfoWindow)
+      );
   };
+
   _removeMarker = (police) => {
     const { markersPolice } = this.state;
     let newMarkers = [];
