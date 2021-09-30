@@ -110,47 +110,44 @@ class Map extends Component {
             <img src={funnel} alt='funnel' />
           </Dropdown.Toggle>
           <Dropdown.Menu className='btn-filter__menu'>
-            <Dropdown.Item className='btn-filter__item'>
-              <img 
-                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/red-dot.png')} 
-                src={'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}
-                alt='Filter'
-              />
+            <Dropdown.Item
+             className='btn-filter__item'
+             onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/red-dot.png')} 
+             >
+                VIGILANCIA VECINAL
             </Dropdown.Item>
-            <Dropdown.Item className='btn-filter__item'>
-              <img 
-                onClick={() => this._loadCams('https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png')} 
-                src={'https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png'} 
-                alt='Filter' 
-              />
+            <Dropdown.Item 
+              className='btn-filter__item'
+              onClick={() => this._loadCams('https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png')}
+              >
+                PTZ RESIDENCIALES
             </Dropdown.Item>
-            <Dropdown.Item className='btn-filter__item'>
-              <img 
-                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')} 
-                src={'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'} 
-                alt='Filter' 
-              />   
+            <Dropdown.Item 
+              className='btn-filter__item'
+              onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')}
+              >
+                AI
             </Dropdown.Item>
-            <Dropdown.Item className='btn-filter__item'>
-              <img 
-                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/blue-dot.png')}
-                src={'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}
-                alt='Filter'
-              /> 
+            <Dropdown.Item
+              className='btn-filter__item'
+              onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/blue-dot.png')}
+              >
+                PTZ PARQUES
             </Dropdown.Item>
-            <Dropdown.Item className='btn-filter__item'>
-              <img 
-                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/orange-dot.png')}
-                src={'http://maps.google.com/mapfiles/ms/icons/orange-dot.png'}
-                alt='Filter'
-              /> 
+            <Dropdown.Item 
+              className='btn-filter__item'
+              onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/orange-dot.png')}
+            >
+              TERMICAS
             </Dropdown.Item>
-            <Dropdown.Item className='btn-filter__item'>
-              <img 
-                onClick={() => this._loadCams()}
-                src={deleteIcon}
-                alt='Delete filter'
-              /> 
+            <Dropdown.Item 
+              className='btn-filter__item'
+              onClick={() => this._loadCams('hiddenCam')}
+            >
+              PATRULLAS
+            </Dropdown.Item>
+            <Dropdown.Item className='btn-filter__item' onClick={() => this._loadCams()}>
+              ELIMINAR FILTRO
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>          
@@ -367,7 +364,7 @@ class Map extends Component {
         urlHistoryPort: urlHistoryPort
       };      
 
-      if (value.lat && value.lng) {
+      if (value.lat && value.lng && filter !== 'hiddenCam') {
         newMarkers[index] = new window.google.maps.Marker({
           position: { lat: value.lat, lng: value.lng },
           icon: { url: value.flag_color },
