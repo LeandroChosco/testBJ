@@ -114,39 +114,67 @@ class Map extends Component {
              className='btn-filter__item'
              onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/red-dot.png')} 
              >
+                <img 
+                  src={'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}
+                  alt='Filter'
+                />
                 VIGILANCIA VECINAL
             </Dropdown.Item>
             <Dropdown.Item 
               className='btn-filter__item'
               onClick={() => this._loadCams('https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png')}
               >
+                <img 
+                  src={'https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png'}
+                  alt='Filter'
+                />
                 PTZ RESIDENCIALES
             </Dropdown.Item>
             <Dropdown.Item 
               className='btn-filter__item'
               onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')}
               >
+                <img 
+                  src={'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'}
+                  alt='Filter'
+                />
                 AI
             </Dropdown.Item>
             <Dropdown.Item
               className='btn-filter__item'
               onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/blue-dot.png')}
               >
+                <img 
+                  src={'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}
+                  alt='Filter'
+                />
                 PTZ PARQUES
             </Dropdown.Item>
             <Dropdown.Item 
               className='btn-filter__item'
               onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/orange-dot.png')}
             >
+                <img 
+                  src={'http://maps.google.com/mapfiles/ms/icons/orange-dot.png'}
+                  alt='Filter'
+                />
               TERMICAS
             </Dropdown.Item>
             <Dropdown.Item 
               className='btn-filter__item'
               onClick={() => this._loadCams('hiddenCam')}
             >
+                <img 
+                  src={police_blue}
+                  alt='Filter'
+                />
               PATRULLAS
             </Dropdown.Item>
             <Dropdown.Item className='btn-filter__item' onClick={() => this._loadCams()}>
+                <img 
+                  src={deleteIcon}
+                  alt='Filter'
+                />
               ELIMINAR FILTRO
             </Dropdown.Item>
           </Dropdown.Menu>
