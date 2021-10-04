@@ -1,7 +1,7 @@
 // Produccion
 // const sails_url = 'http://prod.adminc5.bj.sails.energetikadevelepment.com';
 const sails_url = "http://apibj.energetikatechnology.com";
-const radar_backend = "http://radar-backend-dev.us-east-2.elasticbeanstalk.com/graphql";
+const radar_backend = "http://radarbackendprod.radarapptechnologies.com/graphql";
 const express_url = "http://3.15.181.186";
 
 // Dev
