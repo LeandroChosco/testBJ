@@ -117,6 +117,15 @@ class Main extends Component {
 
 
   componentDidMount() {
+    conections.getClients().then(res=>{
+      const data = res.data.data.getClients.filter(c => c.name === constants.client);
+      constants.urlPath =
+       data[0].photo_path != null
+       ?
+       constants.urlPath = data[0].photo_path:
+       constants.urlPath
+    })
+
     firebaseC5Benito
       .app('c5benito')
       .firestore()

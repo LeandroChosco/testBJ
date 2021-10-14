@@ -161,11 +161,16 @@ class Cuadrantes extends Component{
                 <div id="analisis_holder"  className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
                     {this.state.loading ?
                         <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
-                        <JellyfishSpinner
+                        {/* <JellyfishSpinner
                             size={250}
                             color="#686769"
                             loading={this.state.loading}
-                        />
+                        /> */}
+                        	<img
+							className="spinner"
+							src={constants.urlPath}
+							style={{ width: "10%", borderRadius: "50%" }}
+							alt={constants.urlPath} />
                     </div>
                     :this.state.camsCuadrante.length !==0 ?
                                 // <GridCameraDisplay

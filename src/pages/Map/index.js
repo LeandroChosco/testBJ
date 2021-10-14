@@ -23,6 +23,7 @@ import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
 import './style.css';
+import constants from "../../constants/constants";
 
 const MARKERS = {
   police_available: police_blue,
@@ -101,7 +102,12 @@ class Map extends Component {
     return (
       <div className='map'>
         <div style={{ position: 'absolute', top: '30%', background: 'transparent', width: '100%' }} align='center'>
-          <JellyfishSpinner size={250} color='#686769' loading={this.state.loading} />
+          {/* <JellyfishSpinner size={250} color='#686769' loading={this.state.loading} /> */}
+          <img
+              className="spinner"
+              src={constants.urlPath}
+              style={{ width: "10%", borderRadius: "50%" }}
+              alt={constants.urlPath}/>
         </div>
         <MapContainer options={MAP_OPTIONS} places={this.state.places} onMapLoad={this._onMapLoad} />
         <div className='btn-filter'>

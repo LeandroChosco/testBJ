@@ -2,6 +2,8 @@
 // const sails_url = 'http://prod.adminc5.bj.sails.energetikadevelepment.com';
 // const sails_url = "http://3.21.75.143";
 // const radar_backend = "http://radar-backend-dev.us-east-2.elasticbeanstalk.com/graphql";
+import favicon from '../assets/images/icons/favicon.jpg'
+
 const express_url = "http://3.15.181.186";
 
 //Dev
@@ -12,6 +14,9 @@ const webSocketPort = '20';
 const apiPort = "3000";
 const sailsPort = "1337";
 const ptzPort = "3001";
+const client = 'Benito Juárez';
+const urlPath = favicon
+
 
 export default {
   express_url,
@@ -20,5 +25,7 @@ export default {
   webSocketPort,
   sailsPort,
   ptzPort,
-  radar_backend
+  radar_backend,
+  client,
+  urlPath
 };

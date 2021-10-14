@@ -298,6 +298,21 @@ export default {
 
     return Axios.post("http://" +getUrlHistory +':' +getUrlHistoryPort + '/onvif/stop/ptz', data);
   },
+  getClients: () => {
+    return Axios.post(constants.radar_backend, {
+      query: `
+       query {
+        getClients{
+          id
+          name
+          admin_email
+          clave_municipal,
+          photo_path
+        }
+      }`
+    }
+    );
+  }, 
   cancelRadarAlert: (params) => {
     return Axios.post(constants.radar_backend, {
       query:
