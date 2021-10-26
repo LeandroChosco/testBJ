@@ -49,6 +49,7 @@ import { MESSAGES_COLLECTION, COMPLAINT_COLLECTION, POLICE_COLLECTION } from "..
 
 
 import Chat from './ChatPlus/index'
+import Policia from './Policia';
 // import { ContentSort } from 'material-ui/svg-icons';
 
 var io = sailsIOClient(socketIOClient);
@@ -820,7 +821,7 @@ class Main extends Component {
             doc_data.forEach(d => {
               const { data } = d;
               if (data && data.chatId) {
-                const { police, fire, medical,partial_armed, away_armed  } = data.alarmedStatus;
+                const { police, fire, medical, partial_armed, away_armed } = data.alarmedStatus;
                 if (police || partial_armed || away_armed) {
                   this.showAlarmNot('Activacion  de Alarma', 'Nuevo solicitud de auxilio - Policia', 'error', 'Ir a chat', 0, data.chatId)
                 }
@@ -1225,6 +1226,7 @@ class Main extends Component {
           <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path='/personas' exact render={(props) => <Sospechosos showMatches={this.state.showMatches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this - this._toggleControls} />} />
+          <Route path='/policia' exact render={(props) => <Policia showMatches={this.state.showMatches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this - this._toggleControls} />} />
           <Route path="/covid" exact render={(props) => <Covid alertaCovidState={this.state.alertaCovidState} _alertaCovidState={this._alertaCovidState} _newCovidItem={this._newCovidItem} newCovidState={this.state.newCovidState} newCovidItem={this.state.newCovidItem} alertaCovid={this.state.alertaCovid} showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route
             path="/alarm/:alarmIndex?/:chatId?"

@@ -8,6 +8,8 @@ export const POLICE_COLLECTION = 'police';
 export const MESSAGES_COLLECTION = 'messages';
 export const COMPLAINT_COLLECTION = 'complaint';
 export const POLICE_TRACKING_COLLECTION = 'police_tracking';
+export const POLICE_BINNACLE_COLLECTION = 'police_binnacle';
+
 
 const fireSos = firebaseSos.app('sos').firestore();
 const fireC5 = firebaseC5.app('c5benito').firestore();
