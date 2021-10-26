@@ -82,7 +82,12 @@ class Analysis extends Component {
 			<div>
 				{loading ? (
 					<div style={{ position: 'absolute', top: '30%', background: 'transparent', width: '100%' }} align="center">
-						<JellyfishSpinner size={250} color="#686769" loading={loading} />
+						{/* <JellyfishSpinner size={250} color="#686769" loading={loading} /> */}
+						<img
+							className="spinner"
+							src={constants.urlPath}
+							style={{ width: "10%", borderRadius: "50%" }}
+							alt={constants.urlPath} />
 					</div>
 				) : (
 					<div id="analisis_holder" className={!this.props.showMatches ? 'hide-matches' : 'show-matches'}>
@@ -184,7 +189,7 @@ class Analysis extends Component {
 										value={phones}
 										onChange={this.onChange}
 										fromSuggestionsOnly={false}
-										createChipKeys={[ ' ', 13, 32 ]}
+										createChipKeys={[' ', 13, 32]}
 									/>
 								</Form.Field>
 							)}
@@ -198,7 +203,7 @@ class Analysis extends Component {
 										value={mails}
 										onChange={this.onChangeMail}
 										fromSuggestionsOnly={false}
-										createChipKeys={[ ' ', 13, 32 ]}
+										createChipKeys={[' ', 13, 32]}
 									/>
 								</Form.Field>
 							)}
@@ -253,15 +258,15 @@ class Analysis extends Component {
 			type_report: this.state.typeReport,
 			user_id: 1
 		})
-		.then((response) => {
-			const data = response.data;
-			this.setState({ cameraProblem: {}, problemDescription: '' });
-			if (data.success) {
-				alert('Ticket creado correctamente');
-			} else {
-				alert('Error al crear ticket');
-			}
-		});
+			.then((response) => {
+				const data = response.data;
+				this.setState({ cameraProblem: {}, problemDescription: '' });
+				if (data.success) {
+					alert('Ticket creado correctamente');
+				} else {
+					alert('Error al crear ticket');
+				}
+			});
 	};
 	_snapShot = (camera) => {
 		this.setState({ loadingSnap: true });
@@ -444,8 +449,8 @@ class Analysis extends Component {
 	};
 
 	urlToPromise = (url) => {
-		return new Promise(function(resolve, reject) {
-			JSZipUtils.getBinaryContent(url, function(err, data) {
+		return new Promise(function (resolve, reject) {
+			JSZipUtils.getBinaryContent(url, function (err, data) {
 				if (err) reject(err);
 				else resolve(data);
 			});
@@ -478,7 +483,7 @@ class Analysis extends Component {
 			saveAs(content, `cam_${camera.num_cam}.zip`);
 		});
 	};
-	
+
 	_toggleControlsBottom = (marker) => {
 		this.props.toggleControls(marker);
 	};
@@ -489,7 +494,7 @@ class Analysis extends Component {
 		this.setState({ loading: true });
 		conections.getAllCams()
 			.then((response) => {
-				const camaras = response.data;				
+				const camaras = response.data;
 				let auxCamaras = [];
 				let offlineCamaras = [];
 				let disconnectedCameras = [];
@@ -504,11 +509,11 @@ class Analysis extends Component {
 						var urlHistory = null
 						var urlHistoryPort = null
 
-						if ("urlhistory" in value){
+						if ("urlhistory" in value) {
 							urlHistory = value.urlhistory
 						}
 
-						if ("urlhistoryport" in value){
+						if ("urlhistoryport" in value) {
 							urlHistoryPort = value.urlhistoryport
 						}
 
@@ -521,7 +526,7 @@ class Analysis extends Component {
 							name: `${value.street} ${value.number}, ${value.township}, ${value.town}, ${value.state} #cam${value.num_cam}`,
 							rel_cuadrante: value.RelCuadranteCams,
 							isHls: true,
-							url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port?`:${value.UrlStreamMediaServer.output_port}`:null}${value.UrlStreamMediaServer.name}${value.channel}`,
+							url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port ? `:${value.UrlStreamMediaServer.output_port}` : null}${value.UrlStreamMediaServer.name}${value.channel}`,
 							real_num_cam:
 								value.num_cam < 10 ? '0' + value.num_cam.toString() : value.num_cam.toString(),
 							camera_number: value.num_cam,
@@ -540,7 +545,7 @@ class Analysis extends Component {
 									lng: value.google_cordenate.split(',')[1],
 									name: `${value.street} ${value.number}, ${value.township}, ${value.town}, ${value.state}`,
 									isHls: true,
-									url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port?`:${value.UrlStreamMediaServer.output_port}`:null}${value.UrlStreamMediaServer.name}${value.channel}`,
+									url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port ? `:${value.UrlStreamMediaServer.output_port}` : null}${value.UrlStreamMediaServer.name}${value.channel}`,
 									real_num_cam:
 										value.num_cam < 10 ? '0' + value.num_cam.toString() : value.num_cam.toString(),
 									camera_number: value.num_cam,
@@ -583,7 +588,7 @@ class Analysis extends Component {
 								lng: valueoff.google_cordenate.split(',')[1],
 								name: `${valueoff.street} ${valueoff.number}, ${valueoff.township}, ${valueoff.town}, ${valueoff.state} #cam${valueoff.num_cam}`,
 								isHls: true,
-								url: `http://${valueoff.UrlStreamMediaServer.ip_url_ms}${valueoff.UrlStreamMediaServer.output_port?`:${valueoff.UrlStreamMediaServer.output_port}`:null}${valueoff.UrlStreamMediaServer.name}${valueoff.channel}`,
+								url: `http://${valueoff.UrlStreamMediaServer.ip_url_ms}${valueoff.UrlStreamMediaServer.output_port ? `:${valueoff.UrlStreamMediaServer.output_port}` : null}${valueoff.UrlStreamMediaServer.name}${valueoff.channel}`,
 								real_num_cam:
 									valueoff.num_cam < 10
 										? '0' + valueoff.num_cam.toString()
@@ -610,7 +615,7 @@ class Analysis extends Component {
 								lng: valueoff.google_cordenate.split(',')[1],
 								name: `${valueoff.street} ${valueoff.number}, ${valueoff.township}, ${valueoff.town}, ${valueoff.state} #cam${valueoff.num_cam}`,
 								isHls: true,
-								url: `http://${valueoff.UrlStreamMediaServer.ip_url_ms}${valueoff.UrlStreamMediaServer.output_port?`:${valueoff.UrlStreamMediaServer.output_port}`:null}${valueoff.UrlStreamMediaServer.name}${valueoff.channel}`,
+								url: `http://${valueoff.UrlStreamMediaServer.ip_url_ms}${valueoff.UrlStreamMediaServer.output_port ? `:${valueoff.UrlStreamMediaServer.output_port}` : null}${valueoff.UrlStreamMediaServer.name}${valueoff.channel}`,
 								real_num_cam:
 									valueoff.num_cam < 10
 										? '0' + valueoff.num_cam.toString()
@@ -668,18 +673,18 @@ class Analysis extends Component {
 	};
 	_chageCamStatus = (camare) => {
 		conections.changeCamStatus(camare.id)
-		.then((response) => {
-			console.log(response);
-			if (response.status === 200) {
-				if (response.data.success) {
-					const event = new Event('restartCamEvent');
-					window.dispatchEvent(event);
+			.then((response) => {
+				console.log(response);
+				if (response.status === 200) {
+					if (response.data.success) {
+						const event = new Event('restartCamEvent');
+						window.dispatchEvent(event);
+					}
 				}
-			}
-		})
-		.catch((err) => {
-			console.log(err);
-		});
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 }
 
