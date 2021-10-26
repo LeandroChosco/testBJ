@@ -50,8 +50,17 @@ class Header extends Component {
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
-    window.open('http://clientes.ubiqo.net/Publica/Inicio_Sesion.aspx?ReturnUrl=%2f', 'Ficha de Incidencias', 'height=600,width=1200');
+    this.props.history.push("/policia");
   };
+  // _goFicha = () => {
+  //   if (this.props.isSidemenuShow) {
+  //     this.props.toggleSideMenu();
+  //   }
+  //   document
+  //     .getElementsByClassName("navbar-collapse")[0]
+  //     .classList.remove("show");
+  //   window.open('http://clientes.ubiqo.net/Publica/Inicio_Sesion.aspx?ReturnUrl=%2f', 'Ficha de Incidencias', 'height=600,width=1200');
+  // };
   _goCovid = () => {
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();

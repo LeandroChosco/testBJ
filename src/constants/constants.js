@@ -1,6 +1,7 @@
 // Produccion
 // const sails_url = 'http://prod.adminc5.bj.sails.energetikadevelepment.com';
 // const sails_url = "http://3.21.75.143";
+// const sails_url = "http://apibj.energetikatechnology.com"; //actual
 // const radar_backend = "http://radar-backend-dev.us-east-2.elasticbeanstalk.com/graphql";
 import favicon from '../assets/images/icons/favicon.jpg'
 
