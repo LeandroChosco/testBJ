@@ -24,7 +24,7 @@ const TotalMonth = (props) => {
     })
   }
 
-  console.log(days);
+  // console.log(days);
 
   const series =  [{
       name: 'Incidencias',

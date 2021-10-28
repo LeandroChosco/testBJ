@@ -1,58 +1,77 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ResponsiveContainer } from "recharts";
 import Chart from 'react-apexcharts'
 
 const Police = (props) => {
+  const [ofi, setOfi] = useState([]);
+  const [data, setData] = useState([]);
   const { data:dataParser } = props;
-  const oficial1 = dataParser && dataParser.filter(f => f.nameOficial === '1 Policía')
-  const oficial2 = dataParser && dataParser.filter(f => f.nameOficial === '2 Policía')
-  const oficial3 = dataParser && dataParser.filter(f => f.nameOficial === '3 Policía')
-  const oficial4 = dataParser && dataParser.filter(f => f.nameOficial === '4 Policía')
-  const oficial5 = dataParser && dataParser.filter(f => f.nameOficial === '5 Policía')
-  const oficial6 = dataParser && dataParser.filter(f => f.nameOficial === 'Jaquelin')
-  const oficial7 = dataParser && dataParser.filter(f => f.nameOficial === 'Felipe')
+
+  const police = () => {
+    let pol = []
+    dataParser && dataParser.map(d => {
+      pol.push(d.nameOficial)
+    }); 
+    let su = pol && pol.reduce((a, d) =>{
+      return(a[d] ? a[d] += 1 : a[d] = 1, a)
+    } , {})
+
+    setOfi(su);
+  }
+
+  const getData = () => {
+    let d = []
+    for (var [key, value] of Object.entries(ofi)) {
+      d.push({
+        name: key,
+        total: value
+      })
+     
+      d.sort((a, b) => {
+        if(a.name < b.name){
+          return -1
+        }
+        if(a.name > b.name){
+          return 1
+        }
+        return 0
+      })
+      
+      setData(d)
+    }
+  }
+
+  const polices = data && data.map(d => (d.name));
+  const total = data && data.map(d => (d.total));
 
   const series =  [{
       name: 'Casos atentidos',
-      data:[
-        oficial1.length, 
-        oficial2.length,
-        oficial3.length,
-        oficial4.length,
-        oficial5.length,
-        oficial6.length,
-        oficial7.length
-      ]
+      data: total && total
     }
   ];
 
   const options = {
-    // plotOptions: {
-    //   bar: {
-    //     horizontal: true,
-    //   }
-    // },
     dataLabels: {
       enabled: false
     },
     xaxis: {
-      categories: [
-        "1 Policía",
-        "2 Policía",
-        "3 Policía",
-        "4 Policía",
-        "5 Policía",
-        "Jaquelin",
-        "Felipe",
-      ],
+      categories: polices && polices
     }
   };
+
+  useEffect(() => {
+    getData()
+  }, [ofi])
+
+  useEffect(() => {
+    police();
+  }, [])
 
     return (
       <>
         <ResponsiveContainer width="80%" height='80%'>
           {
-              <Chart options={options} series={series} type="bar" width={500} />
+              <Chart options={options} series={series} type="bar" height='500px' />
           }
         </ResponsiveContainer>
       </>
