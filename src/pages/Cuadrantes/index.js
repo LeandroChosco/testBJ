@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Input, Icon, TextArea, Form, Label, Button, Radio, Dropdown } from 'semantic-ui-react';
 import { ToggleButton, ToggleButtonGroup, Modal } from 'react-bootstrap';
-import { JellyfishSpinner } from 'react-spinners-kit';
+// import { JellyfishSpinner } from 'react-spinners-kit';
 
 import JSZipUtils from 'jszip-utils';
 import saveAs from 'file-saver';
@@ -15,6 +15,8 @@ import CameraStream from '../../components/CameraStream';
 import ModalAddCams from '../../components/ModalAddCams';
 import GridCameraDisplay from '../../components/GridCameraDisplay';
 import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
+import SearchCamera from '../../components/SearchCamera';
+import Strings from '../../constants/strings';
 
 import './style.css';
 import '../../assets/styles/util.css';
@@ -106,11 +108,14 @@ class Cuadrantes extends Component{
             }    
         ],
         flagOtroName: false,
-        flagDelete: false
-
+        flagDelete: false,
+        showSearch: false,
+        is_quadrant_filter: false,
+        filterData:[]
     }
 
     render(){
+      const { camsCuadrante, is_quadrant_filter} = this.state;
         return(
             <div>
                 <div className="containerCuadrantes">
@@ -172,7 +177,7 @@ class Cuadrantes extends Component{
 							style={{ width: "10%", borderRadius: "50%" }}
 							alt={constants.urlPath} />
                     </div>
-                    :this.state.camsCuadrante.length !==0 ?
+                    :this.state.camsCuadrante.length !==0 || this.state.is_quadrant_filter ?
                                 // <GridCameraDisplay
                                 //     ref='myChild'
                                 //     error={this.state.error}
@@ -194,11 +199,25 @@ class Cuadrantes extends Component{
                                 //     changeStatus={this._chageCamStatus}/>
                                 <Fragment>
                                     {this.state.displayTipe!==3&&!this.state.loading?<div className="toggleViewButton row">
-                                        <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
+                                    <div className='col-12'>
+                                    {this.state.is_quadrant_filter && <Button onClick={() => this._loadCuadrantes()}  className='btn clear pull-right' basic>Limpiar filtro</Button>}
+                                    <Button onClick={() => this.setState({showSearch:true})}  className='btn clear pull-right' basic>Filtrar</Button>
+                                    </div>
+                                    { camsCuadrante.length !==0 &&
+                                      <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe} style={{marginTop:'1%'}}>
                                             <ToggleButton value={1} variant='outline-dark' ><Icon name="grid layout"/></ToggleButton>
                                             <ToggleButton value={2} variant='outline-dark' ><Icon name="clone"/></ToggleButton>
                                             {this.state.cameraID?<ToggleButton value={3} variant='outline-dark' ><Icon name="square"/></ToggleButton>:null}
                                         </ToggleButtonGroup>
+                                      
+                                    }
+                                    {
+                                      camsCuadrante.length === 0 && is_quadrant_filter &&
+                                      <div align="center" className='col-12'><br />
+                                        {Strings.noResults}
+                                      </div>
+
+                                      }
                                     </div> :null}
                                     <div style={{position:'absolute',top:'30%', background:'transparent', width:'100%'}} align='center'>
                                 
@@ -219,6 +238,7 @@ class Cuadrantes extends Component{
                 {
                 this._renderModals()
                 }
+                {this._searchModal()}
                 
             </div>
         )
@@ -321,19 +341,32 @@ class Cuadrantes extends Component{
         
     }
 
-    _loadCuadrantes = () => {
+    _loadCuadrantes = (quadrantFilter=false, params) => {
+      if (params) {
+        this.setState({ filterData: params });
+      }
+
         this.setState({loading: true})
         conections.getCuadrantes().then((response) => {
-            //console.log('cuadrantesss', response)
             if(response.data.data.length !== 0){
                 this.setState({cuadrantes: response.data.data})
                 if(this.props.match.params.id){
+                  if(!quadrantFilter){
                     this._camsCuadrante(this.props.match.params.id)
+                  }else{
+                    this._camsCuadrante(this.props.match.params.id, quadrantFilter.data)
+                  }
                     this.setState({cuadranteActual:this.props.match.params.id})
                 }
                 else{
-                    this._camsCuadrante(this.state.cuadrantes[0].id)
-                    this.setState({cuadranteActual:this.state.cuadrantes[0].id})
+                    if(!quadrantFilter){
+                      this._camsCuadrante(this.state.cuadrantes[0].id);
+                      this.setState({cuadranteActual:this.state.cuadrantes[0].id,  is_quadrant_filter:false, filterData:[]});
+                    }else{
+                      this._camsCuadrante(quadrantFilter.quadrant_id, quadrantFilter.data);
+                      this.setState({cuadranteActual:quadrantFilter.quadrant_id, is_quadrant_filter:true})
+                    }
+
                 }
             }else{
                 this.setState({loading: false})
@@ -371,101 +404,107 @@ class Cuadrantes extends Component{
         this.setState({showModal:true,cuadranteSelection:dataCam})
     }
 
-    _camsCuadrante = (id) => {
-        //console.log('idCams',id)
+    _camsCuadrante = (id, quadrantFilter) => {
+      this.setState({is_quadrant_filter:false});
         this.state.cuadrantes.map(item =>{
             if(item.id === id){
                 this.setState({cuadranteActual:item.id})
             }
             return item
-        })
-        
-        conections.getCamsCuadrante(id).then((response)=>{
-            //console.log('res',response.data.data)
-            const camaras = response.data.data
-                let auxCamaras = []
-                let offlineCamaras = []
-                let actualCamera = {}
-                let title = ''
-                let idCamera = null
-                let index = 1
-                let indexFail = 1
-                if (camaras.length !== 0) {
-                    camaras.map(value=>{
-                        //console.log('camara',value)
-                        if (value.active === 1 && value.flag_streaming === 1) {
-                            
-                            var urlHistory = null
-                            var urlHistoryPort = null
-
-                            if ("urlhistory" in value){
-                                urlHistory = value.urlhistory
-                            }
-
-                            if ("urlhistoryport" in value){
-                                urlHistoryPort = value.urlhistoryport
-                            }
-                            
-                            //let url = 'rtmp://18.212.185.68/live/cam';                                               
-                            auxCamaras.push({
-                                id:value.id,
-                                num_cam:index,
-                                lat:value.google_cordenate.split(',')[0],
-                                lng:value.google_cordenate.split(',')[1],
-                                name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
-                                isHls:true,
-                                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
-                                dataCamValue: value,
-                                urlHistory: urlHistory,
-                                urlHistoryPort: urlHistoryPort
-                            })                       
-                            index = index +1
-                            if(this.state.id_cam !== 0){
-                            if (parseInt(this.state.id_cam) === value.id) {                           
-                                    title= value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state
-                                    actualCamera = {
-                                        id:value.id,
-                                        num_cam:value.num_cam,
-                                        lat:value.google_cordenate.split(',')[0],
-                                        lng:value.google_cordenate.split(',')[1],                                   
-                                        name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state,
-                                        isHls:true,
-                                        url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
-                                        dataCamValue: value 
-                
-                                    }
-                                    idCamera = value.id
-                            }
-                            }
-
-                        } else { 
-                            if (value.active === 1 ) {
-                                offlineCamaras.push({
-                                    id:value.id,
-                                    num_cam:indexFail,
-                                    lat:value.google_cordenate.split(',')[0],
-                                    lng:value.google_cordenate.split(',')[1],
-                                    name: value.street +' '+ value.number + ', ' + value.township+ ', ' + value.town+ ', ' + value.state + ' #cam' + value.num_cam,
-                                    isHls:true,
-                                    url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
-                                    dataCamValue: value     
-                                })   
-                                indexFail++
-                            }
-                        }
-                        return true;
-                    })
-                }
-                if(idCamera== null){
-                    this.setState({camsCuadrante:auxCamaras,offlineCamaras:offlineCamaras,loading: false,error:undefined})
-                } else {
-                    this.setState({places:auxCamaras,offlineCamaras:offlineCamaras,loading: false,cameraID:idCamera,actualCamera:{title:title,extraData:actualCamera},error:undefined})
-                    this.setState({displayTipe:3})
-                }
+        });
+          if(!quadrantFilter){
+            conections.getCamsCuadrante(id).then((response)=>{
+              const camaras = response.data.data
+              this._getQuadrants(camaras);
             }).catch(error=>{
-                this.setState({loading: false,error:'Error de conexion'})                
+              this.setState({loading: false,error:'Error de conexion'})                
             })
+          }else{
+            this._getQuadrants(quadrantFilter);
+          }
     }
+
+  _getQuadrants = (camaras) => {
+    let auxCamaras = []
+    let offlineCamaras = []
+    let actualCamera = {}
+    let title = ''
+    let idCamera = null
+    let index = 1
+    let indexFail = 1
+    if (camaras.length !== 0) {
+      camaras.map(value => {
+        //console.log('camara',value)
+        if (value.active === 1 && value.flag_streaming === 1) {
+
+          let urlHistory = null
+          let urlHistoryPort = null
+
+          if ("urlhistory" in value) {
+            urlHistory = value.urlhistory
+          }
+
+          if ("urlhistoryport" in value) {
+            urlHistoryPort = value.urlhistoryport
+          }
+
+          //let url = 'rtmp://18.212.185.68/live/cam';                                               
+          auxCamaras.push({
+            id: value.id,
+            num_cam: index,
+            lat: value.google_cordenate.split(',')[0],
+            lng: value.google_cordenate.split(',')[1],
+            name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state + ' #cam' + value.num_cam,
+            isHls: true,
+            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
+            dataCamValue: value,
+            urlHistory: urlHistory,
+            urlHistoryPort: urlHistoryPort
+          })
+          index = index + 1
+          if (this.state.id_cam !== 0) {
+            if (parseInt(this.state.id_cam) === value.id) {
+              title = value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state
+              actualCamera = {
+                id: value.id,
+                num_cam: value.num_cam,
+                lat: value.google_cordenate.split(',')[0],
+                lng: value.google_cordenate.split(',')[1],
+                name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state,
+                isHls: true,
+                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
+                dataCamValue: value
+
+              }
+              idCamera = value.id
+            }
+          }
+
+        } else {
+          if (value.active === 1) {
+            offlineCamaras.push({
+              id: value.id,
+              num_cam: indexFail,
+              lat: value.google_cordenate.split(',')[0],
+              lng: value.google_cordenate.split(',')[1],
+              name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state + ' #cam' + value.num_cam,
+              isHls: true,
+              url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
+              dataCamValue: value
+            })
+            indexFail++
+          }
+        }
+        return true;
+      })
+    }
+    if (idCamera == null) {
+      this.setState({ camsCuadrante: auxCamaras, offlineCamaras: offlineCamaras, loading: false, error: undefined })
+    } else {
+      this.setState({ places: auxCamaras, offlineCamaras: offlineCamaras, loading: false, cameraID: idCamera, actualCamera: { title: title, extraData: actualCamera }, error: undefined })
+      this.setState({ displayTipe: 3 })
+    }
+  }
 
     _recordignToggle = (selectedCamera) => {
         if(this.state.recordingCams.indexOf(selectedCamera)>-1){
@@ -689,7 +728,7 @@ class Cuadrantes extends Component{
     _chageCamStatus = (camera) =>{
         conections.changeCamStatus(camera.id)
             .then(response=>{
-                console.log(response)
+                // console.log(response)
                 if(response.status === 200) {
                     if (response.data.success) {
                         const event = new Event('restartCamEvent')
@@ -701,6 +740,35 @@ class Cuadrantes extends Component{
                 console.log(err)
             })
     }
+
+    _searchModal = () => {
+      return (
+          <SearchCamera
+            _setLoading={this._setLoading}
+            showSearch={this.state.showSearch}
+            handleClose={this._handleClose}
+            is_covid={false}
+            is_quadrant={true}
+            quadrant_id={this.state.cuadranteActual}
+            _loadCuadrantes={this._loadCuadrantes}
+            filterData={this.state.filterData}
+            _clear={this._clear}
+          />
+      )
+    }
+  
+    _handleClose=()=>{
+      this.setState({ showSearch: false });
+    }
+  
+    _setLoading = () => {
+      this.setState({ loading: true, showSearch: false });
+    }
+
+    _clear =()=>{
+      this.setState({filterData:[]});
+    }
+  
 }
 
 export default Cuadrantes;

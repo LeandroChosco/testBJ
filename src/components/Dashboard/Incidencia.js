@@ -5,7 +5,7 @@ import Chart from 'react-apexcharts'
 const Incidencia = (props) => {
 
   const { data:dataParser } = props;
-  const incidenciaNull = dataParser && dataParser.filter(f => !f.incidentName)
+  // const incidenciaNull = dataParser && dataParser.filter(f => !f.incidentName)
   const otro = dataParser && dataParser.filter(f => f.incidentName === 'Otro')
   const nsv = dataParser && dataParser.filter(f => f.incidentName === 'Robo a negocio sin violencia')
   const chsv = dataParser && dataParser.filter(f => f.incidentName === 'Robo a casa habitación sin violencia')

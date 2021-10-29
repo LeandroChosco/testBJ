@@ -123,6 +123,15 @@ export default {
   loadCams: () => {
     return Axios.get(constants.sails_url + ':' + constants.sailsPort + '/cams?sort=num_cam asc&active=1&limit=1000&populate=false');
   },
+  filterCams: (data) => {
+    return Axios.post(constants.sails_url + ':' + constants.sailsPort + '/control-cams/filter/cams', data);
+  },
+  filterOffCams: (data) => {
+    return Axios.post(constants.sails_url + ':' + constants.sailsPort + '/control-cams/filter/offCams', data);
+  },
+  filterQuadrantsById: (data) => {
+    return Axios.post(constants.sails_url + ':' + constants.sailsPort + '/control-cams/filter/quadrantById', data);
+  },
   changeCamStatus: (id) => {
     return Axios.put(constants.sails_url + ':' + constants.sailsPort + '/control-cams/change-status/' + id);
   },

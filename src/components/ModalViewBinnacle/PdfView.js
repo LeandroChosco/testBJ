@@ -19,12 +19,12 @@ const Pdfview = ({data}) => {
     return { uri: `${pathImage}${path}`, method: selectedMethod, body: '', headers: '' }; 
   }
 
-  function returnSrcCiu(e) {
-    const path = e;
-    const pathImage = "https://radarsync.s3.us-east-2.amazonaws.com/";
-    const selectedMethod = 'GET';
-    return { uri: `${pathImage}${path}`, method: selectedMethod, body: '', headers: '' }; 
-  }
+  // function returnSrcCiu(e) {
+  //   const path = e;
+  //   const pathImage = "https://radarsync.s3.us-east-2.amazonaws.com/";
+  //   const selectedMethod = 'GET';
+  //   return { uri: `${pathImage}${path}`, method: selectedMethod, body: '', headers: '' }; 
+  // }
 
   return (
       <Document >

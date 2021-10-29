@@ -7,5 +7,6 @@ export default {
     sistem: 'Sistema',
     info: 'Operador Digital'
   },
-  noTimePolice: 'No se pudo calcular el tiempo de llegada del policia.'
+  noTimePolice: 'No se pudo calcular el tiempo de llegada del policia.',
+  noResults:'No se encontraron coincidencias.'
 };

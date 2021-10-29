@@ -679,7 +679,7 @@ class CameraStream extends Component {
 	};
 
 	componentDidMount() {
-		   console.log('props', this.props)
+		  //  console.log('props', this.props)
 		if (this.props.marker.extraData === undefined) {
 			this.setState({ data: {}, qnapServer: null, qnapChannel: null });
 			return false;
