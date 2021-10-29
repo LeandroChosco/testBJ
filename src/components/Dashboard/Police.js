@@ -51,12 +51,18 @@ const Police = (props) => {
   ];
 
   const options = {
+    plotOptions: {
+      bar: {
+        horizontal: true,
+      }
+    },
     dataLabels: {
-      enabled: false
+      enabled: true
     },
     xaxis: {
       categories: polices && polices
-    }
+    },
+    colors: '#6435c9'
   };
 
   useEffect(() => {

@@ -33,7 +33,7 @@ const Incidencia = (props) => {
       }
     },
     dataLabels: {
-      enabled: false
+      enabled: true
     },
     xaxis: {
       categories: [

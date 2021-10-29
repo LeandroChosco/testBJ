@@ -1,68 +1,74 @@
 import React, { useState, useEffect  } from 'react';
 import { ResponsiveContainer } from 'recharts';
 import Chart from 'react-apexcharts'
-import * as moment from 'moment';
 
 const TotalMonth = (props) => {
 
   const { data:dataParser } = props;
-  const test =  dataParser.slice('', 10)
-  // console.log('test', test.slice('', 10));
   const [days, setDays] = useState([])
-  const incidenciaNull = dataParser && dataParser.filter(f => !f.incidentName)
-  const otro = dataParser && dataParser.filter(f => f.incidentName === 'Otro')
-  const nsv = dataParser && dataParser.filter(f => f.incidentName === 'Robo a negocio sin violencia')
-  const chsv = dataParser && dataParser.filter(f => f.incidentName === 'Robo a casa habitación sin violencia')
-  const chcv = dataParser && dataParser.filter(f => f.incidentName === 'Robo a casa habitación con violencia')
-  const tcv = dataParser && dataParser.filter(f => f.incidentName === 'Robo a transeúnte con violencia')
-  const ap = dataParser && dataParser.filter(f => f.incidentName === 'Robo de auto partes')
-
+  const [dayView, setDayView] = useState([])
+  const [total, setTotal] = useState([])
 
   const getDays = () => {
-    test && test.map( d => {
-      setDays(days => [...days, d.date])
-    })
+    let cont = []
+    dataParser && dataParser.map( d => {
+      cont.push(d.date)
+    });
+
+    let su = cont && cont.reduce((a,d) => {
+      return(a[d] ? a[d] += 1 : a[d] = 1, a)
+    }, {});
+
+    setDays(su)
   }
 
-  // console.log(days);
+  const parserDataView = () => {
+    let d = [];
+    for (var [key, value] of Object.entries(days)) {
+      d.push({
+        day: key,
+        total: value
+      })
+
+      const order = d && d.sort(function(a,b) {
+        a = a.day.split('/').reverse().join('');
+        b = b.day.split('/').reverse().join('');
+        return a > b ? 1 : a < b ? -1 : 0;
+      });
+
+      const selectData = order && order.slice(order.length-7)      
+      const label =  selectData && selectData.map(d => (d.day));
+      const total =  selectData && selectData.map(d => (d.total));
+
+      setDayView(label)
+      setTotal(total)
+      console.log(selectData);
+    }
+  }
 
   const series =  [{
       name: 'Incidencias',
-      data:[
-        otro.length, 
-        nsv.length,
-        chsv.length,
-        chcv.length,
-        tcv.length,
-        ap.length,
-      ]
+      data: total && total
     }
   ];
 
   const options = {
-    plotOptions: {
-      bar: {
-        horizontal: true,
-      }
-    },
     dataLabels: {
-      enabled: false
+      enabled: true
     },
     xaxis: {
-      categories: [
-        'Otro',
-        'Robo a negocio sin violencia',
-        'Robo a casa habitación sin violencia',
-        'Robo a casa habitación con violencia',
-        'Robo a transeúnte con violencia',
-        'Robo de auto partes',
-      ],
-    }
+      categories: dayView && dayView
+    },
+    colors: '#21ba45'
   };
 
   useEffect(() => {
+    parserDataView()
+  }, [days]);
+
+  useEffect(() => {
     getDays();
-  }, [])
+  }, []);
 
     return (
       <>
