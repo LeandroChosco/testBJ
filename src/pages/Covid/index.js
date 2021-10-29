@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { ToggleButton, ToggleButtonGroup } from 'react-bootstrap'
-import { Icon, Tab } from 'semantic-ui-react'
+import { Icon, Tab, Button } from 'semantic-ui-react'
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
@@ -9,9 +9,9 @@ import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
 import GridCovidDisplay from '../../components/GridCovidDisplay';
 import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants'
-import { JellyfishSpinner } from "react-spinners-kit";
+// import { JellyfishSpinner } from "react-spinners-kit";
 import conections from '../../conections'
-
+import SearchCamera from '../../components/SearchCamera';
 import {
   Legend,
   Tooltip,
@@ -26,7 +26,7 @@ import { ClassicSpinner } from "react-spinners-kit";
 import CovidItem from "../../components/CovidItem"
 import Spinner from "react-bootstrap/Spinner";
 import ColorScheme from 'color-scheme'
-
+import Strings from '../../constants/strings';
 const scm = new ColorScheme();
 const COLORS = scm.from_hue(235)
   .scheme('analogic')
@@ -34,8 +34,6 @@ const COLORS = scm.from_hue(235)
   .add_complement(false)
   .variation('pastel')
   .web_safe(false).colors();
-
-
 class Analysis extends Component {
 
   state = {
@@ -112,8 +110,10 @@ class Analysis extends Component {
     ],
     photos: [],
     imageLoading: false,
-    loadingCovidGrid: false
-
+    loadingCovidGrid: false,
+    showSearch: false,
+    is_filter:false,
+    filterData:[]
   }
 
   render() {
@@ -136,21 +136,43 @@ class Analysis extends Component {
     return (
       <div id="analisis_holder" className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
         <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
-
+        {this._searchModal()}
       </div>
     );
   }
 
+  _filterButtons = () => {
+    return (
+      <div style={{ justifyContent: "right", display: "flex",  marginBottom :  5 }} className='col-12'>
+        <Button onClick={() => this.setState({ showSearch: true })} basic >Filtrar</Button>
+        {this.state.is_filter && <Button onClick={() => this._loadCameras()} basic>Limpiar filtro</Button>}
+      </div>
+    )
+  }
 
   _renderOnlineTab = () => {
+    const { places, is_filter } = this.state;
     return (
       <Fragment>
+        {
+          (places.length > 0 || is_filter ) &&
+          this._filterButtons()
+        }
         {this.state.displayTipe !== 3 && !this.state.loading ? <div className="toggleViewButton row">
-          <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
+          { 
+            places.length > 0 &&
+            <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
             <ToggleButton value={1} variant='outline-dark' ><Icon name="grid layout" /></ToggleButton>
             <ToggleButton value={2} variant='outline-dark' ><Icon name="clone" /></ToggleButton>
             {this.state.cameraID ? <ToggleButton value={3} variant='outline-dark' ><Icon name="square" /></ToggleButton> : null}
           </ToggleButtonGroup>
+          }  
+          {
+            places.length === 0 && is_filter &&
+            <div align="center" className='col-12'><br />
+           {Strings.noResults}
+          </div>
+          }
         </div> : null}
         <div style={{ position: 'absolute', top: '30%', background: 'transparent', width: '100%' }} align='center'>
 
@@ -235,7 +257,7 @@ class Analysis extends Component {
 
 
   _loadCovidFiles = () => {
-    console.log("COVID", this.props.alertaCovid)
+    // console.log("COVID", this.props.alertaCovid)
     this.setState({
       photos: [],
       imageLoading: true,
@@ -267,7 +289,7 @@ class Analysis extends Component {
   _showDisplay = () => {
     switch (this.state.displayTipe) {
       case 1:
-        return (<>
+        return (
           <GridCovidDisplay
             ref='myChild'
             newCovidState={this.props.newCovidState}
@@ -289,7 +311,7 @@ class Analysis extends Component {
             showMatches={this.props.showMatches}
             propsIniciales={this.props} />
 
-        </>)
+        )
       case 2:
         return (<LoopCamerasDisplay
           ref='myChild'
@@ -318,7 +340,7 @@ class Analysis extends Component {
   }
 
   componentDidUpdate() {
-    console.log("PROPS ALERTACOVID", this.props)
+    // console.log("PROPS ALERTACOVID", this.props)
     if (this.props.newCovidState === true) {
       this.props._newCovidItem();
       let tmpArr = [...this.state.photos];
@@ -355,7 +377,7 @@ class Analysis extends Component {
 
   _loadCameras = () => {
     // console.log('este es _loadCamera')
-    this.setState({ loading: true }, console.log('loading'))
+    this.setState({ loading: true, is_filter:false, filterData:[] }, console.log('loading'))
     conections.getAllCams()
       .then((response) => {
         // console.log(response)
@@ -369,7 +391,7 @@ class Analysis extends Component {
         // let indexFail = 1
         camaras.map(value => {
           if (value.active === 1 && value.tipo_camara === 4) {
-            console.log("value", value)
+            // console.log("value", value) 
 
             var urlHistory = null
             var urlHistoryPort = null
@@ -464,6 +486,108 @@ class Analysis extends Component {
         console.log(err)
       })
 
+  }
+
+  _searchModal = () => {
+    return (
+      <div>
+        <SearchCamera
+          _filterCameras={this._filterCameras}
+          _setLoading={this._setLoading}
+          showSearch={this.state.showSearch}
+          handleClose={this._handleClose}
+          is_covid={true}
+          is_quadrant={false}
+          _clear={this._clear}
+          filterData={this.state.filterData}
+        />
+      </div>
+    )
+  }
+
+  _handleClose = () => {
+    this.setState({ showSearch: false });
+  }
+
+  _setLoading = () => {
+    this.setState({ loading: true, showSearch: false });
+  }
+
+  _clear =()=>{
+    this.setState({filterData:[]});
+  }
+
+
+  _filterCameras = (data, offData, params) => {
+    if (params) {
+      this.setState({ filterData: params });
+    }
+    let auxCamaras = [],actualCamera = {};
+    let title = '', idCamera = null, index = 1
+    if (data.length > 0) {
+      data.map(value => {
+        if (value.active === 1 && value.tipo_camara === 4) {
+          let urlHistory = null;
+          let urlHistoryPort = null;
+
+          if ("urlhistory" in value) {
+            urlHistory = value.urlhistory
+          }
+
+          if ("urlhistoryport" in value) {
+            urlHistoryPort = value.urlhistoryport
+          }
+
+          // let url = 'rtmp://18.212.185.68/live/cam';                                               
+          auxCamaras.push({
+            id: value.id,
+            num_cam: index,
+            lat: value.google_cordenate.split(',')[0],
+            lng: value.google_cordenate.split(',')[1],
+            name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state + ' #cam' + value.num_cam,
+
+            isHls: value.tipo_camara === 3 ? false : true,
+            url: value.tipo_camara !== 3 ? 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel : null,
+            real_num_cam: value.num_cam < 10 ? ('0' + value.num_cam.toString()) : value.num_cam.toString(),
+            camera_number: value.num_cam,
+            dataCamValue: value,
+            tipo_camara: value.tipo_camara,
+            urlHistory: urlHistory,
+            urlHistoryPort: urlHistoryPort
+          })
+          index = index + 1;
+          if (this.state.id_cam !== 0) {
+            if (parseInt(this.state.id_cam) === value.id) {
+              title = value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state
+              actualCamera = {
+                id: value.id,
+                num_cam: value.num_cam,
+                lat: value.google_cordenate.split(',')[0],
+                lng: value.google_cordenate.split(',')[1],
+                name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state,
+                isHls: true,
+                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
+                real_num_cam: value.num_cam < 10 ? ('0' + value.num_cam.toString()) : value.num_cam.toString(),
+                camera_number: value.num_cam,
+                dataCamValue: value,
+                tipo_camara: value.tipo_camara
+
+              }
+              idCamera = value.id
+            }
+          }
+
+        }
+        return true;
+      })
+      if (idCamera == null) {
+        this.setState({ places: auxCamaras, loading: false, error: undefined, is_filter:true })
+      } else {
+        this.setState({ places: auxCamaras, loading: false, cameraID: idCamera, actualCamera: { title: title, extraData: actualCamera }, error: undefined, displayTipe: 3, is_filter:true  })
+      }
+    } else {
+      this.setState({ places: auxCamaras, loading: false, cameraID: idCamera, actualCamera: { title: title, extraData: actualCamera }, error: undefined, is_filter:true })
+    }
   }
 }
 

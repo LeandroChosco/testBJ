@@ -88,7 +88,8 @@ class GridCameraDisplay extends Component {
                 }
                 lg={4}
                 sm={6}
-                key={value.extraData.id}
+                // key={value.extraData.id}
+                key={index}
                 onClick={() => this._openCameraInfo(value, index)}
                 marker={value.id}
               >

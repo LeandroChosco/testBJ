@@ -15,6 +15,7 @@ import CameraStream from '../CameraStream';
 import AdvancedSearch from '../AdvancedSearch';
 import MediaContainer from '../MediaContainer';
 import responseJson from '../../assets/json/suspects.json';
+import Strings from '../../constants/strings';
 
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
 import * as QvrFunctions from '../../functions/getQvrFunctions';
@@ -72,7 +73,7 @@ class GridCameraDisplay extends Component {
 
 	render() {
 		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ } = this.state;
-		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, matches } = this.props;
+		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, matches, is_filter } = this.props;
 		return (
 			<div className="gridCameraContainer" align="center">
 				<Row>
@@ -122,6 +123,11 @@ class GridCameraDisplay extends Component {
 				{error && markers.length === 0 ? (
 					<div className="errorContainer">
 						Error al cargar informacion: {JSON.stringify(error)}
+					</div>
+				) : null}
+        {is_filter && markers.length === 0 ? (
+					<div align="center">
+          {Strings.noResults}
 					</div>
 				) : null}
 				<div className={!autoplay ? !showMatches ? ('sin-margin camGridControl showfiles') : ('con-margin camGridControl showfiles') : !showMatches ? ('sin-margin camGridControl') : ('con-margin camGridControl')}>

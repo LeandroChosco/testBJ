@@ -6,7 +6,7 @@ import {
 
 const PoliceDashboard = (props) => {
   const { data:dataParser } = props;
-  const filterSector = dataParser && dataParser.filter( f => f.sector)
+  // const filterSector = dataParser && dataParser.filter( f => f.sector)
   const filterNull = dataParser && dataParser.filter( f => !f.sector)
   const napoles = dataParser && dataParser.filter(f => f.sector === "NAPOLES") 
   const portales = dataParser && dataParser.filter(f => f.sector === "PORTALES")

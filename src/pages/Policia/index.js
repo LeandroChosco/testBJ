@@ -153,11 +153,11 @@ const Policia = ({ showMatches }) => {
     }
  }
 
-  const showImgs = (cell, row) => {
-    return (
-      <img className="styleImg" src={row.foto} alt="img" />
-    )
-  }
+  // const showImgs = (cell, row) => {
+  //   return (
+  //     <img className="styleImg" src={row.foto} alt="img" />
+  //   )
+  // }
 
 
   const renderBinnancle = () => {
