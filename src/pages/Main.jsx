@@ -118,13 +118,13 @@ class Main extends Component {
 
 
   componentDidMount() {
-    conections.getClients().then(res=>{
+    conections.getClients().then(res => {
       const data = res.data.data.getClients.filter(c => c.name === constants.client);
       constants.urlPath =
-       data[0].photo_path != null
-       ?
-       constants.urlPath = data[0].photo_path:
-       constants.urlPath
+        data[0].photo_path != null
+          ?
+          constants.urlPath = data[0].photo_path :
+          constants.urlPath
     })
 
     firebaseC5Benito
@@ -143,7 +143,6 @@ class Main extends Component {
             value.id = v.id;
             return value;
           });
-
           this.setState({ chats });
         }
       });

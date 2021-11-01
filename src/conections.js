@@ -252,60 +252,121 @@ export default {
     var getUrlHistory = "0.0.0.0"
     var getUrlHistoryPort = "00"
 
-    if (urlhistory != null){
+    if (urlhistory != null) {
       getUrlHistory = urlhistory.toString()
     }
 
-    if (urlhistoryport != null){
+    if (urlhistoryport != null) {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" +getUrlHistory +':' +getUrlHistoryPort + '/onvif/new/device', data);
+    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/new/device', data);
   },
   getProfilePTZ: (urlhistory, urlhistoryport, data) => {
 
     var getUrlHistory = "0.0.0.0"
     var getUrlHistoryPort = "00"
 
-    if (urlhistory != null){
+    if (urlhistory != null) {
       getUrlHistory = urlhistory.toString()
     }
 
-    if (urlhistoryport != null){
+    if (urlhistoryport != null) {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" +getUrlHistory +':' +getUrlHistoryPort + '/onvif/get/profile', data);
+    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/get/profile', data);
   },
   continuousMovePTZ: (urlhistory, urlhistoryport, data) => {
 
     var getUrlHistory = "0.0.0.0"
     var getUrlHistoryPort = "00"
 
-    if (urlhistory != null){
+    if (urlhistory != null) {
       getUrlHistory = urlhistory.toString()
     }
 
-    if (urlhistoryport != null){
+    if (urlhistoryport != null) {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" +getUrlHistory +':' +getUrlHistoryPort + '/onvif/continuous/move/ptz', data);
+    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/continuous/move/ptz', data);
   },
   stopPTZ: (urlhistory, urlhistoryport, data) => {
 
     var getUrlHistory = "0.0.0.0"
     var getUrlHistoryPort = "00"
 
-    if (urlhistory != null){
+    if (urlhistory != null) {
       getUrlHistory = urlhistory.toString()
     }
 
-    if (urlhistoryport != null){
+    if (urlhistoryport != null) {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" +getUrlHistory +':' +getUrlHistoryPort + '/onvif/stop/ptz', data);
+    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/stop/ptz', data);
+  },
+  // Presets PTZ
+  setPreset: (urlhistory, urlhistoryport, data) => {
+
+    let getUrlHistory = "0.0.0.0"
+    let getUrlHistoryPort = "00"
+
+    if (urlhistory != null) {
+      getUrlHistory = urlhistory.toString()
+    }
+
+    if (urlhistoryport != null) {
+      getUrlHistoryPort = urlhistoryport.toString()
+    }
+
+    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/set/preset', data);
+  },
+  getPresets: (urlhistory, urlhistoryport, data) => {
+
+    let getUrlHistory = "0.0.0.0"
+    let getUrlHistoryPort = "00"
+
+    if (urlhistory != null) {
+      getUrlHistory = urlhistory.toString()
+    }
+
+    if (urlhistoryport != null) {
+      getUrlHistoryPort = urlhistoryport.toString()
+    }
+
+    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/get/presets', data);
+  },
+  goToPresets: (urlhistory, urlhistoryport, data) => {
+
+    let getUrlHistory = "0.0.0.0"
+    let getUrlHistoryPort = "00"
+
+    if (urlhistory != null) {
+      getUrlHistory = urlhistory.toString()
+    }
+
+    if (urlhistoryport != null) {
+      getUrlHistoryPort = urlhistoryport.toString()
+    }
+
+    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/go/to/presets', data);
+  },
+  removePreset: (urlhistory, urlhistoryport, data) => {
+
+    let getUrlHistory = "0.0.0.0"
+    let getUrlHistoryPort = "00"
+
+    if (urlhistory != null) {
+      getUrlHistory = urlhistory.toString()
+    }
+
+    if (urlhistoryport != null) {
+      getUrlHistoryPort = urlhistoryport.toString()
+    }
+
+    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/remove/preset', data);
   },
   getClients: () => {
     return Axios.post(constants.radar_backend, {
@@ -321,7 +382,7 @@ export default {
       }`
     }
     );
-  }, 
+  },
   cancelRadarAlert: (params) => {
     return Axios.post(constants.radar_backend, {
       query:
