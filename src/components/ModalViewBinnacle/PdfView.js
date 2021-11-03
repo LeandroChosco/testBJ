@@ -37,7 +37,7 @@ const Pdfview = ({data}) => {
                   headers: {},
                   body: ''
                 }} style={styles.imgHeader} />
-              <Text style={styles.headerTitle}>FICHA DE INCIDENCIAS ALCALDIA BENITO JAUREZ</Text>
+              <Text style={styles.headerTitle}>FICHA DE INCIDENCIAS ALCALDIA BENITO JUAREZ</Text>
             </View>
             <View style={styles.descriptionContainer}>
               <View style={styles.boxLeft}>
