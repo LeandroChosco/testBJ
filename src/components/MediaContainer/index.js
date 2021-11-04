@@ -14,6 +14,17 @@ class MediaContainer extends Component {
 	render() {
 		let { modal, loading } = this.state;
 		let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value, servidorMultimedia } = this.props;
+		let portCam = ""
+
+		if (this.props.urlHistoryPort) {
+			if (this.props.urlHistoryPort != null) {
+				portCam = this.props.urlHistoryPort
+			} else {
+				portCam = "3000"
+			}
+		} else {
+			portCam = "3000"
+		}
 
 		return (
 			<div className={!covid ? 'mediaContainer col-6 p10' : 'col-3 p-3'}>
@@ -27,7 +38,7 @@ class MediaContainer extends Component {
 						<img
 							src={
 								covid ? (`${constants.sails_url}:${constants.sails_port}/${value.path}/${value.name}`)
-									: (`${servidorMultimedia}:${constants.apiPort}/${src}`)
+									: (`${servidorMultimedia}:${portCam}/${src}`)
 							}
 							style={{ width: '100%' }}
 							alt="img"
@@ -61,8 +72,8 @@ class MediaContainer extends Component {
 								<ReactPlayer
 									url={
 										isQnap ? (`${src}&open=normal`)
-											: dns_ip ? (`${dns_ip}:${constants.apiPort}/${src}`)
-												: (`${servidorMultimedia}:${constants.apiPort}/${src}`)
+											: dns_ip ? (`${dns_ip}:${portCam}/${src}`)
+												: (`${servidorMultimedia}:${portCam}/${src}`)
 									}
 									playing={true}
 									controls={true}
@@ -76,7 +87,7 @@ class MediaContainer extends Component {
 									id="imagecontainerfrommedia"
 									src={
 										covid ? (`${constants.sails_url}:${constants.sails_port}/${value.path}/${value.name}`)
-											: (`${servidorMultimedia}:${constants.apiPort}/${src}`)
+											: (`${servidorMultimedia}:${portCam}/${src}`)
 									}
 									style={{ width: '100%' }}
 									crossOrigin={!isQnap}
@@ -93,13 +104,24 @@ class MediaContainer extends Component {
 	_saveFile = async () => {
 		this.setState({ loading: true });
 		let { isQnap, dns_ip, src, exists_image, exists_video, covid, value, servidorMultimedia } = this.props;
+		let portCam = ""
+
+		if (this.props.urlHistoryPort) {
+			if (this.props.urlHistoryPort != null) {
+				portCam = this.props.urlHistoryPort
+			} else {
+				portCam = "3000"
+			}
+		} else {
+			portCam = "3000"
+		}
 
 		let response = {};
 		response.file = (
 			isQnap && !covid ? `${src}${exists_video ? '&open=forcedownload' : ''}`
 				: covid ? `${constants.sails_url}:${constants.sails_port}/${value.relative_path}/${value.name}`
-					: dns_ip ? `${dns_ip}:${constants.apiPort}/${src}` 
-						: `${servidorMultimedia}:${constants.apiPort}/${src}`
+					: dns_ip ? `${dns_ip}:${portCam}/${src}` 
+						: `${servidorMultimedia}:${portCam}/${src}`
 		);
 
 		if (isQnap && !covid && exists_video) {

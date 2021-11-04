@@ -508,7 +508,19 @@ class Analysis extends Component {
 			let imgZip = zip.folder('images');
 			photos.forEach((f) => {
 				let filename = f.name;
-				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				let portCam = "";
+
+				if (camera.urlHistoryPort ) {
+					if (camera.urlHistoryPort != null){
+						portCam = camera.urlHistoryPort
+					}else{
+						portCam = "3000"
+					}
+				}else{
+					portCam = "3000"
+				}
+
+				let url = `${server}:${portCam}/${f.relative_url}`;
 				imgZip.file(filename, this.urlToPromise(url), { binary: true });
 			});
 		}
@@ -516,7 +528,19 @@ class Analysis extends Component {
 			let vdZip = zip.folder('videos');
 			videos.forEach((f) => {
 				let filename = f.name;
-				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				let portCam = "";
+
+				if (camera.urlHistoryPort ) {
+					if (camera.urlHistoryPort != null){
+						portCam = camera.urlHistoryPort
+					}else{
+						portCam = "3000"
+					}
+				}else{
+					portCam = "3000"
+				}
+
+				let url = `${server}:${portCam}/${f.relative_url}`;
 				vdZip.file(filename, this.urlToPromise(url), { binary: true });
 			});
 		}
