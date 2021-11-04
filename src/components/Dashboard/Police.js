@@ -9,7 +9,7 @@ const Police = (props) => {
 
   const police = () => {
     let pol = []
-    dataParser && dataParser.map(d => {
+    dataParser && dataParser.forEach(d => {
       pol.push(d.nameOficial)
     }); 
     let su = pol && pol.reduce((a, d) =>{

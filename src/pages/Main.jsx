@@ -146,7 +146,7 @@ class Main extends Component {
           this.setState({ chats });
         }
       });
-    io.sails.url = `${constants.sails_url}:${constants.sailsPort}`;
+    io.sails.url = `${constants.sails_url}`;
     io.socket.get('/termicfiles', (data) => {
       let covidTmp = [];
       if (data && data.data) {

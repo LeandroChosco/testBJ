@@ -24,13 +24,13 @@ const ControlPresetsPTZ = (props) => {
       let urlHistory = "";
       let urlHistoryPort = "";
 
-      if(camera.urlHistory == "NULL" || camera.urlHistory == null || camera.urlHistory == ""){
+      if(camera.urlHistory === "NULL" || camera.urlHistory === null || camera.urlHistory === ""){
         urlHistory = "0.0.0.0";
       }else{
         urlHistory = camera.urlHistory;
       }
 
-      if(camera.urlHistoryPort == "NULL" || camera.urlHistoryPort == null || camera.urlHistoryPort == ""){
+      if(camera.urlHistoryPort === "NULL" || camera.urlHistoryPort === null || camera.urlHistoryPort === ""){
         urlHistoryPort = "0";
       }else{
         urlHistoryPort = camera.urlHistoryPort;
