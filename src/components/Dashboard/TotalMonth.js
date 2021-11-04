@@ -11,7 +11,7 @@ const TotalMonth = (props) => {
 
   const getDays = () => {
     let cont = []
-    dataParser && dataParser.map( d => {
+    dataParser && dataParser.forEach( d => {
       cont.push(d.date)
     });
 

@@ -1,83 +1,83 @@
-import React, {Fragment, useState} from 'react';
+import React, { /* useState */ } from 'react';
 import { Modal } from 'react-bootstrap';
-import { Button, Form, Select } from 'semantic-ui-react';
-import { PDFDownloadLink, BlobProvider } from "@react-pdf/renderer";
+import { Form } from 'semantic-ui-react';
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import './style.css';
-import conections from '../../conections';
-import axios from 'axios';
-import { CircleSpinner	} from "react-spinners-kit";
-import  FormData  from 'form-data';
+// import conections from '../../conections';
+// import axios from 'axios';
+// import { CircleSpinner	} from "react-spinners-kit";
+// import  FormData  from 'form-data';
 import Pdfview from './PdfView';
 
-const access = {
-  "ApiKey": "A33317CF-6751-4803-8F92-B0F8DE840B1A",
-  "ApiSecret": "FVXqUdLtWaED/qb/i6Te++zklBwYJ8wvfAjmDmlXuLkdgULJ6m1RSGBoEDAGclGqmmjm4T6pLC9OzkeP594GOQ==",
-  "CustomerId": "f99222d6-a2c6-420d-b87e-b605fadd836b"
-}
+// const access = {
+//   "ApiKey": "A33317CF-6751-4803-8F92-B0F8DE840B1A",
+//   "ApiSecret": "FVXqUdLtWaED/qb/i6Te++zklBwYJ8wvfAjmDmlXuLkdgULJ6m1RSGBoEDAGclGqmmjm4T6pLC9OzkeP594GOQ==",
+//   "CustomerId": "f99222d6-a2c6-420d-b87e-b605fadd836b"
+// }
 
-const styles = {
-  spinner:{
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    justifyContent: 'center',
-    alignItems: 'center', 
-    display:"flex"
-  }
-}
+// const styles = {
+//   spinner:{
+//     position: 'absolute',
+//     top: 0,
+//     bottom: 0,
+//     right: 0,
+//     left: 0,
+//     justifyContent: 'center',
+//     alignItems: 'center', 
+//     display:"flex"
+//   }
+// }
 const ModalViewBinnacle = ({modal, hide, row}) => {
-    console.log('desde el modal', row);
-    const [img64, actualizarImg64] = useState(null);
-    const [typePersona, actualizaTypePersona] = useState('sospechoso');
-    const [dataForm, actualizarDataForm] = useState({
-        nombre: '',
-        edad: '',
-        sexo: '',
-        señas_particulares: '',
-        ultima_vez: '',
-        motivo:'',
-        puesto: '',
-        comentario:''
-    });
-    const [imageInfo, setImageInfo]= useState();
-    const [isLoading, setIsloading]= useState(false);
+    // console.log('desde el modal', row);
+    // const [img64, actualizarImg64] = useState(null);
+    // const [typePersona, actualizaTypePersona] = useState('sospechoso');
+    // const [dataForm, actualizarDataForm] = useState({
+    //     nombre: '',
+    //     edad: '',
+    //     sexo: '',
+    //     señas_particulares: '',
+    //     ultima_vez: '',
+    //     motivo:'',
+    //     puesto: '',
+    //     comentario:''
+    // });
+    // const [imageInfo, setImageInfo]= useState();
+    // const [isLoading, setIsloading]= useState(false);
 
-    const sexOptions = [
-        { key: 'masculino', value: 'masculino', text: 'Masculino' },
-        { key: 'feminino', value: 'femenino', text: 'Femenino'}
-    ];
+    // const sexOptions = [
+    //     { key: 'masculino', value: 'masculino', text: 'Masculino' },
+    //     { key: 'feminino', value: 'femenino', text: 'Femenino'}
+    // ];
 
-    const changeFile = e =>{
-        let imgUpload = e.target.files[0]
-        let reader = new FileReader();
-        setImageInfo(imgUpload);
-        reader.readAsDataURL(imgUpload);
-        reader.onloadend = () => {
-            actualizarImg64(reader.result);
-          };
-    }
+    // const changeFile = e =>{
+    //     let imgUpload = e.target.files[0]
+    //     let reader = new FileReader();
+    //     setImageInfo(imgUpload);
+    //     reader.readAsDataURL(imgUpload);
+    //     reader.onloadend = () => {
+    //         actualizarImg64(reader.result);
+    //       };
+    // }
 
-    const changeType = (event, data) =>{
-        actualizaTypePersona(data.value);
-    }
+    // const changeType = (event, data) =>{
+    //     actualizaTypePersona(data.value);
+    // }
 
-    const changeInfo = (event, data) =>{
-        if(data){
-            actualizarDataForm({
-                ...dataForm,
-                [data.name]: data.value
-            })
+    // const changeInfo = (event, data) =>{
+    //     if(data){
+    //         actualizarDataForm({
+    //             ...dataForm,
+    //             [data.name]: data.value
+    //         })
 
-        }else{
-            actualizarDataForm({
-                ...dataForm,
-                [event.target.name]: event.target.value
-            })
-        }
+    //     }else{
+    //         actualizarDataForm({
+    //             ...dataForm,
+    //             [event.target.name]: event.target.value
+    //         })
+    //     }
         
-    }
+    // }
 
     return ( 
         <Modal size="md" backdrop={'static'} show={modal} onHide={hide}>

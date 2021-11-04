@@ -548,7 +548,7 @@ class Analysis extends Component {
 				let index = 1;
 
 				camaras.map((value) => {
-					if (value.active === 1 && value.flag_streaming === 1) {
+					if (value.active === 1 && value.flag_streaming === 1 && value.UrlStreamMediaServer ) {
 
 						var urlHistory = null
 						var urlHistoryPort = null
@@ -712,6 +712,7 @@ class Analysis extends Component {
 				}
 			})
 			.catch((error) => {
+        console.log("error ", error)
 				this.setState({ loading: false, error: 'Error de conexion' });
 			});
 	};
@@ -760,6 +761,7 @@ class Analysis extends Component {
   }
 
   _filterCameras = (cameras, offline, params) => {
+    console.log("cameras", cameras)
     if (params) {
       this.setState({ filterData: params });
       if (params.activeIndex !==  undefined ) {

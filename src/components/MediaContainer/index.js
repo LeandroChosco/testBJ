@@ -115,7 +115,7 @@ class MediaContainer extends Component {
 	
 	_deleteFile = async () => {
 		let { cam, value, exists_video, exists_image } = this.props;
-		let response = await axios.delete(`${constants.sails_url}:${constants.sailsPort}/cams/${cam.id}/${value.id}/1/V2`);
+		let response = await axios.delete(`${constants.sails_url}/cams/${cam.id}/${value.id}/1/V2`);
 		if (response.data && response.data.success) {
 			this.setState({ modal: false, display: 'none' });
 			this.props.reloadData(cam, false, exists_video, false, exists_image);
