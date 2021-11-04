@@ -7,7 +7,7 @@ import favicon from '../assets/images/icons/favicon.jpg'
 const express_url = "http://3.15.181.186";
 
 //Dev
-const sails_url = "http://adminc5dockerbj.us-east-1.elasticbeanstalk.com";
+const sails_url = "https://bjapi.radarapptechnologies.com";
 // const sails_url = "http://localhost";
 const radar_backend = "http://radar-backend-test.us-east-1.elasticbeanstalk.com/graphql";
 const webSocketPort = '20';

@@ -761,7 +761,6 @@ class Analysis extends Component {
   }
 
   _filterCameras = (cameras, offline, params) => {
-    console.log("cameras", cameras)
     if (params) {
       this.setState({ filterData: params });
       if (params.activeIndex !==  undefined ) {
