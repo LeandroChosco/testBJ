@@ -302,6 +302,7 @@ class GridCameraDisplay extends Component {
     // console.log("CAM: ", cam);
     if (!this.props.dashboard) {
       let auxCovidFile = [];
+      if(this.props.alertaCovid){
       let arrAux = [...this.props.alertaCovid];
 
       arrAux.forEach(element => {
@@ -309,6 +310,7 @@ class GridCameraDisplay extends Component {
           auxCovidFile.push(element);
         }
       });
+    }
       setTimeout(() => {
         this.setState({
           imageLoading: false,

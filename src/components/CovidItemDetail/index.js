@@ -124,8 +124,6 @@ const CovidItemDetail = props => {
                           size="medium"
                           src={
                             constants.sails_url +
-                            ":" +
-                            constants.sails_port +
                             "/" +
                             dataComplete.relative_path +
                             "/" +
