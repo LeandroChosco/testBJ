@@ -2,12 +2,12 @@ import favicon from '../assets/images/icons/favicon.jpg'
 // Produccion
 // const sails_url = 'http://prod.adminc5.bj.sails.energetikadevelepment.com';
 // const sails_url = "http://3.21.75.143";
-// const sails_url = "http://apibj.energetikatechnology.com"; //actual
+// const sails_url = "https://bjapi.radarapptechnologies.com"; //actual
 // const radar_backend = "http://radarbackendprod.radarapptechnologies.com/graphql";
 const express_url = "http://3.15.181.186";
 
 //Dev
-const sails_url = "https://bjapi.radarapptechnologies.com";
+const sails_url = "http://adminc5dockerbj.us-east-1.elasticbeanstalk.com";
 // const sails_url = "http://localhost";
 const radar_backend = "http://radar-backend-test.us-east-1.elasticbeanstalk.com/graphql";
 const webSocketPort = '20';
