@@ -7,6 +7,7 @@ import "./style.css";
 import { JellyfishSpinner } from "react-spinners-kit";
 import { ToastsContainer, ToastsStore } from "react-toasts";
 import Conections from "../../conections";
+import constants from '../../constants/constants';
 
 class Login extends Component {
   state = {
@@ -28,8 +29,14 @@ class Login extends Component {
         user_password: btoa(pass)
       };
       this.setState({ loading: true });
-	  Conections.makeLogin(userInfo)
-	  .then(response => {
+      Conections.makeLogin(userInfo)
+        .then(response => {
+          Conections.getClients().then(res => {
+            const data = res.data.data.getClients.filter(c => c.name === constants.client);
+            constants.urlPath =
+              data[0].photo_path != null ? constants.urlPath = data[0].photo_path :
+                constants.urlPath
+          })
           const userResponse = response.data;
           if (userResponse.success && userResponse.data.login) {
             this.props.makeAuth(userResponse.data.info_user);
@@ -63,7 +70,7 @@ class Login extends Component {
                   <img
                     src={favicon}
                     style={{ width: "100%", borderRadius: "50%" }}
-                    alt="modelorama"
+                    alt="Benito"
                   />
                 </span>
                 <span className="login100-form-title p-b-34 p-t-27">

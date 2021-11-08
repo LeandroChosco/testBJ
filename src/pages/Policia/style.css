@@ -1,0 +1,32 @@
+.dash {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 10px;
+  padding: 5px;
+}
+
+.dash-containt {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.87);
+  box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);
+  border-radius: 10px;
+  margin: 10px;
+  padding: 10px;
+  width: 604px;
+  height: 452px;
+}
+
+.dash-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  width: '100%';
+}

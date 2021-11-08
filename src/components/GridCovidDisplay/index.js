@@ -88,7 +88,8 @@ class GridCameraDisplay extends Component {
                 }
                 lg={4}
                 sm={6}
-                key={value.extraData.id}
+                // key={value.extraData.id}
+                key={index}
                 onClick={() => this._openCameraInfo(value, index)}
                 marker={value.id}
               >
@@ -301,6 +302,7 @@ class GridCameraDisplay extends Component {
     // console.log("CAM: ", cam);
     if (!this.props.dashboard) {
       let auxCovidFile = [];
+      if(this.props.alertaCovid){
       let arrAux = [...this.props.alertaCovid];
 
       arrAux.forEach(element => {
@@ -308,6 +310,7 @@ class GridCameraDisplay extends Component {
           auxCovidFile.push(element);
         }
       });
+    }
       setTimeout(() => {
         this.setState({
           imageLoading: false,

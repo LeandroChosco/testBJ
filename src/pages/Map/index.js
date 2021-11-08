@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Provider, connect } from 'react-redux';
-import { Row, Col, Dropdown } from 'react-bootstrap';
+import { Row, Col, Dropdown, Modal, Button } from 'react-bootstrap';
 import { render } from 'react-dom';
 import moment from 'moment';
 
-import { JellyfishSpinner } from 'react-spinners-kit';
 import { store } from '../../store';
 
 import conections from '../../conections';
@@ -19,10 +18,14 @@ import police_blue from '../../assets/images/icons/maps/p1_blue_car.png';
 import police_yellow from '../../assets/images/icons/maps/p1_yellow_car.png';
 import funnel from '../../assets/images/icons/funnel.png';
 import deleteIcon from '../../assets/images/icons/delete.png';
+import searchIcon from '../../assets/images/icons/lupa.png';
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
 import './style.css';
+import constants from "../../constants/constants";
+import SearchCamera from '../../components/SearchCamera';
+import Strings from '../../constants/strings';
 
 const MARKERS = {
   police_available: police_blue,
@@ -40,6 +43,22 @@ const MAP_OPTIONS = {
   loading: false
 };
 
+const styles = {
+  loadingStart:{
+    position: 'absolute', 
+    top: '30%', 
+    background: 'transparent', 
+    width: '100%'
+  },
+  loadingFilter:{
+    position: 'absolute', 
+    background: 'white', 
+    width: '100%', 
+    height:"100%", 
+    zIndex:1
+  }
+}
+
 class Map extends Component {
   state = {
     map: null,
@@ -48,6 +67,10 @@ class Map extends Component {
     markers: [],
     markersPolice: [],
     moduleActions: {},
+    showSearch: false,
+    loadingFilter:false,
+    modalFilter:false,
+    filterData:[]
   };
 
   componentDidMount() {
@@ -100,8 +123,13 @@ class Map extends Component {
   render() {
     return (
       <div className='map'>
-        <div style={{ position: 'absolute', top: '30%', background: 'transparent', width: '100%' }} align='center'>
-          <JellyfishSpinner size={250} color='#686769' loading={this.state.loading} />
+        <div style={this.state.loadingFilter ?  styles.loadingFilter: styles.loadingStart} align='center'>
+          {/* <JellyfishSpinner size={250} color='#686769' loading={this.state.loading} /> */}
+          <img
+              className="spinner"
+              src={constants.urlPath}
+              style={{ width: "10%", borderRadius: "50%" , marginTop:"10%"}}
+              alt={constants.urlPath}/>
         </div>
         <MapContainer options={MAP_OPTIONS} places={this.state.places} onMapLoad={this._onMapLoad} />
         <div className='btn-filter'>
@@ -170,6 +198,13 @@ class Map extends Component {
                 />
               PATRULLAS
             </Dropdown.Item>
+            <Dropdown.Item className='btn-filter__item'  onClick={() => this.setState({ showSearch: true })}>
+            <img 
+            src={searchIcon}
+            alt='Filter'
+          />
+          POR CÁMARA
+        </Dropdown.Item>
             <Dropdown.Item className='btn-filter__item' onClick={() => this._loadCams()}>
                 <img 
                   src={deleteIcon}
@@ -178,8 +213,10 @@ class Map extends Component {
               ELIMINAR FILTRO
             </Dropdown.Item>
           </Dropdown.Menu>
-        </Dropdown>          
+        </Dropdown>         
         </div>
+         {this._searchModal()}
+         {this._modal()}
       </div>
     );
   }
@@ -296,9 +333,9 @@ class Map extends Component {
     }
   };
 
-  _loadCams = async (filter) => {
+  _loadCams = async (filter, filteredData) => {
     this.setState({ loading: true });
-    let newMarkers = [], center_lat = 0, center_lng = 0, total = 0;
+    let  center_lat = 0, center_lng = 0;
     for (let index = 0; index < this.state.markers.length; index++) {
       const element = this.state.markers[index];
       element.setMap(null);
@@ -306,118 +343,113 @@ class Map extends Component {
 
     const data = await conections.getAllCams();
     const camaras = data.data;
-    const search = filter &&
-      filter !== 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' 
+    const search = filter && filter !== 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' 
         ? camaras.filter( d => d.flag_color === filter)
         : camaras.filter( d => d.flag_color === filter || d.flag_color === null)
+    
+    let info;
+    if(camaras && !filter && !filteredData){
+      info = await  this._filteredData(camaras, filter, true);
+    }
+ 
+    if(search && filter && !filteredData){
+      info = await this._filteredData(search, filter, false);
+    }
 
-    const newPlaces = !filter ? camaras.map((d, index) => {
-      let urlHistory = null;
-      let urlHistoryPort = null;
-      if ("urlhistory" in d) urlHistory = d.urlhistory
-      if ("urlhistoryport" in d) urlHistoryPort = d.urlhistoryport
-
-      center_lat = center_lat + parseFloat(d.google_cordenate.split(',')[0]);
-      center_lng = center_lng + parseFloat(d.google_cordenate.split(',')[1]);
-      total = total + 1;
-      console.log(d.flag_color);
-      const value = {
-        id: d.id,
-        num_cam: index + 1,
-        lat: parseFloat(d.google_cordenate.split(',')[0]),
-        lng: parseFloat(d.google_cordenate.split(',')[1]),
-        name: `${d.street} ${d.number}, ${d.township}, ${d.town}, ${d.state} #cam${d.num_cam}`,
-        isHls: d.tipo_camara === 3 ? false : true,
-        url:
-          d.UrlStreamMediaServer !== null
-            ? `http://${d.UrlStreamMediaServer.ip_url_ms}:${d.UrlStreamMediaServer.output_port}${d.UrlStreamMediaServer
-              .name}${d.channel}`
-            : null,
-        flag_color: d.flag_color ? d.flag_color : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-        dataCamValue: d,
-        tipo_camara: d.tipo_camara,
-        fromMap: true,
-        urlHistory: urlHistory,
-        urlHistoryPort: urlHistoryPort
-      };      
-
-      if (value.lat && value.lng) {
-        newMarkers[index] = new window.google.maps.Marker({
-          position: { lat: value.lat, lng: value.lng },
-          icon: { url: value.flag_color },
-          map: this.state.map,
-          title: value.name,
-          extraData: value
-        });
-
-        window.google.maps.event.addListener(
-          newMarkers[index],
-          'click',
-          ((marker, currentMap, infoWindow) => {
-            return () => infoWindow(marker, currentMap);
-          })(newMarkers[index], this.state.map, this._createInfoWindow)
-        );
+    if(filteredData){
+      info = await this._filteredData(filteredData, filter, false);
+    }
+    
+    if(info.newMarkers.length > 0 && info.newPlaces.length > 0){
+      center_lat = info.center_lat / info.total;
+      center_lng = info.center_lng / info.total;
+      this.state.map.setCenter(new window.google.maps.LatLng(center_lat, center_lng));
+      this.setState({ loading: false, places: info.newPlaces, markers: info.newMarkers, loadingFilter:false });
+    }else{
+      if(filteredData){
+        this.setState({ loadingFilter: false, modalFilter:true });      
       }
-
-      return value;
-    })
-    : search.map((d, index) => {
-      let urlHistory = null;
-      let urlHistoryPort = null;
-      if ("urlhistory" in d) urlHistory = d.urlhistory
-      if ("urlhistoryport" in d) urlHistoryPort = d.urlhistoryport
-
-      center_lat = center_lat + parseFloat(d.google_cordenate.split(',')[0]);
-      center_lng = center_lng + parseFloat(d.google_cordenate.split(',')[1]);
-      total = total + 1;
-
-
-      const value = {
-        id: d.id,
-        num_cam: index + 1,
-        lat: parseFloat(d.google_cordenate.split(',')[0]),
-        lng: parseFloat(d.google_cordenate.split(',')[1]),
-        name: `${d.street} ${d.number}, ${d.township}, ${d.town}, ${d.state} #cam${d.num_cam}`,
-        isHls: d.tipo_camara === 3 ? false : true,
-        url:
-          d.UrlStreamMediaServer !== null
-            ? `http://${d.UrlStreamMediaServer.ip_url_ms}:${d.UrlStreamMediaServer.output_port}${d.UrlStreamMediaServer
-              .name}${d.channel}`
-            : null,
-        flag_color: d.flag_color ? d.flag_color : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-        dataCamValue: d,
-        tipo_camara: d.tipo_camara,
-        fromMap: true,
-        urlHistory: urlHistory,
-        urlHistoryPort: urlHistoryPort
-      };      
-
-      if (value.lat && value.lng && filter !== 'hiddenCam') {
-        newMarkers[index] = new window.google.maps.Marker({
-          position: { lat: value.lat, lng: value.lng },
-          icon: { url: value.flag_color },
-          map: this.state.map,
-          title: value.name,
-          extraData: value
-        });
-
-        window.google.maps.event.addListener(
-          newMarkers[index],
-          'click',
-          ((marker, currentMap, infoWindow) => {
-            return () => infoWindow(marker, currentMap);
-          })(newMarkers[index], this.state.map, this._createInfoWindow)
-        );
-      }
-
-      return value;
-    })
-
-    center_lat = center_lat / total;
-    center_lng = center_lng / total;
-    this.state.map.setCenter(new window.google.maps.LatLng(center_lat, center_lng));
-    this.setState({ loading: false, places: newPlaces, markers: newMarkers });
+    }
   };
+
+  _filteredData =(search, filter, is_cam)=>{
+    let newMarkers = [], center_lat = 0, center_lng = 0, total = 0, newPlaces = [];
+    search.forEach((d, index) => {
+      let urlHistory = null;
+      let urlHistoryPort = null;
+      if ("urlhistory" in d) urlHistory = d.urlhistory
+      if ("urlhistoryport" in d) urlHistoryPort = d.urlhistoryport
+
+      center_lat = center_lat + parseFloat(d.google_cordenate.split(',')[0]);
+      center_lng = center_lng + parseFloat(d.google_cordenate.split(',')[1]);
+      total = total + 1;
+
+      const value = {
+        id: d.id,
+        num_cam: index + 1,
+        lat: parseFloat(d.google_cordenate.split(',')[0]),
+        lng: parseFloat(d.google_cordenate.split(',')[1]),
+        name: `${d.street} ${d.number}, ${d.township}, ${d.town}, ${d.state} #cam${d.num_cam}`,
+        isHls: d.tipo_camara === 3 ? false : true,
+        url:
+          d.UrlStreamMediaServer !== null
+            ? `http://${d.UrlStreamMediaServer.ip_url_ms}:${d.UrlStreamMediaServer.output_port}${d.UrlStreamMediaServer
+              .name}${d.channel}`
+            : null,
+        flag_color: d.flag_color ? d.flag_color : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+        dataCamValue: d,
+        tipo_camara: d.tipo_camara,
+        fromMap: true,
+        urlHistory: urlHistory,
+        urlHistoryPort: urlHistoryPort
+      };
+
+      if (is_cam) {
+        if (value.lat && value.lng) {
+          newMarkers[index] = new window.google.maps.Marker({
+            position: { lat: value.lat, lng: value.lng },
+            icon: { url: value.flag_color },
+            map: this.state.map,
+            title: value.name,
+            extraData: value
+          });
+
+          window.google.maps.event.addListener(
+            newMarkers[index],
+            'click',
+            ((marker, currentMap, infoWindow) => {
+              return () => infoWindow(marker, currentMap);
+            })(newMarkers[index], this.state.map, this._createInfoWindow)
+          );
+        }
+      }
+
+      if (!is_cam) {
+        if (value.lat && value.lng && filter !== 'hiddenCam' && !is_cam) {
+          newMarkers[index] = new window.google.maps.Marker({
+            position: { lat: value.lat, lng: value.lng },
+            icon: { url: value.flag_color },
+            map: this.state.map,
+            title: value.name,
+            extraData: value
+          });
+
+          window.google.maps.event.addListener(
+            newMarkers[index],
+            'click',
+            ((marker, currentMap, infoWindow) => {
+              return () => infoWindow(marker, currentMap);
+            })(newMarkers[index], this.state.map, this._createInfoWindow)
+          );
+        }
+      }
+      newPlaces.push(value);
+    });
+
+    let result = { newPlaces, newMarkers, total, center_lat, center_lng };
+    return result;
+  }
+
   
      _loadPolices = () => {
     const { map } = this.state;
@@ -511,6 +543,66 @@ class Map extends Component {
       map.style.maxHeight = documentHeight - navHeight + 'px';
     }
   };
+
+  _searchModal = () => {
+    return (
+        <SearchCamera
+          _filterCameras={this._filterCameras}
+          _setLoading={this._setLoading}
+          showSearch={this.state.showSearch}
+          handleClose={this._handleClose}
+          is_covid={false}
+          is_quadrant={false}
+          _clear={this._clear}
+          filterData={this.state.filterData}
+          map={true}
+        />
+    );
+  }
+
+  _modal=()=>{
+    return(
+        <Modal
+          show={this.state.modalFilter}
+          onHide={this._handleClose}
+          backdrop="static"
+          size="sm"
+        >
+          <Modal.Header>
+            <Modal.Title id="example-custom-modal-styling-title">
+              Aviso
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {Strings.noResults}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="outline-primary" onClick={this._handleClose} size="sm">
+              Cerrar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+    );
+  }
+
+  _handleClose = () => {
+    this.setState({ showSearch: false, modalFilter:false });
+  }
+
+  _setLoading = () => {
+    this.setState({ loadingFilter: true, showSearch: false});
+  }
+
+  _filterCameras = (data, offData, params) => {
+    if (params) {
+      this.setState({ filterData: params });
+    }
+    this._loadCams(null, data);
+  }
+  
+  _clear =()=>{
+    this.setState({filterData:[]});
+  }
 }
 
 const mapStateToProps = (state) => ({

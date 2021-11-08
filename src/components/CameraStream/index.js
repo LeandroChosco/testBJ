@@ -679,7 +679,7 @@ class CameraStream extends Component {
 	};
 
 	componentDidMount() {
-		   console.log('props', this.props)
+		  //  console.log('props', this.props)
 		if (this.props.marker.extraData === undefined) {
 			this.setState({ data: {}, qnapServer: null, qnapChannel: null });
 			return false;
@@ -1057,7 +1057,19 @@ class CameraStream extends Component {
 			let imgZip = zip.folder('images');
 			photos.forEach((f) => {
 				let filename = f.name;
-				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				let portCam = "";
+
+				if (camera.urlHistoryPort) {
+					if (camera.urlHistoryPort != null) {
+						portCam = camera.urlHistoryPort
+					} else {
+						portCam = "3000"
+					}
+				} else {
+					portCam = "3000"
+				}
+
+				let url = `${server}:${portCam}/${f.relative_url}`;
 				imgZip.file(filename, this.urlToPromise(url), { binary: true });
 			});
 		}
@@ -1065,7 +1077,19 @@ class CameraStream extends Component {
 			let vdZip = zip.folder('videos');
 			videos.forEach((f) => {
 				let filename = f.name;
-				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				let portCam = "";
+
+				if (camera.urlHistoryPort) {
+					if (camera.urlHistoryPort != null) {
+						portCam = camera.urlHistoryPort
+					} else {
+						portCam = "3000"
+					}
+				} else {
+					portCam = "3000"
+				}
+
+				let url = `${server}:${portCam}/${f.relative_url}`;
 				vdZip.file(filename, this.urlToPromise(url), { binary: true });
 			});
 		}

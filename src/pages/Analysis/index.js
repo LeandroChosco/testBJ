@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { ToggleButton, ToggleButtonGroup, Modal } from 'react-bootstrap';
 import { Icon, TextArea, Form, Label, Button, Radio, Tab } from 'semantic-ui-react';
-import { JellyfishSpinner } from 'react-spinners-kit';
+// import { JellyfishSpinner } from 'react-spinners-kit';
 
 import JSZipUtils from 'jszip-utils';
 import saveAs from 'file-saver';
@@ -14,12 +14,26 @@ import constants from '../../constants/constants';
 import CameraStream from '../../components/CameraStream';
 import GridCameraDisplay from '../../components/GridCameraDisplay';
 import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
+import SearchCamera from '../../components/SearchCamera';
 
 import './style.css';
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
 
+const TAB = {
+  ONLINE: 0,
+  OFFLINE: 1,
+  DISCONNECTED: 2
+}
+
+const styles = {
+ tab: { 
+ display: "flex",
+ justifyContent: "flex-end", 
+ marginBottom : 10
+}
+}
 class Analysis extends Component {
 	state = {
 		places: [],
@@ -55,6 +69,13 @@ class Analysis extends Component {
 		offlineCamaras: [],
 		disconnectedCameras: [],
 		camerasQnap: [],
+    showSearch: false,
+    is_filter: false,
+    filterData: [],
+    activeIndex: TAB.ONLINE,
+    filterOnLine:false,
+    filterOff:false,
+    filterDiss:false
 	};
 
 	componentDidMount() {
@@ -77,29 +98,49 @@ class Analysis extends Component {
 	}
 
 	render() {
-		const { loading, panes } = this.state;
+    const { loading, panes, activeIndex } = this.state;
 		return (
 			<div>
 				{loading ? (
 					<div style={{ position: 'absolute', top: '30%', background: 'transparent', width: '100%' }} align="center">
-						<JellyfishSpinner size={250} color="#686769" loading={loading} />
+						{/* <JellyfishSpinner size={250} color="#686769" loading={loading} /> */}
+						<img
+							className="spinner"
+							src={constants.urlPath}
+							style={{ width: "10%", borderRadius: "50%" }}
+							alt={constants.urlPath} />
 					</div>
 				) : (
 					<div id="analisis_holder" className={!this.props.showMatches ? 'hide-matches' : 'show-matches'}>
-						<Tab menu={{ secondary: true, pointing: true }} panes={panes} />
-						{this._renderModals()}
+            <Tab menu={{ secondary: true, pointing: true }} panes={panes} onTabChange={this.handleChangeTab} defaultActiveIndex={activeIndex} />
+            {this._renderModals()}
+            {this._searchModal()}
 					</div>
 				)}
 			</div>
 		);
 	}
 
+  handleChangeTab = (e, data, ) => {
+    this.setState({ activeIndex: data.activeIndex });
+  }
+
+  _filterButtons = (data, is_visible ) => {
+    return (
+      <div style={styles.tab} className='col-12'>
+        { (data.length > 0 || is_visible) &&<Button onClick={() => this.setState({ showSearch: true })} basic >Filtrar</Button>}
+        {( is_visible) && <Button onClick={() => this._loadCameras()} basic>Limpiar filtro</Button>}
+      </div>
+    )
+  }
+
 	// Components Render
 	_renderDisconnectedOfflineTab = (isDisconnected) => {
-		let { error, loading, disconnectedCameras, offlineCamaras, loadingRcord, isRecording, recordingCams, recordingProcess, loadingSnap, loadingFiles, moduleActions } = this.state;
+    let { error, loading, disconnectedCameras, offlineCamaras, loadingRcord, isRecording, recordingCams, recordingProcess, loadingSnap, loadingFiles, moduleActions, activeIndex, filterOff, filterDiss } = this.state;
 		let { matches, showMatches } = this.props;
 		return (
 			<div>
+        { TAB.OFFLINE === activeIndex ?  this._filterButtons(offlineCamaras,filterOff) : this._filterButtons(disconnectedCameras, filterDiss)}
 				<GridCameraDisplay
 					ref="myChild"
 					error={error}
@@ -121,15 +162,20 @@ class Analysis extends Component {
 					changeStatus={this._chageCamStatus}
 					showMatches={showMatches}
 					propsIniciales={this.props}
+          is_filter={ TAB.OFFLINE === activeIndex ? filterOff : filterDiss}
 				/>
 			</div>
 		);
 	};
 	_renderOnlineTab = () => {
-		let { displayTipe, loading, cameraID } = this.state;
-		return (
-			<Fragment>
-				{displayTipe !== 3 && !loading ? (
+    let { displayTipe, loading, cameraID, places,filterOnLine } = this.state;
+    return (
+      <Fragment>
+        {displayTipe !== 3 && !loading ? (
+        <Fragment>
+        {this._filterButtons(places, filterOnLine)}
+        {
+          places.length > 0 &&
 					<div className="toggleViewButton row">
 						<ToggleButtonGroup className="col-12" type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={displayTipe}>
 							<ToggleButton value={1} variant="outline-dark"><Icon name="grid layout" /></ToggleButton>
@@ -137,6 +183,8 @@ class Analysis extends Component {
 							{cameraID && (<ToggleButton value={3} variant="outline-dark"><Icon name="square" /></ToggleButton>)}
 						</ToggleButtonGroup>
 					</div>
+        }
+        </Fragment>
 				) : null}
 				<div
 					style={{ position: 'absolute', top: '30%', background: 'transparent', width: '100%' }}
@@ -184,7 +232,7 @@ class Analysis extends Component {
 										value={phones}
 										onChange={this.onChange}
 										fromSuggestionsOnly={false}
-										createChipKeys={[ ' ', 13, 32 ]}
+										createChipKeys={[' ', 13, 32]}
 									/>
 								</Form.Field>
 							)}
@@ -198,7 +246,7 @@ class Analysis extends Component {
 										value={mails}
 										onChange={this.onChangeMail}
 										fromSuggestionsOnly={false}
-										createChipKeys={[ ' ', 13, 32 ]}
+										createChipKeys={[' ', 13, 32]}
 									/>
 								</Form.Field>
 							)}
@@ -253,15 +301,15 @@ class Analysis extends Component {
 			type_report: this.state.typeReport,
 			user_id: 1
 		})
-		.then((response) => {
-			const data = response.data;
-			this.setState({ cameraProblem: {}, problemDescription: '' });
-			if (data.success) {
-				alert('Ticket creado correctamente');
-			} else {
-				alert('Error al crear ticket');
-			}
-		});
+			.then((response) => {
+				const data = response.data;
+				this.setState({ cameraProblem: {}, problemDescription: '' });
+				if (data.success) {
+					alert('Ticket creado correctamente');
+				} else {
+					alert('Error al crear ticket');
+				}
+			});
 	};
 	_snapShot = (camera) => {
 		this.setState({ loadingSnap: true });
@@ -373,7 +421,7 @@ class Analysis extends Component {
 		this.setState({ modalProblem: true, cameraProblem: camera });
 	};
 	_showDisplay = () => {
-		let { displayTipe, error, loading, places, loadingRcord, isRecording, recordingCams, recordingProcess, loadingSnap, loadingFiles, moduleActions, actualCamera } = this.state;
+    let { displayTipe, error, loading, places, loadingRcord, isRecording, recordingCams, recordingProcess, loadingSnap, loadingFiles, moduleActions, actualCamera, activeIndex, filterOnLine } = this.state;
 		let { matches, showMatches } = this.props;
 		switch (displayTipe) {
 			case 1:
@@ -399,6 +447,7 @@ class Analysis extends Component {
 						changeStatus={this._chageCamStatus}
 						showMatches={showMatches}
 						propsIniciales={this.props}
+            is_filter={activeIndex === TAB.ONLINE ? filterOnLine : false }
 					/>
 				);
 			case 2:
@@ -444,8 +493,8 @@ class Analysis extends Component {
 	};
 
 	urlToPromise = (url) => {
-		return new Promise(function(resolve, reject) {
-			JSZipUtils.getBinaryContent(url, function(err, data) {
+		return new Promise(function (resolve, reject) {
+			JSZipUtils.getBinaryContent(url, function (err, data) {
 				if (err) reject(err);
 				else resolve(data);
 			});
@@ -459,7 +508,19 @@ class Analysis extends Component {
 			let imgZip = zip.folder('images');
 			photos.forEach((f) => {
 				let filename = f.name;
-				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				let portCam = "";
+
+				if (camera.urlHistoryPort ) {
+					if (camera.urlHistoryPort != null){
+						portCam = camera.urlHistoryPort
+					}else{
+						portCam = "3000"
+					}
+				}else{
+					portCam = "3000"
+				}
+
+				let url = `${server}:${portCam}/${f.relative_url}`;
 				imgZip.file(filename, this.urlToPromise(url), { binary: true });
 			});
 		}
@@ -467,7 +528,19 @@ class Analysis extends Component {
 			let vdZip = zip.folder('videos');
 			videos.forEach((f) => {
 				let filename = f.name;
-				let url = `${server}:${constants.apiPort}/${f.relative_url}`;
+				let portCam = "";
+
+				if (camera.urlHistoryPort ) {
+					if (camera.urlHistoryPort != null){
+						portCam = camera.urlHistoryPort
+					}else{
+						portCam = "3000"
+					}
+				}else{
+					portCam = "3000"
+				}
+
+				let url = `${server}:${portCam}/${f.relative_url}`;
 				vdZip.file(filename, this.urlToPromise(url), { binary: true });
 			});
 		}
@@ -478,7 +551,7 @@ class Analysis extends Component {
 			saveAs(content, `cam_${camera.num_cam}.zip`);
 		});
 	};
-	
+
 	_toggleControlsBottom = (marker) => {
 		this.props.toggleControls(marker);
 	};
@@ -486,10 +559,10 @@ class Analysis extends Component {
 		this.setState({ displayTipe: value });
 	};
 	_loadCameras = () => {
-		this.setState({ loading: true });
+    this.setState({ loading: true, is_filter: false, filterData: [], activeIndex: 0, filterButton:false, filterOnLine:false, filterDiss:false, filterOff:false });
 		conections.getAllCams()
 			.then((response) => {
-				const camaras = response.data;				
+				const camaras = response.data;
 				let auxCamaras = [];
 				let offlineCamaras = [];
 				let disconnectedCameras = [];
@@ -499,16 +572,16 @@ class Analysis extends Component {
 				let index = 1;
 
 				camaras.map((value) => {
-					if (value.active === 1 && value.flag_streaming === 1) {
+					if (value.active === 1 && value.flag_streaming === 1 && value.UrlStreamMediaServer ) {
 
 						var urlHistory = null
 						var urlHistoryPort = null
 
-						if ("urlhistory" in value){
+						if ("urlhistory" in value) {
 							urlHistory = value.urlhistory
 						}
 
-						if ("urlhistoryport" in value){
+						if ("urlhistoryport" in value) {
 							urlHistoryPort = value.urlhistoryport
 						}
 
@@ -521,7 +594,7 @@ class Analysis extends Component {
 							name: `${value.street} ${value.number}, ${value.township}, ${value.town}, ${value.state} #cam${value.num_cam}`,
 							rel_cuadrante: value.RelCuadranteCams,
 							isHls: true,
-							url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port?`:${value.UrlStreamMediaServer.output_port}`:null}${value.UrlStreamMediaServer.name}${value.channel}`,
+							url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port ? `:${value.UrlStreamMediaServer.output_port}` : null}${value.UrlStreamMediaServer.name}${value.channel}`,
 							real_num_cam:
 								value.num_cam < 10 ? '0' + value.num_cam.toString() : value.num_cam.toString(),
 							camera_number: value.num_cam,
@@ -540,7 +613,7 @@ class Analysis extends Component {
 									lng: value.google_cordenate.split(',')[1],
 									name: `${value.street} ${value.number}, ${value.township}, ${value.town}, ${value.state}`,
 									isHls: true,
-									url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port?`:${value.UrlStreamMediaServer.output_port}`:null}${value.UrlStreamMediaServer.name}${value.channel}`,
+									url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port ? `:${value.UrlStreamMediaServer.output_port}` : null}${value.UrlStreamMediaServer.name}${value.channel}`,
 									real_num_cam:
 										value.num_cam < 10 ? '0' + value.num_cam.toString() : value.num_cam.toString(),
 									camera_number: value.num_cam,
@@ -583,7 +656,7 @@ class Analysis extends Component {
 								lng: valueoff.google_cordenate.split(',')[1],
 								name: `${valueoff.street} ${valueoff.number}, ${valueoff.township}, ${valueoff.town}, ${valueoff.state} #cam${valueoff.num_cam}`,
 								isHls: true,
-								url: `http://${valueoff.UrlStreamMediaServer.ip_url_ms}${valueoff.UrlStreamMediaServer.output_port?`:${valueoff.UrlStreamMediaServer.output_port}`:null}${valueoff.UrlStreamMediaServer.name}${valueoff.channel}`,
+								url: `http://${valueoff.UrlStreamMediaServer.ip_url_ms}${valueoff.UrlStreamMediaServer.output_port ? `:${valueoff.UrlStreamMediaServer.output_port}` : null}${valueoff.UrlStreamMediaServer.name}${valueoff.channel}`,
 								real_num_cam:
 									valueoff.num_cam < 10
 										? '0' + valueoff.num_cam.toString()
@@ -610,7 +683,7 @@ class Analysis extends Component {
 								lng: valueoff.google_cordenate.split(',')[1],
 								name: `${valueoff.street} ${valueoff.number}, ${valueoff.township}, ${valueoff.town}, ${valueoff.state} #cam${valueoff.num_cam}`,
 								isHls: true,
-								url: `http://${valueoff.UrlStreamMediaServer.ip_url_ms}${valueoff.UrlStreamMediaServer.output_port?`:${valueoff.UrlStreamMediaServer.output_port}`:null}${valueoff.UrlStreamMediaServer.name}${valueoff.channel}`,
+								url: `http://${valueoff.UrlStreamMediaServer.ip_url_ms}${valueoff.UrlStreamMediaServer.output_port ? `:${valueoff.UrlStreamMediaServer.output_port}` : null}${valueoff.UrlStreamMediaServer.name}${valueoff.channel}`,
 								real_num_cam:
 									valueoff.num_cam < 10
 										? '0' + valueoff.num_cam.toString()
@@ -663,24 +736,225 @@ class Analysis extends Component {
 				}
 			})
 			.catch((error) => {
+        console.log("error ", error)
 				this.setState({ loading: false, error: 'Error de conexion' });
 			});
 	};
 	_chageCamStatus = (camare) => {
 		conections.changeCamStatus(camare.id)
-		.then((response) => {
-			console.log(response);
-			if (response.status === 200) {
-				if (response.data.success) {
-					const event = new Event('restartCamEvent');
-					window.dispatchEvent(event);
+			.then((response) => {
+				// console.log(response);
+				if (response.status === 200) {
+					if (response.data.success) {
+						const event = new Event('restartCamEvent');
+						window.dispatchEvent(event);
+					}
 				}
-			}
-		})
-		.catch((err) => {
-			console.log(err);
-		});
-	};
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}
+
+  _searchModal = () => {
+    return (
+      <SearchCamera
+        _filterCameras={this._filterCameras}
+        _setLoading={this._setLoading}
+        showSearch={this.state.showSearch}
+        handleClose={this._handleClose}
+        is_covid={false}
+        is_quadrant={false}
+        filterData={this.state.filterData}
+        _clear={this._clear}
+        tab={this.state.activeIndex}
+      />
+    )
+  }
+
+  _handleClose = () => {
+    this.setState({ showSearch: false });
+  }
+
+  _setLoading = () => {
+    this.setState({ loading: true, showSearch: false });
+  }
+
+  _clear = () => {
+    this.setState({ filterData: [] });
+  }
+
+  _filterCameras = (cameras, offline, params) => {
+    if (params) {
+      this.setState({ filterData: params });
+      if (params.activeIndex !==  undefined ) {
+        this.handleChangeTab(null, params);
+      }
+    }
+    let auxCamaras = [], offlineCamaras = [], disconnectedCameras = [];
+    let actualCamera = {}, title = '';
+    let idCamera = null, index = 1;
+
+    if (cameras.length > 0) {
+      cameras.forEach((value) => {
+        if (value.active === 1 && value.flag_streaming === 1) {
+          let urlHistory = null, urlHistoryPort = null;
+
+          if ("urlhistory" in value) {
+            urlHistory = value.urlhistory;
+          }
+
+          if ("urlhistoryport" in value) {
+            urlHistoryPort = value.urlhistoryport;
+          }
+
+          auxCamaras.push({
+            id: value.id,
+            num_cam: index,
+            lat: value.google_cordenate.split(',')[0],
+            lng: value.google_cordenate.split(',')[1],
+            name: `${value.street} ${value.number}, ${value.township}, ${value.town}, ${value.state} #cam${value.num_cam}`,
+            rel_cuadrante: value.RelCuadranteCams,
+            isHls: true,
+            url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port ? `:${value.UrlStreamMediaServer.output_port}` : null}${value.UrlStreamMediaServer.name}${value.channel}`,
+            real_num_cam:
+              value.num_cam < 10 ? '0' + value.num_cam.toString() : value.num_cam.toString(),
+            camera_number: value.num_cam,
+            dataCamValue: value,
+            urlHistory: urlHistory,
+            urlHistoryPort: urlHistoryPort
+          });
+          index = index + 1;
+          if (this.state.id_cam !== 0) {
+            if (parseInt(this.state.id_cam) === value.id) {
+              title = `${value.street} ${value.number}, ${value.township}, ${value.town}, ${value.state}`;
+              actualCamera = {
+                id: value.id,
+                num_cam: value.num_cam,
+                lat: value.google_cordenate.split(',')[0],
+                lng: value.google_cordenate.split(',')[1],
+                name: `${value.street} ${value.number}, ${value.township}, ${value.town}, ${value.state}`,
+                isHls: true,
+                url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port ? `:${value.UrlStreamMediaServer.output_port}` : null}${value.UrlStreamMediaServer.name}${value.channel}`,
+                real_num_cam:
+                  value.num_cam < 10 ? '0' + value.num_cam.toString() : value.num_cam.toString(),
+                camera_number: value.num_cam,
+                dataCamValue: value
+              };
+              idCamera = value.id;
+            }
+          }
+        }
+        return true;
+      });
+    }
+
+    if (offline.length > 0 ) {
+      let indexFail = 1;
+      offline.forEach((valueoff) => {
+        if (valueoff.active === 1) {
+          offlineCamaras.push({
+            id: valueoff.id,
+            num_cam: indexFail,
+            lat: valueoff.google_cordenate.split(',')[0],
+            lng: valueoff.google_cordenate.split(',')[1],
+            name: `${valueoff.street} ${valueoff.number}, ${valueoff.township}, ${valueoff.town}, ${valueoff.state} #cam${valueoff.num_cam}`,
+            isHls: true,
+            url: `http://${valueoff.UrlStreamMediaServer.ip_url_ms}${valueoff.UrlStreamMediaServer.output_port ? `:${valueoff.UrlStreamMediaServer.output_port}` : null}${valueoff.UrlStreamMediaServer.name}${valueoff.channel}`,
+            real_num_cam:
+              valueoff.num_cam < 10
+                ? '0' + valueoff.num_cam.toString()
+                : valueoff.num_cam.toString(),
+            camera_number: valueoff.num_cam,
+            dataCamValue: valueoff
+          });
+          indexFail++;
+        }
+
+        if (valueoff.active === 0) {
+          disconnectedCameras.push({
+            id: valueoff.id,
+            num_cam: indexFail,
+            lat: valueoff.google_cordenate.split(',')[0],
+            lng: valueoff.google_cordenate.split(',')[1],
+            name: `${valueoff.street} ${valueoff.number}, ${valueoff.township}, ${valueoff.town}, ${valueoff.state} #cam${valueoff.num_cam}`,
+            isHls: true,
+            url: `http://${valueoff.UrlStreamMediaServer.ip_url_ms}${valueoff.UrlStreamMediaServer.output_port ? `:${valueoff.UrlStreamMediaServer.output_port}` : null}${valueoff.UrlStreamMediaServer.name}${valueoff.channel}`,
+            real_num_cam:
+              valueoff.num_cam < 10
+                ? '0' + valueoff.num_cam.toString()
+                : valueoff.num_cam.toString(),
+            camera_number: valueoff.num_cam,
+            dataCamValue: valueoff
+          });
+          indexFail++;
+        }
+        return true;
+      });
+    }
+
+    if (idCamera === null) {
+      if(this.state.activeIndex === TAB.ONLINE){
+        this.setState({
+          places: auxCamaras,
+          loading: false,
+          error: undefined,
+          filterOnLine:true
+        });
+      }
+      if(this.state.activeIndex === TAB.OFFLINE){
+        this.setState({
+          offlineCamaras: offlineCamaras,
+          loading: false,
+          error: undefined,
+          filterOff:true
+        });
+      }
+      if(this.state.activeIndex === TAB.DISCONNECTED){
+        this.setState({
+          disconnectedCameras: disconnectedCameras,
+          loading: false,
+          error: undefined,
+          filterDiss:true
+        });
+      }
+    } else {
+      if(this.state.activeIndex === TAB.ONLINE){
+      this.setState({
+        places: auxCamaras,
+        loading: false,
+        cameraID: idCamera,
+        actualCamera: { title: title, extraData: actualCamera },
+        error: undefined,
+        displayTipe: 3,
+        filterOnLine:true
+      });
+      }
+      if(this.state.activeIndex === TAB.OFFLINE){
+        this.setState({
+          offlineCamaras: offlineCamaras,
+          loading: false,
+          cameraID: idCamera,
+          actualCamera: { title: title, extraData: actualCamera },
+          error: undefined,
+          displayTipe: 3,
+          filterOff:true
+        });
+      }
+      if(this.state.activeIndex === TAB.DISCONNECTED){
+        this.setState({
+          disconnectedCameras: disconnectedCameras,
+          loading: false,
+          cameraID: idCamera,
+          actualCamera: { title: title, extraData: actualCamera },
+          error: undefined,
+          displayTipe: 3,
+          filterDiss:true
+        });
+      }
+    }
+  }
+
 }
 
 export default Analysis;

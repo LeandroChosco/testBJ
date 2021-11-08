@@ -50,7 +50,7 @@ class ModalMoreInformation extends Component {
     //console.log("cam_id", this.props.cam_id);
     //console.log("datacam", this.props.data_cam);
     conections.getMoreInformationByCam(this.props.cam_id).then(res => {
-      console.log("responde", res);
+      // console.log("responde", res);
       if (res.data.success) {
         this.setState({
           dataUsuers: res.data.usersToCam,
