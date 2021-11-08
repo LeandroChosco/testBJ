@@ -49,7 +49,7 @@ class MediaContainer extends Component {
 					{exists_image && (
 						<img
 							src={
-								covid ? (`${constants.sails_url}:${constants.sails_port}/${value.path}/${value.name}`)
+								covid ? (`${constants.sails_url}/${value.path}/${value.name}`)
 									: (`${dnsIp}:${portCam}/${src}`)
 							}
 							style={{ width: '100%' }}
@@ -98,7 +98,7 @@ class MediaContainer extends Component {
 								<img
 									id="imagecontainerfrommedia"
 									src={
-										covid ? (`${constants.sails_url}:${constants.sails_port}/${value.path}/${value.name}`)
+										covid ? (`${constants.sails_url}/${value.path}/${value.name}`)
 											: (`${dnsIp}:${portCam}/${src}`)
 									}
 									style={{ width: '100%' }}
@@ -143,7 +143,7 @@ class MediaContainer extends Component {
 		let response = {};
 		response.file = (
 			isQnap && !covid ? `${src}${exists_video ? '&open=forcedownload' : ''}`
-				: covid ? `${constants.sails_url}:${constants.sails_port}/${value.relative_path}/${value.name}`
+				: covid ? `${constants.sails_url}/${value.relative_path}/${value.name}`
 					: dns_ip ? `${dnsIp}:${portCam}/${src}` 
 						: `${dnsIp}:${portCam}/${src}`
 		);
