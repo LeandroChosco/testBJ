@@ -8,9 +8,9 @@ import { CircleSpinner	} from "react-spinners-kit";
 import  FormData  from 'form-data';
 
 const access = {
-  "ApiKey": "A33317CF-6751-4803-8F92-B0F8DE840B1A",
-  "ApiSecret": "FVXqUdLtWaED/qb/i6Te++zklBwYJ8wvfAjmDmlXuLkdgULJ6m1RSGBoEDAGclGqmmjm4T6pLC9OzkeP594GOQ==",
-  "CustomerId": "f99222d6-a2c6-420d-b87e-b605fadd836b"
+   ApiKey: process.env.REACT_APP_APIKEY_SOS,
+  ApiSecret: process.env.REACT_APP_APISECRET_SOS,
+  CustomerId: process.env.REACT_APP_CUSTOMERID_SOS,
 }
 
 const styles = {

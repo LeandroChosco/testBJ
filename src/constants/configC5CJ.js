@@ -1,26 +1,26 @@
 import firebase from 'firebase'
 
 /* Production */
-var firebaseConfig = {
-  apiKey: "AIzaSyDDq95BbNrQs6WZB-T9B7WTEF2YWr2Ibb0",
-  authDomain: "c5benito.firebaseapp.com",
-  databaseURL: "https://c5benito.firebaseio.com",
-  projectId: "c5benito",
-  storageBucket: "",
-  messagingSenderId: "959359457942",
-  appId: "1:959359457942:web:cff036937c7515fa"
-};
+// var firebaseConfig = {
+//  apiKey:process.env.REACT_APP_APIKEY_C5BENITO,
+//  authDomain:process.env.REACT_APP_AUTHDOMAIN_C5BENITO,
+//  databaseURL:process.env.REACT_APP_DATABASEURL_C5BENITO,
+//  projectId:process.env.REACT_APP_PROJECTID_C5BENITO,
+//  storageBucket:process.env.REACT_APP_STORAGEBUCKET_C5BENITO,
+//  messagingSenderId:process.env.REACT_APP_MESSAGINGSENDERID_C5BENITO,
+//  appId: process.env.REACT_APP_APPID_C5BENITO
+// };
 
 /* Develop */
-// const firebaseConfig = {
-//   apiKey: 'AIzaSyDPzqD06v8lAWD3uZy_8A6rfSOy9zXmXIE',
-//   authDomain: 'c5benitodev.firebaseapp.com',
-//   databaseURL: 'https://c5benitodev.firebaseio.com',
-//   projectId: 'c5benitodev',
-//   storageBucket: 'c5benitodev.appspot.com',
-//   messagingSenderId: '342714394776',
-//   appId: '1:342714394776:android:3451ef1e07ecd9263a48ed'
-// };
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_APIKEY_C5BENITODEV,
+  authDomain: process.env.REACT_APP_AUTHDOMAIN_C5BENITODEV,
+  databaseURL: process.env.REACT_APP_DATABASEURL_C5BENITODEV,
+  projectId: process.env.REACT_APP_PROJECT_ID_C5BENITODEV,
+  storageBucket: process.env.REACT_APP_STORAGEBUCKET_C5BENITODEV,
+  messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID_C5BENITODEV,
+  appId: process.env.REACT_APP_APPID_C5BENITODEV,
+};
 
 var firebaseC5Benito = firebase
 

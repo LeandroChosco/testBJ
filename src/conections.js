@@ -246,6 +246,13 @@ export default {
   postChangeChat: (data) => {
     return Axios.post(constants.sails_url + '/update/change/', data);
   },
+   //DashBOard link
+   getDashboardEmbebed :()=>{
+    return Axios.get(constants.dashboard);
+  },
+  getDetailDashboard :(id)=>{
+    return Axios.get(constants.detialDashboard+id+'?user_id=1')
+  },
   // Opciones PTZ
   newOnvifDevice: (urlhistory, urlhistoryport, data) => {
 
