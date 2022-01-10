@@ -11,7 +11,7 @@ import CardBody from '../../components/Card/CardBody';
 import { Tab } from 'semantic-ui-react'
 // import socketIOClient from 'socket.io-client';
 // import sailsIOClient from 'sails.io.js';
-// import constants from '../../constants/constants';
+import constants from '../../constants/constants';
 import * as moment from 'moment';
 import CameraPerPerson from '../../components/Dashboard/cameraPerPerson';
 import PeoplePerDay from '../../components/Dashboard/persons';
@@ -26,7 +26,9 @@ import DataTickets from '../../components/Dashboard/dataTickets';
 import DataTicketsPerUser from '../../components/Dashboard/dataTicketsPerUser';
 import AttendedVSclosed from '../../components/Dashboard/attendedVScloded';
 import LastCreadedCams from '../../components/Dashboard/lastCreatedCams';
-
+import {
+  RiEye2Fill
+} from "react-icons/ri";
 
 const MOODS = {
   "Happy": "Feliz",
@@ -62,6 +64,7 @@ class Dashboard extends Component {
     dataCams: [],
     loadingTickets: true,
     dataTickets: [],
+    embebedDashboard:[],
     dataTotalTickets: [],
     dataTicketsPerUser: {
       closed: [],
@@ -118,9 +121,19 @@ class Dashboard extends Component {
       { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
       { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
       { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboard()}</Tab.Pane> },
+      constants.clientFirebase === "Modelorama" &&
+      {
+        menuItem: "Análisis",
+        render: () => (
+          <Tab.Pane attached={false}>
+            {this.renderEmebidoDashboard()}
+          </Tab.Pane>
+        ),
+      },
     ]
   }
 
+  
   renderCamsDashboard() {
     // const c = shuffle(COLORS);
     return (
@@ -170,6 +183,40 @@ class Dashboard extends Component {
     );
   }
 
+  renderEmebidoDashboard (){
+    
+    return(
+      <div className="row  content-center items-center center center-block ">
+       {
+         this.state.embebedDashboard.map((item)=>(
+          
+            <div className="card  bg-white  m-2 self-center  "  style={{width:"180px"}} key={item.id} >
+          <div className="card-header bg-white" style={{ height: '50px', 'white-space': 'pre-line' ,overflow: 'hidden', 'text-overflow': "ellipsis" }} > 
+            <div className="card-title" > 
+             { item.nombre}
+            </div>
+          
+          </div>
+          <button
+            className="btn btn-default btn-lg align-content-start"
+             onClick={async()=>{
+                const data =await conections.getDetailDashboard(item.id);
+                // console.log(data.data.data[0]);
+                const script=data.data.data[0].script;
+              window.open(script, 'vizContainer', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no')
+            }}>
+               <RiEye2Fill  />
+            </button>
+        </div>
+   
+          
+       
+         ))
+         
+       } 
+      </div>
+    )
+  }
 
   renderTicketsDashboard() {
     return (
@@ -356,6 +403,7 @@ class Dashboard extends Component {
     })
     conections.dashboardCameraPerPerson().then(this.getPersonsPerCamera);
     conections.dashboardPersons().then(this.getPersons);
+    conections.getDashboardEmbebed().then(this.getDashboardEmbebed)
     /*let io;
     if (socketIOClient.sails) {
       io = socketIOClient;

@@ -1,13 +1,13 @@
 import firebase from 'firebase'
 
 const config = {
-  apiKey: "AIzaSyC1nW0PWv_tl7a3TT1YeZgoohsdhMpRRhA",
-  authDomain: "watchtower-7a145.firebaseapp.com",
-  databaseURL: "https://watchtower-7a145.firebaseio.com",
-  projectId: "watchtower-7a145",
-  storageBucket: "watchtower-7a145.appspot.com",
-  messagingSenderId: "62036046388",
-  appId: "1:62036046388:web:efa0c0881ff8690b"
+  apiKey: process.env.REACT_APP_APIKEY_CONFIG_WATCHTOWER,
+  authDomain: process.env.REACT_APP_AUTHDOMAIN_CONFIG_WATCHTOWER,
+  databaseURL: process.env.REACT_APP_DATABASEURL_CONFIG_WATCHTOWER,
+  projectId: process.env.REACT_APP_PROJECTID_CONFIG_WATCHTOWER,
+  storageBucket: process.env.REACT_APP_STORAGEBUCKET_CONFIG_WATCHTOWER,
+  messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID_CONFIG_WATCHTOWER,
+  appId:process.env.REACT_APP_APPID_CONFIG_WATCHTOWER,
 };
 
 firebase.initializeApp(config)
