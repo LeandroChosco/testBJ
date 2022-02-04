@@ -11,7 +11,8 @@ const dashboard="http://95.216.37.253:6868/dashboard/iframes?user_id=1";
 const detialDashboard="http://95.216.37.253:6868/dashboard/iframes/"
 
 //Dev
-const sails_url = "http://adminc5dockerbj.us-east-1.elasticbeanstalk.com";
+// const sails_url = "http://adminc5dockerbj.us-east-1.elasticbeanstalk.com";
+const sails_url="http://apibjdev.energetikatechnology.com"
 // const sails_url = "http://localhost";
 const radar_backend = "https://radarbackendtest.energetikadevelepment.com/graphql";
 const webSocketPort = '20';
