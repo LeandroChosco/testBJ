@@ -451,7 +451,9 @@ class Chat extends Component {
                                 {chats[index].user_cam.town},{" "}
                                 {chats[index].user_cam.township}
                               </div>
-                              <div
+                              {
+                                camData !== undefined &&
+                                <div
                                 className="col-3"
                                 style={{
                                   fontSize: 13,
@@ -461,6 +463,8 @@ class Chat extends Component {
                               >
                                 <b>Cámara: </b> #cam{camData.extraData.num_cam}
                               </div>
+                              }
+                            
                             </div>
                             <div className="row" style={{ padding: "5px" }}>
                               <div

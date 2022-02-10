@@ -82,7 +82,7 @@ const Step1 = (props) => {
         <Form.Label>TIPO DE INCIDENCIA:</Form.Label>
         <Form.Control as='select' custom>
           {INCIDENTS.map((i, idx) => (
-            <option key={`incident-${idx}`} value={i.name} onClick={() => setType(i.name)} selected={i.name === type}>
+            <option key={`incideent-${idx}`} value={i.name} onClick={() => setType(i.name)} selected={i.name === type}>
               {i.name}
             </option>
           ))}

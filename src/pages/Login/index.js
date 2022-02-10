@@ -8,6 +8,7 @@ import { JellyfishSpinner } from "react-spinners-kit";
 import { ToastsContainer, ToastsStore } from "react-toasts";
 import Conections from "../../conections";
 import constants from '../../constants/constants';
+import {ACCESS_TOKEN,SAILS_ACCESS_TOKEN} from '../../constants/token'
 
 class Login extends Component {
   state = {
@@ -21,16 +22,26 @@ class Login extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  _makeLogin = () => {
+  _makeLogin =async () => {
     const { username, pass } = this.state;
     if (username !== "" && pass !== "") {
       let userInfo = {
         user_login: username,
         user_password: btoa(pass)
       };
+      let userInfoRadar ={
+        email:username,
+        password:(pass)
+      }
+      //Crear una funcion de control si sale error
+      const dataToken = await Conections.makeLoginRadar(userInfoRadar);
+      const token=`Bearer ${dataToken.data.data.userSignIn.token}`
+    
+      localStorage.setItem(ACCESS_TOKEN, token);
       this.setState({ loading: true });
       Conections.makeLogin(userInfo)
         .then(response => {
+          localStorage.setItem(SAILS_ACCESS_TOKEN,response.data.data.info_user.token)
           Conections.getClients().then(res => {
             const data = res.data.data.getClients.filter(c => c.name === constants.client);
             constants.urlPath =
