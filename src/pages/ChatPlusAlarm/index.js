@@ -9,14 +9,13 @@ import './style.css';
 import Strings from '../../constants/strings';
 import firebaseSos from '../../constants/configSOS';
 import firebaseC5Benito from '../../constants/configC5CJ';
-
+import NewWindow from 'react-new-window'
 // COMPONENTS
 import MapPolice from '../../components/MapPolice';
 import MapContainer from '../../components/MapContainer';
 import CameraStream from '../../components/CameraStream';
 // import CloseIncident from '../../components/CloseIncident';
 import CustomizedSnackbars from '../../components/Snack/index';
-
 import { POLICE_COLLECTION } from '../../Api/sos';
 
 import police_blue from '../../assets/images/icons/maps/p1_blue_car.png';
@@ -85,6 +84,10 @@ class ChatAlarm extends Component {
       {
         menuItem: 'Medico',
         render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Médico')}</Tab.Pane>
+      },
+      {
+        menuItem: 'SoftGuard',
+        render: () => <NewWindow url='http://softguard.radarapptechnologies.com:8080/' center='parent'></NewWindow>
       }
     ];
   FILTERSOPTIONS = this.props.history.location.pathname.includes('chat')
