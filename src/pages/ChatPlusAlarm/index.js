@@ -147,6 +147,7 @@ class ChatAlarm extends Component {
     return (
       <div className={!this.props.showMatches ? 'hide-matches app-container' : 'show-matches app-container'}>
         <div className='row fullHeight'>
+          <p>Hola</p>
           <div className='col-4 userList'>
             <Tab
               menu={{ pointing: true }}
