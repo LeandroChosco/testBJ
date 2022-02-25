@@ -9,7 +9,6 @@ import './style.css';
 import Strings from '../../constants/strings';
 import firebaseSos from '../../constants/configSOS';
 import firebaseC5Benito from '../../constants/configC5CJ';
-import NewWindow from 'react-new-window'
 // COMPONENTS
 import MapPolice from '../../components/MapPolice';
 import MapContainer from '../../components/MapContainer';
@@ -36,6 +35,7 @@ const SEARCHOPTIONS = [
 ];
 
 class ChatAlarm extends Component {
+  
   state = {
     messages: [],
     chats: [],
@@ -84,10 +84,6 @@ class ChatAlarm extends Component {
       {
         menuItem: 'Medico',
         render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Médico')}</Tab.Pane>
-      },
-      {
-        menuItem: 'SoftGuard',
-        render: () => <NewWindow url='http://softguard.radarapptechnologies.com:8080/' center='parent'></NewWindow>
       }
     ];
   FILTERSOPTIONS = this.props.history.location.pathname.includes('chat')
@@ -113,7 +109,7 @@ class ChatAlarm extends Component {
     const { alarmIndex: tabIndex, chatId } = this.props.match.params;
     const { chats: chatsPrev } = prevProps;
     const { chats } = this.props;
-
+    
     // if (flagUpdate === 0) {
     if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
       if (chatsPrev.length !== chats.length) this.setState({ chats });
@@ -129,10 +125,11 @@ class ChatAlarm extends Component {
     let messageBody = document.querySelector('#messagesContainer');
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
-
-  render() {
+  
+  render() {    
     const { alarmIndex } = this.props.match.params;
-    const { chats, chatId, index, loading, camData, personalInformation, mapPolice, policeMarker, policePolyline/*, showReport*/ } = this.state;
+    const { chats, chatId, index, loading, camData, personalInformation, mapPolice, policeMarker , policePolyline/*, showReport*/ } = this.state;
+    const url = 'http://softguard.radarapptechnologies.com:8080/'
     if (index !== undefined && chatId === '' && chats.length > 0) this.setState({ chatId: null });
 
     const chatSelected = chats.find((item) => item.id === chatId);
@@ -147,8 +144,8 @@ class ChatAlarm extends Component {
     return (
       <div className={!this.props.showMatches ? 'hide-matches app-container' : 'show-matches app-container'}>
         <div className='row fullHeight'>
-          <p>Hola</p>
           <div className='col-4 userList'>
+          <Button style={{marginBottom: '5px'}} primary onClick={()=>window.open(`${url}`, 'SoftGuard', 'height=600,width=1200')}>SoftGuard</Button>
             <Tab
               menu={{ pointing: true }}
               panes={this.panes}
@@ -165,6 +162,8 @@ class ChatAlarm extends Component {
                 this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null, tabIndex: i.activeIndex });
               }}
             />
+            
+            
           </div>
           <div className='col-8'>
             <div className='messages'>
@@ -475,7 +474,6 @@ class ChatAlarm extends Component {
       </>
     );
   };
-
   renderListChats = (type) => {
     const { index, chats } = this.state;
     const { history: { location: { pathname } } } = this.props;
