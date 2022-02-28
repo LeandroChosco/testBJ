@@ -5,18 +5,16 @@ import firebase from 'firebase';
 import moment from 'moment';
 import _ from 'lodash';
 import './style.css';
-
+import constants from '../../constants/constants'
 import Strings from '../../constants/strings';
 import firebaseSos from '../../constants/configSOS';
 import firebaseC5Benito from '../../constants/configC5CJ';
-
 // COMPONENTS
 import MapPolice from '../../components/MapPolice';
 import MapContainer from '../../components/MapContainer';
 import CameraStream from '../../components/CameraStream';
 // import CloseIncident from '../../components/CloseIncident';
 import CustomizedSnackbars from '../../components/Snack/index';
-
 import { POLICE_COLLECTION } from '../../Api/sos';
 
 import police_blue from '../../assets/images/icons/maps/p1_blue_car.png';
@@ -37,6 +35,7 @@ const SEARCHOPTIONS = [
 ];
 
 class ChatAlarm extends Component {
+  
   state = {
     messages: [],
     chats: [],
@@ -110,7 +109,7 @@ class ChatAlarm extends Component {
     const { alarmIndex: tabIndex, chatId } = this.props.match.params;
     const { chats: chatsPrev } = prevProps;
     const { chats } = this.props;
-
+    
     // if (flagUpdate === 0) {
     if (chats && chatsPrev && !_.isEqual(_.sortBy(chats), _.sortBy(chatsPrev))) {
       if (chatsPrev.length !== chats.length) this.setState({ chats });
@@ -126,10 +125,10 @@ class ChatAlarm extends Component {
     let messageBody = document.querySelector('#messagesContainer');
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
-
-  render() {
+  
+  render() {    
     const { alarmIndex } = this.props.match.params;
-    const { chats, chatId, index, loading, camData, personalInformation, mapPolice, policeMarker, policePolyline/*, showReport*/ } = this.state;
+    const { chats, chatId, index, loading, camData, personalInformation, mapPolice, policeMarker , policePolyline/*, showReport*/ } = this.state;
     if (index !== undefined && chatId === '' && chats.length > 0) this.setState({ chatId: null });
 
     const chatSelected = chats.find((item) => item.id === chatId);
@@ -145,6 +144,7 @@ class ChatAlarm extends Component {
       <div className={!this.props.showMatches ? 'hide-matches app-container' : 'show-matches app-container'}>
         <div className='row fullHeight'>
           <div className='col-4 userList'>
+          <Button style={{marginBottom: '5px'}} primary onClick={()=>window.open(constants.urlSoftGuard, 'SoftGuard', 'height=600,width=1200')}>SoftGuard</Button>
             <Tab
               menu={{ pointing: true }}
               panes={this.panes}
@@ -161,6 +161,8 @@ class ChatAlarm extends Component {
                 this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null, tabIndex: i.activeIndex });
               }}
             />
+            
+            
           </div>
           <div className='col-8'>
             <div className='messages'>
@@ -471,7 +473,6 @@ class ChatAlarm extends Component {
       </>
     );
   };
-
   renderListChats = (type) => {
     const { index, chats } = this.state;
     const { history: { location: { pathname } } } = this.props;
