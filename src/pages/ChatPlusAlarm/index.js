@@ -5,7 +5,7 @@ import firebase from 'firebase';
 import moment from 'moment';
 import _ from 'lodash';
 import './style.css';
-
+import constants from '../../constants/constants'
 import Strings from '../../constants/strings';
 import firebaseSos from '../../constants/configSOS';
 import firebaseC5Benito from '../../constants/configC5CJ';
@@ -129,7 +129,6 @@ class ChatAlarm extends Component {
   render() {    
     const { alarmIndex } = this.props.match.params;
     const { chats, chatId, index, loading, camData, personalInformation, mapPolice, policeMarker , policePolyline/*, showReport*/ } = this.state;
-    const url = 'http://softguard.radarapptechnologies.com:8080/'
     if (index !== undefined && chatId === '' && chats.length > 0) this.setState({ chatId: null });
 
     const chatSelected = chats.find((item) => item.id === chatId);
@@ -145,7 +144,7 @@ class ChatAlarm extends Component {
       <div className={!this.props.showMatches ? 'hide-matches app-container' : 'show-matches app-container'}>
         <div className='row fullHeight'>
           <div className='col-4 userList'>
-          <Button style={{marginBottom: '5px'}} primary onClick={()=>window.open(`${url}`, 'SoftGuard', 'height=600,width=1200')}>SoftGuard</Button>
+          <Button style={{marginBottom: '5px'}} primary onClick={()=>window.open(constants.urlSoftGuard, 'SoftGuard', 'height=600,width=1200')}>SoftGuard</Button>
             <Tab
               menu={{ pointing: true }}
               panes={this.panes}

@@ -18,6 +18,7 @@ const sailsPort = "1337";
 const ptzPort = "3001";
 const client = 'Benito Juárez';
 const clientFirebase="Benito Juárez";
+const urlSoftGuard = "http://softguard.radarapptechnologies.com:8080/";
 const urlPath = favicon
 
 
@@ -33,5 +34,6 @@ export default {
   ptzPort,
   radar_backend,
   client,
-  urlPath
+  urlPath,
+  urlSoftGuard
 };
