@@ -126,8 +126,8 @@ class Main extends Component {
       if(err.message==="Request failed with status code 500"){
 
         sessionStorage.removeItem('isAuthenticated')
-        localStorage.setItem(ACCESS_TOKEN,"")
-        localStorage.setItem(SAILS_ACCESS_TOKEN,"")
+        localStorage.removeItem(ACCESS_TOKEN)
+        localStorage.removeItem(SAILS_ACCESS_TOKEN)
         if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
           window.location.href = window.location.href.replace(window.location.pathname, '/login')
         }
@@ -136,8 +136,8 @@ class Main extends Component {
     conections.getAllPoliceSector().then(response=>{
       if(response.data.errors){
         if(response.data.errors[0].message==="Unauthorized"){
-          localStorage.setItem(ACCESS_TOKEN,"")
-          localStorage.setItem(SAILS_ACCESS_TOKEN,"")
+          localStorage.removeItem(ACCESS_TOKEN,"")
+          localStorage.removeItem(SAILS_ACCESS_TOKEN,"")
           sessionStorage.removeItem('isAuthenticated')
           if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
             window.location.href = window.location.href.replace(window.location.pathname, '/login')
@@ -245,8 +245,8 @@ class Main extends Component {
 
       // console.log((err.message));
       if(err.message==="Request failed with status code 500"){
-        localStorage.setItem(ACCESS_TOKEN,"")
-        localStorage.setItem(SAILS_ACCESS_TOKEN,"")
+        localStorage.removeItem(ACCESS_TOKEN,"")
+        localStorage.removeItem(SAILS_ACCESS_TOKEN,"")
         sessionStorage.removeItem('isAuthenticated')
         if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
           window.location.href = window.location.href.replace(window.location.pathname, '/login')
@@ -256,8 +256,8 @@ class Main extends Component {
     conections.getAllPoliceSector().then(response=>{
       if(response.data.errors){
         if(response.data.errors[0].message==="Unauthorized"){
-          localStorage.setItem(ACCESS_TOKEN,"")
-          localStorage.setItem(SAILS_ACCESS_TOKEN,"")
+          localStorage.removeItem(ACCESS_TOKEN,"")
+          localStorage.removeItem(SAILS_ACCESS_TOKEN,"")
           sessionStorage.removeItem('isAuthenticated')
           if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
             window.location.href = window.location.href.replace(window.location.pathname, '/login')
