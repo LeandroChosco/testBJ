@@ -46,7 +46,7 @@ import sailsIOClient from "sails.io.js";
 import SosView from "./SOSview/index";
 import firebaseSos from "../constants/configSOS";
 import { MESSAGES_COLLECTION, COMPLAINT_COLLECTION, POLICE_COLLECTION } from "../Api/sos";
-
+import {ACCESS_TOKEN,SAILS_ACCESS_TOKEN} from '../constants/token'
 
 import Chat from './ChatPlus/index'
 import Policia from './Policia';
@@ -118,6 +118,35 @@ class Main extends Component {
 
 
   componentDidMount() {
+    conections.getDesconocidos().then((res)=>{
+      // console.log(res);
+    }).catch(err=>{
+
+      // console.log((err.message));
+      if(err.message==="Request failed with status code 500"){
+
+        sessionStorage.removeItem('isAuthenticated')
+        localStorage.setItem(ACCESS_TOKEN,"")
+        localStorage.setItem(SAILS_ACCESS_TOKEN,"")
+        if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+          window.location.href = window.location.href.replace(window.location.pathname, '/login')
+        }
+      }
+    })
+    conections.getAllPoliceSector().then(response=>{
+      if(response.data.errors){
+        if(response.data.errors[0].message==="Unauthorized"){
+          localStorage.setItem(ACCESS_TOKEN,"")
+          localStorage.setItem(SAILS_ACCESS_TOKEN,"")
+          sessionStorage.removeItem('isAuthenticated')
+          if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+            window.location.href = window.location.href.replace(window.location.pathname, '/login')
+          }
+        };
+      }
+     
+    })
+
     conections.getClients().then(res => {
       const data = res.data.data.getClients.filter(c => c.name === constants.client);
       constants.urlPath =
@@ -210,6 +239,34 @@ class Main extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    conections.getDesconocidos().then((res)=>{
+      // console.log(res);
+    }).catch(err=>{
+
+      // console.log((err.message));
+      if(err.message==="Request failed with status code 500"){
+        localStorage.setItem(ACCESS_TOKEN,"")
+        localStorage.setItem(SAILS_ACCESS_TOKEN,"")
+        sessionStorage.removeItem('isAuthenticated')
+        if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+          window.location.href = window.location.href.replace(window.location.pathname, '/login')
+        }
+      }
+    })
+    conections.getAllPoliceSector().then(response=>{
+      if(response.data.errors){
+        if(response.data.errors[0].message==="Unauthorized"){
+          localStorage.setItem(ACCESS_TOKEN,"")
+          localStorage.setItem(SAILS_ACCESS_TOKEN,"")
+          sessionStorage.removeItem('isAuthenticated')
+          if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+            window.location.href = window.location.href.replace(window.location.pathname, '/login')
+          }
+        };
+      }
+     
+    })
+
     const { limits: prevLimits } = prevProps;
     const { limits } = this.props;
     if (prevLimits !== limits) {

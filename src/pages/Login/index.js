@@ -37,11 +37,12 @@ class Login extends Component {
       const dataToken = await Conections.makeLoginRadar(userInfoRadar);
       const token=`Bearer ${dataToken.data.data.userSignIn.token}`
     
-      localStorage.setItem(ACCESS_TOKEN, token);
+     
       this.setState({ loading: true });
       Conections.makeLogin(userInfo)
         .then(response => {
           localStorage.setItem(SAILS_ACCESS_TOKEN,response.data.data.info_user.token)
+          localStorage.setItem(ACCESS_TOKEN, token);
           Conections.getClients().then(res => {
             const data = res.data.data.getClients.filter(c => c.name === constants.client);
             constants.urlPath =
