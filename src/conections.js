@@ -18,6 +18,9 @@ export default {
   getDesconocidos: () => {
     return connected.get(constants.sails_url + '/getUnknow/?limit=50');
   },
+  validateToken: (valid) => {
+    return Axios.get(constants.sails_url + '/getUnknow/?limit=50', {"headers": {'Authorization': valid}});
+  },
   getDetecciones: () => {
     return connected.get(constants.sails_url + '/getMatches/');
   },
@@ -497,8 +500,23 @@ export default {
       'Authorization': token,
     }}
 );
+  },
+  validTokenRadar: (valid) => {
+    return Axios.post(constants.radar_backend, {
+      query:
+        `query {
+          getAllPoliceSector {
+            id
+            name
+          }
+        }`
+    },{headers: {
+      'Authorization': valid,
+    }}
+);
   }
 };
+
 
 function getUserID() {
   const isAuth = sessionStorage.getItem('isAuthenticated');

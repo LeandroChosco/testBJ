@@ -8,10 +8,11 @@ import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 import {ACCESS_TOKEN,SAILS_ACCESS_TOKEN} from '../../constants/token'
-
+import conections from '../../conections';
 
 class Header extends Component {
   _goAlarma = () => {
+    
     // if (this.props.isSidemenuShow) {
     //   this.props.toggleSideMenu();
     // }
@@ -28,6 +29,7 @@ class Header extends Component {
     this.props.history.push("/alarm");
   };
   _goComplaint = () => {
+    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -37,6 +39,7 @@ class Header extends Component {
     this.props.history.push("/servicios");
   };
   _goTracking = () => {
+    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -46,6 +49,7 @@ class Header extends Component {
     this.props.history.push("/seguimiento");
   };
   _goFicha = () => {
+    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -64,6 +68,7 @@ class Header extends Component {
   //   window.open('http://clientes.ubiqo.net/Publica/Inicio_Sesion.aspx?ReturnUrl=%2f', 'Ficha de Incidencias', 'height=600,width=1200');
   // };
   _goCovid = () => {
+    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -73,6 +78,7 @@ class Header extends Component {
     this.props.history.push("/covid");
   };
   _goSospechosos = () => {
+    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -83,6 +89,7 @@ class Header extends Component {
   };
 
   _goCuadrantes = () => {
+    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -93,6 +100,7 @@ class Header extends Component {
   };
 
   _goAnalitics = () => {
+    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -103,6 +111,7 @@ class Header extends Component {
   };
 
   _goChat = () => {
+    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -113,6 +122,7 @@ class Header extends Component {
   };
 
   _cameraAction = () => {
+    
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
@@ -121,6 +131,7 @@ class Header extends Component {
     } else {
       this.props.toggleSideMenu();
     }
+   
   };
 
   _logOut = () => {
@@ -138,6 +149,7 @@ class Header extends Component {
   };
 
   _goDashboard = () => {
+    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -148,6 +160,7 @@ class Header extends Component {
   };
 
   _goSOS = () => {
+    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -160,6 +173,19 @@ class Header extends Component {
   _cameraSideInfo = () => {
     this.props.cameraSideInfo();
   };
+
+  _validateToken=()=>{
+    const isAuth = JSON.parse(sessionStorage.getItem('isAuthenticated'))    
+    if(isAuth){
+      if (!isAuth.logged) {
+        localStorage.removeItem(ACCESS_TOKEN)
+        localStorage.removeItem(SAILS_ACCESS_TOKEN)
+        if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+          window.location.href = window.location.href.replace(window.location.pathname, '/login')
+        }
+      }
+    }
+  }
 
   render() {
     return (
@@ -281,18 +307,47 @@ class Header extends Component {
   }
   componentDidMount() { }
   componentDidUpdate(){
-    const isAuth = JSON.parse(sessionStorage.getItem('isAuthenticated'))    
-    // console.log(isAuth.logged);
-    // console.log(this.props);
-    if(isAuth){
-      if (!isAuth.logged) {
+    // const isAuth = JSON.parse(sessionStorage.getItem('isAuthenticated'))    
+    const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
+    const tokenRadar=localStorage.getItem(ACCESS_TOKEN)
+    conections.validateToken(token).then((res)=>{
+ 
+    }).catch(err=>{
+
+      // console.log((err.message));
+      const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
+      console.log(token);
+      if(err.message==="Request failed with status code 500"){
         localStorage.removeItem(ACCESS_TOKEN)
         localStorage.removeItem(SAILS_ACCESS_TOKEN)
+        sessionStorage.removeItem('isAuthenticated')
         if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
           window.location.href = window.location.href.replace(window.location.pathname, '/login')
         }
       }
-    }
+    })
+    conections.validTokenRadar(tokenRadar).then(response=>{
+      if(response.data.errors){
+        if(response.data.errors[0].message==="Unauthorized"){
+          localStorage.removeItem(ACCESS_TOKEN)
+          localStorage.removeItem(SAILS_ACCESS_TOKEN)
+          sessionStorage.removeItem('isAuthenticated')
+          if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+            window.location.href = window.location.href.replace(window.location.pathname, '/login')
+          }
+        };
+      }
+     
+    })
+    // if(isAuth){
+    //   if (!isAuth.logged) {
+    //     localStorage.removeItem(ACCESS_TOKEN)
+    //     localStorage.removeItem(SAILS_ACCESS_TOKEN)
+    //     if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+    //       window.location.href = window.location.href.replace(window.location.pathname, '/login')
+    //     }
+    //   }
+    // }
   }
 
 }

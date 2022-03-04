@@ -244,6 +244,8 @@ class Main extends Component {
     }).catch(err=>{
 
       // console.log((err.message));
+      const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
+
       if(err.message==="Request failed with status code 500"){
         localStorage.removeItem(ACCESS_TOKEN)
         localStorage.removeItem(SAILS_ACCESS_TOKEN)
