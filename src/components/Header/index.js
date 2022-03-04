@@ -339,15 +339,6 @@ class Header extends Component {
       }
      
     })
-    // if(isAuth){
-    //   if (!isAuth.logged) {
-    //     localStorage.removeItem(ACCESS_TOKEN)
-    //     localStorage.removeItem(SAILS_ACCESS_TOKEN)
-    //     if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-    //       window.location.href = window.location.href.replace(window.location.pathname, '/login')
-    //     }
-    //   }
-    // }
   }
 
 }

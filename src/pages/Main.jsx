@@ -239,13 +239,14 @@ class Main extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    conections.getDesconocidos().then((res)=>{
+    const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
+    const tokenRadar = localStorage.getItem(ACCESS_TOKEN);
+    conections.validateToken(token).then((res)=>{
       // console.log(res);
     }).catch(err=>{
 
       // console.log((err.message));
-      const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
-
+     
       if(err.message==="Request failed with status code 500"){
         localStorage.removeItem(ACCESS_TOKEN)
         localStorage.removeItem(SAILS_ACCESS_TOKEN)
@@ -255,7 +256,7 @@ class Main extends Component {
         }
       }
     })
-    conections.getAllPoliceSector().then(response=>{
+    conections.validTokenRadar(tokenRadar).then(response=>{
       if(response.data.errors){
         if(response.data.errors[0].message==="Unauthorized"){
           localStorage.removeItem(ACCESS_TOKEN)
