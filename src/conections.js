@@ -5,7 +5,7 @@ import {SAILS_ACCESS_TOKEN,ACCESS_TOKEN} from './constants/token'
 const SailsToken = localStorage.getItem(SAILS_ACCESS_TOKEN);
 const token = localStorage.getItem(ACCESS_TOKEN)
 
-const conected =Axios.create({
+const connected =Axios.create({
   headers: {'Authorization': SailsToken}
 })
 
@@ -13,255 +13,255 @@ const conected =Axios.create({
 
 export default {
   getOnTermicPhotoData: (name) => {
-    return conected.get(constants.sails_url + '/termicfiles-one/' + name);
+    return connected.get(constants.sails_url + '/termicfiles-one/' + name);
   },
   getDesconocidos: () => {
-    return conected.get(constants.sails_url + '/getUnknow/?limit=50');
+    return connected.get(constants.sails_url + '/getUnknow/?limit=50');
   },
   getDetecciones: () => {
-    return conected.get(constants.sails_url + '/getMatches/');
+    return connected.get(constants.sails_url + '/getMatches/');
   },
   createPersons: (data) => {
-    return conected.post(constants.sails_url + '/create/persons/', data);
+    return connected.post(constants.sails_url + '/create/persons/', data);
   },
   getPersons: (type) => {
-    if (type) return conected.get(constants.sails_url + '/getPersons/?type=' + type);
-    else return conected.get(constants.sails_url + '/getPersons/');
+    if (type) return connected.get(constants.sails_url + '/getPersons/?type=' + type);
+    else return connected.get(constants.sails_url + '/getPersons/');
   },
   makeLogin: (data) => {
     return Axios.post(constants.sails_url + '/login', data);
   },
   restartStream: (dns = constants.apiStream) => {
-    return conected.put(dns + ':' + constants.apiPort + '/control-cams/restart-streaming3/all');
+    return connected.put(dns + ':' + constants.apiPort + '/control-cams/restart-streaming3/all');
   },
   restartOneStream: (dns = constants.apiStream, id) => {
-    return conected.put(dns + ':' + constants.apiPort + '/control-cams/restart-streaming3/' + id);
+    return connected.put(dns + ':' + constants.apiPort + '/control-cams/restart-streaming3/' + id);
   },
   sendTicket: (data) => {
-    return conected.post(constants.sails_url + '/tickets/create/', data);
+    return connected.post(constants.sails_url + '/tickets/create/', data);
   },
   /*
   snapShot: (camara_id) => {
     const user_id = getUserID();
-    return conected.post(constants.sails_url + ':' + constants.apiPort + '/control-cams/screenshot/' + camara_id + '/?user_id=' + user_id);
+    return connected.post(constants.sails_url + ':' + constants.apiPort + '/control-cams/screenshot/' + camara_id + '/?user_id=' + user_id);
   },
   stopRecord: (data, camera_id) => {
     const user_id = getUserID();
-    return conected.put(constants.sails_url + ':' + constants.apiPort + '/control-cams/stop-record/' + camera_id + '/?user_id=' + user_id, data);
+    return connected.put(constants.sails_url + ':' + constants.apiPort + '/control-cams/stop-record/' + camera_id + '/?user_id=' + user_id, data);
   },
   startRecord: (data, camera_id) => {
     const user_id = getUserID();
-    return conected.post(constants.sails_url + ':' + constants.apiPort + '/control-cams/start-record/' + camera_id + '/?user_id=' + user_id, data);
+    return connected.post(constants.sails_url + ':' + constants.apiPort + '/control-cams/start-record/' + camera_id + '/?user_id=' + user_id, data);
   },
   getCamData: (camera_id) => {
     const user_id = getUserID();
-    return conected.get(constants.sails_url + ':' + constants.apiPort + '/control-cams/' + camera_id + '/data/?user_id=' + user_id);
+    return connected.get(constants.sails_url + ':' + constants.apiPort + '/control-cams/' + camera_id + '/data/?user_id=' + user_id);
   },
   */
   // Nuevos endpoint para menejor de media
   snapShotV2: (camara_id) => {
     const user_id = getUserID();
-    return conected.post(constants.sails_url + '/control-cams/screenshotV2/' + camara_id + '/?user_id=' + user_id);
+    return connected.post(constants.sails_url + '/control-cams/screenshotV2/' + camara_id + '/?user_id=' + user_id);
   },
   stopRecordV2: (data, camera_id) => {
     const user_id = getUserID();
-    return conected.put(constants.sails_url + '/control-cams/stop-recordV2/' + camera_id + '/?user_id=' + user_id, data);
+    return connected.put(constants.sails_url + '/control-cams/stop-recordV2/' + camera_id + '/?user_id=' + user_id, data);
   },
   startRecordV2: (data, camera_id) => {
     const user_id = getUserID();
-    return conected.post(constants.sails_url + '/control-cams/start-recordV2/' + camera_id + '/?user_id=' + user_id, data);
+    return connected.post(constants.sails_url + '/control-cams/start-recordV2/' + camera_id + '/?user_id=' + user_id, data);
   },
   deleteMedia: (camera_id, media_id) => {
-    return conected.delete(constants.sails_url + '/cams/' + camera_id + '/' + media_id + '/1/V2');
+    return connected.delete(constants.sails_url + '/cams/' + camera_id + '/' + media_id + '/1/V2');
   },
   // Nuevos endpoints con salis
   getCamDataV2: (camera_id) => {
     const user_id = getUserID();
-    return conected.get(constants.sails_url + '/control-cams/' + camera_id + '/data?user_id=' + user_id);
+    return connected.get(constants.sails_url + '/control-cams/' + camera_id + '/data?user_id=' + user_id);
   },
   getAllCams: () => {
     const user_id = getUserID();
-    return conected.get(constants.sails_url + '/control-cams/all-cams/?user_id=' + user_id);
+    return connected.get(constants.sails_url + '/control-cams/all-cams/?user_id=' + user_id);
   },
   getCamsOffline: () => {
     const user_id = getUserID();
-    return conected.get(constants.sails_url + '/control-cams/cams-offline/?user_id=' + user_id);
+    return connected.get(constants.sails_url + '/control-cams/cams-offline/?user_id=' + user_id);
   },
   getCamDataHistory: (camera_id, num_cam) => {
     const user_id = getUserID();
-    return conected.get(constants.sails_url + '/control-cams/' + camera_id + '/' + num_cam + '/video-history/?user_id=' + user_id);
+    return connected.get(constants.sails_url + '/control-cams/' + camera_id + '/' + num_cam + '/video-history/?user_id=' + user_id);
   },
   getTickets: () => {
-    return conected.get(constants.sails_url + '/tickets');
+    return connected.get(constants.sails_url + '/tickets');
   },
   getTicket: (id) => {
-    return conected.get(constants.sails_url + '/tickets/?ticket_id=' + id);
+    return connected.get(constants.sails_url + '/tickets/?ticket_id=' + id);
   },
   // Endpoint para ticket en pingüino
   toProcess: (data) => {
     data.user_id = getUserID();
-    return conected.put(constants.sails_url + '/tickets/toprocess/', data);
+    return connected.put(constants.sails_url + '/tickets/toprocess/', data);
   },
   toClose: (data) => {
     data.user_id = getUserID();
-    return conected.put(constants.sails_url + '/tickets/toclose/', data);
+    return connected.put(constants.sails_url + '/tickets/toclose/', data);
   },
   dashboardCams: () => {
-    return conected.get(constants.sails_url + '/dashboard/cams');
+    return connected.get(constants.sails_url + '/dashboard/cams');
   },
   dashboardTickets: () => {
-    return conected.get(constants.sails_url + '/dashboard/tickets');
+    return connected.get(constants.sails_url + '/dashboard/tickets');
   },
   dashboardTotalRecognition: () => {
-    return conected.get(constants.sails_url + '/dashboard/detected');
+    return connected.get(constants.sails_url + '/dashboard/detected');
   },
   dashboardRecognitionAges: () => {
-    return conected.get(constants.sails_url + '/dashboard/ageranges');
+    return connected.get(constants.sails_url + '/dashboard/ageranges');
   },
   dashboardRecognitionPerDay: (filter = '') => {
-    return conected.get(constants.sails_url + '/dashboard/peoplefordays' + filter);
+    return connected.get(constants.sails_url + '/dashboard/peoplefordays' + filter);
   },
   dashboardRecognitionMood: () => {
-    return conected.get(constants.sails_url + '/dashboard/mood');
+    return connected.get(constants.sails_url + '/dashboard/mood');
   },
   dashboardCameraPerPerson: () => {
-    return conected.get(`${constants.sails_url}/dashboard/numberofpeoplepercamera`);
+    return connected.get(`${constants.sails_url}/dashboard/numberofpeoplepercamera`);
   },
   dashboardPersons: () => {
-    return conected.get(`${constants.sails_url}/dashboard/person`)
+    return connected.get(`${constants.sails_url}/dashboard/person`)
   },
   loadCams: () => {
-    return conected.get(constants.sails_url + '/cams?sort=num_cam asc&active=1&limit=1000&populate=false');
+    return connected.get(constants.sails_url + '/cams?sort=num_cam asc&active=1&limit=1000&populate=false');
   },
   filterCams: (data) => {
-    return conected.post(constants.sails_url + '/control-cams/filter/cams', data);
+    return connected.post(constants.sails_url + '/control-cams/filter/cams', data);
   },
   filterOffCams: (data) => {
-    return conected.post(constants.sails_url + '/control-cams/filter/offCams', data);
+    return connected.post(constants.sails_url + '/control-cams/filter/offCams', data);
   },
   filterQuadrantsById: (data) => {
-    return conected.post(constants.sails_url + '/control-cams/filter/quadrantById', data);
+    return connected.post(constants.sails_url + '/control-cams/filter/quadrantById', data);
   },
   changeCamStatus: (id) => {
-    return conected.put(constants.sails_url + '/control-cams/change-status/' + id);
+    return connected.put(constants.sails_url + '/control-cams/change-status/' + id);
   },
   loadCamsCuadrantes: (id_cuadrante) => {
-    return conected.get(constants.sails_url + '/control-cams/cuadrantecams/?id_cuadrante=' + id_cuadrante);
+    return connected.get(constants.sails_url + '/control-cams/cuadrantecams/?id_cuadrante=' + id_cuadrante);
   },
   getCuadrantes: () => {
-    return conected.get(constants.sails_url + '/control-cams/cuadrantes/');
+    return connected.get(constants.sails_url + '/control-cams/cuadrantes/');
   },
   newCuadrante: (data) => {
-    return conected.post(constants.sails_url + '/control-cams/newcuadrante/', data);
+    return connected.post(constants.sails_url + '/control-cams/newcuadrante/', data);
   },
   addCamsCuadrante: (data) => {
-    return conected.post(constants.sails_url + '/control-cams/cuadrantecam', data);
+    return connected.post(constants.sails_url + '/control-cams/cuadrantecam', data);
   },
   getCamsCuadrante: (id_cuadrante) => {
-    return conected.get(constants.sails_url + '/control-cams/cuadrantescams/?id_cuadrante=' + id_cuadrante);
+    return connected.get(constants.sails_url + '/control-cams/cuadrantescams/?id_cuadrante=' + id_cuadrante);
   },
   deleteCuadrante: (id_cuadrante) => {
-    return conected.get(constants.sails_url + '/control-cams/cuadrante/?id_cuadrante=' + id_cuadrante);
+    return connected.get(constants.sails_url + '/control-cams/cuadrante/?id_cuadrante=' + id_cuadrante);
   },
   getMatches: () => {
-    return conected.get(constants.sails_url + '/matchApi');
+    return connected.get(constants.sails_url + '/matchApi');
   },
   getCamMatches: (num_cam) => {
-    return conected.get(constants.sails_url + '/matchApi?num_cam=' + num_cam);
+    return connected.get(constants.sails_url + '/matchApi?num_cam=' + num_cam);
   },
   getCamMatchesDetail: (matchId) => {
-    return conected.get(constants.sails_url + '/matchApi/' + matchId);
+    return connected.get(constants.sails_url + '/matchApi/' + matchId);
   },
   getCambyNumCam: (num_cam) => {
-    return conected.get(constants.sails_url + '/cams?num_cam=' + num_cam);
+    return connected.get(constants.sails_url + '/cams?num_cam=' + num_cam);
   },
   getMoreInformationByCam: (num_cam) => {
-    return conected.get(constants.sails_url + '/control-cams/single-cam/?cam_id=' + num_cam);
+    return connected.get(constants.sails_url + '/control-cams/single-cam/?cam_id=' + num_cam);
   },
   getLimitsCam: () => {
-    return conected.get(constants.sails_url + '/limits-zone/');
+    return connected.get(constants.sails_url + '/limits-zone/');
   },
   getMatchAPI: (data) => {
     if (data !== undefined) {
-      return conected.get(constants.sails_url + '/getmatch/?id_match=' + data);
+      return connected.get(constants.sails_url + '/getmatch/?id_match=' + data);
     } else {
-      return conected.get(constants.sails_url + '/getmatch/');
+      return connected.get(constants.sails_url + '/getmatch/');
     }
   },
   getCollectionvsblty: (data) => {
-    return conected.get(constants.sails_url + '/face/vsblty/?id_person=' + data);
+    return connected.get(constants.sails_url + '/face/vsblty/?id_person=' + data);
   },
   getHelp: (data) => {
     if (data !== undefined) {
-      return conected.get(constants.sails_url + '/gethelp/?id_help=' + data);
+      return connected.get(constants.sails_url + '/gethelp/?id_help=' + data);
     } else {
-      return conected.get(constants.sails_url + '/gethelp/');
+      return connected.get(constants.sails_url + '/gethelp/');
     }
   },
   getSupport: (data) => {
     if (data !== undefined) {
-      return conected.get(constants.sails_url + '/getsupport/?id_support=' + data);
+      return connected.get(constants.sails_url + '/getsupport/?id_support=' + data);
     } else {
-      return conected.get(constants.sails_url + '/getsupport/');
+      return connected.get(constants.sails_url + '/getsupport/');
     }
   },
   checkSupport: (data) => {
     if (data !== undefined) {
-      return conected.get(constants.sails_url + '/getsupport/?id_support=' + data);
+      return connected.get(constants.sails_url + '/getsupport/?id_support=' + data);
     }
   },
   postStatusSupportUndefined: (data) => {
-    return conected.post(constants.sails_url + '/status/support/', data);
+    return connected.post(constants.sails_url + '/status/support/', data);
   },
   postSupportToProcess: (data) => {
     data.user_id = getUserID();
-    return conected.post(constants.sails_url + '/postsupport/toprocess/', data);
+    return connected.post(constants.sails_url + '/postsupport/toprocess/', data);
   },
   postSupportClose: (data) => {
     data.user_id = getUserID();
-    return conected.post(constants.sails_url + '/postsupport/close/', data);
+    return connected.post(constants.sails_url + '/postsupport/close/', data);
   },
   postMatchUpdate: (data) => {
-    return conected.post(constants.sails_url + '/update/match/', data);
+    return connected.post(constants.sails_url + '/update/match/', data);
   },
   postHelpStatus: (data) => {
-    return conected.post(constants.sails_url + '/givehelp', data);
+    return connected.post(constants.sails_url + '/givehelp', data);
   },
   getComplaints: (data) => {
     if (data !== undefined) {
-      return conected.get(constants.sails_url + '/getcomplaints/?id_complaint=' + data);
+      return connected.get(constants.sails_url + '/getcomplaints/?id_complaint=' + data);
     } else {
-      return conected.get(constants.sails_url + '/getcomplaints');
+      return connected.get(constants.sails_url + '/getcomplaints');
     }
   },
   getCalls: () => {
-    return conected.get(constants.sails_url + '/getcalls/');
+    return connected.get(constants.sails_url + '/getcalls/');
   },
   getMessages: () => {
-    return conected.get(constants.sails_url + '/getmessages/');
+    return connected.get(constants.sails_url + '/getmessages/');
   },
   getUsers: (data) => {
     if (data !== undefined) {
-      return conected.get(constants.sails_url + '/getuserss/?user_creation=' + data);
+      return connected.get(constants.sails_url + '/getuserss/?user_creation=' + data);
     } else {
-      return conected.get(constants.sails_url + '/getuserss/');
+      return connected.get(constants.sails_url + '/getuserss/');
     }
   },
   getChatMessages: (user_creation) => {
-    return conected.get(constants.sails_url + '/admin/users/?user_creation=' + user_creation);
+    return connected.get(constants.sails_url + '/admin/users/?user_creation=' + user_creation);
   },
   sendMessageChat: (data) => {
-    return conected.post(constants.sails_url + '/update/message/', data);
+    return connected.post(constants.sails_url + '/update/message/', data);
   },
   postChangeChat: (data) => {
-    return conected.post(constants.sails_url + '/update/change/', data);
+    return connected.post(constants.sails_url + '/update/change/', data);
   },
    //DashBOard link
    getDashboardEmbebed :()=>{
-    return conected.get(constants.dashboard);
+    return connected.get(constants.dashboard);
   },
   getDetailDashboard :(id)=>{
-    return conected.get(constants.detialDashboard+id+'?user_id=1')
+    return connected.get(constants.detialDashboard+id+'?user_id=1')
   },
   // Opciones PTZ
   newOnvifDevice: (urlhistory, urlhistoryport, data) => {
