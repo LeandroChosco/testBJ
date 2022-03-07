@@ -29,6 +29,8 @@ connectedSails.interceptors.request.use(config =>{
 
   return config;
 
+},(err)=>{
+  return Promise.reject(err);
 })
 connectedSails.interceptors.response.use(response=>{
   return response;
