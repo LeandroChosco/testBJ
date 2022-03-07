@@ -118,34 +118,7 @@ class Main extends Component {
 
 
   componentDidMount() {
-    conections.getDesconocidos().then((res)=>{
-      // console.log(res);
-    }).catch(err=>{
 
-      // console.log((err.message));
-      if(err.message==="Request failed with status code 500"){
-
-        sessionStorage.removeItem('isAuthenticated')
-        localStorage.removeItem(ACCESS_TOKEN)
-        localStorage.removeItem(SAILS_ACCESS_TOKEN)
-        if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-          window.location.href = window.location.href.replace(window.location.pathname, '/login')
-        }
-      }
-    })
-    conections.getAllPoliceSector().then(response=>{
-      if(response.data.errors){
-        if(response.data.errors[0].message==="Unauthorized"){
-          localStorage.removeItem(ACCESS_TOKEN)
-          localStorage.removeItem(SAILS_ACCESS_TOKEN)
-          sessionStorage.removeItem('isAuthenticated')
-          if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-            window.location.href = window.location.href.replace(window.location.pathname, '/login')
-          }
-        };
-      }
-     
-    })
 
     conections.getClients().then(res => {
       const data = res.data.data.getClients.filter(c => c.name === constants.client);
@@ -239,37 +212,8 @@ class Main extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
-    const tokenRadar = localStorage.getItem(ACCESS_TOKEN);
-    conections.validateToken(token).then((res)=>{
-      // console.log(res);
-    }).catch(err=>{
-
-      // console.log((err.message));
-     
-      if(err.message==="Request failed with status code 500"){
-        localStorage.removeItem(ACCESS_TOKEN)
-        localStorage.removeItem(SAILS_ACCESS_TOKEN)
-        sessionStorage.removeItem('isAuthenticated')
-        if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-          window.location.href = window.location.href.replace(window.location.pathname, '/login')
-        }
-      }
-    })
-    conections.validTokenRadar(tokenRadar).then(response=>{
-      if(response.data.errors){
-        if(response.data.errors[0].message==="Unauthorized"){
-          localStorage.removeItem(ACCESS_TOKEN)
-          localStorage.removeItem(SAILS_ACCESS_TOKEN)
-          sessionStorage.removeItem('isAuthenticated')
-          if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-            window.location.href = window.location.href.replace(window.location.pathname, '/login')
-          }
-        };
-      }
-     
-    })
-
+  
+   
     const { limits: prevLimits } = prevProps;
     const { limits } = this.props;
     if (prevLimits !== limits) {

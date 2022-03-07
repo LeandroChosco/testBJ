@@ -306,40 +306,40 @@ class Header extends Component {
     );
   }
   componentDidMount() { }
-  componentDidUpdate(){
-    // const isAuth = JSON.parse(sessionStorage.getItem('isAuthenticated'))    
-    const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
-    const tokenRadar=localStorage.getItem(ACCESS_TOKEN)
-    conections.validateToken(token).then((res)=>{
+  // componentDidUpdate(){
+  //   // const isAuth = JSON.parse(sessionStorage.getItem('isAuthenticated'))    
+  //   const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
+  //   const tokenRadar=localStorage.getItem(ACCESS_TOKEN)
+  //   conections.validateToken(token).then((res)=>{
  
-    }).catch(err=>{
+  //   }).catch(err=>{
 
-      // console.log((err.message));
-      const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
-      console.log(token);
-      if(err.message==="Request failed with status code 500"){
-        localStorage.removeItem(ACCESS_TOKEN)
-        localStorage.removeItem(SAILS_ACCESS_TOKEN)
-        sessionStorage.removeItem('isAuthenticated')
-        if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-          window.location.href = window.location.href.replace(window.location.pathname, '/login')
-        }
-      }
-    })
-    conections.validTokenRadar(tokenRadar).then(response=>{
-      if(response.data.errors){
-        if(response.data.errors[0].message==="Unauthorized"){
-          localStorage.removeItem(ACCESS_TOKEN)
-          localStorage.removeItem(SAILS_ACCESS_TOKEN)
-          sessionStorage.removeItem('isAuthenticated')
-          if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-            window.location.href = window.location.href.replace(window.location.pathname, '/login')
-          }
-        };
-      }
+  //     // console.log((err.message));
+  //     const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
+  //     console.log(token);
+  //     if(err.message==="Request failed with status code 500"){
+  //       localStorage.removeItem(ACCESS_TOKEN)
+  //       localStorage.removeItem(SAILS_ACCESS_TOKEN)
+  //       sessionStorage.removeItem('isAuthenticated')
+  //       if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+  //         window.location.href = window.location.href.replace(window.location.pathname, '/login')
+  //       }
+  //     }
+  //   })
+  //   conections.validTokenRadar(tokenRadar).then(response=>{
+  //     if(response.data.errors){
+  //       if(response.data.errors[0].message==="Unauthorized"){
+  //         localStorage.removeItem(ACCESS_TOKEN)
+  //         localStorage.removeItem(SAILS_ACCESS_TOKEN)
+  //         sessionStorage.removeItem('isAuthenticated')
+  //         if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+  //           window.location.href = window.location.href.replace(window.location.pathname, '/login')
+  //         }
+  //       };
+  //     }
      
-    })
-  }
+  //   })
+  // }
 
 }
 
