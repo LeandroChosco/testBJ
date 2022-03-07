@@ -58,6 +58,8 @@ connectedRadar.interceptors.request.use(config=>{
   }
 
  return config;
+},(err)=>{
+  return Promise.reject(err);
 })
 
 connectedRadar.interceptors.response.use(response=>{
