@@ -142,9 +142,6 @@ class Header extends Component {
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
-    localStorage.removeItem(ACCESS_TOKEN)
-    localStorage.removeItem(SAILS_ACCESS_TOKEN)
-    this.props.history.push("/login");
     this.props.logOut();
   };
 
@@ -174,18 +171,7 @@ class Header extends Component {
     this.props.cameraSideInfo();
   };
 
-  _validateToken=()=>{
-    const isAuth = JSON.parse(sessionStorage.getItem('isAuthenticated'))    
-    if(isAuth){
-      if (!isAuth.logged) {
-        localStorage.removeItem(ACCESS_TOKEN)
-        localStorage.removeItem(SAILS_ACCESS_TOKEN)
-        if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-          window.location.href = window.location.href.replace(window.location.pathname, '/login')
-        }
-      }
-    }
-  }
+
 
   render() {
     return (

@@ -25,18 +25,7 @@ class Welcome extends Component {
     }
   }
     
-  componentDidUpdate(){
-    const isAuth = JSON.parse(sessionStorage.getItem('isAuthenticated'))    
-    if (!isAuth) {
-      this.props.history.push('/login')
-    } else{
-      if (!isAuth.logged) {
-        if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-          window.location.href = window.location.href.replace(window.location.pathname, '/login')
-        }
-      }
-    }
-  }
+  
 
 }
 

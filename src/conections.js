@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import constants from './constants/constants';
 import {SAILS_ACCESS_TOKEN,ACCESS_TOKEN} from './constants/token'
-
+import {remove} from './helpers/remove'
 let SailsToken = localStorage.getItem(SAILS_ACCESS_TOKEN);
 let token = localStorage.getItem(ACCESS_TOKEN)
 
@@ -13,16 +13,11 @@ const connectedSails =Axios.create({
   headers: {'Authorization': SailsToken}
 })
 
+
 const logOut = (config,TOKEN)=>{
-  SailsToken = localStorage.getItem(TOKEN);
-   
+  SailsToken = localStorage.getItem(TOKEN);  
    if(!SailsToken || SailsToken==null){
-    localStorage.removeItem(ACCESS_TOKEN)
-    localStorage.removeItem(SAILS_ACCESS_TOKEN)
-    sessionStorage.removeItem('isAuthenticated')
-    if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-      window.location.href = window.location.href.replace(window.location.pathname, '/login')
-    }
+    remove();
    }else{
      config.headers.Authorization=SailsToken;
    }
@@ -30,22 +25,13 @@ const logOut = (config,TOKEN)=>{
 
 const controlError =(err)=>{
   if(err.message==="Request failed with status code 500"){
-    localStorage.removeItem(ACCESS_TOKEN)
-    localStorage.removeItem(SAILS_ACCESS_TOKEN)
-    sessionStorage.removeItem('isAuthenticated')
-    if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-      window.location.href = window.location.href.replace(window.location.pathname, '/login')
-    }
+    remove();
   }
 }
 
 connectedSails.interceptors.request.use(config =>{
-  // console.log(config);
   logOut(config,SAILS_ACCESS_TOKEN)
- 
-
   return config;
-
 },(err)=>{
   return Promise.reject(err);
 })
