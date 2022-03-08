@@ -18,7 +18,7 @@ import ControlPTZ from '../ControlPTZ';
 import conections from '../../conections';
 import AdvancedSearch from '../AdvancedSearch';
 import MediaContainer from '../MediaContainer';
-import constants from '../../constants/constants';
+// import constants from '../../constants/constants';
 import ModalMoreInformation from '../../components/ModalMoreInformation';
 
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';

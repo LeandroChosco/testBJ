@@ -7,7 +7,6 @@ import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
-import {ACCESS_TOKEN,SAILS_ACCESS_TOKEN} from '../../constants/token'
 
 
 class Header extends Component {

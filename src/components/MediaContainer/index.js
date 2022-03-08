@@ -13,8 +13,8 @@ class MediaContainer extends Component {
 
 	render() {
 		let { modal, loading } = this.state;
-		let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value, servidorMultimedia } = this.props;
-		
+		// let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value, servidorMultimedia } = this.props;
+		let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value } = this.props;
 		let dnsIp = ""
 		let portCam = ""
 
@@ -115,8 +115,8 @@ class MediaContainer extends Component {
 
 	_saveFile = async () => {
 		this.setState({ loading: true });
-		let { isQnap, dns_ip, src, exists_image, exists_video, covid, value, servidorMultimedia } = this.props;
-		
+		// let { isQnap, dns_ip, src, exists_image, exists_video, covid, value, servidorMultimedia } = this.props;
+		let { isQnap, dns_ip, src, exists_image, exists_video, covid, value } = this.props;
 		let dnsIp = ""
 		let portCam = ""
 
