@@ -46,7 +46,6 @@ import sailsIOClient from "sails.io.js";
 import SosView from "./SOSview/index";
 import firebaseSos from "../constants/configSOS";
 import { MESSAGES_COLLECTION, COMPLAINT_COLLECTION, POLICE_COLLECTION } from "../Api/sos";
-import {ACCESS_TOKEN,SAILS_ACCESS_TOKEN} from '../constants/token'
 
 import Chat from './ChatPlus/index'
 import Policia from './Policia';

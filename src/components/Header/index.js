@@ -8,7 +8,7 @@ import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 import {ACCESS_TOKEN,SAILS_ACCESS_TOKEN} from '../../constants/token'
-import conections from '../../conections';
+
 
 class Header extends Component {
   _goAlarma = () => {
@@ -306,40 +306,6 @@ class Header extends Component {
     );
   }
   componentDidMount() { }
-  // componentDidUpdate(){
-  //   // const isAuth = JSON.parse(sessionStorage.getItem('isAuthenticated'))    
-  //   const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
-  //   const tokenRadar=localStorage.getItem(ACCESS_TOKEN)
-  //   conections.validateToken(token).then((res)=>{
- 
-  //   }).catch(err=>{
-
-  //     // console.log((err.message));
-  //     const token = localStorage.getItem(SAILS_ACCESS_TOKEN)
-  //     console.log(token);
-  //     if(err.message==="Request failed with status code 500"){
-  //       localStorage.removeItem(ACCESS_TOKEN)
-  //       localStorage.removeItem(SAILS_ACCESS_TOKEN)
-  //       sessionStorage.removeItem('isAuthenticated')
-  //       if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-  //         window.location.href = window.location.href.replace(window.location.pathname, '/login')
-  //       }
-  //     }
-  //   })
-  //   conections.validTokenRadar(tokenRadar).then(response=>{
-  //     if(response.data.errors){
-  //       if(response.data.errors[0].message==="Unauthorized"){
-  //         localStorage.removeItem(ACCESS_TOKEN)
-  //         localStorage.removeItem(SAILS_ACCESS_TOKEN)
-  //         sessionStorage.removeItem('isAuthenticated')
-  //         if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-  //           window.location.href = window.location.href.replace(window.location.pathname, '/login')
-  //         }
-  //       };
-  //     }
-     
-  //   })
-  // }
 
 }
 

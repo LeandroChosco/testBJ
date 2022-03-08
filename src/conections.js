@@ -13,9 +13,9 @@ const connectedSails =Axios.create({
   headers: {'Authorization': SailsToken}
 })
 
-connectedSails.interceptors.request.use(config =>{
-  // console.log(config);
-   SailsToken = localStorage.getItem(SAILS_ACCESS_TOKEN);
+const logOut = (config,TOKEN)=>{
+  SailsToken = localStorage.getItem(TOKEN);
+   
    if(!SailsToken || SailsToken==null){
     localStorage.removeItem(ACCESS_TOKEN)
     localStorage.removeItem(SAILS_ACCESS_TOKEN)
@@ -26,6 +26,23 @@ connectedSails.interceptors.request.use(config =>{
    }else{
      config.headers.Authorization=SailsToken;
    }
+}
+
+const controlError =(err)=>{
+  if(err.message==="Request failed with status code 500"){
+    localStorage.removeItem(ACCESS_TOKEN)
+    localStorage.removeItem(SAILS_ACCESS_TOKEN)
+    sessionStorage.removeItem('isAuthenticated')
+    if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+      window.location.href = window.location.href.replace(window.location.pathname, '/login')
+    }
+  }
+}
+
+connectedSails.interceptors.request.use(config =>{
+  // console.log(config);
+  logOut(config,SAILS_ACCESS_TOKEN)
+ 
 
   return config;
 
@@ -35,30 +52,12 @@ connectedSails.interceptors.request.use(config =>{
 connectedSails.interceptors.response.use(response=>{
   return response;
 }, (err)=>{
-  if(err.message==="Request failed with status code 500"){
-    localStorage.removeItem(ACCESS_TOKEN)
-    localStorage.removeItem(SAILS_ACCESS_TOKEN)
-    sessionStorage.removeItem('isAuthenticated')
-    if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-      window.location.href = window.location.href.replace(window.location.pathname, '/login')
-    }
-  }
+   controlError(err)
   return Promise.reject(err);
 })
 
 connectedRadar.interceptors.request.use(config=>{
-  SailsToken = localStorage.getItem(ACCESS_TOKEN);
-  if(!SailsToken || SailsToken==null){
-   localStorage.removeItem(ACCESS_TOKEN)
-   localStorage.removeItem(SAILS_ACCESS_TOKEN)
-   sessionStorage.removeItem('isAuthenticated')
-   if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-     window.location.href = window.location.href.replace(window.location.pathname, '/login')
-   }
-  }else{
-    config.headers.Authorization=SailsToken;
-  }
-
+  logOut(config,ACCESS_TOKEN)
  return config;
 },(err)=>{
   return Promise.reject(err);
@@ -67,14 +66,7 @@ connectedRadar.interceptors.request.use(config=>{
 connectedRadar.interceptors.response.use(response=>{
   return response;
 }, (err)=>{
-  if(err.message==="Request failed with status code 500"){
-    localStorage.removeItem(ACCESS_TOKEN)
-    localStorage.removeItem(SAILS_ACCESS_TOKEN)
-    sessionStorage.removeItem('isAuthenticated')
-    if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-      window.location.href = window.location.href.replace(window.location.pathname, '/login')
-    }
-  }
+ controlError(err)
   return Promise.reject(err);
 })
 
