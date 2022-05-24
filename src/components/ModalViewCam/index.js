@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Modal } from 'react-bootstrap';
 import HlsPlayer from '../HlsPlayer';
 import WssPlayer from '../WssPlayer';
+import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import './style.css';
 
 class ModalViewCam extends Component {
@@ -24,8 +25,7 @@ class ModalViewCam extends Component {
 						<HlsPlayer
 							channelARN={dataCam.amazon_arn_channel}
 							region={dataCam.amazon_region}
-							src={`http://${dataCam.UrlStreamMediaServer.ip_url_ms}:${dataCam.UrlStreamMediaServer
-								.output_port}${dataCam.UrlStreamMediaServer.name}${dataCam.channel}`}
+							src={urlHttpOrHttps(dataCam.UrlStreamMediaServer.ip_url_ms, dataCam.UrlStreamMediaServer.output_port, dataCam.UrlStreamMediaServer.name, dataCam.channel, dataCam.UrlStreamMediaServer.protocol)}		
 							num_cam={dataCam.num_cam}
 						/>
 					)}

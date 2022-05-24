@@ -9,7 +9,7 @@ export const MESSAGES_COLLECTION = 'messages';
 export const COMPLAINT_COLLECTION = 'complaint';
 export const POLICE_TRACKING_COLLECTION = 'police_tracking';
 export const POLICE_BINNACLE_COLLECTION = 'police_binnacle';
-
+export const EVENT_COLLECTION = 'event'
 
 const fireSos = firebaseSos.app('sos').firestore();
 const fireC5 = firebaseC5.app('c5benito').firestore();

@@ -9,6 +9,7 @@ import constants from '../../constants/constants'
 import Strings from '../../constants/strings';
 import firebaseSos from '../../constants/configSOS';
 import firebaseC5Benito from '../../constants/configC5CJ';
+import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 // COMPONENTS
 import MapPolice from '../../components/MapPolice';
 import MapContainer from '../../components/MapContainer';
@@ -770,8 +771,7 @@ class ChatAlarm extends Component {
             num_cam: user_cam.num_cam,
             cameraID: user_cam.num_cam,
             isHls: true,
-            url: `http://${user_cam.UrlStreamMediaServer.ip_url_ms}:${user_cam.UrlStreamMediaServer
-              .output_port}${user_cam.UrlStreamMediaServer.name}${user_cam.channel}`,
+            url: urlHttpOrHttps(user_cam.UrlStreamMediaServer.ip_url_ms, user_cam.UrlStreamMediaServer.output_port, user_cam.UrlStreamMediaServer.name, user_cam.channel, user_cam.UrlStreamMediaServer.protocol),
             dataCamValue: user_cam
           }
         }

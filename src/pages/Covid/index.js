@@ -9,6 +9,7 @@ import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
 import GridCovidDisplay from '../../components/GridCovidDisplay';
 import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants'
+import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 // import { JellyfishSpinner } from "react-spinners-kit";
 import conections from '../../conections'
 import SearchCamera from '../../components/SearchCamera';
@@ -413,7 +414,7 @@ class Analysis extends Component {
               name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state + ' #cam' + value.num_cam,
 
               isHls: value.tipo_camara === 3 ? false : true,
-              url: value.tipo_camara !== 3 ? 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel : null,
+              url: value.tipo_camara !== 3 ? urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol) : null,
               real_num_cam: value.num_cam < 10 ? ('0' + value.num_cam.toString()) : value.num_cam.toString(),
               camera_number: value.num_cam,
               dataCamValue: value,
@@ -433,7 +434,7 @@ class Analysis extends Component {
                   lng: value.google_cordenate.split(',')[1],
                   name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state,
                   isHls: true,
-                  url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
+                  url: urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol),
                   real_num_cam: value.num_cam < 10 ? ('0' + value.num_cam.toString()) : value.num_cam.toString(),
                   camera_number: value.num_cam,
                   dataCamValue: value,
@@ -547,7 +548,7 @@ class Analysis extends Component {
             name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state + ' #cam' + value.num_cam,
 
             isHls: value.tipo_camara === 3 ? false : true,
-            url: value.tipo_camara !== 3 ? 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel : null,
+            url: value.tipo_camara !== 3 ? urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol) : null,
             real_num_cam: value.num_cam < 10 ? ('0' + value.num_cam.toString()) : value.num_cam.toString(),
             camera_number: value.num_cam,
             dataCamValue: value,
@@ -566,7 +567,7 @@ class Analysis extends Component {
                 lng: value.google_cordenate.split(',')[1],
                 name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state,
                 isHls: true,
-                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
+                url: urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol),
                 real_num_cam: value.num_cam < 10 ? ('0' + value.num_cam.toString()) : value.num_cam.toString(),
                 camera_number: value.num_cam,
                 dataCamValue: value,

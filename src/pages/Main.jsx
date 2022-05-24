@@ -6,12 +6,13 @@ import Login from './Login'
 import Map from './Map'
 import Analysis from './Analysis';
 import NotificationSystem from 'react-notification-system';
-
+import CamarasInternas from './CamerasInternas'
+import Microfonos from './Microfonos'
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 import Notifications from '../components/Notifications';
 import CameraControls from '../components/CameraControls';
-
+import * as moment from 'moment'
 // import '../App.css';
 import Details from './Details';
 import MobileHelp from './CamaraForMobile';
@@ -47,9 +48,9 @@ import SosView from "./SOSview/index";
 import firebaseSos from "../constants/configSOS";
 import { MESSAGES_COLLECTION, COMPLAINT_COLLECTION, POLICE_COLLECTION } from "../Api/sos";
 
+
 import Chat from './ChatPlus/index'
 import Policia from './Policia';
-import { remove } from '../helpers/remove';
 // import { ContentSort } from 'material-ui/svg-icons';
 
 var io = sailsIOClient(socketIOClient);
@@ -91,6 +92,9 @@ class Main extends Component {
     ws: null,
     fisrtTimecomplaiments: true,
     complaiments: [],
+    eventMic: [],
+    fechasEventos: [],
+    countEvent: [],
     modalCall: false,
     callInfo: {},
     calls: [],
@@ -118,8 +122,6 @@ class Main extends Component {
 
 
   componentDidMount() {
-
-
     conections.getClients().then(res => {
       const data = res.data.data.getClients.filter(c => c.name === constants.client);
       constants.urlPath =
@@ -212,8 +214,6 @@ class Main extends Component {
   }
 
   componentDidUpdate(prevProps) {
-  
-   
     const { limits: prevLimits } = prevProps;
     const { limits } = this.props;
     if (prevLimits !== limits) {
@@ -742,7 +742,6 @@ class Main extends Component {
       })
     })
 
-
     firebaseC5Benito.app('c5benito').firestore().collection('complaints').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.complaiments.length !== docs.size && this.state.showNotification && !this.state.fisrtTimecomplaiments) {
         this.showNot('Nueva denuncia', 'Se ha recibido una nueva denuncia', 'info', 'Ver detalles', 2, docs.docs[0].id)
@@ -849,7 +848,90 @@ class Main extends Component {
 
         }
       });
+      firebaseSos
+      .app("sos")
+      .firestore()
+      .collection('event')
+      .orderBy('lastModification', 'desc')
+      .onSnapshot((docs) => {
+        let { eventMic, showNotification, callIsGoing } = this.state;
+        if (eventMic.length > 0) {
+          let changes = docs.docChanges();
+          if (changes.length > 0 && changes.length < 5) {
+            const CREATED_ID = changes[0].doc.id;
+            if (changes[0].type === 'added') {
+              let founded = eventMic.find((item) => item.id === CREATED_ID);
+              if (!founded) {
+                if (showNotification && !callIsGoing) {
+                  this.setState({ reproducirSonido: true });
+                  this.showEventNot(
+                    'Evento',
+                    'Nuevo evento encontrado',
+                    'info',
+                    'Ver detalles',
+                    CREATED_ID
+                  );
+                }
+              }
+            }
+          }
+        }
+        let countShoot = 0
+        let countBrokenGlass = 0
+        let fechas = []
+        let today =  moment().format('L'),
+            fechaActual = [],
+            fecha1 = [],
+            fecha2 = [],
+            fecha3 = [],
+            fecha4 = [],
+            fecha5 = [],
+            fecha6 = [],
+            infoDay = null;
+        docs.docs.map(doc => {
+          //let DateEvent = doc.data().eventDate.split(" ", 1)
+          //let formatDate = moment(DateEvent, 'YYYY/MM/DD').format('L')
+          fechas.push(doc.data())
+          if(doc.data().nameEvent === 'Detección de disparo de arma'){
+            countShoot +=1
+          }
+          if(doc.data().nameEvent === 'Rotura de vidrio'){
+            countBrokenGlass +=1
+          }
+        })
+        /* fechas.map((day) =>{
+          let fechaDay = day.eventDate.split(" ", 1)
+          if( moment(fechaDay, 'YYYY/MM/DD').format('L') === today){
+            fechaActual.push(day)
+          }
+        })
+
+        for (let index = 1; index <= 6; index++) {
+          infoDay = moment().subtract(index, 'days').format('L');
+          fechas.map((day)=>{
+          let fechaDay = day.eventDate.split(" ", 1)
+          console.log('infoDay-----', infoDay)
+          //console.log('fechaDAY----', moment(fechaDay, 'YYYY/MM/DD').format('L'))
+          if(moment(fechaDay, 'YYYY/MM/DD').format('L') === infoDay){
+            `fecha${index}`.push(day)
+          }
+          })  
+        } */
+        let newEvents = docs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        this.setState({ eventMic: newEvents, countEvent: [countShoot, countBrokenGlass], fechasEventos:[fechaActual, fecha1, fecha2, fecha3, fecha4, fecha5, fecha6] });
+      });
+
+
+
+
+
+
+
   }
+
+
+
+  
 
   notificationRoute = () => {
     this.setState({
@@ -973,6 +1055,24 @@ class Main extends Component {
     return window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/servicios/${complaintId}`)
   }
 
+  showEventNot = (title, message, type, label, id) => {
+    const notification = this.refs.notificationSystem;
+    if (notification && !this.state.callIsGoing) {
+      notification.addNotification({
+        title: title,
+        message: message,
+        level: type,
+        action: {
+          label: label,
+          callback: () => this.handleComplaintsRedirect(id)
+        }
+      });
+    }
+  }
+
+  handleComplaintsRedirect = (eventId) => {
+    return window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/Microfonos/${eventId}`)
+  }
   showNot = (title, message, type, label, action, id) => {
     const notification = this.refs.notificationSystem;
     if (notification && !this.state.stopNotification && !this.state.callIsGoing) {
@@ -1086,7 +1186,7 @@ class Main extends Component {
 
   _logOut = () => {
     this.setState({ isAuthenticated: false, userInfo: {} })
-   remove();
+    sessionStorage.removeItem('isAuthenticated')
   }
 
   _toggleControls = (camera) => {
@@ -1122,6 +1222,7 @@ class Main extends Component {
   render() {
     return (
       <Router>
+        
         {
           this.state.roberyNotification.display &&
           <RoberyNotification notificationRoute={this.notificationRoute} userId={this.state.roberyNotification.data} />
@@ -1212,6 +1313,7 @@ class Main extends Component {
           <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated} />} />
           <Route path="/analisis" exact render={(props) => <Analysis showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/analisis/:id" exact render={(props) => <Analysis canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
+          <Route path="/camarasInternas" exact render={(props) => <CamarasInternas showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/detalles/covid/:id" exact render={(props) => <CovidItemDetail  {...props} alertaCovidd={this.state.alertaCovidd} alertaCovid={this.state.alertaCovid} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/detalles/emergency/:id" exact render={(props) => <DetailsEmergency  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/detalles/denuncia/:id" exact render={(props) => <DetailsComplaiment  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
@@ -1234,7 +1336,7 @@ class Main extends Component {
             )}
           />
           <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
-          <Route path="/dashboard" exact render={(props) => <Dashboard showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
+          <Route path="/dashboard" exact render={(props) => <Dashboard showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} totalEvents={this.state.countEvent}  fechasEventos={this.state.fechasEventos} />} />
           <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path='/personas' exact render={(props) => <Sospechosos showMatches={this.state.showMatches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this - this._toggleControls} />} />
@@ -1266,6 +1368,20 @@ class Main extends Component {
               />
             )}
           />
+          <Route
+            path="/microfonos/:complaintId?"
+            exact
+            render={(props) => (
+              <Microfonos
+                {...props}
+                complaints={this.state.eventMic}
+                userInfo={this.state.userInfo}
+                countEvent={this.state.countEvent}
+              />
+            )}
+          />
+
+
           <Route
             path="/seguimiento/:tabIndex?/:chatId?"
             exact

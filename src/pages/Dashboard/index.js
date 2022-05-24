@@ -115,12 +115,14 @@ class Dashboard extends Component {
     ],
     genderDetected: [],
     agesDetected: [],
+    totalEvents: [],
     personsperDay: [],
     attendedVSclosed: [],
     panes: [
       { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
       { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
       { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboard()}</Tab.Pane> },
+      { menuItem: 'Micrófonos', render: () => <Tab.Pane attached={false}> {this.renderEvents()}</Tab.Pane> },
       constants.clientFirebase === "Modelorama" &&
       {
         menuItem: "Análisis",
@@ -255,7 +257,28 @@ class Dashboard extends Component {
       </div>
     );
   }
+  renderEvents(){
+    return (
+    <div className='container-flex'>
+        <div className='row'>
+            <div className='col-6 chart' align='center'>
 
+              <Card style={style.height}>
+                <CardHeader>
+                  <h3 className="pt-2">Total de eventos</h3>
+                </CardHeader>          
+                  {this.state.loadTotalRecognition ? <Loading /> :
+                  <GenderDetected genderDetected={this.state.totalEvents} dataTickets={this.state.dataTickets} />
+                  }
+              </Card>
+
+
+            </div>
+        </div>
+    </div>
+    )
+    
+  }
   renderRecognitionDashboard() {
     const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons } = this.state;
 
@@ -379,6 +402,7 @@ class Dashboard extends Component {
       loadingPeoplePerCamera: true,
       loadingPersons: true
     })
+    this.processMicrofono()
     conections.dashboardCams().then(response => {
       const data = response.data;
       // console.log('datilla: ', data)
@@ -450,7 +474,24 @@ class Dashboard extends Component {
     const data = response.data.data
     this.setState({ personsperDay: data, loadingRecognitionPerDay: false })
   }
-
+  processMicrofono = () => {
+    const data = this.props.totalEvents
+    console.log("EVENTOS", this.props.fechasEventos)
+    if(data.length > 0){
+      this.setState({
+        totalEvents: [
+          {
+            name: 'Disparos',
+            value: data[0]
+          }, {
+            name: 'Rotura de vidrios',
+            value: data[1]
+          }
+        ],
+        loadTotalRecognition: false
+      })
+    }
+  }
   processDetected = (response) => {
     const data = response.data.data
     if (Object.keys(data).length > 0) {

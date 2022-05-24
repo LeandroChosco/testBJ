@@ -110,6 +110,9 @@ export default {
     const user_id = getUserID();
     return connectedSails.post(constants.sails_url + '/control-cams/screenshotV2/' + camara_id + '/?user_id=' + user_id);
   },
+  getCamerasInternal: () => {
+    return Axios.get(constants.sails_url + '/control-cams/internal-cameras')
+  },
   stopRecordV2: (data, camera_id) => {
     const user_id = getUserID();
     return connectedSails.put(constants.sails_url + '/control-cams/stop-recordV2/' + camera_id + '/?user_id=' + user_id, data);
@@ -134,9 +137,58 @@ export default {
     const user_id = getUserID();
     return connectedSails.get(constants.sails_url + '/control-cams/cams-offline/?user_id=' + user_id);
   },
-  getCamDataHistory: (camera_id, num_cam) => {
+  getTokenApiStreamsCams: (protocol, dnsMbox, dns_port, secretKeyBody) =>{
+    if(dns_port === 80 || dns_port === 443){
+      return Axios.post(protocol +'://'+ dnsMbox + '/users/login', secretKeyBody)
+    }
+    return Axios.post(protocol +'://'+ dnsMbox + ':'+ dns_port + '/users/login', secretKeyBody)
+
+  },
+  getCamDataHistoryApiCams: (protocol, dnsMbox, dns_port, protocolStorage, dnsStorage, tokenStorage, numCam, token, portApiStore) => {
+    
+    if((dns_port === 80 || dns_port === 443) && (portApiStore === 80 || portApiStore === 443)){
+      return Axios.get(protocol + '://' + dnsMbox  + '/historics/' + numCam + '/' + "?protocol=" +protocolStorage +"&dns=" +dnsStorage +"&token=" +tokenStorage, {headers:{
+      'Authorization': token
+    }});
+    }
+    if((dns_port === 80 || dns_port === 443) && (portApiStore !== 80 || portApiStore !== 443)){
+      return Axios.get(protocol + '://' + dnsMbox  + '/historics/' + numCam + '/' + "?protocol=" +protocolStorage +"&dns=" +dnsStorage +"&token=" +tokenStorage, {headers:{
+      'Authorization': token
+    }});
+    }
+    if ((dns_port !== 80 || dns_port !== 443) && (portApiStore === 80 || portApiStore === 443)){
+      return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam + '/' + "?protocol=" +protocolStorage +"&dns=" +dnsStorage +"&token=" +tokenStorage, {headers:{
+      'Authorization': token
+    }});
+    }
+    return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam + '/' + "?protocol=" +protocolStorage +"&dns=" +dnsStorage +"&token=" +tokenStorage, {headers:{
+      'Authorization': token
+    }});
+    
+  }, 
+  getCamDataHistoryWhithOutProtocol: (protocol, dnsMbox, dns_port, protocolStorage, dnsStorage, tokenStorage, numCam, token, portApiStore)=>{
+    if((dns_port === 80 || dns_port === 443) && (portApiStore === 80 || portApiStore === 443)){
+      return Axios.get(protocol + '://' + dnsMbox  + '/historics/' + numCam, {headers:{
+      'Authorization': token
+    }});
+    }
+    if((dns_port === 80 || dns_port === 443) && (portApiStore !== 80 || portApiStore !== 443)){
+      return Axios.get(protocol + '://' + dnsMbox  + '/historics/' + numCam,  {headers:{
+      'Authorization': token
+    }});
+    }
+    if ((dns_port !== 80 || dns_port !== 443) && (portApiStore === 80 || portApiStore === 443)){
+      return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam, {headers:{
+      'Authorization': token
+    }});
+    }
+    return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam, {headers:{
+      'Authorization': token
+    }});
+  },
+  getCamDataHistory: (camera_id, num_cam, typeMBOX) => {
     const user_id = getUserID();
-    return connectedSails.get(constants.sails_url + '/control-cams/' + camera_id + '/' + num_cam + '/video-history/?user_id=' + user_id);
+    return connectedSails.get(constants.sails_url + '/control-cams/' + camera_id + '/' + num_cam + '/video-history/?user_id=' + user_id + '&type_mbox=' + typeMBOX);
   },
   getTickets: () => {
     return connectedSails.get(constants.sails_url + '/tickets');

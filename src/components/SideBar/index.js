@@ -8,6 +8,7 @@ import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 import constants from "../../constants/constants";
+import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import conections from "../../conections";
 
 class SideBar extends Component {
@@ -31,6 +32,7 @@ class SideBar extends Component {
         if (camaras === undefined) {
           return;
         }
+        console.log("CAMARAS", camaras)
         camaras.map(value => {
           if (value.active === 1 && value.flag_streaming === 1) {
 
@@ -65,15 +67,7 @@ class SideBar extends Component {
                 " #cam" +
                 value.num_cam,
               isHls: value.tipo_camara === 3 ? false : true,
-              url:
-                value.UrlStreamMediaServer !== null
-                  ? "http://" +
-                  value.UrlStreamMediaServer.ip_url_ms +
-                  ":" +
-                  value.UrlStreamMediaServer.output_port +
-                  value.UrlStreamMediaServer.name +
-                  value.channel
-                  : null,
+              url: value.UrlStreamMediaServer !== null ? urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol): null,
               dataCamValue: value,
               tipo_camara: value.tipo_camara,
               urlHistory: urlHistory,

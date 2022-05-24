@@ -8,7 +8,7 @@ import saveAs from 'file-saver';
 import Chips from 'react-chips';
 import moment from 'moment';
 import JSZip from 'jszip';
-
+import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import conections from '../../conections';
 import constants from '../../constants/constants';
 import CameraStream from '../../components/CameraStream';
@@ -456,7 +456,7 @@ class Cuadrantes extends Component{
             lng: value.google_cordenate.split(',')[1],
             name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state + ' #cam' + value.num_cam,
             isHls: true,
-            url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
+            url: urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol),
             dataCamValue: value,
             urlHistory: urlHistory,
             urlHistoryPort: urlHistoryPort
@@ -472,7 +472,7 @@ class Cuadrantes extends Component{
                 lng: value.google_cordenate.split(',')[1],
                 name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state,
                 isHls: true,
-                url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
+                url: urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol),
                 dataCamValue: value
 
               }
@@ -489,7 +489,7 @@ class Cuadrantes extends Component{
               lng: value.google_cordenate.split(',')[1],
               name: value.street + ' ' + value.number + ', ' + value.township + ', ' + value.town + ', ' + value.state + ' #cam' + value.num_cam,
               isHls: true,
-              url: 'http://' + value.UrlStreamMediaServer.ip_url_ms + ':' + value.UrlStreamMediaServer.output_port + value.UrlStreamMediaServer.name + value.channel,
+              url: urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol),
               dataCamValue: value
             })
             indexFail++

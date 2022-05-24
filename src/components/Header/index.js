@@ -8,10 +8,8 @@ import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 
-
 class Header extends Component {
   _goAlarma = () => {
-    
     // if (this.props.isSidemenuShow) {
     //   this.props.toggleSideMenu();
     // }
@@ -28,7 +26,6 @@ class Header extends Component {
     this.props.history.push("/alarm");
   };
   _goComplaint = () => {
-    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -38,7 +35,6 @@ class Header extends Component {
     this.props.history.push("/servicios");
   };
   _goTracking = () => {
-    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -48,7 +44,6 @@ class Header extends Component {
     this.props.history.push("/seguimiento");
   };
   _goFicha = () => {
-    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -57,6 +52,25 @@ class Header extends Component {
       .classList.remove("show");
     this.props.history.push("/policia");
   };
+  _goCamerasInternal = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/camarasInternas");
+
+  }
+  _goMicrofono = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/Microfonos");
+  }
   // _goFicha = () => {
   //   if (this.props.isSidemenuShow) {
   //     this.props.toggleSideMenu();
@@ -67,7 +81,6 @@ class Header extends Component {
   //   window.open('http://clientes.ubiqo.net/Publica/Inicio_Sesion.aspx?ReturnUrl=%2f', 'Ficha de Incidencias', 'height=600,width=1200');
   // };
   _goCovid = () => {
-    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -77,7 +90,6 @@ class Header extends Component {
     this.props.history.push("/covid");
   };
   _goSospechosos = () => {
-    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -88,7 +100,6 @@ class Header extends Component {
   };
 
   _goCuadrantes = () => {
-    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -99,7 +110,6 @@ class Header extends Component {
   };
 
   _goAnalitics = () => {
-    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -110,7 +120,6 @@ class Header extends Component {
   };
 
   _goChat = () => {
-    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -121,7 +130,6 @@ class Header extends Component {
   };
 
   _cameraAction = () => {
-    
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
@@ -130,7 +138,6 @@ class Header extends Component {
     } else {
       this.props.toggleSideMenu();
     }
-   
   };
 
   _logOut = () => {
@@ -141,11 +148,11 @@ class Header extends Component {
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
+    this.props.history.push("/login");
     this.props.logOut();
   };
 
   _goDashboard = () => {
-    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -156,7 +163,6 @@ class Header extends Component {
   };
 
   _goSOS = () => {
-    
     if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
@@ -169,8 +175,6 @@ class Header extends Component {
   _cameraSideInfo = () => {
     this.props.cameraSideInfo();
   };
-
-
 
   render() {
     return (
@@ -223,7 +227,11 @@ class Header extends Component {
                                             : value.id === 11
                                               ? this._goComplaint
                                               : value.id === 12
-                                                ? this._goTracking
+                                              ? this._goTracking
+                                                : value.id === 13
+                                                ? this._goCamerasInternal
+                                                : value.id === 14
+                                                ? this._goMicrofono
                                                 : null
                       }
                     >
@@ -254,7 +262,11 @@ class Header extends Component {
                                                 ? "fa fa-taxi"
                                                 : value.id === 11
                                                   ? "fa fa-bullhorn"
-                                                    : null
+                                                  : value.id === 13
+                                                    ? "fa fa-video-camera"
+                                                    : value.id === 14
+                                                      ? "fa fa-bullhorn"
+                                                        : null
                           }
                         ></i>
                       }
@@ -291,7 +303,6 @@ class Header extends Component {
     );
   }
   componentDidMount() { }
-
 }
 
 export default withRouter(Header);

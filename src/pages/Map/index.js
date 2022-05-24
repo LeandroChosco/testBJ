@@ -9,7 +9,7 @@ import { store } from '../../store';
 import conections from '../../conections';
 import MapContainer from '../../components/MapContainer';
 import CameraStream from '../../components/CameraStream';
-
+import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import firebaseSos from '../../constants/configSOS';
 import { POLICE_TRACKING_COLLECTION } from '../../Api/sos';
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
@@ -391,11 +391,7 @@ class Map extends Component {
         lng: parseFloat(d.google_cordenate.split(',')[1]),
         name: `${d.street} ${d.number}, ${d.township}, ${d.town}, ${d.state} #cam${d.num_cam}`,
         isHls: d.tipo_camara === 3 ? false : true,
-        url:
-          d.UrlStreamMediaServer !== null
-            ? `http://${d.UrlStreamMediaServer.ip_url_ms}:${d.UrlStreamMediaServer.output_port}${d.UrlStreamMediaServer
-              .name}${d.channel}`
-            : null,
+        url:d.UrlStreamMediaServer !== null? urlHttpOrHttps(d.UrlStreamMediaServer.ip_url_ms, d.UrlStreamMediaServer.output_port, d.UrlStreamMediaServer.name, d.channel, d.UrlStreamMediaServer.protocol) : null,
         flag_color: d.flag_color ? d.flag_color : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
         dataCamValue: d,
         tipo_camara: d.tipo_camara,

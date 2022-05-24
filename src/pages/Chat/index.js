@@ -6,6 +6,7 @@ import firebaseC5 from '../../constants/configC5';
 import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants';
 import MapContainer from '../../components/MapContainer';
+import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import Axios from 'axios';
 const ref = firebaseC5.app('c5benito').firestore().collection('messages')
 class Chat extends Component {
@@ -288,7 +289,7 @@ class Chat extends Component {
                 cameraID: data.UserToCameras[0] !== undefined ? data.UserToCameras[0].Camare.num_cam : null,
                 //webSocket:'ws://'+data.UserToCameras[0].Camare.UrlStreamToCameras[0].Url.dns_ip+':'+data.UserToCameras[0].Camare.port_output_streaming
                 isHls: true,
-                url: data.UserToCameras[0] !== undefined ? 'http://' + data.UserToCameras[0].Camare.UrlStreamMediaServer.ip_url_ms + ':' + data.UserToCameras[0].Camare.UrlStreamMediaServer.output_port + data.UserToCameras[0].Camare.UrlStreamMediaServer.name + data.UserToCameras[0].Camare.channel : null,
+                url: data.UserToCameras[0] !== undefined ? urlHttpOrHttps(data.UserToCameras[0].Camare.UrlStreamMediaServer.ip_url_ms, data.UserToCameras[0].Camare.UrlStreamMediaServer.output_port, data.UserToCameras[0].Camare.UrlStreamMediaServer.name, data.UserToCameras[0].Camare.channel, data.UserToCameras[0].UrlStreamMediaServer.protocol) : null,
                 dataCamValue: data.UserToCameras[0] !== undefined ? data.UserToCameras[0].Camare : null
               }
             }

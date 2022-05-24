@@ -7,6 +7,7 @@ import CameraStream from "../../components/CameraStream";
 // import constants from "../../constants/constants";
 import MapContainer from "../../components/MapContainer";
 // import Axios from "axios";
+import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import moment from "moment";
 import _ from "lodash";
 
@@ -823,13 +824,7 @@ class Chat extends Component {
             num_cam: user_cam.num_cam,
             cameraID: user_cam.num_cam,
             isHls: true,
-            url:
-              "http://" +
-              user_cam.UrlStreamMediaServer.ip_url_ms +
-              ":" +
-              user_cam.UrlStreamMediaServer.output_port +
-              user_cam.UrlStreamMediaServer.name +
-              user_cam.channel,
+            url: urlHttpOrHttps(user_cam.UrlStreamMediaServer.ip_url_ms, user_cam.UrlStreamMediaServer.output_port, user_cam.UrlStreamMediaServer.name, user_cam.channel, user_cam.UrlStreamMediaServer.protocol),
             dataCamValue: user_cam,
           },
         },

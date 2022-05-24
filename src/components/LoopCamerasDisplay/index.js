@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Button, Tab } from 'semantic-ui-react';
 import { connect } from 'react-redux';
+import { DateTime } from 'luxon';
 
 import Spinner from 'react-bootstrap/Spinner';
 import moment from 'moment-timezone';
 
-import Match from '../Match';
+// import Match from '../Match';
 import ControlPTZ from '../ControlPTZ';
 import conections from '../../conections';
 import CameraStream from '../CameraStream';
@@ -26,6 +27,7 @@ class LoopCamerasDisplay extends Component {
     scrollInitialDate: moment().startOf('date'),
     activeIndex: 0,
     markers: [],
+    fullHeight: 10,
     slideIndex: 0,
     autoplay: true,
     interval: null,
@@ -35,12 +37,33 @@ class LoopCamerasDisplay extends Component {
     video_history: [],
     video_search: [],
     video_ssid: [],
+    video_fistHistory: [],
+	  video_loadMoreHistory: [],
+	  video_advancedSearch: [],
+	  typeMBOX: null,
+	  arrPares: [],
+	  dnsArray: null,
+	  apiStorageKey: null,
+	  camURL: null,
+	  portContainer: null,
+	  resHistorySearch: null,
+	  dnsPort: 0,
+	  dnsContainer: null,
+	  countArray: 1,
+	  awsApiStreamsCams: false,
+	  inputCkecked: false,
+	  inputCkeckedBusqueda: false,
+	  moduleSearch: false,
+	  completeCamera: null,
     selectedCamera: {},
     qnapServer: null,
     qnapChannel: null,
     isplaying: [],
     matches: [],
     height: undefined,
+    limit: 10,
+    start: 0,
+    pageCount: 1,
     isplay: true,
     servidorMultimedia: '',
     loadingSnap: false,
@@ -48,11 +71,11 @@ class LoopCamerasDisplay extends Component {
     historyLoading: false,
     searchLoading: false,
     isNewSearch: false,
+    photosLoading: false,
     recordingCams: [],
     recordingProcess: [],
     loadingRcord: false,
-    showPTZ: false,
-    reloadCamPTZ: false
+    showPTZ: false
   };
 
   _showCameraInfo() {
@@ -60,17 +83,19 @@ class LoopCamerasDisplay extends Component {
   }
 
   render() {
-    let { activeIndex, markers, slideIndex, autoplay, photos, videos, video_history, video_search, selectedCamera, qnapServer, qnapChannel, height, servidorMultimedia, loadingSnap, videosLoading, historyLoading, searchLoading, photosLoading, isNewSearch, recordingCams, restarting, showPTZ } = this.state
-    let { error, propsIniciales, moduleActions, loadingFiles, matches } = this.props
+    let { activeIndex, markers, slideIndex, autoplay, photos, videos, video_history, video_search, selectedCamera, qnapServer, qnapChannel, height, servidorMultimedia, loadingSnap, videosLoading, historyLoading, searchLoading, photosLoading, isNewSearch, recordingCams, restarting, showPTZ, inputCkecked, portContainer, dnsContainer } = this.state
+    let { error, propsIniciales, moduleActions, loadingFiles } = this.props
     return (
-      <div className="holderOfSlides">
+      <div className="holderOfSlides"  align="center">
         {error ? (<div className="errorContainer">Error al cargar informacion: {JSON.stringify(error)}</div>) : null}
         {height ? (
           markers.map((value, index) =>
             index === slideIndex ? (
               <div key={value.extraData.id} style={{ height: 'auto', width: '100%', paddign: '50%' }} align="center" className={index === slideIndex ? '' : 'hiddenCameraNotshow'}>
                 <CameraStream
-                  propsIniciales={propsIniciales} ref={'camrefgrid' + value.extraData.id} key={value.extraData.id} marker={value}
+                  propsIniciales={propsIniciales}
+                  ref={'camstreamloopref' + value.extraData.id}
+                  marker={value}
                 />
               </div>
             ) : null
@@ -99,8 +124,7 @@ class LoopCamerasDisplay extends Component {
           <div className={!autoplay ? 'row showfilesinfocamera' : 'row hidefiles'}>
             {showPTZ &&
               <div className="col ptz">
-                Controles
-								<ControlPTZ
+                <ControlPTZ
                   camera={selectedCamera}
                   isInMap={false}
                   hasMatch={true}
@@ -110,7 +134,7 @@ class LoopCamerasDisplay extends Component {
             }
             <div className="col snapshots">
               Fotos
-							<div>
+              <div>
                 {photosLoading ? (
                   this._renderLoading()
                 ) : photos.length > 0 ? (
@@ -125,6 +149,9 @@ class LoopCamerasDisplay extends Component {
                         src={value.relative_url}
                         reloadData={this._loadFiles}
                         servidorMultimedia={servidorMultimedia}
+                        port={portContainer}
+						            dnsContainer={dnsContainer}
+						            userIdContainer={this.getUserID()}
                       />
                     ))}
                   </div>
@@ -138,7 +165,7 @@ class LoopCamerasDisplay extends Component {
             </div>
             <div id="scrollVideo" className="col videos">
               Videos
-							<Tab
+              <Tab
                 align="center"
                 activeIndex={activeIndex}
                 onTabChange={(e, { activeIndex }) => this.setState({ activeIndex })}
@@ -161,7 +188,7 @@ class LoopCamerasDisplay extends Component {
                           video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
                           true,
                           video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
-                          true
+                          true, inputCkecked, false, true
                         )}
                       </Tab.Pane>
                     )
@@ -184,15 +211,15 @@ class LoopCamerasDisplay extends Component {
             </div>
             <div className="col matches" align="center">
               Historial
-							{/* --- matches reales ---
+              {/* --- matches reales ---
 							{matches.length>0?matches.map((value, index)=><Match key={index} info={value} toggleControls={this._closeControl} />):<h4>Sin historial de matches</h4>} 
 							*/}
               {/* --- matches planchados */}
-              {matches ? (
-                matches.map((value, index) => (
-                  <Match key={index} info={value} toggleControls={this._closeControl} />
-                ))
-              ) : null}
+              {/* {matches ? (
+								matches.map((value, index) => (
+									<Match key={index} info={value} toggleControls={this._closeControl} />
+								))
+							) : null} */}
             </div>
           </div>
         </div>
@@ -204,28 +231,33 @@ class LoopCamerasDisplay extends Component {
     window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
   };
 
-  _changeReloadCamPTZ = () => {
-    this.setState({ reloadCamPTZ: true });
-    setTimeout(() => this.setState({ reloadCamPTZ: false }), 1000);
-  };
-
   _renderLoading = () => (
     <Spinner animation="border" variant="info" role="status" size="xl">
       <span className="sr-only">Loading...</span>
     </Spinner>
   );
 
-  _renderVideoList = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false) => {
-    let { hasMore, selectedCamera, qnapServer, qnapChannel, servidorMultimedia } = this.state;
+  getUserID = () => {
+		const isAuth = sessionStorage.getItem('isAuthenticated');
+		if (isAuth) {
+		  const data = JSON.parse(isAuth);
+		  return data.user_id ? data.user_id : data.userInfo.user_id;
+		}
+		return 0;
+	  }
+
+  _renderVideoList = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false, isDownload = false, isRecord = false, noButtons = false) => {
+    let { hasMore, selectedCamera, qnapServer, qnapChannel, servidorMultimedia, apiStorageKey, awsApiStreamsCams, portContainer, dnsContainer, completeCamera, typeMBOX, dnsArray } = this.state;
+    const userIdContainer = this.getUserID()
     return loading ? (
       this._renderLoading()
     ) : videoList && videoList.length > 0 ? videoList[0].videos && videoList[0].videos.length > 0 ? (
       <div>
         {videoList.map((list, idx) => (
           <div key={idx} className="row">
-            {hasDns || (list.fecha && list.hour) ? (
+            {dnsArray || (list.fecha && list.hour) ? (
               <div className="col-12">
-                <h4>{`${hasDns !== null ? list.videos[0].fecha : list.fecha} - ${hasDns !== null ? list.videos[0].hour : list.hour}`}</h4>
+                <h4>{`${dnsArray !== null ? list.videos[0].fecha : list.fecha} - ${dnsArray !== null ? list.videos[0].hour : list.hour}`}</h4>
               </div>
             ) : null}
             {list.videos.map((video, vidx) => (
@@ -235,11 +267,20 @@ class LoopCamerasDisplay extends Component {
                 dns_ip={hasDns && `http://${hasDns}`}
                 exists_video={true}
                 cam={selectedCamera}
+                port={portContainer}
+                dnsContainer={dnsContainer}
                 src={video.path_video ? video.path_video : video.relative_path_video}
                 reloadData={this._loadFiles}
                 real_hour={video.real_hour}
                 isQnap={qnapServer && qnapChannel}
                 servidorMultimedia={servidorMultimedia}
+                apiStorageKey={apiStorageKey}
+                awsApiStreamsCams={awsApiStreamsCams}
+                isRecord={isRecord}
+                userIdContainer={userIdContainer}
+                completeCamera={completeCamera}
+                noButtons={noButtons}
+                typeMBOX={typeMBOX}
               />
             ))}
           </div>
@@ -256,9 +297,17 @@ class LoopCamerasDisplay extends Component {
             dns_ip={hasDns && `http://${hasDns}`}
             exists_video={true}
             cam={selectedCamera}
+            port={portContainer}
+			      dnsContainer={dnsContainer}
             src={list.relative_url}
             reloadData={this._loadFiles}
             servidorMultimedia={servidorMultimedia}
+            awsApiStreamsCams={awsApiStreamsCams}
+			      isRecord={isRecord}
+			      userIdContainer={userIdContainer}
+			      completeCamera={completeCamera}
+			      noButtons={noButtons}
+			      typeMBOX={typeMBOX}
           />
         ))}
       </div>
@@ -447,7 +496,7 @@ class LoopCamerasDisplay extends Component {
         let sharedParams = { url, host, sid: auth.authSid, path: mainPath, files: allVideosList, expire_time };
         await this.props.getQvrFileStationShareLink(sharedParams);
         let { QvrFileStationShareLink: listShare } = this.props.QvrFileStationShareLink;
-        searchVideos = QvrFunctions._getCleanListVideos(listShare.links);
+        searchVideos = QvrFunctions._getCleanListVideos(listShare.links, url);
 
         if (listShare && listShare.ssid) video_ssid.push({ ssid: listShare.ssid, total: listShare.total });
         this.props.QvrFileStationShareLink.QvrFileStationShareLink.ssid = video_ssid;
@@ -528,45 +577,178 @@ class LoopCamerasDisplay extends Component {
     if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos));
     let { selectedCamera } = this.state;
     let camera = cam && cam.id ? cam : selectedCamera;
+    let tipoMBOX= camera.dataCamValue.tipombox
+		let dnsMbox = camera.dataCamValue.urlhistory;
+		const dns_portMbox = camera.dataCamValue.urlhistoryport
+		const protocol = camera.dataCamValue.protocolhistory
+		const portApiStorage = camera.dataCamValue.UrlAPIStorage.port
+		const secretKeyBody = {
+			'apiKey': camera.dataCamValue.tokenhistory
+		}
+		this.setState({apiStorageKey: camera.dataCamValue.UrlAPIStorage.secretkey, camURL: camera.dataCamValue, portContainer: camera.dataCamValue.urlhistoryport, dnsContainer: camera.dataCamValue.urlhistory, completeCamera: cam, typeMBOX: tipoMBOX})
+		const protocolStorage = String(camera.dataCamValue.UrlAPIStorage.ip_url).split("://")[0]
+		const dnsStorage = String(camera.dataCamValue.UrlAPIStorage.ip_url).split("://")[1] 
+		const tokenStorage = String(camera.dataCamValue.UrlAPIStorage.secretkey).replace("?", "")
 
     // History
     if (camera.dataCamValue && camera.dataCamValue.qnap_server_id && camera.dataCamValue.qnap_channel) {
       if (onlyHistory) this._loadMoreHistory(true);
     } else {
-      if (onlyHistory) {
+      if ( tipoMBOX && onlyHistory) {
         this.setState({ historyLoading: true });
-        conections.getCamDataHistory(camera.id)
-          .then((response) => {
-            let resHistory = response.data;
-            if (resHistory.success) {
-              let items = [];
-              resHistory.data.items = resHistory.data.items.map((val) => {
-                val.fecha = moment(val.RecordProccessVideo.datetime_start).format('HH:mm');
-                let fecha_inicio = moment(val.RecordProccessVideo.datetime_start);
-                if (items.length === 0) {
-                  items.push({ dateTime: val.RecordProccessVideo.datetime_start, videos: [val] });
-                } else {
-                  let found = false;
-                  for (let index = 0; index < items.length; index++) {
-                    let fecha_array = moment(items[index].dateTime);
-                    if (fecha_array.isSame(fecha_inicio, 'hour')) {
-                      found = true;
-                      items[index].videos.push(val);
-                      break;
-                    }
-                  }
-                  if (!found) items.push({ dateTime: val.RecordProccessVideo.datetime_start, videos: [val] });
-                }
-                return val;
-              });
-              items.map((val) => {
-                val.fecha = moment(val.dateTime).format('YYYY-MM-DD HH:mm');
-                return val;
-              });
-              resHistory.data.items = items;
-              this.setState({ video_history: resHistory.data, historyLoading: false });
-            }
-          });
+        const last_day = DateTime.local().plus({ days: -1 }).setZone('America/Mexico_City').toISODate();
+				const current_day = DateTime.local().setZone('America/Mexico_City').toISODate();
+				const createArrDate = (arr) => {
+					let nuevoObjeto = {};
+					arr.forEach((x) => {
+						if (!nuevoObjeto.hasOwnProperty(x.fecha)) nuevoObjeto[x.fecha] = { videos: [] };
+						nuevoObjeto[x.fecha].videos.push(x);
+					});
+					return nuevoObjeto;
+				};
+				const createArrHour = (arr) => {
+					let nuevoObjeto = {};
+					arr.forEach((x) => {
+						if (!nuevoObjeto.hasOwnProperty(x.hour)) nuevoObjeto[x.hour] = { videos: [] };
+						nuevoObjeto[x.hour].videos.push(x);
+					});
+					return nuevoObjeto;
+				};
+				
+				try {
+					if(tipoMBOX === 'pro'){
+								let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
+								let resHistory = response.data.data;
+								this.setState({resHistorySearch: resHistory})
+								if (resHistory.items.length > 0) {
+										let dns_ip = dnsMbox
+										let dns_port = dns_portMbox
+										this.setState({ dnsPort: dns_port})
+										if (resHistory) {
+											let dates = createArrDate(resHistory.items);
+											let arrayHistoricos  = []
+											let hours_last_day = createArrHour(dates[last_day].videos);
+											let hours_current_day = createArrHour(dates[current_day].videos);
+											this.setState({ video_history: [ dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse() ], historyLoading: false });
+											this.setState({dnsArray: this.state.video_history[0]})
+											arrayHistoricos = this.state.video_history
+											this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos})
+											this.setState({video_history: arrayHistoricos[1].slice(0,2)})
+											setTimeout(() => this.spinnerif(), 400);
+											this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
+										} else {
+											this.setState({ video_history: [], historyLoading: false });
+											this.spinnerif();
+										}
+								} else {
+									this.setState({ video_history: [], historyLoading: false });
+									this.spinnerif();
+								}
+					}else{
+						let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
+								if(response.data.data.items.length > 0){
+									let resHistory = response.data.data;
+									this.setState({resHistorySearch: resHistory})
+									if (resHistory.items.length > 0) {
+											let dns_ip = dnsMbox
+											let dns_port = dns_portMbox
+											this.setState({dns_portdnsPort: dns_port})
+											if (resHistory) {
+												let dates = createArrDate(resHistory.items);
+												let arrayHistoricos  = []
+												let hours_last_day = createArrHour(dates[last_day].videos);
+												let hours_current_day = createArrHour(dates[current_day].videos);
+												this.setState({ video_history: [ dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse() ], historyLoading: false });
+												this.setState({dnsArray: this.state.video_history[0]})
+												arrayHistoricos = this.state.video_history
+												this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos})
+												this.setState({video_history: arrayHistoricos[1].slice(0,2)})
+												setTimeout(() => this.spinnerif(), 400);
+												this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
+											}} else {
+												this.setState({ video_history: [], historyLoading: false });
+												this.spinnerif();
+											}
+								}else{
+									let tokenApiStreams = await conections.getTokenApiStreamsCams(protocol, dnsMbox, dns_portMbox, secretKeyBody);
+										if(tokenApiStreams.data.token){
+
+											let response = await conections.getCamDataHistoryApiCams(protocol, dnsMbox, dns_portMbox, protocolStorage, dnsStorage, tokenStorage, camera.dataCamValue.num_cam, tokenApiStreams.data.token, portApiStorage);
+											if(!response.success){
+												let resHistory = response.data;
+												let dns_port = dns_portMbox
+											this.setState({resHistorySearch: resHistory, awsApiStreamsCams: true})
+											this.setState({ dnsPort: dns_port})
+											if (resHistory.items.length > 0) {
+												let dns_ip = dnsMbox
+												let dns_port = dns_portMbox
+												this.setState({dns_port: dns_port})
+												if (resHistory.success) {
+													let dates = createArrDate(resHistory.items);
+													let arrayHistoricos  = []
+													let hours_last_day = createArrHour(dates[last_day].videos);
+													let hours_current_day = createArrHour(dates[current_day].videos);
+													this.setState({ video_history: [ dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse() ], historyLoading: false });
+													this.setState({dnsArray: this.state.video_history[0]})
+													arrayHistoricos = this.state.video_history
+													this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos})
+													this.setState({video_history: arrayHistoricos[1].slice(0,2)})
+													setTimeout(() => this.spinnerif(), 400);
+													this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
+												} else {
+													this.setState({ video_history: [], historyLoading: false });
+													this.spinnerif();
+												}
+											} else {
+												this.setState({ video_history: [], historyLoading: false });
+												this.spinnerif();
+											}
+											}else{
+												let response = await conections.getCamDataHistoryWhithOutProtocol(protocol, dnsMbox, dns_portMbox, protocolStorage, dnsStorage, tokenStorage, camera.dataCamValue.num_cam, tokenApiStreams.data.token, portApiStorage);
+												let resHistory = response.data;
+												let dns_port = dns_portMbox
+											this.setState({resHistorySearch: resHistory, awsApiStreamsCams: true})
+											this.setState({ dnsPort: dns_port})
+											if (resHistory.items.length > 0) {
+												let dns_ip = dnsMbox
+												let dns_port = dns_portMbox
+												this.setState({dns_port: dns_port})
+												if (resHistory.success) {
+													let dates = createArrDate(resHistory.items);
+													let arrayHistoricos  = []
+													let hours_last_day = createArrHour(dates[last_day].videos);
+													let hours_current_day = createArrHour(dates[current_day].videos);
+													this.setState({ video_history: [ dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse() ], historyLoading: false });
+													this.setState({dnsArray: this.state.video_history[0]})
+													arrayHistoricos = this.state.video_history
+													this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos})
+													this.setState({video_history: arrayHistoricos[1].slice(0,2)})
+													setTimeout(() => this.spinnerif(), 400);
+													this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
+												} else {
+													this.setState({ video_history: [], historyLoading: false });
+													this.spinnerif();
+												}
+											} else {
+												this.setState({ video_history: [], historyLoading: false });
+												this.spinnerif();
+											}
+											}
+
+
+										} 
+									}
+								
+								}
+                 
+
+				
+        }
+				catch(err) {
+					this.setState({ video_history: [], historyLoading: false });
+				}
+      }else{
+        this.setState({ video_history: [], historyLoading: false });
       }
       /* --- matches reales ---     
       conections.getCamMatches(this.state.markers[this.state.slideIndex].extraData.real_num_cam).then(response=>{
@@ -578,7 +760,7 @@ class LoopCamerasDisplay extends Component {
     }
 
     // Current
-    if (onlyCurrent || onlyPhotos) {
+    if (tipoMBOX && (onlyCurrent || onlyPhotos)) {
       this.setState({ videosLoading: true, photosLoading: true });
       try {
         let response = await conections.getCamDataV2(camera.id);
@@ -597,14 +779,164 @@ class LoopCamerasDisplay extends Component {
           this.setState({ videosLoading: false, photosLoading: false });
         }
       }
+    }else{
+      this.setState({ videosLoading: false, photosLoading: false });
     }
   };
+
+  _loadfilesForSearch = async (cam, destroyFiles = false, onlyCurrent = false, onlyHistory = false, onlyPhotos = false, dnsMbox = null, portMbox = null) =>{
+		
+		if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos));
+		let { selectedCamera } = this.state;
+		let camera = cam && cam.id ? cam : selectedCamera;
+		// History
+		if (camera.dataCamValue && camera.dataCamValue.qnap_server_id && camera.dataCamValue.qnap_channel) {
+			if (onlyHistory) this._loadMoreHistory(true);
+		} else {
+			if (onlyHistory) {
+				let pruebas = []
+				const last_day = DateTime.local().plus({ days: - 1 }).setZone('America/Mexico_City').toISODate();
+				const current_day = DateTime.local().setZone('America/Mexico_City').toISODate();
+				const createArrDate = (arr) => {
+					let nuevoObjeto = {};
+					arr.forEach((x) => {
+						if (!nuevoObjeto.hasOwnProperty(x.fecha)) nuevoObjeto[x.fecha] = { videos: [] };
+						nuevoObjeto[x.fecha].videos.push(x);
+					});
+					return nuevoObjeto;
+				};
+				const createArrHour = (arr) => {
+					let nuevoObjeto = {};
+					arr.forEach((x) => {
+						if (!nuevoObjeto.hasOwnProperty(x.hour)) nuevoObjeto[x.hour] = { videos: [] };
+						nuevoObjeto[x.hour].videos.push(x);
+					});
+					return nuevoObjeto;
+				};
+		
+					let resHistory = this.state.resHistorySearch					
+					if (resHistory.items.length > 0) {
+						let dns_ip= dnsMbox
+						let dns_port = portMbox
+						this.setState({dnsPort: dns_port})
+						if (resHistory) {
+							let dates = createArrDate(resHistory.items);
+							//let dates = createArrDate(resHistory.items);
+							let hours_last_day = createArrHour(dates[last_day].videos);
+							let hours_current_day = createArrHour(dates[current_day].videos);
+							pruebas.push([ dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse() ])
+						} else {
+							this.setState({ video_history: [], historyLoading: false });
+							this.spinnerif();
+						}
+					} else {
+						this.setState({ video_history: [], historyLoading: false });
+						this.spinnerif();
+					}
+				
+				let countArraySearch = 4
+				let conjunto = []
+				for (let index = 2; index <= countArraySearch; index++) {
+				const last_day = DateTime.local().plus({ days: - +index }).setZone('America/Mexico_City').toISODate();
+				const createArrDate = (arr) => {
+					let nuevoObjeto = {};
+					arr.forEach((x) => {
+						if (!nuevoObjeto.hasOwnProperty(x.fecha)) nuevoObjeto[x.fecha] = { videos: [] };
+						nuevoObjeto[x.fecha].videos.push(x);
+					});
+					return nuevoObjeto;
+				};
+				const createArrHour = (arr) => {
+					let nuevoObjeto = {};
+					arr.forEach((x) => {
+						if (!nuevoObjeto.hasOwnProperty(x.hour)) nuevoObjeto[x.hour] = { videos: [] };
+						nuevoObjeto[x.hour].videos.push(x);
+					});
+					return nuevoObjeto;
+				};
+	
+					//let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam);
+					let resHistory = this.state.resHistorySearch;
+					if (resHistory.items.length > 0) {
+						if (resHistory) {
+							let dates = createArrDate(resHistory.items);
+							let hours_last_day = createArrHour(dates[last_day].videos);
+							conjunto.push(Object.values(hours_last_day).reverse().reverse() )		
+						} else {
+							this.setState({ video_history: [], historyLoading: false });
+							this.spinnerif();
+						}
+					} else {
+						this.setState({ video_history: [], historyLoading: false });
+						this.spinnerif();
+					}
+
+				}
+				let conjunto2 = []
+				for (let index = 0; index < countArraySearch-1; index++) {
+					if(!conjunto2.length){
+						conjunto2.push(conjunto[index])
+					}else{
+						conjunto[index].map(videos => {
+							return conjunto2[0].push(videos)
+						})
+					}
+					
+				}
+				conjunto2[0].map(videos=>{
+					return pruebas[0][1].push(videos)
+				}) 
+				this.setState({video_advancedSearch: pruebas})
+			}
+		};
+
+	};
 
   componentWillUnmount() {
     clearInterval(this.state.interval);
     this._destroyFileVideos();
     document.getElementById('scrollVideo').removeEventListener('scroll', this._infiniteScroll, false);
   }
+
+	_loadMoreVideosNotQnap = async (isFirst = false)=>{
+		let { video_history, video_fistHistory, countArray, video_loadMoreHistory } = this.state;
+		
+		let index = countArray
+		let indexTwo = countArray + 2
+		 if (index < video_loadMoreHistory[1].length -1) {
+			 if(video_history.length === 2){
+				index = 1
+				let indexFirst = index
+				let indexTwoFirst = indexFirst + 2
+				let recorte = video_fistHistory[1].slice(indexFirst, indexTwoFirst);
+				index= index + 1;
+				video_history.push(recorte[1])
+				this.setState({video_history, historyLoading: false, countArray: index})
+				this.setState({ historyLoading: false });
+			 }else{
+				let recorte = video_fistHistory[1].slice(index, indexTwo);
+				index= index + 1;
+				video_history.push(recorte[1])
+				this.setState({video_history, historyLoading: false, countArray: index})
+				this.setState({ historyLoading: false });
+			 }
+			
+		}
+		else{
+			this.setState({countArray: 1, video_history: video_loadMoreHistory, historyLoading: false})
+			this.setState({ hasMore: false });
+
+		}
+		
+	}
+
+  spinnerif = () => {
+		if (this.state.loading) {
+			setTimeout(() => {
+				this.setState({ loading: false });
+			}, 2500);
+		}
+	};
 
   _infiniteScroll = (event) => {
     let { activeIndex, video_history, qnapServer, qnapChannel, scroll, hasMore } = this.state;
@@ -617,6 +949,15 @@ class LoopCamerasDisplay extends Component {
       scroll.push(divScroll.scrollHeight);
       this._loadMoreHistory();
     }
+    
+    if(activeIndex === 1 && video_history.length > 0 && isDown && hasMore){
+			setTimeout(() => {
+				scroll.push(divScroll.scrollHeight);
+				this.setState({ historyLoading: true });
+				this._loadMoreVideosNotQnap();	
+			}, 1000);
+			
+		}
   };
 
   componentDidMount() {
@@ -672,25 +1013,25 @@ this.setState({interval: time,markers:markersForLoop, height:height})
   };
 
   componentDidUpdate() {
-    const navHeight = document.getElementsByTagName('nav')[0].scrollHeight;
-    const viewBar = document.getElementsByClassName('toggleViewButton')[0].scrollHeight;
-    const bottomBar = document.getElementsByClassName('camControl')[0].scrollHeight;
-    const documentHeight = window.innerHeight;
-    let map = document.getElementsByClassName('holderOfSlides')[0]; //.style.height = documentHeight - navHeight
-    map.style.height = documentHeight - navHeight - bottomBar - viewBar + 'px';
-    map.style.maxHeight = documentHeight - navHeight - bottomBar - viewBar + 'px';
-    let canvas = document.querySelector(
-      '.holderOfSlides>div:not(.hiddenCameraNotshow)>.card>.card-body>.camHolder>canvas'
-    );
-    if (canvas) {
-      if (this.state.autoplay) {
-        canvas.style.height = '100%';
-        canvas.style.width = '100%';
-      } else {
-        canvas.style.height = '95%';
-        canvas.style.width = '80%';
-      }
-    }
+    // const navHeight = document.getElementsByTagName('nav')[0].scrollHeight;
+    // const viewBar = document.getElementsByClassName('toggleViewButton')[0].scrollHeight;
+    // const bottomBar = document.getElementsByClassName('camControl')[0].scrollHeight;
+    // const documentHeight = window.innerHeight;
+    // let map = document.getElementsByClassName('holderOfSlides')[0]; //.style.height = documentHeight - navHeight
+    // map.style.height = documentHeight - navHeight - bottomBar - viewBar + 'px';
+    // map.style.maxHeight = documentHeight - navHeight - bottomBar - viewBar + 'px';
+    // let canvas = document.querySelector(
+    //   '.holderOfSlides>div:not(.hiddenCameraNotshow)>.card>.card-body>.camHolder>canvas'
+    // );
+    // if (canvas) {
+    //   if (this.state.autoplay) {
+    //     canvas.style.height = '100%';
+    //     canvas.style.width = '100%';
+    //   } else {
+    //     canvas.style.height = '95%';
+    //     canvas.style.width = '80%';
+    //   }
+    // }
   }
 
   static getDerivedStateFromProps(props, state) {
