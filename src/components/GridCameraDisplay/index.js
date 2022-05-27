@@ -55,6 +55,7 @@ class GridCameraDisplay extends Component {
 		typeMBOX: null,
 		arrPares: [],
 		dnsArray: null,
+		countDays: null,
 		apiStorageKey: null,
 		camURL: null,
 		portContainer: null,
@@ -90,7 +91,7 @@ class GridCameraDisplay extends Component {
 	};
 
 	render() {
-		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer } = this.state;
+		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays } = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, matches, is_filter } = this.props;
 		return (
 			<div className="gridCameraContainer" align="center">
@@ -162,7 +163,7 @@ class GridCameraDisplay extends Component {
 							<Button basic circular onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange"/></Button>
 							{selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.dns != null ? <Button basic circular onClick={() => this.Clicked(selectedCamera.dataCamValue.dns)}><i className="fa fa-sliders"/></Button> : null}
 							{selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.camera_ip != null ? <Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows"/></Button> : null}
-							{!qnapServer && !qnapChannel && (<AdvancedSearchNotqnap	loading={searchLoading}	_searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus}	/>)} 
+							{!qnapServer && !qnapChannel && (<AdvancedSearchNotqnap	loading={searchLoading}	_searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus}	countDays={countDays} />)} 
 							{qnapServer && qnapChannel && (<AdvancedSearch	loading={searchLoading}	_searchFileVideos={this._searchFileVideos} 	/>)}
 						</div>
 						<div className='col-5'>
@@ -686,12 +687,15 @@ class GridCameraDisplay extends Component {
 		video_advancedSearch[0][1].map(filter => {
 			return videosGuardados.push(filter.videos)
 		})
+		console.log("VIDEOS GUARDADOS", videosGuardados)
 		videosGuardados.map((videos, index) => {
-			
-			for (let i = 0; i < 2; i++) {
-				element.push(videos[i]);	
+			if(videos){
+				for (let i = 0; i < 2; i++) {
+					element.push(videos[i]);	
+				}
+				return element
 			}
-			return element
+			
 
 		})
 		
@@ -894,11 +898,11 @@ class GridCameraDisplay extends Component {
 		const dnsStorage = String(camera.dataCamValue.UrlAPIStorage.ip_url).split("://")[1] 
 		const tokenStorage = String(camera.dataCamValue.UrlAPIStorage.secretkey).replace("?", "")
 		// History
+		
 		if (camera.dataCamValue && camera.dataCamValue.qnap_server_id && camera.dataCamValue.qnap_channel) {
 			if (onlyHistory) this._loadMoreHistory(true);
 		} else {
-			if (tipoMBOX && onlyHistory) {
-				
+			if (onlyHistory) {
 				this.setState({ historyLoading: true });
 				const last_day = DateTime.local().plus({ days: -1 }).setZone('America/Mexico_City').toISODate();
 				const current_day = DateTime.local().setZone('America/Mexico_City').toISODate();
@@ -1135,59 +1139,104 @@ class GridCameraDisplay extends Component {
 						this.spinnerif();
 					}
 				
-				let countArraySearch = 4
+				let countArraySearch = camera.dataCamValue.historyDays - 1
+				this.setState({countDays: camera.dataCamValue.historyDays});
 				let conjunto = []
-				for (let index = 2; index <= countArraySearch; index++) {
-				const last_day = DateTime.local().plus({ days: - +index }).setZone('America/Mexico_City').toISODate();
-				const createArrDate = (arr) => {
-					let nuevoObjeto = {};
-					arr.forEach((x) => {
-						if (!nuevoObjeto.hasOwnProperty(x.fecha)) nuevoObjeto[x.fecha] = { videos: [] };
-						nuevoObjeto[x.fecha].videos.push(x);
-					});
-					return nuevoObjeto;
-				};
-				const createArrHour = (arr) => {
-					let nuevoObjeto = {};
-					arr.forEach((x) => {
-						if (!nuevoObjeto.hasOwnProperty(x.hour)) nuevoObjeto[x.hour] = { videos: [] };
-						nuevoObjeto[x.hour].videos.push(x);
-					});
-					return nuevoObjeto;
-				};
-	
-					//let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam);
-					let resHistory = this.state.resHistorySearch;
-					if (resHistory.items.length > 0) {
-						if (resHistory) {
-							let dates = createArrDate(resHistory.items);
-							let hours_last_day = createArrHour(dates[last_day].videos);
-							conjunto.push(Object.values(hours_last_day).reverse().reverse() )		
-						} else {
-							this.setState({ video_history: [], historyLoading: false });
-							this.spinnerif();
+				if(countArraySearch <= 1){
+					for (let index = 1; index <= countArraySearch; index++) {
+						const last_day = DateTime.local().plus({ days: - +index }).setZone('America/Mexico_City').toISODate();
+						const createArrDate = (arr) => {
+							let nuevoObjeto = {};
+							arr.forEach((x) => {
+								if (!nuevoObjeto.hasOwnProperty(x.fecha)) nuevoObjeto[x.fecha] = { videos: [] };
+								nuevoObjeto[x.fecha].videos.push(x);
+							});
+							return nuevoObjeto;
+						};
+						const createArrHour = (arr) => {
+							let nuevoObjeto = {};
+							arr.forEach((x) => {
+								if (!nuevoObjeto.hasOwnProperty(x.hour)) nuevoObjeto[x.hour] = { videos: [] };
+								nuevoObjeto[x.hour].videos.push(x);
+							});
+							return nuevoObjeto;
+						};
+			
+							//let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam);
+							let resHistory = this.state.resHistorySearch;
+							if (resHistory.items.length > 0) {
+								if (resHistory) {
+									let dates = createArrDate(resHistory.items);
+									let hours_last_day = createArrHour(dates[last_day].videos);
+									conjunto.push(Object.values(hours_last_day).reverse().reverse() )
+									pruebas[0][1].push(conjunto)
+									this.setState({video_advancedSearch: pruebas})	
+								} else {
+									this.setState({ video_history: [], historyLoading: false });
+									this.spinnerif();
+								}
+							} else {
+								this.setState({ video_history: [], historyLoading: false });
+								this.spinnerif();
+							}
+		
 						}
-					} else {
-						this.setState({ video_history: [], historyLoading: false });
-						this.spinnerif();
-					}
-
 				}
-				let conjunto2 = []
-				for (let index = 0; index < countArraySearch-1; index++) {
-					if(!conjunto2.length){
-						conjunto2.push(conjunto[index])
-					}else{
-						conjunto[index].map(videos => {
-							return conjunto2[0].push(videos)
-						})
-					}
-					
+				else{
+					for (let index = 2; index <= countArraySearch; index++) {
+						const last_day = DateTime.local().plus({ days: - +index }).setZone('America/Mexico_City').toISODate();
+						const createArrDate = (arr) => {
+							let nuevoObjeto = {};
+							arr.forEach((x) => {
+								if (!nuevoObjeto.hasOwnProperty(x.fecha)) nuevoObjeto[x.fecha] = { videos: [] };
+								nuevoObjeto[x.fecha].videos.push(x);
+							});
+							return nuevoObjeto;
+						};
+						const createArrHour = (arr) => {
+							let nuevoObjeto = {};
+							arr.forEach((x) => {
+								if (!nuevoObjeto.hasOwnProperty(x.hour)) nuevoObjeto[x.hour] = { videos: [] };
+								nuevoObjeto[x.hour].videos.push(x);
+							});
+							return nuevoObjeto;
+						};
+			
+							//let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam);
+							let resHistory = this.state.resHistorySearch;
+							if (resHistory.items.length > 0) {
+								if (resHistory) {
+									let dates = createArrDate(resHistory.items);
+									let hours_last_day = createArrHour(dates[last_day].videos);
+									conjunto.push(Object.values(hours_last_day).reverse().reverse() )		
+								} else {
+									this.setState({ video_history: [], historyLoading: false });
+									this.spinnerif();
+								}
+							} else {
+								this.setState({ video_history: [], historyLoading: false });
+								this.spinnerif();
+							}
+		
+						}
+						let conjunto2 = []
+						for (let index = 0; index < countArraySearch-1; index++) {
+							if(!conjunto2.length){
+								conjunto2.push(conjunto[index])
+							}else{
+								conjunto[index].map(videos => {
+									return conjunto2[0].push(videos)
+								})
+							}
+							
+						}
+						conjunto2[0].map(videos=>{
+							return pruebas[0][1].push(videos)
+						}) 
+						this.setState({video_advancedSearch: pruebas})
 				}
-				conjunto2[0].map(videos=>{
-					return pruebas[0][1].push(videos)
-				}) 
-				this.setState({video_advancedSearch: pruebas})
+				
+				
 			}
 		};
 

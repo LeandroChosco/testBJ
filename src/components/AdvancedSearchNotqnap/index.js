@@ -101,6 +101,7 @@ class AdvancedSearchNotqnap extends Component {
 		})
 	}
 	_onSubmit = (event) => {
+		let countDays = this.props.countDays
 		event.preventDefault();
 		let { endDate, startDate, startHour, endHour, estado } = this.state;
 		let currrentDate = moment().startOf('date').format('YYYY-MM-DD');
@@ -108,7 +109,7 @@ class AdvancedSearchNotqnap extends Component {
 		let slEndDate = moment(endDate).startOf('date').format('YYYY-MM-DD');
 
 		if (slStartDate > currrentDate || slEndDate > currrentDate) return this.setState({ error: `La fecha no puede ser mayor a hoy.` });
-		if (moment(endDate).startOf('date').diff(moment(startDate).startOf('date'), 'days') > 9) return this.setState({ error: `No puede solicitar mas de 9 días.` });
+		if (moment(endDate).startOf('date').diff(moment(startDate).startOf('date'), 'days') > countDays) return this.setState({ error: `No puede solicitar mas de ${countDays} días.` });
 		
 
 		let start = parseInt(startHour, 10), end = parseInt(endHour, 10);
