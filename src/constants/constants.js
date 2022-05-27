@@ -10,7 +10,7 @@ const detialDashboard="http://95.216.37.253:6868/dashboard/iframes/"
 
 //Dev
 // sails_url genera token de autenticacion 
-const sails_url = "http://localhost:1337";
+const sails_url = "http://apibjdev.energetikatechnology.com";
 const radar_backend = "https://radar-api-dev.radarapptechnologies.com/graphql";
 const webSocketPort = '20';
 const apiPort = "3000";
