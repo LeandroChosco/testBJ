@@ -687,7 +687,7 @@ class GridCameraDisplay extends Component {
 		video_advancedSearch[0][1].map(filter => {
 			return videosGuardados.push(filter.videos)
 		})
-		console.log("VIDEOS GUARDADOS", videosGuardados)
+		
 		videosGuardados.map((videos, index) => {
 			if(videos){
 				for (let i = 0; i < 2; i++) {
