@@ -20,7 +20,7 @@ export const urlHttpOrHttps = (server, output_port, name, channel = false, proto
 export const urlHttpOrHttpsMultimedia = (server, output_port, src, protocol = false) => {
     let url = null;
     if (output_port === 80 || output_port === 443) {
-        url = `${protocol}://${server}/${src}$`;
+        url = `${protocol}://${server}/${src}`;
     } else {
         url = `${protocol}://${server}:${output_port}/${src}`;
     }
