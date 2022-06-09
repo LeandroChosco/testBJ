@@ -97,7 +97,7 @@
     "BPPD": "react-scripts build && git add . && git commit -m'build para despliege' && git push && ssh admin@95.216.37.253 'cd public_html/c5virtual_desarrollo && git pull && exit'",
     "deploy_production": "react-scripts build && git add . && git commit -m'build para despliege produccion' && git push && ssh admin@95.216.37.253 'cd public_html/c5virtual && git pull && exit'",
     "deploy:dev": "react-scripts --max-old-space-size=8192 build && aws s3 sync build/ s3://adminc5bj-new-dev",
-    "deploy:prod": "react-scripts --max-old-space-size=8192 build && aws s3 sync build/ s3://adminc5bj",
+    "deploy:prod": "react-scripts --max-old-space-size=8192 build && aws s3 sync build/ s3://customer-bj-s3-frontend",
     "deploy:current_dev": "react-scripts --max-old-space-size=8192 build && aws s3 sync build/ s3://adminc5bj-dev",
     "deploy:qnap": "react-scripts --max-old-space-size=8192 build && aws s3 sync build/ s3://qnap-bj-features"
   },
