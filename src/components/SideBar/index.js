@@ -23,6 +23,7 @@ class SideBar extends Component {
     conections.getAllCams().then(data => {
       // console.log(data);
       const camaras = data.data;
+      console.log("camaras", camaras)
       if (data.status === 200) {
         // console.log("entro al if");
         let auxCamaras = [];
@@ -32,7 +33,7 @@ class SideBar extends Component {
         if (camaras === undefined) {
           return;
         }
-        console.log("CAMARAS", camaras)
+        
         camaras.map(value => {
           if (value.active === 1 && value.flag_streaming === 1) {
 
