@@ -68,6 +68,7 @@ class GridCameraDisplay extends Component {
 		inputCkeckedBusqueda: false,
 		moduleSearch: false,
 		autoplay: true,
+		lightTwo: false,
 		completeCamera: null,
 		selectedCamera: {},
 		qnapServer: null,
@@ -81,6 +82,7 @@ class GridCameraDisplay extends Component {
 		pageCount: 1,
 		isplay: true,
 		servidorMultimedia: '',
+		protocol:null,
 		loadingSnap: false,
 		videosLoading: false,
 		historyLoading: false,
@@ -337,9 +339,9 @@ class GridCameraDisplay extends Component {
 	};
 
 	download = (params,dns) => {
-		let { apiStorageKey, dnsPort, typeMBOX} = this.state;
-		if(typeMBOX === 'light'){
-			const URI=`${params.relative_path_video}${apiStorageKey}`
+		let { apiStorageKey, dnsPort, typeMBOX, protocol, lightTwo} = this.state;
+		if(typeMBOX === 'light' && lightTwo === false){
+			const URI=`${params.relative_path_video}${apiStorageKey ? apiStorageKey : ''}`
 			axios({
 			  url:URI,
 			  method: "GET",
@@ -354,8 +356,25 @@ class GridCameraDisplay extends Component {
 			   link.click();
 			   document.body.removeChild(link);
 			 });
-		}else{
-			const URI=`http://${dns}:${dnsPort}/${params.relative_path_video}`
+		}if(typeMBOX === 'light' && lightTwo){
+			const URI=`${protocol}://${dns}/${params.relative_path_video}${apiStorageKey ? apiStorageKey : ''}`
+			axios({
+			  url:URI,
+			  method: "GET",
+		   responseType: "blob"
+			 }).then((response) => {
+				
+		   const url = window.URL.createObjectURL(new Blob([response.data]));
+			   const link = document.createElement("a");
+			   link.href = url;
+			   link.setAttribute("download", `video${params.fecha}-${params.real_hour}.mp4`);
+		   document.body.appendChild(link);
+			   link.click();
+			   document.body.removeChild(link);
+			 });
+		}
+		else{
+			const URI=`${protocol}://${dns}:${dnsPort}/${params.relative_path_video}`
 		axios({
 		  url:URI,
 		  method: "GET",
@@ -395,7 +414,7 @@ class GridCameraDisplay extends Component {
 	  }
 	  
 	_renderVideoList = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false, isDownload = false, isRecord = false, noButtons = false) => {
-		let { hasMore, qnapServer, qnapChannel, servidorMultimedia, dnsArray, camURL, apiStorageKey, awsApiStreamsCams, portContainer, dnsContainer, completeCamera, typeMBOX } = this.state;
+		let { hasMore, qnapServer, qnapChannel, servidorMultimedia, dnsArray, camURL, apiStorageKey, awsApiStreamsCams, portContainer, dnsContainer, completeCamera, typeMBOX, lightTwo } = this.state;
 		const userIdContainer = this.getUserID()
 		return loading ? (
 			this._renderLoading()
@@ -435,6 +454,7 @@ class GridCameraDisplay extends Component {
 									completeCamera={completeCamera}
 									noButtons={noButtons}
 									typeMBOX={typeMBOX}
+									lightTwo={lightTwo}
 								/>
 								:
 								<button key={vidx} className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={()=>this.download(video,dnsArray)}>{`${hasDns !== null ? video[0].fecha : video.fecha} - ${video.real_hour ? video.real_hour : null}`}</button>
@@ -465,6 +485,7 @@ class GridCameraDisplay extends Component {
 						completeCamera={completeCamera}
 						noButtons={noButtons}
 						typeMBOX={typeMBOX}
+						lightTwo={lightTwo}
 					/>
 				))}
 			</div>
@@ -579,6 +600,7 @@ class GridCameraDisplay extends Component {
 	_snapShot = async (camera) => {
 		this.setState({ loadingSnap: true });
 		let response = await conections.snapShotV2(camera.id);
+		console.log("response de camara", response)
 		const data = response.data;
 		if (data.success) {
 			this._loadFiles(camera, false, false, false, true)
@@ -883,7 +905,7 @@ class GridCameraDisplay extends Component {
 
 	_loadFiles = async (cam, destroyFiles = false, onlyCurrent = false, onlyHistory = false, onlyPhotos = false) => {
 		if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos));
-		let { selectedCamera } = this.state;
+		let { selectedCamera} = this.state;
 		let camera = cam && cam.id ? cam : selectedCamera;
 		let tipoMBOX= camera.dataCamValue.tipombox
 		let dnsMbox = camera.dataCamValue.urlhistory;
@@ -893,7 +915,7 @@ class GridCameraDisplay extends Component {
 		const secretKeyBody = {
 			'apiKey': camera.dataCamValue.tokenhistory
 		}
-		this.setState({apiStorageKey: camera.dataCamValue.UrlAPIStorage.secretkey, camURL: camera.dataCamValue, portContainer: camera.dataCamValue.urlhistoryport, dnsContainer: camera.dataCamValue.urlhistory, completeCamera: cam, typeMBOX: tipoMBOX})
+		this.setState({apiStorageKey: camera.dataCamValue.UrlAPIStorage.secretkey, camURL: camera.dataCamValue, portContainer: camera.dataCamValue.urlhistoryport, dnsContainer: camera.dataCamValue.urlhistory, completeCamera: cam, typeMBOX: tipoMBOX, protocol: protocol})
 		const protocolStorage = String(camera.dataCamValue.UrlAPIStorage.ip_url).split("://")[0]
 		const dnsStorage = String(camera.dataCamValue.UrlAPIStorage.ip_url).split("://")[1] 
 		const tokenStorage = String(camera.dataCamValue.UrlAPIStorage.secretkey).replace("?", "")
@@ -954,9 +976,9 @@ class GridCameraDisplay extends Component {
 								}
 					}else{
 						let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
-								if(response.data.data.items.length > 0){
+						if(response.data.data.items.length > 0){
 									let resHistory = response.data.data;
-									this.setState({resHistorySearch: resHistory})
+									this.setState({resHistorySearch: resHistory, lightTwo: true})
 									if (resHistory.items.length > 0) {
 											let dns_ip = dnsMbox
 											let dns_port = dns_portMbox
@@ -979,13 +1001,12 @@ class GridCameraDisplay extends Component {
 											}
 								}else{
 									let tokenApiStreams = await conections.getTokenApiStreamsCams(protocol, dnsMbox, dns_portMbox, secretKeyBody);
-										if(tokenApiStreams.data.token){
-
-											let response = await conections.getCamDataHistoryApiCams(protocol, dnsMbox, dns_portMbox, protocolStorage, dnsStorage, tokenStorage, camera.dataCamValue.num_cam, tokenApiStreams.data.token, portApiStorage);
-											if(!response.success){
+									if(tokenApiStreams.data.token){
+										let response = await conections.getCamDataHistoryApiCams(protocol, dnsMbox, dns_portMbox, protocolStorage, dnsStorage, tokenStorage, camera.dataCamValue.num_cam, tokenApiStreams.data.token, portApiStorage);	
+										if(response.success){
 												let resHistory = response.data;
 												let dns_port = dns_portMbox
-											this.setState({resHistorySearch: resHistory, awsApiStreamsCams: true})
+											this.setState({resHistorySearch: resHistory, awsApiStreamsCams: true, lightTwo: false})
 											this.setState({ dnsPort: dns_port})
 											if (resHistory.items.length > 0) {
 												let dns_ip = dnsMbox

@@ -13,7 +13,7 @@ class MediaContainer extends Component {
 
   render() {
     let { modal, loading } = this.state;
-    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value,  port, dnsContainer, isRecord, noButtons, typeMBOX, cam } = this.props;
+    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value,  port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo } = this.props;
     let dnsIp = ""
     let portCam = ""
     let protocol= null;
@@ -44,7 +44,8 @@ class MediaContainer extends Component {
             <ReactPlayer
               url={
                 isQnap ? (`${src}&open=normal`)
-                  : typeMBOX === 'light' && isRecord === false ? (`${src}`)
+                  : typeMBOX === 'light' && isRecord === false && lightTwo ? (`${protocol}://${dnsIp}/${src}`)
+                  :typeMBOX === 'light' && isRecord === false && lightTwo === false ? (`${src}`)
                   : typeMBOX === 'light' && isRecord === true ? urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol): urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
               }
               style={{ backgroundColor: '#000' }}
@@ -89,7 +90,8 @@ class MediaContainer extends Component {
               <ReactPlayer
                 url={
                   isQnap ? (`${src}&open=normal`)
-                    :typeMBOX === 'light' && isRecord === false ? (`${src}`)
+                    :typeMBOX === 'light' && isRecord === false && lightTwo ? (`${protocol}://${dnsIp}/${src}`)
+                    :typeMBOX === 'light' && isRecord === false && lightTwo === false ? (`${src}`)
                     : typeMBOX === 'light' && isRecord === true ? urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol): urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
                 }
                 playing={true}
