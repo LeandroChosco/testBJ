@@ -321,7 +321,9 @@ class CameraStream extends Component {
                 {cameraName && !this.props.hideInfo ? <p>
                   Direccion: {cameraName}
                 </p> : null}
-
+                {this.props.marker.extraData.dataCamValue.entrecalles ? <p>
+                  Entre calles: {this.props.marker.extraData.dataCamValue.entrecalles}
+                </p> : null}
                 {data.rel_cuadrante ? data.rel_cuadrante.length !== 0 ? (
                   data.rel_cuadrante.map(
                     (item) =>
