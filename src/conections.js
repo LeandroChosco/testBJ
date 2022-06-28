@@ -111,7 +111,7 @@ export default {
     return connectedSails.post(constants.sails_url + '/control-cams/screenshotV2/' + camara_id + '/?user_id=' + user_id);
   },
   getCamerasInternal: () => {
-    return Axios.get(constants.sails_url + '/control-cams/internal-cameras')
+    return connectedSails.get(constants.sails_url + '/control-cams/internal-cameras')
   },
   stopRecordV2: (data, camera_id) => {
     const user_id = getUserID();
