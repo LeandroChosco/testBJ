@@ -15,7 +15,7 @@ import CameraStream from '../../components/CameraStream';
 import GridCameraDisplay from '../../components/GridCameraDisplay';
 import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
 import SearchCamera from '../../components/SearchCamera';
-
+import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import './style.css';
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
@@ -532,6 +532,7 @@ class CamarasInternas extends Component {
 			.then((response) => {
                 
 				const camaras = response.data.data;
+				console.log("Camaras Internas", camaras)
 				let auxCamaras = [];
 				let offlineCamaras = [];
 				let disconnectedCameras = [];
@@ -562,7 +563,7 @@ class CamarasInternas extends Component {
 							name: `${value.street} ${value.number}, ${value.township}, ${value.town}, ${value.state} #cam${value.num_cam}`,
 							rel_cuadrante: value.RelCuadranteCams,
 							isHls: true,
-							url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port ? `:${value.UrlStreamMediaServer.output_port}` : null}${value.UrlStreamMediaServer.name}${value.channel}`,
+							url: urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol),
 							real_num_cam:
 								value.num_cam < 10 ? '0' + value.num_cam.toString() : value.num_cam.toString(),
 							camera_number: value.num_cam,
@@ -581,7 +582,7 @@ class CamarasInternas extends Component {
 									lng: value.google_cordenate.split(',')[1],
 									name: `${value.street} ${value.number}, ${value.township}, ${value.town}, ${value.state}`,
 									isHls: true,
-									url: `http://${value.UrlStreamMediaServer.ip_url_ms}${value.UrlStreamMediaServer.output_port ? `:${value.UrlStreamMediaServer.output_port}` : null}${value.UrlStreamMediaServer.name}${value.channel}`,
+									url: urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol),
 									real_num_cam:
 										value.num_cam < 10 ? '0' + value.num_cam.toString() : value.num_cam.toString(),
 									camera_number: value.num_cam,

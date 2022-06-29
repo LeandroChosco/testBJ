@@ -908,10 +908,10 @@ class GridCameraDisplay extends Component {
 		let { selectedCamera} = this.state;
 		let camera = cam && cam.id ? cam : selectedCamera;
 		let tipoMBOX= camera.dataCamValue.tipombox
-		let dnsMbox = camera.dataCamValue.urlhistory;
-		const dns_portMbox = camera.dataCamValue.urlhistoryport
+		let dnsMbox = camera.dataCamValue.urlhistory 
+		const dns_portMbox = camera.dataCamValue.urlhistoryport 
 		const protocol = camera.dataCamValue.protocolhistory
-		const portApiStorage = camera.dataCamValue.UrlAPIStorage.port
+		const portApiStorage = camera.dataCamValue.UrlAPIStorage.port 
 		const secretKeyBody = {
 			'apiKey': camera.dataCamValue.tokenhistory
 		}
@@ -1166,6 +1166,7 @@ class GridCameraDisplay extends Component {
 				if(countArraySearch <= 1){
 					for (let index = 1; index <= countArraySearch; index++) {
 						const last_day = DateTime.local().plus({ days: - +index }).setZone('America/Mexico_City').toISODate();
+						
 						const createArrDate = (arr) => {
 							let nuevoObjeto = {};
 							arr.forEach((x) => {
