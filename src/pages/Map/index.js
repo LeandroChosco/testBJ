@@ -338,7 +338,10 @@ class Map extends Component {
     let  center_lat = 0, center_lng = 0;
     for (let index = 0; index < this.state.markers.length; index++) {
       const element = this.state.markers[index];
-      element.setMap(null);
+      if(element){
+
+        element.setMap(null);
+      }
     }
 
     const data = await conections.getAllCams();
@@ -383,22 +386,24 @@ class Map extends Component {
       center_lat = center_lat + parseFloat(d.google_cordenate.split(',')[0]);
       center_lng = center_lng + parseFloat(d.google_cordenate.split(',')[1]);
       total = total + 1;
+      if(d.UrlStreamMediaServer){
 
-      const value = {
-        id: d.id,
-        num_cam: index + 1,
-        lat: parseFloat(d.google_cordenate.split(',')[0]),
-        lng: parseFloat(d.google_cordenate.split(',')[1]),
-        name: `${d.street} ${d.number}, ${d.township}, ${d.town}, ${d.state} #cam${d.num_cam}`,
-        isHls: d.tipo_camara === 3 ? false : true,
-        url:d.UrlStreamMediaServer !== null? urlHttpOrHttps(d.UrlStreamMediaServer.ip_url_ms, d.UrlStreamMediaServer.output_port, d.UrlStreamMediaServer.name, d.channel, d.UrlStreamMediaServer.protocol) : null,
-        flag_color: d.flag_color ? d.flag_color : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-        dataCamValue: d,
-        tipo_camara: d.tipo_camara,
-        fromMap: true,
-        urlHistory: urlHistory,
-        urlHistoryPort: urlHistoryPort
-      };
+        const value = {
+          id: d.id,
+          num_cam: index + 1,
+          lat: parseFloat(d.google_cordenate.split(',')[0]),
+          lng: parseFloat(d.google_cordenate.split(',')[1]),
+          name: `${d.street} ${d.number}, ${d.township}, ${d.town}, ${d.state} #cam${d.num_cam}`,
+          isHls: d.tipo_camara === 3 ? false : true,
+          url: urlHttpOrHttps(d.UrlStreamMediaServer.ip_url_ms, d.UrlStreamMediaServer.output_port, d.UrlStreamMediaServer.name, d.channel, d.UrlStreamMediaServer.protocol),
+          flag_color: d.flag_color ? d.flag_color : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+          dataCamValue: d,
+          tipo_camara: d.tipo_camara,
+          fromMap: true,
+          urlHistory: urlHistory,
+          urlHistoryPort: urlHistoryPort
+        };
+      
 
       if (is_cam) {
         if (value.lat && value.lng) {
@@ -438,12 +443,14 @@ class Map extends Component {
             })(newMarkers[index], this.state.map, this._createInfoWindow)
           );
         }
-      }
+      } 
       newPlaces.push(value);
+       }
     });
 
     let result = { newPlaces, newMarkers, total, center_lat, center_lng };
     return result;
+    
   }
 
   

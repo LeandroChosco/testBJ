@@ -35,7 +35,7 @@ class SideBar extends Component {
         }
         
         camaras.map(value => {
-          if (value.active === 1 && value.flag_streaming === 1) {
+          if (value.active === 1 && value.flag_streaming === 1 && value.UrlStreamMediaServer) {
 
             var urlHistory = null
             var urlHistoryPort = null
@@ -68,7 +68,7 @@ class SideBar extends Component {
                 " #cam" +
                 value.num_cam,
               isHls: value.tipo_camara === 3 ? false : true,
-              url: value.UrlStreamMediaServer !== null ? urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol): null,
+              url: urlHttpOrHttps(value.UrlStreamMediaServer.ip_url_ms, value.UrlStreamMediaServer.output_port, value.UrlStreamMediaServer.name, value.channel, value.UrlStreamMediaServer.protocol),
               dataCamValue: value,
               tipo_camara: value.tipo_camara,
               urlHistory: urlHistory,
