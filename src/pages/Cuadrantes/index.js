@@ -115,7 +115,7 @@ class Cuadrantes extends Component{
     }
 
     render(){
-      const { camsCuadrante, is_quadrant_filter} = this.state;
+      const { camsCuadrante, is_quadrant_filter, places} = this.state;
         return(
             <div>
                 <div className="containerCuadrantes">
@@ -329,7 +329,6 @@ class Cuadrantes extends Component{
     }
 
     _deleteCuadrante = (cuadrante) =>{
-        console.log('cuadrante', cuadrante)
         if(window.confirm("¿Esta seguro de eliminar "+cuadrante.name+" ?")){
             conections.deleteCuadrante(cuadrante.id).then((res)=>{
                 //console.log('resDelete',res)
@@ -348,6 +347,7 @@ class Cuadrantes extends Component{
 
         this.setState({loading: true})
         conections.getCuadrantes().then((response) => {
+            
             if(response.data.data.length !== 0){
                 this.setState({cuadrantes: response.data.data})
                 if(this.props.match.params.id){
@@ -360,8 +360,8 @@ class Cuadrantes extends Component{
                 }
                 else{
                     if(!quadrantFilter){
-                      this._camsCuadrante(this.state.cuadrantes[0].id);
-                      this.setState({cuadranteActual:this.state.cuadrantes[0].id,  is_quadrant_filter:false, filterData:[]});
+                        this._camsCuadrante(this.state.cuadrantes[0].id);
+                        this.setState({cuadranteActual:this.state.cuadrantes[0].id,  is_quadrant_filter:false, filterData:[]});
                     }else{
                       this._camsCuadrante(quadrantFilter.quadrant_id, quadrantFilter.data);
                       this.setState({cuadranteActual:quadrantFilter.quadrant_id, is_quadrant_filter:true})
@@ -405,7 +405,7 @@ class Cuadrantes extends Component{
     }
 
     _camsCuadrante = (id, quadrantFilter) => {
-      this.setState({is_quadrant_filter:false});
+        this.setState({is_quadrant_filter:false});
         this.state.cuadrantes.map(item =>{
             if(item.id === id){
                 this.setState({cuadranteActual:item.id})
@@ -435,8 +435,7 @@ class Cuadrantes extends Component{
     if (camaras.length !== 0) {
       camaras.map(value => {
         //console.log('camara',value)
-        if (value.active === 1 && value.flag_streaming === 1) {
-
+        if (value.active === 1 && value.flag_streaming === 1 && value.UrlStreamMediaServer) {
           let urlHistory = null
           let urlHistoryPort = null
 
@@ -481,7 +480,7 @@ class Cuadrantes extends Component{
           }
 
         } else {
-          if (value.active === 1) {
+          if (value.active === 1 && value.UrlStreamMediaServer)  {
             offlineCamaras.push({
               id: value.id,
               num_cam: indexFail,

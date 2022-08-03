@@ -23,7 +23,7 @@ class SideBar extends Component {
     conections.getAllCams().then(data => {
       // console.log(data);
       const camaras = data.data;
-      console.log("camaras", camaras)
+      //console.log("camaras", camaras)
       if (data.status === 200) {
         // console.log("entro al if");
         let auxCamaras = [];
