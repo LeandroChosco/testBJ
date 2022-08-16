@@ -19,7 +19,7 @@ class MediaContainer extends Component {
     let dnsIp = ""
     let portCam = ""
 
-    let poster = exists_image ? coverImage : coverImage === "images/no_imagen.jpg"? urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol) : noDisponible;
+    let poster = exists_image ? coverImage : coverImage === "images/no_imagen.jpg"? noDisponible : urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol);
 
     let protocol= null;
     if (dnsContainer) {
