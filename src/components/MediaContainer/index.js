@@ -7,15 +7,20 @@ import ReactPlayer from 'react-player';
 import axios from 'axios';
 import constants from '../../constants/constants';
 import { urlHttpOrHttpsMultimedia } from '../../functions/urlHttpOrHttps';
+import noDisponible from '../../assets/images/noDisponible.png';
+
 
 class MediaContainer extends Component {
   state = { modal: false, loading: false };
 
   render() {
     let { modal, loading } = this.state;
-    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value,  port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo } = this.props;
+    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value,  port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo, coverImage, historyServerDns, historyServerPort, historyServerProtocol } = this.props;
     let dnsIp = ""
     let portCam = ""
+
+    let poster = exists_image ? coverImage : coverImage === "images/no_imagen.jpg"? urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol) : noDisponible;
+
     let protocol= null;
     if (dnsContainer) {
       dnsIp = dnsContainer
@@ -51,6 +56,13 @@ class MediaContainer extends Component {
               style={{ backgroundColor: '#000' }}
               width="100%"
               height="120px"
+              config={{
+                file: { 
+                  attributes: { 
+                    poster: poster,
+                  } 
+                } 
+              }}
             />
           )}
           {exists_image && (
