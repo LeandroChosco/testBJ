@@ -7,8 +7,8 @@ import ReactPlayer from 'react-player';
 import axios from 'axios';
 import constants from '../../constants/constants';
 import { urlHttpOrHttpsMultimedia } from '../../functions/urlHttpOrHttps';
-import video from '../../assets/videos/default.mp4';
 import noDisponible from '../../assets/images/noDisponible.png';
+import noHistoric from '../../assets/images/noHistoric.png';
 
 
 
@@ -21,7 +21,7 @@ class MediaContainer extends Component {
     let dnsIp = ""
     let portCam = ""
 
-    let poster = value.relative_path_image === "images/no_imagen.jpg" ? noDisponible : value.relative_path_image === "images/no_video.jpg" ? video : (servidorMultimedia + "/" + value.relative_path_image);
+    let poster = value.relative_path_image === "images/no_imagen.jpg" ? noDisponible : value.relative_path_image === "images/no_video.jpg" ? noHistoric : (servidorMultimedia + "/" + value.relative_path_image);
 
     let protocol= null;
     if (dnsContainer) {
