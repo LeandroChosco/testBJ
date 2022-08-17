@@ -494,12 +494,14 @@ class GridCameraDisplay extends Component {
 
 
 	_renderVideoListSearch = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false, isDownloadSearch = false, isRecord = false, noButtons = false) => {
-		let {  servidorMultimedia, dnsArray, camURL, apiStorageKey, awsApiStreamsCams, selectedCamera, portContainer, dnsContainer, typeMBOX, protocolDownload } = this.state;
+		let {  servidorMultimedia, dnsArray, camURL, apiStorageKey, awsApiStreamsCams, selectedCamera, portContainer, dnsContainer, typeMBOX, protocolDownload, historyServerDns, historyServerPort, historyServerProtocol } = this.state;
 		if(videoList.length >0){
 			if(!videoList[0].active){
 				videoList.shift()
 			}
 		}
+
+		console.log(videoList)
 		return loading ? (
 			this._renderLoading()
 		) :  videoList && videoList.length > 0  ? (
@@ -522,6 +524,9 @@ class GridCameraDisplay extends Component {
 			download={this.download}
 			renderPagination={this._renderPagination}
 			protocolDownload={protocolDownload}
+			historyServerDns={historyServerDns}
+			historyServerPort={historyServerPort}
+			historyServerProtocol={historyServerProtocol}
 			/>
 			):				
 		showNoFiles ? (

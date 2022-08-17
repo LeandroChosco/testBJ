@@ -7,7 +7,9 @@ import ReactPlayer from 'react-player';
 import axios from 'axios';
 import constants from '../../constants/constants';
 import { urlHttpOrHttpsMultimedia } from '../../functions/urlHttpOrHttps';
+import video from '../../assets/videos/default.mp4';
 import noDisponible from '../../assets/images/noDisponible.png';
+
 
 
 class MediaContainer extends Component {
@@ -15,11 +17,11 @@ class MediaContainer extends Component {
 
   render() {
     let { modal, loading } = this.state;
-    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value,  port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo, coverImage, historyServerDns, historyServerPort, historyServerProtocol } = this.props;
+    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value,  port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo, coverImage, historyServerDns, historyServerPort, historyServerProtocol, exists_image_historic, servidorMultimedia } = this.props;
     let dnsIp = ""
     let portCam = ""
 
-    let poster = exists_image ? coverImage : coverImage === "images/no_imagen.jpg"? noDisponible : urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol);
+    let poster = value.relative_path_image === "images/no_imagen.jpg" ? noDisponible : value.relative_path_image === "images/no_video.jpg" ? video : (servidorMultimedia + "/" + value.relative_path_image);
 
     let protocol= null;
     if (dnsContainer) {
@@ -42,6 +44,7 @@ class MediaContainer extends Component {
       protocol= cam.protocolhistory;
     }
 
+    console.log("props" , value.relative_path_image)
     return (
       <div className={!covid ? 'mediaContainer col-6 p10' : 'col-3 p-3'}>
         <Card onClick={src !== '/images/no_video.jpg' ? () => this.setState({ modal: true }) : null}>

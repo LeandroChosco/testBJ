@@ -2,7 +2,7 @@ import React, {useState, } from 'react'
 import PaginationNumber from './PaginationNumber'
 import MediaContainer from '../MediaContainer'
 export default function PaginationList(props) {
-const {awsApiStreamsCams, videoList, reloadData, download, isDownloadSearch, dnsArray, protocolDownload, hasDns, camURL, dnsContainer, portContainer, servidorMultimedia, apiStorageKey, noButtons, isRecord, typeMBOX, selectedCamera} = props;
+const {awsApiStreamsCams, videoList, reloadData, download, isDownloadSearch, dnsArray, protocolDownload, hasDns, camURL, dnsContainer, portContainer, servidorMultimedia, apiStorageKey, noButtons, isRecord, typeMBOX, selectedCamera, historyServerDns, historyServerPort, historyServerProtocol} = props;
 const [videos, setVideos] = useState(videoList)
 const [currentPage, setCurrentPage] = useState(1)
 const totalVideos = 40
@@ -15,7 +15,6 @@ const currentPost = videos.slice(indexOfFirstPost, indexOfLastPost)
 function paginate(pageNumber) {
     setCurrentPage(pageNumber)
 }
-
     return (
         <>
         <PaginationNumber videos={totalVideos} totalVideos={videos.length} paginate={paginate} /> ,
@@ -54,6 +53,11 @@ function paginate(pageNumber) {
                     noButtons={noButtons}
                     isRecord={isRecord}
                     typeMBOX={typeMBOX}
+                    exists_image_historic={list.exists_image}
+                    historyServerDns={historyServerDns}
+			        historyServerPort={historyServerPort}
+			        historyServerProtocol={historyServerProtocol}
+                    coverImage={list.relative_path_image}
                     />
                 </>
                     ): (<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={()=>download(list,dnsArray, protocolDownload)}>{`${dnsArray !== null ? list.fecha : list.fecha} - ${list.real_hour ? list.real_hour : null}`}</button>))
@@ -62,6 +66,7 @@ function paginate(pageNumber) {
             
             
             }
+            {console.log(currentPost)}
             </div>
 
             :
