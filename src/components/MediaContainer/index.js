@@ -21,7 +21,10 @@ class MediaContainer extends Component {
     let dnsIp = ""
     let portCam = ""
 
-    let poster = value.relative_path_image === "images/no_imagen.jpg" ? noDisponible : value.relative_path_image === "images/no_video.jpg" ? noHistoric : (servidorMultimedia + "/" + value.relative_path_image);
+    let poster = !exists_image_historic && src === "images/no_video.jpg" ? noHistoric: coverImage !== "images/no_imagen.jpg"? urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol) : noDisponible;
+
+    // let poster = value.relative_path_image === "images/no_imagen.jpg" ? noDisponible : value.relative_path_image === "images/no_video.jpg" ? noHistoric : (servidorMultimedia + "/" + value.relative_path_image);
+
 
     let protocol= null;
     if (dnsContainer) {
@@ -43,7 +46,7 @@ class MediaContainer extends Component {
     if(cam.protocolhistory && !cam.dataCamValue){
       protocol= cam.protocolhistory;
     }
-
+    
     return (
       <div className={!covid ? 'mediaContainer col-6 p10' : 'col-3 p-3'}>
         <Card onClick={src !== 'images/no_video.jpg' ? () => this.setState({ modal: true }) : null}>
