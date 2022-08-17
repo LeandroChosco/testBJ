@@ -99,6 +99,11 @@ function paginate(pageNumber) {
                     noButtons={noButtons}
                     isRecord={isRecord}
                     typeMBOX={typeMBOX}
+                    exists_image_historic={list.exists_image}
+                    historyServerDns={historyServerDns}
+			        historyServerPort={historyServerPort}
+			        historyServerProtocol={historyServerProtocol}
+                    coverImage={list.relative_path_image}
                     />
                     </>
                     ): (<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={()=>download(list,dnsArray, protocolDownload)}>{`${dnsArray !== null ? list.fecha : list.fecha} - ${list.real_hour ? list.real_hour : null}`}</button>))
