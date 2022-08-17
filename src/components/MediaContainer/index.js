@@ -44,10 +44,9 @@ class MediaContainer extends Component {
       protocol= cam.protocolhistory;
     }
 
-    console.log("props" , value.relative_path_image)
     return (
       <div className={!covid ? 'mediaContainer col-6 p10' : 'col-3 p-3'}>
-        <Card onClick={src !== '/images/no_video.jpg' ? () => this.setState({ modal: true }) : null}>
+        <Card onClick={src !== 'images/no_video.jpg' ? () => this.setState({ modal: true }) : null}>
           {exists_video && (
             <ReactPlayer
               url={
@@ -82,7 +81,7 @@ class MediaContainer extends Component {
         </Card>
 
         {/* Modal */}
-        <Modal show={modal} onHide={() => this.setState({ modal: false })}>
+        <Modal show={modal} onHide={() => src !== 'images/no_video.jpg' ? this.setState({ modal: false }) : null}>
           <Modal.Header closeButton>{
             loading ? (
               <div>

@@ -66,7 +66,6 @@ function paginate(pageNumber) {
             
             
             }
-            {console.log(currentPost)}
             </div>
 
             :

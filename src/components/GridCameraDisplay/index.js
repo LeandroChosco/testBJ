@@ -500,8 +500,7 @@ class GridCameraDisplay extends Component {
 				videoList.shift()
 			}
 		}
-
-		console.log(videoList)
+		
 		return loading ? (
 			this._renderLoading()
 		) :  videoList && videoList.length > 0  ? (
