@@ -343,10 +343,10 @@ class GridCameraDisplay extends Component {
 		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
 	};
 
-	download = (params,dns, protocol) => {
-		let { apiStorageKey, dnsPort, typeMBOX} = this.state;
+	download = (params,dns) => {
+		let { apiStorageKey, dnsPort, typeMBOX, historyServerProtocol } = this.state;
 		if(typeMBOX === 'light'){
-			const URI=`${params.relative_path_video}${apiStorageKey}`
+			const URI= apiStorageKey ? `${params.relative_path_video}${apiStorageKey}` : dnsPort === 80 ? `${historyServerProtocol}://${dns}/${params.relative_path_video}` : `${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`;
 			axios({
 			  url:URI,
 			  method: "GET",
@@ -362,7 +362,7 @@ class GridCameraDisplay extends Component {
 			   document.body.removeChild(link);
 			 });
 		}else{
-			const URI=`${protocol}://${dns}:${dnsPort}/${params.relative_path_video}`
+			const URI=`${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`
 		axios({
 		  url:URI,
 		  method: "GET",
