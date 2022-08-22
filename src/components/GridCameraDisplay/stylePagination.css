@@ -1,0 +1,27 @@
+
+.pagination-number {
+	justify-content: space-around;
+	display: flex;
+    border: 0.5px solid rgb(80, 80, 80);
+    width: 100%;
+}
+
+.pagination-number > li {
+	background-color: #fafafa;
+	border-radius: 5px;
+	width: 100%;
+}
+
+.pagination-number > li > a {
+	
+	display: block;
+	cursor: pointer;
+	color: black;
+}
+.pagination-number .active {
+	
+	display: block;
+	cursor: pointer;
+	background-color: aqua;
+	color: white;
+}

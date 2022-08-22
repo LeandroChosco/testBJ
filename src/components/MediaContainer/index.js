@@ -7,15 +7,25 @@ import ReactPlayer from 'react-player';
 import axios from 'axios';
 import constants from '../../constants/constants';
 import { urlHttpOrHttpsMultimedia } from '../../functions/urlHttpOrHttps';
+import noDisponible from '../../assets/images/noDisponible.png';
+import noHistoric from '../../assets/images/noHistoric.png';
+
+
 
 class MediaContainer extends Component {
   state = { modal: false, loading: false };
 
   render() {
     let { modal, loading } = this.state;
-    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value,  port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo } = this.props;
+    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value,  port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo, coverImage, historyServerDns, historyServerPort, historyServerProtocol, exists_image_historic, servidorMultimedia } = this.props;
     let dnsIp = ""
     let portCam = ""
+
+    let poster = !exists_image_historic && src === "images/no_video.jpg" ? noHistoric: coverImage !== "images/no_imagen.jpg"? urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol) : noDisponible;
+
+    // let poster = value.relative_path_image === "images/no_imagen.jpg" ? noDisponible : value.relative_path_image === "images/no_video.jpg" ? noHistoric : (servidorMultimedia + "/" + value.relative_path_image);
+
+
     let protocol= null;
     if (dnsContainer) {
       dnsIp = dnsContainer
@@ -36,10 +46,10 @@ class MediaContainer extends Component {
     if(cam.protocolhistory && !cam.dataCamValue){
       protocol= cam.protocolhistory;
     }
-
+    
     return (
       <div className={!covid ? 'mediaContainer col-6 p10' : 'col-3 p-3'}>
-        <Card onClick={src !== '/images/no_video.jpg' ? () => this.setState({ modal: true }) : null}>
+        <Card onClick={src !== 'images/no_video.jpg' ? () => this.setState({ modal: true }) : null}>
           {exists_video && (
             <ReactPlayer
               url={
@@ -51,6 +61,13 @@ class MediaContainer extends Component {
               style={{ backgroundColor: '#000' }}
               width="100%"
               height="120px"
+              config={{
+                file: { 
+                  attributes: { 
+                    poster: poster,
+                  } 
+                } 
+              }}
             />
           )}
           {exists_image && (
@@ -67,7 +84,7 @@ class MediaContainer extends Component {
         </Card>
 
         {/* Modal */}
-        <Modal show={modal} onHide={() => this.setState({ modal: false })}>
+        <Modal show={modal} onHide={() => src !== 'images/no_video.jpg' ? this.setState({ modal: false }) : null}>
           <Modal.Header closeButton>{
             loading ? (
               <div>
