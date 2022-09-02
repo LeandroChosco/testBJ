@@ -435,7 +435,8 @@ class Cuadrantes extends Component{
     if (camaras.length !== 0) {
       camaras.map(value => {
         //console.log('camara',value)
-        if (value.active === 1 && value.flag_streaming === 1 && value.UrlStreamMediaServer) {
+        if (value.active === 1 && value.flag_streaming === 1) {
+
           let urlHistory = null
           let urlHistoryPort = null
 
@@ -480,7 +481,7 @@ class Cuadrantes extends Component{
           }
 
         } else {
-          if (value.active === 1 && value.UrlStreamMediaServer)  {
+          if (value.active === 1) {
             offlineCamaras.push({
               id: value.id,
               num_cam: indexFail,

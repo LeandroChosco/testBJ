@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import { Header, Button, Grid } from "semantic-ui-react";
 
 import firebaseC5cuajimalpa from "../../constants/configC5CJ";
+const handleComplaintsRedirect = (userId,chatId) => {
+  return window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/${userId}/${chatId}`)
+}
 
 const UserDetailsComponent = props => {
   const { dataUser, dataCamValue } = props;
@@ -12,7 +15,8 @@ const UserDetailsComponent = props => {
     props.propsIniciales.chats.forEach(chat => {
       if (chat.user_creation === dataUser.u_user_id) {
         userFound = true;
-        props.propsIniciales.history.push("/chat?f=2&u=" + dataUser.u_user_id);
+        // props.propsIniciales.history.push("/chat?f=2&u=" + dataUser.u_user_id);
+        handleComplaintsRedirect(chat.c5Unread,chat.id)
       }
     });
 
@@ -20,7 +24,7 @@ const UserDetailsComponent = props => {
       //console.log('no encontrado, cree chat');
       //console.log(props.dataCamValue);
       firebaseC5cuajimalpa
-        .app("c5cuajimalpa")
+        .app("c5benito")
         .firestore()
         .collection("messages")
         .add({
@@ -38,11 +42,16 @@ const UserDetailsComponent = props => {
           user_creation: dataUser.u_user_id,
           user_name: dataUser.display_name,
           user_cam: dataCamValue
-        });
+        })
+        .then((data)=>{
+          setTimeout(() => {
+            handleComplaintsRedirect(0,data.id)
+          }, 1000);
+        })
 
-      setTimeout(() => {
-        props.propsIniciales.history.push("/chat?f=2&u=" + dataUser.u_user_id);
-      }, 1000);
+        ;
+
+     
     }
   };
 

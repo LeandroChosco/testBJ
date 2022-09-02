@@ -1,7 +1,7 @@
 import favicon from '../assets/images/icons/favicon.jpg'
 // Produccion
 const sails_url = "https://customer-bj-api.radarapptechnologies.com";
-const radar_backend = "https://api.radarapptechnologies.com/graphql";
+const radar_backend = "https://radar-api-test.radarapptechnologies.com/graphql";
 const express_url = "http://3.15.181.186";
 
 //ligas de dashboard embebed
@@ -10,8 +10,8 @@ const detialDashboard="http://95.216.37.253:6868/dashboard/iframes/"
 
 //Dev
 // sails_url genera token de autenticacion 
-//const sails_url = "http://apibjdev.energetikatechnology.com";
-//const radar_backend = "https://radar-api-dev.radarapptechnologies.com/graphql";
+// const sails_url = "https://customer-bj-api-dev.radarapptechnologies.com";
+// const radar_backend = "https://api.radarapptechnologies.com/graphql";
 const webSocketPort = '20';
 const apiPort = "3000";
 const sailsPort = "1337";
