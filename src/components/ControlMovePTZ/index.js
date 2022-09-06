@@ -27,9 +27,9 @@ const ControlMovePTZ = (props) => {
       let params = { ip: camera.dataCamValue.camera_ip };
       let urlHistory = camera.urlHistory;
       let urlHistoryPort = camera.urlHistoryPort;
-
-      let dataDevice = await conections.newOnvifDevice(urlHistory, urlHistoryPort, params);
-      let dataProfile = await conections.getProfilePTZ(urlHistory, urlHistoryPort, params);
+      let protocoPTZ = camera.dataCamValue.protocolhistory
+      let dataDevice = await conections.newOnvifDevice(urlHistory, urlHistoryPort, params, protocoPTZ);
+      let dataProfile = await conections.getProfilePTZ(urlHistory, urlHistoryPort, params, protocoPTZ);
       params.ProfileToken = dataProfile.data ? dataProfile.data.token : '';
       if (!params.ProfileToken || params.ProfileToken === '')
         setErrorMessage('No se encontraron los recursos necesarios para poder controlar la camara.');

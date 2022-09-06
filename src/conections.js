@@ -363,10 +363,10 @@ export default {
     return connectedSails.get(constants.detialDashboard+id+'?user_id=1')
   },
   // Opciones PTZ
-  newOnvifDevice: (urlhistory, urlhistoryport, data) => {
+  newOnvifDevice: (urlhistory, urlhistoryport, data, protocoPTZ) => {
 
-    var getUrlHistory = "0.0.0.0"
-    var getUrlHistoryPort = "00"
+    let getUrlHistory = "0.0.0.0"
+    let getUrlHistoryPort = "00"
 
     if (urlhistory != null) {
       getUrlHistory = urlhistory.toString()
@@ -376,12 +376,12 @@ export default {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/new/device', data);
+    return Axios.post(protocoPTZ + "://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/new/device', data);
   },
-  getProfilePTZ: (urlhistory, urlhistoryport, data) => {
+  getProfilePTZ: (urlhistory, urlhistoryport, data, protocoPTZ) => {
 
-    var getUrlHistory = "0.0.0.0"
-    var getUrlHistoryPort = "00"
+    let getUrlHistory = "0.0.0.0"
+    let getUrlHistoryPort = "00"
 
     if (urlhistory != null) {
       getUrlHistory = urlhistory.toString()
@@ -391,7 +391,7 @@ export default {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/get/profile', data);
+    return Axios.post(protocoPTZ + "://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/get/profile', data);
   },
   continuousMovePTZ: (urlhistory, urlhistoryport, data) => {
 
