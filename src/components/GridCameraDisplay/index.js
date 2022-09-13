@@ -21,6 +21,7 @@ import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/acti
 import * as QvrFunctions from '../../functions/getQvrFunctions';
 
 import './style.css';
+import Placas from './placas';
 
 const SHOW_HISTORY = 3;
 const countryOptions = [
@@ -317,6 +318,11 @@ class GridCameraDisplay extends Component {
 						</div>
 						<div className="col matchesgrid" align="center">
 							Historial
+							<br />
+							{selectedCamera.id === 5213 ? this._showPlates(true) : null }
+							
+							{selectedCamera.id !== 5213 ? this._showPlates(false) : null }
+
 							{/*  ---matches reales---
 								{
 										matches.length > 0 ? 
@@ -338,6 +344,13 @@ class GridCameraDisplay extends Component {
 			</div>
 		);
 	}
+
+	_showPlates = (state = false) =>{
+		return(
+			<Placas reset={state} />
+		)
+	}
+
 
 	Clicked = (dns) => {
 		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
