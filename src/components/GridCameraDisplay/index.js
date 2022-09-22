@@ -319,9 +319,12 @@ class GridCameraDisplay extends Component {
 						<div className="col matchesgrid" align="center">
 							Historial
 							<br />
-							{selectedCamera.id === 5213 ? this._showPlates(true, selectedCamera) : null }
-							
-							{selectedCamera.id !== 5213 ? this._showPlates(false) : null }
+
+							{/* { selectedCamera.dataCamValue? selectedCamera.dataCamValue.dns === "172.16.1.15" ? this._showPlates(true, selectedCamera) : selectedCamera.dataCamValue.dns === "192.168.9.201" ? this._showPlates(true, selectedCamera) : this._showPlates(false) : null} */}
+
+							{ selectedCamera.dataCamValue ? selectedCamera.dataCamValue.dns === "172.16.1.15" || selectedCamera.dataCamValue.dns === "192.168.9.201" ? this._showPlates(true, selectedCamera) : null : null}
+
+							{ selectedCamera.dataCamValue ? selectedCamera.dataCamValue.dns !== "172.16.1.15" && selectedCamera.dataCamValue.dns !== "192.168.9.201" ? this._showPlates(false) : null : null}
 
 							{/*  ---matches reales---
 								{
