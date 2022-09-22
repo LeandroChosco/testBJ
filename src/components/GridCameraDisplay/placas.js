@@ -11,10 +11,11 @@ import { getIo } from '../../constants/socketplate'
 export default function Placas(props) {
 
     const [test, setTest] = useState("")
+    const [refresh, setRefresh] = useState(false)
     const arrayDetections = []
     const io = getIo();
+    const selectedCamera = props.selectedCamera
     const connection = props.reset
-    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         if (connection === false) {
@@ -23,13 +24,15 @@ export default function Placas(props) {
         } if (connection === true) {
             io.connect();
             io.on('connect', () => { console.log("Socket connected") })
-            io.on("bj-get-plate-detection", (data) => {
+            io.on("bj-create-plate-detection", (data) => {
+                // if (data.ip === selectedCamera.dataCamValue.camera_ip) {
                 if (data.timestamp) {
                     setRefresh(true)
                     setTest("")
                     let results = getPlates(data).slice(0, 100);
                     setTest(results);
                 }
+                // }
             })
         }
     }, [])

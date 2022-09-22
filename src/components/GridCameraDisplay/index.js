@@ -319,7 +319,7 @@ class GridCameraDisplay extends Component {
 						<div className="col matchesgrid" align="center">
 							Historial
 							<br />
-							{selectedCamera.id === 5213 ? this._showPlates(true) : null }
+							{selectedCamera.id === 5213 ? this._showPlates(true, selectedCamera) : null }
 							
 							{selectedCamera.id !== 5213 ? this._showPlates(false) : null }
 
@@ -345,9 +345,9 @@ class GridCameraDisplay extends Component {
 		);
 	}
 
-	_showPlates = (state = false) =>{
+	_showPlates = (state = false, selectedCamera) =>{
 		return(
-			<Placas reset={state} />
+			<Placas reset={state} selectedCamera={selectedCamera} />
 		)
 	}
 
