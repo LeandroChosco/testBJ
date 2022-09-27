@@ -37,6 +37,7 @@ export default function Placas(props) {
                     setTest("");
                     let results = getPlates(data).slice(0, 100);
                     setTest(results);
+
                 }
             })
         }

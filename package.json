@@ -68,6 +68,7 @@
     "react-toastify": "^5.1.1",
     "react-toasts": "^3.0.3",
     "react-tree-graph": "^5.0.0",
+    "reactstrap": "^9.1.4",
     "recharts": "^1.8.5",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",

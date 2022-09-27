@@ -26,6 +26,7 @@ import DataTickets from '../../components/Dashboard/dataTickets';
 import DataTicketsPerUser from '../../components/Dashboard/dataTicketsPerUser';
 import AttendedVSclosed from '../../components/Dashboard/attendedVScloded';
 import LastCreadedCams from '../../components/Dashboard/lastCreatedCams';
+import Placas from "../../components/Dashboard/Placas"
 import {
   RiEye2Fill
 } from "react-icons/ri";
@@ -129,6 +130,14 @@ class Dashboard extends Component {
         render: () => (
           <Tab.Pane attached={false}>
             {this.renderEmebidoDashboard()}
+          </Tab.Pane>
+        ),
+      },
+      {
+        menuItem: "LPR",
+        render: () => (
+          <Tab.Pane attached={false}>
+            {this.renderLPRDashboard()}
           </Tab.Pane>
         ),
       },
@@ -366,6 +375,13 @@ class Dashboard extends Component {
             }
           </div>
         </div>
+      </div>
+    )
+  }
+  renderLPRDashboard(){
+    return(
+      <div>
+      <Placas />
       </div>
     )
   }

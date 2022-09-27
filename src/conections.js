@@ -59,6 +59,33 @@ connectedRadar.interceptors.response.use(response=>{
 
 
 export default {
+
+  // Dashboard LPR
+  
+  getLPRGroupType:()=>{
+    return connectedSails.get(`${constants.sails_url}/lpr/byGroup`)
+  },
+  getLPRTotalDay:()=>{
+    return connectedSails.get(`${constants.sails_url}/lpr/perDay`)
+  },
+  getLPRTotalWeek:()=>{
+    return connectedSails.get(`${constants.sails_url}/lpr/perWeek`)
+  },
+  getLPRTotalMonth:()=>{
+    return connectedSails.get(`${constants.sails_url}/lpr/perMonth`)
+  },
+  getLPRTableList:()=>{
+    return connectedSails.get(`${constants.sails_url}/lpr/list`)
+  },
+  getLPRTotalAlerts:()=>{
+    return connectedSails.get(`${constants.sails_url}/lpr/total`)
+  },
+  getLPRAlertHour:()=>{
+    return connectedSails.get(`${constants.sails_url}/lpr/perHour`)
+  },
+  getLPRAlertWeek:()=>{
+    return connectedSails.get(`${constants.sails_url}/lpr/perWeekHour`)
+  },
   getOnTermicPhotoData: (name) => {
     return connectedSails.get(constants.sails_url + '/termicfiles-one/' + name);
   },
