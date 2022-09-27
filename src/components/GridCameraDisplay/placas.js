@@ -19,28 +19,25 @@ export default function Placas(props) {
 
     useEffect(() => {
         if (props.selectedCamera) {
-            setSelectedCamera(props.selectedCamera.dataCamValue.dns)
+            setSelectedCamera(props.selectedCamera.dataCamValue.dns.split("-")[2])
         }
         if (connection === false) {
             io.disconnect();
             io.on('disconnect', () => { console.log("Socket disconnected") });
         } if (connection === true) {
-            if (props.selectedCamera.dataCamValue.dns !== selectedCamera) {
+            if (props.selectedCamera.dataCamValue.dns.split("-")[2] !== selectedCamera) {
                 io.disconnect();
                 io.on('disconnect', () => { console.log("Socket disconnected") });
             }
             io.connect();
             io.on('connect', () => { console.log("Socket connected") })
             io.on("bj-create-plate-detection", (data) => {
-                // console.log(data)
-                // if (data.data[0].camera_ip === selectedCamera) {
-                    // if (data.data[0].timestamp) {
+                if (data.camera_ip === selectedCamera) {
                     setRefresh(true);
                     setTest("");
-                    let results = getPlates(data.data[0]).slice(0, 100);
+                    let results = getPlates(data).slice(0, 100);
                     setTest(results);
-                    // }
-                // }
+                }
             })
         }
     }, [selectedCamera])
