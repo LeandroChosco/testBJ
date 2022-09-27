@@ -32,13 +32,13 @@ export default function Placas(props) {
             io.connect();
             io.on('connect', () => { console.log("Socket connected") })
             io.on("bj-create-plate-detection", (data) => {
-                if (data.camera_ip === selectedCamera) {
+                // if (data.camera_ip === selectedCamera) {
                     setRefresh(true);
                     setTest("");
                     let results = getPlates(data).slice(0, 100);
                     setTest(results);
 
-                }
+                // }
             })
         }
     }, [selectedCamera])
