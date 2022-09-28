@@ -14,14 +14,7 @@ export const CurveDash =(props) =>{
   const [categoriesGrid, setCategoriesGrid] = useState([])
   const init =async () =>{
     const alertPerHour = await conections.getLPRAlertHour();
-    if(props.dataGraphic){
-      props.dataGraphic.forEach(element =>{
-        dataArraySeriesGrid.push(element.total)
-        dataArrayCategoriesGrid.push(`${element.hour}:00`)
-      })
-      setSeriesGrid(dataArraySeriesGrid)
-      setCategoriesGrid(dataArrayCategoriesGrid)
-    }
+
     if(alertPerHour.data && alertPerHour.data.msg ==='ok' && alertPerHour.data.success){
       alertPerHour.data.data.forEach(element => {
         dataArraySeries.push(element.total)
@@ -32,6 +25,14 @@ export const CurveDash =(props) =>{
     }
 
 
+    if(props.dataGraphic){
+      props.dataGraphic.forEach(element =>{
+        dataArraySeriesGrid.push(element.total)
+        dataArrayCategoriesGrid.push(`${element.hour}:00`)
+      })
+      setSeriesGrid(dataArraySeriesGrid)
+      setCategoriesGrid(dataArrayCategoriesGrid)
+    }
   }
   useEffect(() => {
     init()
@@ -46,21 +47,41 @@ export const CurveDash =(props) =>{
           id: "smooth"
         },
         xaxis: {
-          categories: categoriesGrid ? categoriesGrid : categories
+          categories: categories 
         }
       },
       series: [
         {
           name: "Camara 1",
-          data: seriesGrid ? seriesGrid : series
+          data: series 
         }
       ]
     }
+    const dataGrid={
+      options: {
+      stroke: {
+          curve: 'smooth',
+        },
+      chart: {
+        id: "smooth"
+      },
+      xaxis: {
+        categories: categoriesGrid 
+      }
+    },
+    series: [
+      {
+        name: "Camara 1",
+        data: seriesGrid 
+      }
+    ]
+  }
+
     return (
         // <div className="wChart">
             <Chart
               options={data.options}
-              series={data.series}
+              series={props.dataGraphic ? dataGrid.series : data.series}
               type="area"
               width="100%"
               height= {props.stateHeight ? props.stateHeight : '500'}
