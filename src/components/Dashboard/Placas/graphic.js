@@ -6,10 +6,22 @@ import './styles.css'
 export const CurveDash =(props) =>{
   let dataArraySeries =[];
   let dataArrayCategories =[];
+  let dataArraySeriesGrid =[];
+  let dataArrayCategoriesGrid =[];
   const [series, setSeries] = useState([])
   const [categories, setCategories] = useState([])
+  const [seriesGrid, setSeriesGrid] = useState([])
+  const [categoriesGrid, setCategoriesGrid] = useState([])
   const init =async () =>{
     const alertPerHour = await conections.getLPRAlertHour();
+    if(props.dataGraphic){
+      props.dataGraphic.forEach(element =>{
+        dataArraySeriesGrid.push(element.total)
+        dataArrayCategoriesGrid.push(`${element.hour}:00`)
+      })
+      setSeriesGrid(dataArraySeriesGrid)
+      setCategoriesGrid(dataArrayCategoriesGrid)
+    }
     if(alertPerHour.data && alertPerHour.data.msg ==='ok' && alertPerHour.data.success){
       alertPerHour.data.data.forEach(element => {
         dataArraySeries.push(element.total)
@@ -34,13 +46,13 @@ export const CurveDash =(props) =>{
           id: "smooth"
         },
         xaxis: {
-          categories:categories
+          categories: categoriesGrid ? categoriesGrid : categories
         }
       },
       series: [
         {
           name: "Camara 1",
-          data: series
+          data: seriesGrid ? seriesGrid : series
         }
       ]
     }

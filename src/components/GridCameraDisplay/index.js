@@ -94,6 +94,129 @@ class GridCameraDisplay extends Component {
 		historyServerPort: null,
 		historyServerDns: null,
 		historyServerProtocol: null,
+		dataGraphic:  [
+			{
+				"date": "2022-09-28",
+				"total": 629,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "10",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 849,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "11",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 1408,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "12",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 1853,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "13",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 2415,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "14",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 720,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "15",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 3385,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "09",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 1564,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "08",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 1034,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "07",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 4863,
+				"client": "Benito Juárez",
+				"camera_ip": "192.168.9.201",
+				"hour": "06",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 619,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "05",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 834,
+				"client": "Benito Juárez",
+				"camera_ip": "192.168.9.201",
+				"hour": "04",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 3946,
+				"client": "Benito Juárez",
+				"camera_ip": "192.168.9.201",
+				"hour": "03",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 1750,
+				"client": "Benito Juárez",
+				"camera_ip": "192.168.9.201",
+				"hour": "02",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 2513,
+				"client": "Benito Juárez",
+				"camera_ip": "192.168.9.201",
+				"hour": "00",
+				"day": null
+			}
+		]
+	
 	};
 
 	render() {
@@ -322,7 +445,7 @@ class GridCameraDisplay extends Component {
 						</>
 						:
 						<div className="col platesgrid" align="center">
-							<CurveDash stateHeight="200" />
+							<CurveDash stateHeight="200" dataGraphic={this.state.dataGraphic} />
 						</div>
 							:
 							null
