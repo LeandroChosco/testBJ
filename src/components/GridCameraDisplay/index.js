@@ -22,6 +22,7 @@ import * as QvrFunctions from '../../functions/getQvrFunctions';
 
 import './style.css';
 import Placas from './placas';
+import { CurveDash } from '../Dashboard/Placas/graphic';
 
 const SHOW_HISTORY = 3;
 const countryOptions = [
@@ -190,7 +191,9 @@ class GridCameraDisplay extends Component {
 								/>
 							</div>
 						}
-						<div className="col snapshotsgrid">
+						{selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ? 
+							<>
+							<div className="col snapshotsgrid">
 							Fotos
 							<div>
 								{photosLoading ? (
@@ -316,6 +319,14 @@ class GridCameraDisplay extends Component {
 								]}
 							/>
 						</div>
+						</>
+						:
+						<div className="col platesgrid" align="center">
+							<CurveDash stateHeight="200" />
+						</div>
+							:
+							null
+							}
 						<div className="col matchesgrid" align="center">
 							Historial
 							<br />
@@ -1349,12 +1360,18 @@ class GridCameraDisplay extends Component {
 		}
 		const pageCount = Math.ceil(cameras.length / this.state.limit);
 		this.setState({ markers: markersForLoop, matches: cameras, pageCount: pageCount });
-		document.getElementById('scrollVideo').addEventListener('scroll', this._infiniteScroll, false);
+		if(this.state.selectedCamera.dataCamValue){
+			document.getElementById('scrollVideo').addEventListener('scroll', this._infiniteScroll, false);
+		}
 	}
 
 	componentWillUnmount() {
 		this._destroyFileVideos();
-		document.getElementById('scrollVideo').removeEventListener('scroll', this._infiniteScroll, false);
+		if(this.state.selectedCamera.dataCamValue){
+			if(document.getElementById('scrollVideo')){
+				document.getElementById('scrollVideo').removeEventListener('scroll', this._infiniteScroll, false);
+			}
+		}
 	}
 	static getDerivedStateFromProps(props, state) {
 		let markersForLoop = [];

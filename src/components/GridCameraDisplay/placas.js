@@ -4,7 +4,6 @@ import Spinner from 'react-bootstrap/Spinner';
 import MockupPlaca from './MockupPlaca';
 
 // Socket placas
-
 import { getIo } from '../../constants/socketplate';
 
 
@@ -43,22 +42,6 @@ export default function Placas(props) {
         }
     }, [selectedCamera])
 
-    // const getPlates = (data) => {
-
-    //     let timeStringToDate = `${data.timestamp.split(".")[0].split("T")[0].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3')} ${data.timestamp.split(".")[0].split("T")[1].replace(/(\d{2})(\d{2})(\d{2})/g, '$1:$2:$3')} GMT-0000`;
-    //     let parseDate = new Date(timeStringToDate).toLocaleString();
-
-    //     let objDetection = {
-    //         plate: data.listedInfo ? data.listedInfo.plate : "Match",
-    //         date: parseDate.replace(",", " -"),
-    //         event_type: data.event_type
-    //     }
-    //     if (objDetection.plate !== "Match") {
-    //         arrayDetections.unshift(objDetection)
-    //     }
-    //     return arrayDetections
-    // }
-
     const getPlates = (data) => {
 
         let timeStringToDate = `${data.timestamp.split(".")[0].split("T")[0].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3')} ${data.timestamp.split(".")[0].split("T")[1].replace(/(\d{2})(\d{2})(\d{2})/g, '$1:$2:$3')} GMT-0000`;
@@ -69,9 +52,7 @@ export default function Placas(props) {
             date: parseDate.replace(",", " -"),
             event_type: data.event_type
         }
-        // if (objDetection.plate !== "Match") {
         arrayDetections.unshift(objDetection);
-        // }
         return arrayDetections;
     }
 

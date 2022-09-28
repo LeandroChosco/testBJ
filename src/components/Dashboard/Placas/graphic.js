@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import conections from "../../../conections";
 import './styles.css'
 
-export const CurveDash =() =>{
+export const CurveDash =(props) =>{
   let dataArraySeries =[];
   let dataArrayCategories =[];
   const [series, setSeries] = useState([])
@@ -51,7 +51,7 @@ export const CurveDash =() =>{
               series={data.series}
               type="area"
               width="100%"
-              height='500'
+              height= {props.stateHeight ? props.stateHeight : '500'}
             />
         // </div>
     )
