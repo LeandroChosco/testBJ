@@ -97,10 +97,18 @@ class GridCameraDisplay extends Component {
 		dataGraphic:  [
 			{
 				"date": "2022-09-28",
+				"total": 958,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "16",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
 				"total": 629,
 				"client": "Benito Juárez",
 				"camera_ip": "172.16.1.15",
-				"hour": "10",
+				"hour": "15",
 				"day": null
 			},
 			{
@@ -108,7 +116,7 @@ class GridCameraDisplay extends Component {
 				"total": 849,
 				"client": "Benito Juárez",
 				"camera_ip": "172.16.1.15",
-				"hour": "11",
+				"hour": "14",
 				"day": null
 			},
 			{
@@ -116,7 +124,7 @@ class GridCameraDisplay extends Component {
 				"total": 1408,
 				"client": "Benito Juárez",
 				"camera_ip": "172.16.1.15",
-				"hour": "12",
+				"hour": "13",
 				"day": null
 			},
 			{
@@ -124,7 +132,7 @@ class GridCameraDisplay extends Component {
 				"total": 1853,
 				"client": "Benito Juárez",
 				"camera_ip": "172.16.1.15",
-				"hour": "13",
+				"hour": "12",
 				"day": null
 			},
 			{
@@ -132,7 +140,7 @@ class GridCameraDisplay extends Component {
 				"total": 2415,
 				"client": "Benito Juárez",
 				"camera_ip": "172.16.1.15",
-				"hour": "14",
+				"hour": "11",
 				"day": null
 			},
 			{
@@ -140,7 +148,7 @@ class GridCameraDisplay extends Component {
 				"total": 720,
 				"client": "Benito Juárez",
 				"camera_ip": "172.16.1.15",
-				"hour": "15",
+				"hour": "10",
 				"day": null
 			},
 			{
@@ -201,18 +209,10 @@ class GridCameraDisplay extends Component {
 			},
 			{
 				"date": "2022-09-28",
-				"total": 1750,
+				"total": 623,
 				"client": "Benito Juárez",
 				"camera_ip": "192.168.9.201",
 				"hour": "02",
-				"day": null
-			},
-			{
-				"date": "2022-09-28",
-				"total": 2513,
-				"client": "Benito Juárez",
-				"camera_ip": "192.168.9.201",
-				"hour": "00",
 				"day": null
 			}
 		]
