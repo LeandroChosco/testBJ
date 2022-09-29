@@ -9,7 +9,7 @@ import { getIo } from '../../constants/socketplate';
 
 export default function Placas(props) {
 
-    const [test, setTest] = useState("");
+    const [plates, setPlates] = useState("");
     const [refresh, setRefresh] = useState(false);
     const arrayDetections = [];
     const io = getIo();
@@ -18,26 +18,25 @@ export default function Placas(props) {
 
     useEffect(() => {
         if (props.selectedCamera) {
-            setSelectedCamera(props.selectedCamera.dataCamValue.dns.split("-")[2])
+            setSelectedCamera("CAM" + props.selectedCamera.dataCamValue.id + "_" + props.selectedCamera.dataCamValue.dns)
         }
         if (connection === false) {
             io.disconnect();
             io.on('disconnect', () => { console.log("Socket disconnected") });
         } if (connection === true) {
-            if (props.selectedCamera.dataCamValue.dns.split("-")[2] !== selectedCamera) {
+            if (props.selectedCamera !== selectedCamera.split("_")[1]) {
                 io.disconnect();
                 io.on('disconnect', () => { console.log("Socket disconnected") });
             }
             io.connect();
             io.on('connect', () => { console.log("Socket connected") })
             io.on("bj-create-plate-detection", (data) => {
-                // if (data.camera_ip === selectedCamera) {
+                if (data.camera_ip === selectedCamera) {
                     setRefresh(true);
-                    setTest("");
+                    setPlates("");
                     let results = getPlates(data).slice(0, 100);
-                    setTest(results);
-
-                // }
+                    setPlates(results);
+                }
             })
         }
     }, [selectedCamera])
@@ -60,7 +59,7 @@ export default function Placas(props) {
         <>
             {
                 connection ?
-                    test.length > 0 && refresh ? test.map((placa, idx) => {
+                    plates.length > 0 && refresh ? plates.map((placa, idx) => {
                         return (
                             <div key={idx}>
                                 <Row style={{ border: "1px solid grey", borderRadius: "2px", marginTop: "10px", marginLeft: "3px", marginRight: "3px" }} className={idx === 0 ? "newPlate" : "oldPlates"} >
