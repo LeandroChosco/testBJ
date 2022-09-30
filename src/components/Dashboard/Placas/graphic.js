@@ -3,8 +3,13 @@ import React, { useEffect, useState } from 'react'
 import conections from "../../../conections";
 import './styles.css'
 
+function comparar(a, b) {
+  return a - b;
+}
+
 export const CurveDash = (props) => {
   let dataArraySeries = [];
+  let dataArray=[]
   let dataArrayCategories = [];
   let dataArraySeriesGrid = [];
   let dataArrayCategoriesGrid = [];
@@ -13,16 +18,30 @@ export const CurveDash = (props) => {
   const [categories, setCategories] = useState([])
   const [seriesGrid, setSeriesGrid] = useState([])
   const [categoriesGrid, setCategoriesGrid] = useState([])
+  
   const init = async () => {
     const alertPerHour = await conections.getLPRAlertHour();
 
     if (alertPerHour.data && alertPerHour.data.msg === 'ok' && alertPerHour.data.success) {
       alertPerHour.data.data.forEach(element => {
-        dataArraySeries.push(element.total)
-        dataArrayCategories.push(`${element.hour}:00`)
+        dataArraySeries.push({serie:element.total,categorie:element.hour})
+        dataArrayCategories.push(element.hour)
       });
-      setSeries(dataArraySeries)
-      setCategories(dataArrayCategories)
+     let arrayComplete= dataArraySeries.sort(function (a, b) {
+        if (a.categorie > b.categorie) {
+          return 1;
+        }
+        if (a.categorie < b.categorie) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
+      })
+      arrayComplete.forEach(element => {
+        dataArray.push(element.serie)
+      });
+      setSeries(dataArray)
+      setCategories(dataArrayCategories.sort(comparar))
     }
 
 

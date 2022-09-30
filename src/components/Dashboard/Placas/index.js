@@ -10,7 +10,7 @@ const Placas =()=>{
         <Row>
         <Col xl={12} lg={12} md={12}>
           <Card>
-            <CardHeader>Totales Demográficos</CardHeader>
+            <CardHeader>Total de Detecciones por Hora</CardHeader>
             <CardBody>
             <CurveDash/>
             </CardBody>
