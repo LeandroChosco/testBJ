@@ -556,8 +556,7 @@ class GridCameraDisplay extends Component {
 		const userIdContainer = this.getUserID()
 		return loading ? (
 			this._renderLoading()
-		) : videoList && videoList.length > 0  ?(
-
+		) : videoList && videoList.length > 1  ?(
 							
 			<PaginationList 
 			awsApiStreamsCams={true} 
