@@ -1,25 +1,25 @@
-import React, {useState, } from 'react'
+import React, { useState, } from 'react'
 import PaginationNumber from './PaginationNumber'
 import MediaContainer from '../MediaContainer'
 export default function PaginationList(props) {
 const {awsApiStreamsCams, videoList, reloadData, download, isDownloadSearch, dnsArray, protocolDownload, hasDns, dnsContainer, portContainer, servidorMultimedia,  noButtons, isRecord, typeMBOX, selectedCamera, historyServerDns, historyServerPort, historyServerProtocol, numberVideos} = props;
-const [videos, setVideos] = useState(videoList)
+// const [videos, setVideos] = useState(videoList)
 const [currentPage, setCurrentPage] = useState(1)
 const totalVideos = numberVideos
-if(videoList.length !== videos.length){
-    setVideos(videoList)
-}
+// if(videoList.length !== videos.length){
+//     setVideos(videoList)
+// }
 const indexOfLastPost = currentPage * totalVideos
 const indexOfFirstPost = indexOfLastPost - totalVideos
-const currentPost = videos.slice(indexOfFirstPost, indexOfLastPost)
+const currentPost = videoList.slice(indexOfFirstPost, indexOfLastPost)
+
 function paginate(pageNumber) {
     setCurrentPage(pageNumber)
 }
     return (
         <>
-        <PaginationNumber videos={totalVideos} totalVideos={videos.length} paginate={paginate} /> ,
+        <PaginationNumber videos={totalVideos} totalVideos={videoList.length} paginate={paginate} /> ,
         {awsApiStreamsCams ?
-            
             
             <div>
             {currentPost.map((list, idx) => (
