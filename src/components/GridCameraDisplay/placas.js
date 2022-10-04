@@ -31,7 +31,6 @@ export default function Placas(props) {
             io.connect();
             io.on('connect', () => { console.log("Socket connected") })
             io.on("bj-create-plate-detection", (data) => {
-                console.log(data.plate_full, data.camera_ip)
                 if (data.camera_ip === selectedCamera) {
                     setRefresh(true);
                     setPlates("");
