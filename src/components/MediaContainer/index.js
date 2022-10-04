@@ -22,7 +22,6 @@ class MediaContainer extends Component {
     let portCam = ""
 
     let poster = !exists_image_historic && src === "images/no_video.jpg" ? noHistoric: coverImage !== "images/no_imagen.jpg"? urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol) : noDisponible;
-
     // let poster = value.relative_path_image === "images/no_imagen.jpg" ? noDisponible : value.relative_path_image === "images/no_video.jpg" ? noHistoric : (servidorMultimedia + "/" + value.relative_path_image);
 
 
