@@ -21,6 +21,8 @@ import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/acti
 import * as QvrFunctions from '../../functions/getQvrFunctions';
 
 import './style.css';
+import Placas from './placas';
+import { CurveDash } from '../Dashboard/Placas/graphic';
 
 const SHOW_HISTORY = 3;
 const countryOptions = [
@@ -92,6 +94,129 @@ class GridCameraDisplay extends Component {
 		historyServerPort: null,
 		historyServerDns: null,
 		historyServerProtocol: null,
+		dataGraphic:  [
+			{
+				"date": "2022-09-28",
+				"total": 958,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "16",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 629,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "15",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 849,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "14",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 1408,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "13",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 1853,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "12",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 2415,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "11",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 720,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "10",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 3385,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "09",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 1564,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "08",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 1034,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "07",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 4863,
+				"client": "Benito Juárez",
+				"camera_ip": "192.168.9.201",
+				"hour": "06",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 619,
+				"client": "Benito Juárez",
+				"camera_ip": "172.16.1.15",
+				"hour": "05",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 834,
+				"client": "Benito Juárez",
+				"camera_ip": "192.168.9.201",
+				"hour": "04",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 3946,
+				"client": "Benito Juárez",
+				"camera_ip": "192.168.9.201",
+				"hour": "03",
+				"day": null
+			},
+			{
+				"date": "2022-09-28",
+				"total": 623,
+				"client": "Benito Juárez",
+				"camera_ip": "192.168.9.201",
+				"hour": "02",
+				"day": null
+			}
+		]
+	
 	};
 
 	render() {
@@ -189,7 +314,9 @@ class GridCameraDisplay extends Component {
 								/>
 							</div>
 						}
-						<div className="col snapshotsgrid">
+						{selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ? 
+							<>
+							<div className="col snapshotsgrid">
 							Fotos
 							<div>
 								{photosLoading ? (
@@ -315,8 +442,24 @@ class GridCameraDisplay extends Component {
 								]}
 							/>
 						</div>
+						</>
+						:
+						<div className="col platesgrid" align="center">
+							<CurveDash stateHeight="200" dataGraphic={this.state.dataGraphic} />
+						</div>
+							:
+							null
+							}
 						<div className="col matchesgrid" align="center">
 							Historial
+							<br />
+
+							{/* { selectedCamera.dataCamValue? selectedCamera.dataCamValue.dns === "172.16.1.15" ? this._showPlates(true, selectedCamera) : selectedCamera.dataCamValue.dns === "192.168.9.201" ? this._showPlates(true, selectedCamera) : this._showPlates(false) : null} */}
+
+							{ selectedCamera.dataCamValue ? selectedCamera.dataCamValue.is_lpr ? this._showPlates(true, selectedCamera) : null : null}
+
+							{ selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ? this._showPlates(false) : null : null}
+
 							{/*  ---matches reales---
 								{
 										matches.length > 0 ? 
@@ -338,6 +481,13 @@ class GridCameraDisplay extends Component {
 			</div>
 		);
 	}
+
+	_showPlates = (state = false, selectedCamera) =>{
+		return(
+			<Placas reset={state} selectedCamera={selectedCamera} />
+		)
+	}
+
 
 	Clicked = (dns) => {
 		window.open('http://' + dns, 'Ficha de Incidencias', 'height=600,width=1200');
@@ -402,99 +552,51 @@ class GridCameraDisplay extends Component {
 	  }
 	  
 	_renderVideoList = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false, isDownload = false, isRecord = false, noButtons = false) => {
-		let { hasMore, qnapServer, qnapChannel, servidorMultimedia, dnsArray, camURL, apiStorageKey, awsApiStreamsCams, portContainer, dnsContainer, completeCamera, typeMBOX, historyServerDns, historyServerPort, historyServerProtocol } = this.state;
+		let {  servidorMultimedia, dnsArray, camURL, apiStorageKey, portContainer, dnsContainer, typeMBOX, historyServerDns, historyServerPort, historyServerProtocol, selectedCamera, protocolDownload } = this.state;
 		const userIdContainer = this.getUserID()
 		return loading ? (
 			this._renderLoading()
-		) : videoList && videoList.length > 0 ? videoList[0].videos && videoList[0].videos.length > 0 ? (
-			<div>
-				{videoList.map((list, idx) => (
-					<div key={idx} className="row">
-						{dnsArray || (list.fecha && list.hour) ? (
-							<div className="col-12">
-								{!isDownload ?
-									<h4>{`${dnsArray !== null ? list.videos[0].fecha : list.fecha} - ${dnsArray !== null ? list.videos[0].hour : list.hour}`}</h4>
-									:
-									null
-								}
-							</div>
-						) : null}
-						{list.videos.map((video, vidx) => (
+		) : videoList && videoList.length > 0  ?(
+
 							
-							!isDownload ?					
-							<MediaContainer
-									key={vidx}
-									value={video}
-									dns_ip={hasDns && `http://${hasDns}`}
-									exists_video={true}
-									exists_image_historic={video.exists_image}
-									cam={camURL}
-									port={portContainer}
-									dnsContainer={dnsContainer}
-									src={video.path_video ? video.path_video : video.relative_path_video}
-									reloadData={this._loadFiles}
-									real_hour={video.real_hour}
-									isQnap={qnapServer && qnapChannel}
-									servidorMultimedia={servidorMultimedia}
-									apiStorageKey={apiStorageKey}
-									awsApiStreamsCams={awsApiStreamsCams}
-									isRecord={isRecord}
-									userIdContainer={userIdContainer}
-									completeCamera={completeCamera}
-									noButtons={noButtons}
-									typeMBOX={typeMBOX}
-									coverImage={video.relative_path_image}
-									historyServerDns={historyServerDns}
-									historyServerPort={historyServerPort}
-									historyServerProtocol={historyServerProtocol}
-								/>
-								:
-								<button key={vidx} className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={()=>this.download(video,dnsArray)}>{`${hasDns !== null ? video[0].fecha : video.fecha} - ${video.real_hour ? video.real_hour : null}`}</button>
-								))}
-					</div>
-				))}
-				{qnapServer && qnapChannel && hasMore && isHistory && this._renderLoading()}
-			</div>
-		) : (
-			<div className="row">
-				{videoList.map((list, idx) => (
-					<MediaContainer
-						key={idx}
-						value={list}
-						isQnap={false}
-						dns_ip={hasDns && `http://${hasDns}`}
-						exists_video={true}
-						exists_image_historic={list.exists_image}
-						cam={camURL}
-						port={portContainer}
-						dnsContainer={dnsContainer}
-						src={list.relative_url}
-						reloadData={this._loadFiles}
-						apiStorageKey={apiStorageKey}
-						servidorMultimedia={servidorMultimedia}
-						awsApiStreamsCams={awsApiStreamsCams}
-						isRecord={isRecord}
-						userIdContainer={userIdContainer}
-						completeCamera={completeCamera}
-						noButtons={noButtons}
-						typeMBOX={typeMBOX}
-						historyServerDns={historyServerDns}
-						historyServerPort={historyServerPort}
-						historyServerProtocol={historyServerProtocol}
-						/>
-						))}
-			</div>
-		) : showNoFiles ? (
+			<PaginationList 
+			awsApiStreamsCams={true} 
+			numberVideos={7} 
+			videoList={videoList} 
+			isDownloadSearch={isDownload} 
+			dnsArray={dnsArray}  
+			hasDns={hasDns} 
+			camURL={camURL}
+			dnsContainer={dnsContainer}
+			portContainer={portContainer}
+			servidorMultimedia={servidorMultimedia}
+			apiStorageKey={apiStorageKey}
+			noButtons={noButtons}
+			isRecord={isRecord}
+			typeMBOX={typeMBOX}
+			selectedCamera={selectedCamera}
+			reloadData={this._loadFiles}
+			download={this.download}
+			renderPagination={this._renderPagination}
+			protocolDownload={protocolDownload}
+			historyServerDns={historyServerDns}
+			historyServerPort={historyServerPort}
+			historyServerProtocol={historyServerProtocol}
+			/>
+
+		
+		)  : showNoFiles ? (
 			<div align="center">
 				<p className="big-letter">No hay archivos que mostrar</p>
 				<i className="fa fa-image fa-5x" />
 			</div>
-		) : null;
+		) :null
 	};
 
 
 	_renderVideoListSearch = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false, isDownloadSearch = false, isRecord = false, noButtons = false) => {
 		let {  servidorMultimedia, dnsArray, camURL, apiStorageKey, awsApiStreamsCams, selectedCamera, portContainer, dnsContainer, typeMBOX, protocolDownload, historyServerDns, historyServerPort, historyServerProtocol } = this.state;
+		
 		if(videoList.length >0){
 			if(!videoList[0].active){
 				videoList.shift()
@@ -506,6 +608,7 @@ class GridCameraDisplay extends Component {
 		) :  videoList && videoList.length > 0  ? (
 			<PaginationList 
 			awsApiStreamsCams={awsApiStreamsCams}  
+			numberVideos={40}
 			videoList={videoList} 
 			isDownloadSearch={isDownloadSearch} 
 			dnsArray={dnsArray}  
@@ -900,7 +1003,7 @@ class GridCameraDisplay extends Component {
 											this.setState({dnsArray: this.state.video_history[0]})
 											arrayHistoricos = this.state.video_history
 											this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos})
-											this.setState({video_history: arrayHistoricos[1].slice(0,2)})
+											
 											setTimeout(() => this.spinnerif(), 400);
 											this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
 										} else {
@@ -929,7 +1032,7 @@ class GridCameraDisplay extends Component {
 												this.setState({dnsArray: this.state.video_history[0]})
 												arrayHistoricos = this.state.video_history
 												this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos})
-												this.setState({video_history: arrayHistoricos[1].slice(0,2)})
+												
 												setTimeout(() => this.spinnerif(), 400);
 												this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
 											}} else {
@@ -1247,37 +1350,37 @@ class GridCameraDisplay extends Component {
 		}
 	};
 
-	_loadMoreVideosNotQnap = async (isFirst = false)=>{
-		let { video_history, video_fistHistory, countArray, video_loadMoreHistory } = this.state;
+	// _loadMoreVideosNotQnap = async (isFirst = false)=>{
+	// 	let { video_history, video_fistHistory, countArray, video_loadMoreHistory } = this.state;
 		
-		let index = countArray
-		let indexTwo = countArray + 2
-		 if (index < video_loadMoreHistory[1].length -1) {
-			 if(video_history.length === 2){
-				index = 1
-				let indexFirst = index
-				let indexTwoFirst = indexFirst + 2
-				let recorte = video_fistHistory[1].slice(indexFirst, indexTwoFirst);
-				index= index + 1;
-				video_history.push(recorte[1])
-				this.setState({video_history, historyLoading: false, countArray: index})
-				this.setState({ historyLoading: false });
-			 }else{
-				let recorte = video_fistHistory[1].slice(index, indexTwo);
-				index= index + 1;
-				video_history.push(recorte[1])
-				this.setState({video_history, historyLoading: false, countArray: index})
-				this.setState({ historyLoading: false });
-			 }
+	// 	let index = countArray
+	// 	let indexTwo = countArray + 2
+	// 	 if (index < video_loadMoreHistory[1].length -1) {
+	// 		 if(video_history.length === 2){
+	// 			index = 1
+	// 			let indexFirst = index
+	// 			let indexTwoFirst = indexFirst + 2
+	// 			let recorte = video_fistHistory[1].slice(indexFirst, indexTwoFirst);
+	// 			index= index + 1;
+	// 			video_history.push(recorte[1])
+	// 			this.setState({video_history, historyLoading: false, countArray: index})
+	// 			this.setState({ historyLoading: false });
+	// 		 }else{
+	// 			let recorte = video_fistHistory[1].slice(index, indexTwo);
+	// 			index= index + 1;
+	// 			video_history.push(recorte[1])
+	// 			this.setState({video_history, historyLoading: false, countArray: index})
+	// 			this.setState({ historyLoading: false });
+	// 		 }
 			
-		}
-		else{
-			this.setState({countArray: 1, video_history: video_loadMoreHistory, historyLoading: false})
-			this.setState({ hasMore: false });
+	// 	}
+	// 	else{
+	// 		this.setState({countArray: 1, video_history: video_loadMoreHistory, historyLoading: false})
+	// 		this.setState({ hasMore: false });
 
-		}
+	// 	}
 		
-	}
+	// }
 	spinnerif = () => {
 		if (this.state.loading) {
 			setTimeout(() => {
@@ -1333,12 +1436,18 @@ class GridCameraDisplay extends Component {
 		}
 		const pageCount = Math.ceil(cameras.length / this.state.limit);
 		this.setState({ markers: markersForLoop, matches: cameras, pageCount: pageCount });
-		document.getElementById('scrollVideo').addEventListener('scroll', this._infiniteScroll, false);
+		if(this.state.selectedCamera.dataCamValue){
+			document.getElementById('scrollVideo').addEventListener('scroll', this._infiniteScroll, false);
+		}
 	}
 
 	componentWillUnmount() {
 		this._destroyFileVideos();
-		document.getElementById('scrollVideo').removeEventListener('scroll', this._infiniteScroll, false);
+		if(this.state.selectedCamera.dataCamValue){
+			if(document.getElementById('scrollVideo')){
+				document.getElementById('scrollVideo').removeEventListener('scroll', this._infiniteScroll, false);
+			}
+		}
 	}
 	static getDerivedStateFromProps(props, state) {
 		let markersForLoop = [];

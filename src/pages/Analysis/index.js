@@ -678,7 +678,7 @@ class Analysis extends Component {
 					const disconnected = res.data;
 					// console.log('disconnected', disconnected);
 					disconnected.map((valueoff) => {
-						if (valueoff.active === 0) {
+						if (valueoff.active === 0 && valueoff.UrlStreamMediaServer) {
 							disconnectedCameras.push({
 								id: valueoff.id,
 								num_cam: indexFail,

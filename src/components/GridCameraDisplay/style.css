@@ -63,6 +63,10 @@
 	height: 100%;
 	overflow-y: auto;
 }
+.platesgrid {
+	height: 200px;
+	overflow-y: auto;
+}
 
 .videosgrid > div > div > video {
 	width: 100%;

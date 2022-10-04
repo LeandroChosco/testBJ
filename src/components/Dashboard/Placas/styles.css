@@ -1,0 +1,24 @@
+.textSize{
+    font-size:300%
+}
+.wChart{
+    width: 70%;
+}
+.hfull{
+    height: 100%;
+}
+
+.colorDay{
+    background: linear-gradient(0deg, rgba(97, 244, 247, 0.56) 0%, rgba(17, 161, 168, 0.67) 100%);
+}
+.colorSemana{
+    background: linear-gradient(0deg, rgba(0, 25, 115, 0.824) 0%, rgba(1, 14, 132, 0.779) 100%);
+}
+.colorMes{
+    background: linear-gradient(0deg, rgba(15, 87, 20, 0.56) 0%, rgba(14, 142, 63, 0.67) 100%);
+
+}
+.colorAlerta{
+    background: linear-gradient(0deg, rgba(248, 3, 3, 0.795) 0%, rgba(229, 99, 125, 0.872) 100%);
+
+}
