@@ -86,6 +86,9 @@ export default {
   getLPRAlertWeek:()=>{
     return connectedSails.get(`${constants.sails_url}/lpr/perWeekHour`)
   },
+
+////////////////////////////////////////////////////////////////////
+
   getOnTermicPhotoData: (name) => {
     return connectedSails.get(constants.sails_url + '/termicfiles-one/' + name);
   },
