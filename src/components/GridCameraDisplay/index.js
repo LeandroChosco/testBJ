@@ -444,13 +444,13 @@ class GridCameraDisplay extends Component {
 						</div>
 						</>
 						:
-						<div className="col platesgrid" align="center">
-							<CurveDash stateHeight="200" dataGraphic={this.state.dataGraphic} />
+						<div className="col-8 platesgrid" align="center">
+							<CurveDash stateHeight="200" dataGraphic={true} />
 						</div>
 							:
 							null
 							}
-						<div className="col matchesgrid" align="center">
+						<div className="col-4 matchesgrid" align="center">
 							Historial
 							<br />
 

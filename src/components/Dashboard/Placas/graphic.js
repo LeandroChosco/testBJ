@@ -9,25 +9,24 @@ function comparar(a, b) {
 
 export const CurveDash = (props) => {
   let dataArraySeries = [];
-  let dataArray=[]
+  let dataArray = []
   let dataArrayCategories = [];
   let dataArraySeriesGrid = [];
   let dataArrayCategoriesGrid = [];
-  let dataHourGrid = new Date().getHours().toLocaleString()
   const [series, setSeries] = useState([])
   const [categories, setCategories] = useState([])
   const [seriesGrid, setSeriesGrid] = useState([])
   const [categoriesGrid, setCategoriesGrid] = useState([])
-  
+
   const init = async () => {
     const alertPerHour = await conections.getLPRAlertHour();
 
     if (alertPerHour.data && alertPerHour.data.msg === 'ok' && alertPerHour.data.success) {
       alertPerHour.data.data.forEach(element => {
-        dataArraySeries.push({serie:element.total,categorie:element.hour})
+        dataArraySeries.push({ serie: element.total, categorie: element.hour })
         dataArrayCategories.push(element.hour)
       });
-     let arrayComplete= dataArraySeries.sort(function (a, b) {
+      let arrayComplete = dataArraySeries.sort(function (a, b) {
         if (a.categorie > b.categorie) {
           return 1;
         }
@@ -45,15 +44,19 @@ export const CurveDash = (props) => {
     }
 
 
-    if (props.dataGraphic) {
-      props.dataGraphic.forEach((element, idx) => {
-        dataArraySeriesGrid.unshift(element.total)
-        if ((dataHourGrid - idx) < 0) {
-          dataArrayCategoriesGrid.unshift((24 + (dataHourGrid - idx)) + ":00")
-        } else {
-          dataArrayCategoriesGrid.unshift((dataHourGrid - idx) + ":00")
-        }
+    if (props.dataGraphic && alertPerHour.data) {
+
+      const arrayData = await alertPerHour.data.data
+      const sortAlertPerHour = await arrayData.sort((a, b) => {
+        if (a.hour > b.hour) return 1
+        if (a.hour < b.hour) return -1
       })
+
+      sortAlertPerHour.forEach((el) => {
+        dataArraySeriesGrid.push(el.total + ":00")
+        dataArrayCategoriesGrid.push(el.hour + ":00")
+      })
+
       setSeriesGrid(dataArraySeriesGrid)
       setCategoriesGrid(dataArrayCategoriesGrid)
     }
