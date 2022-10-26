@@ -31,6 +31,7 @@ import {
   RiEye2Fill
 } from "react-icons/ri";
 import AgeDemographic from '../../components/Dashboard/AgeDemographic';
+import RegisterMood from '../../components/Dashboard/RegisterMood';
 
 const MOODS = {
   "Happy": "Feliz",
@@ -47,7 +48,8 @@ const MOODS = {
 
 const style = {
   height: {
-    height: '100%'
+    height: '100%',
+    backgroundColor: '#f5f5f5'
   },
   adjustX: {
     height: '100%',
@@ -400,7 +402,7 @@ class Dashboard extends Component {
           nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
           fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui oﬃcia deserunt mollit anim id est laborum.</p>
         <div className='row'>
-          <div className='col-12 chart' align='center'>
+          <div className='col-12 chart' style={{height: "auto"}} align='center'>
             <Card style={style.adjustX}>
               <CardBody>
                 {
@@ -411,51 +413,15 @@ class Dashboard extends Component {
                 }
               </CardBody>
             </Card>
-            {/* {
-              this.state.loadingRecognitionMood ?
-                <ClassicSpinner
-                  loading={true}
-                  size={40}
-                  color="#686769"
-                /> : <ResponsiveContainer>
-                  <RadarChart data={this.state.personsMood}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="mood" />
-                    <PolarRadiusAxis angle={30} domain={[0, 100]} />
-                    <Radar name="assaEstado de animo" dataKey="total" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-
-                    <Legend />
-                    <Tooltip />
-                  </RadarChart>
-                </ResponsiveContainer>} */}
-
           </div>
         </div>
 
         <div style={{backgroundColor: "#f5f5f5", padding: "4rem"}}>
           <div className='row'>
             <div className='col-12 chart' align='center'>
-              <h3>Emociones registradas</h3>
-              {/* <Card style={style.height}>
-              <CardHeader>
-                <h3 className="pt-2">Personas registradas</h3>
-              </CardHeader>          {
-                this.state.loadTotalRecognition ?
-                  <Loading />
-                  :
-                  <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
-              }
-            </Card> */}
+              <RegisterMood />
             </div>
-            {/* <div className='col-6 chart' align='center'>
-            <h3>Edades registradas</h3>
-            {
-              this.state.loadRecognitionAges ?
-                <Loading />
-                :
-                <AgeDetected agesDetected={this.state.agesDetected} />
-            }
-          </div> */}
+            <br />
           </div>
           <div className='row'>
             <div className='col-6 chart' align='center'>
@@ -476,33 +442,11 @@ class Dashboard extends Component {
                 this.state.loadRecognitionAges ?
                   <Loading />
                   :
-                  // <AgeDetected agesDetected={this.state.agesDetected} />
                   <AgeDemographic />
               }
             </div>
-            {/* <div className='col-6 chart' align='center'>
-            <h3>Conteo de personas por cámara últimos 90 días</h3>
-            {
-              loadingPeoplePerCamera ?
-                <Loading />
-                :
-                <CameraPerPerson data={personsPerCamera} />
-            }
-          </div> */}
           </div>
         </div>
-
-        {/* <div className="row">
-          <div className='col-12 chart' align='center' >
-            <h3>Conteo de personas por día últimos 90 días </h3>
-            {
-              loadingPersons ?
-                <Loading />
-                :
-                <PeoplePerDay data={persons} />
-            }
-          </div>
-        </div> */}
       </div>
     )
   }
