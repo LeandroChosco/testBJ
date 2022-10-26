@@ -30,6 +30,7 @@ import Placas from "../../components/Dashboard/Placas"
 import {
   RiEye2Fill
 } from "react-icons/ri";
+import AgeDemographic from '../../components/Dashboard/AgeDemographic';
 
 const MOODS = {
   "Happy": "Feliz",
@@ -460,7 +461,7 @@ class Dashboard extends Component {
             <div className='col-6 chart' align='center'>
               <Card style={style.height}>
                 <CardHeader>
-                  <h3 className="pt-2">Personas registradas</h3>
+                  <h3 className="pt-2" style={{display: "flex"}}>Personas registradas</h3>
                 </CardHeader>          {
                   this.state.loadTotalRecognition ?
                     <Loading />
@@ -470,12 +471,13 @@ class Dashboard extends Component {
               </Card>
             </div>
             <div className='col-6 chart' align='center'>
-              <h3>Edades registradas</h3>
+              <h3 style={{display: "flex"}}>Edades registradas</h3>
               {
                 this.state.loadRecognitionAges ?
                   <Loading />
                   :
-                  <AgeDetected agesDetected={this.state.agesDetected} />
+                  // <AgeDetected agesDetected={this.state.agesDetected} />
+                  <AgeDemographic />
               }
             </div>
             {/* <div className='col-6 chart' align='center'>
