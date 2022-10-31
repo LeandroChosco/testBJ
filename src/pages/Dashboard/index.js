@@ -30,6 +30,8 @@ import Placas from "../../components/Dashboard/Placas"
 import {
   RiEye2Fill
 } from "react-icons/ri";
+import AgeDemographic from '../../components/Dashboard/AgeDemographic';
+import RegisterMood from '../../components/Dashboard/RegisterMood';
 
 const MOODS = {
   "Happy": "Feliz",
@@ -46,7 +48,8 @@ const MOODS = {
 
 const style = {
   height: {
-    height: '100%'
+    height: '100%',
+    backgroundColor: '#f5f5f5'
   },
   adjustX: {
     height: '100%',
@@ -122,7 +125,7 @@ class Dashboard extends Component {
     panes: [
       { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
       { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
-      { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboard()}</Tab.Pane> },
+      { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboardRedesign()}</Tab.Pane> },
       { menuItem: 'Micrófonos', render: () => <Tab.Pane attached={false}> {this.renderEvents()}</Tab.Pane> },
       constants.clientFirebase === "Modelorama" &&
       {
@@ -288,32 +291,29 @@ class Dashboard extends Component {
     )
     
   }
-  renderRecognitionDashboard() {
-    const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons } = this.state;
+
+  renderLPRDashboard(){
+    return(
+      <div>
+      <Placas />
+      </div>
+    )
+  }
+
+  renderRecognitionDashboardRedesign() {
+    // const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons } = this.state;
 
     return (
       <div className='container-flex'>
+        <h1>Reconocimiento Facial</h1>
+        <p>Powered by Radar ®</p>
+        <hr />
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+          nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui oﬃcia deserunt mollit anim id est laborum.</p>
         <div className='row'>
-          <div className='col-6 chart' align='center'>
-
-            <Card style={style.height}>
-              <CardHeader>
-                <h3 className="pt-2">Personas detectadas</h3>
-              </CardHeader>          {
-                this.state.loadTotalRecognition ?
-                  <Loading />
-                  :
-                  <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
-              }
-            </Card>
-
-
-          </div>
-          <div className='col-6 chart' align='center'>
+          <div className='col-12 chart' style={{height: "auto"}} align='center'>
             <Card style={style.adjustX}>
-              <CardHeader>
-                <h3 className="pt-2">Estado de Animo</h3><br></br><br></br>
-              </CardHeader>
               <CardBody>
                 {
                   this.state.loadingRecognitionMood ?
@@ -323,65 +323,40 @@ class Dashboard extends Component {
                 }
               </CardBody>
             </Card>
-            {/* {
-              this.state.loadingRecognitionMood ?
-                <ClassicSpinner
-                  loading={true}
-                  size={40}
-                  color="#686769"
-                /> : <ResponsiveContainer>
-                  <RadarChart data={this.state.personsMood}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="mood" />
-                    <PolarRadiusAxis angle={30} domain={[0, 100]} />
-                    <Radar name="assaEstado de animo" dataKey="total" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-
-                    <Legend />
-                    <Tooltip />
-                  </RadarChart>
-                </ResponsiveContainer>} */}
-
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col-6 chart' align='center'>
-            <h3>Rango de edades</h3>
-            {
-              this.state.loadRecognitionAges ?
-                <Loading />
-                :
-                <AgeDetected agesDetected={this.state.agesDetected} />
-            }
-          </div>
-          <div className='col-6 chart' align='center'>
-            <h3>Conteo de personas por cámara últimos 90 días</h3>
-            {
-              loadingPeoplePerCamera ?
-                <Loading />
-                :
-                <CameraPerPerson data={personsPerCamera} />
-            }
           </div>
         </div>
 
-        <div className="row">
-          <div className='col-12 chart' align='center' >
-            <h3>Conteo de personas por día últimos 90 días </h3>
-            {
-              loadingPersons ?
-                <Loading />
-                :
-                <PeoplePerDay data={persons} />
-            }
+        <div style={{backgroundColor: "#f5f5f5", padding: "4rem"}}>
+          <div className='row'>
+            <div className='col-12 chart' align='center'>
+              <RegisterMood />
+            </div>
+            <br />
+          </div>
+          <div className='row'>
+            <div className='col-6 chart' align='center'>
+              <Card style={style.height}>
+                <CardHeader>
+                  <h3 className="pt-2" style={{display: "flex"}}>Personas registradas</h3>
+                </CardHeader>          {
+                  this.state.loadTotalRecognition ?
+                    <Loading />
+                    :
+                    <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
+                }
+              </Card>
+            </div>
+            <div className='col-6 chart' align='center'>
+              <h3 style={{display: "flex"}}>Edades registradas</h3>
+              {
+                this.state.loadRecognitionAges ?
+                  <Loading />
+                  :
+                  <AgeDemographic />
+              }
+            </div>
           </div>
         </div>
-      </div>
-    )
-  }
-  renderLPRDashboard(){
-    return(
-      <div>
-      <Placas />
       </div>
     )
   }
