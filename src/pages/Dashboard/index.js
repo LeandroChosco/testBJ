@@ -125,7 +125,7 @@ class Dashboard extends Component {
     panes: [
       { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
       { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
-      { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboard()}</Tab.Pane> },
+      { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboardRedesign()}</Tab.Pane> },
       { menuItem: 'Micrófonos', render: () => <Tab.Pane attached={false}> {this.renderEvents()}</Tab.Pane> },
       constants.clientFirebase === "Modelorama" &&
       {
@@ -144,7 +144,6 @@ class Dashboard extends Component {
           </Tab.Pane>
         ),
       },
-      { menuItem: 'DemograficosRed', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboardRedesign()}</Tab.Pane> },
     ]
   }
 
@@ -292,96 +291,7 @@ class Dashboard extends Component {
     )
     
   }
-  renderRecognitionDashboard() {
-    const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons } = this.state;
 
-    return (
-      <div className='container-flex'>
-        <div className='row'>
-          <div className='col-6 chart' align='center'>
-
-            <Card style={style.height}>
-              <CardHeader>
-                <h3 className="pt-2">Personas detectadas</h3>
-              </CardHeader>          {
-                this.state.loadTotalRecognition ?
-                  <Loading />
-                  :
-                  <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
-              }
-            </Card>
-
-
-          </div>
-          <div className='col-6 chart' align='center'>
-            <Card style={style.adjustX}>
-              <CardHeader>
-                <h3 className="pt-2">Estado de Animo</h3><br></br><br></br>
-              </CardHeader>
-              <CardBody>
-                {
-                  this.state.loadingRecognitionMood ?
-                    <Loading />
-                    :
-                    <PersonsMood personsMood={this.state.personsMood} />
-                }
-              </CardBody>
-            </Card>
-            {/* {
-              this.state.loadingRecognitionMood ?
-                <ClassicSpinner
-                  loading={true}
-                  size={40}
-                  color="#686769"
-                /> : <ResponsiveContainer>
-                  <RadarChart data={this.state.personsMood}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="mood" />
-                    <PolarRadiusAxis angle={30} domain={[0, 100]} />
-                    <Radar name="assaEstado de animo" dataKey="total" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-
-                    <Legend />
-                    <Tooltip />
-                  </RadarChart>
-                </ResponsiveContainer>} */}
-
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col-6 chart' align='center'>
-            <h3>Rango de edades</h3>
-            {
-              this.state.loadRecognitionAges ?
-                <Loading />
-                :
-                <AgeDetected agesDetected={this.state.agesDetected} />
-            }
-          </div>
-          <div className='col-6 chart' align='center'>
-            <h3>Conteo de personas por cámara últimos 90 días</h3>
-            {
-              loadingPeoplePerCamera ?
-                <Loading />
-                :
-                <CameraPerPerson data={personsPerCamera} />
-            }
-          </div>
-        </div>
-
-        <div className="row">
-          <div className='col-12 chart' align='center' >
-            <h3>Conteo de personas por día últimos 90 días </h3>
-            {
-              loadingPersons ?
-                <Loading />
-                :
-                <PeoplePerDay data={persons} />
-            }
-          </div>
-        </div>
-      </div>
-    )
-  }
   renderLPRDashboard(){
     return(
       <div>
@@ -391,7 +301,7 @@ class Dashboard extends Component {
   }
 
   renderRecognitionDashboardRedesign() {
-    const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons } = this.state;
+    // const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons } = this.state;
 
     return (
       <div className='container-flex'>
