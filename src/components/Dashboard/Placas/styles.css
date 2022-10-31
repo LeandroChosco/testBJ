@@ -1,11 +1,43 @@
 .textSize{
-    font-size:300%
+    font-size:350%;
+    font-weight: bold;
 }
 .wChart{
     width: 70%;
 }
 .hfull{
     height: 100%;
+}
+
+.pr-intro{
+    padding-right: 30%;
+}
+.-pt-span{
+    margin-top: -rem;
+}
+.text-h1{
+    font-size: xx-large;
+    font-weight: bold;
+}
+.text-xxs{
+    font-size: smaller;
+}
+.dropdwon-btn{
+    border-width: 0.2px;
+    width: 90%;
+    border-color: darkgray;
+}
+.text-gray{
+    color: gray
+}
+.bg-gray{
+    
+    background-color: rgb(238, 236, 236);
+    border-width: 0.5px;
+    border-color: darkgrey;
+}
+.text-porcent{
+    color: dodgerblue;
 }
 
 .colorDay{
