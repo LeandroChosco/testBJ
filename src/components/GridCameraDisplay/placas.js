@@ -13,20 +13,20 @@ export default function Placas(props) {
     const [refresh, setRefresh] = useState(false);
     const arrayDetections = [];
     const io = getIo();
-    const [selectedCamera, setSelectedCamera] = useState("");
+    const [selectedCamera, setSelectedCamera] = useState(`CAM${props.selectedCamera.dataCamValue.id}_${props.selectedCamera.dataCamValue.dns}`);
     const connection = props.reset;
 
     useEffect(() => {
-        if (props.selectedCamera) {
-            setSelectedCamera("CAM" + props.selectedCamera.dataCamValue.id + "_" + props.selectedCamera.dataCamValue.dns)
-        }
         if (connection === false) {
+            io.removeAllListeners();
             io.disconnect();
-            io.on('disconnect', () => { console.log("Socket disconnected") });
+            io.on('disconnect', () => { console.log("Socket disconnected") })
         } if (connection === true) {
-            if (props.selectedCamera !== selectedCamera.split("_")[1]) {
+            if (props.selectedCamera.id !== selectedCamera.split("CAM")[1].split("_")[0]) {
+                io.removeAllListeners();
+                setPlates("")
                 io.disconnect();
-                io.on('disconnect', () => { console.log("Socket disconnected") });
+                io.on('disconnect', () => { console.log("Socket disconnected true") })
             }
             io.connect();
             io.on('connect', () => { console.log("Socket connected") })
@@ -40,6 +40,10 @@ export default function Placas(props) {
             })
         }
     }, [selectedCamera])
+
+    useEffect(() => {
+        setSelectedCamera(`CAM${props.selectedCamera.dataCamValue.id}_${props.selectedCamera.dataCamValue.dns}`)
+    }, [props.selectedCamera])
 
     const getPlates = (data) => {
 

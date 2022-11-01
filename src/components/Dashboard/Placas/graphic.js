@@ -3,23 +3,62 @@ import React, { useEffect, useState } from 'react'
 import conections from "../../../conections";
 import './styles.css'
 
-export const CurveDash =() =>{
-  let dataArraySeries =[];
-  let dataArrayCategories =[];
+function comparar(a, b) {
+  return a - b;
+}
+
+export const CurveDash = (props) => {
+  let dataArraySeries = [];
+  let dataArray = []
+  let dataArrayCategories = [];
+  let dataArraySeriesGrid = [];
+  let dataArrayCategoriesGrid = [];
   const [series, setSeries] = useState([])
   const [categories, setCategories] = useState([])
-  const init =async () =>{
+  const [seriesGrid, setSeriesGrid] = useState([])
+  const [categoriesGrid, setCategoriesGrid] = useState([])
+
+  const init = async () => {
     const alertPerHour = await conections.getLPRAlertHour();
     if(alertPerHour.data && alertPerHour.data.msg ==='ok' && alertPerHour.data.success){
       alertPerHour.data.data.forEach(element => {
-        dataArraySeries.push(element.total)
-        dataArrayCategories.push(`${element.hour}:00`)
+        dataArraySeries.push({ serie: element.total, categorie: element.hour })
+        dataArrayCategories.push(element.hour)
+      });
+      let arrayComplete = dataArraySeries.sort(function (a, b) {
+        if (a.categorie > b.categorie) {
+          return 1;
+        }
+        if (a.categorie < b.categorie) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
+      })
+      arrayComplete.forEach(element => {
+        dataArray.push(element.serie)
       });
       setSeries(dataArraySeries)
       setCategories(dataArrayCategories)
     }
 
 
+    if (props.dataGraphic && alertPerHour.data) {
+
+      const arrayData = await alertPerHour.data.data
+      const sortAlertPerHour = await arrayData.sort((a, b) => {
+        if (a.hour > b.hour) return 1
+        if (a.hour < b.hour) return -1
+      })
+
+      sortAlertPerHour.forEach((el) => {
+        dataArraySeriesGrid.push(el.total + ":00")
+        dataArrayCategoriesGrid.push(el.hour + ":00")
+      })
+
+      setSeriesGrid(dataArraySeriesGrid)
+      setCategoriesGrid(dataArrayCategoriesGrid)
+    }
   }
   useEffect(() => {
     init()
