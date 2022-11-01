@@ -33,6 +33,7 @@ import {
 } from "react-icons/ri";
 import AgeDemographic from '../../components/Dashboard/AgeDemographic';
 import RegisterMood from '../../components/Dashboard/RegisterMood';
+import MicrofonosDash from '../../components/Dashboard/microfonosDash';
 
 const MOODS = {
   "Happy": "Feliz",
@@ -281,7 +282,7 @@ class Dashboard extends Component {
                   <h3 className="pt-2">Total de eventos</h3>
                 </CardHeader>          
                   {this.state.loadTotalRecognition ? <Loading /> :
-                  <GenderDetected genderDetected={this.state.totalEvents} dataTickets={this.state.dataTickets} />
+                  <MicrofonosDash genderDetected={this.state.totalEvents} dataTickets={this.state.dataTickets} />
                   }
               </Card>
 
