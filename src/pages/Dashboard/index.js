@@ -13,17 +13,18 @@ import { Tab } from 'semantic-ui-react'
 // import sailsIOClient from 'sails.io.js';
 import constants from '../../constants/constants';
 import * as moment from 'moment';
-import CameraPerPerson from '../../components/Dashboard/cameraPerPerson';
-import PeoplePerDay from '../../components/Dashboard/persons';
+// import CameraPerPerson from '../../components/Dashboard/cameraPerPerson';
+// import PeoplePerDay from '../../components/Dashboard/persons';
 import Loading from '../../components/Loading/index';
 import IntalledLastMonth from '../../components/Dashboard/camerasInstalledLastMonth';
-import AgeDetected from '../../components/Dashboard/ageDetected';
+// import AgeDetected from '../../components/Dashboard/ageDetected';
 import PersonsMood from '../../components/Dashboard/personsMood';
 import GenderDetected from '../../components/Dashboard/genderDetected';
 import DataCams from '../../components/Dashboard/dataCams';
 import CamsInstalledByMonth from '../../components/Dashboard/camsInstalledByMonth';
 import DataTickets from '../../components/Dashboard/dataTickets';
-import DataTicketsPerUser from '../../components/Dashboard/dataTicketsPerUser';
+// import DataTicketsPerUser from '../../components/Dashboard/dataTicketsPerUser';
+import DataTicketsPerUserRedesign from '../../components/Dashboard/dataTicketsPerUserRedesign';
 import AttendedVSclosed from '../../components/Dashboard/attendedVScloded';
 import LastCreadedCams from '../../components/Dashboard/lastCreatedCams';
 import Placas from "../../components/Dashboard/Placas"
@@ -247,13 +248,13 @@ class Dashboard extends Component {
           </div>
         </div>
         <div className='row'>
-          <div className='col-6 chart2x' align='center'>
+        <div className='col-6 chart overflow table-responsive' style={{height: "501px"}} align='center'>
             <h3>Tickets creados por usuario</h3>
             {
               this.state.loadingTickets ?
                 <Loading />
                 :
-                <DataTicketsPerUser dataTicketsPerUser={this.state.dataTicketsPerUser} customLabel={customLabel} />
+                <DataTicketsPerUserRedesign dataTicketsPerUser={this.state.dataTicketsPerUser} customLabel={customLabel} />
             }
           </div>
           <div className='col-6 chart2x' align='center'>
