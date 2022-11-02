@@ -19,14 +19,14 @@ const styles = {
 
 const MicrofonosDash = (props) => {
 
-  const { genderDetected } = props;
+  const { eventDetected } = props;
   const [options, setOptions] = useState();
   const [series, setSeries] = useState();
 
   useEffect(() => {
     let xAxis = [], yAxis = [];
-    if (genderDetected.length > 0) {
-      genderDetected.forEach((item) => {
+    if (eventDetected.length > 0) {
+      eventDetected.forEach((item) => {
         xAxis.push(item.name);
         yAxis.push(item.value)
       })

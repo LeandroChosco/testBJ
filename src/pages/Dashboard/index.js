@@ -20,9 +20,11 @@ import IntalledLastMonth from '../../components/Dashboard/camerasInstalledLastMo
 // import AgeDetected from '../../components/Dashboard/ageDetected';
 import PersonsMood from '../../components/Dashboard/personsMood';
 import GenderDetected from '../../components/Dashboard/genderDetected';
-import DataCams from '../../components/Dashboard/dataCams';
+// import DataCams from '../../components/Dashboard/dataCams';
+import DataCamsDash from '../../components/Dashboard/dataCamsDash';
 import CamsInstalledByMonth from '../../components/Dashboard/camsInstalledByMonth';
-import DataTickets from '../../components/Dashboard/dataTickets';
+// import DataTickets from '../../components/Dashboard/dataTickets';
+import DataTicketsDash from '../../components/Dashboard/dataTicketsDash';
 // import DataTicketsPerUser from '../../components/Dashboard/dataTicketsPerUser';
 import DataTicketsPerUserRedesign from '../../components/Dashboard/dataTicketsPerUserRedesign';
 import AttendedVSclosed from '../../components/Dashboard/attendedVScloded';
@@ -70,7 +72,7 @@ class Dashboard extends Component {
     dataCams: [],
     loadingTickets: true,
     dataTickets: [],
-    embebedDashboard:[],
+    embebedDashboard: [],
     dataTotalTickets: [],
     dataTicketsPerUser: {
       closed: [],
@@ -149,11 +151,16 @@ class Dashboard extends Component {
     ]
   }
 
-  
+
   renderCamsDashboard() {
     // const c = shuffle(COLORS);
     return (
       <div className='container-flex'>
+        <h1>Logística de cámaras</h1>
+        <p>Powered by Radar ®</p>
+        <hr />
+        <p>La logística de Radar realiza un recuento del estado y registro de cámaras en la alcaldía. De esta manera, los monitoristas tienen un control más eficaz de las instalaciones.</p>
+        <br />
         <div className='row'>
           <div className='col chart overflow table-responsive' align='center'>
             {
@@ -166,18 +173,18 @@ class Dashboard extends Component {
 
           </div>
           <div className='col chart' align='center'>
-            <h3>Estatus de camaras</h3>
+            <h3>Estado de camaras</h3>
             {
               this.state.loadingCams ?
                 <Loading />
                 :
-                <DataCams dataCams={this.state.dataCams} />
+                <DataCamsDash dataCams={this.state.dataCams} />
             }
           </div>
         </div>
         <div className="row">
           <div className='col-6 chart' align='center'>
-            <h3>Camara  instaladas por mes</h3>
+            <h3>Cámaras instaladas por mes</h3>
             {
               this.state.loadingCams ?
                 <Loading />
@@ -186,7 +193,7 @@ class Dashboard extends Component {
             }
           </div>
           <div className='col-6 chart' align='center'>
-            <h3>Camara instaladas Ultimo mes</h3>
+            <h3>Cámaras instaladas el último mes</h3>
             {
               this.state.loadingCams ?
                 <Loading />
@@ -199,37 +206,33 @@ class Dashboard extends Component {
     );
   }
 
-  renderEmebidoDashboard (){
-    
-    return(
+  renderEmebidoDashboard() {
+
+    return (
       <div className="row  content-center items-center center center-block ">
-       {
-         this.state.embebedDashboard.map((item)=>(
-          
-            <div className="card  bg-white  m-2 self-center  "  style={{width:"180px"}} key={item.id} >
-          <div className="card-header bg-white" style={{ height: '50px', 'white-space': 'pre-line' ,overflow: 'hidden', 'text-overflow': "ellipsis" }} > 
-            <div className="card-title" > 
-             { item.nombre}
+        {
+          this.state.embebedDashboard.map((item) => (
+
+            <div className="card  bg-white  m-2 self-center  " style={{ width: "180px" }} key={item.id} >
+              <div className="card-header bg-white" style={{ height: '50px', 'white-space': 'pre-line', overflow: 'hidden', 'text-overflow': "ellipsis" }} >
+                <div className="card-title" >
+                  {item.nombre}
+                </div>
+
+              </div>
+              <button
+                className="btn btn-default btn-lg align-content-start"
+                onClick={async () => {
+                  const data = await conections.getDetailDashboard(item.id);
+                  // console.log(data.data.data[0]);
+                  const script = data.data.data[0].script;
+                  window.open(script, 'vizContainer', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no')
+                }}>
+                <RiEye2Fill />
+              </button>
             </div>
-          
-          </div>
-          <button
-            className="btn btn-default btn-lg align-content-start"
-             onClick={async()=>{
-                const data =await conections.getDetailDashboard(item.id);
-                // console.log(data.data.data[0]);
-                const script=data.data.data[0].script;
-              window.open(script, 'vizContainer', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no')
-            }}>
-               <RiEye2Fill  />
-            </button>
-        </div>
-   
-          
-       
-         ))
-         
-       } 
+          ))
+        }
       </div>
     )
   }
@@ -237,19 +240,13 @@ class Dashboard extends Component {
   renderTicketsDashboard() {
     return (
       <div className='container-flex'>
+        <h1>Bitácora de tickets</h1>
+        <p>Powered by Radar ®</p>
+        <hr />
+        <p>La bitácora de Radar exhibe el estado de los tickets de atención a los ciudadanos de la alcaldía, facilitando un histórico del desempeño de cada monitorista.</p>
+        <br />
         <div className='row'>
-          <div className='col chart' align='center'>
-            <h3>Estatus de tickets</h3>
-            {
-              this.state.loadingTickets ?
-                <Loading />
-                :
-                <DataTickets dataTickets={this.state.dataTickets} dataTotalTickets={this.state.dataTotalTickets} />
-            }
-          </div>
-        </div>
-        <div className='row'>
-        <div className='col-6 chart overflow table-responsive' style={{height: "501px"}} align='center'>
+          <div className='col-6 chart overflow table-responsive' style={{ height: "375px" }} align='center'>
             <h3>Tickets creados por usuario</h3>
             {
               this.state.loadingTickets ?
@@ -258,7 +255,19 @@ class Dashboard extends Component {
                 <DataTicketsPerUserRedesign dataTicketsPerUser={this.state.dataTicketsPerUser} customLabel={customLabel} />
             }
           </div>
-          <div className='col-6 chart2x' align='center'>
+          <div className='col-6 chart' align='center'>
+            <h3>Estado de tickets</h3>
+            <br />
+              {
+                this.state.loadingTickets ?
+                  <Loading />
+                  :
+                  <DataTicketsDash dataTickets={this.state.dataTickets} dataTotalTickets={this.state.dataTotalTickets} />
+              }
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-12 chart2x' align='center'>
             <h3>Tickets atendidos y cerrados por usuario</h3>
             {
               this.state.loadingTickets ?
@@ -271,33 +280,36 @@ class Dashboard extends Component {
       </div>
     );
   }
-  renderEvents(){
+  renderEvents() {
     return (
-    <div className='container-flex'>
+      <div className='container-flex'>
+        <h1>Micrófonos</h1>
+        <p>Powered by Radar ®</p>
+        <hr />
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+          nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui oﬃcia deserunt mollit anim id est laborum.</p>
         <div className='row'>
-            <div className='col-6 chart' align='center'>
-
-              <Card style={style.height}>
-                <CardHeader>
-                  <h3 className="pt-2">Total de eventos</h3>
-                </CardHeader>          
-                  {this.state.loadTotalRecognition ? <Loading /> :
-                  <MicrofonosDash genderDetected={this.state.totalEvents} dataTickets={this.state.dataTickets} />
-                  }
-              </Card>
-
-
-            </div>
+          <div className='col-12 chart' align='center'>
+            <Card style={style.height}>
+              <CardHeader>
+                <h3 className="pt-2">Total de eventos</h3>
+              </CardHeader>
+              {this.state.loadTotalRecognition ? <Loading /> :
+                <MicrofonosDash eventDetected={this.state.totalEvents} dataTickets={this.state.dataTickets} />
+              }
+            </Card>
+          </div>
         </div>
-    </div>
+      </div>
     )
-    
+
   }
 
-  renderLPRDashboard(){
-    return(
+  renderLPRDashboard() {
+    return (
       <div>
-      <Placas />
+        <Placas />
       </div>
     )
   }
@@ -310,11 +322,9 @@ class Dashboard extends Component {
         <h1>Reconocimiento Facial</h1>
         <p>Powered by Radar ®</p>
         <hr />
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-          nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui oﬃcia deserunt mollit anim id est laborum.</p>
+        <p>El sistema de reconocimiento de Radar utiliza inteligencia artificial para detectar expresiones faciales en las personas y registrarlas en tiempo real. Los monitoristas pueden seccionar por tiempo los eventos almacenados, diferenciándolos por sexo o edad.</p>
         <div className='row'>
-          <div className='col-12 chart' style={{height: "auto"}} align='center'>
+          <div className='col-12 chart' style={{ height: "auto" }} align='center'>
             <Card style={style.adjustX}>
               <CardBody>
                 {
@@ -328,7 +338,7 @@ class Dashboard extends Component {
           </div>
         </div>
 
-        <div style={{backgroundColor: "#f5f5f5", padding: "4rem"}}>
+        <div style={{ backgroundColor: "#f5f5f5", padding: "4rem" }}>
           <div className='row'>
             <div className='col-12 chart' align='center'>
               <RegisterMood />
@@ -339,7 +349,7 @@ class Dashboard extends Component {
             <div className='col-6 chart' align='center'>
               <Card style={style.height}>
                 <CardHeader>
-                  <h3 className="pt-2" style={{display: "flex"}}>Personas registradas</h3>
+                  <h3 className="pt-2" style={{ display: "flex" }}>Personas registradas</h3>
                 </CardHeader>          {
                   this.state.loadTotalRecognition ?
                     <Loading />
@@ -349,7 +359,7 @@ class Dashboard extends Component {
               </Card>
             </div>
             <div className='col-6 chart' align='center'>
-              <h3 style={{display: "flex"}}>Edades registradas</h3>
+              <h3 style={{ display: "flex" }}>Edades registradas</h3>
               {
                 this.state.loadRecognitionAges ?
                   <Loading />
@@ -470,7 +480,7 @@ class Dashboard extends Component {
   processMicrofono = () => {
     const data = this.props.totalEvents
     console.log("EVENTOS", this.props.fechasEventos)
-    if(data.length > 0){
+    if (data.length > 0) {
       this.setState({
         totalEvents: [
           {

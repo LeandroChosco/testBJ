@@ -1,5 +1,4 @@
 import React from 'react';
-import ColorScheme from 'color-scheme';
 import {
   Tooltip,
   ResponsiveContainer,
@@ -10,14 +9,6 @@ import {
   ComposedChart,
   Legend
 } from 'recharts';
-
-const scm = new ColorScheme();
-const COLORS = scm.from_hue(235)
-  .scheme('analogic')
-  .distance(0.3)
-  .add_complement(false)
-  .variation('pastel')
-  .web_safe(false).colors();
 
 
 const AttendedVSclosed = (props) => {
@@ -35,8 +26,8 @@ const AttendedVSclosed = (props) => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar barSize={30} dataKey="Cerrados" fill={'#' + COLORS[0 % COLORS.length]} />
-        <Bar barSize={30} dataKey="Proceso" fill={'#' + COLORS[1 % COLORS.length]} />
+        <Bar barSize={30} dataKey="Cerrados" fill={'#008ffb'} />
+        <Bar barSize={30} dataKey="Proceso" fill={'#f2833e'} />
       </ComposedChart>
     </ResponsiveContainer>
   )

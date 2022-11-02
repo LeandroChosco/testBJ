@@ -11,17 +11,27 @@ import TableD from "./table";
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 const Placas = () => {
   return (
-    <div className="container-fluid py-4 ">
-      <span className="text-h1">Licence Plate Recognition</span>
-      <p className="pb-4">Powered by Radar </p>
+    // <div className="container-fluid py-4 ">
+    //   <span className="text-h1">Licence Plate Recognition</span>
+    //   <p className="pb-4">Powered by Radar </p>
 
-      <p className="pr-intro pb-2">
-        El análisis de reconocimiento de matrículas (LPR) de Radar lee
+    //   <p className="pr-intro pb-2">
+    //     El análisis de reconocimiento de matrículas (LPR) de Radar lee
+    //     automáticamente la información de matrículas y la vincula a videos en
+    //     vivo y grabados. Gracias a esto, los operadores de seguridad pueden
+    //     buscar y encontrar rápidamente videos específicos de matrículas de
+    //     vehículos capturadas para su verificación e investigación
+    //   </p>
+    <div className="container-flex">
+      <h1>Licence Plate Recognition</h1>
+      <p>Powered by Radar ®</p>
+      <hr />
+      <p>El análisis de reconocimiento de matrículas (LPR) de Radar lee
         automáticamente la información de matrículas y la vincula a videos en
         vivo y grabados. Gracias a esto, los operadores de seguridad pueden
         buscar y encontrar rápidamente videos específicos de matrículas de
-        vehículos capturadas para su verificación e investigación
-      </p>
+        vehículos capturadas para su verificación e investigación.</p>
+      <br />
       <SummaryCount />
       <Row className="py-4">
         <Col xl={3}>

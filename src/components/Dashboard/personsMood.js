@@ -67,31 +67,6 @@ const PersonsMood = (props) => {
           ))
           : null
       }
-      {/* <li>
-        <img alt="Neutral" src={neutralEmoji} width='20%'></img>
-        <h4>Neutral</h4>
-        {personsMood[0].total}
-      </li>
-      <li>
-        <img alt="Sorprendido" src={surpriseEmoji} width='20%'></img>
-        <h4>Sorprendido</h4>
-        {personsMood[1].total}
-      </li>
-      <li>
-        <img alt="Triste" src={sadEmoji} width='20%'></img>
-        <h4>Triste</h4>
-        {personsMood[2].total}
-      </li>
-      <li>
-        <img alt="Feliz" src={happyEmoji} width='20%'></img>
-        <h4>Feliz</h4>
-        {personsMood[3].total}
-      </li>
-      <li>
-        <img alt="Enojado" src={angryEmoji} width='20%'></img>
-        <h4>Enojado</h4>
-        {personsMood[4].total}
-      </li> */}
     </ul>
   )
 }

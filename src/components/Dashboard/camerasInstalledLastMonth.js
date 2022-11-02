@@ -10,15 +10,6 @@ import {
   ComposedChart
 } from 'recharts';
 
-import ColorScheme from 'color-scheme'
-const scm = new ColorScheme();
-const COLORS = scm.from_hue(235)
-  .scheme('analogic')
-  .distance(0.3)
-  .add_complement(false)
-  .variation('pastel')
-  .web_safe(false).colors();
-
 const IntalledLastMonth = (props) => {
   const { installed_last_moth } = props;
   return (
@@ -34,7 +25,7 @@ const IntalledLastMonth = (props) => {
         <YAxis allowDecimals={false} />
         <Tooltip />
         <Legend />
-        <Bar dataKey="total" fill={'#' + COLORS[0]} />
+        <Bar dataKey="total" fill={'#008ffb'} />
       </ComposedChart>
     </ResponsiveContainer>
   )

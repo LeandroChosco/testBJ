@@ -1,5 +1,4 @@
 import React from 'react';
-import ColorScheme from 'color-scheme';
 import {
   Legend,
   Tooltip,
@@ -10,14 +9,6 @@ import {
   Bar,
   ComposedChart,
 } from 'recharts';
-
-const scm = new ColorScheme();
-const COLORS = scm.from_hue(235)
-  .scheme('analogic')
-  .distance(0.3)
-  .add_complement(false)
-  .variation('pastel')
-  .web_safe(false).colors();
 
 
 const CamsInstalledByMonth = (props) => {
@@ -35,7 +26,7 @@ const CamsInstalledByMonth = (props) => {
         <YAxis allowDecimals={false} />
         <Tooltip itemStyle={{ color: "#666666" }} />
         <Legend />
-        <Bar dataKey="total" fill={'#' + COLORS[2]} />
+        <Bar dataKey="total" fill={'#008ffb'} />
       </ComposedChart>
     </ResponsiveContainer>
   )
