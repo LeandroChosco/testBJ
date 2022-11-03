@@ -445,7 +445,7 @@ class GridCameraDisplay extends Component {
 						</>
 						:
 						<div className="col-8 platesgrid" align="center">
-							<CurveDash stateHeight="200" dataGraphic={true} />
+							<CurveDash camera={selectedCamera.dataCamValue} stateHeight="200" dataGraphic={true} />
 						</div>
 							:
 							null

@@ -18,8 +18,11 @@ export const CurveDash = (props) => {
   const [seriesGrid, setSeriesGrid] = useState([])
   const [categoriesGrid, setCategoriesGrid] = useState([])
 
+  //// Pasar id a alertPerHour 
+
   const init = async () => {
-    const alertPerHour = await conections.getLPRAlertHour();
+    const alertPerHour = await conections.getLPRPerHour();
+
     if(alertPerHour.data && alertPerHour.data.msg ==='ok' && alertPerHour.data.success){
       alertPerHour.data.data.forEach(element => {
         dataArraySeries.push({ serie: element.total, categorie: element.hour })
@@ -52,7 +55,7 @@ export const CurveDash = (props) => {
       })
 
       sortAlertPerHour.forEach((el) => {
-        dataArraySeriesGrid.push(el.total + ":00")
+        dataArraySeriesGrid.push(el.total)
         dataArrayCategoriesGrid.push(el.hour + ":00")
       })
 
@@ -60,6 +63,10 @@ export const CurveDash = (props) => {
       setCategoriesGrid(dataArrayCategoriesGrid)
     }
   }
+
+  console.log(seriesGrid)
+  console.log(categoriesGrid)
+
   useEffect(() => {
     init()
   }, [])
@@ -73,7 +80,7 @@ export const CurveDash = (props) => {
           id: "smooth"
         },
         xaxis: {
-          categories:categories
+          categories:categoriesGrid
         },
         colors: ["#EE8B05"],
       },
@@ -81,19 +88,26 @@ export const CurveDash = (props) => {
       series: [
         {
           name: "Camara 1",
-          data: series
+          data: seriesGrid
         }
       ]
     }
     return (
         // <div className="wChart">
+        <>
+          {
+            seriesGrid.length > 0 ?
             <Chart
-              options={data.options}
-              series={data.series}
-              type="area"
-              width="100%"
-              height='250'
+            options={data.options}
+            series={data.series}
+            type="area"
+            width="100%"
+            height='250'
             />
+            :
+            <h4>NO HAY DATOS</h4>
+          }
+          </>
         // </div>
     )
 }
