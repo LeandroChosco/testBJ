@@ -1,5 +1,6 @@
 import Chart from "react-apexcharts";
 import React, { useEffect, useState } from 'react'
+import Spinner from 'react-bootstrap/Spinner';
 import conections from "../../../conections";
 import './styles.css'
 
@@ -21,7 +22,7 @@ export const CurveDash = (props) => {
   //// Pasar id a alertPerHour 
 
   const init = async () => {
-    const alertPerHour = await conections.getLPRPerHour();
+    const alertPerHour = await conections.getLPRPerHour(props.camera.id);
 
     if(alertPerHour.data && alertPerHour.data.msg ==='ok' && alertPerHour.data.success){
       alertPerHour.data.data.forEach(element => {
@@ -64,12 +65,16 @@ export const CurveDash = (props) => {
     }
   }
 
-  console.log(seriesGrid)
-  console.log(categoriesGrid)
-
   useEffect(() => {
-    init()
-  }, [])
+    
+    setCategoriesGrid([]);
+    setSeriesGrid([]);
+
+    setTimeout(() => {
+     init()
+    }, 500);
+
+  }, [props.camera])
 
     const data={
         options: {
@@ -102,10 +107,10 @@ export const CurveDash = (props) => {
             series={data.series}
             type="area"
             width="100%"
-            height='250'
+            height='180px'
             />
             :
-            <h4>NO HAY DATOS</h4>
+            <Spinner style={{marginTop: "3rem"}} animation="border" variant="info" role="status" size="xl" />
           }
           </>
         // </div>
