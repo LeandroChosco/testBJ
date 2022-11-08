@@ -23,6 +23,7 @@ import * as QvrFunctions from '../../functions/getQvrFunctions';
 import './style.css';
 import Placas from './placas';
 import { CurveDash } from '../Dashboard/Placas/graphic';
+import { CurveGridCamera } from '../Dashboard/Placas/CurveGridCamera';
 
 const SHOW_HISTORY = 3;
 const countryOptions = [
@@ -445,7 +446,7 @@ class GridCameraDisplay extends Component {
 						</>
 						:
 						<div className="col-8 platesgrid" align="center">
-							<CurveDash stateHeight="200" dataGraphic={true} />
+							<CurveGridCamera camera={selectedCamera.dataCamValue} stateHeight="200" dataGraphic={true} />
 						</div>
 							:
 							null

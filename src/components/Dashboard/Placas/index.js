@@ -11,40 +11,50 @@ import TableD from "./table";
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 const Placas = () => {
   return (
-    <div className="container-fluid py-4 ">
-      <span className="text-h1">Licence Plate Recognition</span>
-      <p className="pb-4">Powered by Radar </p>
+    // <div className="container-fluid py-4 ">
+    //   <span className="text-h1">Licence Plate Recognition</span>
+    //   <p className="pb-4">Powered by Radar </p>
 
-      <p className="pr-intro pb-2">
-        El análisis de reconocimiento de matrículas (LPR) de Radar lee
+    //   <p className="pr-intro pb-2">
+    //     El análisis de reconocimiento de matrículas (LPR) de Radar lee
+    //     automáticamente la información de matrículas y la vincula a videos en
+    //     vivo y grabados. Gracias a esto, los operadores de seguridad pueden
+    //     buscar y encontrar rápidamente videos específicos de matrículas de
+    //     vehículos capturadas para su verificación e investigación
+    //   </p>
+    <div className="container-flex">
+      <h1>Licence Plate Recognition</h1>
+      <p>Powered by Radar ®</p>
+      <hr />
+      <p>El análisis de reconocimiento de matrículas (LPR) de Radar lee
         automáticamente la información de matrículas y la vincula a videos en
         vivo y grabados. Gracias a esto, los operadores de seguridad pueden
         buscar y encontrar rápidamente videos específicos de matrículas de
-        vehículos capturadas para su verificación e investigación
-      </p>
+        vehículos capturadas para su verificación e investigación.</p>
+      <br />
       <SummaryCount />
       <Row className="py-4">
         <Col xl={3}>
           <Row>
             <Col xl={9} className="mb-2">
               <h6>Periodo</h6>
-              <div class="dropdown">
+              <div className="dropdown">
                 <button
-                  class="btn dropdwon-btn dropdown-toggle"
+                  className="btn dropdwon-btn dropdown-toggle"
                   type="button"
                   data-toggle="dropdown"
                   aria-expanded="false"
                 >
                   Periodo
                 </button>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" href="#">
+                <div className="dropdown-menu">
+                  <a className="dropdown-item" href="#">
                     Hoy
                   </a>
-                  <a class="dropdown-item" href="#">
+                  <a className="dropdown-item" href="#">
                     Martes
                   </a>
-                  <a class="dropdown-item" href="#">
+                  <a className="dropdown-item" href="#">
                     Miercoles
                   </a>
                 </div>
@@ -136,28 +146,28 @@ const Placas = () => {
         <div className="py-4 px-5">
           <h6>Periodo</h6>
           <Row>
-            <div class="form-check px-4 mt-3 mr-1">
+            <div className="form-check px-4 mt-3 mr-1">
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="exampleRadios"
                 id="exampleRadios1"
                 value="option1"
                 checked
               />
-              <label class="form-check-label" for="exampleRadios1">
+              <label className="form-check-label" for="exampleRadios1">
                 Semana
               </label>
             </div>
-            <div class="form-check mt-3">
+            <div className="form-check mt-3">
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="exampleRadios"
                 id="exampleRadios2"
                 value="option2"
               />
-              <label class="form-check-label" for="exampleRadios2">
+              <label className="form-check-label" for="exampleRadios2">
                 Mes
               </label>
             </div>
@@ -176,7 +186,7 @@ const Placas = () => {
           </Col>
           <Col className="" xl={6} lg={12} md={12}>
             <div className="hfull card ">
-              <div class="card-header">Conteo de Placas</div>
+              <div className="card-header">Conteo de Placas</div>
               <div className="w-100 center">
                 <CurveDash />
               </div>

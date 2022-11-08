@@ -74,14 +74,14 @@ const TableD = () =>{
       {
         dataField: "follow",
         text: "",
-        formatter: ()=>( <button type="button" class="btn btn-primary" style={{marginLeft: "43%"}}>Ver</button>),
+        formatter: ()=>( <button type="button" className="btn btn-primary" style={{marginLeft: "43%"}}>Ver</button>),
         sort: true
       }
       ]
     
     const LinkButton =()=>{
       return(
-        <button type="button" class="btn btn-primary">Ver</button>
+        <button type="button" className="btn btn-primary">Ver</button>
       )
     }
     const data = [
