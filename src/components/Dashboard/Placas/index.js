@@ -149,7 +149,7 @@ const Placas = () => {
                 <b>Ranking Placas</b>
               </h5>
 
-              <thead className="table">
+              <thead className="tableMap">
                 <tr className="tr">
                   <th  className="th" >Placa</th>
                   <th className="px-5 th">Coincidencia</th>
