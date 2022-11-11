@@ -8,19 +8,22 @@ export const CurveDash =() =>{
   let dataArrayCategories =[];
   const [series, setSeries] = useState([])
   const [categories, setCategories] = useState([])
-  const init =async () =>{
-    const alertPerHour = await conections.getLPRAlertHour();
-    if(alertPerHour.data && alertPerHour.data.msg ==='ok' && alertPerHour.data.success){
-      alertPerHour.data.data.forEach(element => {
+  const init = async () => {
+    const alertPerHour = await conections.getLPRPerHour();
+    if (alertPerHour.data && alertPerHour.data.msg === 'ok' && alertPerHour.data.success) {
+      const sortAlertPerHour = await alertPerHour.data.data.sort((a, b) => {
+        if (a.hour > b.hour) return 1
+        if (a.hour < b.hour) return -1
+      })
+      sortAlertPerHour.forEach(element => {
         dataArraySeries.push(element.total)
         dataArrayCategories.push(`${element.hour}:00`)
       });
       setSeries(dataArraySeries)
       setCategories(dataArrayCategories)
     }
-
-
   }
+
   useEffect(() => {
     init()
   }, [])
