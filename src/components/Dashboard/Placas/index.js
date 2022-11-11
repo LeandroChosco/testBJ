@@ -159,20 +159,20 @@ const Placas = () => {
                 <b>Ranking Placas</b>
               </h5>
 
-              <thead className="">
-                <tr className="">
-                  <th  >Placa</th>
-                  <th className="px-5">Coincidencia</th>
-                  <th>Vehículo</th>
+              <thead className="table">
+                <tr className="tr">
+                  <th  className="th" >Placa</th>
+                  <th className="px-5 th">Coincidencia</th>
+                  <th className="th" >Vehículo</th>
                 </tr>
               </thead>
               <tbody>
               {
                 market.plates.map(placa=>(
-                  <tr>
-                    <td>{placa.plate}</td>
-                    <td className="px-5 pt-2">{placa.totalCoinc}</td>
-                    <td>{placa.typeVehicule}</td>
+                  <tr className="tr">
+                    <td className="th" >{placa.plate}</td>
+                    <td className="px-5 pt-2 th">{placa.totalCoinc}</td>
+                    <td className="th" >{placa.typeVehicule}</td>
                   </tr>
                 ))
               }

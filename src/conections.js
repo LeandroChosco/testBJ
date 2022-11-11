@@ -83,6 +83,12 @@ export default {
   getLPRAlertHour:()=>{
     return connectedSails.get(`${constants.sails_url}/lpr/perHour`)
   },
+  getLPRFilterWeek: (data)=>{
+    return connectedSails.post(`${constants.sails_url}/lpr/filter/week`,data)
+  },
+  getLPRFilterHour: (data)=>{
+    return connectedSails.post(`${constants.sails_url}/lpr/filter/hour`,data)
+  },
   getLPRPerHour:(id)=>{
 
     let data = {
