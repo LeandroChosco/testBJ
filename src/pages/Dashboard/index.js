@@ -258,12 +258,12 @@ class Dashboard extends Component {
           <div className='col-6 chart' align='center'>
             <h3>Estado de tickets</h3>
             <br />
-              {
-                this.state.loadingTickets ?
-                  <Loading />
-                  :
-                  <DataTicketsDash dataTickets={this.state.dataTickets} dataTotalTickets={this.state.dataTotalTickets} />
-              }
+            {
+              this.state.loadingTickets ?
+                <Loading />
+                :
+                <DataTicketsDash dataTickets={this.state.dataTickets} dataTotalTickets={this.state.dataTotalTickets} />
+            }
           </div>
         </div>
         <div className='row'>
@@ -308,7 +308,16 @@ class Dashboard extends Component {
 
   renderLPRDashboard() {
     return (
-      <div>
+      <div className='container-flex'>
+        <h1>Licence Plate Recognition</h1>
+        <p>Powered by Radar ®</p>
+        <hr />
+        <p>El análisis de reconocimiento de matrículas (LPR) de Radar lee
+          automáticamente la información de matrículas y la vincula a videos en
+          vivo y grabados. Gracias a esto, los operadores de seguridad pueden
+          buscar y encontrar rápidamente videos específicos de matrículas de
+          vehículos capturadas para su verificación e investigación.</p>
+        <br />
         <Placas />
       </div>
     )
