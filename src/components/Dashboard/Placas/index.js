@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ColumnChart,
+  ColumnMonthChart,
   CurveDash,
   HeatMapChart,
 } from "./graphic";
@@ -11,57 +12,79 @@ import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 import MapaGoogle from "./map";
 
 const Placas = () => {
-  const [isWeek, setIsWeek] = useState(true)
-  const [market, setMarket] = useState({})
+  const [isWeek, setIsWeek] = useState(true);
+  const [market, setMarket] = useState({});
+  const dateMonth = new Date().getMonth();
+  const months = [
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre",
+  ];
   // const coords ={lat: parseFloat(data.google_cordenate.split(',')[0]), lng: parseFloat(data.google_cordenate.split(',')[1])}
+  const [actuallMonth, setActuallMonth] = useState("Enero");
+  const updateMonth = () => {
+    setActuallMonth(months[dateMonth]);
+  };
   const mapBuble = [
     {
-      "id": "1234",
-      "name": "Colonia del Valle del Norte",
-      "minName": "Col. Vall Norte",
-      "addres": "Calle Juan",
-      "totalCount": 40,
-      "totalCoinc": 20,
-      "coord": {
-        "longitude":"19.3761905",
-        "latitude":"-99.1830844"
+      id: "1234",
+      name: "Colonia del Valle del Norte",
+      minName: "Col. Vall Norte",
+      addres: "Calle Juan",
+      totalCount: 40,
+      totalCoinc: 20,
+      coord: {
+        longitude: "19.3761905",
+        latitude: "-99.1830844",
       },
-      "plates": [
+      plates: [
         {
-          "id": "123",
-          "plate": "jj229V",
-          "totalCoinc": 15,
-          "typeVehicule": "Camioneta"
+          id: "123",
+          plate: "jj229V",
+          totalCoinc: 15,
+          typeVehicule: "Camioneta",
         },
         {
-          "id": "1234",
-          "plate": "aby1234",
-          "totalCoinc": 5,
-          "typeVehicule": "Motocicleta"
-        }
-      ]
+          id: "1234",
+          plate: "aby1234",
+          totalCoinc: 5,
+          typeVehicule: "Motocicleta",
+        },
+      ],
     },
     {
-      "id": "123",
-      "name": "Colonia del Valle del Sur",
-      "minName": "Col. Vall Sur",
-      "addres": "Calle 12",
-      "totalCount": 50,
-      "totalCoinc": 30,
-      "coord": {
-        "longitude": "19.40086539280686",
-        "latitude": "-99.15939603892132"
+      id: "123",
+      name: "Colonia del Valle del Sur",
+      minName: "Col. Vall Sur",
+      addres: "Calle 12",
+      totalCount: 50,
+      totalCoinc: 30,
+      coord: {
+        longitude: "19.40086539280686",
+        latitude: "-99.15939603892132",
       },
-      "plates": [
+      plates: [
         {
-          "id": "123",
-          "plate": "jj229V",
-          "totalCoinc": 30,
-          "typeVehicule": "Camioneta"
-        }
-      ]
-    }
-  ]
+          id: "123",
+          plate: "jj229V",
+          totalCoinc: 30,
+          typeVehicule: "Camioneta",
+        },
+      ],
+    },
+  ];
+  useEffect(() => {
+    updateMonth();
+  }, []);
   return (
     <div className="container-fluid py-4 ">
       <SummaryCount />
@@ -123,58 +146,56 @@ const Placas = () => {
         </Col>
         <Col xl={6} lg={12} md={12}>
           <Card>
-            <CardBody  style={{ padding: "0px", width: "100%", height: "400px" }}>
+            <CardBody
+              style={{ padding: "0px", width: "100%", height: "400px" }}
+            >
               <MapaGoogle dataMap={mapBuble} setMarket={setMarket} />
             </CardBody>
           </Card>
         </Col>
-        { 
-          market.coord ? 
-          <Col xl={3} >
-          <div className="infoMap" >   
-          <Row >
-            <Col className="py-4" xl={8}>
-              <h3>{market.addres} {market.name}</h3>
-            </Col>
-            <Col xl={6}>
-              <span className="text-h">{market.totalCount}</span>
-              <p>Conteo</p>
-            </Col>
-            <Col xl={6}>
-              <span className="text-h">{market.totalCoinc}</span>
-              <p>Coincidencias</p>
-            </Col>
-            <Col className="py-3">
-              <h5>
-                <b>Ranking Placas</b>
-              </h5>
+        {market.coord ? (
+          <Col xl={3}>
+            <div className="infoMap">
+              <Row>
+                <Col className="py-4" xl={8}>
+                  <h3>
+                    {market.addres} {market.name}
+                  </h3>
+                </Col>
+                <Col xl={6}>
+                  <span className="text-h">{market.totalCount}</span>
+                  <p>Conteo</p>
+                </Col>
+                <Col xl={6}>
+                  <span className="text-h">{market.totalCoinc}</span>
+                  <p>Coincidencias</p>
+                </Col>
+                <Col className="py-3">
+                  <h5>
+                    <b>Ranking Placas</b>
+                  </h5>
 
-              <thead className="tableMap">
-                <tr className="tr">
-                  <th  className="th" >Placa</th>
-                  <th className="px-5 th">Coincidencia</th>
-                  <th className="th" >Vehículo</th>
-                </tr>
-              </thead>
-              <tbody>
-              {
-                market.plates.map(placa=>(
-                  <tr className="tr">
-                    <td className="th" >{placa.plate}</td>
-                    <td className="px-5 pt-2 th">{placa.totalCoinc}</td>
-                    <td className="th" >{placa.typeVehicule}</td>
-                  </tr>
-                ))
-              }
-              </tbody>
-            </Col>
-          </Row>
-          </div>
-
-        </Col>
-        : null
-        }
-
+                  <thead className="tableMap">
+                    <tr className="tr">
+                      <th className="th">Placa</th>
+                      <th className="px-5 th">Coincidencia</th>
+                      <th className="th">Vehículo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {market.plates.map((placa) => (
+                      <tr className="tr">
+                        <td className="th">{placa.plate}</td>
+                        <td className="px-5 pt-2 th">{placa.totalCoinc}</td>
+                        <td className="th">{placa.typeVehicule}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Col>
+              </Row>
+            </div>
+          </Col>
+        ) : null}
       </Row>
       <div className="bg-gray">
         <div className="py-4 px-5">
@@ -188,9 +209,9 @@ const Placas = () => {
                 id="exampleRadios1"
                 value="option1"
                 checked={isWeek}
-                onClick={()=>{
-                  console.log('trew')
-                  setIsWeek(true)
+                onClick={() => {
+                  console.log("trew");
+                  setIsWeek(true);
                 }}
               />
               <label class="form-check-label" for="exampleRadios1">
@@ -205,9 +226,9 @@ const Placas = () => {
                 id="exampleRadios2"
                 value="option2"
                 checked={!isWeek}
-                onClick={()=>{
-                  console.log('false')
-                  setIsWeek(false)
+                onClick={() => {
+                  console.log("false");
+                  setIsWeek(false);
                 }}
               />
               <label class="form-check-label" for="exampleRadios2">
@@ -215,25 +236,30 @@ const Placas = () => {
               </label>
             </div>
           </Row>
-          <span className="text-xxs">Mes de octubre</span>
+          <span className="text-xxs">Mes de {actuallMonth}</span>
           <Row>
-          <div className="px-4 mt-3 mr-1">
-          <label for="inputState">Camara</label>
-          <select id="inputState" class="form-control">
-            <option selected>Choose...</option>
-            <option>Camara 1</option>
-          </select>
-          </div>
-        
+            <div className="px-4 mt-3 mr-1">
+              <label for="inputState">Camara</label>
+              <select id="inputState" class="form-control">
+                <option disabled selected>
+                  Choose...
+                </option>
+                <option>Camara 1</option>
+              </select>
+            </div>
           </Row>
         </div>
 
         <Row className="py-4 px-5">
           <Col xl={6} lg={12} md={12}>
             <Card>
-              <CardHeader>Coincidencias por Placa</CardHeader>
+              <CardHeader>Conteo por Placa</CardHeader>
               <CardBody>
-                <ColumnChart isWeek={isWeek} />
+                {isWeek ? (
+                  <ColumnChart />
+                ) : (
+                  <ColumnMonthChart month={dateMonth} />
+                )}
               </CardBody>
             </Card>
           </Col>
