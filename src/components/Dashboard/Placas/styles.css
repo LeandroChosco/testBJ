@@ -8,6 +8,11 @@
 .hfull{
     height: 100%;
 }
+.infoMap{
+    background-color: rgba(255,255,255,0.5);
+    border-left: 3px solid rgb(10, 179, 240);
+    padding-left: 10px;
+}
 
 .pr-intro{
     padding-right: 30%;
@@ -17,6 +22,10 @@
 }
 .text-h1{
     font-size: xx-large;
+    font-weight: bold;
+}
+.text-h{
+    font-size: 60px;
     font-weight: bold;
 }
 .text-xxs{
@@ -54,3 +63,27 @@
     background: linear-gradient(0deg, rgba(248, 3, 3, 0.795) 0%, rgba(229, 99, 125, 0.872) 100%);
 
 }
+
+table {
+    width: 100%;
+    border: 1px solid #999;
+    text-align: left;
+    border-collapse: collapse;
+    margin: 0 0 1em 0;
+    caption-side: top;
+ }
+ caption, td, th {
+    padding: 0.3em;
+ }
+ tr{
+    color: deepskyblue!important;
+ }
+ th, td {
+    color: black;
+    border-bottom: 1px solid #999;
+    width: 25%;
+ }
+ caption {
+    font-weight: bold;
+    font-style: italic;
+ }

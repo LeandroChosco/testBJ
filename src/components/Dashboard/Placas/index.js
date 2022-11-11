@@ -1,60 +1,102 @@
-import React from "react";
+import React, { useState } from "react";
 import {
-  BubleChart,
   ColumnChart,
   CurveDash,
-  DonoutDash,
   HeatMapChart,
 } from "./graphic";
 import SummaryCount from "./summaryCount";
 import TableD from "./table";
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
-const Placas = () => {
-  return (
-    // <div className="container-fluid py-4 ">
-    //   <span className="text-h1">Licence Plate Recognition</span>
-    //   <p className="pb-4">Powered by Radar </p>
 
-    //   <p className="pr-intro pb-2">
-    //     El análisis de reconocimiento de matrículas (LPR) de Radar lee
-    //     automáticamente la información de matrículas y la vincula a videos en
-    //     vivo y grabados. Gracias a esto, los operadores de seguridad pueden
-    //     buscar y encontrar rápidamente videos específicos de matrículas de
-    //     vehículos capturadas para su verificación e investigación
-    //   </p>
-    <div className="container-flex">
-      <h1>Licence Plate Recognition</h1>
-      <p>Powered by Radar ®</p>
-      <hr />
-      <p>El análisis de reconocimiento de matrículas (LPR) de Radar lee
+import MapaGoogle from "./map";
+
+const Placas = () => {
+  const [isWeek, setIsWeek] = useState(true)
+  const [market, setMarket] = useState({})
+  // const coords ={lat: parseFloat(data.google_cordenate.split(',')[0]), lng: parseFloat(data.google_cordenate.split(',')[1])}
+  const mapBuble = [
+    {
+      "id": "1234",
+      "name": "Colonia del Valle del Norte",
+      "minName": "Col. Vall Norte",
+      "addres": "Calle Juan",
+      "totalCount": 40,
+      "totalCoinc": 20,
+      "coord": {
+        "longitude":"19.3761905",
+        "latitude":"-99.1830844"
+      },
+      "plates": [
+        {
+          "id": "123",
+          "plate": "jj229V",
+          "totalCoinc": 15,
+          "typeVehicule": "Camioneta"
+        },
+        {
+          "id": "1234",
+          "plate": "aby1234",
+          "totalCoinc": 5,
+          "typeVehicule": "Motocicleta"
+        }
+      ]
+    },
+    {
+      "id": "123",
+      "name": "Colonia del Valle del Sur",
+      "minName": "Col. Vall Sur",
+      "addres": "Calle 12",
+      "totalCount": 50,
+      "totalCoinc": 30,
+      "coord": {
+        "longitude": "19.40086539280686",
+        "latitude": "-99.15939603892132"
+      },
+      "plates": [
+        {
+          "id": "123",
+          "plate": "jj229V",
+          "totalCoinc": 30,
+          "typeVehicule": "Camioneta"
+        }
+      ]
+    }
+  ]
+  return (
+    <div className="container-fluid py-4 ">
+      <span className="text-h1">Licence Plate Recognition</span>
+      <p className="pb-4">Powered by Radar </p>
+
+      <p className="pr-intro pb-2">
+        El análisis de reconocimiento de matrículas (LPR) de Radar lee
         automáticamente la información de matrículas y la vincula a videos en
         vivo y grabados. Gracias a esto, los operadores de seguridad pueden
         buscar y encontrar rápidamente videos específicos de matrículas de
-        vehículos capturadas para su verificación e investigación.</p>
-      <br />
+        vehículos capturadas para su verificación e investigación
+      </p>
       <SummaryCount />
       <Row className="py-4">
         <Col xl={3}>
           <Row>
             <Col xl={9} className="mb-2">
               <h6>Periodo</h6>
-              <div className="dropdown">
+              <div class="dropdown">
                 <button
-                  className="btn dropdwon-btn dropdown-toggle"
+                  class="btn dropdwon-btn dropdown-toggle"
                   type="button"
                   data-toggle="dropdown"
                   aria-expanded="false"
                 >
                   Periodo
                 </button>
-                <div className="dropdown-menu">
-                  <a className="dropdown-item" href="#">
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#">
                     Hoy
                   </a>
-                  <a className="dropdown-item" href="#">
+                  <a class="dropdown-item" href="#">
                     Martes
                   </a>
-                  <a className="dropdown-item" href="#">
+                  <a class="dropdown-item" href="#">
                     Miercoles
                   </a>
                 </div>
@@ -91,23 +133,26 @@ const Placas = () => {
         </Col>
         <Col xl={6} lg={12} md={12}>
           <Card>
-            <CardBody>
-              <BubleChart />
+            <CardBody  style={{ padding: "0px", width: "100%", height: "400px" }}>
+              <MapaGoogle dataMap={mapBuble} setMarket={setMarket} />
             </CardBody>
           </Card>
         </Col>
-        <Col xl={3}>
-          <Row>
+        { 
+          market.coord ? 
+          <Col xl={3} >
+          <div className="infoMap" >   
+          <Row >
             <Col className="py-4" xl={8}>
-              <h3>Calle 12, Col. del Valle Sur</h3>
+              <h3>{market.addres} {market.name}</h3>
             </Col>
             <Col xl={6}>
-              <span className="text-h1">6,090</span>
+              <span className="text-h">{market.totalCount}</span>
               <p>Conteo</p>
             </Col>
             <Col xl={6}>
-              <span className="text-h1">6,090</span>
-              <p>Conteo</p>
+              <span className="text-h">{market.totalCoinc}</span>
+              <p>Coincidencias</p>
             </Col>
             <Col className="py-3">
               <h5>
@@ -122,57 +167,75 @@ const Placas = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>JJ229</td>
-                  <td className="px-5 pt-2">129</td>
-                  <td>Motocicleta</td>
-                </tr>
-                <tr>
-                  <td>JS123V</td>
-                  <td className="px-5 pt-2">394</td>
-                  <td>Carro</td>
-                </tr>
-                <tr>
-                  <td>EE182H</td>
-                  <td className="px-5 pt-2">201</td>
-                  <td>Carro</td>
-                </tr>
+              {
+                market.plates.map(placa=>(
+                  <tr>
+                    <td>{placa.plate}</td>
+                    <td className="px-5 pt-2">{placa.totalCoinc}</td>
+                    <td>{placa.typeVehicule}</td>
+                  </tr>
+                ))
+              }
               </tbody>
             </Col>
           </Row>
+          </div>
+
         </Col>
+        : null
+        }
+
       </Row>
       <div className="bg-gray">
         <div className="py-4 px-5">
           <h6>Periodo</h6>
           <Row>
-            <div className="form-check px-4 mt-3 mr-1">
+            <div class="form-check px-4 mt-3 mr-1">
               <input
-                className="form-check-input"
+                class="form-check-input"
                 type="radio"
                 name="exampleRadios"
                 id="exampleRadios1"
                 value="option1"
-                checked
+                checked={isWeek}
+                onClick={()=>{
+                  console.log('trew')
+                  setIsWeek(true)
+                }}
               />
-              <label className="form-check-label" for="exampleRadios1">
+              <label class="form-check-label" for="exampleRadios1">
                 Semana
               </label>
             </div>
-            <div className="form-check mt-3">
+            <div class="form-check mt-3">
               <input
-                className="form-check-input"
+                class="form-check-input"
                 type="radio"
                 name="exampleRadios"
                 id="exampleRadios2"
                 value="option2"
+                checked={!isWeek}
+                onClick={()=>{
+                  console.log('false')
+                  setIsWeek(false)
+                }}
               />
-              <label className="form-check-label" for="exampleRadios2">
+              <label class="form-check-label" for="exampleRadios2">
                 Mes
               </label>
             </div>
           </Row>
           <span className="text-xxs">Mes de octubre</span>
+          <Row>
+          <div className="px-4 mt-3 mr-1">
+          <label for="inputState">Camara</label>
+          <select id="inputState" class="form-control">
+            <option selected>Choose...</option>
+            <option>Camara 1</option>
+          </select>
+          </div>
+        
+          </Row>
         </div>
 
         <Row className="py-4 px-5">
@@ -180,13 +243,13 @@ const Placas = () => {
             <Card>
               <CardHeader>Coincidencias por Placa</CardHeader>
               <CardBody>
-                <ColumnChart />
+                <ColumnChart isWeek={isWeek} />
               </CardBody>
             </Card>
           </Col>
           <Col className="" xl={6} lg={12} md={12}>
             <div className="hfull card ">
-              <div className="card-header">Conteo de Placas</div>
+              <div class="card-header">Conteo de Placas</div>
               <div className="w-100 center">
                 <CurveDash />
               </div>
