@@ -35,21 +35,21 @@ class AgeDemographic extends React.Component {
                         }
                     }
                 }],
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        borderRadius: 10,
-                        dataLabels: {
-                            total: {
-                                enabled: true,
-                                style: {
-                                    fontSize: '13px',
-                                    fontWeight: 900
-                                }
-                            }
-                        }
-                    },
-                },
+                // plotOptions: {
+                //     bar: {
+                //         horizontal: false,
+                //         borderRadius: 10,
+                //         dataLabels: {
+                //             total: {
+                //                 enabled: true,
+                //                 style: {
+                //                     fontSize: '13px',
+                //                     fontWeight: 900
+                //                 }
+                //             }
+                //         }
+                //     },
+                // },
                 xaxis: {
                     type: 'ages',
                     categories: ['-18', '18-30', '31-50', '+50',

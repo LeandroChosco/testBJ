@@ -73,7 +73,7 @@ const TableD = () =>{
       },
       {
         dataField: "follow",
-        text: "Detalle",
+        text: "",
         formatter: ()=>( <button type="button" class="btn btn-primary" style={{marginLeft: "43%"}}>Ver</button>),
         sort: true
       }
