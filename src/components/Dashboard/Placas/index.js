@@ -9,6 +9,8 @@ import SummaryCount from "./summaryCount";
 import TableD from "./table";
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 
+import conections from "../../../conections";
+
 import MapaGoogle from "./map";
 
 const Placas = () => {
@@ -34,6 +36,19 @@ const Placas = () => {
   const updateMonth = () => {
     setActuallMonth(months[dateMonth]);
   };
+  const [bubbleMap, setBubbleMap] = useState({ })
+  const init =async ()=>{
+    const buble = await conections.getLPRBubble();
+        // console.log("Bubble",bubble);
+    if (
+      buble.data &&
+      buble.data.msg === "ok" &&
+      buble.data.success
+    ) {
+        console.log(buble.data.data);
+        setBubbleMap(buble.data.data)
+    }
+  }
   const mapBuble = [
     {
       id: "1234",
@@ -84,6 +99,7 @@ const Placas = () => {
   ];
   useEffect(() => {
     updateMonth();
+    init()
   }, []);
   return (
     <div className="container-fluid py-4 ">
@@ -149,7 +165,7 @@ const Placas = () => {
             <CardBody
               style={{ padding: "0px", width: "100%", height: "400px" }}
             >
-              <MapaGoogle dataMap={mapBuble} setMarket={setMarket} />
+              <MapaGoogle dataMap={bubbleMap} setMarket={setMarket} />
             </CardBody>
           </Card>
         </Col>

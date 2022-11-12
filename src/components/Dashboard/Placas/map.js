@@ -22,10 +22,10 @@ import {
                 key={index}
                 position={{
                   lat: parseFloat(
-                    lpr.coord.longitude
+                    lpr.coord.latitude
                   ),
                   lng: parseFloat(
-                    lpr.coord.latitude
+                    lpr.coord.longitude
                   ),
                 }}
                 onClick={() =>{
@@ -34,7 +34,7 @@ import {
                 }}
                 icon={{
                   url: circle,
-                  scaledSize: new window.google.maps.Size(lpr.totalCoinc, lpr.totalCoinc),
+                  scaledSize: lpr.totalCount<100 ? new window.google.maps.Size(lpr.totalCount, lpr.totalCount) : new window.google.maps.Size(100, 100),
                 }}
               />
             ))}

@@ -100,6 +100,9 @@ export default {
   getLPRAlertWeek:()=>{
     return connectedSails.get(`${constants.sails_url}/lpr/perWeekHour`)
   },
+  getLPRBubble:()=>{
+    return Axios.post("https://customer-bj-api-dev.radarapptechnologies.com/lpr/filter/bubblemap",{})
+  },
 
 ////////////////////////////////////////////////////////////////////
 
