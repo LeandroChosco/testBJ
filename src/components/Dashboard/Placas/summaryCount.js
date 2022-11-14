@@ -63,7 +63,7 @@ const SummaryCount = () => {
                   Conteo por <b>día</b>
                 </p>
               </div>
-              <div className="ml-3  column position-relative">
+              {/* <div className="ml-3  column position-relative">
               <Icon
                 name="sort down"
                 size="big"
@@ -71,7 +71,7 @@ const SummaryCount = () => {
                 // className={!this.state.small ? "matches-arrow-display-none" : null}
               />
               <p className="text-center text-danger" >-10%</p>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* </div> */}
@@ -94,7 +94,7 @@ const SummaryCount = () => {
                   Conteo por <b>semana</b>
                 </p>
               </div>
-              <div className="ml-3  column position-relative">
+              {/* <div className="ml-3  column position-relative">
               <Icon
                 name="sort up"
                 size="big"
@@ -102,7 +102,7 @@ const SummaryCount = () => {
                 // className={!this.state.small ? "matches-arrow-display-none" : null}
               />
               <p className="text-center text-success" >10%</p>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* </div> */}
@@ -125,7 +125,7 @@ const SummaryCount = () => {
                   Conteo por <b>mes</b>
                 </p>
               </div>
-              <div className="ml-3  column position-relative">
+              {/* <div className="ml-3  column position-relative">
               <Icon
                 name="sort up"
                 size="big"
@@ -133,7 +133,7 @@ const SummaryCount = () => {
                 // className={!this.state.small ? "matches-arrow-display-none" : null}
               />
               <p className="text-center text-success" >+20%</p>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* </div> */}
@@ -156,7 +156,7 @@ const SummaryCount = () => {
                   Coincidencias por <b>mes</b>
                 </p>
               </div>
-              <div className="ml-3  column position-relative">
+              {/* <div className="ml-3  column position-relative">
               <Icon
                 name="sort up"
                 size="big"
@@ -164,7 +164,7 @@ const SummaryCount = () => {
                 // className={!this.state.small ? "matches-arrow-display-none" : null}
               />
               <p className="text-center text-success" >+10%</p>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* </div> */}

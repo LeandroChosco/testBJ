@@ -223,7 +223,9 @@ class GridCameraDisplay extends Component {
 	render() {
 		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays} = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, matches, is_filter } = this.props;
-		
+		console.log('====================================');
+		console.log(markers);
+		console.log('====================================');
 		return (
 			<div className="gridCameraContainer" align="center">
 				<Row>
