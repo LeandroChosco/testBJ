@@ -8,9 +8,12 @@
 .hfull{
     height: 100%;
 }
+.nameCol{
+    text-align: center;
+}
 .infoMap{
     background-color: rgba(255,255,255,0.5);
-    border-left: 3px solid rgb(10, 179, 240);
+    border-left: 5px solid rgb(10, 179, 240);
     padding-left: 10px;
 }
 
@@ -25,7 +28,7 @@
     font-weight: bold;
 }
 .text-h{
-    font-size: 60px;
+    font-size: 30px;
     font-weight: bold;
 }
 .text-xxs{
