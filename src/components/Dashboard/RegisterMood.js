@@ -43,10 +43,10 @@ class RegisterMood extends React.Component {
                 stroke: {
                     curve: 'straight'
                 },
-                title: {
-                    text: 'Emociones registradas',
-                    align: 'left'
-                },
+                // title: {
+                //     text: 'Emociones registradas',
+                //     align: 'left'
+                // },
                 grid: {
                     row: {
                         colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns

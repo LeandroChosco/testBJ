@@ -346,17 +346,23 @@ class Dashboard extends Component {
             </Card>
           </div>
         </div>
-
+        <br />
         <div style={{ backgroundColor: "#f5f5f5", padding: "4rem" }}>
           <div className='row'>
             <div className='col-12 chart' align='center'>
-              <RegisterMood />
+              <Card>
+                <CardHeader>
+                  <h3 className="pt-2" style={{ display: "flex" }}>Emociones registradas</h3>
+                </CardHeader>
+                <RegisterMood />
+              </Card>
             </div>
             <br />
           </div>
+          <br />
           <div className='row'>
             <div className='col-6 chart' align='center'>
-              <Card style={style.height}>
+              <Card style={{ height: "30rem" }}>
                 <CardHeader>
                   <h3 className="pt-2" style={{ display: "flex" }}>Personas registradas</h3>
                 </CardHeader>          {
@@ -368,13 +374,17 @@ class Dashboard extends Component {
               </Card>
             </div>
             <div className='col-6 chart' align='center'>
-              <h3 style={{ display: "flex" }}>Edades registradas</h3>
-              {
-                this.state.loadRecognitionAges ?
-                  <Loading />
-                  :
-                  <AgeDemographic />
-              }
+              <Card style={{ height: "30rem" }}>
+                <CardHeader>
+                  <h3 style={{ display: "flex" }}>Edades registradas</h3>
+                </CardHeader>
+                {
+                  this.state.loadRecognitionAges ?
+                    <Loading />
+                    :
+                    <AgeDemographic />
+                }
+              </Card>
             </div>
           </div>
         </div>
