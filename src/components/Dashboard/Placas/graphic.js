@@ -259,65 +259,6 @@ export const HeatMapChart = () => {
   );
 };
 
-export const BubleChart = () => {
-  console.log("====================================");
-  console.log(new Date().getTime());
-  console.log("====================================");
-  const data = {
-    series: [
-      {
-        name: "U296JX",
-        data: [
-          [2, 25, 28],
-          [3, 50, 50],
-          [4, 20, 28],
-          [5, 55, 40],
-          [6, 10, 100],
-        ],
-      },
-    ],
-    options: {
-      xaxis: {
-        tickAmount: 12,
-        type: "String",
-      },
-      chart: {
-        height: 350,
-        type: "bubble",
-        events: {
-          dataPointSelection(event, chartContext, config) {
-            // The last parameter config contains additional information like `seriesIndex` and `dataPointIndex` for cartesian charts
-            console.log(chartContext.w.globals);
-            // console.log(config.config.series[config.seriesIndex].name)
-            // console.log(config.config.series[config.seriesIndex].data[config.dataPointIndex])
-          },
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      fill: {
-        opacity: 0.8,
-      },
-      title: {
-        text: "",
-      },
-      yaxis: {
-        max: 70,
-      },
-    },
-  };
-  return (
-    <Chart
-      options={data.options}
-      series={data.series}
-      type="bubble"
-      width="100%"
-      height="350"
-    />
-  );
-};
-
 export const ColumnChart = () => {
   const [series, setSeries] = useState([]);
   const [categories, setCategories] = useState([]);

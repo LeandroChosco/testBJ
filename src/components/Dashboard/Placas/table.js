@@ -65,13 +65,6 @@ const TableD = () =>{
         })
       },
       {
-        dataField: "geolocalization",
-        text: 'Coordenada',
-        filter: textFilter({
-            placeholder: 'Buscar Coordenada'
-        })
-      },
-      {
         dataField: "follow",
         text: "",
         formatter: ()=>( <button type="button" class="btn btn-primary" style={{marginLeft: "43%"}}>Ver</button>),
@@ -79,23 +72,11 @@ const TableD = () =>{
       }
       ]
     
-    const LinkButton =()=>{
-      return(
-        <button type="button" class="btn btn-primary">Ver</button>
-      )
-    }
-    const data = [
-        {place:'CHF-235','timestamp':"1245",'typeevents':'45','camera':'245','geolocalization':'234,66'},
-        {place:'AHF-235','timestamp':"2245",'typeevents':'45','camera':'245','geolocalization':'234,66'},
-        {place:'DHF-235','timestamp':"3245",'typeevents':'45','camera':'245','geolocalization':'234,66'},
-        {place:'BHF-235','timestamp':"4245",'typeevents':'45','camera':'245','geolocalization':'234,66'},
-        {place:'EHF-235','timestamp':"5245",'typeevents':'45','camera':'245','geolocalization':'234,66'},
-        {place:'FHF-235','timestamp':"6245",'typeevents':'45','camera':'245','geolocalization':'234,66'},
-        {place:'GHF-235','timestamp':"7245",'typeevents':'45','camera':'245','geolocalization':'234,66'},
-    ]
+
+
     return(
         <>
-            <BootstrapTable keyField='id' data={ data } columns={ columns } pagination={paginationFactory()} filter={filterFactory()} />
+            <BootstrapTable keyField='id' data={ dataQuery } columns={ columns } pagination={paginationFactory()} filter={filterFactory()} />
         </>
     )
 
