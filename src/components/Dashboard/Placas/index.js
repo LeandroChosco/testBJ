@@ -42,7 +42,6 @@ const Placas = () => {
       buble.data.msg === "ok" &&
       buble.data.success
     ) {
-        console.log(buble.data.data);
         setBubbleMap(buble.data.data)
     }
   }

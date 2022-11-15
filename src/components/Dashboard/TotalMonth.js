@@ -42,7 +42,6 @@ const TotalMonth = (props) => {
 
       setDayView(label)
       setTotal(total)
-      console.log(selectData);
     }
   }
 

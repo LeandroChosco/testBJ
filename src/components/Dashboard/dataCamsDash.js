@@ -22,8 +22,7 @@ const styles = {
 const DataCamsDash = (props) => {
     const { dataCams } = props;
 
-    // console.log(dataCams)
-
+  
     const [options, setOptions] = useState();
     const [series, setSeries] = useState();
 

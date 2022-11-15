@@ -18,14 +18,14 @@ export default function MapaGoogle({ setMarket, dataMap }) {
       return nameMin;
     }
     const porcent =(number)=>{
-        const bNum=420029;
-        let porcent =(parseFloat(number)/bNum *100)
+
+        const bNum=parseFloat(dataMap[0].totalCount)+parseFloat(dataMap[1].totalCount);
+        let porcent =(parseFloat(number)/parseFloat (bNum) *100)
         return parseFloat(porcent).toFixed(2) ;
     } 
     const sizeBubble =(totalCount)=>{
      
       let count= parseInt(totalCount)
-      console.log(count);
       let dm=0;
         switch (true) {
           case count <= 100:
@@ -36,19 +36,16 @@ export default function MapaGoogle({ setMarket, dataMap }) {
             break;
             case count > 1000 && count<= 10000:
               dm = (parseInt(count)/100)
-              console.log('2000',dm);
             break;
             case count > 10000 && count<= 100000:
               dm = (parseInt(count)/1000)
             break;
             case count > 100000 && count<= 10000000:
               dm = (parseInt(count)/10000)
-              console.log("42912",dm);
             break;
           default:
             break;
         }
-        console.log(parseInt(dm));
         return parseInt(dm);
     }
     useEffect(() => {
@@ -70,7 +67,6 @@ export default function MapaGoogle({ setMarket, dataMap }) {
                     lng: parseFloat(lpr.coord.longitude),
                   }}
                   onClick={() => {
-                    console.log(lpr);
                     setCenter({ lat: lpr.coord.latitude, lng: lpr.coord.longitude })
                     setSelectMarker(lpr);
                   }}

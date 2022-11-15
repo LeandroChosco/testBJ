@@ -404,8 +404,7 @@ export const ColumnMonthChart = ({ month }) => {
     // }else{
     //    alertPerWeek = await conections.getLPRFilterWeek(dataReqMes);
     // }
-    console.log("Data Req", dataReqMes);
-    console.log(alertPerWeek);
+
 
     if (
       alertPerWeek.data &&
