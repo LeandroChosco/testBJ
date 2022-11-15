@@ -152,9 +152,6 @@ const Placas = () => {
             <div className="px-4 mt-3 mr-1">
               <label for="inputState">Camara</label>
               <select id="inputState" class="form-control">
-                <option disabled selected>
-                  Choose...
-                </option>
                 <option>Camara 1</option>
               </select>
             </div>
