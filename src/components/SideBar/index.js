@@ -33,6 +33,7 @@ class SideBar extends Component {
         if (camaras === undefined) {
           return;
         }
+        console.log("Camaras Map",camaras);
         
         camaras.map(value => {
           if (value.active === 1 && value.flag_streaming === 1 && value.UrlStreamMediaServer) {

@@ -59,11 +59,11 @@ const SummaryCount = () => {
                 <div className="top-0 mb-0 textSize text-black text-start">
                   {totalDay}
                 </div>
-                <p className="mb-0  pt-4 text-xxs text-capitalize text-start text-black">
+                <p className="mb-0  pt-4 text-xxs text-capitalize text-center text-black">
                   Conteo por <b>día</b>
                 </p>
               </div>
-              <div className="ml-3  column position-relative">
+              {/* <div className="ml-3  column position-relative">
               <Icon
                 name="sort down"
                 size="big"
@@ -71,7 +71,7 @@ const SummaryCount = () => {
                 // className={!this.state.small ? "matches-arrow-display-none" : null}
               />
               <p className="text-center text-danger" >-10%</p>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* </div> */}
@@ -90,11 +90,11 @@ const SummaryCount = () => {
                 <div className="top-0 mb-0 textSize text-black text-start">
                   {totalWeek}
                 </div>
-                <p className="mb-0  pt-4 text-xxs text-capitalize text-start text-black">
+                <p className="mb-0  pt-4 text-xxs text-capitalize text-center text-black">
                   Conteo por <b>semana</b>
                 </p>
               </div>
-              <div className="ml-3  column position-relative">
+              {/* <div className="ml-3  column position-relative">
               <Icon
                 name="sort up"
                 size="big"
@@ -102,7 +102,7 @@ const SummaryCount = () => {
                 // className={!this.state.small ? "matches-arrow-display-none" : null}
               />
               <p className="text-center text-success" >10%</p>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* </div> */}
@@ -121,11 +121,11 @@ const SummaryCount = () => {
                 <div className="top-0 mb-0 textSize text-black text-start">
                   {totalMonth}
                 </div>
-                <p className="mb-0  pt-4 text-xxs text-capitalize text-start text-black">
+                <p className="mb-0  pt-4 text-xxs text-capitalize text-center text-black">
                   Conteo por <b>mes</b>
                 </p>
               </div>
-              <div className="ml-3  column position-relative">
+              {/* <div className="ml-3  column position-relative">
               <Icon
                 name="sort up"
                 size="big"
@@ -133,7 +133,7 @@ const SummaryCount = () => {
                 // className={!this.state.small ? "matches-arrow-display-none" : null}
               />
               <p className="text-center text-success" >+20%</p>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* </div> */}
@@ -152,11 +152,11 @@ const SummaryCount = () => {
                 <div className="top-0 mb-0 textSize text-black text-start">
                   {totalAlerts}
                 </div>
-                <p className="mb-0  pt-4 text-xxs text-capitalize text-start text-black">
+                <p className="mb-0  pt-4 text-xxs text-capitalize text-center text-black">
                   Coincidencias por <b>mes</b>
                 </p>
               </div>
-              <div className="ml-3  column position-relative">
+              {/* <div className="ml-3  column position-relative">
               <Icon
                 name="sort up"
                 size="big"
@@ -164,7 +164,7 @@ const SummaryCount = () => {
                 // className={!this.state.small ? "matches-arrow-display-none" : null}
               />
               <p className="text-center text-success" >+10%</p>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* </div> */}

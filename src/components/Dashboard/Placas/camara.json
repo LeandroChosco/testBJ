@@ -1,0 +1,237 @@
+{
+    "CameraToImages": [],
+    "UrlStreamToCameras": [
+        {
+            "id": 10,
+            "date_creation": "2020-07-17T16:47:47.000Z",
+            "date_update": "0000-00-00 00:00:00",
+            "user_update": 0,
+            "user_creation": 48,
+            "activate": 1,
+            "cam_id": 10,
+            "url_id": 1,
+            "Url": {
+                "id": 1,
+                "name_instance": null,
+                "dns_ip": "prod.streaming.bj.uno.energetikadevelepment.com",
+                "port": 3000,
+                "type": "STREAM_CAMS",
+                "active": 1,
+                "protocol": "http",
+                "secretkey": null,
+                "tipombox": "pro"
+            }
+        }
+    ],
+    "RelCuadranteCams": [
+        {
+            "id": 62,
+            "activo": 0,
+            "id_camare": 10,
+            "id_cuadrante": 10,
+            "Cuadrante": {
+                "id": 10,
+                "name": "Cuadrante 2",
+                "activo": 0
+            }
+        },
+        {
+            "id": 69,
+            "activo": 1,
+            "id_camare": 10,
+            "id_cuadrante": 9,
+            "Cuadrante": {
+                "id": 9,
+                "name": "Cuadrante 1",
+                "activo": 0
+            }
+        },
+        {
+            "id": 108,
+            "activo": 1,
+            "id_camare": 10,
+            "id_cuadrante": 15,
+            "Cuadrante": {
+                "id": 15,
+                "name": "Test",
+                "activo": 0
+            }
+        },
+        {
+            "id": 131,
+            "activo": 1,
+            "id_camare": 10,
+            "id_cuadrante": 17,
+            "Cuadrante": {
+                "id": 17,
+                "name": "Test_Redes",
+                "activo": 0
+            }
+        },
+        {
+            "id": 158,
+            "activo": 1,
+            "id_camare": 10,
+            "id_cuadrante": 23,
+            "Cuadrante": {
+                "id": 23,
+                "name": "Red 27 y 28",
+                "activo": 0
+            }
+        },
+        {
+            "id": 302,
+            "activo": 1,
+            "id_camare": 10,
+            "id_cuadrante": 52,
+            "Cuadrante": {
+                "id": 52,
+                "name": "NAPOLES",
+                "activo": 0
+            }
+        },
+        {
+            "id": 362,
+            "activo": 1,
+            "id_camare": 10,
+            "id_cuadrante": 56,
+            "Cuadrante": {
+                "id": 56,
+                "name": "NAPOLES",
+                "activo": 0
+            }
+        },
+        {
+            "id": 423,
+            "activo": 1,
+            "id_camare": 10,
+            "id_cuadrante": 58,
+            "Cuadrante": {
+                "id": 58,
+                "name": "NAPOLES",
+                "activo": 0
+            }
+        },
+        {
+            "id": 560,
+            "activo": 1,
+            "id_camare": 10,
+            "id_cuadrante": 65,
+            "Cuadrante": {
+                "id": 65,
+                "name": "BJ",
+                "activo": 0
+            }
+        },
+        {
+            "id": 894,
+            "activo": 1,
+            "id_camare": 10,
+            "id_cuadrante": 69,
+            "Cuadrante": {
+                "id": 69,
+                "name": "BJ NAPOLES ",
+                "activo": 0
+            }
+        },
+        {
+            "id": 1006,
+            "activo": 1,
+            "id_camare": 10,
+            "id_cuadrante": 75,
+            "Cuadrante": {
+                "id": 75,
+                "name": "NAPOLES ",
+                "activo": 0
+            }
+        },
+        {
+            "id": 2132,
+            "activo": 1,
+            "id_camare": 10,
+            "id_cuadrante": 104,
+            "Cuadrante": {
+                "id": 104,
+                "name": "NAPOLES*",
+                "activo": 1
+            }
+        },
+        {
+            "id": 2266,
+            "activo": 0,
+            "id_camare": 10,
+            "id_cuadrante": 109,
+            "Cuadrante": {
+                "id": 109,
+                "name": "Pruebas",
+                "activo": 0
+            }
+        }
+    ],
+    "id": 10,
+    "num_cam": 10,
+    "path_photo": null,
+    "google_cordenate": "19.3762891,-99.1833892",
+    "street": "Primera Cerrada Luis Carracci",
+    "number": 10,
+    "township": "Benito Juarez",
+    "entrecalles": "Augusto Rondin y Fragonard",
+    "town": "San Juan",
+    "state": "Ciudad de México",
+    "dns": "172.29.191.15",
+    "camera_ip": null,
+    "cam_user": null,
+    "cam_pass": null,
+    "cat_carrier_id": 1,
+    "ssid_name": "Infinitum8980_2.4",
+    "password": "27JdrKPRkz",
+    "personal_name": null,
+    "phone": 56152310,
+    "cell_phone": null,
+    "comment": null,
+    "active": 1,
+    "port_output_streaming": 2010,
+    "flag_streaming": 1,
+    "flag_record_movie": 1,
+    "keep_video_days": 1,
+    "date_creation": "2019-12-03T00:54:47.000Z",
+    "date_update": null,
+    "sniffer_fail_count": 1,
+    "channel": "cam10.m3u8",
+    "rel_msid": 3,
+    "rel_apist": 3,
+    "order": 10,
+    "flag_color": null,
+    "tipo_camara": null,
+    "control": 1,
+    "qnap_channel": null,
+    "is_amazon_stream": null,
+    "amazon_arn_channel": null,
+    "amazon_region": null,
+    "termic_type": null,
+    "user_update": 0,
+    "show_cam": true,
+    "internal": false,
+    "is_lpr": false,
+    "qnap_server_id": null,
+    "user_creation": 48,
+    "type_camare_id": 2,
+    "UrlStreamMediaServer": {
+        "id": 3,
+        "ip_url_ms": "customer-bj-mbox-03-nginx.radarapptechnologies.com",
+        "output_port": 80,
+        "name": "/hls/",
+        "autenticacion": 0,
+        "secretkey": null,
+        "activo": 1,
+        "protocol": "https"
+    },
+    "UrlAPIStorage": [],
+    "urlhistory": "customer-bj-mbox-03-api.radarapptechnologies.com",
+    "urlhistoryport": 80,
+    "protocolhistory": "https",
+    "tokenhistory": null,
+    "historyId": 4,
+    "tipombox": "light",
+    "historyDays": 2
+}
