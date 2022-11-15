@@ -46,16 +46,7 @@ const Placas = () => {
         setBubbleMap(buble.data.data)
     }
   }
-  const minName =(name)=>{
-    const nameArray=name.split(' ')
-    const nameMin = `${nameArray[0]} ${nameArray[1]} ${nameArray[2]}`
-    return nameMin;
-  }
-  const porcent =(number)=>{
-      const bNum=420029;
-      let porcent =(parseFloat(number)/bNum *100)
-      return parseFloat(porcent).toFixed(2) ;
-  }
+ 
   useEffect(() => {
     updateMonth();
     init()
@@ -65,8 +56,8 @@ const Placas = () => {
     
       <SummaryCount />
       <Row className="py-4">
-        <Col xl={3}>
-          <Row>
+        {/* <Col xl={3}>
+          <Row> */}
             {/* <Col xl={9} className="mb-2">
               <h6>Periodo</h6>
               <div class="dropdown">
@@ -94,7 +85,7 @@ const Placas = () => {
                 Hoy 31 de Octubre, hasta las 4:30 pm
               </span>
             </Col> */}
-            { 
+            {/* { 
               bubbleMap &&
               bubbleMap.map((location)=>(
                 <Col xl={6} className="mt-5">
@@ -102,17 +93,17 @@ const Placas = () => {
                   <p className="">{minName(location.minName)}</p>
                 </Col>
               ))
-            }
-          </Row>
-        </Col>
-        <Col xl={6} lg={12} md={12}>
+            } */}
+          {/* </Row>
+        </Col> */}
+        <Col xl={9} lg={12} md={12}>
           <Card>
             <CardBody
               style={{ padding: "0px", width: "100%", height: "400px" }}
             >
             {
               bubbleMap &&
-              <MapaGoogle dataMap={bubbleMap} />
+              <MapaGoogle dataMap={bubbleMap}  />
             }
               
             </CardBody>
@@ -161,9 +152,6 @@ const Placas = () => {
             <div className="px-4 mt-3 mr-1">
               <label for="inputState">Camara</label>
               <select id="inputState" class="form-control">
-                <option disabled selected>
-                  Choose...
-                </option>
                 <option>Camara 1</option>
               </select>
             </div>
