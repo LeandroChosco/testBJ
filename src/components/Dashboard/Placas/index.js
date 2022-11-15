@@ -109,6 +109,7 @@ const Placas = () => {
           </Card>
         </Col>
       </Row>
+      <br />
       <div className="bg-gray">
         <div className="py-4 px-5">
           <h6>Periodo</h6>
