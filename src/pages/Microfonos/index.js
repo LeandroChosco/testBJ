@@ -241,7 +241,7 @@ class Microfonos extends Component {
                 <div style={styles.relative}>
                   <div style={styles.list}>
                     <h4>
-                      {complaint.user_name?  complaint.user_name: complaint.user_email}
+                      {complaint.user_cam?  "Cámara " + complaint.user_cam.num_cam: "ID CÁMARA NO DISPONIBLE"}
                     </h4>
                     <p>{moment(moment(complaint.fecha_creacion)).format('DD-MM-YYYY, HH:mm:ss')}</p>
                   </div>
