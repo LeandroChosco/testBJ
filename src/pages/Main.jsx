@@ -51,6 +51,7 @@ import { MESSAGES_COLLECTION, COMPLAINT_COLLECTION, POLICE_COLLECTION } from "..
 
 import Chat from './ChatPlus/index'
 import Policia from './Policia';
+import { remove } from '../helpers/remove';
 // import { ContentSort } from 'material-ui/svg-icons';
 
 var io = sailsIOClient(socketIOClient);
@@ -1188,6 +1189,7 @@ class Main extends Component {
   _logOut = () => {
     this.setState({ isAuthenticated: false, userInfo: {} })
     sessionStorage.removeItem('isAuthenticated')
+    remove();
   }
 
   _toggleControls = (camera) => {

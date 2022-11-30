@@ -68,6 +68,14 @@ export function getQvrFileStationAuthLogout(params) {
 export const GET_FILE_LIST_REQUEST = 'GET_QVR_FILE_STATION/FILE_LIST_REQUEST';
 export const GET_FILE_LIST_RESPONSE = 'GET_QVR_FILE_STATION/FILE_LIST_RESPONSE';
 export const GET_FILE_LIST_FAILURE = 'GET_QVR_FILE_STATION/FILE_LIST_FAILURE';
+export function setIsValidate (isLPR){
+	return(dispatch) =>{
+		dispatch({
+			type:"VALIDATION",
+			isValidate:isLPR
+		})
+	}
+}
 export function getQvrFileStationFileList(params) {
 	return (dispatch) => {
 		dispatch({

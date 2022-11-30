@@ -30,13 +30,14 @@ import DataTicketsPerUserRedesign from '../../components/Dashboard/dataTicketsPe
 import AttendedVSclosed from '../../components/Dashboard/attendedVScloded';
 import LastCreadedCams from '../../components/Dashboard/lastCreatedCams';
 import Placas from "../../components/Dashboard/Placas"
+import { IS_LPR } from '../../constants/token';
 import {
   RiEye2Fill
 } from "react-icons/ri";
 import AgeDemographic from '../../components/Dashboard/AgeDemographic';
 import RegisterMood from '../../components/Dashboard/RegisterMood';
 import MicrofonosDash from '../../components/Dashboard/microfonosDash';
-
+let isLPR=localStorage.getItem(IS_LPR)
 const MOODS = {
   "Happy": "Feliz",
   "Happiness": "Feliz",
@@ -131,6 +132,15 @@ class Dashboard extends Component {
       { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
       { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboardRedesign()}</Tab.Pane> },
       { menuItem: 'Micrófonos', render: () => <Tab.Pane attached={false}> {this.renderEvents()}</Tab.Pane> },
+      isLPR &&
+      {
+        menuItem: "LPR",
+        render: () => (
+          <Tab.Pane attached={false}>
+            {this.renderLPRDashboard()}
+          </Tab.Pane>
+        ),
+      },
       constants.clientFirebase === "Modelorama" &&
       {
         menuItem: "Análisis",
@@ -140,14 +150,7 @@ class Dashboard extends Component {
           </Tab.Pane>
         ),
       },
-      {
-        menuItem: "LPR",
-        render: () => (
-          <Tab.Pane attached={false}>
-            {this.renderLPRDashboard()}
-          </Tab.Pane>
-        ),
-      },
+    
     ]
   }
 

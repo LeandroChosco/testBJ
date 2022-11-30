@@ -10,7 +10,7 @@ import "./style.css";
 import constants from "../../constants/constants";
 import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import conections from "../../conections";
-
+import { IS_LPR } from "../../constants/token";
 class SideBar extends Component {
   state = {
     selectedOption: [],
@@ -40,7 +40,11 @@ class SideBar extends Component {
 
             var urlHistory = null
             var urlHistoryPort = null
-
+            if(value.is_lpr){
+              localStorage.setItem(IS_LPR, true);
+            }else{
+              localStorage.setItem(IS_LPR, false);
+            }
             if ("urlhistory" in value){
                 urlHistory = value.urlhistory
             }
