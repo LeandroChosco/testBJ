@@ -360,7 +360,7 @@ class Main extends Component {
     io.socket.on('/matchApi', this.matchesApiHandler)
  
     */
-   console.log(this.state.datosAlcaldia);
+  //  console.log(this.state.datosAlcaldia);
     if (this.state.datosAlcaldia && this.state.datosAlcaldia.clave_municipal) {
       firebaseSos
         .app('sos')
