@@ -21,6 +21,7 @@ import AdvancedSearch from '../AdvancedSearch';
 import MediaContainer from '../MediaContainer';
 // import constants from '../../constants/constants';
 import ModalMoreInformation from '../../components/ModalMoreInformation';
+import { HiMicrophone } from 'react-icons/hi';
 
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
 import * as QvrFunctions from '../../functions/getQvrFunctions';
@@ -123,7 +124,21 @@ class CameraStream extends Component {
       <Card style={{ display: display }}>
         {this.props.horizontal ? (
           <Card.Body>
-            <Card.Title>Camara {num_cam}</Card.Title>
+            <Card.Title>
+              {
+              // this.state.data.dataCamValue.is_mic ? 
+              // <Row>
+              //   <Col md={8} lg={8}>
+              //   Camara {num_cam}
+              //   </Col>
+              //   <Col md={4} lg={4} style={{display: "flex", justifyContent: "flex-end"}}>
+              //     <HiMicrophone />
+              //   </Col>
+              // </Row>
+              // :
+            `Camara ${num_cam}`
+            }
+            </Card.Title>
             <Card.Text>
               <Row>
                 <Col lg={6}>

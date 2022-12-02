@@ -945,7 +945,7 @@ class GridCameraDisplay extends Component {
 	_loadFiles = async (cam, destroyFiles = false, onlyCurrent = false, onlyHistory = false, onlyPhotos = false) => {
 		if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos));
 		let { selectedCamera } = this.state;
-		console.log(selectedCamera)
+		// console.log(selectedCamera)
 		let camera = cam && cam.id ? cam : selectedCamera;
 		let tipoMBOX= camera.dataCamValue.tipombox
 		let dnsMbox = camera.dataCamValue.urlhistory;
