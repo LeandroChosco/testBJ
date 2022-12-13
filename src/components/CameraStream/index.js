@@ -21,6 +21,7 @@ import AdvancedSearch from '../AdvancedSearch';
 import MediaContainer from '../MediaContainer';
 // import constants from '../../constants/constants';
 import ModalMoreInformation from '../../components/ModalMoreInformation';
+import { HiMicrophone } from 'react-icons/hi';
 
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
 import * as QvrFunctions from '../../functions/getQvrFunctions';
@@ -123,7 +124,7 @@ class CameraStream extends Component {
       <Card style={{ display: display }}>
         {this.props.horizontal ? (
           <Card.Body>
-            <Card.Title>Camara {num_cam}</Card.Title>
+            <Card.Title>Camara {num_cam}`</Card.Title>
             <Card.Text>
               <Row>
                 <Col lg={6}>
@@ -181,7 +182,21 @@ class CameraStream extends Component {
             {this.props.hideTitle ? null : (
               <Card.Title>
                 <div align="left">
-                  <i className="fa fa-video-camera" /> Camaras {num_cam}{' '}
+                  {
+                    data.dataCamValue && data.dataCamValue.is_mic ?
+                      <Row>
+                        <Col md={8} lg={8}>
+                          <i className="fa fa-video-camera" />   Camara {num_cam}
+                        </Col>
+                        <Col md={4} lg={4} style={{ display: "flex", justifyContent: "flex-end" }}>
+                          <HiMicrophone />
+                        </Col>
+                      </Row>
+                      :
+                      <>
+                        <i className="fa fa-video-camera" />   Camara {num_cam}
+                      </>
+                  }
                   {this.props.marker.extraData.dataCamValue === undefined || this.props.marker.extraData.tipo_camara === undefined ? null :
                     this.props.marker.extraData.dataCamValue.tipo_camara === 2 || this.props.marker.extraData.tipo_camara === 2 ? (
                       <i>, Tipo: PTZ </i>
@@ -881,40 +896,40 @@ class CameraStream extends Component {
       let { QvrFileStationFileList: listNormal, success: sNormal } = this.props.QvrFileStationFileList;
       if (sNormal && listNormal && listNormal.total > 0) {
         // for (const nl of listNormal.datas) {
-          
-          for (const dt of dates) {
-            if (!lthDate.includes(dt)) lthDate.push(dt);
-            let getFistHourParams = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: 1, start: 0, type: '0' };
-            await this.props.getQvrFileStationFileList(getFistHourParams);
-            let { QvrFileStationFileList: firstHour } = this.props.QvrFileStationFileList;
-            let initialHour = firstHour.datas && firstHour.datas[0] ? parseInt(firstHour.datas[0].filename, 10) : 0;
-            let newEndHour = lthDate.length === dates.length ? parseInt(endHour, 10) : 24;
-            let newStartHour = lthDate.length === 1 ? parseInt(startHour, 10) : 0;
-            if (initialHour !== 0) {
-              if (newEndHour < initialHour) newEndHour = 0;
-              else {
-                newEndHour = newEndHour - initialHour;
-                newStartHour = newStartHour > initialHour ? newStartHour - initialHour : 0;
-              }
+
+        for (const dt of dates) {
+          if (!lthDate.includes(dt)) lthDate.push(dt);
+          let getFistHourParams = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: 1, start: 0, type: '0' };
+          await this.props.getQvrFileStationFileList(getFistHourParams);
+          let { QvrFileStationFileList: firstHour } = this.props.QvrFileStationFileList;
+          let initialHour = firstHour.datas && firstHour.datas[0] ? parseInt(firstHour.datas[0].filename, 10) : 0;
+          let newEndHour = lthDate.length === dates.length ? parseInt(endHour, 10) : 24;
+          let newStartHour = lthDate.length === 1 ? parseInt(startHour, 10) : 0;
+          if (initialHour !== 0) {
+            if (newEndHour < initialHour) newEndHour = 0;
+            else {
+              newEndHour = newEndHour - initialHour;
+              newStartHour = newStartHour > initialHour ? newStartHour - initialHour : 0;
             }
+          }
 
-            let getParamsHours = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: newEndHour, start: newStartHour, type: '0' };
-            await this.props.getQvrFileStationFileList(getParamsHours);
-            let { QvrFileStationFileList: listHours, success: sHours } = this.props.QvrFileStationFileList;
+          let getParamsHours = { url, sid: auth.authSid, path: `${mainPath}/${dt}`, limit: newEndHour, start: newStartHour, type: '0' };
+          await this.props.getQvrFileStationFileList(getParamsHours);
+          let { QvrFileStationFileList: listHours, success: sHours } = this.props.QvrFileStationFileList;
 
-            if (sHours && listHours && listHours.total > 0) {
-              if (searchFileHours) return initialHour;
-              for (const hr of listHours.datas) {
-                if (parseInt(hr.filename, 10) < (lthDate === dates.length ? parseInt(endHour, 10) : 24)) {
-                  let getParamsVideo = { url, sid: auth.authSid, path: `${mainPath}/${dt}/${hr.filename}`, limit: '2', start: '0', type: '2' };
-                  await this.props.getQvrFileStationFileList(getParamsVideo);
-                  let { QvrFileStationFileList: listVideos, success: sVideos } = this.props.QvrFileStationFileList;
-                  if (sVideos && listVideos && listVideos.total > 0) for (const v of listVideos.datas) allVideosList.push(`${dt}/${hr.filename}/${v.filename}`);
-                }
+          if (sHours && listHours && listHours.total > 0) {
+            if (searchFileHours) return initialHour;
+            for (const hr of listHours.datas) {
+              if (parseInt(hr.filename, 10) < (lthDate === dates.length ? parseInt(endHour, 10) : 24)) {
+                let getParamsVideo = { url, sid: auth.authSid, path: `${mainPath}/${dt}/${hr.filename}`, limit: '2', start: '0', type: '2' };
+                await this.props.getQvrFileStationFileList(getParamsVideo);
+                let { QvrFileStationFileList: listVideos, success: sVideos } = this.props.QvrFileStationFileList;
+                if (sVideos && listVideos && listVideos.total > 0) for (const v of listVideos.datas) allVideosList.push(`${dt}/${hr.filename}/${v.filename}`);
               }
             }
           }
         }
+      }
       // }
 
       if (allVideosList.length > 0) {
@@ -1018,14 +1033,43 @@ class CameraStream extends Component {
         };
 
         try {
-            if (tipoMBOX === 'pro') {
-              let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
+          if (tipoMBOX === 'pro') {
+            let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
+            let resHistory = response.data.data;
+            this.setState({ resHistorySearch: resHistory })
+            if (resHistory.items.length > 0) {
+              let dns_ip = dnsMbox
+              let dns_port = dns_portMbox
+              this.setState({ dnsPort: dns_port })
+              if (resHistory) {
+                let dates = createArrDate(resHistory.items);
+                let arrayHistoricos = []
+                let hours_last_day = createArrHour(dates[last_day].videos);
+                let hours_current_day = createArrHour(dates[current_day].videos);
+                this.setState({ video_history: [dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse()], historyLoading: false });
+                this.setState({ dnsArray: this.state.video_history[0] })
+                arrayHistoricos = this.state.video_history
+                this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos })
+                this.setState({ video_history: arrayHistoricos[1].slice(0, 2) })
+                setTimeout(() => this.spinnerif(), 400);
+                this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
+              } else {
+                this.setState({ video_history: [], historyLoading: false });
+                this.spinnerif();
+              }
+            } else {
+              this.setState({ video_history: [], historyLoading: false });
+              this.spinnerif();
+            }
+          } else {
+            let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
+            if (response.data.data.items.length > 0) {
               let resHistory = response.data.data;
               this.setState({ resHistorySearch: resHistory })
               if (resHistory.items.length > 0) {
                 let dns_ip = dnsMbox
                 let dns_port = dns_portMbox
-                this.setState({ dnsPort: dns_port })
+                this.setState({ dns_portdnsPort: dns_port })
                 if (resHistory) {
                   let dates = createArrDate(resHistory.items);
                   let arrayHistoricos = []
@@ -1038,113 +1082,84 @@ class CameraStream extends Component {
                   this.setState({ video_history: arrayHistoricos[1].slice(0, 2) })
                   setTimeout(() => this.spinnerif(), 400);
                   this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
-                } else {
-                  this.setState({ video_history: [], historyLoading: false });
-                  this.spinnerif();
                 }
               } else {
                 this.setState({ video_history: [], historyLoading: false });
                 this.spinnerif();
               }
             } else {
-              let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
-              if (response.data.data.items.length > 0) {
-                let resHistory = response.data.data;
-                this.setState({ resHistorySearch: resHistory })
-                if (resHistory.items.length > 0) {
-                  let dns_ip = dnsMbox
-                  let dns_port = dns_portMbox
-                  this.setState({ dns_portdnsPort: dns_port })
-                  if (resHistory) {
-                    let dates = createArrDate(resHistory.items);
-                    let arrayHistoricos = []
-                    let hours_last_day = createArrHour(dates[last_day].videos);
-                    let hours_current_day = createArrHour(dates[current_day].videos);
-                    this.setState({ video_history: [dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse()], historyLoading: false });
-                    this.setState({ dnsArray: this.state.video_history[0] })
-                    arrayHistoricos = this.state.video_history
-                    this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos })
-                    this.setState({ video_history: arrayHistoricos[1].slice(0, 2) })
-                    setTimeout(() => this.spinnerif(), 400);
-                    this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
-                  }
-                } else {
-                  this.setState({ video_history: [], historyLoading: false });
-                  this.spinnerif();
-                }
-              } else {
-                let tokenApiStreams = await conections.getTokenApiStreamsCams(protocol, dnsMbox, dns_portMbox, secretKeyBody);
-                if (tokenApiStreams.data.token) {
+              let tokenApiStreams = await conections.getTokenApiStreamsCams(protocol, dnsMbox, dns_portMbox, secretKeyBody);
+              if (tokenApiStreams.data.token) {
 
-                  let response = await conections.getCamDataHistoryApiCams(protocol, dnsMbox, dns_portMbox, protocolStorage, dnsStorage, tokenStorage, camera.dataCamValue.num_cam, tokenApiStreams.data.token, portApiStorage);
-                  if (!response.success) {
-                    let resHistory = response.data;
+                let response = await conections.getCamDataHistoryApiCams(protocol, dnsMbox, dns_portMbox, protocolStorage, dnsStorage, tokenStorage, camera.dataCamValue.num_cam, tokenApiStreams.data.token, portApiStorage);
+                if (!response.success) {
+                  let resHistory = response.data;
+                  let dns_port = dns_portMbox
+                  this.setState({ resHistorySearch: resHistory, awsApiStreamsCams: true })
+                  this.setState({ dnsPort: dns_port })
+                  if (resHistory.items.length > 0) {
+                    let dns_ip = dnsMbox
                     let dns_port = dns_portMbox
-                    this.setState({ resHistorySearch: resHistory, awsApiStreamsCams: true })
-                    this.setState({ dnsPort: dns_port })
-                    if (resHistory.items.length > 0) {
-                      let dns_ip = dnsMbox
-                      let dns_port = dns_portMbox
-                      this.setState({ dns_port: dns_port })
-                      if (resHistory.success) {
-                        let dates = createArrDate(resHistory.items);
-                        let arrayHistoricos = []
-                        let hours_last_day = createArrHour(dates[last_day].videos);
-                        let hours_current_day = createArrHour(dates[current_day].videos);
-                        this.setState({ video_history: [dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse()], historyLoading: false });
-                        this.setState({ dnsArray: this.state.video_history[0] })
-                        arrayHistoricos = this.state.video_history
-                        this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos })
-                        this.setState({ video_history: arrayHistoricos[1].slice(0, 2) })
-                        setTimeout(() => this.spinnerif(), 400);
-                        this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
-                      } else {
-                        this.setState({ video_history: [], historyLoading: false });
-                        this.spinnerif();
-                      }
+                    this.setState({ dns_port: dns_port })
+                    if (resHistory.success) {
+                      let dates = createArrDate(resHistory.items);
+                      let arrayHistoricos = []
+                      let hours_last_day = createArrHour(dates[last_day].videos);
+                      let hours_current_day = createArrHour(dates[current_day].videos);
+                      this.setState({ video_history: [dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse()], historyLoading: false });
+                      this.setState({ dnsArray: this.state.video_history[0] })
+                      arrayHistoricos = this.state.video_history
+                      this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos })
+                      this.setState({ video_history: arrayHistoricos[1].slice(0, 2) })
+                      setTimeout(() => this.spinnerif(), 400);
+                      this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
                     } else {
                       this.setState({ video_history: [], historyLoading: false });
                       this.spinnerif();
                     }
                   } else {
-                    let response = await conections.getCamDataHistoryWhithOutProtocol(protocol, dnsMbox, dns_portMbox, protocolStorage, dnsStorage, tokenStorage, camera.dataCamValue.num_cam, tokenApiStreams.data.token, portApiStorage);
-                    let resHistory = response.data;
+                    this.setState({ video_history: [], historyLoading: false });
+                    this.spinnerif();
+                  }
+                } else {
+                  let response = await conections.getCamDataHistoryWhithOutProtocol(protocol, dnsMbox, dns_portMbox, protocolStorage, dnsStorage, tokenStorage, camera.dataCamValue.num_cam, tokenApiStreams.data.token, portApiStorage);
+                  let resHistory = response.data;
+                  let dns_port = dns_portMbox
+                  this.setState({ resHistorySearch: resHistory, awsApiStreamsCams: true })
+                  this.setState({ dnsPort: dns_port })
+                  if (resHistory.items.length > 0) {
+                    let dns_ip = dnsMbox
                     let dns_port = dns_portMbox
-                    this.setState({ resHistorySearch: resHistory, awsApiStreamsCams: true })
-                    this.setState({ dnsPort: dns_port })
-                    if (resHistory.items.length > 0) {
-                      let dns_ip = dnsMbox
-                      let dns_port = dns_portMbox
-                      this.setState({ dns_port: dns_port })
-                      if (resHistory.success) {
-                        let dates = createArrDate(resHistory.items);
-                        let arrayHistoricos = []
-                        let hours_last_day = createArrHour(dates[last_day].videos);
-                        let hours_current_day = createArrHour(dates[current_day].videos);
-                        this.setState({ video_history: [dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse()], historyLoading: false });
-                        this.setState({ dnsArray: this.state.video_history[0] })
-                        arrayHistoricos = this.state.video_history
-                        this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos })
-                        this.setState({ video_history: arrayHistoricos[1].slice(0, 2) })
-                        setTimeout(() => this.spinnerif(), 400);
-                        this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
-                      } else {
-                        this.setState({ video_history: [], historyLoading: false });
-                        this.spinnerif();
-                      }
+                    this.setState({ dns_port: dns_port })
+                    if (resHistory.success) {
+                      let dates = createArrDate(resHistory.items);
+                      let arrayHistoricos = []
+                      let hours_last_day = createArrHour(dates[last_day].videos);
+                      let hours_current_day = createArrHour(dates[current_day].videos);
+                      this.setState({ video_history: [dns_ip, Object.values(hours_last_day).reverse().concat(Object.values(hours_current_day).reverse()).reverse()], historyLoading: false });
+                      this.setState({ dnsArray: this.state.video_history[0] })
+                      arrayHistoricos = this.state.video_history
+                      this.setState({ video_fistHistory: arrayHistoricos, video_loadMoreHistory: arrayHistoricos })
+                      this.setState({ video_history: arrayHistoricos[1].slice(0, 2) })
+                      setTimeout(() => this.spinnerif(), 400);
+                      this._loadfilesForSearch(camera, false, false, true, true, dns_ip, dns_port)
                     } else {
                       this.setState({ video_history: [], historyLoading: false });
                       this.spinnerif();
                     }
+                  } else {
+                    this.setState({ video_history: [], historyLoading: false });
+                    this.spinnerif();
                   }
                 }
               }
             }
+          }
 
         } catch (err) {
           this.setState({ video_history: [], historyLoading: false });
         }
-      }else{
+      } else {
         this.setState({ video_history: [], historyLoading: false });
       }
     }
@@ -1165,7 +1180,7 @@ class CameraStream extends Component {
       } catch (err) {
         this.setState({ videosLoading: false, photosLoading: false });
       }
-    }else{
+    } else {
       this.setState({ videosLoading: false, photosLoading: false });
     }
   };
