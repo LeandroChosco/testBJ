@@ -15,7 +15,7 @@ const SummaryCount = () => {
   const init = async () => {
     const perDay = await conections.getLPRTotalDay();
     if (perDay.data && perDay.data.msg === "ok" && perDay.data.success) {
-      perDay.data.data.forEach((element) => {
+         perDay.data.data.forEach((element) => {
         setTotalDay(element.total);
       });
     }

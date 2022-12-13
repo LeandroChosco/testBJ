@@ -83,6 +83,9 @@ export default {
   getLPRAlertHour:()=>{
     return connectedSails.get(`${constants.sails_url}/lpr/perHour`)
   },
+  getLPRCameras:()=>{
+    return connectedSails.get(`${constants.sails_url}/lpr/cams`)
+  },
   getLPRFilterWeek: (data)=>{
     return connectedSails.post(`${constants.sails_url}/lpr/filter/week`,data)
   },
@@ -100,12 +103,11 @@ export default {
   getLPRAlertWeek:()=>{
     return connectedSails.get(`${constants.sails_url}/lpr/perWeekHour`)
   },
-  getLPRBubble:()=>{
-    return Axios.post("https://customer-bj-api-dev.radarapptechnologies.com/lpr/filter/bubblemap",{})
+  getLPRBubble:(data)=>{
+    return connectedSails.post(`${constants.sails_url}/lpr/filter/bubblemap`,data)
   },
 
 ////////////////////////////////////////////////////////////////////
-
   getOnTermicPhotoData: (name) => {
     return connectedSails.get(constants.sails_url + '/termicfiles-one/' + name);
   },

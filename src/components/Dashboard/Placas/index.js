@@ -14,8 +14,9 @@ import conections from "../../../conections";
 import MapaGoogle from "./map";
 
 const Placas = () => {
+  const date = new Date()
   const [isWeek, setIsWeek] = useState(true);
-  const dateMonth = new Date().getMonth();
+  const dateMonth = date.getMonth();
   const months = [
     "enero",
     "febrero",
@@ -31,70 +32,60 @@ const Placas = () => {
     "diciembre",
   ];
   const [actuallMonth, setActuallMonth] = useState("Enero");
+  const [cam, setCam] = useState("5213")
+  const [cameras, setCameras] = useState();
+
   const updateMonth = () => {
     setActuallMonth(months[dateMonth]);
   };
   const [bubbleMap, setBubbleMap] = useState(null)
+
+
+
   const init =async ()=>{
-    const buble = await conections.getLPRBubble();
+
+    
+
+     const buble = await conections.getLPRBubble();
+
+    
+   
     if (
       buble.data &&
       buble.data.msg === "ok" &&
       buble.data.success
     ) {
+      
         setBubbleMap(buble.data.data)
+    }else{
+
+    }
+
+    
+
+  }
+  const initCameras = async ()=>{
+    const camarasLPR = await conections.getLPRCameras();
+    if(
+      camarasLPR.data &&
+      camarasLPR.data.success
+    ){
+      setCameras(camarasLPR.data.data)
+    }else{
+
     }
   }
  
   useEffect(() => {
     updateMonth();
     init()
+    initCameras();
   }, []);
   return (
     <div className="container-fluid py-4 ">
     
       <SummaryCount />
       <Row className="py-4">
-        {/* <Col xl={3}>
-          <Row> */}
-            {/* <Col xl={9} className="mb-2">
-              <h6>Periodo</h6>
-              <div class="dropdown">
-                <button
-                  class="btn dropdwon-btn dropdown-toggle"
-                  type="button"
-                  data-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Periodo
-                </button>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" href="#">
-                    Hoy
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    Martes
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    Miercoles
-                  </a>
-                </div>
-              </div>
-              <span className="text-xxs text-gray">
-                Hoy 31 de Octubre, hasta las 4:30 pm
-              </span>
-            </Col> */}
-            {/* { 
-              bubbleMap &&
-              bubbleMap.map((location)=>(
-                <Col xl={6} className="mt-5">
-                  <span className="text-h1  text-porcent mb-4">{porcent(location.totalCount)} %</span>
-                  <p className="">{minName(location.minName)}</p>
-                </Col>
-              ))
-            } */}
-          {/* </Row>
-        </Col> */}
         <Col xl={9} lg={12} md={12}>
           <Card>
             <CardBody
@@ -151,8 +142,18 @@ const Placas = () => {
           <Row>
             <div className="px-4 mt-3 mr-1">
               <label for="inputState">Camara</label>
-              <select id="inputState" class="form-control">
-                <option>Camara 1</option>
+              <select id="inputState" class="form-control" onChangeCapture={(value)=>{
+                setCam(value.target.value)
+              }}>
+                { 
+                  cameras ?
+                    cameras.map((camera)=>(
+                      <option value={camera.id} >{camera.num_cam}</option>
+                    )):
+                  null
+                }
+               
+             
               </select>
             </div>
           </Row>
@@ -161,21 +162,21 @@ const Placas = () => {
         <Row className="py-4 px-5">
           <Col xl={6} lg={12} md={12}>
             <Card>
-              <CardHeader>Conteo por Placa</CardHeader>
+              <CardHeader>Conteo de placas por semana</CardHeader>
               <CardBody>
                 {isWeek ? (
-                  <ColumnChart />
+                  <ColumnChart cam={cam} month={dateMonth} />
                 ) : (
-                  <ColumnMonthChart month={dateMonth} />
+                  <ColumnMonthChart month={dateMonth} cam={cam} />
                 )}
               </CardBody>
             </Card>
           </Col>
           <Col className="" xl={6} lg={12} md={12}>
             <div className="hfull card ">
-              <div class="card-header">Conteo de Placas</div>
+              <div class="card-header">Conteo de placas por día</div>
               <div className="w-100 center">
-                <CurveDash />
+                <CurveDash camId={cam} />
               </div>
             </div>
           </Col>
@@ -183,9 +184,9 @@ const Placas = () => {
         <Row className="py-4 px-5">
           <Col xl={12} lg={12} md={12}>
             <Card>
-              <CardHeader>Conteo Por Placas por Día</CardHeader>
+              <CardHeader>Conteo de placas por semana</CardHeader>
               <CardBody>
-                <HeatMapChart />
+                <HeatMapChart  camId={cam}/>
               </CardBody>
             </Card>
           </Col>

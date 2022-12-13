@@ -3,13 +3,18 @@ import React, { useEffect, useState } from "react";
 import conections from "../../../conections";
 import "./styles.css";
 
-export const CurveDash = () => {
+export const CurveDash = ({camId}) => {
+  let curveData ={
+    "cam_id":camId,
+    "start_time":"00",
+    "end_time":"23"
+  }
   let dataArraySeries = [];
   let dataArrayCategories = [];
   const [series, setSeries] = useState([]);
   const [categories, setCategories] = useState([]);
   const init = async () => {
-    const alertPerHour = await conections.getLPRPerHour();
+    const alertPerHour = await conections.getLPRFilterHour(curveData);
     if (
       alertPerHour.data &&
       alertPerHour.data.msg === "ok" &&
@@ -19,18 +24,20 @@ export const CurveDash = () => {
         if (a.hour > b.hour) return 1;
         if (a.hour < b.hour) return -1;
       });
-      sortAlertPerHour.forEach((element) => {
-        dataArraySeries.push(element.total);
-        dataArrayCategories.push(`${element.hour}:00`);
-      });
+     
+        sortAlertPerHour.forEach((element) => {
+          dataArraySeries.push(element.total);
+          dataArrayCategories.push(`${element.hour}:00`);
+        });
+      
+     
       setSeries(dataArraySeries);
       setCategories(dataArrayCategories);
     }
   };
-
   useEffect(() => {
     init();
-  }, []);
+  }, [camId]);
 
   const data = {
     options: {
@@ -102,7 +109,7 @@ export const DonoutDash = () => {
   );
 };
 
-export const HeatMapChart = () => {
+export const HeatMapChart = ({camId}) => {
   const [heatMapSeries, setHeatMapSeries] = useState([]);
 
   let Sunday = [];
@@ -150,71 +157,144 @@ export const HeatMapChart = () => {
   }
   const init = async () => {
     const dataWeek = await conections.getLPRAlertWeek();
-
     if (dataWeek.data && dataWeek.data.msg === "ok" && dataWeek.data.success) {
-      dataWeek.data.data.forEach((element) => {
-        switch (element.day) {
-          case "Sunday":
-            for (let index = 0; index < hours.length; index++) {
-              const hora = hours[index];
-              if (hora === element.hour) {
-                Sunday[index] = { x: `${hora}:00`, y: element.total };
-              }
-            }
 
-            break;
-          case "Monday":
-            for (let index = 0; index < hours.length; index++) {
-              const hora = hours[index];
-              if (hora === element.hour) {
-                Monday[index] = { x: `${hora}:00`, y: element.total };
+      if(camId){
+        let dataArrayFilter=[]
+        dataArrayFilter= dataWeek.data.data.filter((element)=>{
+          return element.cam_id=== camId
+        })
+        dataArrayFilter.forEach((element) => {
+
+          switch (element.day) {
+            case "Sunday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Sunday[index] = { x: `${hora}:00`, y: element.total };
+                }
               }
-            }
-            break;
-          case "Tuesday":
-            for (let index = 0; index < hours.length; index++) {
-              const hora = hours[index];
-              if (hora === element.hour) {
-                Tuesday[index] = { x: `${hora}:00`, y: element.total };
+  
+              break;
+            case "Monday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Monday[index] = { x: `${hora}:00`, y: element.total };
+                }
               }
-            }
-            break;
-          case "Wednesday":
-            for (let index = 0; index < hours.length; index++) {
-              const hora = hours[index];
-              if (hora === element.hour) {
-                Wednesday[index] = { x: `${hora}:00`, y: element.total };
+              break;
+            case "Tuesday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Tuesday[index] = { x: `${hora}:00`, y: element.total };
+                }
               }
-            }
-            break;
-          case "Thursday":
-            for (let index = 0; index < hours.length; index++) {
-              const hora = hours[index];
-              if (hora === element.hour) {
-                Thursday[index] = { x: `${hora}:00`, y: element.total };
+              break;
+            case "Wednesday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Wednesday[index] = { x: `${hora}:00`, y: element.total };
+                }
               }
-            }
-            break;
-          case "Friday":
-            for (let index = 0; index < hours.length; index++) {
-              const hora = hours[index];
-              if (hora === element.hour) {
-                Friday[index] = { x: `${hora}:00`, y: element.total };
+              break;
+            case "Thursday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Thursday[index] = { x: `${hora}:00`, y: element.total };
+                }
               }
-            }
-            break;
-          case "Saturday":
-            for (let index = 0; index < hours.length; index++) {
-              const hora = hours[index];
-              if (hora === element.hour) {
-                Saturday[index] = { x: `${hora}:00`, y: element.total };
+              break;
+            case "Friday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Friday[index] = { x: `${hora}:00`, y: element.total };
+                }
               }
-            }
-            break;
-          default:
-            break;
-        }
-      });
+              break;
+            case "Saturday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Saturday[index] = { x: `${hora}:00`, y: element.total };
+                }
+              }
+              break;
+            default:
+              break;
+          }
+        });
+      }else{
+        dataWeek.data.data.forEach((element) => {
+
+          switch (element.day) {
+            case "Sunday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Sunday[index] = { x: `${hora}:00`, y: element.total };
+                }
+              }
+  
+              break;
+            case "Monday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Monday[index] = { x: `${hora}:00`, y: element.total };
+                }
+              }
+              break;
+            case "Tuesday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Tuesday[index] = { x: `${hora}:00`, y: element.total };
+                }
+              }
+              break;
+            case "Wednesday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Wednesday[index] = { x: `${hora}:00`, y: element.total };
+                }
+              }
+              break;
+            case "Thursday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Thursday[index] = { x: `${hora}:00`, y: element.total };
+                }
+              }
+              break;
+            case "Friday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Friday[index] = { x: `${hora}:00`, y: element.total };
+                }
+              }
+              break;
+            case "Saturday":
+              for (let index = 0; index < hours.length; index++) {
+                const hora = hours[index];
+                if (hora === element.hour) {
+                  Saturday[index] = { x: `${hora}:00`, y: element.total };
+                }
+              }
+              break;
+            default:
+              break;
+          }
+        });
+      }
+    
       setHeatMapSeries([
         { name: "Lunes", data: Monday },
         { name: "martes", data: Tuesday },
@@ -229,7 +309,7 @@ export const HeatMapChart = () => {
 
   useEffect(() => {
     init();
-  }, []);
+  }, [camId]);
 
   const options = {
     series: heatMapSeries,
@@ -259,9 +339,22 @@ export const HeatMapChart = () => {
   );
 };
 
-export const ColumnChart = () => {
+export const ColumnChart = ({month,cam}) => {
+  const actualDate=new Date();
+  const year= actualDate.getFullYear()
+  let lastDay = actualDate.getDate()
   const [series, setSeries] = useState([]);
   const [categories, setCategories] = useState([]);
+  let firstDay =actualDate.getDate() -actualDate.getDay()
+  if(firstDay<10){
+    firstDay=`0${firstDay}`
+  }
+  if(lastDay<10){
+    lastDay=`0${lastDay}`
+  }
+  if(month<10){
+    month=`0${month}`
+  }
 
   let Sunday = 0;
   let Monday = 0;
@@ -271,9 +364,15 @@ export const ColumnChart = () => {
   let Friday = 0;
   let Saturday = 0;
   const init = async () => {
+    // let dataReq = {
+    //   start_date:`${year}-${month+1}-${firstDay}`,
+    //   end_date:`${year}-${month+1}-${lastDay}` ,
+    //   "cam_id":cam
+    // };
     let dataReq = {
-      start_date: "2022-11-07",
-      end_date: "2022-11-13",
+      start_date:`2022-11-27`,
+      end_date:`2022-12-04` ,
+      "cam_id":cam
     };
     let dataReqMes = {
       start_date: "2022-11-01",
@@ -284,7 +383,6 @@ export const ColumnChart = () => {
     // }else{
     //    alertPerWeek = await conections.getLPRFilterWeek(dataReqMes);
     // }
-
     if (
       alertPerWeek.data &&
       alertPerWeek.data.msg === "ok" &&
@@ -373,7 +471,7 @@ export const ColumnChart = () => {
   };
   useEffect(() => {
     init();
-  }, []);
+  }, [cam]);
   return (
     <Chart
       options={data.options}
@@ -385,7 +483,7 @@ export const ColumnChart = () => {
   );
 };
 
-export const ColumnMonthChart = ({ month }) => {
+export const ColumnMonthChart = ({ month,cam }) => {
   const [series, setSeries] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -396,9 +494,15 @@ export const ColumnMonthChart = ({ month }) => {
   let Semana5 = 0;
   const init = async () => {
     let dataReqMes = {
-      start_date: `2022-${month + 1}-01`,
-      end_date: `2022-${month + 1}-30`,
+      start_date: "2022-11-01",
+      end_date: "2022-11-30",
+      "cam_id":cam
     };
+    // let dataReqMes = {
+    //   start_date: `2022-${month + 1}-01`,
+    //   end_date: `2022-${month + 1}-30`,
+    //   "cam_id":cam
+    // };
     let alertPerWeek = "";
     alertPerWeek = await conections.getLPRFilterWeek(dataReqMes);
     // }else{
@@ -480,7 +584,7 @@ export const ColumnMonthChart = ({ month }) => {
 
   useEffect(() => {
     init();
-  }, []);
+  }, [cam]);
 
   return (
     <Chart

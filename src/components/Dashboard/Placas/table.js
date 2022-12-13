@@ -64,12 +64,12 @@ const TableD = () =>{
             placeholder: 'Buscar Camara'
         })
       },
-      {
-        dataField: "follow",
-        text: "",
-        formatter: ()=>( <button type="button" class="btn btn-primary" style={{marginLeft: "43%"}}>Ver</button>),
-        sort: true
-      }
+      // {
+      //   dataField: "follow",
+      //   text: "",
+      //   formatter: ()=>( <button type="button" class="btn btn-primary" style={{marginLeft: "43%"}}>Ver</button>),
+      //   sort: true
+      // }
       ]
     
 
