@@ -43,13 +43,7 @@ const Placas = () => {
 
 
   const init =async ()=>{
-
-    
-
      const buble = await conections.getLPRBubble();
-
-    
-   
     if (
       buble.data &&
       buble.data.msg === "ok" &&
@@ -60,9 +54,6 @@ const Placas = () => {
     }else{
 
     }
-
-    
-
   }
   const initCameras = async ()=>{
     const camarasLPR = await conections.getLPRCameras();
@@ -147,7 +138,7 @@ const Placas = () => {
               }}>
                 { 
                   cameras ?
-                    cameras.map((camera)=>(
+                    cameras.sort((a,b)=>b.num_cam-a.num_cam).map((camera)=>(
                       <option value={camera.id} >{camera.num_cam}</option>
                     )):
                   null
