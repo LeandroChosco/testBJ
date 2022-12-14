@@ -2,13 +2,20 @@ import React, { Component } from "react";
 import { Navbar, NavDropdown, Button, Nav } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import { FaShoePrints } from 'react-icons/fa';
+import { ToastsContainer, ToastsStore } from "react-toasts";
 import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
+import ModalChangePassword from "./ModalChangePassword";
 
 class Header extends Component {
+
+  state = {
+    showModal: false
+  }
+
   _goAlarma = () => {
     // if (this.props.isSidemenuShow) {
     //   this.props.toggleSideMenu();
@@ -140,6 +147,16 @@ class Header extends Component {
     }
   };
 
+  _handleModal = () => {
+    if (!this.state.showModal) {
+      this.setState({ showModal: true })
+    }
+  }
+
+  _hideModal = () => {
+    this.setState({ showModal: false })
+  }
+
   _logOut = () => {
     if (this.props.sideMenu) {
       this.props._toggleSideMenu();
@@ -177,11 +194,13 @@ class Header extends Component {
   };
 
   render() {
+    const { showModal } = this.state
     return (
       <Navbar sticky="top" expand="lg" variant="dark" bg="mh">
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse className="justify-content-end">
           <Nav className="mr-auto">
+          <ToastsContainer store={ToastsStore} />
             {this.props.userInfo.modules
               ? this.props.userInfo.modules.map((value) => (
                 <Navbar.Text key={value.id}>
@@ -285,6 +304,10 @@ class Header extends Component {
               className="light"
               title={this.props.userInfo.user_nicename}
             >
+              <NavDropdown.Item onClick={this._handleModal}>
+                Cambiar contraseña
+              </NavDropdown.Item>
+              {showModal && <ModalChangePassword modal={showModal} hideModal={this._hideModal}/>}
               <NavDropdown.Item onClick={this._logOut}>
                 Cerrar sesion
               </NavDropdown.Item>

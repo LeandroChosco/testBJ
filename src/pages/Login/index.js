@@ -8,40 +8,52 @@ import { JellyfishSpinner } from "react-spinners-kit";
 import { ToastsContainer, ToastsStore } from "react-toasts";
 import Conections from "../../conections";
 import constants from '../../constants/constants';
-import {ACCESS_TOKEN,SAILS_ACCESS_TOKEN} from '../../constants/token'
+import { ACCESS_TOKEN, SAILS_ACCESS_TOKEN } from '../../constants/token'
+import ModalResetPassword from "./ModalResetPassword";
 
 class Login extends Component {
   state = {
     username: "",
     pass: "",
     error: null,
-    loading: false
+    loading: false,
+    showModal: false,
   };
 
   _handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  _makeLogin =async () => {
+  _handleModal = () => {
+    if (!this.state.showModal) {
+      this.setState({ showModal: true })
+    }
+  }
+
+  _hideModal = () => {
+    this.setState({ showModal: false })
+  }
+
+  _makeLogin = async () => {
     const { username, pass } = this.state;
     if (username !== "" && pass !== "") {
       let userInfo = {
         user_login: username,
         user_password: btoa(pass)
       };
-      let userInfoRadar ={
-        email:username,
-        password:(pass)
+      let userInfoRadar = {
+        email: username,
+        password: (pass)
       }
       //Crear una funcion de control si sale error
       const dataToken = await Conections.makeLoginRadar(userInfoRadar);
-      const token=`Bearer ${dataToken.data.data.userSignIn.token}`
-    
-     
+      const token = `Bearer ${dataToken.data.data.userSignIn.token}`
+
+
       this.setState({ loading: true });
       Conections.makeLogin(userInfo)
         .then(response => {
-          localStorage.setItem(SAILS_ACCESS_TOKEN,response.data.data.info_user.token)
+          localStorage.setItem(SAILS_ACCESS_TOKEN, response.data.data.info_user.token)
           localStorage.setItem(ACCESS_TOKEN, token);
           Conections.getClients().then(res => {
             const data = res.data.data.getClients.filter(c => c.name === constants.client);
@@ -67,6 +79,7 @@ class Login extends Component {
   };
 
   render() {
+    const {showModal} = this.state
     return (
       <div className="limiter">
         <ToastsContainer store={ToastsStore} />
@@ -145,11 +158,14 @@ class Login extends Component {
                   </button>
                 </div>
                 <div className="text-center p-t-90">
-                  <a className="txt1" href="#div">
+                  <a className="txt1" href="#div" onClick={this._handleModal}>
                     ¿Se te olvido la contraseña?
                   </a>
                 </div>
               </form>
+              {
+                showModal && <ModalResetPassword modal={showModal} hideModal={this._hideModal} favicon={favicon} />
+              }
             </div>
           </div>
         ) : null}
