@@ -75,7 +75,7 @@ const ModalChangePassword = ({ modal, hideModal }) => {
             variables: {
                 clientId: dataForm.clientId,
                 email: dataForm.email,
-                password: dataForm.password ,
+                password: dataForm.password,
             },
             context: {
                 headers: {
@@ -128,9 +128,9 @@ const ModalChangePassword = ({ modal, hideModal }) => {
                                 />
                             </Form.Field>
                             <Button
-                            disabled={
-                                dataForm.password.length < 7
-                            }
+                                disabled={
+                                    dataForm.password.length < 7
+                                }
                             >
                                 Cambiar contraseña
                             </Button>
