@@ -16,104 +16,15 @@ class Header extends Component {
     showModal: false
   }
 
-  _goAlarma = () => {
-    // if (this.props.isSidemenuShow) {
-    //   this.props.toggleSideMenu();
-    // }
-    // document
-    //   .getElementsByClassName("navbar-collapse")[0]
-    //   .classList.remove("show");
-    // window.open('http://alarma.energetikadevelepment.com:8080/', 'Alarma', 'height=600,width=1200');
-    if (this.props.isSidemenuShow) {
-      this.props.toggleSideMenu();
-    }
+  _cameraAction = () => {
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
-    this.props.history.push("/alarm");
-  };
-  _goComplaint = () => {
-    if (this.props.isSidemenuShow) {
+    if (!this.props.location.pathname.includes("/map")) {
+      this.props.history.push("/map");
+    } else {
       this.props.toggleSideMenu();
     }
-    document
-      .getElementsByClassName("navbar-collapse")[0]
-      .classList.remove("show");
-    this.props.history.push("/servicios");
-  };
-  _goTracking = () => {
-    if (this.props.isSidemenuShow) {
-      this.props.toggleSideMenu();
-    }
-    document
-      .getElementsByClassName("navbar-collapse")[0]
-      .classList.remove("show");
-    this.props.history.push("/seguimiento");
-  };
-  _goFicha = () => {
-    if (this.props.isSidemenuShow) {
-      this.props.toggleSideMenu();
-    }
-    document
-      .getElementsByClassName("navbar-collapse")[0]
-      .classList.remove("show");
-    this.props.history.push("/policia");
-  };
-  _goCamerasInternal = () => {
-    if (this.props.isSidemenuShow) {
-      this.props.toggleSideMenu();
-    }
-    document
-      .getElementsByClassName("navbar-collapse")[0]
-      .classList.remove("show");
-    this.props.history.push("/camarasInternas");
-
-  }
-  _goMicrofono = () => {
-    if (this.props.isSidemenuShow) {
-      this.props.toggleSideMenu();
-    }
-    document
-      .getElementsByClassName("navbar-collapse")[0]
-      .classList.remove("show");
-    this.props.history.push("/Microfonos");
-  }
-  // _goFicha = () => {
-  //   if (this.props.isSidemenuShow) {
-  //     this.props.toggleSideMenu();
-  //   }
-  //   document
-  //     .getElementsByClassName("navbar-collapse")[0]
-  //     .classList.remove("show");
-  //   window.open('http://clientes.ubiqo.net/Publica/Inicio_Sesion.aspx?ReturnUrl=%2f', 'Ficha de Incidencias', 'height=600,width=1200');
-  // };
-  _goCovid = () => {
-    if (this.props.isSidemenuShow) {
-      this.props.toggleSideMenu();
-    }
-    document
-      .getElementsByClassName("navbar-collapse")[0]
-      .classList.remove("show");
-    this.props.history.push("/covid");
-  };
-  _goSospechosos = () => {
-    if (this.props.isSidemenuShow) {
-      this.props.toggleSideMenu();
-    }
-    document
-      .getElementsByClassName("navbar-collapse")[0]
-      .classList.remove("show");
-    this.props.history.push("/personas");
-  };
-
-  _goCuadrantes = () => {
-    if (this.props.isSidemenuShow) {
-      this.props.toggleSideMenu();
-    }
-    document
-      .getElementsByClassName("navbar-collapse")[0]
-      .classList.remove("show");
-    this.props.history.push("/cuadrantes");
   };
 
   _goAnalitics = () => {
@@ -136,16 +47,155 @@ class Header extends Component {
     this.props.history.push("/chat");
   };
 
-  _cameraAction = () => {
+  _goDashboard = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
-    if (!this.props.location.pathname.includes("/map")) {
-      this.props.history.push("/map");
-    } else {
+    this.props.history.push("/dashboard");
+  };
+
+  _goCuadrantes = () => {
+    if (this.props.isSidemenuShow) {
       this.props.toggleSideMenu();
     }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/cuadrantes");
   };
+
+  _goSospechosos = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/personas");
+  };
+
+  _goCovid = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/covid");
+  };
+
+  _goSOS = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/sos");
+  };
+
+  _goAlarma = () => {
+    // if (this.props.isSidemenuShow) {
+    //   this.props.toggleSideMenu();
+    // }
+    // document
+    //   .getElementsByClassName("navbar-collapse")[0]
+    //   .classList.remove("show");
+    // window.open('http://alarma.energetikadevelepment.com:8080/', 'Alarma', 'height=600,width=1200');
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/alarm");
+  };
+
+  _goFicha = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/policia");
+  };
+
+  _goComplaint = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/servicios");
+  };
+
+  _goTracking = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/seguimiento");
+  };
+
+  _goCamerasInternal = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/camarasInternas");
+  };
+
+  _goMicrofono = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/Microfonos");
+  }
+
+
+  _goIncident = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/Incident");
+  }
+
+
+  _goLPR = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/LPR");
+  }
+
+  // _goFicha = () => {
+  //   if (this.props.isSidemenuShow) {
+  //     this.props.toggleSideMenu();
+  //   }
+  //   document
+  //     .getElementsByClassName("navbar-collapse")[0]
+  //     .classList.remove("show");
+  //   window.open('http://clientes.ubiqo.net/Publica/Inicio_Sesion.aspx?ReturnUrl=%2f', 'Ficha de Incidencias', 'height=600,width=1200');
+  // };
+
 
   _handleModal = () => {
     if (!this.state.showModal) {
@@ -169,26 +219,6 @@ class Header extends Component {
     this.props.logOut();
   };
 
-  _goDashboard = () => {
-    if (this.props.isSidemenuShow) {
-      this.props.toggleSideMenu();
-    }
-    document
-      .getElementsByClassName("navbar-collapse")[0]
-      .classList.remove("show");
-    this.props.history.push("/dashboard");
-  };
-
-  _goSOS = () => {
-    if (this.props.isSidemenuShow) {
-      this.props.toggleSideMenu();
-    }
-    document
-      .getElementsByClassName("navbar-collapse")[0]
-      .classList.remove("show");
-    this.props.history.push("/sos");
-  };
-
   _cameraSideInfo = () => {
     this.props.cameraSideInfo();
   };
@@ -200,7 +230,7 @@ class Header extends Component {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse className="justify-content-end">
           <Nav className="mr-auto">
-          <ToastsContainer store={ToastsStore} />
+            <ToastsContainer store={ToastsStore} />
             {this.props.userInfo.modules
               ? this.props.userInfo.modules.map((value) => (
                 <Navbar.Text key={value.id}>
@@ -246,17 +276,21 @@ class Header extends Component {
                                             : value.id === 11
                                               ? this._goComplaint
                                               : value.id === 12
-                                              ? this._goTracking
+                                                ? this._goTracking
                                                 : value.id === 13
-                                                ? this._goCamerasInternal
-                                                : value.id === 14
-                                                ? this._goMicrofono
-                                                : null
+                                                  ? this._goCamerasInternal
+                                                  : value.id === 14
+                                                    ? this._goMicrofono
+                                                    : value.id === 15
+                                                      ? this._goIncident
+                                                      : value.id === 16
+                                                        ? this._goLPR
+                                                        : null
                       }
                     >
-                      {value.id === 12 ? 
+                      {value.id === 12 ?
                         <FaShoePrints />
-                      :
+                        :
                         <i
                           className={
                             value.id === 1
@@ -285,11 +319,15 @@ class Header extends Component {
                                                     ? "fa fa-video-camera"
                                                     : value.id === 14
                                                       ? "fa fa-bullhorn"
-                                                        : null
+                                                      : value.id === 15
+                                                        ? "fa fa-bar-chart"
+                                                        : value.id === 16
+                                                          ? "fa fa-id-card"
+                                                          : null
                           }
                         ></i>
                       }
-                      {value.name.includes("Ficha") ? 'Policía' : `${value.id === 12 ? " " : "" }${value.name}`}
+                      {value.name.includes("Ficha") ? 'Policía' : `${value.id === 12 ? " " : ""}${value.name}`}
                     </Button>
                   }
                 </Navbar.Text>
@@ -307,7 +345,7 @@ class Header extends Component {
               <NavDropdown.Item onClick={this._handleModal}>
                 Cambiar contraseña
               </NavDropdown.Item>
-              {showModal && <ModalChangePassword modal={showModal} hideModal={this._hideModal}/>}
+              {showModal && <ModalChangePassword modal={showModal} hideModal={this._hideModal} />}
               <NavDropdown.Item onClick={this._logOut}>
                 Cerrar sesion
               </NavDropdown.Item>

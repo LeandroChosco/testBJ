@@ -79,7 +79,7 @@ class Login extends Component {
   };
 
   render() {
-    const {showModal} = this.state
+    const { showModal } = this.state
     return (
       <div className="limiter">
         <ToastsContainer store={ToastsStore} />
@@ -159,7 +159,7 @@ class Login extends Component {
                 </div>
                 <div className="text-center p-t-90">
                   <a className="txt1" href="#div" onClick={this._handleModal}>
-                    ¿Se te olvido la contraseña?
+                    ¿Se te olvidó la contraseña?
                   </a>
                 </div>
               </form>

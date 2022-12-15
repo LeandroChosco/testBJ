@@ -64,7 +64,7 @@ class Microfonos extends Component {
 
   render() {
     const { complaints, actIdx, loading, camData } = this.state;
-    console.log('ACTIVE INDEX ', actIdx,' COMPLAINT ', complaints)
+    // console.log('ACTIVE INDEX ', actIdx,' COMPLAINT ', complaints)
     return (
       <div className={'show-matches app-container'}>
         <div className="row fullHeight">

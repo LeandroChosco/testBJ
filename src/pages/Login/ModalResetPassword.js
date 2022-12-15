@@ -4,9 +4,13 @@ import { Button, Form } from "semantic-ui-react";
 import { CircleSpinner } from "react-spinners-kit";
 import { ToastsStore } from "react-toasts";
 
-// import { TOKEN_FIX } from '../../constants/token'
-// import { DISABLE_USER } from "../../graphql/mutations";
-// import { useMutation } from "@apollo/client";
+import Conections from "../../conections";
+import constants from '../../constants/constants';
+
+import { SAILS_ACCESS_TOKEN } from '../../constants/token';
+
+import { useMutation } from "@apollo/client";
+import { CHANGE_PASSWORD } from "../../graphql/mutations";
 
 import "./style.css";
 
@@ -25,17 +29,27 @@ const styles = {
 
 const ModalResetPassword = ({ modal, hideModal, favicon }) => {
 
-    // const token = TOKEN_FIX;
-    // const { user_login, radar_id } = data
+    const token = localStorage.getItem(SAILS_ACCESS_TOKEN) ? localStorage.getItem(SAILS_ACCESS_TOKEN) : "";
 
     const [dataForm, setDataForm] = useState({
-        clientId: 1,
+        clientId: "",
         email: "",
         password: "",
     })
 
     const [isLoading, setIsloading] = useState(false);
-    // const [disable] = useMutation(DISABLE_USER)
+    const [recoverypassweb] = useMutation(CHANGE_PASSWORD)
+
+    if (dataForm.clientId === "") {
+        Conections.getClients().then(res => {
+            const client = res.data.data.getClients.filter(c => c.name === constants.client);
+            setDataForm({
+                ...dataForm,
+                clientId: client[0].id,
+                password: btoa((Math.random() * 10000000).toString())
+            })
+        })
+    }
 
     const changeInfo = (event, data) => {
         if (data) {
@@ -51,32 +65,24 @@ const ModalResetPassword = ({ modal, hideModal, favicon }) => {
         }
     }
 
-    const newPassword = () => {
-        setDataForm({
-            ...dataForm,
-            password: btoa((Math.random() * 10000000).toString())
-        })
-    }
-
     const handleReset = () => {
         setIsloading(true);
-        // disable({
-        //     variables: {
-        //         userId: radar_id,
-        //         rootUserId: 6099,
-        //         is_web: true,
-        //         clientId: clientId,
-        //     },
-        //     context: {
-        //         headers: {
-        //             "Authorization": token,
-        //         }
-        //     }
-        // })
+
+        recoverypassweb({
+            variables: {
+                clientId: dataForm.clientId,
+                email: dataForm.email,
+                password: dataForm.password,
+            },
+            context: {
+                headers: {
+                    "Authorization": token,
+                }
+            }
+        })
         setTimeout(() => {
-            console.log("Enviando", dataForm)
             setIsloading(false)
-            ToastsStore.success(`Contraseña reiniciada con éxito`)
+            ToastsStore.success(`Contraseña generada con éxito. Revise su correo electrónico`)
             hideModal()
         }, 2000);
     }
@@ -87,7 +93,7 @@ const ModalResetPassword = ({ modal, hideModal, favicon }) => {
                 <Modal.Header closeButton>
                     <h3>Reset de contraseña</h3>
                 </Modal.Header>
-                <div className="container-login100 cityBackground" style={{minHeight: "10rem", padding: "10rem"}}>
+                <div className="container-login100 cityBackground" style={{ minHeight: "10rem", padding: "10rem" }}>
                     <div className="wrap-login100" style={{ alignItems: 'center', justifyContent: 'center', marginBottom: "5rem" }}>
                         <span className="login100-form-logo">
                             <img
@@ -97,7 +103,7 @@ const ModalResetPassword = ({ modal, hideModal, favicon }) => {
                             />
                         </span>
                         <span className="login10-form-title p-b-34 p-t-27" style={{ color: 'white', padding: "1rem", marginBottom: "1rem" }}>
-                            <ul style={{marginBottom: "1rem"}}>
+                            <ul style={{ marginBottom: "1rem" }}>
                                 <li>
                                     <h5>
                                         - Ingrese su usuario para obtener su nueva clave.
@@ -113,27 +119,31 @@ const ModalResetPassword = ({ modal, hideModal, favicon }) => {
                         <br />
                         <Form onSubmit={handleReset}>
                             <Form.Field>
-                                <label style={{color: "white"}}>Correo</label>
+                                <label style={{ color: "white" }}>Correo</label>
                                 <input
                                     placeholder="Ingrese su correo..."
                                     name="email"
                                     type="email"
                                     value={dataForm.email}
                                     onChange={changeInfo}
-                                    style={{marginBottom: "1rem"}}
+                                    style={{ marginBottom: "1rem" }}
                                     required
                                 />
                             </Form.Field>
-                            <Button onClick={newPassword}>
+                            <Button
+                                disabled={
+                                    dataForm.email === ""
+                                }
+                            >
                                 Generar nueva clave
                             </Button>
                         </Form>
                     </div>
-                {isLoading && (
-                    <div style={styles.spinner}>
-                        <CircleSpinner size={30} color="#D7DBDD" loading={isLoading} />
-                    </div>
-                )}
+                    {isLoading && (
+                        <div style={styles.spinner}>
+                            <CircleSpinner size={30} color="#D7DBDD" loading={isLoading} />
+                        </div>
+                    )}
                 </div>
             </Modal>
         </div>
