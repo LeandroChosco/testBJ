@@ -186,6 +186,16 @@ class Header extends Component {
     this.props.history.push("/LPR");
   }
 
+  _goRegister = () => {
+    if (this.props.isSidemenuShow) {
+      this.props.toggleSideMenu();
+    }
+    document
+      .getElementsByClassName("navbar-collapse")[0]
+      .classList.remove("show");
+    this.props.history.push("/settings");
+  }
+
   // _goFicha = () => {
   //   if (this.props.isSidemenuShow) {
   //     this.props.toggleSideMenu();
@@ -285,7 +295,9 @@ class Header extends Component {
                                                       ? this._goIncident
                                                       : value.id === 16
                                                         ? this._goLPR
-                                                        : null
+                                                        : value.id === 17
+                                                          ? this._goRegister
+                                                          : null
                       }
                     >
                       {value.id === 12 ?
@@ -323,7 +335,9 @@ class Header extends Component {
                                                         ? "fa fa-bar-chart"
                                                         : value.id === 16
                                                           ? "fa fa-id-card"
-                                                          : null
+                                                          : value.id === 17
+                                                            ? "fa fa-id-card"
+                                                            : null
                           }
                         ></i>
                       }

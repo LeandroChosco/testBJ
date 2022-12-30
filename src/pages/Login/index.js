@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import favicon from '../../assets/images/icons/favicon.jpg'
+// import logo from "../../assets/images/logo.jpeg"
+import logo from '../../assets/images/icons/favicon.jpg'
 import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
@@ -93,9 +94,9 @@ class Login extends Component {
               >
                 <span className="login100-form-logo">
                   <img
-                    src={favicon}
+                    src={logo}
                     style={{ width: "100%", borderRadius: "50%" }}
-                    alt="Benito"
+                    alt="MC"
                   />
                 </span>
                 <span className="login100-form-title p-b-34 p-t-27">
@@ -164,7 +165,7 @@ class Login extends Component {
                 </div>
               </form>
               {
-                showModal && <ModalResetPassword modal={showModal} hideModal={this._hideModal} favicon={favicon} />
+                showModal && <ModalResetPassword modal={showModal} hideModal={this._hideModal} logo={logo} />
               }
             </div>
           </div>

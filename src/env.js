@@ -64,3 +64,6 @@ export const REACT_APP_DATABASEURL_DEVRADARSOSDEV="https://devradarsos.firebasei
 export const REACT_APP_STORAGEBUCKET_DEVRADARSOSDEV="devradarsos.appspot.com"
 export const REACT_APP_MESSAGINGSENDERID_DEVRADARSOSDEV="191185099682"
 export const REACT_APP_APPID_DEVRADARSOSDEV="1:191185099682:android:508b531d956f4a016bf0fb"
+
+// key para encriptar reset password
+export const REACT_APP_ENCRYPT_KEY="R4d4rENKTXxZ2023"
