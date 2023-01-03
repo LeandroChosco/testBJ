@@ -16,10 +16,12 @@ const currentPost = videoList.slice(indexOfFirstPost, indexOfLastPost)
 function paginate(pageNumber) {
     setCurrentPage(pageNumber)
 }
+
     return (
         <>
-        <PaginationNumber videos={totalVideos} totalVideos={videoList.length} paginate={paginate} /> ,
-        {awsApiStreamsCams ?
+        <PaginationNumber videos={totalVideos} totalVideos={videoList.length} paginate={paginate} />
+        <br />
+        {awsApiStreamsCams && currentPost[0].videos ?
             
             <div>
             {currentPost.map((list, idx) => (
@@ -73,14 +75,14 @@ function paginate(pageNumber) {
             {currentPost.map((list, idx) => (
                 (!isDownloadSearch ? (
                 <>
-                {idx % 2 ===0 ?
+                {/* {idx % 2 ===0 ?
                     <div className="col-12">
                             {!isDownloadSearch ?
-                                <h4>{`${dnsArray !== null ? list.fecha : null} - ${dnsArray !== null ? list.hour : null}`}</h4>
+                                <h4>{`${dnsArray !== null ? list.datetime_start : null} - ${dnsArray !== null ? list.datetime_start : null}`}</h4>
                                 :
                                 null
                             }
-                    </div>:null }
+                    </div>:null } */}
                 <MediaContainer
                     key={idx}
                     value={list}
@@ -90,7 +92,7 @@ function paginate(pageNumber) {
                     cam={selectedCamera}
                     dnsContainer={dnsContainer}
                     port={portContainer}
-                    src={list.relative_path_video}
+                    src={list.relative_url}
                     real_hour={list.real_hour}
                     reloadData={reloadData}
                     servidorMultimedia={servidorMultimedia}

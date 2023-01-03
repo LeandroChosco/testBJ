@@ -554,9 +554,10 @@ class GridCameraDisplay extends Component {
 	_renderVideoList = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false, isDownload = false, isRecord = false, noButtons = false) => {
 		let {  servidorMultimedia, dnsArray, camURL, apiStorageKey, portContainer, dnsContainer, typeMBOX, historyServerDns, historyServerPort, historyServerProtocol, selectedCamera, protocolDownload } = this.state;
 		const userIdContainer = this.getUserID()
+
 		return loading ? (
 			this._renderLoading()
-		) : videoList && videoList.length > 1  ?(
+		) : videoList && videoList.length > 0  ?(
 							
 			<PaginationList 
 			awsApiStreamsCams={true} 
