@@ -52,6 +52,7 @@ import { MESSAGES_COLLECTION, COMPLAINT_COLLECTION, POLICE_COLLECTION } from "..
 import Chat from './ChatPlus/index'
 import Policia from './Policia';
 import { remove } from '../helpers/remove';
+import ResetPassword from './ResetPassword';
 // import { ContentSort } from 'material-ui/svg-icons';
 
 var io = sailsIOClient(socketIOClient);
@@ -1161,12 +1162,11 @@ class Main extends Component {
       }
     } else {
       this.setState({ isAuthenticated: false })
-      if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+      if (window.location.pathname !== '/' && window.location.pathname !== '/login' && window.location.pathname !== '/recoveryuser' && window.location.pathname !== '/resetpassword') {
         window.location.href = window.location.href.replace(window.location.pathname, '/login')
       }
     }
   }
-
   _makeAuth = (userInfo) => {
     sessionStorage.setItem('isAuthenticated', JSON.stringify({ logged: true, userInfo: userInfo }))
     this.setState({ userInfo: userInfo, showNotification: true })
@@ -1314,6 +1314,7 @@ class Main extends Component {
           <Route path="/map" exact render={(props) => <Map showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} chats={this.state.chats} />} />
           <Route path="/welcome" exact render={(props) => <Welcome {...props} />} />
           <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated} />} />
+          <Route path="/resetpassword" exact render={() => <ResetPassword />} />
           <Route path="/analisis" exact render={(props) => <Analysis showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/analisis/:id" exact render={(props) => <Analysis canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/camarasInternas" exact render={(props) => <CamarasInternas showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />

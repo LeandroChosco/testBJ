@@ -5,7 +5,7 @@ export const remove =()=>{
     localStorage.removeItem(SAILS_ACCESS_TOKEN)
     localStorage.removeItem(IS_LPR)
     sessionStorage.removeItem('isAuthenticated')
-    if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+    if (window.location.pathname !== '/' && window.location.pathname !== '/login' && window.location.pathname !== '/resetpassword') {
       window.location.href = window.location.href.replace(window.location.pathname, '/login')
     }
   }

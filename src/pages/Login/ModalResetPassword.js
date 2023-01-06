@@ -95,6 +95,9 @@ const ModalResetPassword = ({ modal, hideModal, logo }) => {
                     ToastsStore.success(`Contraseña generada con éxito. Revise su correo electrónico.`)
                     hideModal()
                 }, 2000);
+                setTimeout(() => {
+                    window.location.href = window.location.href.replace(window.location.pathname, '/resetpassword')
+                }, 4000);
             } else {
                 setTimeout(() => {
                     setIsloading(false)
@@ -106,7 +109,7 @@ const ModalResetPassword = ({ modal, hideModal, logo }) => {
             .catch(error => {
                 setTimeout(() => {
                     setIsloading(false)
-                    ToastsStore.error(`El correo electrónico ingresado no está registrado.`)
+                    ToastsStore.error(`Datos incorrectos. Revise los campos nuevamente.`)
                     hideModal()
                 }, 2000);
             })
