@@ -10,7 +10,7 @@ import "./style.css";
 import constants from "../../constants/constants";
 import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import conections from "../../conections";
-import { IS_LPR } from "../../constants/token";
+import { IS_LPR, IS_DEMOGRAPHIC } from "../../constants/token";
 class SideBar extends Component {
   state = {
     selectedOption: [],
@@ -45,6 +45,15 @@ class SideBar extends Component {
             }else{
               localStorage.setItem(IS_LPR, false);
             }
+
+            // if(value.is_demographic){
+            //   localStorage.setItem(IS_DEMOGRAPHIC, true)
+            // }
+            
+            if(!localStorage.getItem(IS_DEMOGRAPHIC)){
+              localStorage.setItem(IS_DEMOGRAPHIC, true)
+            }
+
             if ("urlhistory" in value){
                 urlHistory = value.urlhistory
             }

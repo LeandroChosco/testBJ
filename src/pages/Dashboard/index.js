@@ -30,7 +30,7 @@ import DataTicketsPerUserRedesign from '../../components/Dashboard/dataTicketsPe
 import AttendedVSclosed from '../../components/Dashboard/attendedVScloded';
 import LastCreadedCams from '../../components/Dashboard/lastCreatedCams';
 import Placas from "../../components/Dashboard/Placas"
-import { IS_LPR } from '../../constants/token';
+import { IS_DEMOGRAPHIC, IS_LPR } from '../../constants/token';
 import {
   RiEye2Fill
 } from "react-icons/ri";
@@ -38,6 +38,7 @@ import AgeDemographic from '../../components/Dashboard/AgeDemographic';
 import RegisterMood from '../../components/Dashboard/RegisterMood';
 import MicrofonosDash from '../../components/Dashboard/microfonosDash';
 let isLPR=localStorage.getItem(IS_LPR)
+let isDemographic=localStorage.getItem(IS_DEMOGRAPHIC)
 const MOODS = {
   "Happy": "Feliz",
   "Happiness": "Feliz",
@@ -130,7 +131,7 @@ class Dashboard extends Component {
     panes: [
       { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
       { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
-      { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboardRedesign()}</Tab.Pane> },
+      isDemographic && { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboardRedesign()}</Tab.Pane> },
       { menuItem: 'Micrófonos', render: () => <Tab.Pane attached={false}> {this.renderEvents()}</Tab.Pane> },
       isLPR &&
       {
