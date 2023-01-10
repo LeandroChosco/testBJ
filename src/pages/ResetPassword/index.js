@@ -14,7 +14,7 @@ import { SAILS_ACCESS_TOKEN } from '../../constants/token';
 import { useMutation } from "@apollo/client";
 import { CHANGE_PASSWORD } from "../../graphql/mutations";
 
-import logo from "../../assets/images/logo.jpeg"
+import logo from "../../assets/images/icons/favicon.jpg"
 
 const styles = {
     spinner: {
