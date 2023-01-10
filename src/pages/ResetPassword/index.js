@@ -14,7 +14,7 @@ import { SAILS_ACCESS_TOKEN } from '../../constants/token';
 import { useMutation } from "@apollo/client";
 import { CHANGE_PASSWORD } from "../../graphql/mutations";
 
-import logo from "../../assets/images/icons/favicon.jpg"
+import logo from "../../assets/images/logo.jpeg"
 
 const styles = {
     spinner: {
@@ -129,7 +129,7 @@ export default function ResetPassword() {
                         <img
                             src={logo}
                             style={{ width: "100%", borderRadius: "50%" }}
-                            alt="Benito"
+                            alt={constants.client}
                         />
                     </span>
                     <span className="login10-form-title p-b-34 p-t-27" style={{ color: 'white', padding: "1rem", marginBottom: "1rem" }}>

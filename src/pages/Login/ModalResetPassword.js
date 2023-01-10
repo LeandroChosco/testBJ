@@ -109,7 +109,7 @@ const ModalResetPassword = ({ modal, hideModal, logo }) => {
             .catch(error => {
                 setTimeout(() => {
                     setIsloading(false)
-                    ToastsStore.error(`Datos incorrectos. Revise los campos nuevamente.`)
+                    ToastsStore.error(`El correo electrónico ingresado no está registrado.`)
                     hideModal()
                 }, 2000);
             })
@@ -127,7 +127,7 @@ const ModalResetPassword = ({ modal, hideModal, logo }) => {
                             <img
                                 src={logo}
                                 style={{ width: "100%", borderRadius: "50%" }}
-                                alt="Benito"
+                                alt={constants.client}
                             />
                         </span>
                         <span className="login10-form-title p-b-34 p-t-27" style={{ color: 'white', padding: "1rem", marginBottom: "1rem" }}>
