@@ -12,7 +12,7 @@ import MainWrapper from './pages/MainWrapper';
 import './App.css';
 
 const history = createBrowserHistory();
-const client = new ApolloClient({
+export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   uri: constants.radar_backend,
 })
@@ -21,7 +21,7 @@ export const App = () => {
   return (
     <Provider store={store}>
       <Router history={history}>
-        <ApolloProvider client={client}>
+        <ApolloProvider client={apolloClient}>
           <MainWrapper />
         </ApolloProvider>
       </Router>
