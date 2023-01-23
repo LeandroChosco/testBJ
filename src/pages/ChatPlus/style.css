@@ -30,10 +30,10 @@
 
 
 .messagesContainer{
-    height: 34%;
+    height: 27%;
     width: 91%;
     position: absolute;
-    top: 55%;
+    top: 61%;
     overflow-x: hidden;
     overflow-y: auto;
     margin: 0;

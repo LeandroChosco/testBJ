@@ -19,6 +19,7 @@ import { GET_CAMERA_INFO, GET_USER_INFO } from "../../graphql/queries";
 import firebaseC5Benito from "../../constants/configC5CJ";
 import "./style.css";
 import { refreshChat } from "../../Api/sos";
+import { Button } from "react-bootstrap";
 
 const refSOS = firebaseC5Benito
   .app("c5benito")
@@ -76,6 +77,7 @@ class Chat extends Component {
     tabIndex: 0,
     flagUpdate: 0,
     loadingChat: false,
+    infoCurrentCamera: {}
   };
   panes = this.props.history.location.pathname.includes("chat")
     ? [
@@ -278,7 +280,8 @@ class Chat extends Component {
       loading,
       camData,
       personalInformation,
-      loadingChat
+      loadingChat,
+      infoCurrentCamera
     } = this.state;
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
@@ -364,17 +367,17 @@ class Chat extends Component {
                       </h2>
                       <div className="row" style={{ height: "70%", margin: 0 }}>
                         <div className="col" style={{ height: "100%" }}>
-                          {chats[index].user_cam.google_cordenate !== undefined ? (
+                          {infoCurrentCamera.google_cordenate ? (
                             <MapContainer
                               options={{
                                 center: {
                                   lat: parseFloat(
-                                    chats[index].user_cam.google_cordenate.split(
+                                    infoCurrentCamera.google_cordenate.split(
                                       ","
                                     )[0]
                                   ),
                                   lng: parseFloat(
-                                    chats[index].user_cam.google_cordenate.split(
+                                    infoCurrentCamera.google_cordenate.split(
                                       ","
                                     )[1]
                                   ),
@@ -392,12 +395,12 @@ class Chat extends Component {
                               }}
                               onMapLoad={this._onMapLoad}
                             />
-                          ) : (
+                          ) : infoCurrentCamera.location ? (
                             <MapContainer
                               options={{
                                 center: {
-                                  lat: parseFloat(chats[index].location.latitude),
-                                  lng: parseFloat(chats[index].location.longitude),
+                                  lat: parseFloat(infoCurrentCamera.location.latitude),
+                                  lng: parseFloat(infoCurrentCamera.location.longitude),
                                 },
                                 zoom: 15,
                                 mapTypeId: "roadmap",
@@ -412,13 +415,16 @@ class Chat extends Component {
                               }}
                               onMapLoad={this._onMapLoad}
                             />
-                          )}
+                          )
+                            :
+                            <p>Sin camara asignada...</p>
+                          }
                         </div>
                         <div
                           className="col camContainerChatDiv"
                           style={{ height: "100%" }}
                         >
-                          {camData !== undefined ? (
+                          {camData && !loadingChat ? (
                             <CameraStream
                               hideTitle
                               height="250px"
@@ -427,9 +433,9 @@ class Chat extends Component {
                               propsIniciales={this.props}
                               marker={(camData)}
                             />
-                          ) : (
-                            <p>Sin camara asignada...</p>
-                          )}
+                          ) :
+                          null
+                          }
                         </div>
                       </div>
 
@@ -470,10 +476,10 @@ class Chat extends Component {
                                     style={{ fontSize: 13, paddingRight: 0 }}
                                   >
                                     <b>Dirección: </b>
-                                    {chats[index].user_cam.street}{" "}
-                                    {chats[index].user_cam.number},{" "}
-                                    {chats[index].user_cam.town},{" "}
-                                    {chats[index].user_cam.township}
+                                    {infoCurrentCamera.street ? infoCurrentCamera.street : chats[index].street}{" "}
+                                    {infoCurrentCamera.number ? infoCurrentCamera.number : chats[index].number},{" "}
+                                    {infoCurrentCamera.town ? infoCurrentCamera.town : chats[index].town},{" "}
+                                    {infoCurrentCamera.township ? infoCurrentCamera.township : chats[index].township}
                                   </div>
                                   {
                                     camData !== undefined &&
@@ -485,7 +491,7 @@ class Chat extends Component {
                                         paddingRight: 0,
                                       }}
                                     >
-                                      <b>Cámara: </b> #cam{camData.extraData.num_cam}
+                                      <b>Cámara: </b> #cam{infoCurrentCamera.num_cam ? infoCurrentCamera.num_cam : chats[index].num_cam}
                                     </div>
                                   }
 
@@ -495,10 +501,10 @@ class Chat extends Component {
                                     className="col-12"
                                     style={{ fontSize: 13, paddingRight: 0 }}
                                   >
-                                    {chats[index].user_cam.entrecalles ? (
+                                    {infoCurrentCamera.entrecalles ? (
                                       <p>
                                         <b>Entre Calles: </b>
-                                        {chats[index].user_cam.entrecalles}
+                                        {infoCurrentCamera.entrecalles}
                                         {/* {console.log("chats ", chats[index])} */}
                                       </p>
                                     ) : null}
@@ -547,7 +553,9 @@ class Chat extends Component {
                               <div
                                 className="col-4"
                                 style={{ margin: "auto" }}
-                              ></div>
+                              >
+                                <Button onClick={this.refreshButton}>Actualizar</Button>
+                              </div>
                             </div>
                           </Card.Content>
                         </Card>
@@ -593,7 +601,6 @@ class Chat extends Component {
                             </div>
                           )
                         }
-
                         )
                       ) : loading === true ? (
                         <>
@@ -703,7 +710,7 @@ class Chat extends Component {
   getUserInfo = (chat) => {
     if (chat) {
       const { user_cam, alarm, alarmType } = chat;
-      console.log("camarita", user_cam);
+      // console.log("camarita", user_cam);
       if (user_cam.active !== undefined && alarm && alarmType) {
         this.setState({
           personalInformation: {
@@ -741,12 +748,15 @@ class Chat extends Component {
     }).then(response => {
       responseData = response.data.searchInformationUserDataAdminC5
     })
-    .catch(err => console.log(err))
+      .catch(err => {
+        this.setState({ infoCurrentCamera: {} })
+        console.log(err)
+      })
 
     // if (!loading && data) {
-      return responseData
+    return responseData
     // } else {
-      // console.log("ERROR")
+    // console.log("ERROR")
     // }
   }
 
@@ -766,40 +776,50 @@ class Chat extends Component {
     }).then(response => {
       responseData = response
     })
-    .catch(err => console.log(err))
+      .catch(err => {
+        this.setState({ infoCurrentCamera: {} })
+        console.log(err)
+      })
 
     // if (!loading && data) {
-      return responseData
+    return responseData
     // } else {
-      // console.log("ERROR")
+    // console.log("ERROR")
     // }
   }
 
   changeChat = async (chat, i, flag = true, newMsg) => {
+    // this.setState({ infoCurrentCamera: {}})
     this.getUserInfo(chat);
-    // refreshChat(chat.user_creation, {})
+
+    // if(this.state.infoCurrentCamera){
+    //   this.setState({ infoCurrentCamera: {}})
+    // }
+
 
     if (chat && newMsg !== "NO") {
       this.setState({ loadingChat: true })
-      // if(chat.user_creation){
-      //   await this.getInfoC5Radar(chat.user_creation).then(response => {
-      //      this.getInfoCameraUpdate(response.responseuserc5[0].user_login).then(res => {
-      //       // if(res.data.updateInformationFirebaseCamera.response){
-      //         console.log("Actualizado", res)
-      //         let updateChat = res.data.updateInformationFirebaseCamera.response[0]
-      //         console.log("CHAT UPDATE AAAA", updateChat)
-      //         refreshChat(chat.user_creation, updateChat)
-      //       // } else {
-      //       //   console.log("Ya actualicé")
-      //       // }
-      //     })
-      //     .catch(err => console.log(err))
-      //   })
-      //   .catch(err => console.log(err))
+      this.getInfoC5Radar(chat.user_creation).then(response => {
+        if (response.responseuserc5[0].user_login) {
+          this.getInfoCameraUpdate(response.responseuserc5[0].user_login).then(res => {
+            let cameraData = res.data.updateInformationFirebaseCamera.response[0]
+            this.setState({ infoCurrentCamera: cameraData })
+            this._changeUserCam(cameraData)
+          })
+            .catch(err => {
+              this.setState({ infoCurrentCamera: {} })
+              console.log(err)
+            })
+        }
+      })
+        .catch(err =>{
+          this.setState({ infoCurrentCamera: {} }) 
+          console.log(err)
+        })
       // }
       setTimeout(() => {
         this.setState({ loadingChat: false })
-      }, 1500);
+      }, 2000);
     }
 
     if (flag) {
@@ -846,70 +866,6 @@ class Chat extends Component {
     }
   };
 
-  /* changeChat = (chat, i, flag = true) => {
-    if (flag) {
-      this.props.history.push(`/sos/${this.state.activeIndex}/${chat.id}`)
-    }
-    if (chat === undefined && i === -1) {
-      this.props.history.push('/sos')
-    } else {
-      this.getMessages(chat.id)
-      this.setState(
-        { loading: true, camData: undefined },
-        async () => {
-          this.props.stopNotification();
-          const trackingInformation = await getTracking(chat.trackingId);
-
-          let newData = trackingInformation.data.data();
-
-          newData = {
-            ...newData,
-            id: trackingInformation.data.id,
-          };
-
-          this.setState({
-            // chatId: chat.id,
-            // messages: chat.messages,
-            index: i,
-            from: newData.SOSType, //
-            tracking: newData,
-            loading: false,
-            personalInformation: newData.userInformation, //
-            pointCoords: [], //
-          });
-
-          if (chat.active) {
-            const unsub = firebaseSos
-              .app("sos")
-              .firestore()
-              .collection(SOS_COLLECTION)
-              .onSnapshot((docs) => {
-                const track_changes = docs.docChanges();
-                if (track_changes.length === 1) {
-                  const updatedChatId = track_changes[0].doc.id;
-                  const track_data = track_changes[0].doc.data();
-                  if (chat.trackingId === updatedChatId) {
-                    if (chat.active) {
-                      this.setState({ tracking: track_data });
-                    }
-                  }
-                }
-              });
-            this.setState({ firebaseSub: unsub });
-          } else {
-            // this.state.firebaseSub();
-          }
-          refSOS
-            .doc(chat.id)
-            .update({ c5Unread: 0 })
-            .then(() => {
-              this.setState({ text: '', from: 'Chat C5' })
-            })
-        }
-      );
-    }
-  }; */
-
   getMessages = (chatId) => {
     // const {chatFirebase, chats} = this.props
     // const indexChat = chats.findIndex(e => e.id === chatId)
@@ -929,17 +885,16 @@ class Chat extends Component {
     }
   };
 
-  _changeUserCam = (chat) => {
-    if (Object.keys(chat.user_cam).length !== 0) {
-      const { user_cam } = chat;
+  _changeUserCam = (cameraData) => {
+    if (cameraData.UrlStreamMediaServer) {
       this.setState({
         camData: {
           extraData: {
-            num_cam: user_cam.num_cam,
-            cameraID: user_cam.num_cam,
+            num_cam: cameraData.num_cam,
+            cameraID: cameraData.num_cam,
             isHls: true,
-            url: urlHttpOrHttps(user_cam.UrlStreamMediaServer.ip_url_ms, user_cam.UrlStreamMediaServer.output_port, user_cam.UrlStreamMediaServer.name, user_cam.channel, user_cam.UrlStreamMediaServer.protocol),
-            dataCamValue: user_cam,
+            url: `${cameraData.UrlStreamMediaServer.protocol}://${cameraData.UrlStreamMediaServer.ip_url_ms}${cameraData.UrlStreamMediaServer.name}${cameraData.channel}`,
+            dataCamValue: cameraData,
           },
         },
       });
@@ -959,6 +914,9 @@ class Chat extends Component {
     if (this.state.text === "") return;
     const { chatId, messages } = this.state;
 
+    // VER LINEAS COMENTADAS PARA FINALIZAR ACTIVIDAD
+
+    // let newMessageDate = moment(new Date()).format("DD-MM-YYYY")
     let messagesAux = messages.map((e) => e);
 
     messagesAux.push({
@@ -969,13 +927,25 @@ class Chat extends Component {
       userEmail: user_data.email,
     });
 
-    // console.log("TEST", {
-    //   from: user_data.from,
-    //   dateTime: new Date(),
-    //   msg: this.state.text, //msg
-    //   userName: user_data.name,
-    //   userEmail: user_data.email,
-    // })
+    // let obj = {
+    //   "seconds": 1662130550,
+    //   "nanoseconds": 405000000
+    // }
+
+    // let test = moment(obj.toDate()).format("DD-MM-YYYY")
+
+
+    // console.log(messages)
+
+    // console.log(test)
+    // // let validation = messages.some(el => moment(el.dateTime.toDate().format("DD-MM-YYYY")) == newMessageDate)
+
+    // console.log(validation)
+
+    // if(messages.some(el => el.dateTime.toDate().format("DD-MM-YYYY") == newMessageDate)){
+    //   let currentChat = this.props.chats
+    //   console.log(currentChat)
+    // }
 
     this.props.stopNotification();
 
@@ -995,6 +965,13 @@ class Chat extends Component {
         this.setState({ text: "" });
       });
   };
+  refreshButton = () => {
+
+    let { chatId } = this.props.match.params
+    let chatIndex = this.props.chats.findIndex(el => el.id === chatId)
+
+    this.changeChat(this.props.chats[chatIndex], chatIndex, true)
+  }
 
   componentDidMount() {
     const { alarmIndex } = this.props.match.params;
