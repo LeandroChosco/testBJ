@@ -2,15 +2,13 @@ import React, { Component } from "react";
 import { Card, Icon, Input, Dropdown, Tab } from "semantic-ui-react";
 import FadeLoader from "react-spinners/FadeLoader";
 import Spinner from 'react-bootstrap/Spinner';
+import { Button } from "react-bootstrap";
 
 import { apolloClient } from "../../App";
 
-// import firebaseC5 from "../../constants/configC5";
 import CameraStream from "../../components/CameraStream";
-// import constants from "../../constants/constants";
+import constants from "../../constants/constants";
 import MapContainer from "../../components/MapContainer";
-// import Axios from "axios";
-import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import moment from "moment";
 import _ from "lodash";
 import { GET_CAMERA_INFO, GET_USER_INFO } from "../../graphql/queries";
@@ -18,8 +16,7 @@ import { GET_CAMERA_INFO, GET_USER_INFO } from "../../graphql/queries";
 
 import firebaseC5Benito from "../../constants/configC5CJ";
 import "./style.css";
-import { refreshChat } from "../../Api/sos";
-import { Button } from "react-bootstrap";
+import conections from "../../conections";
 
 const refSOS = firebaseC5Benito
   .app("c5benito")
@@ -77,7 +74,8 @@ class Chat extends Component {
     tabIndex: 0,
     flagUpdate: 0,
     loadingChat: false,
-    infoCurrentCamera: {}
+    infoCurrentCamera: {},
+    idClient: null,
   };
   panes = this.props.history.location.pathname.includes("chat")
     ? [
@@ -164,6 +162,14 @@ class Chat extends Component {
           );
         }
         this.setState({ chats: newChats });
+      }
+    });
+  };
+
+  _getClient = () => {
+    conections.getClients().then(res => {
+      if(this.state.idClient !== res.data.data.getClients.filter(el => el.name === constants.client)[0].id){
+        this.setState({ idClient: res.data.data.getClients.filter(el => el.name === constants.client)[0].id })
       }
     });
   };
@@ -302,6 +308,10 @@ class Chat extends Component {
       }
     }
 
+    if(!this.state.idClient) {
+      this._getClient();
+    };
+
     return (
       <div
         className={
@@ -434,7 +444,7 @@ class Chat extends Component {
                               marker={(camData)}
                             />
                           ) :
-                          null
+                            null
                           }
                         </div>
                       </div>
@@ -738,7 +748,7 @@ class Chat extends Component {
       query: GET_USER_INFO,
       variables: {
         userIdC5: id,
-        clientId: 1,
+        clientId: this.state.idClient,
       },
       context: {
         headers: {
@@ -766,7 +776,7 @@ class Chat extends Component {
       query: GET_CAMERA_INFO,
       variables: {
         email: email,
-        clientId: 1,
+        clientId: this.state.idClient,
       },
       context: {
         headers: {
@@ -812,8 +822,8 @@ class Chat extends Component {
             })
         }
       })
-        .catch(err =>{
-          this.setState({ infoCurrentCamera: {} }) 
+        .catch(err => {
+          this.setState({ infoCurrentCamera: {} })
           console.log(err)
         })
       // }
