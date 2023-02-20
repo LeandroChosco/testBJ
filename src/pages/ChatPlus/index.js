@@ -12,6 +12,7 @@ import MapContainer from "../../components/MapContainer";
 import moment from "moment";
 import _ from "lodash";
 import { GET_CAMERA_INFO, GET_USER_INFO } from "../../graphql/queries";
+import noChat from "../../assets/images/noChat.png"
 
 
 import firebaseC5Benito from "../../constants/configC5CJ";
@@ -76,6 +77,7 @@ class Chat extends Component {
     loadingChat: false,
     infoCurrentCamera: {},
     idClient: null,
+    statusCurrentChat: true
   };
   panes = this.props.history.location.pathname.includes("chat")
     ? [
@@ -168,7 +170,7 @@ class Chat extends Component {
 
   _getClient = () => {
     conections.getClients().then(res => {
-      if(this.state.idClient !== res.data.data.getClients.filter(el => el.name === constants.client)[0].id){
+      if (this.state.idClient !== res.data.data.getClients.filter(el => el.name === constants.client)[0].id) {
         this.setState({ idClient: res.data.data.getClients.filter(el => el.name === constants.client)[0].id })
       }
     });
@@ -308,7 +310,7 @@ class Chat extends Component {
       }
     }
 
-    if(!this.state.idClient) {
+    if (!this.state.idClient) {
       this._getClient();
     };
 
@@ -357,179 +359,120 @@ class Chat extends Component {
                   <Spinner style={{ marginTop: "3rem" }} animation="border" variant="info" role="status" size="xl" />
                 </div>
                 :
-                <div className="messages">
-                  {!loading && chatId !== "" && chats[index] ? (
-                    <div className="cameraView">
-                      <h2
-                        className={"Chat C5"}
-                        style={{
-                          textAlign: "center",
-                          backgroundColor:
-                            COLORS[
-                            chats[index].alarmType ? chats[index].alarmType : "c5"
-                            ],
-                          height: "30px",
-                        }}
-                      >
-                        {chats[index].alarmType
-                          ? chats[index].alarmType
-                          : "Chat C5"}
-                      </h2>
-                      <div className="row" style={{ height: "70%", margin: 0 }}>
-                        <div className="col" style={{ height: "100%" }}>
-                          {infoCurrentCamera.google_cordenate ? (
-                            <MapContainer
-                              options={{
-                                center: {
-                                  lat: parseFloat(
-                                    infoCurrentCamera.google_cordenate.split(
-                                      ","
-                                    )[0]
-                                  ),
-                                  lng: parseFloat(
-                                    infoCurrentCamera.google_cordenate.split(
-                                      ","
-                                    )[1]
-                                  ),
-                                },
-                                zoom: 15,
-                                mapTypeId: "roadmap",
-                                zoomControl: false,
-                                mapTypeControl: false,
-                                streetViewControl: false,
-                                fullscreenControl: false,
-                                openConfirm: false,
-                                typeConfirm: false,
-                                openSelection: false,
-                                checked: "",
-                              }}
-                              onMapLoad={this._onMapLoad}
-                            />
-                          ) : infoCurrentCamera.location ? (
-                            <MapContainer
-                              options={{
-                                center: {
-                                  lat: parseFloat(infoCurrentCamera.location.latitude),
-                                  lng: parseFloat(infoCurrentCamera.location.longitude),
-                                },
-                                zoom: 15,
-                                mapTypeId: "roadmap",
-                                zoomControl: false,
-                                mapTypeControl: false,
-                                streetViewControl: false,
-                                fullscreenControl: false,
-                                openConfirm: false,
-                                typeConfirm: false,
-                                openSelection: false,
-                                checked: "",
-                              }}
-                              onMapLoad={this._onMapLoad}
-                            />
-                          )
-                            :
-                            <p>Sin camara asignada...</p>
-                          }
-                        </div>
-                        <div
-                          className="col camContainerChatDiv"
-                          style={{ height: "100%" }}
+
+                this.state.statusCurrentChat ?
+
+                  <div className="messages">
+                    {!loading && chatId !== "" && chats[index] ? (
+                      <div className="cameraView">
+                        <h2
+                          className={"Chat C5"}
+                          style={{
+                            textAlign: "center",
+                            backgroundColor:
+                              COLORS[
+                              chats[index].alarmType ? chats[index].alarmType : "c5"
+                              ],
+                            height: "30px",
+                          }}
                         >
-                          {camData && !loadingChat ? (
-                            <CameraStream
-                              hideTitle
-                              height="250px"
-                              hideButton
-                              hideInfo
-                              propsIniciales={this.props}
-                              marker={(camData)}
-                            />
-                          ) :
-                            null
-                          }
+                          {chats[index].alarmType
+                            ? chats[index].alarmType
+                            : "Chat C5"}
+                        </h2>
+                        <div className="row" style={{ height: "70%", margin: 0 }}>
+                          <div className="col" style={{ height: "100%" }}>
+                            {infoCurrentCamera.google_cordenate ? (
+                              <MapContainer
+                                options={{
+                                  center: {
+                                    lat: parseFloat(
+                                      infoCurrentCamera.google_cordenate.split(
+                                        ","
+                                      )[0]
+                                    ),
+                                    lng: parseFloat(
+                                      infoCurrentCamera.google_cordenate.split(
+                                        ","
+                                      )[1]
+                                    ),
+                                  },
+                                  zoom: 15,
+                                  mapTypeId: "roadmap",
+                                  zoomControl: false,
+                                  mapTypeControl: false,
+                                  streetViewControl: false,
+                                  fullscreenControl: false,
+                                  openConfirm: false,
+                                  typeConfirm: false,
+                                  openSelection: false,
+                                  checked: "",
+                                }}
+                                onMapLoad={this._onMapLoad}
+                              />
+                            ) : infoCurrentCamera.location ? (
+                              <MapContainer
+                                options={{
+                                  center: {
+                                    lat: parseFloat(infoCurrentCamera.location.latitude),
+                                    lng: parseFloat(infoCurrentCamera.location.longitude),
+                                  },
+                                  zoom: 15,
+                                  mapTypeId: "roadmap",
+                                  zoomControl: false,
+                                  mapTypeControl: false,
+                                  streetViewControl: false,
+                                  fullscreenControl: false,
+                                  openConfirm: false,
+                                  typeConfirm: false,
+                                  openSelection: false,
+                                  checked: "",
+                                }}
+                                onMapLoad={this._onMapLoad}
+                              />
+                            )
+                              :
+                              <p>Sin camara asignada...</p>
+                            }
+                          </div>
+                          <div
+                            className="col camContainerChatDiv"
+                            style={{ height: "100%" }}
+                          >
+                            {camData && !loadingChat ? (
+                              <CameraStream
+                                hideTitle
+                                height="250px"
+                                hideButton
+                                hideInfo
+                                propsIniciales={this.props}
+                                marker={(camData)}
+                              />
+                            ) :
+                              null
+                            }
+                          </div>
                         </div>
-                      </div>
 
-                      <div
-                        className="row"
-                        style={{
-                          height: "20%",
-                          width: "100%",
-                          margin: 0,
-                          marginTop: "5px",
-                        }}
-                      >
-                        <Card style={{ width: "100%" }}>
-                          <Card.Content>
-                            <div className="row">
-                              <div className="col-8">
-                                <div className="row" style={{ padding: "5px" }}>
-                                  <div
-                                    className="col-6"
-                                    style={{ fontSize: 13, paddingRight: 0 }}
-                                  >
-                                    <b>Nombre: </b> {chats[index].user_name}
-                                  </div>
-                                  <div
-                                    className="col-3"
-                                    style={{
-                                      fontSize: 13,
-                                      paddingLeft: 0,
-                                      paddingRight: 0,
-                                    }}
-                                  >
-                                    <b>Celular: </b> {chats[index].user_cam.phone}
-                                  </div>
-                                </div>
-                                <div className="row" style={{ padding: "5px" }}>
-                                  <div
-                                    className="col-6"
-                                    style={{ fontSize: 13, paddingRight: 0 }}
-                                  >
-                                    <b>Dirección: </b>
-                                    {infoCurrentCamera.street ? infoCurrentCamera.street : chats[index].street}{" "}
-                                    {infoCurrentCamera.number ? infoCurrentCamera.number : chats[index].number},{" "}
-                                    {infoCurrentCamera.town ? infoCurrentCamera.town : chats[index].town},{" "}
-                                    {infoCurrentCamera.township ? infoCurrentCamera.township : chats[index].township}
-                                  </div>
-                                  {
-                                    camData !== undefined &&
-                                    <div
-                                      className="col-3"
-                                      style={{
-                                        fontSize: 13,
-                                        paddingLeft: 0,
-                                        paddingRight: 0,
-                                      }}
-                                    >
-                                      <b>Cámara: </b> #cam{infoCurrentCamera.num_cam ? infoCurrentCamera.num_cam : chats[index].num_cam}
-                                    </div>
-                                  }
-
-                                </div>
-                                <div className="row" style={{ padding: "5px" }}>
-                                  <div
-                                    className="col-12"
-                                    style={{ fontSize: 13, paddingRight: 0 }}
-                                  >
-                                    {infoCurrentCamera.entrecalles ? (
-                                      <p>
-                                        <b>Entre Calles: </b>
-                                        {infoCurrentCamera.entrecalles}
-                                        {/* {console.log("chats ", chats[index])} */}
-                                      </p>
-                                    ) : null}
-                                  </div>
-                                </div>
-                                {personalInformation.alarmType ? (
+                        <div
+                          className="row"
+                          style={{
+                            height: "20%",
+                            width: "100%",
+                            margin: 0,
+                            marginTop: "5px",
+                          }}
+                        >
+                          <Card style={{ width: "100%" }}>
+                            <Card.Content>
+                              <div className="row">
+                                <div className="col-8">
                                   <div className="row" style={{ padding: "5px" }}>
                                     <div
                                       className="col-6"
                                       style={{ fontSize: 13, paddingRight: 0 }}
                                     >
-                                      <b>Descripción: </b>
-                                      {personalInformation.description
-                                        ? personalInformation.description
-                                        : ""}
+                                      <b>Nombre: </b> {chats[index].user_name}
                                     </div>
                                     <div
                                       className="col-3"
@@ -539,78 +482,160 @@ class Chat extends Component {
                                         paddingRight: 0,
                                       }}
                                     >
-                                      <b>Alarma: </b>{" "}
-                                      {personalInformation.alarmType
-                                        ? personalInformation.alarmType
-                                        : ""}
-                                    </div>
-                                    <div
-                                      className="col-3"
-                                      style={{
-                                        fontSize: 13,
-                                        paddingLeft: 0,
-                                        paddingRight: 0,
-                                      }}
-                                    >
-                                      <b>Alarma NS: </b>{" "}
-                                      {personalInformation.alarmSN
-                                        ? personalInformation.alarmSN
-                                        : ""}
+                                      <b>Celular: </b> {chats[index].user_cam.phone}
                                     </div>
                                   </div>
-                                ) : null}
+                                  <div className="row" style={{ padding: "5px" }}>
+                                    <div
+                                      className="col-6"
+                                      style={{ fontSize: 13, paddingRight: 0 }}
+                                    >
+                                      <b>Dirección: </b>
+                                      {infoCurrentCamera.street ? infoCurrentCamera.street : chats[index].street}{" "}
+                                      {infoCurrentCamera.number ? infoCurrentCamera.number : chats[index].number},{" "}
+                                      {infoCurrentCamera.town ? infoCurrentCamera.town : chats[index].town},{" "}
+                                      {infoCurrentCamera.township ? infoCurrentCamera.township : chats[index].township}
+                                    </div>
+                                    {
+                                      camData !== undefined &&
+                                      <div
+                                        className="col-3"
+                                        style={{
+                                          fontSize: 13,
+                                          paddingLeft: 0,
+                                          paddingRight: 0,
+                                        }}
+                                      >
+                                        <b>Cámara: </b> #cam{infoCurrentCamera.num_cam ? infoCurrentCamera.num_cam : chats[index].num_cam}
+                                      </div>
+                                    }
+
+                                  </div>
+                                  <div className="row" style={{ padding: "5px" }}>
+                                    <div
+                                      className="col-12"
+                                      style={{ fontSize: 13, paddingRight: 0 }}
+                                    >
+                                      {infoCurrentCamera.entrecalles ? (
+                                        <p>
+                                          <b>Entre Calles: </b>
+                                          {infoCurrentCamera.entrecalles}
+                                          {/* {console.log("chats ", chats[index])} */}
+                                        </p>
+                                      ) : null}
+                                    </div>
+                                  </div>
+                                  {personalInformation.alarmType ? (
+                                    <div className="row" style={{ padding: "5px" }}>
+                                      <div
+                                        className="col-6"
+                                        style={{ fontSize: 13, paddingRight: 0 }}
+                                      >
+                                        <b>Descripción: </b>
+                                        {personalInformation.description
+                                          ? personalInformation.description
+                                          : ""}
+                                      </div>
+                                      <div
+                                        className="col-3"
+                                        style={{
+                                          fontSize: 13,
+                                          paddingLeft: 0,
+                                          paddingRight: 0,
+                                        }}
+                                      >
+                                        <b>Alarma: </b>{" "}
+                                        {personalInformation.alarmType
+                                          ? personalInformation.alarmType
+                                          : ""}
+                                      </div>
+                                      <div
+                                        className="col-3"
+                                        style={{
+                                          fontSize: 13,
+                                          paddingLeft: 0,
+                                          paddingRight: 0,
+                                        }}
+                                      >
+                                        <b>Alarma NS: </b>{" "}
+                                        {personalInformation.alarmSN
+                                          ? personalInformation.alarmSN
+                                          : ""}
+                                      </div>
+                                    </div>
+                                  ) : null}
+                                </div>
+                                <div
+                                  className="col-4"
+                                  style={{ margin: "auto" }}
+                                >
+                                  <Button onClick={this.refreshButton}>Actualizar</Button>
+                                </div>
                               </div>
-                              <div
-                                className="col-4"
-                                style={{ margin: "auto" }}
-                              >
-                                <Button onClick={this.refreshButton}>Actualizar</Button>
-                              </div>
-                            </div>
-                          </Card.Content>
-                        </Card>
+                            </Card.Content>
+                          </Card>
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
-                  <div className="messagesContainer" id="messagesContainer">
-                    {!loading && chatId !== "" && chats[index] ? (
-                      chats[index].messages ? (
-                        this.state.messages !== undefined &&
-                        this.state.messages.map((value, ref) => {
-                          return (
-                            <div
-                              key={ref}
-                              className={value.from === "user" ? "user" : "support"}
-                              ref={
-                                ref === chats[index].messages.length - 1
-                                  ? "message"
-                                  : "message" + ref
-                              }
-                              id={
-                                ref === chats[index].messages.length - 1
-                                  ? "lastMessage"
-                                  : "message" + ref
-                              }
-                              style={
-                                {
-                                  backgroundColor: (value.from === 1 || value.from === 2) && "#5ab86d"
+                    ) : null}
+                    <div className="messagesContainer" id="messagesContainer">
+                      {/* {console.log(chats[index])} */}
+                      {!loading && chatId !== "" && chats[index] ? (
+                        chats[index].messages ? (
+                          this.state.messages !== undefined &&
+                          this.state.messages.map((value, ref) => {
+                            return (
+                              <div
+                                key={ref}
+                                className={value.from === "user" ? "user" : "support"}
+                                ref={
+                                  ref === chats[index].messages.length - 1
+                                    ? "message"
+                                    : "message" + ref
                                 }
-                              }
-                            >
-                              <p>{value.msg}</p>
-                              <small>
-                                {value.dateTime.toDate
-                                  ?
-                                  value.userName || value.userEmail
+                                id={
+                                  ref === chats[index].messages.length - 1
+                                    ? "lastMessage"
+                                    : "message" + ref
+                                }
+                                style={
+                                  {
+                                    backgroundColor: (value.from === 1 || value.from === 2) && "#5ab86d"
+                                  }
+                                }
+                              >
+                                <p>{value.msg}</p>
+                                <small>
+                                  {value.dateTime.toDate
                                     ?
-                                    moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
-                                    :
-                                    moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
-                                  : null}
-                              </small>
-                            </div>
+                                    value.userName || value.userEmail
+                                      ?
+                                      moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                                      :
+                                      moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
+                                    : null}
+                                </small>
+                              </div>
+                            )
+                          }
                           )
-                        }
+                        ) : loading === true ? (
+                          <>
+                            <FadeLoader
+                              height={20}
+                              width={7}
+                              radius={20}
+                              margin={5}
+                              loading={loading}
+                              css={styles.centered}
+                            />
+                            <p style={{ position: "fixed", top: "56%", left: "62%" }}>
+                              Cargando chat
+                            </p>
+                          </>
+                        ) : (
+                          <p style={{ position: "fixed", top: "50%", left: "60%" }}>
+                            No se ha seleccionado ningun chat
+                          </p>
                         )
                       ) : loading === true ? (
                         <>
@@ -630,58 +655,80 @@ class Chat extends Component {
                         <p style={{ position: "fixed", top: "50%", left: "60%" }}>
                           No se ha seleccionado ningun chat
                         </p>
-                      )
-                    ) : loading === true ? (
-                      <>
-                        <FadeLoader
-                          height={20}
-                          width={7}
-                          radius={20}
-                          margin={5}
-                          loading={loading}
-                          css={styles.centered}
-                        />
-                        <p style={{ position: "fixed", top: "56%", left: "62%" }}>
-                          Cargando chat
-                        </p>
-                      </>
-                    ) : (
-                      <p style={{ position: "fixed", top: "50%", left: "60%" }}>
-                        No se ha seleccionado ningun chat
-                      </p>
-                    )}
-                  </div>
-                  {chatId !== "" && chats[index] ? (
-                    <div className="messages_send_box">
-                      {!textareaDisabled ? (
-                        <div style={{ position: "relative" }}>
-                          <textarea
-                            disabled={textareaDisabled}
-                            placeholder="Escriba su mensaje"
-                            name="text"
-                            autoComplete="on"
-                            autoCorrect="on"
-                            id="messsageTextarea"
-                            value={this.state.text}
-                            onKeyPress={this.checkKey}
-                            onChange={(event) => {
-                              this.setState({ text: event.target.value });
-                            }}
-                          ></textarea>
-                          <Icon
-                            name="send"
-                            id="sendbutton"
-                            onClick={this.sendMessage}
-                          />
-                        </div>
-                      ) : (
-                        <div className="closed-ticked">
-                          El ticket ya se encuentra cerrado
-                        </div>
                       )}
                     </div>
-                  ) : null}
-                </div>
+
+                    {
+                      chatId !== "" && chats[index] ? (
+                        <div className="messages_send_box">
+                          {!textareaDisabled ? (
+                            <div style={{ position: "relative" }}>
+                              <textarea
+                                disabled={textareaDisabled}
+                                placeholder="Escriba su mensaje"
+                                name="text"
+                                autoComplete="on"
+                                autoCorrect="on"
+                                id="messsageTextarea"
+                                value={this.state.text}
+                                onKeyPress={this.checkKey}
+                                onChange={(event) => {
+                                  this.setState({ text: event.target.value });
+                                }}
+                              ></textarea>
+                              <Icon
+                                name="send"
+                                id="sendbutton"
+                                onClick={this.sendMessage}
+                              />
+                            </div>
+                          ) : (
+                            <div className="closed-ticked">
+                              El ticket ya se encuentra cerrado
+                            </div>
+                          )}
+                        </div>
+                      ) : null
+                    }
+                  </div>
+                  :
+                  <>
+                  <div className="row-6" style={{display: "flex", justifyContent: "center", alignItems: "center" , height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem"}}>
+                    <img style={{height: "30rem"}} src={noChat} alt="Imagen-No-Disponible"/>
+                  </div>
+                  <div className="row-6" style={{ display: "flex", width: "95%", height: "auto", padding: "3rem" }}>
+                    <Card
+                    style={{ display: "flex", padding: "2rem", width: "95%" }}
+                    >
+                      <Card.Content>
+                        <div className="row">
+                          <div className="col-10">
+                            <div className="col-6" style={{ padding: "5px" }}>
+                              <div
+                                className="row-9"
+                                style={{ fontSize: 13, paddingRight: 0 }}
+                              >
+                                El usuario <b>{chats[index].user_name} </b> se encuentra <b>INACTIVO</b>
+                              </div>
+                              <br />
+                              <div
+                                className="row-9"
+                                style={{ fontSize: 13, paddingRight: 0 }}
+                              >
+                                <p>Contáctese con soporte para reactivar este usuario</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className="col-2"
+                            style={{ margin: "auto" }}
+                          >
+                          </div>
+                        </div>
+                      </Card.Content>
+                    </Card>
+                  </div>
+                  </>
             }
           </div>
         </div>
@@ -806,13 +853,21 @@ class Chat extends Component {
     //   this.setState({ infoCurrentCamera: {}})
     // }
 
-
     if (chat && newMsg !== "NO") {
       this.setState({ loadingChat: true })
+      // console.log("ID USER", chat.user_creation)
+      // console.log("CHAT", chat.user_cam.num_cam)
+      // console.log("CHAT", chat)
       this.getInfoC5Radar(chat.user_creation).then(response => {
+        if (response.success) {
+          this.setState({ statusCurrentChat: true })
+        } else {
+          this.setState({ statusCurrentChat: false })
+        }
         if (response.responseuserc5[0].user_login) {
           this.getInfoCameraUpdate(response.responseuserc5[0].user_login).then(res => {
             let cameraData = res.data.updateInformationFirebaseCamera.response[0]
+            // console.log("CAM NUM", cameraData.num_cam)
             this.setState({ infoCurrentCamera: cameraData })
             this._changeUserCam(cameraData)
           })
@@ -1112,7 +1167,8 @@ class Chat extends Component {
                 (e) => e.alarmType === this.FILTERSOPTIONS[this.state.tabIndex]
               );
             }
-            console.log("EN EL DEFAULT");
+            // console.log("EN EL DEFAULT");
+            // console.log(chats)
             this.setState({ chats, flagUpdate: 1 });
             break;
         }
