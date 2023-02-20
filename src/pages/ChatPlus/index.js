@@ -13,6 +13,7 @@ import moment from "moment";
 import _ from "lodash";
 import { GET_CAMERA_INFO, GET_USER_INFO } from "../../graphql/queries";
 import noChat from "../../assets/images/noChat.png"
+import noCamera from "../../assets/images/noCamera.png"
 
 
 import firebaseC5Benito from "../../constants/configC5CJ";
@@ -432,7 +433,9 @@ class Chat extends Component {
                               />
                             )
                               :
-                              <p>Sin camara asignada...</p>
+                              <div className="row-6" style={{display: "flex", justifyContent: "center", alignItems: "center" , height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem"}}>
+                                <img style={{height: "22rem", marginTop: "-18rem"}} src={noCamera} alt="Imagen-No-Disponible"/>
+                              </div>
                             }
                           </div>
                           <div
@@ -693,9 +696,9 @@ class Chat extends Component {
                   </div>
                   :
                   <>
-                  <div className="row-6" style={{display: "flex", justifyContent: "center", alignItems: "center" , height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem"}}>
+                  {/* <div className="row-6" style={{display: "flex", justifyContent: "center", alignItems: "center" , height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem"}}> */}
                     <img style={{height: "30rem"}} src={noChat} alt="Imagen-No-Disponible"/>
-                  </div>
+                  {/* </div> */}
                   <div className="row-6" style={{ display: "flex", width: "95%", height: "auto", padding: "3rem" }}>
                     <Card
                     style={{ display: "flex", padding: "2rem", width: "95%" }}
