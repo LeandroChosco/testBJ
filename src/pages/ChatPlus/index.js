@@ -12,6 +12,7 @@ import MapContainer from "../../components/MapContainer";
 import moment from "moment";
 import _ from "lodash";
 import { GET_CAMERA_INFO, GET_USER_INFO } from "../../graphql/queries";
+import noChat from "../../assets/images/noChat.png"
 
 
 import firebaseC5Benito from "../../constants/configC5CJ";
@@ -692,8 +693,8 @@ class Chat extends Component {
                   </div>
                   :
                   <>
-                  <div className="row-6" style={{display: "flex", justifyContent: "center", alignContent: "center" , height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", backgroundColor: "#f5f5f5", padding: "15rem"}}>
-                    <p>ERROR al cargar el chat</p>
+                  <div className="row-6" style={{display: "flex", justifyContent: "center", alignItems: "center" , height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem"}}>
+                    <img style={{height: "30rem"}} src={noChat} alt="Imagen-No-Disponible"/>
                   </div>
                   <div className="row-6" style={{ display: "flex", width: "95%", height: "auto", padding: "3rem" }}>
                     <Card
@@ -714,7 +715,7 @@ class Chat extends Component {
                                 className="row-9"
                                 style={{ fontSize: 13, paddingRight: 0 }}
                               >
-                                <p>Desactive el chat haciendo click en el botón o contáctese con soporte</p>
+                                <p>Contáctese con soporte para reactivar este usuario</p>
                               </div>
                             </div>
                           </div>
@@ -722,7 +723,6 @@ class Chat extends Component {
                             className="col-2"
                             style={{ margin: "auto" }}
                           >
-                            <Button>Desactivar</Button>
                           </div>
                         </div>
                       </Card.Content>
