@@ -711,7 +711,7 @@ class Chat extends Component {
                                   className="row-9"
                                   style={{ fontSize: 13, paddingRight: 0 }}
                                 >
-                                  El usuario <b>{chats[index].user_name} </b> se encuentra <b>INACTIVO</b>
+                                  El usuario <b>{chats[index].user_name} </b> se encuentra <b>DESACTIVADO</b>
                                 </div>
                                 <br />
                                 <div
