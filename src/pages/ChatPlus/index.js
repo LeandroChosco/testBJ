@@ -186,7 +186,7 @@ class Chat extends Component {
       <div>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Input
-            placeholder="Buscar alertas"
+            placeholder="Buscar chat"
             style={{ flex: 2 }}
             onChange={this.filterAction}
           ></Input>
@@ -433,8 +433,8 @@ class Chat extends Component {
                               />
                             )
                               :
-                              <div className="row-6" style={{display: "flex", justifyContent: "center", alignItems: "center" , height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem"}}>
-                                <img style={{height: "22rem", marginTop: "-18rem"}} src={noCamera} alt="Imagen-No-Disponible"/>
+                              <div className="row-6" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem" }}>
+                                <img style={{ height: "22rem", marginTop: "-18rem" }} src={noCamera} alt="Imagen-No-Disponible" />
                               </div>
                             }
                           </div>
@@ -696,41 +696,41 @@ class Chat extends Component {
                   </div>
                   :
                   <>
-                  {/* <div className="row-6" style={{display: "flex", justifyContent: "center", alignItems: "center" , height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem"}}> */}
-                    <img style={{height: "30rem"}} src={noChat} alt="Imagen-No-Disponible"/>
-                  {/* </div> */}
-                  <div className="row-6" style={{ display: "flex", width: "95%", height: "auto", padding: "3rem" }}>
-                    <Card
-                    style={{ display: "flex", padding: "2rem", width: "95%" }}
-                    >
-                      <Card.Content>
-                        <div className="row">
-                          <div className="col-10">
-                            <div className="col-6" style={{ padding: "5px" }}>
-                              <div
-                                className="row-9"
-                                style={{ fontSize: 13, paddingRight: 0 }}
-                              >
-                                El usuario <b>{chats[index].user_name} </b> se encuentra <b>INACTIVO</b>
-                              </div>
-                              <br />
-                              <div
-                                className="row-9"
-                                style={{ fontSize: 13, paddingRight: 0 }}
-                              >
-                                <p>Contáctese con soporte para reactivar este usuario</p>
+                    <div className="row-6" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem" }}>
+                      <img style={{ height: "30rem" }} src={noChat} alt="Imagen-No-Disponible" />
+                    </div>
+                    <div className="row-6" style={{ display: "flex", width: "95%", height: "auto", padding: "3rem" }}>
+                      <Card
+                        style={{ display: "flex", padding: "2rem", width: "95%" }}
+                      >
+                        <Card.Content>
+                          <div className="row">
+                            <div className="col-10">
+                              <div className="col-6" style={{ padding: "5px" }}>
+                                <div
+                                  className="row-9"
+                                  style={{ fontSize: 13, paddingRight: 0 }}
+                                >
+                                  El usuario <b>{chats[index].user_name} </b> se encuentra <b>INACTIVO</b>
+                                </div>
+                                <br />
+                                <div
+                                  className="row-9"
+                                  style={{ fontSize: 13, paddingRight: 0 }}
+                                >
+                                  <p>Contáctese con soporte para reactivar este usuario</p>
+                                </div>
                               </div>
                             </div>
+                            <div
+                              className="col-2"
+                              style={{ margin: "auto" }}
+                            >
+                            </div>
                           </div>
-                          <div
-                            className="col-2"
-                            style={{ margin: "auto" }}
-                          >
-                          </div>
-                        </div>
-                      </Card.Content>
-                    </Card>
-                  </div>
+                        </Card.Content>
+                      </Card>
+                    </div>
                   </>
             }
           </div>
