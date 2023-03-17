@@ -485,7 +485,7 @@ class Chat extends Component {
                                         paddingRight: 0,
                                       }}
                                     >
-                                      <b>Celular: </b> {chats[index].user_cam.phone}
+                                      <b>Celular: </b> +{infoCurrentCamera.phone ? infoCurrentCamera.phone : chats[index].user_cam.phone}
                                     </div>
                                   </div>
                                   <div className="row" style={{ padding: "5px" }}>
