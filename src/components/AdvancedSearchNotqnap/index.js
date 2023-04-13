@@ -19,12 +19,16 @@ class AdvancedSearchNotqnap extends Component {
 
 	render() {
 		let { showModal, startHour, endHour, error } = this.state;
-		let { loading } = this.props;
+		let { loading, navButton } = this.props;
 		return (
 			<div>
-				<Button variant="info" disabled={loading} onClick={() => this.setState({ showModal: true })} basic circular >
-					<i className="fa fa-search-plus" /> 
-				</Button>
+				{navButton ?
+					<Button variant="info" disabled={loading} onClick={() => this.setState({ showModal: true })} basic circular >
+						<i className="fa fa-search-plus" />
+					</Button>
+					:
+					<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => this.setState({ showModal: true })} >Búsqueda Avanzada</button>
+				}
 
 				{/* Modal */}
 				<Modal show={showModal} onHide={this._onHide}>
@@ -35,7 +39,7 @@ class AdvancedSearchNotqnap extends Component {
 							<Form.Group as={Row} controlId="startDate">
 								<Form.Label column sm="3">Fecha Inicio:</Form.Label>
 								<Col sm="9">
-									<Form.Control 
+									<Form.Control
 										required
 										autoFocus
 										type="date"
@@ -58,7 +62,7 @@ class AdvancedSearchNotqnap extends Component {
 							<Form.Group as={Row} controlId="endDate">
 								<Form.Label column sm="3">Fecha Fin:</Form.Label>
 								<Col sm="9">
-									<Form.Control 
+									<Form.Control
 										required
 										type="date"
 										onChange={(e) => this._onChange(e)}
@@ -101,7 +105,6 @@ class AdvancedSearchNotqnap extends Component {
 		})
 	}
 	_onSubmit = (event) => {
-		let countDays = this.props.countDays
 		event.preventDefault();
 		let { endDate, startDate, startHour, endHour, estado } = this.state;
 		let currrentDate = moment().startOf('date').format('YYYY-MM-DD');
@@ -109,8 +112,8 @@ class AdvancedSearchNotqnap extends Component {
 		let slEndDate = moment(endDate).startOf('date').format('YYYY-MM-DD');
 
 		if (slStartDate > currrentDate || slEndDate > currrentDate) return this.setState({ error: `La fecha no puede ser mayor a hoy.` });
-		if (moment(endDate).startOf('date').diff(moment(startDate).startOf('date'), 'days') > countDays) return this.setState({ error: `No puede solicitar mas de ${countDays} días.` });
-		
+		if (moment(endDate).startOf('date').diff(moment(startDate).startOf('date'), 'days') > 9) return this.setState({ error: `No puede solicitar mas de 9 días.` });
+
 
 		let start = parseInt(startHour, 10), end = parseInt(endHour, 10);
 		if (slStartDate > slEndDate) return this.setState({ error: `Las fecha de inicio no puede ser mayor a la fecha de fin.` });
