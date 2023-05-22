@@ -913,7 +913,9 @@ class Chat extends Component {
       this.getMessages(chat.id);
       this.setState({ loading: true, camData: undefined }, () => {
         this._changeUserCam(chat);
-        this.props.stopNotification();
+        setTimeout(() => {
+          this.props.stopNotification();
+        }, 1000)
 
         this.setState({
           // chatId: chat.id,
@@ -1015,7 +1017,9 @@ class Chat extends Component {
     //   console.log(currentChat)
     // }
 
-    this.props.stopNotification();
+    setTimeout(() => {
+      this.props.stopNotification();
+    }, 1000)
 
     refSOS
       .doc(chatId)
