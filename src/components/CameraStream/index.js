@@ -4,6 +4,8 @@ import { Button, Form, Label, TextArea, Radio, Tab } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { DateTime } from 'luxon';
 
+import { FaClipboardCheck, FaClipboard } from 'react-icons/fa';
+
 import Spinner from 'react-bootstrap/Spinner';
 import JSZipUtils from 'jszip-utils';
 import saveAs from 'file-saver';
@@ -11,6 +13,7 @@ import Chips from 'react-chips';
 import jsmpeg from 'jsmpeg';
 import moment from 'moment';
 import JSZip from 'jszip';
+import NotificationSystem from 'react-notification-system';
 
 import HlsPlayer from '../HlsPlayer';
 import WssPlayer from '../WssPlayer';
@@ -25,6 +28,10 @@ import { HiMicrophone } from 'react-icons/hi';
 
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
 import * as QvrFunctions from '../../functions/getQvrFunctions';
+import { removeSpaces } from '../../functions/removeSpaces';
+import Strings from '../../constants/strings';
+
+import copy from 'copy-to-clipboard'
 
 import './style.css';
 
@@ -45,6 +52,7 @@ var vis = (function () {
   };
 })();
 class CameraStream extends Component {
+  notificationSystem = React.createRef();
   state = {
     scroll: [],
     hasMore: true,
@@ -112,19 +120,28 @@ class CameraStream extends Component {
     servidorMultimedia: '',
     showModalMoreInformation: false,
     photosLoading: false,
-    showPTZ: false
+    showPTZ: false,
+    copyButton: false,
+    copyText: "",
+    copyCam: 0,
+    loadingHistorics: false,
+    historicalUser: null,
+    historicalPassword: null,
+    historyServerDns: null,
+    historyServerProtocol: null
   };
 
   lastDecode = null;
   tryReconect = false;
 
   render() {
-    let { activeIndex, display, num_cam, cameraID, cameraName, showData, photos, data, qnapServer, qnapChannel, servidorMultimedia, photosLoading, videosLoading, videos, historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, loadingSnap, isLoading, isRecording, restarting, loadingFiles, modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription, showPTZ, inputCkecked, portContainer, dnsContainer } = this.state;
+    let { activeIndex, display, num_cam, cameraID, cameraName, showData, photos, data, qnapServer, qnapChannel, servidorMultimedia, photosLoading, videosLoading, videos, historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, loadingSnap, isLoading, isRecording, restarting, loadingFiles, modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription, showPTZ, inputCkecked, portContainer, dnsContainer, copyButton, typeMBOX } = this.state;
     return (
-      <Card style={{ display: display }}>
+      <Card style={{ display: display, padding: "0.75rem" }}>
+        <NotificationSystem ref={this.notificationSystem} />
         {this.props.horizontal ? (
           <Card.Body>
-            <Card.Title>Camara {num_cam}`</Card.Title>
+            <Card.Title>Camara {num_cam}</Card.Title>
             <Card.Text>
               <Row>
                 <Col lg={6}>
@@ -145,6 +162,8 @@ class CameraStream extends Component {
                       />
                     ) : this.props.marker.extraData.isHls ? (
                       <HlsPlayer
+                        dataCamValue={this.props.marker.extraData.dataCamValue}
+                        setCountError={this.props.setCountError}
                         channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
                         region={this.props.marker.extraData.dataCamValue.amazon_region}
                         height={this.props.height}
@@ -206,7 +225,7 @@ class CameraStream extends Component {
             )}
             {showData ? (
               <div className="row dataHolder p10">
-                {showPTZ &&
+                {showPTZ ?
                   <div className="col ptz">
                     Controles
                     <ControlPTZ
@@ -215,47 +234,250 @@ class CameraStream extends Component {
                       hasMatch={false}
                     />
                   </div>
-                }
-                <div className="col snapshots">
-                  Fotos
-                  <div>
-                    {photosLoading ? (
-                      this._renderLoading()
-                    ) : photos.length > 0 ? (
-                      <div className="row">
-                        {photos.map((value, index) => (
-                          <MediaContainer
-                            key={index}
-                            value={value}
-                            exists_image={true}
-                            cam={data}
-                            src={value.relative_url}
-                            reloadData={this._loadFiles}
-                            isQnap={qnapServer && qnapChannel}
-                            servidorMultimedia={servidorMultimedia}
-                            port={portContainer}
-                            dnsContainer={dnsContainer}
-                            userIdContainer={this.getUserID()}
-                          />
-                        ))}
+                  :
+                  <>
+                    {typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
+                      <div className="col snapshots">
+                        Fotos
+                        <div>
+                          {photosLoading ? (
+                            this._renderLoading()
+                          ) : photos.length > 0 ? (
+                            <div className="row">
+                              {photos.map((value, index) => (
+                                <MediaContainer
+                                  key={index}
+                                  value={value}
+                                  exists_image={true}
+                                  cam={data}
+                                  src={value.relative_url}
+                                  reloadData={this._loadFiles}
+                                  isQnap={qnapServer && qnapChannel}
+                                  servidorMultimedia={servidorMultimedia}
+                                  port={portContainer}
+                                  dnsContainer={dnsContainer}
+                                  userIdContainer={this.getUserID()}
+                                />
+                              ))}
+                            </div>
+                          ) : (
+                            <div align="center">
+                              <p className="big-letter">No hay archivos que mostrar</p>
+                              <i className="fa fa-image fa-5x" />
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    ) : (
-                      <div align="center">
-                        <p className="big-letter">No hay archivos que mostrar</p>
-                        <i className="fa fa-image fa-5x" />
-                      </div>
-                    )}
-                  </div>
+                    }
+                    <div id={`scrollVideo#${data.id}`} className="col videos">
+                      Videos
+                      <Tab
+                        align="center"
+                        activeIndex={activeIndex}
+                        onTabChange={(e, { activeIndex }) => this.tabHandler(activeIndex)}
+                        menu={{ secondary: true, pointing: true }}
+                        panes={[
+                          typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && {
+                            menuItem: 'Grabaciones',
+                            render: () => (
+                              <Tab.Pane attached={false}>
+                                {this._renderVideoList(videosLoading, videos)}
+                              </Tab.Pane>
+                            )
+                          },
+                          this.props.moduleActions && this.props.moduleActions.viewHistorial && {
+                            menuItem: 'Ultimas 24 Horas',
+                            render: () => (
+                              <Tab.Pane attached={false}>
+                                {this._renderVideoList(
+                                  historyLoading,
+                                  video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
+                                  true,
+                                  video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
+                                  true, inputCkecked, false, true
+                                )}
+                              </Tab.Pane>
+                            )
+                          },
+                          qnapServer && qnapChannel && {
+                            menuItem: 'Busqueda Avanzada',
+                            render: () => (
+                              <Tab.Pane attached={false}>
+                                <AdvancedSearch
+                                  loading={searchLoading}
+                                  _searchFileVideos={this._searchFileVideos}
+                                />
+                                {(isNewSearch || searchLoading) && <hr />}
+                                {this._renderVideoList(searchLoading, video_search, isNewSearch)}
+                              </Tab.Pane>
+                            )
+                          }
+                        ]}
+                      />
+                    </div>
+                  </>}
+              </div>
+            ) : null}
+            <div className={showData ? 'camHolder hideCamHolder' : 'camHolder'} style={{ width: '100%' }} align="center">
+              <div ref="camHolder" style={{ width: '100%', height: this.props.height ? this.props.height : '100%' }}>
+                {this.props.marker.extraData.isRtmp ? (
+                  <RtmpPlayer
+                    height={this.props.height}
+                    src={this.props.marker.extraData.url}
+                    num_cam={this.props.marker.extraData.num_cam}
+                  />
+                ) : !this.props.marker.extraData.dataCamValue.is_amazon_stream && this.props.marker.extraData.dataCamValue.amazon_arn_channel ? (
+                  <WssPlayer
+                    channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
+                    region={this.props.marker.extraData.dataCamValue.amazon_region}
+                    height={this.props.height}
+                    width={this.props.width}
+                    num_cam={this.props.marker.extraData.num_cam}
+                  />
+                ) : this.props.marker.extraData.isHls ? (
+                  <HlsPlayer
+                    dataCamValue={this.props.marker.extraData.dataCamValue}
+                    setCountError={this.props.setCountError}
+                    channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
+                    region={this.props.marker.extraData.dataCamValue.amazon_region}
+                    height={this.props.height}
+                    width={this.props.width}
+                    src={this.props.marker.extraData.url}
+                    num_cam={this.props.marker.extraData.num_cam}
+                    infoServer={this.props.marker.extraData.dataCamValue.UrlStreamMediaServer}
+                  />
+                ) : (
+                  <canvas
+                    ref="camRef"
+                    id={'canvasCamaraStream' + data.id}
+                    style={{ width: '100%', height: '100%' }}
+                  />
+                )}
+                {tryReconect ? 'Reconectando...' : null}
+              </div>
+            </div>
+            {this.props.hideText ? null : (
+              <div align="left">
+                <div id={`cameraInfo-${this.props.marker.extraData.num_cam}`}>
+
+                  {cameraName && !this.props.hideInfo ? <p>
+                    Direccion: {cameraName}
+                  </p> : null}
+                  {this.props.marker.extraData.dataCamValue.entrecalles ? <p>
+                    Entre calles: {this.props.marker.extraData.dataCamValue.entrecalles}
+                  </p> : null}
                 </div>
+                <hr />
+
+                {data.rel_cuadrante ? data.rel_cuadrante.length !== 0 ? (
+                  data.rel_cuadrante.map(
+                    (item) =>
+                      item.Cuadrante && item.Cuadrante.activo ? (
+                        <Label key={item.id} className="styleTag" as="a" tag onClick={() => this._goToCuadrante(item.id_cuadrante)}>{item.Cuadrante.name}</Label>
+                      ) : null
+                  )
+                ) : null : null}
+                {this.props.hideButton ? null : (
+                  <div>
+                    <br />
+                    <Button onClick={() => this.setState({ showModalMoreInformation: true })} className="ml-2 mt-1">Más información</Button>
+                    {
+                      !copyButton ?
+                        <Button className="ml-2 mt-1" style={{ backgroundColor: "#4B4A49", color: "#f5f5f5" }} onClick={() => { this._handleCopy(); this.setState({ copyText: document.getElementById(`cameraInfo-${this.props.marker.extraData.num_cam}`).textContent }) }}>
+                          <i data-content="Hello. This is an inverted popup" data-variation="inverted">
+                            <FaClipboard />
+                          </i>
+                        </Button>
+                        :
+                        <Button className="ml-2 mt-1" style={{ backgroundColor: "#4B4A49", color: "#f5f5f5" }} disabled><FaClipboardCheck /></Button>
+                    }
+                  </div>
+                )}
+
+                {showModalMoreInformation ? (
+                  <ModalMoreInformation
+                    dataCamValue={this.props.marker.extraData.dataCamValue}
+                    propsIniciales={this.props.propsIniciales}
+                    modal={showModalMoreInformation}
+                    hide={() => this.setState({ showModalMoreInformation: false })}
+                    cam_id={cameraID}
+                    data_cam={cameraName}
+                  />
+                ) : null}
+              </div>
+            )}
+            {this.props.showButtons ? (
+              <Card.Footer>
+                {this.props.moduleActions ? this.props.moduleActions.btnsnap ? <Button basic disabled={photos.length >= 5 || loadingSnap || isLoading || isRecording || restarting || loadingFiles} loading={loadingSnap} onClick={() => this._snapShot(this.props.marker.extraData)}><i className='fa fa-camera' /></Button> : null : null}
+                {/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._togglePlayPause}><i className={isPlay?'fa fa-pause':'fa fa-play'}/></Button>*/}
+                {this.props.moduleActions ? this.props.moduleActions.btnrecord && (typeMBOX && removeSpaces(typeMBOX) !== 'axxon') ? <Button basic disabled={videos.length >= 5 || loadingSnap || isLoading || restarting || loadingFiles} loading={isLoading} onClick={() => this.recordignToggle()}><i className={isRecording ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button> : null : null}
+                <Button basic disabled={loadingFiles || loadingSnap || isLoading || restarting || videosLoading || photosLoading || (photos.length <= 0 && videos.length <= 0)} loading={loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download' /></Button>
+                {this.props.hideFileButton ? null : <Button className="pull-right" variant="outline-secondary" onClick={() => { this.setState({ showData: !showData }) }}><i className={showData ? 'fa fa-video-camera' : 'fa fa-list'} /></Button>}
+                {this.props.showExternal ? <Button basic disabled={loadingSnap || isLoading || isRecording || restarting || loadingFiles} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + data.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link" /></Button> : null}
+                <Button basic disabled={loadingSnap || isLoading || isRecording || restarting || loadingFiles} onClick={() => this.setState({ modalProblem: true })}><i className="fa fa-warning" /></Button>
+                <Button basic onClick={this._chageCamStatus}><i className="fa fa-exchange" /></Button>
+                {this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <Button basic onClick={() => this.Clicked(this.props.marker.extraData.dataCamValue.dns)}><i className="fa fa-sliders" /></Button> : null}
+                {this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.camera_ip != null ? <Button basic onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows" /></Button> : null}
+                {/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/></Button>*/}
+              </Card.Footer>
+            ) : null}
+          </Card.Body>
+        )}
+        {this.props.showFilesBelow ? (
+          <div className="row dataHolder p10">
+            {showPTZ ?
+              <div className="col ptz">
+                Controles
+                <ControlPTZ
+                  camera={data}
+                  isInMap={false}
+                  hasMatch={false}
+                />
+              </div>
+              :
+              <>
+                {typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
+                  <div className="col snapshots">
+                    Fotos
+                    <div>
+                      {photosLoading ? (
+                        this._renderLoading()
+                      ) : photos.length > 0 ? (
+                        <div className="row">
+                          {photos.map((value, index) => (
+                            <MediaContainer
+                              cam={data}
+                              key={index}
+                              value={value}
+                              isQnap={qnapServer && qnapChannel}
+                              exists_image={true}
+                              src={value.relative_url}
+                              reloadData={this._loadFiles}
+                              servidorMultimedia={servidorMultimedia}
+                              port={portContainer}
+                              dnsContainer={dnsContainer}
+                              userIdContainer={this.getUserID()}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div align="center">
+                          <p className="big-letter">No hay archivos que mostrar</p>
+                          <i className="fa fa-image fa-5x" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                }
                 <div id={`scrollVideo#${data.id}`} className="col videos">
                   Videos
                   <Tab
                     align="center"
                     activeIndex={activeIndex}
-                    onTabChange={(e, { activeIndex }) => this.tabHandler(activeIndex)}
+                    onTabChange={(e, { activeIndex }) => { this.tabHandler(activeIndex) }}
                     menu={{ secondary: true, pointing: true }}
                     panes={[
-                      {
+                      typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && {
                         menuItem: 'Grabaciones',
                         render: () => (
                           <Tab.Pane attached={false}>
@@ -293,185 +515,7 @@ class CameraStream extends Component {
                     ]}
                   />
                 </div>
-              </div>
-            ) : null}
-            <div className={showData ? 'camHolder hideCamHolder' : 'camHolder'} style={{ width: '100%' }} align="center">
-              <div ref="camHolder" style={{ width: '100%', height: this.props.height ? this.props.height : '100%' }}>
-                {this.props.marker.extraData.isRtmp ? (
-                  <RtmpPlayer
-                    height={this.props.height}
-                    src={this.props.marker.extraData.url}
-                    num_cam={this.props.marker.extraData.num_cam}
-                  />
-                ) : !this.props.marker.extraData.dataCamValue.is_amazon_stream && this.props.marker.extraData.dataCamValue.amazon_arn_channel ? (
-                  <WssPlayer
-                    channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
-                    region={this.props.marker.extraData.dataCamValue.amazon_region}
-                    height={this.props.height}
-                    width={this.props.width}
-                    num_cam={this.props.marker.extraData.num_cam}
-                  />
-                ) : this.props.marker.extraData.isHls ? (
-                  <HlsPlayer
-                    channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
-                    region={this.props.marker.extraData.dataCamValue.amazon_region}
-                    height={this.props.height}
-                    width={this.props.width}
-                    src={this.props.marker.extraData.url}
-                    num_cam={this.props.marker.extraData.num_cam}
-                    infoServer={this.props.marker.extraData.dataCamValue.UrlStreamMediaServer}
-                  />
-                ) : (
-                  <canvas
-                    ref="camRef"
-                    id={'canvasCamaraStream' + data.id}
-                    style={{ width: '100%', height: '100%' }}
-                  />
-                )}
-                {tryReconect ? 'Reconectando...' : null}
-              </div>
-            </div>
-            {this.props.hideText ? null : (
-              <div align="left">
-                {cameraName && !this.props.hideInfo ? <p>
-                  Direccion: {cameraName}
-                </p> : null}
-                {this.props.marker.extraData.dataCamValue.entrecalles ? <p>
-                  Entre calles: {this.props.marker.extraData.dataCamValue.entrecalles}
-                </p> : null}
-                {data.rel_cuadrante ? data.rel_cuadrante.length !== 0 ? (
-                  data.rel_cuadrante.map(
-                    (item) =>
-                      item.Cuadrante && item.Cuadrante.activo ? (
-                        <Label key={item.id} className="styleTag" as="a" tag onClick={() => this._goToCuadrante(item.id_cuadrante)}>{item.Cuadrante.name}</Label>
-                      ) : null
-                  )
-                ) : null : null}
-                {this.props.hideButton ? null : (
-                  <div>
-                    <br />
-                    <Button onClick={() => this.setState({ showModalMoreInformation: true })} className="ml-2 mt-1">Más información</Button>
-                  </div>
-                )}
-
-                {showModalMoreInformation ? (
-                  <ModalMoreInformation
-                    dataCamValue={this.props.marker.extraData.dataCamValue}
-                    propsIniciales={this.props.propsIniciales}
-                    modal={showModalMoreInformation}
-                    hide={() => this.setState({ showModalMoreInformation: false })}
-                    cam_id={cameraID}
-                    data_cam={cameraName}
-                  />
-                ) : null}
-              </div>
-            )}
-            {this.props.showButtons ? (
-              <Card.Footer>
-                {this.props.moduleActions ? this.props.moduleActions.btnsnap ? <Button basic disabled={photos.length >= 5 || loadingSnap || isLoading || isRecording || restarting || loadingFiles} loading={loadingSnap} onClick={() => this._snapShot(this.props.marker.extraData)}><i className='fa fa-camera' /></Button> : null : null}
-                {/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._togglePlayPause}><i className={isPlay?'fa fa-pause':'fa fa-play'}/></Button>*/}
-                {this.props.moduleActions ? this.props.moduleActions.btnrecord ? <Button basic disabled={videos.length >= 5 || loadingSnap || isLoading || restarting || loadingFiles} loading={isLoading} onClick={() => this.recordignToggle()}><i className={isRecording ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button> : null : null}
-                <Button basic disabled={loadingFiles || loadingSnap || isLoading || restarting || videosLoading || photosLoading || (photos.length <= 0 && videos.length <= 0)} loading={loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download' /></Button>
-                {this.props.hideFileButton ? null : <Button className="pull-right" variant="outline-secondary" onClick={() => { this.setState({ showData: !showData }) }}><i className={showData ? 'fa fa-video-camera' : 'fa fa-list'} /></Button>}
-                {this.props.showExternal ? <Button basic disabled={loadingSnap || isLoading || isRecording || restarting || loadingFiles} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + data.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link" /></Button> : null}
-                <Button basic disabled={loadingSnap || isLoading || isRecording || restarting || loadingFiles} onClick={() => this.setState({ modalProblem: true })}><i className="fa fa-warning" /></Button>
-                <Button basic onClick={this._chageCamStatus}><i className="fa fa-exchange" /></Button>
-                {this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <Button basic onClick={() => this.Clicked(this.props.marker.extraData.dataCamValue.dns)}><i className="fa fa-sliders" /></Button> : null}
-                {this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.camera_ip != null ? <Button basic onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows" /></Button> : null}
-                {/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/></Button>*/}
-              </Card.Footer>
-            ) : null}
-          </Card.Body>
-        )}
-        {this.props.showFilesBelow ? (
-          <div className="row dataHolder p10">
-            {showPTZ &&
-              <div className="col ptz">
-                Controles
-                <ControlPTZ
-                  camera={data}
-                  isInMap={false}
-                  hasMatch={false}
-                />
-              </div>
-            }
-            <div className="col snapshots">
-              Fotos
-              <div>
-                {photosLoading ? (
-                  this._renderLoading()
-                ) : photos.length > 0 ? (
-                  <div className="row">
-                    {photos.map((value, index) => (
-                      <MediaContainer
-                        cam={data}
-                        key={index}
-                        value={value}
-                        isQnap={false}
-                        exists_image={true}
-                        src={value.relative_url}
-                        reloadData={this._loadFiles}
-                        servidorMultimedia={servidorMultimedia}
-                        port={portContainer}
-                        dnsContainer={dnsContainer}
-                        userIdContainer={this.getUserID()}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div align="center">
-                    <p className="big-letter">No hay archivos que mostrar</p>
-                    <i className="fa fa-image fa-5x" />
-                  </div>
-                )}
-              </div>
-            </div>
-            <div id={`scrollVideo#${data.id}`} className="col videos">
-              Videos
-              <Tab
-                align="center"
-                activeIndex={activeIndex}
-                onTabChange={(e, { activeIndex }) => { this.tabHandler(activeIndex) }}
-                menu={{ secondary: true, pointing: true }}
-                panes={[
-                  {
-                    menuItem: 'Grabaciones',
-                    render: () => (
-                      <Tab.Pane attached={false}>
-                        {this._renderVideoList(videosLoading, videos)}
-                      </Tab.Pane>
-                    )
-                  },
-                  this.props.moduleActions && this.props.moduleActions.viewHistorial && {
-                    menuItem: 'Ultimas 24 Horas',
-                    render: () => (
-                      <Tab.Pane attached={false}>
-                        {this._renderVideoList(
-                          historyLoading,
-                          video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
-                          true,
-                          video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
-                          true, inputCkecked, false, true
-                        )}
-                      </Tab.Pane>
-                    )
-                  },
-                  qnapServer && qnapChannel && {
-                    menuItem: 'Busqueda Avanzada',
-                    render: () => (
-                      <Tab.Pane attached={false}>
-                        <AdvancedSearch
-                          loading={searchLoading}
-                          _searchFileVideos={this._searchFileVideos}
-                        />
-                        {(isNewSearch || searchLoading) && <hr />}
-                        {this._renderVideoList(searchLoading, video_search, isNewSearch)}
-                      </Tab.Pane>
-                    )
-                  }
-                ]}
-              />
-            </div>
+              </>}
           </div>
         ) : null}
         <Modal size="lg" show={modal} onHide={() => this.setState({ modal: false })}>
@@ -635,7 +679,7 @@ class CameraStream extends Component {
           <MediaContainer
             key={idx}
             value={list}
-            isQnap={false}
+            isQnap={qnapServer && qnapChannel}
             dns_ip={hasDns && `http://${hasDns}`}
             exists_video={true}
             cam={selectedCamera}
@@ -682,17 +726,19 @@ class CameraStream extends Component {
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
   _sendReport = () => {
-    console.log(this.state.cameraProblem);
     this.setState({ modalProblem: false });
+    // console.log(this.state.phones, this.state.mails)
     conections
       .sendTicket({
         camera_id: this.state.data.id,
         problem: this.state.problemDescription,
         phones: this.state.phones.join(),
         mails: this.state.mails.join(),
-        type_report: this.state.typeReport
+        type_report: this.state.typeReport,
+        user_id: JSON.parse(sessionStorage.getItem("isAuthenticated")).userInfo.user_id || 1,
       })
       .then((response) => {
+        // console.log(response)
         const data = response.data;
         this.setState({ problemDescription: '' });
         if (data.success) {
@@ -760,6 +806,18 @@ class CameraStream extends Component {
 
     }
   };
+
+  _handleCopy = () => {
+
+    this.setState({ copyButton: true })
+    setTimeout(() => {
+      copy(this.state.copyText)
+    }, 300);
+
+    setTimeout(() => {
+      this.setState({ copyButton: false })
+    }, 2500);
+  }
 
   componentDidMount() {
     //   console.log(this.props)
@@ -868,12 +926,94 @@ class CameraStream extends Component {
   };
 
   _snapShot = async (camera) => {
-    this.setState({ loadingSnap: true });
-    let response = await conections.snapShotV2(camera.id);
-    const data = response.data;
-    if (data.success) this._loadFiles(camera, false, false, false, true);
-    this.setState({ loadingSnap: false });
+    const { dnsPort, typeMBOX, historyServerProtocol, historicalPassword, historicalUser, historyServerDns } = this.state;
+    let title = 'Descarga de fotografía', message = Strings.unprocessed, level = 'warning';
+
+    if (typeMBOX && removeSpaces(typeMBOX) === 'axxon') {
+      this.setState({ loadingSnap: true });
+      const payload = { cam_id: camera.id };
+      const getVideoStream = await conections.getVideoStreams(payload);
+
+      if (getVideoStream.data && getVideoStream.data.success) {
+        const { data: { data } } = getVideoStream;
+        const videoSourceId = data[0].accessPoint;
+        const password = historicalPassword;
+        const user = historicalUser;
+        let url = null;
+
+        if (historyServerProtocol && historyServerDns) {
+          if (dnsPort == 80 || dnsPort == 443) {
+            url = `${historyServerProtocol}://${historyServerDns}/live/media/snapshot/${videoSourceId}`;
+          } else {
+            url = `${historyServerProtocol}://${historyServerDns}:${dnsPort}/live/media/snapshot/${videoSourceId}`;
+          }
+
+          const credentials = Buffer.from(`${user}:${password}`).toString('Base64')
+          let xhr = new XMLHttpRequest();
+          xhr.withCredentials = true;
+          xhr.open('GET', url, true);
+          xhr.setRequestHeader("Authorization", "Basic " + credentials)
+          xhr.responseType = 'blob';
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+          xhr.onerror = () => {
+            if (xhr.status == 401) { console.log("onerror:", xhr.status) }
+            this.setState({ loadingSnap: false });
+            this.addNotification({ message, level, title });
+          };
+
+          xhr.onload = (e) => {
+            let blob = xhr.response;
+            if (blob && xhr.status === 200) {
+              const fileName = `CAM${camera.id}.jpeg`;
+              this.saveFile(blob, fileName);
+              this.setState({ loadingSnap: false });
+            } else {
+              this.addNotification({ message, level, title });
+              this.setState({ loadingSnap: false });
+            }
+          };
+          xhr.send();
+        } else {
+          this.addNotification({ message, level, title });
+          this.setState({ loadingSnap: false });
+        }
+      } else {
+        this.addNotification({ message, level, title });
+        this.setState({ loadingSnap: false });
+      }
+    } else {
+      if (typeMBOX) {
+        this.setState({ loadingSnap: true });
+        let response = await conections.snapShotV2(camera.id);
+        const data = response.data;
+        if (data.success) this._loadFiles(camera, false, false, false, true);
+        this.setState({ loadingSnap: false });
+      }
+    }
   };
+
+  addNotification = (info) => {
+    const notification = this.notificationSystem.current;
+    notification.addNotification({
+      message: info.message,
+      level: info.level,
+      position: 'tc',
+      title: info.title
+    });
+  };
+
+  saveFile = (blob, fileName) => {
+    let tempEl = document.createElement("a");
+    document.body.appendChild(tempEl);
+    tempEl.style = "display: none";
+    let url = window.URL.createObjectURL(blob);
+    tempEl.href = url;
+    tempEl.download = fileName;
+    tempEl.click();
+    window.URL.revokeObjectURL(url);
+  }
 
   _searchFileVideos = async (dates, startHour, endHour, stateNames, setNewState = true, searchFileHours = false) => {
     let { qnapServer, qnapChannel } = this.state;
@@ -1064,12 +1204,13 @@ class CameraStream extends Component {
           } else {
             let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
             if (response.data.data.items.length > 0) {
-              let resHistory = response.data.data;
-              this.setState({ resHistorySearch: resHistory })
+              let resHistory = tipoMBOX && removeSpaces(tipoMBOX) === 'axxon' ? [] : response.data.data;
+              let info = response.data.data;
+              this.setState({ resHistorySearch: resHistory, historicalPassword: info.historicalPassword, historicalUser: info.historicalUser, historyServerPort: info.dns_port, historyServerDns: info.dns_ip, historyServerProtocol: info.protocol, dnsPort: dns_portMbox })
               if (resHistory.items.length > 0) {
                 let dns_ip = dnsMbox
                 let dns_port = dns_portMbox
-                this.setState({ dns_portdnsPort: dns_port })
+                this.setState({ dns_portdnsPort: dns_port, dnsPort: dns_port })
                 if (resHistory) {
                   let dates = createArrDate(resHistory.items);
                   let arrayHistoricos = []
@@ -1260,8 +1401,10 @@ class CameraStream extends Component {
           if (resHistory.items.length > 0) {
             if (resHistory) {
               let dates = createArrDate(resHistory.items);
-              let hours_last_day = createArrHour(dates[last_day].videos);
-              conjunto.push(Object.values(hours_last_day).reverse().reverse())
+              if (dates[last_day]) {
+                let hours_last_day = createArrHour(dates[last_day].videos);
+                conjunto.push(Object.values(hours_last_day).reverse().reverse())
+              }
             } else {
               this.setState({ video_history: [], historyLoading: false });
               this.spinnerif();
@@ -1275,15 +1418,15 @@ class CameraStream extends Component {
         let conjunto2 = []
         for (let index = 0; index < countArraySearch - 1; index++) {
           if (!conjunto2.length) {
-            conjunto2.push(conjunto[index])
+            conjunto[index] && conjunto2.push(conjunto[index])
           } else {
-            conjunto[index].map(videos => {
+            conjunto[index] && conjunto[index].map(videos => {
               return conjunto2[0].push(videos)
             })
           }
 
         }
-        conjunto2[0].map(videos => {
+        conjunto2[0] && conjunto2[0].map(videos => {
           return pruebas[0][1].push(videos)
         })
         this.setState({ video_advancedSearch: pruebas })

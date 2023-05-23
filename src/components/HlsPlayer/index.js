@@ -1,21 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import Clappr from 'clappr';
+import axios from 'axios';
 
-import Spinner from 'react-bootstrap/Spinner';
 import * as KNSFunctions from '../../functions/getAmazonKinesis';
+import Spinner from 'react-bootstrap/Spinner';
+import constants from '../../constants/constants';
 
 const HlsPlayer = (props) => {
-	const [ src, setSrc ] = useState(null);
-	const [ player, setPlayer ] = useState(null);
-	const [ loading, setLoading ] = useState(false);
-	const [ amazonSrc, setAmazonSrc ] = useState(null);
+	const [src, setSrc] = useState(null);
+	const [player, setPlayer] = useState(null);
+	const [loading, setLoading] = useState(false);
+	const [amazonSrc, setAmazonSrc] = useState(null);
 
 	useEffect(() => {
 		setLoading(true);
 		if (!props.channelARN) {
-			setSrc(props.src);
-			_handleCreatePlayer(props.src);
+			let body = {
+				"server": constants.server_axxon,
+				"user": "root",
+				"password": "root",
+				"serial_number": props.dataCamValue.display_number,
+			};
+			if (props.dataCamValue.display_number) {
+				axios.post(constants.api_axxon, body)
+					.then(response => {
+						if (response.data.success && response.data.data && response.data.data.length > 0) {
+							let newSrc = constants.server_axxon + response.data.data[0].hls;
+							setSrc(newSrc);
+							_handleCreatePlayer(newSrc);
+						} else {
+							setSrc(props.src);
+							_handleCreatePlayer(props.src);
+						}
+					})
+					.catch(err => console.log(err));
+			}
+			else {
+				setSrc(props.src);
+				_handleCreatePlayer(props.src);
+			}
+
 		} else KNSFunctions.GetHlsStream(props).then((res) => setAmazonSrc(res));
+
 	}, []);
 	useEffect(() => {
 		if (amazonSrc) {
@@ -24,7 +50,7 @@ const HlsPlayer = (props) => {
 				_handleCreatePlayer(amazonSrc.HLSStreamingSessionURL);
 			} else _handleCreatePlayer(props.src);
 		}
-	}, [ amazonSrc ]);
+	}, [amazonSrc]);
 	useEffect(() => {
 		if (player !== null) {
 			_loadPlayer();
@@ -33,12 +59,19 @@ const HlsPlayer = (props) => {
 		return () => {
 			if (player) player.destroy();
 		};
-	}, [ player ]);
+	}, [player]);
 
 	// Functions
 	const _handleCreatePlayer = async (src = null) => {
-		if (player) await player.destroy();
-		await _newPlayer(src);
+		if (props.dataCamValue.display_number) {
+			setTimeout(async () => {
+				if (player) await player.destroy();
+				await _newPlayer(src);
+			}, 5000);
+		} else {
+			if (player) await player.destroy();
+			await _newPlayer(src);
+		}
 	};
 	const _newPlayer = (src) => {
 		let height = {};
@@ -53,7 +86,14 @@ const HlsPlayer = (props) => {
 			...width,
 			...height,
 			autoPlay: true,
+			mute: true,
 			hideVolumeBar: true,
+			strings: {
+				'en': {
+					'default_error_title': 'High latency.',
+					'default_error_message': 'Will come back soon.',
+				},
+			},
 			playback: {
 				playInline: true,
 				hlsjsConfig: {
@@ -100,7 +140,60 @@ const HlsPlayer = (props) => {
 					enableWebVTT: true,
 					enableCEA708Captions: true,
 					stretchShortVideoTrack: false,
-					forceKeyFrameOnDiscontinuity: true
+					forceKeyFrameOnDiscontinuity: true,
+					xhrSetup: function (xhr, url) {
+
+						if (props.infoServer.autenticacion === 1) {
+							const { infoServer } = props;
+							if (infoServer.secretkey) {
+								xhr.withCredentials = false;
+
+								let splitformta = url.split("?")
+
+								xhr.open('GET', splitformta[0] + String(props.infoServer.secretkey));
+							} else if (infoServer.password && infoServer.user) {
+								const password = infoServer.password;
+								const user = infoServer.user;
+								xhr.withCredentials = true;
+								xhr.open("GET", url, true);
+								xhr.setRequestHeader("Authorization", "Basic " + Buffer.from(`${user}:${password}`).toString('Base64'));
+								xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+								xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+								xhr.onload = function (e) {
+									if (xhr.status == 401) {
+										console.log("onload:", xhr.status)
+									}
+								};
+
+								xhr.onerror = (e) => {
+									if (xhr.status == 401) {
+										console.log("onerror:", xhr.status)
+									}
+								};
+							}
+						}
+						else if (props.dataCamValue.display_number && src !== props.src) {
+							const password = "root";
+							const user = "root";
+							xhr.withCredentials = true;
+							xhr.open("GET", url, true, user, password);
+							xhr.setRequestHeader("Authorization", "Basic " + Buffer.from(`${user}:${password}`).toString('Base64'));
+							xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+							xhr.onload = function (e) {
+								if (xhr.status == 401 || xhr.status == 404) {
+									console.log("onload:", xhr)
+									console.log("onload:", xhr.status)
+								}
+							};
+
+							xhr.onerror = (e) => {
+								if (xhr.status == 401) {
+									console.log("onerror:", xhr.status)
+								}
+							};
+						}
+					},
 				}
 			},
 			preload: 'metadata'
@@ -109,17 +202,19 @@ const HlsPlayer = (props) => {
 	};
 	const _loadPlayer = () => {
 		player.on(Clappr.Events.PLAYER_ERROR, (err) => {
-			console.log('error en el player', err);
-			console.log('error en el player code', err.code);
-			if (
-				err.code === 'hls:3' ||
-				err.code === 'hls:networkError_levelLoadTimeOut' ||
-				err.code === 'hls:networkError_manifestLoadTimeOut'
-			) {
-				console.log('network error', src);
-				player.load(src);
-				player.play();
-			}
+			// props.setCountError && props.setCountError(props.dataCamValue.num_cam);
+				console.log('error en el player', err);
+				console.log('error en el player code', err.code);
+				if (
+					err.code === 'hls:3' ||
+					err.code === 'hls:networkError_levelLoadTimeOut' ||
+					err.code === 'hls:networkError_levelLoadError' ||
+					err.code === 'hls:networkError_manifestLoadTimeOut'
+				) {
+					console.log('network error', src);
+					player.load(src);
+					player.play();
+				}
 		});
 	};
 

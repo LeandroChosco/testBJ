@@ -9,11 +9,13 @@ import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 import ModalChangePassword from "./ModalChangePassword";
+// import ModalCuadrantes from "./ModalCuadrantes";
 
 class Header extends Component {
 
   state = {
-    showModal: false
+    showModal: false,
+    // showCuadrantes: false,
   }
 
   _cameraAction = () => {
@@ -217,6 +219,16 @@ class Header extends Component {
     this.setState({ showModal: false })
   }
 
+  // _handleCuadrantes = () => {
+  //   if (!this.state.showCuadrantes) {
+  //     this.setState({ showCuadrantes: true })
+  //   }
+  // }
+
+  // _hideCuadrantes = () => {
+  //   this.setState({ showCuadrantes: false })
+  // }
+
   _logOut = () => {
     if (this.props.sideMenu) {
       this.props._toggleSideMenu();
@@ -297,7 +309,7 @@ class Header extends Component {
                                                         ? this._goLPR
                                                         : value.id === 17
                                                           ? this._goRegister
-                                                          : null
+                                                        : null
                       }
                     >
                       {value.id === 12 ?
@@ -337,7 +349,7 @@ class Header extends Component {
                                                           ? "fa fa-id-card"
                                                           : value.id === 17
                                                             ? "fa fa-id-card"
-                                                            : null
+                                                          : null
                           }
                         ></i>
                       }
@@ -348,7 +360,7 @@ class Header extends Component {
               ))
               : null}
           </Nav>
-          <Nav>
+          <Nav style={{ paddingRight: "3.5rem" }}>
             {/*this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this.props._reloadCams}>
                         <i className={this.props.loadingRestart?'fa fa-repeat fa-spin':"fa fa-repeat"}></i>
                 </Button>:null*/}
@@ -359,9 +371,19 @@ class Header extends Component {
               <NavDropdown.Item onClick={this._handleModal}>
                 Cambiar contraseña
               </NavDropdown.Item>
+              {/* <NavDropdown.Item onClick={this._goRegister}>
+                Settings
+              </NavDropdown.Item>
+              {
+                // (JSON.parse(sessionStorage.getItem("isAuthenticated")).userInfo.user_id === 1 || JSON.parse(sessionStorage.getItem("isAuthenticated")).userInfo.user_id === 2) && 
+                <NavDropdown.Item onClick={this._handleCuadrantes}>
+                  Asignación de cuadrantes
+                </NavDropdown.Item>
+              } */}
               {showModal && <ModalChangePassword modal={showModal} hideModal={this._hideModal} />}
+              {/* {showCuadrantes && <ModalCuadrantes modal={showCuadrantes} hideModal={this._hideCuadrantes} />} */}
               <NavDropdown.Item onClick={this._logOut}>
-                Cerrar sesion
+                Cerrar sesión
               </NavDropdown.Item>
             </NavDropdown>
             {this.props.userInfo.role_id === 1 ? (

@@ -29,5 +29,5 @@ export default ControlPTZ;
 
 const styles = {
   container: { marginTop: 5 },
-  content: { paddingTop: 5, paddingBottom: 5 }
+  content: { padding: "2rem", display: "flex", justifyContent: "center" }
 };
