@@ -11,10 +11,11 @@ import constants from '../../constants/constants';
 import { remove } from "../../helpers/remove"
 
 import { REACT_APP_ENCRYPT_KEY } from "../../env";
-import { SAILS_ACCESS_TOKEN } from '../../constants/token';
+import { LANG, MODE, SAILS_ACCESS_TOKEN } from '../../constants/token';
 
 import { useMutation } from "@apollo/client";
 import { CHANGE_PASSWORD } from "../../graphql/mutations";
+
 
 import logo from '../../assets/images/icons/favicon.jpg'
 
@@ -94,8 +95,8 @@ const ModalChangePassword = ({ modal, hideModal }) => {
                 }
             }
         }).then(response => {
-            console.log(response)
-            // if (response.data.recoveryPassWeb.success) {
+            // console.log(response)
+            if (response.data.recoveryPassWeb.success) {
                 setTimeout(() => {
                     setIsloading(false)
                     ToastsStore.success(`Contraseña cambiada con éxito.`)
@@ -103,20 +104,20 @@ const ModalChangePassword = ({ modal, hideModal }) => {
                 }, 2000);
 
                 setTimeout(() => {
-                    ToastsStore.success(`Será redirigido al login.`)
+                    ToastsStore.success(`Será redirigido al login en 5 segundos...`)
                 }, 4000);
 
                 setTimeout(() => {
                     remove();
                 }, 9000);
 
-            // } else {
-            //     setTimeout(() => {
-            //         setIsloading(false)
-            //         ToastsStore.error(`Algo salió mal! Intente nuevamente o contáctese con soporte.`)
-            //         hideModal()
-            //     }, 2000);
-            // }
+            } else {
+                setTimeout(() => {
+                    setIsloading(false)
+                    ToastsStore.error(`Algo salió mal! Intente nuevamente o contáctese con soporte.`)
+                    hideModal()
+                }, 2000);
+            }
 
         })
             .catch(error => {
@@ -133,7 +134,7 @@ const ModalChangePassword = ({ modal, hideModal }) => {
         <div>
             <Modal size="lg" backdrop={"static"} show={modal} onHide={hideModal}>
                 <Modal.Header closeButton>
-                    <h3>Cambiar contraseña</h3>
+                    <h3>{localStorage.getItem(LANG) === "english" ? "Change password" : "Cambiar contraseña"}</h3>
                 </Modal.Header>
                 <div className="container-login100 cityBackground" style={{ minHeight: "10rem", padding: "3.5rem" }}>
                     <div className="wrap-login100" style={{ alignItems: 'center', justifyContent: 'center', marginBottom: "3rem", marginTop: "2rem" }}>
@@ -145,26 +146,27 @@ const ModalChangePassword = ({ modal, hideModal }) => {
                             />
                         </span>
                         <span className="login10-form-title p-b-34 p-t-27" style={{ color: 'white', padding: "1rem", marginBottom: "1rem" }}>
-                            <h3>Ingrese su nueva contraseña. La misma debe:</h3>
+                            <h3>{localStorage.getItem(LANG) === "english" ? "Enter your new password. It must:" : "Ingrese su nueva contraseña. La misma debe:"}</h3>
                             <ul style={{ marginBottom: "1rem" }}>
                                 <li>
                                     <h5>
-                                        - Contener al menos 7 caracteres.
+                                        {localStorage.getItem(LANG) === "english" ? "- Contain at least 7 characters." : "- Contener al menos 7 caracteres."}
                                     </h5>
                                 </li>
                                 <li>
                                     <h5>
-                                        - Ser fácil de recordar.
+                                        {localStorage.getItem(LANG) === "english" ? "- Be easy to remember." : "- Ser fácil de recordar."}
                                     </h5>
                                 </li>
+
                             </ul>
                         </span>
                         <br />
                         <Form onSubmit={handleReset}>
                             <Form.Field>
-                                <label style={{ color: "white" }}>Contraseña actual</label>
+                                <label style={{ color: "white" }}>{localStorage.getItem(LANG) === "english" ? "Current password" : "Contraseña actual"}</label>
                                 <input
-                                    placeholder="Ingrese su contraseña actual..."
+                                    placeholder={localStorage.getItem(LANG) === "english" ? "Enter your current password..." : "Ingrese su contraseña actual..."}
                                     name="old_password"
                                     type="password"
                                     value={dataForm.old_password}
@@ -174,9 +176,9 @@ const ModalChangePassword = ({ modal, hideModal }) => {
                                 />
                             </Form.Field>
                             <Form.Field>
-                                <label style={{ color: "white" }}>Nueva contraseña</label>
+                                <label style={{ color: "white" }}>{localStorage.getItem(LANG) === "english" ? "New password" : "Nueva contraseña"}</label>
                                 <input
-                                    placeholder="Ingrese su nueva contraseña..."
+                                    placeholder={localStorage.getItem(LANG) === "english" ? "Enter your new password..." : "Ingrese su nueva contraseña..."}
                                     name="password"
                                     type="password"
                                     value={dataForm.password}
@@ -186,9 +188,9 @@ const ModalChangePassword = ({ modal, hideModal }) => {
                                 />
                             </Form.Field>
                             <Form.Field>
-                                <label style={{ color: "white" }}>Confirmar contraseña</label>
+                                <label style={{ color: "white" }}>{localStorage.getItem(LANG) === "english" ? "Confirm password" : "Confirmar contraseña"}</label>
                                 <input
-                                    placeholder="Confirme su contraseña..."
+                                    placeholder={localStorage.getItem(LANG) === "english" ? "Confirm your new password..." : "Confirme su nueva contraseña..."}
                                     name="check_password"
                                     type="password"
                                     value={dataForm.check_password}
@@ -205,7 +207,7 @@ const ModalChangePassword = ({ modal, hideModal }) => {
                                     dataForm.password !== dataForm.check_password
                                 }
                             >
-                                Cambiar contraseña
+                                {localStorage.getItem(LANG) === "english" ? "Change password" : "Cambiar contraseña"}
                             </Button>
                         </Form>
                     </div>

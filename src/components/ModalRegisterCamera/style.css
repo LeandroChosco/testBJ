@@ -1,0 +1,36 @@
+.styleContent{
+    height: 32vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.styleInput{
+    width: 380px !important;
+    margin-left: 43px;
+    margin-top: 5px;
+}
+
+.styleFoto{
+    display: flex;
+    margin: 5px auto;
+    height: 150px;
+    width: 120px;
+}
+
+.styleBtnAdd{
+    width: auto !important;
+    margin: auto !important;
+}
+
+.btnSearch{
+    padding: 7px;
+    border: solid 1px darkgray;
+    border-radius: 2px;
+}
+
+.page-btn{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px
+}

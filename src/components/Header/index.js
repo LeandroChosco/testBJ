@@ -9,14 +9,17 @@ import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 import ModalChangePassword from "./ModalChangePassword";
-// import ModalCuadrantes from "./ModalCuadrantes";
+import { LANG, MODE } from "../../constants/token";
+import { Dropdown } from "semantic-ui-react";
 
 class Header extends Component {
 
   state = {
     showModal: false,
-    // showCuadrantes: false,
+    language: "spanish",
+    mode: "light",
   }
+
 
   _cameraAction = () => {
     document
@@ -219,16 +222,6 @@ class Header extends Component {
     this.setState({ showModal: false })
   }
 
-  // _handleCuadrantes = () => {
-  //   if (!this.state.showCuadrantes) {
-  //     this.setState({ showCuadrantes: true })
-  //   }
-  // }
-
-  // _hideCuadrantes = () => {
-  //   this.setState({ showCuadrantes: false })
-  // }
-
   _logOut = () => {
     if (this.props.sideMenu) {
       this.props._toggleSideMenu();
@@ -246,7 +239,30 @@ class Header extends Component {
   };
 
   render() {
-    const { showModal } = this.state
+    const { showModal } = this.state;
+    const languages = [
+      {
+        key: 'Español',
+        flag: "mx",
+        text: 'Español',
+        value: 'spanish',
+      },
+      {
+        key: 'English',
+        flag: "us",
+        text: 'English',
+        value: 'english',
+      }
+    ];
+
+    if (localStorage.getItem(LANG) && this.state.language !== localStorage.getItem(LANG)) {
+      this.setState({ language: localStorage.getItem(LANG) });
+    };
+
+    if (localStorage.getItem(MODE) && this.state.mode !== localStorage.getItem(MODE)) {
+      this.setState({ mode: localStorage.getItem(MODE) });
+    };
+
     return (
       <Navbar sticky="top" expand="lg" variant="dark" bg="mh">
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -309,7 +325,7 @@ class Header extends Component {
                                                         ? this._goLPR
                                                         : value.id === 17
                                                           ? this._goRegister
-                                                        : null
+                                                          : null
                       }
                     >
                       {value.id === 12 ?
@@ -349,7 +365,7 @@ class Header extends Component {
                                                           ? "fa fa-id-card"
                                                           : value.id === 17
                                                             ? "fa fa-id-card"
-                                                          : null
+                                                            : null
                           }
                         ></i>
                       }
@@ -364,26 +380,34 @@ class Header extends Component {
             {/*this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this.props._reloadCams}>
                         <i className={this.props.loadingRestart?'fa fa-repeat fa-spin':"fa fa-repeat"}></i>
                 </Button>:null*/}
+            {/* <Dropdown
+              placeholder='Language'
+              closeOnBlur={false}
+              fluid
+              selection
+              options={languages}
+              onChange={this.props.handleLanguage}
+              defaultValue={localStorage.getItem(LANG) || "spanish"}
+              style={{
+                background: "none",
+                color: "white",
+                border: "none",
+                width: "8.5rem"
+              }}
+            /> */}
             <NavDropdown
               className="light"
               title={this.props.userInfo.user_nicename}
             >
               <NavDropdown.Item onClick={this._handleModal}>
-                Cambiar contraseña
+                {this.props.lang === "english" ? "Change password" : "Cambiar contraseña"}
               </NavDropdown.Item>
+              {showModal && <ModalChangePassword modal={showModal} hideModal={this._hideModal} />}
               {/* <NavDropdown.Item onClick={this._goRegister}>
                 Settings
-              </NavDropdown.Item>
-              {
-                // (JSON.parse(sessionStorage.getItem("isAuthenticated")).userInfo.user_id === 1 || JSON.parse(sessionStorage.getItem("isAuthenticated")).userInfo.user_id === 2) && 
-                <NavDropdown.Item onClick={this._handleCuadrantes}>
-                  Asignación de cuadrantes
-                </NavDropdown.Item>
-              } */}
-              {showModal && <ModalChangePassword modal={showModal} hideModal={this._hideModal} />}
-              {/* {showCuadrantes && <ModalCuadrantes modal={showCuadrantes} hideModal={this._hideCuadrantes} />} */}
+              </NavDropdown.Item> */}
               <NavDropdown.Item onClick={this._logOut}>
-                Cerrar sesión
+                {this.props.lang === "english" ? "Log out" : "Cerrar sesión"}
               </NavDropdown.Item>
             </NavDropdown>
             {this.props.userInfo.role_id === 1 ? (

@@ -1,58 +1,58 @@
 import Axios from 'axios';
 import constants from './constants/constants';
-import {SAILS_ACCESS_TOKEN,ACCESS_TOKEN} from './constants/token'
-import {remove} from './helpers/remove'
+import { SAILS_ACCESS_TOKEN, ACCESS_TOKEN } from './constants/token'
+import { remove } from './helpers/remove'
 let SailsToken = localStorage.getItem(SAILS_ACCESS_TOKEN);
 let token = localStorage.getItem(ACCESS_TOKEN)
 
 const connectedRadar = Axios.create({
-  headers:{'Authorization':token}
+  headers: { 'Authorization': token }
 })
 
-const connectedSails =Axios.create({
-  headers: {'Authorization': SailsToken}
+const connectedSails = Axios.create({
+  headers: { 'Authorization': SailsToken }
 })
 
 
-const logOut = (config,TOKEN)=>{
-  SailsToken = localStorage.getItem(TOKEN);  
-   if(!SailsToken || SailsToken==null){
+const logOut = (config, TOKEN) => {
+  SailsToken = localStorage.getItem(TOKEN);
+  if (!SailsToken || SailsToken == null) {
     remove();
-   }else{
-     config.headers.Authorization=SailsToken;
-   }
+  } else {
+    config.headers.Authorization = SailsToken;
+  }
 }
 
-const controlError =(err)=>{
-  if(err.message==="Request failed with status code 500"){
+const controlError = (err) => {
+  if (err.message === "Request failed with status code 500") {
     remove();
   }
 }
 
-connectedSails.interceptors.request.use(config =>{
-  logOut(config,SAILS_ACCESS_TOKEN)
+connectedSails.interceptors.request.use(config => {
+  logOut(config, SAILS_ACCESS_TOKEN)
   return config;
-},(err)=>{
+}, (err) => {
   return Promise.reject(err);
 })
-connectedSails.interceptors.response.use(response=>{
+connectedSails.interceptors.response.use(response => {
   return response;
-}, (err)=>{
-   controlError(err)
+}, (err) => {
+  controlError(err)
   return Promise.reject(err);
 })
 
-connectedRadar.interceptors.request.use(config=>{
-  logOut(config,ACCESS_TOKEN)
- return config;
-},(err)=>{
+connectedRadar.interceptors.request.use(config => {
+  logOut(config, ACCESS_TOKEN)
+  return config;
+}, (err) => {
   return Promise.reject(err);
 })
 
-connectedRadar.interceptors.response.use(response=>{
+connectedRadar.interceptors.response.use(response => {
   return response;
-}, (err)=>{
- controlError(err)
+}, (err) => {
+  controlError(err)
   return Promise.reject(err);
 })
 
@@ -61,38 +61,38 @@ connectedRadar.interceptors.response.use(response=>{
 export default {
 
   // Dashboard LPR
-  
-  getLPRGroupType:()=>{
+
+  getLPRGroupType: () => {
     return connectedSails.get(`${constants.sails_url}/lpr/byGroup`)
   },
-  getLPRTotalDay:()=>{
+  getLPRTotalDay: () => {
     return connectedSails.get(`${constants.sails_url}/lpr/perDay`)
   },
-  getLPRTotalWeek:()=>{
+  getLPRTotalWeek: () => {
     return connectedSails.get(`${constants.sails_url}/lpr/perWeek`)
   },
-  getLPRTotalMonth:()=>{
+  getLPRTotalMonth: () => {
     return connectedSails.get(`${constants.sails_url}/lpr/perMonth`)
   },
-  getLPRTableList:()=>{
+  getLPRTableList: () => {
     return connectedSails.get(`${constants.sails_url}/lpr/list`)
   },
-  getLPRTotalAlerts:()=>{
+  getLPRTotalAlerts: () => {
     return connectedSails.get(`${constants.sails_url}/lpr/total`)
   },
-  getLPRAlertHour:()=>{
+  getLPRAlertHour: () => {
     return connectedSails.get(`${constants.sails_url}/lpr/perHour`)
   },
-  getLPRCameras:()=>{
+  getLPRCameras: () => {
     return connectedSails.get(`${constants.sails_url}/lpr/cams`)
   },
-  getLPRFilterWeek: (data)=>{
-    return connectedSails.post(`${constants.sails_url}/lpr/filter/week`,data)
+  getLPRFilterWeek: (data) => {
+    return connectedSails.post(`${constants.sails_url}/lpr/filter/week`, data)
   },
-  getLPRFilterHour: (data)=>{
-    return connectedSails.post(`${constants.sails_url}/lpr/filter/hour`,data)
+  getLPRFilterHour: (data) => {
+    return connectedSails.post(`${constants.sails_url}/lpr/filter/hour`, data)
   },
-  getLPRPerHour:(id)=>{
+  getLPRPerHour: (id) => {
 
     let data = {
       cam_id: id
@@ -100,14 +100,14 @@ export default {
 
     return connectedSails.post(`${constants.sails_url}/lpr/filter/hour`, data)
   },
-  getLPRAlertWeek:()=>{
+  getLPRAlertWeek: () => {
     return connectedSails.get(`${constants.sails_url}/lpr/perWeekHour`)
   },
-  getLPRBubble:(data)=>{
-    return connectedSails.post(`${constants.sails_url}/lpr/filter/bubblemap`,data)
+  getLPRBubble: (data) => {
+    return connectedSails.post(`${constants.sails_url}/lpr/filter/bubblemap`, data)
   },
 
-////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
   getOnTermicPhotoData: (name) => {
     return connectedSails.get(constants.sails_url + '/termicfiles-one/' + name);
   },
@@ -186,54 +186,70 @@ export default {
     const user_id = getUserID();
     return connectedSails.get(constants.sails_url + '/control-cams/cams-offline/?user_id=' + user_id);
   },
-  getTokenApiStreamsCams: (protocol, dnsMbox, dns_port, secretKeyBody) =>{
-    if(dns_port === 80 || dns_port === 443){
-      return Axios.post(protocol +'://'+ dnsMbox + '/users/login', secretKeyBody)
+  getTokenApiStreamsCams: (protocol, dnsMbox, dns_port, secretKeyBody) => {
+    if (dns_port === 80 || dns_port === 443) {
+      return Axios.post(protocol + '://' + dnsMbox + '/users/login', secretKeyBody)
     }
-    return Axios.post(protocol +'://'+ dnsMbox + ':'+ dns_port + '/users/login', secretKeyBody)
+    return Axios.post(protocol + '://' + dnsMbox + ':' + dns_port + '/users/login', secretKeyBody)
 
   },
   getCamDataHistoryApiCams: (protocol, dnsMbox, dns_port, protocolStorage, dnsStorage, tokenStorage, numCam, token, portApiStore) => {
-    
-    if((dns_port === 80 || dns_port === 443) && (portApiStore === 80 || portApiStore === 443)){
-      return Axios.get(protocol + '://' + dnsMbox  + '/historics/' + numCam + '/' + "?protocol=" +protocolStorage +"&dns=" +dnsStorage +"&token=" +tokenStorage, {headers:{
-      'Authorization': token
-    }});
+
+    if ((dns_port === 80 || dns_port === 443) && (portApiStore === 80 || portApiStore === 443)) {
+      return Axios.get(protocol + '://' + dnsMbox + '/historics/' + numCam + '/' + "?protocol=" + protocolStorage + "&dns=" + dnsStorage + "&token=" + tokenStorage, {
+        headers: {
+          'Authorization': token
+        }
+      });
     }
-    if((dns_port === 80 || dns_port === 443) && (portApiStore !== 80 || portApiStore !== 443)){
-      return Axios.get(protocol + '://' + dnsMbox  + '/historics/' + numCam + '/' + "?protocol=" +protocolStorage +"&dns=" +dnsStorage +"&token=" +tokenStorage, {headers:{
-      'Authorization': token
-    }});
+    if ((dns_port === 80 || dns_port === 443) && (portApiStore !== 80 || portApiStore !== 443)) {
+      return Axios.get(protocol + '://' + dnsMbox + '/historics/' + numCam + '/' + "?protocol=" + protocolStorage + "&dns=" + dnsStorage + "&token=" + tokenStorage, {
+        headers: {
+          'Authorization': token
+        }
+      });
     }
-    if ((dns_port !== 80 || dns_port !== 443) && (portApiStore === 80 || portApiStore === 443)){
-      return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam + '/' + "?protocol=" +protocolStorage +"&dns=" +dnsStorage +"&token=" +tokenStorage, {headers:{
-      'Authorization': token
-    }});
+    if ((dns_port !== 80 || dns_port !== 443) && (portApiStore === 80 || portApiStore === 443)) {
+      return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam + '/' + "?protocol=" + protocolStorage + "&dns=" + dnsStorage + "&token=" + tokenStorage, {
+        headers: {
+          'Authorization': token
+        }
+      });
     }
-    return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam + '/' + "?protocol=" +protocolStorage +"&dns=" +dnsStorage +"&token=" +tokenStorage, {headers:{
-      'Authorization': token
-    }});
-    
-  }, 
-  getCamDataHistoryWhithOutProtocol: (protocol, dnsMbox, dns_port, protocolStorage, dnsStorage, tokenStorage, numCam, token, portApiStore)=>{
-    if((dns_port === 80 || dns_port === 443) && (portApiStore === 80 || portApiStore === 443)){
-      return Axios.get(protocol + '://' + dnsMbox  + '/historics/' + numCam, {headers:{
-      'Authorization': token
-    }});
+    return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam + '/' + "?protocol=" + protocolStorage + "&dns=" + dnsStorage + "&token=" + tokenStorage, {
+      headers: {
+        'Authorization': token
+      }
+    });
+
+  },
+  getCamDataHistoryWhithOutProtocol: (protocol, dnsMbox, dns_port, protocolStorage, dnsStorage, tokenStorage, numCam, token, portApiStore) => {
+    if ((dns_port === 80 || dns_port === 443) && (portApiStore === 80 || portApiStore === 443)) {
+      return Axios.get(protocol + '://' + dnsMbox + '/historics/' + numCam, {
+        headers: {
+          'Authorization': token
+        }
+      });
     }
-    if((dns_port === 80 || dns_port === 443) && (portApiStore !== 80 || portApiStore !== 443)){
-      return Axios.get(protocol + '://' + dnsMbox  + '/historics/' + numCam,  {headers:{
-      'Authorization': token
-    }});
+    if ((dns_port === 80 || dns_port === 443) && (portApiStore !== 80 || portApiStore !== 443)) {
+      return Axios.get(protocol + '://' + dnsMbox + '/historics/' + numCam, {
+        headers: {
+          'Authorization': token
+        }
+      });
     }
-    if ((dns_port !== 80 || dns_port !== 443) && (portApiStore === 80 || portApiStore === 443)){
-      return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam, {headers:{
-      'Authorization': token
-    }});
+    if ((dns_port !== 80 || dns_port !== 443) && (portApiStore === 80 || portApiStore === 443)) {
+      return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam, {
+        headers: {
+          'Authorization': token
+        }
+      });
     }
-    return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam, {headers:{
-      'Authorization': token
-    }});
+    return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam, {
+      headers: {
+        'Authorization': token
+      }
+    });
   },
   getCamDataHistory: (camera_id, num_cam, typeMBOX) => {
     const user_id = getUserID();
@@ -296,8 +312,22 @@ export default {
   loadCamsCuadrantes: (id_cuadrante) => {
     return connectedSails.get(constants.sails_url + '/control-cams/cuadrantecams/?id_cuadrante=' + id_cuadrante);
   },
-  getCuadrantes: () => {
-    return connectedSails.get(constants.sails_url + '/control-cams/cuadrantes/');
+  getCuadrantes: (type, value) => {
+    if (type === "user_id") {
+      return connectedSails.get(constants.sails_url + '/control-cams/cuadrantes/?user_id=' + value);
+    } else if (type === "admin_user") {
+      return connectedSails.get(constants.sails_url + '/control-cams/cuadrantes/?admin_user=' + value);
+    }
+  },
+  getUsersCuadrante: (id_cuadrante) => {
+    return connectedSails.get(constants.sails_url + '/return/user/quadrants?id_cuadrante=' + id_cuadrante)
+  },
+  assignCuadrante: (id_cuadrante, users) => {
+    let data = {
+      id_cuadrante,
+      users,
+    }
+    return connectedSails.post(constants.sails_url + '/relation/user/quadrants', data)
   },
   newCuadrante: (data) => {
     return connectedSails.post(constants.sails_url + '/control-cams/newcuadrante/', data);
@@ -404,12 +434,12 @@ export default {
   postChangeChat: (data) => {
     return connectedSails.post(constants.sails_url + '/update/change/', data);
   },
-   //DashBOard link
-   getDashboardEmbebed :()=>{
+  //DashBOard link
+  getDashboardEmbebed: () => {
     return connectedSails.get(constants.dashboard);
   },
-  getDetailDashboard :(id)=>{
-    return connectedSails.get(constants.detialDashboard+id+'?user_id=1')
+  getDetailDashboard: (id) => {
+    return connectedSails.get(constants.detialDashboard + id + '?user_id=1')
   },
   // Opciones PTZ
   newOnvifDevice: (urlhistory, urlhistoryport, data, protocoPTZ) => {
@@ -533,10 +563,10 @@ export default {
 
     return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/remove/preset', data);
   },
-  makeLoginRadar:(params)=>{
-    return Axios.post(constants.radar_backend,{
+  makeLoginRadar: (params) => {
+    return Axios.post(constants.radar_backend, {
       query:
-      `query UserSignIn(
+        `query UserSignIn(
         $email:String!, 
         $password:String!
       ){
@@ -592,7 +622,7 @@ export default {
           }`,
       variables: params
     }
-);
+    );
   },
   sendNotificationByProfile: (params) => {
     return connectedRadar.post(constants.radar_backend, {
@@ -610,7 +640,7 @@ export default {
         }`,
       variables: params
     }
-);
+    );
   },
   getAllPoliceIncidentType: () => {
     return connectedRadar.post(constants.radar_backend, {
@@ -623,7 +653,7 @@ export default {
           }
         }`
     }
-);
+    );
   },
   getAllPoliceSector: () => {
     return connectedRadar.post(constants.radar_backend, {
@@ -635,7 +665,7 @@ export default {
           }
         }`
     }
-);
+    );
   }
 };
 
