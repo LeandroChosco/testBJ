@@ -129,7 +129,7 @@ export default function renderCameraServer({ modalInputs }) {
     const getAllCamerasToServers = () => {
         let { data, loading } = useQuery(CAMERA_FILTER, {
             variables: {
-                userId: 1,
+                userId: 6062,
                 id_camara: 0
             },
             context: {
@@ -170,7 +170,7 @@ export default function renderCameraServer({ modalInputs }) {
     const getAllZips = () => {
         let { data, loading } = useQuery(CAT_ADDRESS, {
             variables: {
-                userId: 1
+                userId: 6062
             },
             context: {
                 headers: {

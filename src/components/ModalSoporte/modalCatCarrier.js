@@ -33,7 +33,7 @@ export default function ModalCatCarrier(props) {
     const [isLoading, setIsloading] = useState(false);
 
     const [dataForm, setDataForm] = useState({
-        userId: 1,
+        userId: 6062,
         carrier: "",
         update_data: 0,
         carrier_id: 0
@@ -42,7 +42,7 @@ export default function ModalCatCarrier(props) {
     useEffect(() => {
         if (currentData) {
             setDataForm({
-                userId: 1,
+                userId: 6062,
                 carrier: currentData.carrier,
                 update_data: 1,
                 carrier_id: currentData.id
@@ -50,7 +50,7 @@ export default function ModalCatCarrier(props) {
         }
         else {
             setDataForm({
-                userId: 1,
+                userId: 6062,
                 carrier: "",
                 update_data: 0,
                 carrier_id: 0
@@ -61,7 +61,7 @@ export default function ModalCatCarrier(props) {
     const addCatCarrier = (event) => {
         event.preventDefault();
         // let data = {
-        //     userId: 1,
+        //     userId: 6062,
         //     carrier: dataForm.carrier,
         //     update_data: dataForm.update_data,
         //     carrier_id: dataForm.carrier_id,
@@ -72,7 +72,7 @@ export default function ModalCatCarrier(props) {
         if (showModalCatCarrier === "Agregar Cat Carrier" || showModalCatCarrier === "Actualizar Cat Carrier") {
             createUpdateCarrier({
                 variables: {
-                    userId: 1,
+                    userId: 6062,
                     carrier: dataForm.carrier,
                     update_data: dataForm.update_data,
                     carrier_id: dataForm.carrier_id
@@ -99,7 +99,7 @@ export default function ModalCatCarrier(props) {
         if (showModalCatCarrier === "Eliminar Cat Carrier") {
             deleteCarrier({
                 variables: {
-                    userId: 1,
+                    userId: 6062,
                     carrier_id: dataForm.carrier_id
                 },
                 context: {

@@ -9,7 +9,7 @@ import { JellyfishSpinner } from "react-spinners-kit";
 import { ToastsContainer, ToastsStore } from "react-toasts";
 import Conections from "../../conections";
 import constants from '../../constants/constants';
-import { ACCESS_TOKEN, SAILS_ACCESS_TOKEN } from '../../constants/token'
+import { ACCESS_TOKEN, RADAR_ID, SAILS_ACCESS_TOKEN } from '../../constants/token'
 import ModalResetPassword from "./ModalResetPassword";
 
 class Login extends Component {
@@ -49,6 +49,8 @@ class Login extends Component {
       //Crear una funcion de control si sale error
       const dataToken = await Conections.makeLoginRadar(userInfoRadar);
       const token = `Bearer ${dataToken.data.data.userSignIn.token}`
+
+      token && localStorage.setItem(RADAR_ID, dataToken.data.data.userSignIn.userData.id);
 
 
       this.setState({ loading: true });

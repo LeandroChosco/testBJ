@@ -15,7 +15,7 @@ export default function RenderCamaras(props) {
     const getAllCameras = () => {
         let { data, loading } = useQuery(CAMERA_FILTER, {
             variables: {
-                userId: 1,
+                userId: 6062,
                 id_camara: 0,
                 clientId: parseInt(clientId),
             },

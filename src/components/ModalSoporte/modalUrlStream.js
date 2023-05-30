@@ -33,7 +33,7 @@ export default function ModalUrlStream(props) {
     const [isLoading, setIsloading] = useState(false);
 
     const [dataForm, setDataForm] = useState({
-        userId: 1,
+        userId: 6062,
         ip_url_ms: "",
         output_port: "",
         name: "",  // !
@@ -47,7 +47,7 @@ export default function ModalUrlStream(props) {
     useEffect(() => {
         if (currentData) {
             setDataForm({
-                userId: 1,
+                userId: 6062,
                 ip_url_ms: currentData.ip_url_ms,
                 output_port: currentData.output_port,
                 name: currentData.name,
@@ -60,7 +60,7 @@ export default function ModalUrlStream(props) {
         }
         else {
             setDataForm({
-                userId: 1,
+                userId: 6062,
                 ip_url_ms: "",
                 output_port: "",
                 name: "",
@@ -76,7 +76,7 @@ export default function ModalUrlStream(props) {
     const addUrlStream = (event) => {
         event.preventDefault();
         // let data = {
-        //     userId: 1,
+        //     userId: 6062,
         //     ip_url_ms: dataForm.ip_url_ms,
         //     output_port: parseInt(dataForm.output_port),
         //     name: dataForm.name,
@@ -92,7 +92,7 @@ export default function ModalUrlStream(props) {
         if (showModalUrlStream === "Agregar Url Stream" || showModalUrlStream === "Actualizar Url Stream") {
             createUpdateStream({
                 variables: {
-                    userId: 1,
+                    userId: 6062,
                     ip_url_ms: dataForm.ip_url_ms,
                     output_port: parseInt(dataForm.output_port),
                     name: dataForm.name,
@@ -124,7 +124,7 @@ export default function ModalUrlStream(props) {
         if (showModalUrlStream === "Eliminar Url Stream") {
             deleteStream({
                 variables: {
-                    userId: 1,
+                    userId: 6062,
                     stream_id: dataForm.stream_id
                 },
                 context: {

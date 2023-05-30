@@ -92,7 +92,7 @@ const Soporte = (props, { showMatches }) => {
   const getCatAddress = () => {
     let { data, loading } = useQuery(CAT_ADDRESS, {
       variables: {
-        userId: 1,
+        userId: 6062,
       },
       context: {
         headers: {
@@ -110,7 +110,7 @@ const Soporte = (props, { showMatches }) => {
 
   const getCarrier = () => {
     let { data, loading } = useQuery(GET_CARRIER, {
-      variables: { userId: 1 },
+      variables: { userId: 6062 },
       context: {
         headers: {
           "Authorization": token ? token : "",
@@ -126,7 +126,7 @@ const Soporte = (props, { showMatches }) => {
 
   const getApiUrl = () => {
     let { data, loading } = useQuery(GET_API_URL, {
-      variables: { userId: 1 },
+      variables: { userId: 6062 },
       context: {
         headers: {
           "Authorization": token ? token : "",
@@ -142,7 +142,7 @@ const Soporte = (props, { showMatches }) => {
 
   const getStorageUrl = () => {
     let { data, loading } = useQuery(GET_STORAGE_URL, {
-      variables: { userId: 1 },
+      variables: { userId: 6062 },
       context: {
         headers: {
           "Authorization": token ? token : "",
@@ -158,7 +158,7 @@ const Soporte = (props, { showMatches }) => {
 
   const getStreamUrl = () => {
     let { data, loading } = useQuery(GET_STREAM_URL, {
-      variables: { userId: 1 },
+      variables: { userId: 6062 },
       context: {
         headers: {
           "Authorization": token ? token : "",

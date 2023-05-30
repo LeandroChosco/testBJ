@@ -5,7 +5,7 @@ export const allQueries = {
     getAllCamerasToServers: (clientId, token) => {
         let { data, loading } = useQuery(CAMERA_FILTER, {
             variables: {
-                userId: 1,
+                userId: 6062,
                 id_camara: 0,
                 clientId: parseInt(clientId),
             },
@@ -24,7 +24,7 @@ export const allQueries = {
     getCatAddress: (token) => {
         let { data, loading } = useQuery(CAT_ADDRESS, {
             variables: {
-                userId: 1,
+                userId: 6062,
             },
             context: {
                 headers: {
@@ -41,7 +41,7 @@ export const allQueries = {
     getAllUsers: (clientId, token) => {
         let { data, loading } = useQuery(ALL_USERS, {
             variables: {
-                userId: 1,
+                userId: 6062,
                 clientId: clientId,
             },
             context: {
@@ -73,7 +73,7 @@ export const allQueries = {
 
   getApiUrl: (token) => {
     let { data, loading } = useQuery(GET_API_URL, {
-      variables: { userId: 1 },
+      variables: { userId: 6062 },
       context: {
         headers: {
           "Authorization": token ? token : "",
@@ -86,7 +86,7 @@ export const allQueries = {
   },
   getStreamUrl: (token) => {
     let { data, loading } = useQuery(GET_STREAM_URL, {
-      variables: { userId: 1 },
+      variables: { userId: 6062 },
       context: {
         headers: {
           "Authorization": token ? token : "",
@@ -99,7 +99,7 @@ export const allQueries = {
   },
   getStorageUrl: (token) => {
     let { data, loading } = useQuery(GET_STORAGE_URL, {
-      variables: { userId: 1 },
+      variables: { userId: 6062 },
       context: {
         headers: {
           "Authorization": token ? token : "",
@@ -112,7 +112,7 @@ export const allQueries = {
   },
   getCarrier: (token) => {
     let { data, loading } = useQuery(GET_CARRIER, {
-      variables: { userId: 1 },
+      variables: { userId: 6062 },
       context: {
         headers: {
           "Authorization": token ? token : "",

@@ -15,7 +15,7 @@ export default function RenderUsuarios(props) {
   const getAllUsers = () => {
     let { data, loading } = useQuery(ALL_USERS, {
       variables: {
-        userId: 1,
+        userId: 6062,
         clientId: parseInt(clientId),
       },
       context: {

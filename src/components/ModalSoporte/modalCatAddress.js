@@ -33,7 +33,7 @@ export default function ModalCatAddress(props) {
     const [isLoading, setIsloading] = useState(false);
 
     const [dataForm, setDataForm] = useState({
-        userId: 1,
+        userId: 6062,
         codigoPostal: "",
         asenta: "",
         tipoAsenta: "",
@@ -53,7 +53,7 @@ export default function ModalCatAddress(props) {
     useEffect(() => {
         if (currentData) {
             setDataForm({
-                userId: 1,
+                userId: 6062,
                 codigoPostal: currentData.d_cp,
                 asenta: currentData.d_asenta,
                 tipoAsenta: currentData.d_tipo_asenta,
@@ -72,7 +72,7 @@ export default function ModalCatAddress(props) {
         }
         else {
             setDataForm({
-                userId: 1,
+                userId: 6062,
                 codigoPostal: "",
                 asenta: "",
                 tipoAsenta: "",
@@ -94,7 +94,7 @@ export default function ModalCatAddress(props) {
     const addCatAddress = (event) => {
         event.preventDefault();
         // let data = {
-        //     userId: 1,
+        //     userId: 6062,
         //     codigoPostal: dataForm.codigoPostal,
         //     asenta: dataForm.asenta,
         //     tipoAsenta: dataForm.tipoAsenta,
@@ -116,7 +116,7 @@ export default function ModalCatAddress(props) {
         if (showModalCatAddress === "Agregar Cat Address" || showModalCatAddress === "Actualizar Cat Address") {
             createUpdateAddress({
                 variables: {
-                    userId: 1,
+                    userId: 6062,
                     codigoPostal: dataForm.codigoPostal,
                     asenta: dataForm.asenta,
                     tipoAsenta: dataForm.tipoAsenta,
@@ -154,7 +154,7 @@ export default function ModalCatAddress(props) {
         if (showModalCatAddress === "Eliminar Cat Address") {
             deleteAddress({
                 variables: {
-                    userId: 1,
+                    userId: 6062,
                     address_id: dataForm.address_id
                 },
                 context: {

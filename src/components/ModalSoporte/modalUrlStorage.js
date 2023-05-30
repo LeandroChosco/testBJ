@@ -35,7 +35,7 @@ export default function ModalUrlStorage(props) {
     const [mboxData, setMboxData] = useState("light")
 
     const [dataForm, setDataForm] = useState({
-        userId: 1,
+        userId: 6062,
         type_mbox: "light",
         ip_url: "",
         port: "",
@@ -53,7 +53,7 @@ export default function ModalUrlStorage(props) {
         if (currentData) {
             setVaultData(currentData.is_bold_storage)
             setDataForm({
-                userId: 1,
+                userId: 6062,
                 type_mbox: currentData.type_mbox,
                 ip_url: currentData.ip_url,
                 port: currentData.port,
@@ -69,7 +69,7 @@ export default function ModalUrlStorage(props) {
         }
         else {
             setDataForm({
-                userId: 1,
+                userId: 6062,
                 type_mbox: "light",
                 ip_url: "",
                 port: "",
@@ -88,7 +88,7 @@ export default function ModalUrlStorage(props) {
     const addUrlStorage = (event) => {
         event.preventDefault();
         // let data = {
-        //     userId: 1,
+        //     userId: 6062,
         //     type_mbox: dataForm.type_mbox,
         //     ip_url: dataForm.ip_url,
         //     port: parseInt(dataForm.port),
@@ -107,7 +107,7 @@ export default function ModalUrlStorage(props) {
         if (showModalUrlStorage === "Agregar Url Storage" || showModalUrlStorage === "Actualizar Url Storage") {
             createUpdateStorage({
                 variables: {
-                    userId: 1,
+                    userId: 6062,
                     type_mbox: dataForm.type_mbox,
                     ip_url: dataForm.ip_url,
                     port: parseInt(dataForm.port),
@@ -142,7 +142,7 @@ export default function ModalUrlStorage(props) {
         if (showModalUrlStorage === "Eliminar Url Storage") {
             deleteStorage({
                 variables: {
-                    userId: 1,
+                    userId: 6062,
                     storage_id: dataForm.storage_id
                 },
                 context: {

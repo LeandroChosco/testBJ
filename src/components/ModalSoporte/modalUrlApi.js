@@ -33,7 +33,7 @@ export default function ModalUrlApi(props) {
     const [isLoading, setIsloading] = useState(false);
 
     const [dataForm, setDataForm] = useState({
-        userId: 1,
+        userId: 6062,
         name_instance: "",
         dns_ip: "",
         port: "",
@@ -47,7 +47,7 @@ export default function ModalUrlApi(props) {
     useEffect(() => {
         if (currentData) {
             setDataForm({
-                userId: 1,
+                userId: 6062,
                 name_instance: currentData.name_instance,
                 dns_ip: currentData.dns_ip,
                 port: currentData.port,
@@ -60,7 +60,7 @@ export default function ModalUrlApi(props) {
         }
         else {
             setDataForm({
-                userId: 1,
+                userId: 6062,
                 name_instance: "",
                 dns_ip: "",
                 port: "",
@@ -76,7 +76,7 @@ export default function ModalUrlApi(props) {
     const addUrlApi = (event) => {
         event.preventDefault();
         // let data = {
-        //     userId: 1,
+        //     userId: 6062,
         //     name_instance: dataForm.name_instance,
         //     dns_ip: dataForm.dns_ip,
         //     port: parseInt(dataForm.port),
@@ -92,7 +92,7 @@ export default function ModalUrlApi(props) {
         if (showModalUrlApi === "Agregar Url Api" || showModalUrlApi === "Actualizar Url Api") {
             createUpdateApi({
                 variables: {
-                    userId: 1,
+                    userId: 6062,
                     name_instance: dataForm.name_instance,
                     dns_ip: dataForm.dns_ip,
                     port: parseInt(dataForm.port),
@@ -125,7 +125,7 @@ export default function ModalUrlApi(props) {
         if (showModalUrlApi === "Eliminar Url Api") {
             deleteApi({
                 variables: {
-                    userId: 1,
+                    userId: 6062,
                     url_id: dataForm.url_id
                 },
                 context: {
