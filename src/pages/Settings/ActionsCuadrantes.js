@@ -8,8 +8,8 @@ export default function ActionsCuadrantes(props) {
     return (
         <div style={{ display: "flex", justifyContent: "space-around" }}>
             <HiOutlineUserGroup data-toggle="tooltip" data-placement="top" title="Gestión de usuarios" className="actionBtn" onClick={() => {
-                // setCurrentData(row)
-                // setShowModalManagmentCuadrantes(true)
+                setCurrentData(row)
+                setShowModalManagmentCuadrantes(true)
             }} />
         </div>
     )

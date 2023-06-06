@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import logo from "../../assets/images/logo.jpeg"
-import logo from '../../assets/images/icons/favicon.jpg'
+import logo from '../../assets/images/icons/favicon.jpg';
 import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
@@ -52,7 +52,7 @@ class Login extends Component {
 
       token && localStorage.setItem(RADAR_ID, dataToken.data.data.userSignIn.userData.id);
 
-
+      
       this.setState({ loading: true });
       Conections.makeLogin(userInfo)
         .then(response => {

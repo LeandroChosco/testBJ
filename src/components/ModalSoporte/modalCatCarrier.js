@@ -5,7 +5,7 @@ import { CircleSpinner } from "react-spinners-kit";
 import { ToastsStore } from "react-toasts";
 import { useMutation } from '@apollo/client'
 import { CAT_CARRIER, DELETE_CARRIER } from '../../graphql/mutations'
-import { TOKEN_FIX } from '../../constants/token';
+import { TOKEN_FIX, RADAR_ID } from '../../constants/token';
 
 import "./style.css";
 
@@ -26,6 +26,7 @@ export default function ModalCatCarrier(props) {
 
     const { showModalCatCarrier, setShowModalCatCarrier, hide, currentData, setCurrentData } = props
     const token = TOKEN_FIX;
+    let userId = parseInt(localStorage.getItem(RADAR_ID));
 
     const [createUpdateCarrier] = useMutation(CAT_CARRIER)
     const [deleteCarrier] = useMutation(DELETE_CARRIER)
@@ -33,7 +34,7 @@ export default function ModalCatCarrier(props) {
     const [isLoading, setIsloading] = useState(false);
 
     const [dataForm, setDataForm] = useState({
-        userId: 6062,
+        userId: userId,
         carrier: "",
         update_data: 0,
         carrier_id: 0
@@ -42,7 +43,7 @@ export default function ModalCatCarrier(props) {
     useEffect(() => {
         if (currentData) {
             setDataForm({
-                userId: 6062,
+                userId: userId,
                 carrier: currentData.carrier,
                 update_data: 1,
                 carrier_id: currentData.id
@@ -50,7 +51,7 @@ export default function ModalCatCarrier(props) {
         }
         else {
             setDataForm({
-                userId: 6062,
+                userId: userId,
                 carrier: "",
                 update_data: 0,
                 carrier_id: 0
@@ -60,19 +61,11 @@ export default function ModalCatCarrier(props) {
 
     const addCatCarrier = (event) => {
         event.preventDefault();
-        // let data = {
-        //     userId: 6062,
-        //     carrier: dataForm.carrier,
-        //     update_data: dataForm.update_data,
-        //     carrier_id: dataForm.carrier_id,
-        // }
-
-        // VERIFICAR SI SE PUEDE ENVIAR DATA EN VARIABLES MÁS ADELANTE...
-
+        setIsloading(true);
         if (showModalCatCarrier === "Agregar Cat Carrier" || showModalCatCarrier === "Actualizar Cat Carrier") {
             createUpdateCarrier({
                 variables: {
-                    userId: 6062,
+                    userId: userId,
                     carrier: dataForm.carrier,
                     update_data: dataForm.update_data,
                     carrier_id: dataForm.carrier_id
@@ -83,23 +76,47 @@ export default function ModalCatCarrier(props) {
                     }
                 },
             })
-            setIsloading(true);
-            setTimeout(() => {
-                setIsloading(false);
-                if (showModalCatCarrier === "Agregar Cat Carrier") {
-                    ToastsStore.success("Cat Carrier creado con éxito")
-                }
-                if (showModalCatCarrier === "Actualizar Cat Carrier") {
-                    ToastsStore.success("Cat Carrier actualizado con éxito")
-                }
-                setShowModalCatCarrier(false);
-                setCurrentData(false)
-            }, 2000);
+                .then(response => {
+                    if (response.data && response.data.CreateUpdateCatCarrier.success) {
+                        setTimeout(() => {
+                            setIsloading(false);
+                            if (showModalCatCarrier === "Agregar Cat Carrier") {
+                                ToastsStore.success("Cat Carrier creado con éxito");
+                            }
+                            if (showModalCatCarrier === "Actualizar Cat Carrier") {
+                                ToastsStore.success("Cat Carrier actualizado con éxito");
+                            }
+                            setShowModalCatCarrier(false);
+                            setCurrentData(false);
+                        }, 2000);
+                    } else {
+                        setTimeout(() => {
+                            setIsloading(false);
+                            if (showModalCatCarrier === "Agregar Cat Carrier") {
+                                ToastsStore.error("No se pudo crear el Cat Carrier. Reintente o contáctese con soporte");
+                            }
+                            if (showModalCatCarrier === "Actualizar Cat Carrier") {
+                                ToastsStore.error("No se pudo actualizar el Cat Carrier. Reintente o contáctese con soporte");
+                            }
+                            setShowModalCatCarrier(false);
+                            setCurrentData(false)
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    setTimeout(() => {
+                        setIsloading(false);
+                        ToastsStore.error(`Algo falló. Contáctese con soporte`);
+                        setShowModalCatCarrier(false);
+                        setCurrentData(false);
+                    }, 2000);
+                })
         }
         if (showModalCatCarrier === "Eliminar Cat Carrier") {
             deleteCarrier({
                 variables: {
-                    userId: 6062,
+                    userId: userId,
                     carrier_id: dataForm.carrier_id
                 },
                 context: {
@@ -108,13 +125,32 @@ export default function ModalCatCarrier(props) {
                     }
                 },
             })
-            setIsloading(true);
-            setTimeout(() => {
-                setIsloading(false);
-                ToastsStore.success("Cat Carrier eliminado con éxito")
-                setShowModalCatCarrier(false);
-                setCurrentData(false)
-            }, 2000);
+                .then(response => {
+                    if (response.data && response.data.DeleteCatCarrier.success) {
+                        setTimeout(() => {
+                            setIsloading(false);
+                            ToastsStore.success("Cat Carrier eliminado con éxito");
+                            setShowModalCatCarrier(false);
+                            setCurrentData(false);
+                        }, 2000);
+                    } else {
+                        setTimeout(() => {
+                            setIsloading(false);
+                            ToastsStore.error("No se pudo eliminar el Cat Carrier. Reintente o contáctese con soporte");
+                            setShowModalCatCarrier(false);
+                            setCurrentData(false);
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    setTimeout(() => {
+                        setIsloading(false);
+                        ToastsStore.error(`Algo falló. Contáctese con soporte`);
+                        setShowModalCatCarrier(false);
+                        setCurrentData(false);
+                    }, 2000);
+                })
         }
     }
 

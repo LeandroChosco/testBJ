@@ -2,24 +2,20 @@ import React, { useState } from 'react'
 import PaginationNumber from './PaginationNumber'
 import MediaContainer from '../MediaContainer'
 export default function PaginationList(props) {
-    const { awsApiStreamsCams, videoList, reloadData, download, isDownloadSearch, dnsArray, protocolDownload, hasDns, dnsContainer, portContainer, servidorMultimedia, noButtons, isRecord, typeMBOX, selectedCamera, historyServerDns, historyServerPort, historyServerProtocol, numberVideos, renderLoading } = props;
-    // const [videos, setVideos] = useState(videoList)
-    const [currentPage, setCurrentPage] = useState(1)
-    const [loading, setLoading] = useState(false)
-    const totalVideos = numberVideos
-    // if(videoList.length !== videos.length){
-    //     setVideos(videoList)
-    // }
+    const { awsApiStreamsCams, videoList, reloadData, download, isDownloadSearch, dnsArray, protocolDownload, hasDns, dnsContainer, portContainer, servidorMultimedia, noButtons, isRecord, typeMBOX, selectedCamera, historyServerDns, historyServerPort, historyServerProtocol, numberVideos, renderLoading, isQnap } = props;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const totalVideos = numberVideos;
 
-    const indexOfLastPost = currentPage * totalVideos
-    const indexOfFirstPost = indexOfLastPost - totalVideos
-    const currentPost = videoList.slice(indexOfFirstPost, indexOfLastPost)
+    const indexOfLastPost = currentPage * totalVideos;
+    const indexOfFirstPost = indexOfLastPost - totalVideos;
+    const currentPost = videoList.slice(indexOfFirstPost, indexOfLastPost);
 
     function paginate(pageNumber) {
         setLoading(true);
         setCurrentPage(pageNumber);
         setTimeout(() => {
-            setLoading(false)
+            setLoading(false);
         }, 1000);
     }
 
@@ -35,7 +31,12 @@ export default function PaginationList(props) {
                                 {!isRecord && dnsArray || (list.fecha && list.hour) ? (
                                     <div className="col-12">
                                         {!isDownloadSearch ?
-                                            <h4>{`${dnsArray !== null ? list.videos[0].fecha : list.fecha} - ${dnsArray !== null ? list.videos[0].hour : list.hour}`}</h4>
+                                            <>
+                                                {!isQnap ?
+                                                    <h4 className="title-date">{`${dnsArray !== null || videoList.length > 0 ? list.videos[0].fecha : list.fecha} - ${dnsArray !== null || videoList.length > 0 ? list.videos[0].hour : list.hour}`}</h4>
+                                                    :
+                                                    <h4>{"Date no available"}</h4>}
+                                            </>
                                             :
                                             null
                                         }
@@ -47,7 +48,7 @@ export default function PaginationList(props) {
                                         <MediaContainer
                                             key={vidx}
                                             value={video}
-                                            isQnap={false}
+                                            isQnap={selectedCamera.dataCamValue.qnap_server_id ? true : false}
                                             dns_ip={hasDns && `http://${hasDns}`}
                                             exists_video={true}
                                             cam={selectedCamera}
@@ -85,8 +86,13 @@ export default function PaginationList(props) {
                                     {idx % 2 === 0 ?
                                         <div className="col-12">
                                             {!isRecord && !isDownloadSearch ?
+                                                <>
+                                                    {!isQnap ?
+                                                        <h4 className="ESDsddE" id={!isQnap}>{`${dnsArray !== null || videoList.length > 0 ? list.fecha : null} - ${dnsArray !== null || videoList.length > 0 ? list.hour : null}`}</h4>
+                                                        :
+                                                        <h4>{"Date no available"}</h4>}
+                                                </>
                                                 // <h4>{`${dnsArray !== null ? list.datetime_start : null} - ${dnsArray !== null ? list.datetime_start : null}`}</h4>
-                                                <h4>{`${dnsArray !== null ? list.fecha : null} - ${dnsArray !== null ? list.hour : null}`}</h4>
                                                 :
                                                 null
                                             }
@@ -94,7 +100,7 @@ export default function PaginationList(props) {
                                     <MediaContainer
                                         key={idx}
                                         value={list}
-                                        isQnap={false}
+                                        isQnap={selectedCamera.dataCamValue.qnap_server_id ? true : false}
                                         dns_ip={hasDns && `http://${hasDns}`}
                                         exists_video={true}
                                         cam={selectedCamera}

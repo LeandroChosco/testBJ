@@ -7,30 +7,37 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
 import { CAMERA_FILTER } from '../../graphql/queries';
 import { useQuery } from '@apollo/client';
+import { RADAR_ID } from '../../constants/token';
+import conections from '../../conections';
 
 export default function RenderCamaras(props) {
 
-    const [setShowModalCamera, cameras, setCameras, columnsCameras, clientId, token] = props.data
+    const [setShowModalCamera, cameras, setCameras, columnsCameras, clientId, token] = props.data;
+    let userId = parseInt(localStorage.getItem(RADAR_ID));
 
     const getAllCameras = () => {
-        let { data, loading } = useQuery(CAMERA_FILTER, {
-            variables: {
-                userId: 6062,
-                id_camara: 0,
-                clientId: parseInt(clientId),
-            },
-            context: {
-                headers: {
-                    "Authorization": token ? token : "",
-                }
-            }
-        })
+        conections.getAllCams().then(response => {
+            setCameras(response.data);
+        });
 
-        if (!loading && data) {
-            if (cameras !== data.getCamaraFilter.response) {
-                setCameras(data.getCamaraFilter.response)
-            }
-        }
+        // let { data, loading } = useQuery(CAMERA_FILTER, {
+        //     variables: {
+        //         userId: userId,
+        //         id_camara: 0,
+        //         clientId: parseInt(clientId),
+        //     },
+        //     context: {
+        //         headers: {
+        //             "Authorization": token ? token : "",
+        //         }
+        //     }
+        // })
+
+        // if (!loading && data) {
+        //     if (cameras !== data.getCamaraFilter.response) {
+        //         setCameras(data.getCamaraFilter.response)
+        //     }
+        // }
     }
     getAllCameras();
 

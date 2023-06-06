@@ -10,7 +10,7 @@ import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 import ModalChangePassword from "./ModalChangePassword";
 import { LANG, MODE } from "../../constants/token";
-import { Dropdown } from "semantic-ui-react";
+// import { Dropdown } from "semantic-ui-react";
 
 class Header extends Component {
 
@@ -240,20 +240,20 @@ class Header extends Component {
 
   render() {
     const { showModal } = this.state;
-    const languages = [
-      {
-        key: 'Español',
-        flag: "mx",
-        text: 'Español',
-        value: 'spanish',
-      },
-      {
-        key: 'English',
-        flag: "us",
-        text: 'English',
-        value: 'english',
-      }
-    ];
+    // const languages = [
+    //   {
+    //     key: 'Español',
+    //     flag: "mx",
+    //     text: 'Español',
+    //     value: 'spanish',
+    //   },
+    //   {
+    //     key: 'English',
+    //     flag: "us",
+    //     text: 'English',
+    //     value: 'english',
+    //   }
+    // ];
 
     if (localStorage.getItem(LANG) && this.state.language !== localStorage.getItem(LANG)) {
       this.setState({ language: localStorage.getItem(LANG) });

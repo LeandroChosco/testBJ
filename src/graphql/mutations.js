@@ -3,21 +3,21 @@ import { gql } from '@apollo/client'
 export const REGISTER_USER = gql`
 mutation
   Registration(
-        $email: String!
-        $password: String!
-        $clientId: Int
-        $phone: BigInteger
-        $country_code: String
-        $cca2: String
-        $location: String!
-        $firstname: String
-        $lastname: String
-        $rol_id: Int
-        $is_web: Boolean
-        $isCustomRegistration: Boolean
+    $email: String!
+    $password: String!
+    $clientId: Int
+    $phone: BigInteger
+    $country_code: String
+    $cca2: String
+    $location: String!
+    $firstname: String
+    $lastname: String
+    $rol_id: Int
+    $is_web: Boolean
+    $isCustomRegistration: Boolean
     $pin: String
     $legal_age: Boolean
-    )
+  )
   {
 		registration(
 			email: $email
@@ -34,30 +34,31 @@ mutation
 			isCustomRegistration: $isCustomRegistration
       pin:  $pin
       legal_age: $legal_age
-    ) {
-            token
-            user {
-                location {
-                    latitude
-                    longitude
-                }
-                id
-                username
-                firstname
-                lastname
-                email
-                password
-                phone
-                country_code
-                cca2
-                is_active
-                c5_userId
-                profile {
-                    id
-                }
-            }
+    )
+    {
+      token
+      user {
+        location {
+          latitude
+          longitude
         }
+        id
+        username
+        firstname
+        lastname
+        email
+        password
+        phone
+        country_code
+        cca2
+        is_active
+        c5_userId
+        profile {
+          id
+        }
+      }
     }
+  }
 `
 
 export const CAMERA_USER = gql`
@@ -170,6 +171,7 @@ mutation
     $clientId: Int!
     $emailorcellphone: String!
     $password: String!
+    $flagOldPassword: Int
   )
   {
     recoveryPass(
@@ -177,6 +179,7 @@ mutation
       clientId: $clientId
       emailorcellphone: $emailorcellphone
       password: $password
+      flagOldPassword: $flagOldPassword
       ){
         success
         msg
@@ -210,7 +213,6 @@ disableUser(
 export const UPDATE_USER = gql`
 mutation
 UPDATEUSERDATA(
-  $rootUserId:Int
   $userId: Int!
   $firstname: String
   $lastname: String
@@ -221,7 +223,6 @@ UPDATEUSERDATA(
   $profile_picture:String
 ){
   updateUserData(
-    rootUserId: $rootUserId
     userId: $userId
     firstname: $firstname
     lastname: $lastname

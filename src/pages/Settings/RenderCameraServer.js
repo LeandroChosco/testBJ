@@ -14,7 +14,8 @@ import { CAMERA_FILTER, CAT_ADDRESS } from '../../graphql/queries'
 
 export default function renderCameraServer({ modalInputs }) {
 
-    const token = JSON.parse(sessionStorage.getItem("isAuthenticated")).userInfo.token
+    const token = JSON.parse(sessionStorage.getItem("isAuthenticated")).userInfo.token;
+    let userId = parseInt(localStorage.getItem(RADAR_ID));
     const [showModal, setShowModal, hideModalCameraInputs] = modalInputs;
 
     const [updateCheck, setUpdateCheck] = useState(0)
@@ -127,9 +128,10 @@ export default function renderCameraServer({ modalInputs }) {
     }
 
     const getAllCamerasToServers = () => {
+
         let { data, loading } = useQuery(CAMERA_FILTER, {
             variables: {
-                userId: 6062,
+                userId: userId,
                 id_camara: 0
             },
             context: {
@@ -170,7 +172,7 @@ export default function renderCameraServer({ modalInputs }) {
     const getAllZips = () => {
         let { data, loading } = useQuery(CAT_ADDRESS, {
             variables: {
-                userId: 6062
+                userId: userId
             },
             context: {
                 headers: {

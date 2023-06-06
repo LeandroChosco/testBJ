@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Col } from "react-bootstrap";
 import { Button, Form } from "semantic-ui-react";
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
@@ -11,12 +11,13 @@ import { CircleSpinner } from "react-spinners-kit";
 import { ToastsStore } from "react-toasts";
 import { CAMERA_USER } from '../../graphql/mutations'
 import { useMutation } from '@apollo/client'
-import { TOKEN_FIX } from '../../constants/token'
+import { RADAR_ID, TOKEN_FIX } from '../../constants/token'
 import { allQueries } from "./queries";
 
 
 import "./style.css";
 import Actions from "./Actions";
+import conections from "../../conections";
 
 const styles = {
   spinner: {
@@ -33,6 +34,8 @@ const styles = {
 const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs }) => {
 
   const token = TOKEN_FIX;
+
+  let userId = parseInt(localStorage.getItem(RADAR_ID));
 
   const [registration] = useMutation(CAMERA_USER);
   const [updateData, setUpdateData] = useState(0);
@@ -77,7 +80,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
     update_data: 0,
     id_camara: 0,
     is_lpr: 0,
-    is_mic: 0
+    is_mic: 0,
   });
 
   const [dataToShow, setDataToShow] = useState({
@@ -90,7 +93,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
 
   const actions = (cell, row, rowIndex, formatExtraData) => {
     return (
-      <Actions setters={[setDataForm, setUpdateCarrier, setIsAmazonStream, setDataToShow, setShowModal, setTypeModal, setIsLPR, setIsMic]} data={[row, dataForm, dataToShow]} />
+      <Actions setters={[setDataForm, setUpdateCarrier, setIsAmazonStream, setDataToShow, setShowModal, setTypeModal, isLPR, isMic, setIsLPR, setIsMic]} data={[row, dataForm, dataToShow]} />
     )
   }
 
@@ -268,8 +271,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
     formatter: actions,
   }];
 
-  
-  const allCamerasToServers = allQueries.getAllCamerasToServers(clientId, token);
+
+  const [allCamerasToServers, setAllCamerasToServers] = useState(null);
+
   const allCatAddress = allQueries.getCatAddress(token);
   const allUsers = allQueries.getAllUsers(clientId, token);
   const allBrand = allQueries.getAllBrand(token);
@@ -337,8 +341,8 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
       })
     };
   }
-  
-  
+
+
   const changeLPR = (event, data) => {
     if (data.value === 1) {
       setIsLPR(1)
@@ -375,36 +379,86 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
 
   const addCamera = (event) => {
     event.preventDefault();
-    // let data = {
-    //   google_cordenate: dataForm.google_cordenate,
-    //   num_cam: parseInt(dataForm.num_cam),
-    //   dns_ip: dataForm.dns_ip,
-    //   cam_user: dataForm.cam_user,
-    //   cam_pass: dataForm.cam_pass,
-    //   street: dataForm.street,
-    //   number: dataForm.number,
-    //   township: dataForm.township,
-    //   town: dataForm.town,
-    //   state: dataForm.state,
-    //   cat_carrier_id: parseInt(dataForm.cat_carrier_id),
-    //   ssid_name: dataForm.ssid_name,
-    //   password: dataForm.password,
-    //   between_streets: dataForm.between_streets,
-    //   model_id: parseInt(dataForm.model_id),
-    //   zip: dataForm.zip,
-    //   userId: dataForm.userId,
-    //   url_id: dataForm.url_id,
-    //   stream_id: dataForm.stream_id,
-    //   storage_id: dataForm.storage_id,
-    //   amazon_stream: parseInt(isAmazonStream),
-    //   amazon_arn_channel: dataForm.amazon_arn_channel,
-    //   amazon_region: dataForm.amazon_region,
-    //   update_data: updateData,
-    //   id_camara: dataForm.id_camara,
-    // };
+    let data = {
+      google_cordenate: dataForm.google_cordenate,
+      num_cam: parseInt(dataForm.num_cam),
+      dns_ip: dataForm.dns_ip,
+      cam_user: dataForm.cam_user,
+      cam_pass: dataForm.cam_pass,
+      street: dataForm.street,
+      number: dataForm.number,
+      township: dataForm.township,
+      town: dataForm.town,
+      state: dataForm.state,
+      cat_carrier_id: parseInt(dataForm.cat_carrier_id),
+      ssid_name: dataForm.ssid_name,
+      password: dataForm.password,
+      between_streets: dataForm.between_streets,
+      model_id: parseInt(dataForm.model_id),
+      zip: dataForm.zip,
+      userId: dataForm.userId,
+      url_id: dataForm.url_id,
+      stream_id: dataForm.stream_id,
+      storage_id: dataForm.storage_id,
+      amazon_stream: parseInt(isAmazonStream),
+      amazon_arn_channel: dataForm.amazon_arn_channel,
+      amazon_region: dataForm.amazon_region,
+      update_data: updateData,
+      id_camara: dataForm.id_camara,
+    };
 
-    // Ver en un futuro si se puede enviar este data directamente a registration...
-
+    setIsloading(true);
+    if(dataForm.zip === "-"){
+      registration({
+        variables: {
+          google_cordenate: dataForm.google_cordenate,
+          num_cam: parseInt(dataForm.num_cam),
+          dns_ip: dataForm.dns_ip,
+          cam_user: dataForm.cam_user !== "" ? dataForm.cam_user : "admin",
+          cam_pass: dataForm.cam_pass !== "" ? dataForm.cam_pass : "ENGTK2010!",
+          street: dataForm.street,
+          number: dataForm.number.toString(),
+          township: dataForm.township,
+          town: dataForm.town,
+          state: dataForm.state,
+          cat_carrier_id: parseInt(dataForm.cat_carrier_id),
+          ssid_name: dataForm.ssid_name,
+          password: dataForm.password,
+          between_streets: dataForm.between_streets,
+          model_id: parseInt(dataForm.model_id),
+          userId: userId,
+          // url_id: dataForm.url_id,
+          stream_id: dataForm.stream_id,
+          storage_id: dataForm.storage_id,
+          amazon_stream: parseInt(isAmazonStream),
+          amazon_arn_channel: dataForm.amazon_arn_channel,
+          amazon_region: dataForm.amazon_region,
+          update_data: updateData,
+          id_camara: dataForm.id_camara,
+          is_lpr: parseInt(dataForm.is_lpr),
+          is_mic: parseInt(dataForm.is_mic),
+        },
+        context: {
+          headers: {
+            "Authorization": token ? token : "",
+          }
+        },
+      }).then(response => {
+        setTimeout(() => {
+          setIsloading(false);
+          ToastsStore.success("Cámara agregada con éxito")
+          stateModal(false)
+        }, 2000);
+      }).catch(err => {
+        console.log(err);
+        setTimeout(() => {
+          setIsloading(false);
+          ToastsStore.error("Algo falló. Comuníquese con soporte")
+          stateModal(false)
+        }, 2000);
+  
+      })
+    } else {
     registration({
       variables: {
         google_cordenate: dataForm.google_cordenate,
@@ -433,22 +487,29 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
         update_data: updateData,
         id_camara: dataForm.id_camara,
         is_lpr: parseInt(dataForm.is_lpr),
-        is_mic: parseInt(dataForm.is_mic)
+        is_mic: parseInt(dataForm.is_mic),
       },
       context: {
         headers: {
           "Authorization": token ? token : "",
         }
       },
+    }).then(response => {
+      setTimeout(() => {
+        setIsloading(false);
+        ToastsStore.success("Cámara agregada con éxito")
+        stateModal(false)
+      }, 2000);
+    }).catch(err => {
+      console.log(err);
+      setTimeout(() => {
+        setIsloading(false);
+        ToastsStore.error("Algo falló. Comuníquese con soporte")
+        stateModal(false)
+      }, 2000);
+
     })
-
-    setIsloading(true);
-
-    setTimeout(() => {
-      setIsloading(false);
-      ToastsStore.success("Cámara agregada con éxito")
-      stateModal(false)
-    }, 2000);
+  }
   };
 
   const handleSelect = (e) => {
@@ -521,6 +582,14 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
     setPageModal(pageModal + 1);
   }
 
+  useEffect(() => {
+    conections.getAllCams().then(response => {
+      setAllCamerasToServers(response.data);
+    })
+      .catch(err => {
+        console.log(err);
+      })
+  }, [])
 
   return (
     <Modal size="lg" backdrop={"static"} show={modal} onHide={hide}>
@@ -535,8 +604,15 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                 <Modal.Header closeButton>
                   <h3>Elija IP</h3>
                 </Modal.Header>
-                <Modal.Body>
-                  <BootstrapTable className="styleTable" hover="true" keyField='id' data={allCamerasToServers ? allCamerasToServers : []} columns={columnsDns} filter={filterFactory()} pagination={paginationFactory()} />
+                <Modal.Body style={{padding: !allCamerasToServers && "4rem"}}>
+                  {
+                    allCamerasToServers ?
+                      <BootstrapTable className="styleTable" hover="true" keyField='id' data={allCamerasToServers} columns={columnsDns} filter={filterFactory()} pagination={paginationFactory()} />
+                      :
+                      <div style={styles.spinner}>
+                        <CircleSpinner size={30} color="#D7DBDD" loading={!allCamerasToServers} />
+                      </div>
+                  }
                 </Modal.Body>
               </Modal>
               :
@@ -779,39 +855,39 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                     </Form.Field>
                   </Col>
                   <Col md={3} lg={3}>
-                  <Form.Field>
-                    <label>Es LPR?</label>
-                    <Form.Radio
-                      label="NO"
-                      value={0}
-                      checked={dataForm.is_lpr === 0}
-                      onChange={changeLPR}
-                    />
-                    <Form.Radio
-                      label="SÍ"
-                      value={1}
-                      checked={dataForm.is_lpr === 1}
-                      onChange={changeLPR}
-                    />
-                  </Form.Field>
-                </Col>
-                <Col md={3} lg={3}>
-                  <Form.Field>
-                    <label>Tiene micrófono?</label>
-                    <Form.Radio
-                      label="NO"
-                      value={0}
-                      checked={dataForm.is_mic === 0}
-                      onChange={changeMic}
-                    />
-                    <Form.Radio
-                      label="SÍ"
-                      value={1}
-                      checked={dataForm.is_mic === 1}
-                      onChange={changeMic}
-                    />
-                  </Form.Field>
-                </Col>
+                    <Form.Field>
+                      <label>Es LPR?</label>
+                      <Form.Radio
+                        label="NO"
+                        value={0}
+                        checked={dataForm.is_lpr === 0}
+                        onChange={changeLPR}
+                      />
+                      <Form.Radio
+                        label="SÍ"
+                        value={1}
+                        checked={dataForm.is_lpr === 1}
+                        onChange={changeLPR}
+                      />
+                    </Form.Field>
+                  </Col>
+                  <Col md={3} lg={3}>
+                    <Form.Field>
+                      <label>Tiene micrófono?</label>
+                      <Form.Radio
+                        label="NO"
+                        value={0}
+                        checked={dataForm.is_mic === 0}
+                        onChange={changeMic}
+                      />
+                      <Form.Radio
+                        label="SÍ"
+                        value={1}
+                        checked={dataForm.is_mic === 1}
+                        onChange={changeMic}
+                      />
+                    </Form.Field>
+                  </Col>
                 </Form.Group>
               </>
               :

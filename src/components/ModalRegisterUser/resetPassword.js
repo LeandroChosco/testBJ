@@ -31,12 +31,14 @@ const ModalResetPassword = ({ modal, hide, stateModal, data, clientId }) => {
   const [recovery] = useMutation(RESET_PASSWORD)
 
   const handleReset = () => {
+    setIsloading(true);
     recovery({
       variables: {
         updateAuth: 1,
         clientId: clientId,
         emailorcellphone: user_email,
-        password: "12345678"
+        password: "123456789",
+        flagOldPassword: 0,
       },
       context: {
         headers: {
@@ -44,17 +46,32 @@ const ModalResetPassword = ({ modal, hide, stateModal, data, clientId }) => {
         }
       },
       onError: (error) => {
-        console.log(error)
+        console.log(error);
       }
     })
-
-    setIsloading(true);
-
-    setTimeout(() => {
-      setIsloading(false);
-      ToastsStore.success(`Contraseña de ${user_email} reestablecida con éxito`);
-      stateModal(false)
-    }, 2000)
+    .then(response => {
+      if(response.data && response.data.recoveryPass.success){
+        setTimeout(() => {
+          setIsloading(false);
+          ToastsStore.success(`Contraseña de ${user_email} reestablecida con éxito`);
+          stateModal(false)
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          setIsloading(false);
+          ToastsStore.error(`No se pudo reestablecer la contraseña de ${user_email}. Intente nuevamente o contáctese con soporte`);
+          stateModal(false)
+        }, 2000);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      setTimeout(() => {
+        setIsloading(false);
+        ToastsStore.error(`Algo falló. Contáctese con soporte`);
+        stateModal(false)
+      }, 2000);
+    })
   }
 
   return (

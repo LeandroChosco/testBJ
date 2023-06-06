@@ -84,6 +84,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
   const addUser = (event) => {
     event.preventDefault();
     if (rolId !== 4) {
+      setIsloading(true);
       registrationUser({
         variables: {
           email: dataForm.email,
@@ -107,13 +108,31 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
           }
         },
       })
-      setIsloading(true);
-      setTimeout(() => {
-        setIsloading(false);
-        ToastsStore.success("Usuario creado con éxito")
-        stateModal(false);
-      }, 2000);
+      .then(response => {
+        if(response.data && response.data.registration.token){
+          setTimeout(() => {
+            setIsloading(false);
+            ToastsStore.success("Usuario creado con éxito")
+            stateModal(false);
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            setIsloading(false);
+            ToastsStore.error("No se pudo crear el usuario. Intente más tarde o contáctese con soporte");
+            stateModal(false);
+          }, 2000);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        setTimeout(() => {
+          setIsloading(false);
+          ToastsStore.error("Algo falló. Contáctese con soporte");
+          stateModal(false);
+        }, 2000);
+      })
     } else {
+      setIsloading(true);
       registrationPolice({
         variables: {
           usernumber: dataPolice.usernumber,
@@ -134,12 +153,29 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
           }
         },
       })
-      setIsloading(true);
-      setTimeout(() => {
-        setIsloading(false);
-        ToastsStore.success("Policía creado con éxito")
-        stateModal(false);
-      }, 2000);
+      .then(response => {
+        if(response.data && response.data.createPolice.token){
+          setTimeout(() => {
+            setIsloading(false);
+            ToastsStore.success("Policía creado con éxito")
+            stateModal(false);
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            setIsloading(false);
+            ToastsStore.error("No se pudo crear el policía. Intente más tarde o contáctese con soporte")
+            stateModal(false);
+          }, 2000);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        setTimeout(() => {
+          setIsloading(false);
+          ToastsStore.error("Algo falló. Contáctese con soporte")
+          stateModal(false);
+        }, 2000);
+      })
     }
   };
 
@@ -194,32 +230,28 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
       <Modal.Body>
         <Form onSubmit={addUser}>
           <Form.Field>
-            {/* <label>Tipo de usuario</label>
-            <select name="rol_id" onChange={changeInfo} >
-              {allRoles ? allRoles.map((el) => {
-                return (
-                  <option key={el.id} value={el.id} onClick={() => setRolId(el.id)}>{el.name}</option>
-                )
-              }) : null}
-            </select> */}
-            <Form.Group>
-              <Form.Field>
-                <label>Tipo de usuario</label>
-              </Form.Field>
-              {
-                allRoles ? allRoles.map((el) => {
-                  return (
-                    <Form.Radio
-                      label={el.name}
-                      value={el.id}
-                      checked={rolId === el.id}
-                      onChange={changeRol}
-                    />
-                  )
-                })
-                  :
-                  <label>Mayor de edad?</label>
-              }
+            <Form.Group style={{display: "grid"}}>
+              <div>
+                <Form.Field>
+                  <label>Tipo de usuario</label>
+                </Form.Field>
+              </div>
+              <div>
+                {
+                  allRoles && allRoles.map((el) => {
+                    return (
+                      <Form.Field>
+                        <Form.Radio
+                          label={el.name}
+                          value={el.id}
+                          checked={rolId === el.id}
+                          onChange={changeRol}
+                        />
+                      </Form.Field>
+                    )
+                  })
+                }
+              </div>
             </Form.Group>
           </Form.Field>
 

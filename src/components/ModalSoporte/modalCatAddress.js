@@ -5,7 +5,7 @@ import { CircleSpinner } from "react-spinners-kit";
 import { ToastsStore } from "react-toasts";
 import { useMutation } from '@apollo/client'
 import { CAT_ADDRESS, DELETE_ADDRESS } from '../../graphql/mutations'
-import { TOKEN_FIX } from '../../constants/token';
+import { TOKEN_FIX, RADAR_ID } from '../../constants/token';
 
 import "./style.css";
 
@@ -27,13 +27,15 @@ export default function ModalCatAddress(props) {
     const { showModalCatAddress, setShowModalCatAddress, hide, currentData, setCurrentData } = props
     const token = TOKEN_FIX;
 
+    let userId = parseInt(localStorage.getItem(RADAR_ID));
+
     const [createUpdateAddress] = useMutation(CAT_ADDRESS)
     const [deleteAddress] = useMutation(DELETE_ADDRESS)
 
     const [isLoading, setIsloading] = useState(false);
 
     const [dataForm, setDataForm] = useState({
-        userId: 6062,
+        userId: userId,
         codigoPostal: "",
         asenta: "",
         tipoAsenta: "",
@@ -53,7 +55,7 @@ export default function ModalCatAddress(props) {
     useEffect(() => {
         if (currentData) {
             setDataForm({
-                userId: 6062,
+                userId: userId,
                 codigoPostal: currentData.d_cp,
                 asenta: currentData.d_asenta,
                 tipoAsenta: currentData.d_tipo_asenta,
@@ -72,7 +74,7 @@ export default function ModalCatAddress(props) {
         }
         else {
             setDataForm({
-                userId: 6062,
+                userId: userId,
                 codigoPostal: "",
                 asenta: "",
                 tipoAsenta: "",
@@ -93,30 +95,11 @@ export default function ModalCatAddress(props) {
 
     const addCatAddress = (event) => {
         event.preventDefault();
-        // let data = {
-        //     userId: 6062,
-        //     codigoPostal: dataForm.codigoPostal,
-        //     asenta: dataForm.asenta,
-        //     tipoAsenta: dataForm.tipoAsenta,
-        //     municipio: dataForm.municipio,
-        //     estado: dataForm.estado,
-        //     ciudad: dataForm.ciudad,
-        //     codigoEstado: dataForm.codigoEstado,
-        //     codigoTipoAsenta: dataForm.codigoTipoAsenta !== "" ? dataForm.codigoTipoAsenta : null,
-        //     codigoMunicipio: dataForm.codigoMunicipio !== "" ? dataForm.codigoMunicipio : null,
-        //     idAsenta: dataForm.idAsenta,
-        //     zona: dataForm.zona,
-        //     codigoCVECiudad: dataForm.codigoCVECiudad,
-        //     update_data: dataForm.update_data,
-        //     address_id: dataForm.address_id,
-        // }
-
-        // VERIFICAR SI SE PUEDE ENVIAR DATA EN VARIABLES MÁS ADELANTE...
-
+        setIsloading(true);
         if (showModalCatAddress === "Agregar Cat Address" || showModalCatAddress === "Actualizar Cat Address") {
             createUpdateAddress({
                 variables: {
-                    userId: 6062,
+                    userId: userId,
                     codigoPostal: dataForm.codigoPostal,
                     asenta: dataForm.asenta,
                     tipoAsenta: dataForm.tipoAsenta,
@@ -138,23 +121,47 @@ export default function ModalCatAddress(props) {
                     }
                 },
             })
-            setIsloading(true);
-            setTimeout(() => {
-                setIsloading(false);
-                if (showModalCatAddress === "Agregar Cat Address") {
-                    ToastsStore.success("Cat Address creado con éxito")
-                }
-                if (showModalCatAddress === "Actualizar Cat Address") {
-                    ToastsStore.success("Cat Address actualizado con éxito")
-                }
-                setShowModalCatAddress(false);
-                setCurrentData(false)
-            }, 2000);
+                .then(response => {
+                    if(response.data && response.data.CreateUpdateCatAddress.success){
+                        setTimeout(() => {
+                            setIsloading(false);
+                            if (showModalCatAddress === "Agregar Cat Address") {
+                                ToastsStore.success("Cat Address creado con éxito");
+                            }
+                            if (showModalCatAddress === "Actualizar Cat Address") {
+                                ToastsStore.success("Cat Address actualizado con éxito");
+                            }
+                            setShowModalCatAddress(false);
+                            setCurrentData(false);
+                        }, 2000);
+                    } else {
+                        setTimeout(() => {
+                            setIsloading(false);
+                            if (showModalCatAddress === "Agregar Cat Address") {
+                                ToastsStore.error("No se pudo agregar el Cat Address. Reintente o contáctese con soporte");
+                            }
+                            if (showModalCatAddress === "Actualizar Cat Address") {
+                                ToastsStore.error("No se pudo actualizar el Cat Address. Reintente o contáctese con soporte");
+                            }
+                            setShowModalCatAddress(false);
+                            setCurrentData(false);
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    setTimeout(() => {
+                        setIsloading(false);
+                        ToastsStore.error(`Algo falló. Contáctese con soporte`);
+                        setShowModalCatAddress(false);
+                        setCurrentData(false);
+                    }, 2000);
+                })
         }
         if (showModalCatAddress === "Eliminar Cat Address") {
             deleteAddress({
                 variables: {
-                    userId: 6062,
+                    userId: userId,
                     address_id: dataForm.address_id
                 },
                 context: {
@@ -163,13 +170,33 @@ export default function ModalCatAddress(props) {
                     }
                 },
             })
-            setIsloading(true);
-            setTimeout(() => {
-                setIsloading(false);
-                ToastsStore.success("Cat Address eliminado con éxito")
-                setShowModalCatAddress(false);
-                setCurrentData(false)
-            }, 2000);
+                .then(response => {
+                    if(response.data && response.data.DeleteCatAddress.success){
+                        setTimeout(() => {
+                            setIsloading(false);
+                            ToastsStore.success("Cat Address eliminado con éxito");
+                            setShowModalCatAddress(false);
+                            setCurrentData(false);
+                        }, 2000);
+                    } else {
+                        setTimeout(() => {
+                            setIsloading(false);
+                            ToastsStore.error("No se pudo eliminar el Cat Address. Reintente o contáctese con soporte");
+                            setShowModalCatAddress(false);
+                            setCurrentData(false);
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    setTimeout(() => {
+                        setIsloading(false);
+                        ToastsStore.error(`Algo falló. Contáctese con soporte`);
+                        setShowModalCatAddress(false);
+                        setCurrentData(false);
+                    }, 2000);
+                })
+
         }
     }
 

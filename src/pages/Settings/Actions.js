@@ -1,6 +1,5 @@
 import React from 'react';
 import { BsFillXCircleFill, BsArrowRepeat, BsFillUnlockFill } from "react-icons/bs";
-import { FaObjectUngroup } from "react-icons/fa";
 
 
 export default function Actions(props) {

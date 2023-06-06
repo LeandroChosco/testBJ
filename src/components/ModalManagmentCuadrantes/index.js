@@ -36,7 +36,6 @@ const ModalManagmentCuadrantes = ({ modal, users, columnsUsers, actualQuadrant, 
 
   const assignCuadrante = () => {
     setIsSubmit(true);
-
     conections.assignCuadrante(actualQuadrant.id, selection)
     .then(response => {
       if(response.data.success){
@@ -53,7 +52,14 @@ const ModalManagmentCuadrantes = ({ modal, users, columnsUsers, actualQuadrant, 
         }, 2500);
       }
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log(err)
+      setTimeout(() => {
+        setIsSubmit(false);
+        ToastsStore.error("Algo falló. Comuníquese con soporte");
+        stateModal(false);
+      }, 2500);
+    })
   }
 
   const selectionCheckbox = (data, isSelect, rowIndex, e) => {

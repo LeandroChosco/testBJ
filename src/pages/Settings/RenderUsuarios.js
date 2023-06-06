@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory from 'react-bootstrap-table2-filter';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -7,15 +7,17 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
 import { ALL_USERS } from '../../graphql/queries';
 import { useQuery } from '@apollo/client';
+import { RADAR_ID } from '../../constants/token';
 
 export default function RenderUsuarios(props) {
 
   const [setShowModalUser, users, setUsers, columnsUsers, clientId, token] = props.data
+  let userId = parseInt(localStorage.getItem(RADAR_ID));
 
   const getAllUsers = () => {
     let { data, loading } = useQuery(ALL_USERS, {
       variables: {
-        userId: 6062,
+        userId: userId,
         clientId: parseInt(clientId),
       },
       context: {

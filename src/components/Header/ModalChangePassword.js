@@ -11,7 +11,7 @@ import constants from '../../constants/constants';
 import { remove } from "../../helpers/remove"
 
 import { REACT_APP_ENCRYPT_KEY } from "../../env";
-import { LANG, MODE, SAILS_ACCESS_TOKEN } from '../../constants/token';
+import { LANG, /*MODE,*/ SAILS_ACCESS_TOKEN } from '../../constants/token';
 
 import { useMutation } from "@apollo/client";
 import { CHANGE_PASSWORD } from "../../graphql/mutations";

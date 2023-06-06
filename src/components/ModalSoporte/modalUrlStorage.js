@@ -5,7 +5,7 @@ import { CircleSpinner } from "react-spinners-kit";
 import { ToastsStore } from "react-toasts";
 import { useMutation } from '@apollo/client'
 import { URL_STORAGE, DELETE_STORAGE } from '../../graphql/mutations'
-import { TOKEN_FIX } from '../../constants/token';
+import { TOKEN_FIX, RADAR_ID } from '../../constants/token';
 
 import "./style.css";
 
@@ -26,6 +26,7 @@ export default function ModalUrlStorage(props) {
 
     const { showModalUrlStorage, setShowModalUrlStorage, hide, currentData, setCurrentData } = props
     const token = TOKEN_FIX;
+    let userId = parseInt(localStorage.getItem(RADAR_ID));
 
     const [createUpdateStorage] = useMutation(URL_STORAGE)
     const [deleteStorage] = useMutation(DELETE_STORAGE)
@@ -35,7 +36,7 @@ export default function ModalUrlStorage(props) {
     const [mboxData, setMboxData] = useState("light")
 
     const [dataForm, setDataForm] = useState({
-        userId: 6062,
+        userId: userId,
         type_mbox: "light",
         ip_url: "",
         port: "",
@@ -53,8 +54,8 @@ export default function ModalUrlStorage(props) {
         if (currentData) {
             setVaultData(currentData.is_bold_storage)
             setDataForm({
-                userId: 6062,
-                type_mbox: currentData.type_mbox,
+                userId: userId,
+                type_mbox: currentData.ip_url ? "light" : "pro",
                 ip_url: currentData.ip_url,
                 port: currentData.port,
                 secretkey: currentData.secretkey,
@@ -69,7 +70,7 @@ export default function ModalUrlStorage(props) {
         }
         else {
             setDataForm({
-                userId: 6062,
+                userId: userId,
                 type_mbox: "light",
                 ip_url: "",
                 port: "",
@@ -87,27 +88,29 @@ export default function ModalUrlStorage(props) {
 
     const addUrlStorage = (event) => {
         event.preventDefault();
-        // let data = {
-        //     userId: 6062,
-        //     type_mbox: dataForm.type_mbox,
-        //     ip_url: dataForm.ip_url,
-        //     port: parseInt(dataForm.port),
-        //     secretkey: dataForm.secretkey,
-        //     is_bold_storage: parseInt(vaultData),
-        //     dns_bold: dataForm.dns_bold,
-        //     region_bold: dataForm.region_bold,
-        //     bucket_bold: dataForm.bucket_bold,
-        //     client_bucket_bold: dataForm.client_bucket_bold,
-        //     update_data: dataForm.update_data,
-        //     storage_id: dataForm.storage_id
-        // }
-
-        // VERIFICAR SI SE PUEDE ENVIAR DATA EN VARIABLES MÁS ADELANTE...
-
+        setIsloading(true);
         if (showModalUrlStorage === "Agregar Url Storage" || showModalUrlStorage === "Actualizar Url Storage") {
+
+            let data = {
+                userId: userId,
+                type_mbox: dataForm.type_mbox,
+                ip_url: dataForm.ip_url,
+                port: parseInt(dataForm.port),
+                secretkey: dataForm.secretkey,
+                is_bold_storage: parseInt(vaultData),
+                dns_bold: dataForm.dns_bold,
+                region_bold: dataForm.region_bold,
+                bucket_bold: dataForm.bucket_bold,
+                client_bucket_bold: dataForm.client_bucket_bold,
+                update_data: dataForm.update_data,
+                storage_id: dataForm.storage_id
+            }
+
+            console.log(data)
+
             createUpdateStorage({
                 variables: {
-                    userId: 6062,
+                    userId: userId,
                     type_mbox: dataForm.type_mbox,
                     ip_url: dataForm.ip_url,
                     port: parseInt(dataForm.port),
@@ -126,23 +129,47 @@ export default function ModalUrlStorage(props) {
                     }
                 },
             })
-            setIsloading(true);
-            setTimeout(() => {
-                setIsloading(false);
-                if (showModalUrlStorage === "Agregar Url Storage") {
-                    ToastsStore.success("Url Storage creado con éxito")
-                }
-                if (showModalUrlStorage === "Actualizar Url Storage") {
-                    ToastsStore.success("Url Storage actualizado con éxito")
-                }
-                setShowModalUrlStorage(false);
-                setCurrentData(false)
-            }, 2000);
+                .then(response => {
+                    if (response.data && response.data.CreateUpdateUrlStorage.success) {
+                        setTimeout(() => {
+                            setIsloading(false);
+                            if (showModalUrlStorage === "Agregar Url Storage") {
+                                ToastsStore.success("Url Storage creada con éxito")
+                            }
+                            if (showModalUrlStorage === "Actualizar Url Storage") {
+                                ToastsStore.success("Url Storage actualizada con éxito")
+                            }
+                            setShowModalUrlStorage(false);
+                            setCurrentData(false)
+                        }, 2000);
+                    } else {
+                        setTimeout(() => {
+                            setIsloading(false);
+                            if (showModalUrlStorage === "Agregar Url Storage") {
+                                ToastsStore.error("No se pudo actualizar la Url Storage. Reintente o contáctese con soporte")
+                            }
+                            if (showModalUrlStorage === "Actualizar Url Storage") {
+                                ToastsStore.error("No se pudo actualizar la Url Storage. Reintente o contáctese con soporte")
+                            }
+                            setShowModalUrlStorage(false);
+                            setCurrentData(false)
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    setTimeout(() => {
+                        setIsloading(false);
+                        ToastsStore.error(`Algo falló. Contáctese con soporte`);
+                        setShowModalUrlStorage(false);
+                        setCurrentData(false);
+                    }, 2000);
+                });
         }
         if (showModalUrlStorage === "Eliminar Url Storage") {
             deleteStorage({
                 variables: {
-                    userId: 6062,
+                    userId: userId,
                     storage_id: dataForm.storage_id
                 },
                 context: {
@@ -151,13 +178,32 @@ export default function ModalUrlStorage(props) {
                     }
                 },
             })
-            setIsloading(true);
-            setTimeout(() => {
-                setIsloading(false);
-                ToastsStore.success("Url Storage eliminado con éxito")
-                setShowModalUrlStorage(false);
-                setCurrentData(false)
-            }, 2000);
+                .then(response => {
+                    if (response.data && response.data.DeleteUrlStorage.success) {
+                        setTimeout(() => {
+                            setIsloading(false);
+                            ToastsStore.success("Url Storage eliminada con éxito")
+                            setShowModalUrlStorage(false);
+                            setCurrentData(false)
+                        }, 2000);
+                    } else {
+                        setTimeout(() => {
+                            setIsloading(false);
+                            ToastsStore.error("No se pudo eliminar la Url Api. Reintente o contáctese con soporte")
+                            setShowModalUrlStorage(false);
+                            setCurrentData(false)
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    setTimeout(() => {
+                        setIsloading(false);
+                        ToastsStore.error(`Algo falló. Contáctese con soporte`);
+                        setShowModalUrlStorage(false);
+                        setCurrentData(false);
+                    }, 2000);
+                });
         }
     }
 
@@ -231,29 +277,26 @@ export default function ModalUrlStorage(props) {
                                         type="text"
                                         value={dataForm.ip_url}
                                         onChange={changeInfo}
-                                        disabled={mboxData === "pro"}
+                                        disabled={mboxData === "pro" || (currentData && !currentData.ip_url)}
                                     />
                                 </Form.Field>
-                                <Form.Field>
-                                    <label>Tipo Mbox</label>
-                                    <Form.Radio
-                                        label="light"
-                                        value={"light"}
-                                        checked={mboxData === "light"}
-                                        onChange={changeMbox}
-                                    />
-                                    <Form.Radio
-                                        label="pro"
-                                        value={"pro"}
-                                        checked={mboxData === "pro"}
-                                        onChange={changeMbox}
-                                    />
-                                    {/* <label>Tipo Mbox</label>
-                                    <select name="type_mbox" onChange={changeInfo}>
-                                        <option key={1} value="light">light</option>
-                                        <option key={2} value="pro">pro</option>
-                                    </select> */}
-                                </Form.Field>
+                                {!currentData &&
+                                    <Form.Field>
+                                        <label>Tipo Mbox</label>
+                                        <Form.Radio
+                                            label="light"
+                                            value={"light"}
+                                            checked={mboxData === "light"}
+                                            onChange={changeMbox}
+                                        />
+                                        <Form.Radio
+                                            label="pro"
+                                            value={"pro"}
+                                            checked={mboxData === "pro" || (currentData && !currentData.ip_url)}
+                                            onChange={changeMbox}
+                                        />
+                                    </Form.Field>
+                                }
                             </Form.Group>
                             <Form.Group>
                                 <Form.Field>
@@ -264,7 +307,7 @@ export default function ModalUrlStorage(props) {
                                         type="text"
                                         value={dataForm.port}
                                         onChange={changeInfo}
-                                        disabled={mboxData === "pro"}
+                                        disabled={mboxData === "pro" || (currentData && !currentData.ip_url)}
                                     />
                                 </Form.Field>
                                 <Form.Field>
@@ -275,7 +318,7 @@ export default function ModalUrlStorage(props) {
                                         type="text"
                                         value={dataForm.secretkey}
                                         onChange={changeInfo}
-                                        disabled={mboxData === "pro"}
+                                        disabled={mboxData === "pro" || (currentData && !currentData.ip_url)}
                                     />
                                 </Form.Field>
                             </Form.Group>
@@ -357,7 +400,7 @@ export default function ModalUrlStorage(props) {
                                             AGREGAR URL STORAGE
                                         </Button>
                                         :
-                                        mboxData === "pro" ?
+                                        mboxData === "pro" || (currentData && !currentData.ip_url) ?
                                             <Button
                                                 className="styleBtnAdd btn-block"
                                                 type="submit"
@@ -386,7 +429,7 @@ export default function ModalUrlStorage(props) {
                                                 ACTUALIZAR URL STORAGE
                                             </Button>
                                             :
-                                            mboxData === "pro" ?
+                                            mboxData === "pro" || (currentData && !currentData.ip_url) ?
                                                 <Button
                                                     className="styleBtnAdd btn-block"
                                                     type="submit"

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Row } from "reactstrap";
-import { Form } from "semantic-ui-react";
 
 
 export default function VehiclesSelector(props) {

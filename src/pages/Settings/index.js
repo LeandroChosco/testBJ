@@ -20,8 +20,6 @@ import conections from '../../conections';
 import { ToastsContainer, ToastsStore } from "react-toasts";
 import constants from '../../constants/constants'
 import { TOKEN_FIX } from '../../constants/token'
-import { ALL_USERS, CAMERA_FILTER } from '../../graphql/queries'
-import { useQuery } from '@apollo/client'
 
 import Actions from './Actions';
 import RenderCamaras from './RenderCamaras';
@@ -46,10 +44,10 @@ const Settings = (props, { showMatches }) => {
       menuItem: 'Registro de cámaras',
       render: () => <Tab.Pane attached={false}><RenderCamaras data={[setShowModalCamera, cameras, setCameras, columnsCameras, clientId, token]} /></Tab.Pane>,
     },
-    {
-      menuItem: 'Asignación de cuadrantes',
-      render: () => <Tab.Pane attached={false}><RenderCuadrantes data={[cuadrantes, setCuadrantes, columnsCuadrantes, clientId, token]} /></Tab.Pane>,
-    },
+    // {
+    //   menuItem: 'Asignación de cuadrantes',
+    //   render: () => <Tab.Pane attached={false}><RenderCuadrantes data={[cuadrantes, setCuadrantes, columnsCuadrantes, clientId, token]} /></Tab.Pane>,
+    // },
     {
       menuItem: 'Acciones sobre catálogos',
       render: () => <Tab.Pane attached={false}><Soporte /></Tab.Pane>,
@@ -151,22 +149,10 @@ const Settings = (props, { showMatches }) => {
       placeholder: 'Buscar calle...'
     })
   }, {
-    dataField: "active",
-    text: 'ACTIVA',
+    dataField: "tipombox",
+    text: 'TIPO MBOX',
     filter: textFilter({
-      placeholder: 'Buscar por activa...'
-    })
-  }, {
-    dataField: "flag_streaming",
-    text: 'FLAG STREAMING',
-    filter: textFilter({
-      placeholder: 'Buscar por flag...'
-    })
-  }, {
-    dataField: "User.user_login",
-    text: 'USER',
-    filter: textFilter({
-      placeholder: 'Buscar por user...'
+      placeholder: 'Buscar por tipo...'
     })
   }];
 

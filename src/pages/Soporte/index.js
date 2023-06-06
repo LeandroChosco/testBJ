@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@apollo/client'
 import conections from '../../conections';
 import constants from '../../constants/constants'
-import { TOKEN_FIX } from '../../constants/token'
+import { RADAR_ID, TOKEN_FIX } from '../../constants/token'
 import { CAT_ADDRESS, GET_CARRIER, GET_API_URL, GET_STORAGE_URL, GET_STREAM_URL } from '../../graphql/queries'
 
 import UrlApi from './UrlApi';
@@ -30,6 +30,7 @@ import './style.css'
 const Soporte = (props, { showMatches }) => {
 
   const token = TOKEN_FIX;
+  let userId = parseInt(localStorage.getItem(RADAR_ID));
 
   const panes = [
     {
@@ -56,19 +57,6 @@ const Soporte = (props, { showMatches }) => {
   ]
 
   const [clientId, setClientId] = useState("")
-
-  //   const [showModalUser, setShowModalUser] = useState(false);
-  //   const [showModalResetPassword, setShowModalResetPassword] = useState(false);
-  //   const [showModalUserUpdate, setShowModalUserUpdate] = useState(false);
-  //   const [showModalUserDelete, setShowModalUserDelete] = useState(false);
-
-  //   const [showModalCamera, setShowModalCamera] = useState(false);
-  //   const [showModalCameraDetail, setShowModalCameraDetail] = useState(false);
-  //   const [showModalCameraUpdate, setShowModalCameraUpdate] = useState(false);
-  //   const [showModalCameraDelete, setShowModalCameraDelete] = useState(false);
-
-  //   const [showModalCameraInputs, setShowModalCameraInputs] = useState(false);
-
   const [showModalCatAddress, setShowModalCatAddress] = useState(false)
   const [showModalCatCarrier, setShowModalCatCarrier] = useState(false)
   const [showModalUrlApi, setShowModalUrlApi] = useState(false)
@@ -92,7 +80,7 @@ const Soporte = (props, { showMatches }) => {
   const getCatAddress = () => {
     let { data, loading } = useQuery(CAT_ADDRESS, {
       variables: {
-        userId: 6062,
+        userId,
       },
       context: {
         headers: {
@@ -107,10 +95,11 @@ const Soporte = (props, { showMatches }) => {
   }
   const allCatAddress = getCatAddress();
 
-
   const getCarrier = () => {
     let { data, loading } = useQuery(GET_CARRIER, {
-      variables: { userId: 6062 },
+      variables: {
+        userId
+      },
       context: {
         headers: {
           "Authorization": token ? token : "",
@@ -126,7 +115,9 @@ const Soporte = (props, { showMatches }) => {
 
   const getApiUrl = () => {
     let { data, loading } = useQuery(GET_API_URL, {
-      variables: { userId: 6062 },
+      variables: {
+        userId
+      },
       context: {
         headers: {
           "Authorization": token ? token : "",
@@ -142,7 +133,9 @@ const Soporte = (props, { showMatches }) => {
 
   const getStorageUrl = () => {
     let { data, loading } = useQuery(GET_STORAGE_URL, {
-      variables: { userId: 6062 },
+      variables: {
+        userId
+      },
       context: {
         headers: {
           "Authorization": token ? token : "",
@@ -158,7 +151,9 @@ const Soporte = (props, { showMatches }) => {
 
   const getStreamUrl = () => {
     let { data, loading } = useQuery(GET_STREAM_URL, {
-      variables: { userId: 6062 },
+      variables: {
+        userId
+      },
       context: {
         headers: {
           "Authorization": token ? token : "",
@@ -178,7 +173,6 @@ const Soporte = (props, { showMatches }) => {
       <Actions row={row} setCurrentData={setCurrentData} setShowModalCatAddress={setShowModalCatAddress} setShowModalCatCarrier={setShowModalCatCarrier} setShowModalUrlApi={setShowModalUrlApi} setShowModalUrlStorage={setShowModalUrlStorage} setShowModalUrlStream={setShowModalUrlStream} />
     )
   }
-  // data={[row, setCurrentData, setShowModalResetPassword, setShowModalCameraDetail, setShowModalUserUpdate, setShowModalCameraUpdate, setShowModalUserDelete, setShowModalCameraDelete]}
 
   const columnsCatAddress = [{
     dataField: "d_cp",
@@ -243,12 +237,6 @@ const Soporte = (props, { showMatches }) => {
       placeholder: "🔎"
     })
   }, {
-    dataField: "active",
-    text: 'Activa?',
-    filter: textFilter({
-      placeholder: "🔎"
-    })
-  }, {
     dataField: "type",
     text: 'Tipo',
     filter: textFilter({
@@ -299,20 +287,8 @@ const Soporte = (props, { showMatches }) => {
 
 
   const columnsStream = [{
-    dataField: "name",
-    text: 'Nombre',
-    filter: textFilter({
-      placeholder: "🔎"
-    })
-  }, {
     dataField: "ip_url_ms",
     text: 'DNS',
-    filter: textFilter({
-      placeholder: "🔎"
-    })
-  }, {
-    dataField: "active",
-    text: 'Activa?',
     filter: textFilter({
       placeholder: "🔎"
     })
@@ -348,11 +324,7 @@ const Soporte = (props, { showMatches }) => {
         break;
     }
   }
-
-  //   const hideModalCameraInputs = () => {
-  //     setShowModalCameraInputs(false)
-  //   }
-
+  
   return (
     <div className={!showMatches ? "hide-matches" : "show-matches"}>
       <Tab menu={{ secondary: true, pointing: true }} panes={panes} />

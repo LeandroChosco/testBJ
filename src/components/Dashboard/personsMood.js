@@ -4,9 +4,10 @@ import sadEmoji from '../../assets/images/emojis/triste.png'
 import happyEmoji from '../../assets/images/emojis/feliz.png'
 import angryEmoji from '../../assets/images/emojis/enojado.png'
 import surpriseEmoji from '../../assets/images/emojis/sorprendido.png'
-import { HiArrowCircleDown, HiArrowCircleUp } from 'react-icons/hi'
-import { TiEquals } from 'react-icons/ti'
+// import { Icon } from "semantic-ui-react";
 import { Col, Row } from 'reactstrap';
+
+// import { fakeData } from './personsMoodFakeData';
 
 const MOODS_EMOJIS = {
   Neutral: neutralEmoji,
@@ -18,6 +19,7 @@ const MOODS_EMOJIS = {
 
 const PersonsMood = (props) => {
   const { personsMood } = props;
+
   return (
     <ul className="cardlist">
       {
@@ -33,34 +35,34 @@ const PersonsMood = (props) => {
                     {item.total}
                   </h1>
                   <p>
-                    {item.mood}
+                    {item.mood.toUpperCase()}
                   </p>
                 </Col>
                 <Col>
-                  {
-                    index === 0 || index === 3 ?
+                  {/* {
+                    item.total / previousData[index].total > 1 ?
                       <>
-                        <HiArrowCircleDown style={{ color: "red", border: "none", width: "40px", height: "40px" }} />
+                        <Icon
+                          name="sort up"
+                          size="big"
+                          className="text-success"
+                        />
                         <p>
-                          -10%
+                          +{Math.floor(((item.total / previousData.find((el) => el.mood === item.mood).total) - 1) * 100)}%
                         </p>
                       </>
                       :
-                      index === 4 ?
-                        <>
-                          <HiArrowCircleUp style={{ color: "green", border: "none", width: "40px", height: "40px" }} />
-                          <p>
-                            +15%
-                          </p>
-                        </>
-                        :
-                        <>
-                          <TiEquals style={{ color: "grey", border: "none", width: "40px", height: "40px" }} />
-                          <p>
-                            ±5%
-                          </p>
-                        </>
-                  }
+                      <>
+                        <Icon
+                          name="sort down"
+                          size="big"
+                          className="text-danger"
+                        />
+                        <p>
+                          -{Math.floor((1 - (item.total / previousData.find((el) => el.mood === item.mood).total)) * 100)}%
+                        </p>
+                      </>
+                  } */}
                 </Col>
               </Row>
             </li>
