@@ -408,7 +408,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
     };
 
     setIsloading(true);
-    if(dataForm.zip === "-"){
+    if (dataForm.zip === "-") {
       registration({
         variables: {
           google_cordenate: dataForm.google_cordenate,
@@ -444,79 +444,99 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
           }
         },
       }).then(response => {
-        setTimeout(() => {
-          setIsloading(false);
-          ToastsStore.success("Cámara agregada con éxito")
-          stateModal(false)
-        }, 2000);
+        if (response.data && response.data.registerUserCameraWeb.success) {
+          setTimeout(() => {
+            setIsloading(false);
+            ToastsStore.success("Cámara actualizada con éxito");
+            stateModal(false);
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            setIsloading(false);
+            ToastsStore.error("No se pudo actualizar la cámara");
+            stateModal(false);
+          }, 2000);
+        }
       }).catch(err => {
         console.log(err);
         setTimeout(() => {
           setIsloading(false);
-          ToastsStore.error("Algo falló. Comuníquese con soporte")
-          stateModal(false)
+          ToastsStore.error("Algo falló. Comuníquese con soporte");
+          stateModal(false);
         }, 2000);
-  
-      })
+      });
     } else {
-    registration({
-      variables: {
-        google_cordenate: dataForm.google_cordenate,
-        num_cam: parseInt(dataForm.num_cam),
-        dns_ip: dataForm.dns_ip,
-        cam_user: dataForm.cam_user !== "" ? dataForm.cam_user : "admin",
-        cam_pass: dataForm.cam_pass !== "" ? dataForm.cam_pass : "ENGTK2010!",
-        street: dataForm.street,
-        number: dataForm.number.toString(),
-        township: dataForm.township,
-        town: dataForm.town,
-        state: dataForm.state,
-        cat_carrier_id: parseInt(dataForm.cat_carrier_id),
-        ssid_name: dataForm.ssid_name,
-        password: dataForm.password,
-        between_streets: dataForm.between_streets,
-        model_id: parseInt(dataForm.model_id),
-        zip: dataForm.zip,
-        userId: dataForm.userId,
-        url_id: dataForm.url_id,
-        stream_id: dataForm.stream_id,
-        storage_id: dataForm.storage_id,
-        amazon_stream: parseInt(isAmazonStream),
-        amazon_arn_channel: dataForm.amazon_arn_channel,
-        amazon_region: dataForm.amazon_region,
-        update_data: updateData,
-        id_camara: dataForm.id_camara,
-        is_lpr: parseInt(dataForm.is_lpr),
-        is_mic: parseInt(dataForm.is_mic),
-      },
-      context: {
-        headers: {
-          "Authorization": token ? token : "",
+      registration({
+        variables: {
+          google_cordenate: dataForm.google_cordenate,
+          num_cam: parseInt(dataForm.num_cam),
+          dns_ip: dataForm.dns_ip,
+          cam_user: dataForm.cam_user !== "" ? dataForm.cam_user : "admin",
+          cam_pass: dataForm.cam_pass !== "" ? dataForm.cam_pass : "ENGTK2010!",
+          street: dataForm.street,
+          number: dataForm.number.toString(),
+          township: dataForm.township,
+          town: dataForm.town,
+          state: dataForm.state,
+          cat_carrier_id: parseInt(dataForm.cat_carrier_id),
+          ssid_name: dataForm.ssid_name,
+          password: dataForm.password,
+          between_streets: dataForm.between_streets,
+          model_id: parseInt(dataForm.model_id),
+          zip: dataForm.zip,
+          userId: dataForm.userId,
+          url_id: dataForm.url_id,
+          stream_id: dataForm.stream_id,
+          storage_id: dataForm.storage_id,
+          amazon_stream: parseInt(isAmazonStream),
+          amazon_arn_channel: dataForm.amazon_arn_channel,
+          amazon_region: dataForm.amazon_region,
+          update_data: updateData,
+          id_camara: dataForm.id_camara,
+          is_lpr: parseInt(dataForm.is_lpr),
+          is_mic: parseInt(dataForm.is_mic),
+        },
+        context: {
+          headers: {
+            "Authorization": token ? token : "",
+          }
+        },
+      }).then(response => {
+        if (response.data && response.data.registerUserCameraWeb.success) {
+          setTimeout(() => {
+            setIsloading(false);
+            ToastsStore.success("Cámara agregada con éxito");
+            stateModal(false);
+          }, 2000);
+        } else if (response.data.registerUserCameraWeb.error === "el numero de la camara ya existe") {
+          setTimeout(() => {
+            setIsloading(false);
+            ToastsStore.error("Ya existe una cámara con ese número. Pruebe con otro número");
+            stateModal(false);
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            setIsloading(false);
+            ToastsStore.error("No se pudo agregar la cámara");
+            stateModal(false);
+          }, 2000);
         }
-      },
-    }).then(response => {
-      setTimeout(() => {
-        setIsloading(false);
-        ToastsStore.success("Cámara agregada con éxito")
-        stateModal(false)
-      }, 2000);
-    }).catch(err => {
-      console.log(err);
-      setTimeout(() => {
-        setIsloading(false);
-        ToastsStore.error("Algo falló. Comuníquese con soporte")
-        stateModal(false)
-      }, 2000);
-
-    })
-  }
+      }).catch(err => {
+        console.log(err);
+        setTimeout(() => {
+          setIsloading(false);
+          ToastsStore.error("Algo falló. Comuníquese con soporte");
+          stateModal(false);
+        }, 2000);
+      });
+    };
   };
 
   const handleSelect = (e) => {
     e.preventDefault();
     setShowModal(true);
-    setTypeModal(e.target.name)
-  }
+    setTypeModal(e.target.name);
+  };
 
   const handleReset = () => {
     setDataForm({
@@ -596,7 +616,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
       <Modal.Header closeButton>
         <h3>Nueva cámara</h3>
       </Modal.Header>
-      <Modal.Body className="styleContent">
+      <Modal.Body className="styleContent" style={{ height: "27rem" }}>
         <Form onSubmit={addCamera}>
           {
             updateData === 1 && typeModal === "dns_ip" ?
@@ -604,7 +624,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                 <Modal.Header closeButton>
                   <h3>Elija IP</h3>
                 </Modal.Header>
-                <Modal.Body style={{padding: !allCamerasToServers && "4rem"}}>
+                <Modal.Body style={{ padding: !allCamerasToServers && "4rem" }}>
                   {
                     allCamerasToServers ?
                       <BootstrapTable className="styleTable" hover="true" keyField='id' data={allCamerasToServers} columns={columnsDns} filter={filterFactory()} pagination={paginationFactory()} />
@@ -848,7 +868,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                       <input
                         placeholder="Ingrese número..."
                         name="number"
-                        type="text"
+                        type="number"
                         value={dataForm.number}
                         onChange={changeInfo}
                       />

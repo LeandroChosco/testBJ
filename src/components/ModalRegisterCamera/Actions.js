@@ -9,7 +9,7 @@ export default function Actions(props) {
     return (
         <div style={{ display: "flex", justifyContent: "space-around" }}>
             <Button onClick={() => {
-                console.log(row)
+                // console.log(row)
                 if (row.__typename) {
                     switch (row.__typename) {
                         case "CatAddress":

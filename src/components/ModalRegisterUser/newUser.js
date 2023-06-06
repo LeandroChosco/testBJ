@@ -108,29 +108,37 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
           }
         },
       })
-      .then(response => {
-        if(response.data && response.data.registration.token){
-          setTimeout(() => {
-            setIsloading(false);
-            ToastsStore.success("Usuario creado con éxito")
-            stateModal(false);
-          }, 2000);
-        } else {
-          setTimeout(() => {
-            setIsloading(false);
-            ToastsStore.error("No se pudo crear el usuario. Intente más tarde o contáctese con soporte");
-            stateModal(false);
-          }, 2000);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        setTimeout(() => {
-          setIsloading(false);
-          ToastsStore.error("Algo falló. Contáctese con soporte");
-          stateModal(false);
-        }, 2000);
-      })
+        .then(response => {
+          if (response.data && response.data.registration.token) {
+            setTimeout(() => {
+              setIsloading(false);
+              ToastsStore.success("Usuario creado con éxito")
+              stateModal(false);
+            }, 2000);
+          } else {
+            setTimeout(() => {
+              setIsloading(false);
+              ToastsStore.error("No se pudo crear el usuario. Intente más tarde o contáctese con soporte");
+              stateModal(false);
+            }, 2000);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          if (err.message === "Already registered user, if you already have an account please go to the login section.") {
+            setTimeout(() => {
+              setIsloading(false);
+              ToastsStore.error("Ya existe un usuario registrado con ese correo");
+              stateModal(false);
+            }, 2000);
+          } else {
+            setTimeout(() => {
+              setIsloading(false);
+              ToastsStore.error("Algo falló. Contáctese con soporte");
+              stateModal(false);
+            }, 2000);
+          }
+        })
     } else {
       setIsloading(true);
       registrationPolice({
@@ -153,29 +161,29 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
           }
         },
       })
-      .then(response => {
-        if(response.data && response.data.createPolice.token){
+        .then(response => {
+          if (response.data && response.data.createPolice.token) {
+            setTimeout(() => {
+              setIsloading(false);
+              ToastsStore.success("Policía creado con éxito")
+              stateModal(false);
+            }, 2000);
+          } else {
+            setTimeout(() => {
+              setIsloading(false);
+              ToastsStore.error("No se pudo crear el policía. Intente más tarde o contáctese con soporte")
+              stateModal(false);
+            }, 2000);
+          }
+        })
+        .catch(err => {
+          console.log(err);
           setTimeout(() => {
             setIsloading(false);
-            ToastsStore.success("Policía creado con éxito")
+            ToastsStore.error("Algo falló. Contáctese con soporte")
             stateModal(false);
           }, 2000);
-        } else {
-          setTimeout(() => {
-            setIsloading(false);
-            ToastsStore.error("No se pudo crear el policía. Intente más tarde o contáctese con soporte")
-            stateModal(false);
-          }, 2000);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        setTimeout(() => {
-          setIsloading(false);
-          ToastsStore.error("Algo falló. Contáctese con soporte")
-          stateModal(false);
-        }, 2000);
-      })
+        })
     }
   };
 
@@ -230,7 +238,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
       <Modal.Body>
         <Form onSubmit={addUser}>
           <Form.Field>
-            <Form.Group style={{display: "grid"}}>
+            <Form.Group style={{ display: "grid" }}>
               <div>
                 <Form.Field>
                   <label>Tipo de usuario</label>

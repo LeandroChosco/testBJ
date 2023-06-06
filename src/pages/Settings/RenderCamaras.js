@@ -1,19 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory from 'react-bootstrap-table2-filter';
 import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
-import { CAMERA_FILTER } from '../../graphql/queries';
-import { useQuery } from '@apollo/client';
-import { RADAR_ID } from '../../constants/token';
+// import { RADAR_ID } from '../../constants/token';
 import conections from '../../conections';
 
 export default function RenderCamaras(props) {
 
-    const [setShowModalCamera, cameras, setCameras, columnsCameras, clientId, token] = props.data;
-    let userId = parseInt(localStorage.getItem(RADAR_ID));
+    const [setShowModalCamera, cameras, setCameras, columnsCameras /*, clientId, token*/] = props.data;
+    // let userId = parseInt(localStorage.getItem(RADAR_ID));
 
     const getAllCameras = () => {
         conections.getAllCams().then(response => {
@@ -39,7 +37,11 @@ export default function RenderCamaras(props) {
         //     }
         // }
     }
-    getAllCameras();
+
+    useEffect(() => {
+
+        getAllCameras();
+    }, [])
 
     return (
         <div className="containerTable">
