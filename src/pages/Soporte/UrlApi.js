@@ -37,9 +37,9 @@ export default function UrlApi(props) {
         <div className="containerTable">
             <div className="row containerTitle">
                 <div className="col">
-                    <div>
+                    {/* <div>
                         <input type="button" className="btn btnAdd" value="Agregar Url Api" style={{ marginRight: "50px" }} onClick={() => setShowModalUrlApi("Agregar Url Api")} />
-                    </div>
+                    </div> */}
                     <hr />
                     <h3 className="pt-2">Lista de Url Api</h3>
                 </div>

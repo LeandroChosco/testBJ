@@ -37,9 +37,9 @@ export default function UrlStorage(props) {
         <div className="containerTable">
             <div className="row containerTitle">
                 <div className="col">
-                    <div>
+                    {/* <div>
                         <input type="button" className="btn btnAdd" value="Agregar Url Storage" style={{ marginRight: "50px" }} onClick={() => setShowModalUrlStorage("Agregar Url Storage")} />
-                    </div>
+                    </div> */}
                     <hr />
                     <h3 className="pt-2">Lista de Url Storage</h3>
                 </div>

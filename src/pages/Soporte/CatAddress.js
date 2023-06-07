@@ -37,9 +37,9 @@ export default function CatAddress(props) {
         <div className="containerTable">
             <div className="row containerTitle">
                 <div className="col">
-                    <div>
+                    {/* <div>
                         <input type="button" className="btn btnAdd" value="Agregar Cat Address" style={{ marginRight: "50px" }} onClick={() => setShowModalCatAddress("Agregar Cat Address")} />
-                    </div>
+                    </div> */}
                     <hr />
                     <h3 className="pt-2">Lista de Cat Address</h3>
                 </div>

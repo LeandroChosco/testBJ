@@ -10,7 +10,7 @@ import UrlStream from './UrlStream';
 import UrlStorage from './UrlStorage';
 import CatCarrier from './CatCarrier';
 import CatAddress from './CatAddress';
-import Actions from './Actions';
+// import Actions from './Actions';
 import ModalCatAddress from '../../components/ModalSoporte/modalCatAddress';
 import ModalCatCarrier from '../../components/ModalSoporte/modalCatCarrier';
 import ModalUrlApi from '../../components/ModalSoporte/modalUrlApi';
@@ -168,11 +168,11 @@ const Soporte = (props, { showMatches }) => {
 
 
 
-  const actions = (cell, row, rowIndex, formatExtraData) => {
-    return (
-      <Actions row={row} setCurrentData={setCurrentData} setShowModalCatAddress={setShowModalCatAddress} setShowModalCatCarrier={setShowModalCatCarrier} setShowModalUrlApi={setShowModalUrlApi} setShowModalUrlStorage={setShowModalUrlStorage} setShowModalUrlStream={setShowModalUrlStream} />
-    )
-  }
+  // const actions = (cell, row, rowIndex, formatExtraData) => {
+  //   return (
+  //     <Actions row={row} setCurrentData={setCurrentData} setShowModalCatAddress={setShowModalCatAddress} setShowModalCatCarrier={setShowModalCatCarrier} setShowModalUrlApi={setShowModalUrlApi} setShowModalUrlStorage={setShowModalUrlStorage} setShowModalUrlStream={setShowModalUrlStream} />
+  //   )
+  // }
 
   const columnsCatAddress = [{
     dataField: "d_cp",
@@ -192,10 +192,10 @@ const Soporte = (props, { showMatches }) => {
     filter: textFilter({
       placeholder: "🔎"
     })
-  }, {
-    dataField: "actions",
-    text: '',
-    formatter: actions,
+    // }, {
+    //   dataField: "actions",
+    //   text: '',
+    //   formatter: actions,
   }];
 
 
@@ -217,10 +217,10 @@ const Soporte = (props, { showMatches }) => {
     filter: textFilter({
       placeholder: "🔎"
     })
-  }, {
-    dataField: "actions",
-    text: '',
-    formatter: actions,
+    // }, {
+    //   dataField: "actions",
+    //   text: '',
+    //   formatter: actions,
   }]
 
 
@@ -242,10 +242,10 @@ const Soporte = (props, { showMatches }) => {
     filter: textFilter({
       placeholder: "🔎"
     })
-  }, {
-    dataField: "actions",
-    text: '',
-    formatter: actions,
+    // }, {
+    //   dataField: "actions",
+    //   text: '',
+    //   formatter: actions,
   }]
 
 
@@ -279,10 +279,10 @@ const Soporte = (props, { showMatches }) => {
     filter: textFilter({
       placeholder: "🔎"
     })
-  }, {
-    dataField: "actions",
-    text: '',
-    formatter: actions,
+    // }, {
+    //   dataField: "actions",
+    //   text: '',
+    //   formatter: actions,
   }]
 
 
@@ -292,10 +292,10 @@ const Soporte = (props, { showMatches }) => {
     filter: textFilter({
       placeholder: "🔎"
     })
-  }, {
-    dataField: "actions",
-    text: '',
-    formatter: actions,
+    // }, {
+    //   dataField: "actions",
+    //   text: '',
+    //   formatter: actions,
   }]
 
   const hideModal = (type) => {
@@ -324,7 +324,7 @@ const Soporte = (props, { showMatches }) => {
         break;
     }
   }
-  
+
   return (
     <div className={!showMatches ? "hide-matches" : "show-matches"}>
       <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
