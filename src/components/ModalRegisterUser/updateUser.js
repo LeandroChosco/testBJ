@@ -31,9 +31,9 @@ const ModalDetailUser = ({ modal, clientId, hide, stateModal, data }) => {
     userId: radar_id,
     firstname: user_nicename.split(" ")[0],
     lastname: user_nicename.split(" ").length > 2 ? user_nicename.split(" ").slice(1).join(" ") : user_nicename.split(" ").length === 2 ? user_nicename.split(" ")[1] : "",
-    country_code: cellphone ? cellphone.split("+52").length > 1 ? "+52" : "" : "",
+    country_code: "+",
     email: user_email,
-    phone: cellphone ? cellphone.split("+52").length > 1 ? cellphone.split("+52")[1] : cellphone : "",
+    phone: cellphone ? (cellphone.split("+")[1] || cellphone.split("+")[0]) : "",
     cca2: "MX",
     profile_picture: null
   });
@@ -51,7 +51,7 @@ const ModalDetailUser = ({ modal, clientId, hide, stateModal, data }) => {
         lastname: dataForm.lastname,
         email: dataForm.email,
         phone: dataForm.phone,
-        country_code: dataForm.country_code,
+        country_code: "+",
         cca2: dataForm.cca2,
         profile_picture: dataForm.profile_picture
       },
@@ -61,32 +61,29 @@ const ModalDetailUser = ({ modal, clientId, hide, stateModal, data }) => {
         }
       },
     })
-    .then(response => {
-      if(response.data && response.data.updateUserData){
+      .then(response => {
+        if (response.data && response.data.updateUserData) {
+          setTimeout(() => {
+            setIsloading(false);
+            ToastsStore.success("Usuario modificado con éxito");
+            stateModal(false);
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            setIsloading(false);
+            ToastsStore.error("No se pudo modificar el usuario. Intente más tarde o contáctese con soporte");
+            stateModal(false);
+          }, 2000);
+        }
+      })
+      .catch(err => {
+        console.log(err);
         setTimeout(() => {
           setIsloading(false);
-          ToastsStore.success("Usuario modificado con éxito");
+          ToastsStore.error("Algo falló. Contáctese con soporte");
           stateModal(false);
         }, 2000);
-      } else {
-        setTimeout(() => {
-          setIsloading(false);
-          ToastsStore.error("No se pudo crear el usuario. Intente más tarde o contáctese con soporte");
-          stateModal(false);
-        }, 2000);
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      setTimeout(() => {
-        setIsloading(false);
-        ToastsStore.error("Algo falló. Contáctese con soporte");
-        stateModal(false);
-      }, 2000);
-    })
-
-    
-
+      })
   };
 
   const changeInfo = (event, data) => {
@@ -132,17 +129,7 @@ const ModalDetailUser = ({ modal, clientId, hide, stateModal, data }) => {
               />
             </Form.Field>
           </Form.Group>
-          <Form.Group inline>
-            <Form.Field>
-              <label>LADA</label>
-              <input
-                placeholder="Ingrese LADA..."
-                name="country_code"
-                type="number"
-                onChange={changeInfo}
-                value={dataForm.country_code}
-              />
-            </Form.Field>
+          <Form.Group>
             <Form.Field>
               <label>Celular</label>
               <input

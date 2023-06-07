@@ -30,7 +30,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
   const [registrationUser] = useMutation(REGISTER_USER)
   const [registrationPolice] = useMutation(CREATE_POLICE)
 
-  const [isLegalAge, setIsLegalAge] = useState(true);
+  // const [isLegalAge, setIsLegalAge] = useState(true);
   const [rolId, setRolId] = useState(1)
   const [isLoading, setIsloading] = useState(false);
 
@@ -39,9 +39,9 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
     lastname: "",
     email: "",
     password: "12345678",
-    country_code: "+52",
+    country_code: "+",
     phone: "",
-    legal_age: "",
+    legal_age: true,
     location: "",
     pin: "1234",
     profile_picture: null,
@@ -61,7 +61,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
     password: "",
     phone: "",
     cca2: "MX",
-    country_code: "+52",
+    country_code: "+",
     clientId: clientId,
     usertypeId: 4
   })
@@ -91,7 +91,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
           password: dataForm.password,
           clientId: dataForm.clientId,
           phone: parseInt(dataForm.phone),
-          country_code: dataForm.country_code,
+          country_code: "+",
           cca2: dataForm.cca2,
           location: "{\n  \"latitude\": \"" + dataForm.location.split(",")[0].trim() + "\",\n  \"longitude\": \"" + dataForm.location.split(",")[1].trim() + "\"\n}",
           firstname: dataForm.firstname,
@@ -100,7 +100,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
           is_web: dataForm.is_web,
           isCustomRegistration: dataForm.isCustomRegistration,
           pin: dataForm.pin,
-          legal_age: isLegalAge,
+          legal_age: true,
         },
         context: {
           headers: {
@@ -150,7 +150,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
           password: dataPolice.password,
           phone: parseInt(dataPolice.phone),
           cca2: dataPolice.cca2,
-          country_code: dataPolice.country_code,
+          country_code: "+",
           is_active: dataPolice.is_active,
           clientId: dataPolice.clientId,
           usertypeId: dataPolice.usertypeId,
@@ -187,14 +187,14 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
     }
   };
 
-  const changeType = (event, data) => {
-    if (data.value === "yes") {
-      setIsLegalAge(true);
-    }
-    if (data.value === "no") {
-      setIsLegalAge(false);
-    }
-  };
+  // const changeType = (event, data) => {
+  //   if (data.value === "yes") {
+  //     setIsLegalAge(true);
+  //   }
+  //   if (data.value === "no") {
+  //     setIsLegalAge(false);
+  //   }
+  // };
 
   const changeRol = (event, data) => {
     if (data) {
@@ -297,6 +297,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
                   onChange={changeInfo}
                 />
               </Form.Field>
+              <Form.Group>
               <Form.Field>
                 <label>Contraseña</label>
                 <input
@@ -307,17 +308,6 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
                   onChange={changeInfo}
                 />
               </Form.Field>
-              <Form.Group inline>
-                <Form.Field>
-                  <label>LADA</label>
-                  <input
-                    placeholder="Ingrese LADA..."
-                    name="country_code"
-                    type="text"
-                    value={dataForm.country_code}
-                    onChange={changeInfo}
-                  />
-                </Form.Field>
                 <Form.Field>
                   <label>Celular</label>
                   <input
@@ -329,7 +319,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
                   />
                 </Form.Field>
               </Form.Group>
-              <Form.Group>
+              {/* <Form.Group>
                 <Form.Field>
                   <label>Mayor de edad?</label>
                 </Form.Field>
@@ -345,7 +335,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
                   checked={!isLegalAge}
                   onChange={changeType}
                 />
-              </Form.Group>
+              </Form.Group> */}
               <Form.Field>
                 <label>Ubicación</label>
                 <input
@@ -394,7 +384,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
                   onChange={changeInfo}
                 />
               </Form.Field>
-              <Form.Group inline>
+              <Form.Group>
                 <Form.Field>
                   <label>Nombre del policía</label>
                   <input
@@ -438,17 +428,7 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
                   />
                 </Form.Field>
               </Form.Group>
-              <Form.Group inline>
-                <Form.Field>
-                  <label>LADA</label>
-                  <input
-                    placeholder="Ingrese LADA..."
-                    name="country_code"
-                    type="text"
-                    value={dataPolice.country_code}
-                    onChange={changeInfo}
-                  />
-                </Form.Field>
+              <Form.Group>
                 <Form.Field>
                   <label>Teléfono</label>
                   <input
@@ -472,7 +452,6 @@ const ModalRegisterUser = ({ modal, hide, stateModal, clientId }) => {
                     dataPolice.password === "" ||
                     dataPolice.phone === "" ||
                     dataPolice.cca2 === "" ||
-                    dataPolice.country_code === "" ||
                     dataPolice.clientId === "" ||
                     dataPolice.usertypeId === ""
                   }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory from 'react-bootstrap-table2-filter';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -7,20 +7,37 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
 import conections from '../../conections';
 
+import { CircleSpinner } from "react-spinners-kit";
+
+const styles = {
+    spinner: {
+        position: "relative",
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        justifyContent: "center",
+        alignItems: "flex-end",
+        display: "flex",
+    },
+};
+
 export default function RenderCuadrantes(props) {
 
-    const [cuadrantes, setCuadrantes, columnsCuadrantes] = props.data
+    const [cuadrantes, setCuadrantes, columnsCuadrantes] = props.data;
+    const [loading, setLoading] = useState(true);
 
     const getAllQuadrants = () => {
         conections.getCuadrantes("admin_user", 1).then(res => {
-            setCuadrantes(res.data.data)
+            setCuadrantes(res.data.data);
+            setLoading(false);
         })
-            .catch(err => console.log(err))
+            .catch(err => console.log(err));;
     }
 
-    if (cuadrantes === "") {
+    useEffect(() => {
         getAllQuadrants();
-    }
+    }, []);
 
     return (
         <div className="containerTable">
@@ -29,14 +46,20 @@ export default function RenderCuadrantes(props) {
                     <h3 className="pt-2">Lista de cuadrantes</h3>
                 </div>
             </div>
-            {cuadrantes && cuadrantes.length === 0 ?
-                <div className="row">
-                    <div className="col">
-                        <p>No hay cuadrantes que mostrar</p>
+            {
+                loading ?
+                    <div style={styles.spinner}>
+                        <CircleSpinner size={30} color="#D7DBDD" loading={loading} />
                     </div>
-                </div>
-                :
-                <BootstrapTable className="styleTable" hover="true" keyField='id' data={cuadrantes ? cuadrantes : []} columns={columnsCuadrantes} pagination={paginationFactory()} filter={filterFactory()} />
+                    :
+                    cuadrantes && cuadrantes.length === 0 ?
+                        <div className="row">
+                            <div className="col">
+                                <p>No hay cuadrantes que mostrar</p>
+                            </div>
+                        </div>
+                        :
+                        <BootstrapTable className="styleTable" hover="true" keyField='id' data={cuadrantes} columns={columnsCuadrantes} pagination={paginationFactory()} filter={filterFactory()} />
             }
         </div>
     )

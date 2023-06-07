@@ -1,4 +1,5 @@
 import { useMutation } from "@apollo/client";
+import CryptoJS from "crypto-js";
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Button } from "semantic-ui-react";
@@ -7,6 +8,7 @@ import { RESET_PASSWORD } from "../../graphql/mutations";
 import { CircleSpinner } from "react-spinners-kit";
 import { ToastsStore } from "react-toasts";
 import "./style.css";
+import { REACT_APP_ENCRYPT_KEY } from "../../env";
 
 const styles = {
   spinner: {
@@ -31,13 +33,14 @@ const ModalResetPassword = ({ modal, hide, stateModal, data, clientId }) => {
   const [recovery] = useMutation(RESET_PASSWORD)
 
   const handleReset = () => {
+    let hashPass = CryptoJS.AES.encrypt("12345678", REACT_APP_ENCRYPT_KEY).toString();
     setIsloading(true);
     recovery({
       variables: {
         updateAuth: 1,
         clientId: clientId,
         emailorcellphone: user_email,
-        password: "123456789",
+        password: hashPass,
         flagOldPassword: 0,
       },
       context: {
