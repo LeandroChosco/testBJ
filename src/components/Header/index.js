@@ -403,9 +403,12 @@ class Header extends Component {
                 {this.props.lang === "english" ? "Change password" : "Cambiar contraseña"}
               </NavDropdown.Item>
               {showModal && <ModalChangePassword modal={showModal} hideModal={this._hideModal} />}
-              <NavDropdown.Item onClick={this._goRegister}>
-                Settings
-              </NavDropdown.Item>
+              {
+                (this.props.userInfo.role_id === 1 || this.props.userInfo.role_id === 2 || this.props.userInfo.role_id === 6) &&
+                <NavDropdown.Item onClick={this._goRegister}>
+                  Settings
+                </NavDropdown.Item>
+              }
               <NavDropdown.Item onClick={this._logOut}>
                 {this.props.lang === "english" ? "Log out" : "Cerrar sesión"}
               </NavDropdown.Item>
