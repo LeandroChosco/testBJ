@@ -1347,7 +1347,13 @@ class Main extends Component {
           <Route path='/personas' exact render={(props) => <Sospechosos showMatches={this.state.showMatches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this - this._toggleControls} />} />
           <Route path='/policia' exact render={(props) => <Policia showMatches={this.state.showMatches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this - this._toggleControls} />} />
           <Route path="/covid" exact render={(props) => <Covid alertaCovidState={this.state.alertaCovidState} _alertaCovidState={this._alertaCovidState} _newCovidItem={this._newCovidItem} newCovidState={this.state.newCovidState} newCovidItem={this.state.newCovidItem} alertaCovid={this.state.alertaCovid} showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
-          <Route path='/settings' exact render={(props) => <Settings showMatches={this.state.showMatches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this - this._toggleControls} />} />
+          <Route path='/settings' exact render={(props) => {
+            if (this.state.userInfo.role_id === 1 || this.state.userInfo.role_id === 2 || this.state.userInfo.role_id === 6) {
+              return (
+                <Settings showMatches={this.state.showMatches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this - this._toggleControls} />
+              )
+            }
+          }} />
           <Route
             path="/alarm/:alarmIndex?/:chatId?"
             exact
