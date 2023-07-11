@@ -300,36 +300,36 @@ class Main extends Component {
   }
 
   loadData = () => {
-    if (process.env.NODE_ENV === 'production' || true) {
-      // --- matches planchados ---
-      conections.getMatchAPI().then(docs => {
-        if (this.state.matches.length !== docs.data.length && this.state.showNotification && !this.state.fisrtTime) {
-          this.showNot(
-            "Match",
-            "Nuevo match detectado",
-            "warning",
-            "ver match",
-            0
-          );
-        }
-        if (this.state.fisrtTime) {
-          this.setState({ fisrtTime: false });
-        }
-        this.setState({
-          matches: docs.data.map(v => {
-            let value = v
-            if (value.dateTime) {
-              value.dateTime = new Date(
-                value.dateTime
-              ).toString();
-            } else {
-              value.dateTime = value.date;
-            }
-            return value
-          })
-        })
-      })
-    }
+    // if (process.env.NODE_ENV === 'production' || true) {
+    //   // --- matches planchados ---
+    //   conections.getMatchAPI().then(docs => {
+    //     if (this.state.matches.length !== docs.data.length && this.state.showNotification && !this.state.fisrtTime) {
+    //       this.showNot(
+    //         "Match",
+    //         "Nuevo match detectado",
+    //         "warning",
+    //         "ver match",
+    //         0
+    //       );
+    //     }
+    //     if (this.state.fisrtTime) {
+    //       this.setState({ fisrtTime: false });
+    //     }
+    //     this.setState({
+    //       matches: docs.data.map(v => {
+    //         let value = v
+    //         if (value.dateTime) {
+    //           value.dateTime = new Date(
+    //             value.dateTime
+    //           ).toString();
+    //         } else {
+    //           value.dateTime = value.date;
+    //         }
+    //         return value
+    //       })
+    //     })
+    //   })
+    // }
 
     /* firebaseC5Benito.firestore().collection('matches').orderBy('dateTime', 'desc').onSnapshot(docs => {
       if (this.state.matches.length !== docs.size && this.state.showNotification && !this.state.fisrtTime) {
@@ -1260,11 +1260,11 @@ class Main extends Component {
           {this.state.isAuthenticated && this.state.showHeader ?
             (<React.Fragment>
               <ArrowToggle ocultarMatches={this.ocultarMatches} />
-              {this.state.showMatches ?
+              {/* {this.state.showMatches ?
                 <Matches
                   toggleSideMenu={this._cameraSideInfo}
                   cameraID={this.state.cameraID}
-                  matchs={this.state.matches} /> : null}
+                  matchs={this.state.matches} /> : null} */}
             </React.Fragment>)
             : null
           }
