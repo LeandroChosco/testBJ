@@ -44,18 +44,18 @@ const MAP_OPTIONS = {
 };
 
 const styles = {
-  loadingStart:{
-    position: 'absolute', 
-    top: '30%', 
-    background: 'transparent', 
+  loadingStart: {
+    position: 'absolute',
+    top: '30%',
+    background: 'transparent',
     width: '100%'
   },
-  loadingFilter:{
-    position: 'absolute', 
-    background: 'white', 
-    width: '100%', 
-    height:"100%", 
-    zIndex:1
+  loadingFilter: {
+    position: 'absolute',
+    background: 'white',
+    width: '100%',
+    height: "100%",
+    zIndex: 1
   }
 }
 
@@ -68,9 +68,9 @@ class Map extends Component {
     markersPolice: [],
     moduleActions: {},
     showSearch: false,
-    loadingFilter:false,
-    modalFilter:false,
-    filterData:[]
+    loadingFilter: false,
+    modalFilter: false,
+    filterData: []
   };
 
   componentDidMount() {
@@ -123,100 +123,100 @@ class Map extends Component {
   render() {
     return (
       <div className='map'>
-        <div style={this.state.loadingFilter ?  styles.loadingFilter: styles.loadingStart} align='center'>
+        <div style={this.state.loadingFilter ? styles.loadingFilter : styles.loadingStart} align='center'>
           {/* <JellyfishSpinner size={250} color='#686769' loading={this.state.loading} /> */}
           <img
-              className="spinner"
-              src={constants.urlPath}
-              style={{ width: "10%", borderRadius: "50%" , marginTop:"10%"}}
-              alt={constants.urlPath}/>
+            className="spinner"
+            src={constants.urlPath}
+            style={{ width: "10%", borderRadius: "50%", marginTop: "10%" }}
+            alt={constants.urlPath} />
         </div>
         <MapContainer options={MAP_OPTIONS} places={this.state.places} onMapLoad={this._onMapLoad} />
         <div className='btn-filter'>
-        <Dropdown>
-          <Dropdown.Toggle variant="primary" id="dropdown-basic">
-            <img src={funnel} alt='funnel' />
-          </Dropdown.Toggle>
-          <Dropdown.Menu className='btn-filter__menu'>
-            <Dropdown.Item
-             className='btn-filter__item'
-             onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/red-dot.png')} 
-             >
-                <img 
+          <Dropdown>
+            <Dropdown.Toggle variant="primary" id="dropdown-basic">
+              <img src={funnel} alt='funnel' />
+            </Dropdown.Toggle>
+            <Dropdown.Menu className='btn-filter__menu'>
+              <Dropdown.Item
+                className='btn-filter__item'
+                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/red-dot.png')}
+              >
+                <img
                   src={'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}
                   alt='Filter'
                 />
                 VIGILANCIA VECINAL
-            </Dropdown.Item>
-            <Dropdown.Item 
-              className='btn-filter__item'
-              onClick={() => this._loadCams('https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png')}
+              </Dropdown.Item>
+              <Dropdown.Item
+                className='btn-filter__item'
+                onClick={() => this._loadCams('https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png')}
               >
-                <img 
+                <img
                   src={'https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png'}
                   alt='Filter'
                 />
                 PTZ RESIDENCIALES
-            </Dropdown.Item>
-            <Dropdown.Item 
-              className='btn-filter__item'
-              onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')}
+              </Dropdown.Item>
+              <Dropdown.Item
+                className='btn-filter__item'
+                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')}
               >
-                <img 
+                <img
                   src={'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'}
                   alt='Filter'
                 />
                 AI
-            </Dropdown.Item>
-            <Dropdown.Item
-              className='btn-filter__item'
-              onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/blue-dot.png')}
+              </Dropdown.Item>
+              <Dropdown.Item
+                className='btn-filter__item'
+                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/blue-dot.png')}
               >
-                <img 
+                <img
                   src={'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}
                   alt='Filter'
                 />
                 PTZ PARQUES
-            </Dropdown.Item>
-            <Dropdown.Item 
-              className='btn-filter__item'
-              onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/orange-dot.png')}
-            >
-                <img 
+              </Dropdown.Item>
+              <Dropdown.Item
+                className='btn-filter__item'
+                onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/orange-dot.png')}
+              >
+                <img
                   src={'http://maps.google.com/mapfiles/ms/icons/orange-dot.png'}
                   alt='Filter'
                 />
-              TERMICAS
-            </Dropdown.Item>
-            <Dropdown.Item 
-              className='btn-filter__item'
-              onClick={() => this._loadCams('hiddenCam')}
-            >
-                <img 
+                TERMICAS
+              </Dropdown.Item>
+              <Dropdown.Item
+                className='btn-filter__item'
+                onClick={() => this._loadCams('hiddenCam')}
+              >
+                <img
                   src={police_blue}
                   alt='Filter'
                 />
-              PATRULLAS
-            </Dropdown.Item>
-            <Dropdown.Item className='btn-filter__item'  onClick={() => this.setState({ showSearch: true })}>
-            <img 
-            src={searchIcon}
-            alt='Filter'
-          />
-          POR CÁMARA
-        </Dropdown.Item>
-            <Dropdown.Item className='btn-filter__item' onClick={() => this._loadCams()}>
-                <img 
+                PATRULLAS
+              </Dropdown.Item>
+              <Dropdown.Item className='btn-filter__item' onClick={() => this.setState({ showSearch: true })}>
+                <img
+                  src={searchIcon}
+                  alt='Filter'
+                />
+                POR CÁMARA
+              </Dropdown.Item>
+              <Dropdown.Item className='btn-filter__item' onClick={() => this._loadCams()}>
+                <img
                   src={deleteIcon}
                   alt='Filter'
                 />
-              ELIMINAR FILTRO
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>         
+                ELIMINAR FILTRO
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
-         {this._searchModal()}
-         {this._modal()}
+        {this._searchModal()}
+        {this._modal()}
       </div>
     );
   }
@@ -334,48 +334,59 @@ class Map extends Component {
   };
 
   _loadCams = async (filter, filteredData) => {
+    let datos = [];
     this.setState({ loading: true });
-    let  center_lat = 0, center_lng = 0;
+    let center_lat = 0, center_lng = 0;
     for (let index = 0; index < this.state.markers.length; index++) {
       const element = this.state.markers[index];
-      if(element){
+      if (element) {
 
         element.setMap(null);
       }
     }
 
-    const data = await conections.getAllCams();
-    const camaras = data.data;
-    const search = filter && filter !== 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' 
-        ? camaras.filter( d => d.flag_color === filter)
-        : camaras.filter( d => d.flag_color === filter || d.flag_color === null)
-    
+
+    await conections.getCamsOffline().then(response => {
+      response.data.forEach(el => datos.push(el));
+    })
+      .catch(err => console.log(err));
+
+    await conections.getAllCams().then(response => {
+      response.data.forEach(el => datos.push(el))
+    })
+      .catch(err => console.log(err));
+
+
+    const search = filter && filter !== 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+      ? datos.filter(d => d.flag_color === filter)
+      : datos.filter(d => d.flag_color === filter || d.flag_color === null)
+
     let info;
-    if(camaras && !filter && !filteredData){
-      info = await  this._filteredData(camaras, filter, true);
+    if (datos && !filter && !filteredData) {
+      info = await this._filteredData(datos, filter, true);
     }
- 
-    if(search && filter && !filteredData){
+
+    if (search && filter && !filteredData) {
       info = await this._filteredData(search, filter, false);
     }
 
-    if(filteredData){
+    if (filteredData) {
       info = await this._filteredData(filteredData, filter, false);
     }
-    
-    if(info.newMarkers.length > 0 && info.newPlaces.length > 0){
+
+    if (info.newMarkers.length > 0 && info.newPlaces.length > 0) {
       center_lat = info.center_lat / info.total;
       center_lng = info.center_lng / info.total;
       this.state.map.setCenter(new window.google.maps.LatLng(center_lat, center_lng));
-      this.setState({ loading: false, places: info.newPlaces, markers: info.newMarkers, loadingFilter:false });
-    }else{
-      if(filteredData){
-        this.setState({ loadingFilter: false, modalFilter:true });      
+      this.setState({ loading: false, places: info.newPlaces, markers: info.newMarkers, loadingFilter: false });
+    } else {
+      if (filteredData) {
+        this.setState({ loadingFilter: false, modalFilter: true });
       }
     }
   };
 
-  _filteredData =(search, filter, is_cam)=>{
+  _filteredData = (search, filter, is_cam) => {
     let newMarkers = [], center_lat = 0, center_lng = 0, total = 0, newPlaces = [];
     search.forEach((d, index) => {
       let urlHistory = null;
@@ -386,7 +397,7 @@ class Map extends Component {
       center_lat = center_lat + parseFloat(d.google_cordenate.split(',')[0]);
       center_lng = center_lng + parseFloat(d.google_cordenate.split(',')[1]);
       total = total + 1;
-      if(d.UrlStreamMediaServer){
+      if (d.UrlStreamMediaServer) {
 
         const value = {
           id: d.id,
@@ -403,58 +414,58 @@ class Map extends Component {
           urlHistory: urlHistory,
           urlHistoryPort: urlHistoryPort
         };
-      
 
-      if (is_cam) {
-        if (value.lat && value.lng) {
-          newMarkers[index] = new window.google.maps.Marker({
-            position: { lat: value.lat, lng: value.lng },
-            icon: { url: value.flag_color },
-            map: this.state.map,
-            title: value.name,
-            extraData: value
-          });
 
-          window.google.maps.event.addListener(
-            newMarkers[index],
-            'click',
-            ((marker, currentMap, infoWindow) => {
-              return () => infoWindow(marker, currentMap);
-            })(newMarkers[index], this.state.map, this._createInfoWindow)
-          );
+        if (is_cam) {
+          if (value.lat && value.lng) {
+            newMarkers[index] = new window.google.maps.Marker({
+              position: { lat: value.lat, lng: value.lng },
+              icon: { url: value.flag_color },
+              map: this.state.map,
+              title: value.name,
+              extraData: value
+            });
+
+            window.google.maps.event.addListener(
+              newMarkers[index],
+              'click',
+              ((marker, currentMap, infoWindow) => {
+                return () => infoWindow(marker, currentMap);
+              })(newMarkers[index], this.state.map, this._createInfoWindow)
+            );
+          }
         }
+
+        if (!is_cam) {
+          if (value.lat && value.lng && filter !== 'hiddenCam' && !is_cam) {
+            newMarkers[index] = new window.google.maps.Marker({
+              position: { lat: value.lat, lng: value.lng },
+              icon: { url: value.flag_color },
+              map: this.state.map,
+              title: value.name,
+              extraData: value
+            });
+
+            window.google.maps.event.addListener(
+              newMarkers[index],
+              'click',
+              ((marker, currentMap, infoWindow) => {
+                return () => infoWindow(marker, currentMap);
+              })(newMarkers[index], this.state.map, this._createInfoWindow)
+            );
+          }
+        }
+        newPlaces.push(value);
       }
-
-      if (!is_cam) {
-        if (value.lat && value.lng && filter !== 'hiddenCam' && !is_cam) {
-          newMarkers[index] = new window.google.maps.Marker({
-            position: { lat: value.lat, lng: value.lng },
-            icon: { url: value.flag_color },
-            map: this.state.map,
-            title: value.name,
-            extraData: value
-          });
-
-          window.google.maps.event.addListener(
-            newMarkers[index],
-            'click',
-            ((marker, currentMap, infoWindow) => {
-              return () => infoWindow(marker, currentMap);
-            })(newMarkers[index], this.state.map, this._createInfoWindow)
-          );
-        }
-      } 
-      newPlaces.push(value);
-       }
     });
 
     let result = { newPlaces, newMarkers, total, center_lat, center_lng };
     return result;
-    
+
   }
 
-  
-     _loadPolices = () => {
+
+  _loadPolices = () => {
     const { map } = this.state;
     const { limits: { data: { clave_municipal } } } = this.props;
 
@@ -509,22 +520,22 @@ class Map extends Component {
   _addMarker = (police) => {
     const { map, markersPolice } = this.state;
     const { id, available, policeId, police_name, lastLocation: { latitude, longitude } } = police;
-    
-      markersPolice[policeId] = new window.google.maps.Marker({
-        position: { lat: latitude, lng: longitude },
-        icon: MARKERS[`police_${available ? '' : 'un'}available`],
-        map: map,
-        title: police_name,
-        extraData: { id, ...police, isPolice: true }
-      });
-  
-      window.google.maps.event.addListener(
-        markersPolice[policeId],
-        'click',
-        ((police, currentMap, infoWindow) => {
-          return () => infoWindow(police, currentMap);
-        })(markersPolice[policeId], map, this._createInfoWindow)
-      );
+
+    markersPolice[policeId] = new window.google.maps.Marker({
+      position: { lat: latitude, lng: longitude },
+      icon: MARKERS[`police_${available ? '' : 'un'}available`],
+      map: map,
+      title: police_name,
+      extraData: { id, ...police, isPolice: true }
+    });
+
+    window.google.maps.event.addListener(
+      markersPolice[policeId],
+      'click',
+      ((police, currentMap, infoWindow) => {
+        return () => infoWindow(police, currentMap);
+      })(markersPolice[policeId], map, this._createInfoWindow)
+    );
   };
 
   _removeMarker = (police) => {
@@ -549,51 +560,51 @@ class Map extends Component {
 
   _searchModal = () => {
     return (
-        <SearchCamera
-          _filterCameras={this._filterCameras}
-          _setLoading={this._setLoading}
-          showSearch={this.state.showSearch}
-          handleClose={this._handleClose}
-          is_covid={false}
-          is_quadrant={false}
-          _clear={this._clear}
-          filterData={this.state.filterData}
-          map={true}
-        />
+      <SearchCamera
+        _filterCameras={this._filterCameras}
+        _setLoading={this._setLoading}
+        showSearch={this.state.showSearch}
+        handleClose={this._handleClose}
+        is_covid={false}
+        is_quadrant={false}
+        _clear={this._clear}
+        filterData={this.state.filterData}
+        map={true}
+      />
     );
   }
 
-  _modal=()=>{
-    return(
-        <Modal
-          show={this.state.modalFilter}
-          onHide={this._handleClose}
-          backdrop="static"
-          size="sm"
-        >
-          <Modal.Header>
-            <Modal.Title id="example-custom-modal-styling-title">
-              Aviso
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {Strings.noResults}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="outline-primary" onClick={this._handleClose} size="sm">
-              Cerrar
-            </Button>
-          </Modal.Footer>
-        </Modal>
+  _modal = () => {
+    return (
+      <Modal
+        show={this.state.modalFilter}
+        onHide={this._handleClose}
+        backdrop="static"
+        size="sm"
+      >
+        <Modal.Header>
+          <Modal.Title id="example-custom-modal-styling-title">
+            Aviso
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {Strings.noResults}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-primary" onClick={this._handleClose} size="sm">
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     );
   }
 
   _handleClose = () => {
-    this.setState({ showSearch: false, modalFilter:false });
+    this.setState({ showSearch: false, modalFilter: false });
   }
 
   _setLoading = () => {
-    this.setState({ loadingFilter: true, showSearch: false});
+    this.setState({ loadingFilter: true, showSearch: false });
   }
 
   _filterCameras = (data, offData, params) => {
@@ -602,9 +613,9 @@ class Map extends Component {
     }
     this._loadCams(null, data);
   }
-  
-  _clear =()=>{
-    this.setState({filterData:[]});
+
+  _clear = () => {
+    this.setState({ filterData: [] });
   }
 }
 
