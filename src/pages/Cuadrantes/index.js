@@ -16,6 +16,7 @@ import ModalAddCams from '../../components/ModalAddCams';
 import GridCameraDisplay from '../../components/GridCameraDisplay';
 import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
 import SearchCamera from '../../components/SearchCamera';
+import LoadingLogo from '../../components/LoadingLogo';
 import Strings from '../../constants/strings';
 import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 
@@ -23,6 +24,7 @@ import './style.css';
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
+import { LANG } from '../../constants/token';
 
 class Cuadrantes extends Component {
   state = {
@@ -112,13 +114,18 @@ class Cuadrantes extends Component {
     flagDelete: false,
     showSearch: false,
     is_quadrant_filter: false,
-    filterData: []
+    filterData: [],
+    showAllQuadrants: false,
+    arrayCamsNoStream: [],
+    update: false
   }
 
   render() {
-    const { camsCuadrante, is_quadrant_filter } = this.state;
+    const { camsCuadrante, is_quadrant_filter, showAllQuadrants } = this.state;
     return (
-      <div>
+      <div style={{ background: "white" }}>
+        {showAllQuadrants ?
+          <>
         <div className="containerCuadrantes">
           {this.state.cuadrantes.length > 0 && this.state.cuadrantes.map((value) =>
 
@@ -140,7 +147,7 @@ class Cuadrantes extends Component {
           }
           {
             this.state.flagDelete
-              ? <Button className="buttonCuadrantes" onClick={() => this.setState({ flagDelete: false, cuadranteActual: 1 })}>Cancelar</Button>
+              ? <Button className="buttonCuadrantes" onClick={() => this.setState({ flagDelete: false, cuadranteActual: 1 })}>{localStorage.getItem(LANG) === "english" ? "Cancel" : "Cancelar"}</Button>
               :
               this.state.cuadrantes.length !== 0
                 ? <Button style={{ width: '50px', margin: '0px' }} className="buttonCuadrantes delete" color="red" onClick={() => this.setState({ flagDelete: true, cuadranteActual: '' })}>
@@ -148,14 +155,14 @@ class Cuadrantes extends Component {
                 </Button>
                 : null
           }
-          <Button className="buttonCuadrantes" onClick={() => this._newCuadrante(true)}>Crear Cuadrante</Button>
+          <Button className="buttonCuadrantes" onClick={() => this._newCuadrante(true)}>{localStorage.getItem(LANG) === "english" ? "New Quadrant" : "Crear Cuadrante"}</Button>
           {this.state.showInput ?
             <div className="ui action input">
               <Button style={{ marginRight: '3px' }} onClick={() => this.setState({ showInput: false, valueNew: '' })} icon='close' />
               {
                 this.state.flagOtroName
                   ? <Input focus className="formatInput" onChange={(e, { value }) => this.setState({ valueNew: value })} value={this.state.valueNew} placeholder='Nombre Cuadrante' />
-                  : <Dropdown className="formatInput" onChange={(e, { value }) => this._changeName(value)} placeholder='Nombre Cuadrante' selection options={this.state.optionsCuadrantes} />
+                  : <Dropdown className="formatInput" onChange={(e, { value }) => this._changeName(value)} placeholder={localStorage.getItem(LANG) === "english" ? "Cancel" : 'Nombre Cuadrante'} selection options={this.state.optionsCuadrantes} />
               }
               <Button style={{ marginLeft: '4px' }} onClick={() => this._newCuadrante(false)} disabled={this.state.valueNew === ''}>Agregar</Button>
             </div>
@@ -164,20 +171,66 @@ class Cuadrantes extends Component {
             <ModalAddCams modal={this.state.showModal} hide={(flag) => this._hideModal(flag)} name_cuadrante={this.state.cuadranteSelection} />
             : null}
         </div>
-        <div id="analisis_holder" className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
-          {this.state.loading ?
-            <div style={{ position: 'absolute', top: '30%', background: 'transparent', width: '100%' }} align='center'>
-              {/* <JellyfishSpinner
-                            size={250}
-                            color="#686769"
-                            loading={this.state.loading}
-                        /> */}
-              <img
-                className="spinner"
-                src={constants.clientLogo}
-                style={{ width: "10%", borderRadius: "40%" }}
-                alt={constants.clientLogo} />
+        {
+              this.state.cuadrantes.length > 25 &&
+              <Button onClick={this._hideAndShowQuadrants} style={{ height: "4rem", width: "100%", marginTop: "1rem", position: "absolute", zIndex: "2" }}>{localStorage.getItem(LANG) === "english" ? "Hide quadrants" : "Ocultar cuadrantes"}</Button>
+            }
+          </>
+          :
+          <>
+            <div className="containerCuadrantes" style={{ maxHeight: "60px" }}>
+              {this.state.cuadrantes.length > 0 && this.state.cuadrantes.map((value) =>
+
+                <Button key={value.id} className="buttonCuadrantes" as='div' labelPosition='left'>
+                  {
+                    this.state.flagDelete
+                      ? <Button style={{ borderRadius: '.28571429rem' }} color='red' icon='minus' onClick={() => this._deleteCuadrante(value)} />
+                      : null
+                  }
+                  <Label as='a' basic pointing='right' className={this.state.cuadranteActual === value.id ? 'colorSelected' : 'colorNormal'} onClick={() => this._camsCuadrante(value.id)}>
+                    {value.name}
+                  </Label>
+                  <Button icon onClick={() => this._addCams(value)}>
+                    <Icon name='add' />
+                  </Button>
+                </Button>
+              )
+              }
+              {
+                this.state.flagDelete
+                  ? <Button className="buttonCuadrantes" onClick={() => this.setState({ flagDelete: false, cuadranteActual: 1 })}>Cancelar</Button>
+                  :
+                  this.state.cuadrantes.length !== 0
+                    ? <Button style={{ width: '50px', margin: '0px' }} className="buttonCuadrantes delete" color="red" onClick={() => this.setState({ flagDelete: true, cuadranteActual: '' })}>
+                      <Icon name='trash alternate' />
+                    </Button>
+                    : null
+              }
+              <Button className="buttonCuadrantes" onClick={() => this._newCuadrante(true)}>Crear Cuadrante</Button>
+              {this.state.showInput ?
+                <div className="ui action input">
+                  <Button style={{ marginRight: '3px' }} onClick={() => this.setState({ showInput: false, valueNew: '' })} icon='close' />
+                  {
+                    this.state.flagOtroName
+                      ? <Input focus className="formatInput" onChange={(e, { value }) => this.setState({ valueNew: value })} value={this.state.valueNew} placeholder={localStorage.getItem(LANG) === "english" ? "Cancel" : 'Nombre Cuadrante'} />
+                      : <Dropdown className="formatInput" onChange={(e, { value }) => this._changeName(value)} placeholder={localStorage.getItem(LANG) === "english" ? "Cancel" : 'Nombre Cuadrante'} selection options={this.state.optionsCuadrantes} />
+                  }
+                  <Button style={{ marginLeft: '4px' }} onClick={() => this._newCuadrante(false)} disabled={this.state.valueNew === ''}>Agregar</Button>
+                </div>
+                : null}
+              {this.state.showModal ?
+                <ModalAddCams modal={this.state.showModal} hide={(flag) => this._hideModal(flag)} name_cuadrante={this.state.cuadranteSelection} />
+                : null}
             </div>
+            {
+              this.state.cuadrantes.length > 25 &&
+              <Button onClick={this._hideAndShowQuadrants} style={{ height: "4rem", width: "100%", marginTop: "1rem", position: "absolute", zIndex: "2" }}>{localStorage.getItem(LANG) === "english" ? "Show more quadrants" : "Mostrar más cuadrantes"}</Button>
+            }
+          </>
+        }
+        <div id="analisis_holder" className={!this.props.showMatches ? "hide-matches" : "show-matches"} style={{ position: "absolute", zIndex: "2", background: "white", marginTop: "5rem", width: "100%" }}>
+          {this.state.loading ?
+            <LoadingLogo />
             : this.state.camsCuadrante.length !== 0 || this.state.is_quadrant_filter ?
               // <GridCameraDisplay
               //     ref='myChild'
@@ -200,9 +253,10 @@ class Cuadrantes extends Component {
               //     changeStatus={this._chageCamStatus}/>
               <Fragment>
                 {this.state.displayTipe !== 3 && !this.state.loading ? <div className="toggleViewButton row">
-                  <div className='col-12'>
-                    {this.state.is_quadrant_filter && <Button onClick={() => this._loadCuadrantes()} className='btn clear pull-right' basic>Limpiar filtro</Button>}
-                    <Button onClick={() => this.setState({ showSearch: true })} className='btn clear pull-right' basic>Filtrar</Button>
+                <div className='col-12' style={{ marginTop: "1rem" }}>
+                    {this.state.is_quadrant_filter && <Button onClick={() => this._loadCuadrantes()} className='btn clear pull-right' basic>{localStorage.getItem(LANG) === "english" ? "Delete filter" : "Limpiar filtro"}</Button>}
+                    <Button onClick={() => this.setState({ showSearch: true })} className='btn clear pull-right' basic>{localStorage.getItem(LANG) === "english" ? "Filter" : "Filtrar"}</Button>
+                    <Button onClick={() => this.setState({ update: true })}  className='btn clear pull-right' basic>{localStorage.getItem(LANG) === "english" ? "Update" : "Actualizar"}</Button>
                   </div>
                   {camsCuadrante.length !== 0 &&
                     <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe} style={{ marginTop: '1%' }}>
@@ -229,10 +283,10 @@ class Cuadrantes extends Component {
               </Fragment>
               : this.state.cuadrantes.length !== 0
                 ? <div className="errorContainer">
-                  Cuadrante sin camaras asignadas
+                  {localStorage.getItem(LANG) === "english" ? "Quadrant without cameras" : "Cuadrante sin camaras asignadas"}
                 </div>
                 : <div className="errorContainer">
-                  No hay cuadrantes que mostrar
+                  {localStorage.getItem(LANG) === "english" ? "No quadrants to show" : "No hay cuadrantes que mostrar"}
                 </div>
           }
         </div>
@@ -263,6 +317,8 @@ class Cuadrantes extends Component {
     //window.addEventListener('restartCamEvent', this._loadCameras, false)
   }
 
+  changeUpdate = (state) => this.setState({ update: state });
+
   _changeDisplay = (value) => {
     this.setState({ displayTipe: value })
   }
@@ -290,7 +346,12 @@ class Cuadrantes extends Component {
           snapShot={this._snapShot}
           changeStatus={this._chageCamStatus}
           showMatches={this.props.showMatches}
-          propsIniciales={this.props} />)
+          setCountError={this._setCountError}
+          propsIniciales={this.props}
+          update={this.state.update}
+          changeUpdate={this.changeUpdate}
+          />
+          )
       case 2:
         return (<LoopCamerasDisplay
           ref='myChild'
@@ -312,9 +373,13 @@ class Cuadrantes extends Component {
           snapShot={this._snapShot}
           changeStatus={this._chageCamStatus}
           showMatches={this.props.showMatches}
-          propsIniciales={this.props} />)
+          setCountError={this._setCountError}
+          propsIniciales={this.props} 
+          update={this.state.update}
+          changeUpdate={this.changeUpdate}
+          />)
       case 3:
-        return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450} hideFileButton showFilesBelow moduleActions={this.state.moduleActions} /></div>)
+        return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450} hideFileButton showFilesBelow moduleActions={this.state.moduleActions} setCountError={this._setCountError} arrayCamsNoStream={this.state.arrayCamsNoStream} /></div>)
       default:
         return null
     }
@@ -345,6 +410,7 @@ class Cuadrantes extends Component {
     if (params) {
       this.setState({ filterData: params });
     }
+
     let userId = JSON.parse(sessionStorage.getItem("isAuthenticated")).userInfo.user_id;
 
     this.setState({ loading: true })
@@ -361,7 +427,7 @@ class Cuadrantes extends Component {
         }
         else {
           if (!quadrantFilter) {
-            if(this.state.cuadrantes[0]){
+            if (this.state.cuadrantes[0]) {
               this._camsCuadrante(this.state.cuadrantes[0].id);
               this.setState({ cuadranteActual: this.state.cuadrantes[0].id, is_quadrant_filter: false, filterData: [] });
             }
@@ -376,6 +442,11 @@ class Cuadrantes extends Component {
       }
 
     })
+  }
+
+  _hideAndShowQuadrants = () => {
+    let { showAllQuadrants } = this.state;
+    this.setState({ showAllQuadrants: !showAllQuadrants })
   }
 
   _newCuadrante = (action) => {
@@ -411,7 +482,7 @@ class Cuadrantes extends Component {
     this.setState({ is_quadrant_filter: false });
     this.state.cuadrantes.map(item => {
       if (item.id === id) {
-        this.setState({ cuadranteActual: item.id })
+        this.setState({ cuadranteActual: item.id, arrayCamsNoStream: [] })
       }
       return item
     });
@@ -609,13 +680,13 @@ class Cuadrantes extends Component {
         let filename = f.name;
         let portCam = "";
 
-        if (camera.urlHistoryPort ) {
-          if (camera.urlHistoryPort != null){
+        if (camera.urlHistoryPort) {
+          if (camera.urlHistoryPort != null) {
             portCam = camera.urlHistoryPort
-          }else{
+          } else {
             portCam = "3000"
           }
-        }else{
+        } else {
           portCam = "3000"
         }
 
@@ -629,13 +700,13 @@ class Cuadrantes extends Component {
         let filename = f.name;
         let portCam = "";
 
-        if (camera.urlHistoryPort ) {
-          if (camera.urlHistoryPort != null){
+        if (camera.urlHistoryPort) {
+          if (camera.urlHistoryPort != null) {
             portCam = camera.urlHistoryPort
-          }else{
+          } else {
             portCam = "3000"
           }
-        }else{
+        } else {
           portCam = "3000"
         }
 
@@ -651,6 +722,13 @@ class Cuadrantes extends Component {
     });
   };
 
+  _setCountError = (num_cam) => {
+    if (!this.state.arrayCamsNoStream.includes(num_cam)) {
+      this.setState({ arrayCamsNoStream: [...this.state.arrayCamsNoStream, num_cam] });
+    };
+
+    console.log(this.state.arrayCamsNoStream);
+  }
   _makeReport = (camera) => {
     this.setState({ modalProblem: true, cameraProblem: camera })
   }

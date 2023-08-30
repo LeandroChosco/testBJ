@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 
 import Spinner from 'react-bootstrap/Spinner';
 import moment from 'moment-timezone';
+import NotificationSystem from 'react-notification-system';
 
 // import Match from '../Match';
 import ControlPTZ from '../ControlPTZ';
@@ -13,14 +14,19 @@ import CameraStream from '../CameraStream';
 import AdvancedSearch from '../AdvancedSearch';
 import MediaContainer from '../MediaContainer';
 import responseJson from '../../assets/json/suspects.json';
+import LoadingLogo from '../LoadingLogo';
 
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
 import * as QvrFunctions from '../../functions/getQvrFunctions';
+import Strings from '../../constants/strings';
+import { removeSpaces } from '../../functions/removeSpaces';
 
 import './style.css';
+import { LANG } from '../../constants/token';
 
 const SHOW_HISTORY = 3;
 class LoopCamerasDisplay extends Component {
+  notificationSystem = React.createRef();
   state = {
     scroll: [],
     hasMore: true,
@@ -75,7 +81,12 @@ class LoopCamerasDisplay extends Component {
     recordingCams: [],
     recordingProcess: [],
     loadingRcord: false,
-    showPTZ: false
+    showPTZ: false,
+    loadingHistorics: false,
+		historicalUser:null,
+		historicalPassword:null,
+    historyServerDns:null,
+    loadingUpdate: false
   };
 
   _showCameraInfo() {
@@ -83,31 +94,35 @@ class LoopCamerasDisplay extends Component {
   }
 
   render() {
-    let { activeIndex, markers, slideIndex, autoplay, photos, videos, video_history, video_search, selectedCamera, qnapServer, qnapChannel, height, servidorMultimedia, loadingSnap, videosLoading, historyLoading, searchLoading, photosLoading, isNewSearch, recordingCams, restarting, showPTZ, inputCkecked, portContainer, dnsContainer } = this.state
+    let { activeIndex, markers, slideIndex, autoplay, photos, videos, video_history, video_search, selectedCamera, qnapServer, qnapChannel, height, servidorMultimedia, loadingSnap, videosLoading, historyLoading, searchLoading, photosLoading, isNewSearch, recordingCams, restarting, showPTZ, inputCkecked, portContainer, dnsContainer, typeMBOX, loadingUpdate } = this.state
     let { error, propsIniciales, moduleActions, loadingFiles } = this.props
     return (
       <div className="holderOfSlides"  align="center">
-        {error ? (<div className="errorContainer">Error al cargar informacion: {JSON.stringify(error)}</div>) : null}
-        {height ? (
-          markers.map((value, index) =>
-            index === slideIndex ? (
-              <div key={value.extraData.id} style={{ height: 'auto', width: '100%', paddign: '50%' }} align="center" className={index === slideIndex ? '' : 'hiddenCameraNotshow'}>
-                <CameraStream
-                  propsIniciales={propsIniciales}
-                  ref={'camstreamloopref' + value.extraData.id}
-                  marker={value}
-                />
-              </div>
+        <NotificationSystem ref={this.notificationSystem} />
+        {error ? (<div className="errorContainer">{localStorage.getItem(LANG) === "english" ? "Error to show information" : "Error al cargar informacion: "}{JSON.stringify(error)}</div>) : null}
+        {
+          loadingUpdate ?
+            <LoadingLogo /> : height ? (
+              markers.map((value, index) =>
+                index === slideIndex ? (
+                  <div key={value.extraData.id} style={{ height: 'auto', width: '100%', paddign: '50%' }} align="center" className={index === slideIndex ? '' : 'hiddenCameraNotshow'}>
+                    <CameraStream
+                      propsIniciales={propsIniciales}
+                      ref={'camstreamloopref' + value.extraData.id}
+                      marker={value}
+                    />
+                  </div>
+                ) : null
+              )
             ) : null
-          )
-        ) : null}
+        }
         <div className={!autoplay ? 'camControl showfiles' : 'camControl'}>
           {markers[slideIndex] ? (
             <div className="row stiky-top">
               <div className="col-8">
                 {moduleActions ? moduleActions.btnsnap ? <Button basic circular disabled={photos.length >= 5 || restarting || loadingSnap || loadingFiles || recordingCams.indexOf(markers[slideIndex].extraData) > -1} loading={loadingSnap} onClick={() => this._snapShot(markers[slideIndex].extraData)}><i className='fa fa-camera' /></Button> : null : null}
                 {/* <Button basic circular disabled={restarting||loadingSnap||loadingFiles||recordingCams.indexOf(markers[slideIndex].extraData)>-1} onClick={this._playPause}><i className={isplay?'fa fa-pause':'fa fa-play'}/></Button> */}
-                {moduleActions ? moduleActions.btnrecord ? <Button basic circular disabled={videos.length >= 5 || restarting || loadingSnap || loadingFiles} onClick={() => this._recordignToggle(markers[slideIndex].extraData)}><i className={recordingCams.indexOf(markers[slideIndex].extraData) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button> : null : null}
+                {moduleActions ? moduleActions.btnrecord && (typeMBOX && removeSpaces(typeMBOX) !== 'axxon') ? <Button basic circular disabled={videos.length >= 5 || restarting || loadingSnap || loadingFiles} onClick={() => this._recordignToggle(markers[slideIndex].extraData)}><i className={recordingCams.indexOf(markers[slideIndex].extraData) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button> : null : null}
                 <Button basic circular disabled={restarting || loadingSnap || loadingFiles || recordingCams.indexOf(markers[slideIndex].extraData) > -1} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + markers[slideIndex].extraData.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link" /></Button>
                 <Button basic circular disabled={restarting || loadingSnap || loadingFiles || recordingCams.indexOf(markers[slideIndex].extraData) > -1 || videosLoading || photosLoading || (photos.length <= 0 && videos.length <= 0)} onClick={() => this.props.downloadFiles(markers[slideIndex].extraData, { videos, photos, servidorMultimedia })} loading={loadingFiles}><i className="fa fa-download" /></Button>
                 <Button basic circular disabled={restarting || loadingSnap || loadingFiles || recordingCams.indexOf(markers[slideIndex].extraData) > -1} onClick={() => this.props.makeReport(markers[slideIndex].extraData)}><i className="fa fa-warning" /></Button>
@@ -117,7 +132,7 @@ class LoopCamerasDisplay extends Component {
                 {markers[slideIndex].extraData.dataCamValue && markers[slideIndex].extraData.dataCamValue.tipo_camara === 2 && markers[slideIndex].extraData.dataCamValue.camera_ip != null ? <Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows" /></Button> : null}
               </div>
               <div className="col-4">
-                <Button onClick={() => this._openCameraInfo(markers[slideIndex])} className='pull-right' primary><i className={autoplay ? 'fa fa-square' : 'fa fa-play'}></i> {autoplay ? 'Parar loop' : 'Continuar loop'} <i className={autoplay ? 'fa fa-chevron-up' : 'fa fa-chevron-down'} /></Button>
+                <Button onClick={() => this._openCameraInfo(markers[slideIndex])} className='pull-right' primary><i className={autoplay ? 'fa fa-square' : 'fa fa-play'}></i> {autoplay ? localStorage.getItem(LANG) === "english" ? 'Stop loop' : 'Parar loop' : localStorage.getItem(LANG) === "english" ? 'Play loop' : 'Continuar loop'} <i className={autoplay ? 'fa fa-chevron-up' : 'fa fa-chevron-down'} /></Button>
               </div>
             </div>
           ) : null}
@@ -132,8 +147,9 @@ class LoopCamerasDisplay extends Component {
                 />
               </div>
             }
-            <div className="col snapshots">
-              Fotos
+            {typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
+              <div className="col snapshots">
+              {localStorage.getItem(LANG) === "english" ? "Photos" : "Fotos"}
               <div>
                 {photosLoading ? (
                   this._renderLoading()
@@ -157,12 +173,13 @@ class LoopCamerasDisplay extends Component {
                   </div>
                 ) : (
                   <div align="center">
-                    <p className="big-letter">No hay archivos que mostrar</p>
+                    <p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
                     <i className="fa fa-image fa-5x" />
                   </div>
                 )}
               </div>
             </div>
+            }
             <div id="scrollVideo" className="col videos">
               Videos
               <Tab
@@ -171,8 +188,8 @@ class LoopCamerasDisplay extends Component {
                 onTabChange={(e, { activeIndex }) => this.setState({ activeIndex })}
                 menu={{ secondary: true, pointing: true }}
                 panes={[
-                  {
-                    menuItem: 'Grabaciones',
+                  typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && {
+                    menuItem: localStorage.getItem(LANG) === "english" ? "Recordings" : "Grabaciones",
                     render: () => (
                       <Tab.Pane attached={false}>
                         {this._renderVideoList(videosLoading, videos)}
@@ -180,7 +197,7 @@ class LoopCamerasDisplay extends Component {
                     )
                   },
                   moduleActions && moduleActions.viewHistorial && {
-                    menuItem: 'Ultimas 24 Horas',
+                    menuItem: localStorage.getItem(LANG) === "english" ? "Last 24 Hours" : "Últimas 24 Horas",
                     render: () => (
                       <Tab.Pane attached={false}>
                         {this._renderVideoList(
@@ -194,7 +211,7 @@ class LoopCamerasDisplay extends Component {
                     )
                   },
                   qnapServer && qnapChannel && {
-                    menuItem: 'Busqueda Avanzada',
+                    menuItem: localStorage.getItem(LANG) === "english" ? "Advanced Search" : "Búsqueda Avanzada",
                     render: () => (
                       <Tab.Pane attached={false}>
                         <AdvancedSearch
@@ -210,7 +227,7 @@ class LoopCamerasDisplay extends Component {
               />
             </div>
             <div className="col matches" align="center">
-              Historial
+            {localStorage.getItem(LANG) === "english" ? "History" : "Historial"}
               {/* --- matches reales ---
 							{matches.length>0?matches.map((value, index)=><Match key={index} info={value} toggleControls={this._closeControl} />):<h4>Sin historial de matches</h4>} 
 							*/}
@@ -313,19 +330,102 @@ class LoopCamerasDisplay extends Component {
       </div>
     ) : showNoFiles ? (
       <div align="center">
-        <p className="big-letter">No hay archivos que mostrar</p>
+        <p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
         <i className="fa fa-image fa-5x" />
       </div>
     ) : null;
   };
 
   _snapShot = async (camera) => {
-    this.setState({ loadingSnap: true });
-    let response = await conections.snapShotV2(camera.id);
-    const data = response.data;
-    if (data.success) this._loadFiles(camera, false, false, false, true);
-    this.setState({ loadingSnap: false });
+    const { dnsPort, typeMBOX, historyServerProtocol, historicalPassword, historicalUser, historyServerDns } = this.state;
+		let title = 'Descarga de fotografía', message = Strings.unprocessed, level = 'warning';
+
+    if( typeMBOX && removeSpaces(typeMBOX) === 'axxon') {
+      this.setState({ loadingSnap: true });
+			const payload = { cam_id: camera.id };
+			const getVideoStream = await conections.getVideoStreams(payload);
+
+			if (getVideoStream.data && getVideoStream.data.success) {
+				const { data: { data } } = getVideoStream;
+				const videoSourceId = data[0].accessPoint;
+				const password = historicalPassword;
+				const user = historicalUser;
+				let url = null;
+        
+				if (historyServerProtocol && historyServerDns) {
+					if (dnsPort == 80 || dnsPort == 443) {
+						url = `${historyServerProtocol}://${historyServerDns}/live/media/snapshot/${videoSourceId}`;
+					} else {
+						url = `${historyServerProtocol}://${historyServerDns}:${dnsPort}/live/media/snapshot/${videoSourceId}`;
+					}
+
+					const credentials = Buffer.from(`${user}:${password}`).toString('Base64')
+					let xhr = new XMLHttpRequest();
+					xhr.withCredentials = true;
+					xhr.open('GET', url, true);
+					xhr.setRequestHeader("Authorization", "Basic " + credentials)
+					xhr.responseType = 'blob';
+					xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+					xhr.onerror = () => {
+						if (xhr.status == 401) { console.log("onerror:", xhr.status) }
+						this.setState({ loadingSnap: false });
+						this.addNotification({ message, level, title });
+					};
+
+					xhr.onload = (e) => {
+						let blob = xhr.response;
+						if (blob && xhr.status === 200 ) {
+							const fileName = `CAM${camera.id}.jpeg`;
+							this.saveFile(blob, fileName);
+							this.setState({ loadingSnap: false });
+            } else {
+              this.addNotification({ message, level, title });
+              this.setState({ loadingSnap: false });
+            }
+					};
+					xhr.send();
+				} else {
+					this.addNotification({ message, level, title });
+					this.setState({ loadingSnap: false });
+				}
+			} else {
+				this.addNotification({ message, level, title });
+				this.setState({ loadingSnap: false });
+			}
+
+    } else {
+      if(typeMBOX){
+        this.setState({ loadingSnap: true });
+        let response = await conections.snapShotV2(camera.id);
+        const data = response.data;
+        if (data.success) this._loadFiles(camera, false, false, false, true);
+        this.setState({ loadingSnap: false });
+      }      
+    }
   };
+
+  addNotification = (info) => {
+    const notification = this.notificationSystem.current;
+    notification.addNotification({
+      message: info.message,
+      level: info.level,
+      position: 'tc',
+      title: info.title
+    });
+  };
+
+  saveFile = (blob, fileName) => {
+    let tempEl = document.createElement("a");
+    document.body.appendChild(tempEl);
+    tempEl.style = "display: none";
+    let url = window.URL.createObjectURL(blob);
+    tempEl.href = url;
+    tempEl.download = fileName;
+    tempEl.click();
+    window.URL.revokeObjectURL(url);
+  }
 
   _recordignToggle = async (selectedCamera) => {
     let response = {};
@@ -510,10 +610,18 @@ class LoopCamerasDisplay extends Component {
     }
   };
 
-  _destroyFileVideos = async (loading = false, setNewState = true, lastState = this.state.qnapServer) => {
+  _destroyFileVideos = async (loading = false, setNewState = true, lastState = this.state.qnapServer, typeMbox = false) => {
     if (setNewState) {
+
+      if (typeMbox === 'axxon') {
+				const historialTab = 1;
+				this.setState({ activeIndex: historialTab });
+			} else {
+				this.setState({ activeIndex: 0 });
+			}
+
       this.setState({
-        activeIndex: 0, videos: [], video_history: [], photos: [], video_search: [], video_ssid: [],
+        videos: [], video_history: [], photos: [], video_search: [], video_ssid: [],
         videosLoading: loading, historyLoading: loading, photosLoading: loading, searchLoading: false, isNewSearch: false,
         scroll: [], hasMore: true, scrollInitialDate: moment().startOf('date')
       });
@@ -574,10 +682,11 @@ class LoopCamerasDisplay extends Component {
   };
 
   _loadFiles = async (cam, destroyFiles = false, onlyCurrent = false, onlyHistory = false, onlyPhotos = false) => {
-    if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos));
-    let { selectedCamera } = this.state;
     let camera = cam && cam.id ? cam : selectedCamera;
     let tipoMBOX= camera.dataCamValue.tipombox
+
+    if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos), null, tipoMBOX);
+    let { selectedCamera } = this.state;
 		let dnsMbox = camera.dataCamValue.urlhistory;
 		const dns_portMbox = camera.dataCamValue.urlhistoryport
 		const protocol = camera.dataCamValue.protocolhistory
@@ -647,12 +756,13 @@ class LoopCamerasDisplay extends Component {
 					}else{
 						let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
 								if(response.data.data.items.length > 0){
-									let resHistory = response.data.data;
-									this.setState({resHistorySearch: resHistory})
+									let resHistory = tipoMBOX &&  removeSpaces(tipoMBOX) === 'axxon' ? [] : response.data.data;
+                  let info = response.data.data;
+									this.setState({resHistorySearch: resHistory, historicalPassword: info.historicalPassword, historicalUser: info.historicalUser, historyServerPort: info.dns_port, historyServerDns: info.dns_ip, historyServerProtocol: info.protocol, dnsPort: dns_portMbox})
 									if (resHistory.items.length > 0) {
 											let dns_ip = dnsMbox
 											let dns_port = dns_portMbox
-											this.setState({dns_portdnsPort: dns_port})
+											this.setState({dns_portdnsPort: dns_port, dnsPort: dns_port})
 											if (resHistory) {
 												let dates = createArrDate(resHistory.items);
 												let arrayHistoricos  = []
@@ -786,7 +896,7 @@ class LoopCamerasDisplay extends Component {
 
   _loadfilesForSearch = async (cam, destroyFiles = false, onlyCurrent = false, onlyHistory = false, onlyPhotos = false, dnsMbox = null, portMbox = null) =>{
 		
-		if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos));
+		if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos), null, this.state.typeMBOX);
 		let { selectedCamera } = this.state;
 		let camera = cam && cam.id ? cam : selectedCamera;
 		// History
@@ -1012,7 +1122,7 @@ this.setState({interval: time,markers:markersForLoop, height:height})
     await this._destroyFileVideos();
   };
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     // const navHeight = document.getElementsByTagName('nav')[0].scrollHeight;
     // const viewBar = document.getElementsByClassName('toggleViewButton')[0].scrollHeight;
     // const bottomBar = document.getElementsByClassName('camControl')[0].scrollHeight;
@@ -1032,6 +1142,18 @@ this.setState({interval: time,markers:markersForLoop, height:height})
     //     canvas.style.width = '80%';
     //   }
     // }
+
+    const { update, changeUpdate } = this.props
+    const { update: updatePrev } = prevProps;
+    if (update !== updatePrev) {
+      if (update) {
+        this.setState({ loadingUpdate: true })
+        changeUpdate(false)
+        setTimeout(() => {
+          this.setState({ loadingUpdate: false });
+        }, 2500);
+      }
+    }
   }
 
   static getDerivedStateFromProps(props, state) {

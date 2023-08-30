@@ -80,7 +80,7 @@ const DataTicketsDash = (props) => {
                     },
                 },
 
-                colors: ['#00e396', '#f2833e', '#008ffb'],
+                colors: ['#098f62', '#f2833e', '#008ffb'],
                 legend: {
                     show: true,
                     showForSingleSeries: false,
@@ -153,11 +153,11 @@ const DataTicketsDash = (props) => {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col className='col-4'><BsEnvelopeOpenFill style={{ color: "#00e396", border: "none", width: "70%", height: "50%" }} /></Col>
+                                <Col className='col-4'><BsEnvelopeOpenFill style={{ color: "#098f62", border: "none", width: "70%", height: "50%" }} /></Col>
                                 <Col className='col-8'>
                                     <Row style={{marginTop: "0.75rem"}}>
                                         <p>
-                                            <b style={{ color: "#00e396" }}>{dataTickets.filter((el) => el.name === "Abiertos")[0].value} tickets</b> abiertos
+                                            <b style={{ color: "#098f62" }}>{dataTickets.filter((el) => el.name === "Abiertos")[0].value} tickets</b> abiertos
                                         </p>
                                     </Row>
                                 </Col>

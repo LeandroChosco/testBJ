@@ -10,6 +10,8 @@ import 'moment/locale/es';
 import PaginationList from './pagination'
 import NotificationSystem from 'react-notification-system';
 
+import { BsArrowsExpand } from 'react-icons/bs'
+
 // import Match from '../Match';
 import ControlPTZ from '../ControlPTZ';
 import conections from '../../conections';
@@ -29,6 +31,8 @@ import { CurveGridCamera } from '../Dashboard/Placas/CurveGridCamera';
 import { VehiclesCount } from './VehiclesCount';
 import VehiclesSelector from './VehiclesSelector';
 import { removeSpaces } from '../../functions/removeSpaces';
+import { LANG } from '../../constants/token';
+import LoadingLogo from '../LoadingLogo';
 
 const SHOW_HISTORY = 3;
 const countryOptions = [
@@ -40,6 +44,7 @@ const countryOptions = [
 	{ key: 30, text: 30, value: 30 },
 	{ key: 50, text: 50, value: 50 }
 ];
+
 class GridCameraDisplay extends Component {
 	notificationSystem = React.createRef();
 	state = {
@@ -108,35 +113,70 @@ class GridCameraDisplay extends Component {
 		loadingHistorics: false,
 		historicalUser: null,
 		historicalPassword: null,
+		isAxxonSearch: false,
+		axxonList: [],
 	};
 
 	render() {
-		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays, filterCount, typeMBOX } = this.state;
+		let { activeIndex, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays, filterCount, typeMBOX, isAxxonSearch, axxonList, loadingUpdate } = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, is_filter } = this.props;
 
+
+		if (document.getElementById("gridCameraControl") && document.getElementById("iconGrid")) {
+			let gridCameraControl = document.getElementById("gridCameraControl");
+			let iconGrid = document.getElementById("iconGrid");
+			let mousePressed = false;
+			let startY, startHeight;
+
+			iconGrid.addEventListener("mousedown", function (event) {
+				let rect = gridCameraControl.getBoundingClientRect();
+				let topOffset = event.clientY - rect.top;
+				if (topOffset <= 28) {
+					mousePressed = true;
+					startY = event.clientY;
+					startHeight = gridCameraControl.offsetHeight;
+				}
+			});
+
+			document.addEventListener("mousemove", function (event) {
+				if (mousePressed) {
+					let deltaY = startY - event.clientY;
+					let newHeight = startHeight + deltaY;
+					gridCameraControl.style.height = newHeight + "px";
+				}
+			});
+
+			document.addEventListener("mouseup", function () {
+				mousePressed = false;
+			});
+		}
+
 		return (
-			<div className="gridCameraContainer" align="center">
+			<div className="gridCameraContainer" style={{ height: "280%" }} align="center">
 				<NotificationSystem ref={this.notificationSystem} />
 				<Row>
-					{markers.map((value, index) =>
-						index < start + limit && index >= start ? (
-							<Col className={selectedCamera === value.extraData ? ('p-l-0 p-r-0 activeselectedcameragrid camcolgridholder') : ('p-l-0 p-r-0 camcolgridholder')} lg={4} sm={6} key={value.extraData.id} onClick={() => this._openCameraInfo(value, index)} marker={value.id}>
-								<CameraStream
-									propsIniciales={propsIniciales}
-									ref={'camrefgrid' + value.extraData.id}
-									key={value.extraData.id}
-									marker={value}
-								/>
-							</Col>
-						) : null
-					)}
+					{loadingUpdate ?
+						<LoadingLogo />
+						: markers.map((value, index) =>
+							index < start + limit && index >= start ? (
+								<Col className={selectedCamera === value.extraData ? ('p-l-0 p-r-0 activeselectedcameragrid camcolgridholder') : ('p-l-0 p-r-0 camcolgridholder')} lg={4} sm={6} key={value.extraData.id} onClick={() => this._openCameraInfo(value, index)} marker={value.id}>
+									<CameraStream
+										setCountError={this.props.setCountError}
+										propsIniciales={propsIniciales}
+										ref={'camrefgrid' + value.extraData.id}
+										key={value.extraData.id}
+										marker={value}
+									/>
+								</Col>
+							) : null
+						)}
 				</Row>
 				{loading ? null : (
-					<Row className={!showMatches ? ('hide-matches paginatorContainerOnGrid2') : ('show-matches paginatorContainerOnGrid')}>
+					<Row className={!showMatches ? ('hide-matches paginatorContainerOnGrid2') : ('show-matches paginatorContainerOnGrid')} style={{ width: "100%" }}>
 						<Col style={{ height: '100%' }}>
-							Camaras por pagina{' '}
+							{localStorage.getItem(LANG) === "english" ? "Cameras per page    " : "Cámaras por página    "}
 							<Select
-								placeholder="Camaras por pagina"
+								placeholder={localStorage.getItem(LANG) === "english" ? "Cameras per page" : "Cámaras por página"}
 								options={countryOptions}
 								value={limit}
 								onChange={(e, value) => {
@@ -147,8 +187,8 @@ class GridCameraDisplay extends Component {
 						</Col>
 						<Col>
 							<ReactPaginate
-								previousLabel={'Anterior'}
-								nextLabel={'Siguiente'}
+								previousLabel={localStorage.getItem(LANG) === "english" ? "Previous" : 'Anterior'}
+								nextLabel={localStorage.getItem(LANG) === "english" ? "Next" : 'Siguiente'}
 								breakLabel={'...'}
 								pageCount={pageCount}
 								marginPagesDisplayed={2}
@@ -163,7 +203,12 @@ class GridCameraDisplay extends Component {
 				)}
 				{error && markers.length === 0 ? (
 					<div className="errorContainer">
-						Error al cargar informacion: {JSON.stringify(error)}
+						{localStorage.getItem(LANG) === "english" ?
+							`Error loading information: ${JSON.stringify(error)}`
+							:
+							`Error al cargar información: ${JSON.stringify(error)}`
+						}
+
 					</div>
 				) : null}
 				{is_filter && markers.length === 0 ? (
@@ -171,13 +216,15 @@ class GridCameraDisplay extends Component {
 						{Strings.noResults}
 					</div>
 				) : null}
-				<div className={!autoplay ? !showMatches ? ('sin-margin camGridControl showfiles') : ('con-margin camGridControl showfiles') : !showMatches ? ('sin-margin camGridControl') : ('con-margin camGridControl')}>
-					{/* <div className={!showMatches ? "hide-matches" : "show-matches"}> */}
+				<div id="gridCameraControl" className={!autoplay ? !showMatches ? ('sin-margin camGridControl showfiles') : ('con-margin camGridControl showfiles') : !showMatches ? ('sin-margin camGridControl') : ('con-margin camGridControl')}>
+					<div id="iconGrid" className="iconGrid">
+						<BsArrowsExpand />
+					</div>
 					<div className="row stiky-top">
 						<div className="col-4">
 							{moduleActions && moduleActions.btnsnap && (<Button basic circular disabled={photos.length >= 5 || loadingSnap || loadingRcord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1} loading={loadingSnap} onClick={() => this._snapShot(selectedCamera)}><i className="fa fa-camera" /></Button>)}
 							{/* <Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={this._playPause}><i className={isplay?'fa fa-pause':'fa fa-play'}/></Button> */}
-							{moduleActions && moduleActions.btnrecord && (<Button basic circular disabled={videos.length >= 5 || loadingSnap || loadingRcord || loadingFiles || restarting} loading={loadingRcord} onClick={() => this._recordignToggle(selectedCamera)}><i className={recordingCams.indexOf(selectedCamera) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button>)}
+							{moduleActions && moduleActions.btnrecord && typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && (<Button basic circular disabled={videos.length >= 5 || loadingSnap || loadingRcord || loadingFiles || restarting} loading={loadingRcord} onClick={() => this._recordignToggle(selectedCamera)}><i className={recordingCams.indexOf(selectedCamera) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button>)}
 							<Button basic disabled={loadingSnap || loadingRcord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1} circular onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + selectedCamera.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link" /></Button>
 							<Button basic disabled={loadingSnap || loadingRcord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1 || videosLoading || photosLoading || (photos.length <= 0 && videos.length <= 0)} circular onClick={() => this.props.downloadFiles(selectedCamera, { videos, photos, servidorMultimedia })} loading={loadingFiles}><i className="fa fa-download" /></Button>
 							<Button basic disabled={loadingSnap || loadingRcord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1} circular onClick={() => this.props.makeReport(selectedCamera)}><i className="fa fa-warning" /></Button>
@@ -185,20 +232,20 @@ class GridCameraDisplay extends Component {
 							<Button basic circular onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange" /></Button>
 							{selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.dns != null ? <Button basic circular onClick={() => this.Clicked(selectedCamera.dataCamValue.dns)}><i className="fa fa-sliders" /></Button> : null}
 							{selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.camera_ip != null ? <Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows" /></Button> : null}
-							{!qnapServer && !qnapChannel && (<AdvancedSearchNotqnap loading={searchLoading} _searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus} countDays={countDays} navButton={true} />)}
+							{!qnapServer && !qnapChannel && (<AdvancedSearchNotqnap loading={searchLoading} _searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus} countDays={countDays} navButton={true} isAxxon={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : false} _searchFilesAxxon={this._searchFilesAxxon} />)}
 							{qnapServer && qnapChannel && (<AdvancedSearch loading={searchLoading} _searchFileVideos={this._searchFileVideos} />)}
 						</div>
-						<div className='col-5'>
-							<b>Camara</b> {selectedCamera.name}
+						<div className='col-4'>
+							<b>{localStorage.getItem(LANG) === "english" ? "Camera" : "Camara"}</b> {selectedCamera.name}
 						</div>
-						<div className='col-3'>
-							<Button onClick={() => (this._openCameraInfo(false), this.setState({ moduleSearch: false }))} className='pull-right' primary> {autoplay ? '' : 'Ocultar controles'} <i className={autoplay ? 'fa fa-chevron-up' : 'fa fa-chevron-down'} /></Button>
+						<div className='col-4'>
+							<Button onClick={() => this._openCameraInfo(false)} className='pull-right' primary> {autoplay ? '' : localStorage.getItem(LANG) === "english" ? "Hide controls" : 'Ocultar controles'} <i className={autoplay ? 'fa fa-chevron-up' : 'fa fa-chevron-down'} /></Button>
 						</div>
 					</div>
 					<div className={!autoplay ? 'row showfilesinfocameragrid' : 'row hidefiles'}>
 						{showPTZ &&
 							<div className="col ptzgrid">
-								Controles
+								{localStorage.getItem(LANG) === "english" ? "Controls" : "Controles"}
 								<ControlPTZ
 									camera={selectedCamera}
 									isInMap={false}
@@ -207,7 +254,7 @@ class GridCameraDisplay extends Component {
 							</div>
 						}
 						{
-							selectedCamera.id > 100513 && selectedCamera.id < 100547 ?
+							selectedCamera.id > 513 && selectedCamera.id < 547 ?
 								// selectedCamera.id === 1 || selectedCamera.id === 2 ?
 								<>
 									<div className="col-1 platesgrid" align="center">
@@ -223,47 +270,50 @@ class GridCameraDisplay extends Component {
 
 								selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ?
 									<>
-										<div className="col snapshotsgrid">
-											Fotos
-											<div>
-												{photosLoading ? (
-													this._renderLoading()
-												) : photos.length > 0 ? (
-													<div className="row">
-														{photos.map((value, index) => (
-															<MediaContainer
-																key={index}
-																value={value}
-																isQnap={false}
-																exists_image={true}
-																cam={selectedCamera}
-																src={value.relative_url}
-																reloadData={this._loadFiles}
-																servidorMultimedia={servidorMultimedia}
-																port={portContainer}
-																dnsContainer={dnsContainer}
-																userIdContainer={this.getUserID()}
-															/>
-														))}
-													</div>
-												) : (
-													<div align="center">
-														<p className="big-letter">No hay archivos que mostrar</p>
-														<i className="fa fa-image fa-5x" />
-													</div>
-												)}
+										{typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
+											<div className="col snapshotsgrid">
+												{localStorage.getItem(LANG) === "english" ? "Photos" : "Fotos"}
+												<div>
+													{photosLoading ? (
+														this._renderLoading()
+													) : photos.length > 0 ? (
+														<div className="row">
+															{photos.map((value, index) => (
+																<MediaContainer
+																	key={index}
+																	value={value}
+																	isQnap={false}
+																	exists_image={true}
+																	cam={selectedCamera}
+																	src={value.relative_url}
+																	reloadData={this._loadFiles}
+																	servidorMultimedia={servidorMultimedia}
+																	port={portContainer}
+																	dnsContainer={dnsContainer}
+																	userIdContainer={this.getUserID()}
+																/>
+															))}
+														</div>
+													) : (
+														<div align="center">
+															<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+															<i className="fa fa-image fa-5x" />
+														</div>
+													)}
+												</div>
 											</div>
-										</div>
+										}
 										<div id="scrollVideo" className="col videosgrid">
-											Videos
+											{localStorage.getItem(LANG) === "english" ? "Videos" : "Videos"}
 											<Tab
 												align="center"
 												activeIndex={activeIndex}
 												onTabChange={(e, { activeIndex }) => this.setState({ activeIndex })}
 												menu={{ secondary: true, pointing: true }}
 												panes={[
+													typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
 													{
-														menuItem: 'Grabaciones',
+														menuItem: localStorage.getItem(LANG) === "english" ? "Recordings" : 'Grabaciones',
 														render: () => (
 															<Tab.Pane attached={false}>
 																{this._renderVideoList(videosLoading, videos, true, null, false, false, true)}
@@ -271,85 +321,80 @@ class GridCameraDisplay extends Component {
 														)
 													},
 													moduleActions && moduleActions.viewHistorial && !moduleSearch ? {
-														menuItem: 'Últimas 24 Horas',
+														menuItem: localStorage.getItem(LANG) === "english" ? "Last 24 Hours" : 'Últimas 24 Horas',
 														render: () => (
 															<>
-																<div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0.3rem" }}>
-																	{
-																		typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
-																			<p>Descarga de videos</p>
-																			:
-																			<Radio
-																				toggle
-																				onClick={this._statusChange}
-																				id="toggle24"
-																				label="Descarga de videos"
-																				checked={this.state.inputCkecked}
-																			/>
-																	}
-																	<AdvancedSearchNotqnap loading={searchLoading} _searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus} countDays={countDays} navButton={false} />
-																	<div>
-																		<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >Actualizar</button>
-																	</div>
-																</div>
+																{
+																	historyLoading ?
+																		this._renderLoading()
+																		:
+																		<>
+																			<div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0.3rem" }}>
+																				{
+																					typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
+																						<p>{localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}</p>
+																						:
+																						<Radio
+																							toggle
+																							onClick={this._statusChange}
+																							id="toggle24"
+																							label={localStorage.getItem(LANG) === "english" ? "Download videos (links)" : "Descarga de videos (links)"}
+																							checked={this.state.inputCkecked}
+																						/>
+																				}
+																				<AdvancedSearchNotqnap loading={searchLoading} _searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus} countDays={countDays} navButton={false} isAxxon={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : false} _searchFilesAxxon={this._searchFilesAxxon} />
+																				<div>
+																					<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
+																						{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}
+																					</button>
+																				</div>
+																			</div>
 
-																<hr />
-																<div>
-																	{this._renderButtonsByHour()}
-																</div>
+																			<hr />
+																			{this._renderButtonsByHour()}
 
-																{!inputCkecked ? (<Tab.Pane attached={false}>
-																	{this._renderVideoListSearch(
-																		historyLoading,
-																		arrPares.length > 0 ? arrPares : video_history,
-																		true,
-																		arrPares.length > 0 ? arrPares[0] : null,
-																		true, inputCkecked, false, true
-																	)}
-																</Tab.Pane>) : (<Tab.Pane attached={false}>
-																	{this._renderVideoListSearch(
-																		historyLoading,
-																		arrPares.length > 0 ? arrPares : video_history,
-																		true,
-																		arrPares.length > 0 ? arrPares[0] : null,
-																		true, inputCkecked, false, true
-																	)}
-																</Tab.Pane>)}
-																<div style={{ display: "flex", justifyContent: "center", paddingTop: "0.3rem" }}>
-																	{
-																		typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
-																			null
-																			:
-																			<Radio
-																				toggle
-																				onClick={this._statusChange}
-																				id="toggle24"
-																				label="Descarga de videos (links)"
-																				checked={this.state.inputCkecked}
-																			/>
-																	}
-																</div>
+																			{!inputCkecked ? (<Tab.Pane attached={false}>
+																				{this._renderVideoListSearch(
+																					historyLoading,
+																					arrPares.length > 0 ? arrPares : video_history,
+																					true,
+																					arrPares.length > 0 ? arrPares[0] : null,
+																					true, inputCkecked, false, true
+																				)}
+																			</Tab.Pane>) : (<Tab.Pane attached={false}>
+																				{this._renderVideoListSearch(
+																					historyLoading,
+																					arrPares.length > 0 ? arrPares : video_history,
+																					true,
+																					arrPares.length > 0 ? arrPares[0] : null,
+																					true, inputCkecked, false, true
+																				)}
+																			</Tab.Pane>)}
+																		</>
+																}
 															</>
 														)
 													}
 														:
 														{
-															menuItem: 'Resultados de búsqueda',
+															menuItem: localStorage.getItem(LANG) === "english" ? "Search results" : 'Resultados de búsqueda',
 															render: () => (
 																<>
 																	<div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0.3rem" }}>
 																		{typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
-																			<p>Descarga de videos</p> :
+																			<p>{localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}</p> :
 																			<Radio
 																				toggle
 																				onClick={this._statusChange}
 																				id="toggle24"
-																				label="Descarga de videos"
+																				label={localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}
 																				checked={this.state.inputCkecked}
 																			/>
 																		}
 																		<div>
-																			<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => this._backToHistorics()} >Volver a históricos</button>
+																			<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => this._backToHistorics()} >
+																				{localStorage.getItem(LANG) === "english" ? "Back to historics" : "Volver a históricos"}
+																			</button>
 																		</div>
 																	</div>
 																	<hr />
@@ -358,17 +403,17 @@ class GridCameraDisplay extends Component {
 																	{!inputCkecked ? (<Tab.Pane attached={false}>
 																		{this._renderVideoListSearch(
 																			historyLoading,
-																			arrPares.length > 0 ? arrPares : video_history,
+																			isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares : video_history,
 																			true,
-																			arrPares.length > 0 ? arrPares[0] : null,
+																			isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares[0] : null,
 																			true, inputCkecked, false, true
 																		)}
 																	</Tab.Pane>) : (<Tab.Pane attached={false}>
 																		{this._renderVideoListSearch(
 																			historyLoading,
-																			arrPares.length > 0 ? arrPares : video_history,
+																			isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares : video_history,
 																			true,
-																			arrPares.length > 0 ? arrPares[0] : null,
+																			isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares[0] : null,
 																			true, inputCkecked, false, true
 																		)}
 																	</Tab.Pane>)}
@@ -381,7 +426,7 @@ class GridCameraDisplay extends Component {
 																					toggle
 																					onClick={this._statusChange}
 																					id="toggle24"
-																					label="Descarga de videos (links)"
+																					label={localStorage.getItem(LANG) === "english" ? "Download videos (links)" : "Descarga de videos (links)"}
 																					checked={this.state.inputCkecked}
 																				/>
 																		}
@@ -389,15 +434,15 @@ class GridCameraDisplay extends Component {
 																</>
 															)
 														},
-													qnapServer && qnapChannel && {
-														menuItem: 'Resultados de busqueda',
-														render: () => (
-															<Tab.Pane attached={false}>
-																{(isNewSearch || searchLoading) && <hr />}
-																{this._renderVideoList(searchLoading, video_search, isNewSearch, null, false, false, true)}
-															</Tab.Pane>
-														)
-													}
+													// qnapServer && qnapChannel && {
+													// 	menuItem: 'Resultados de busqueda',
+													// 	render: () => (
+													// 		<Tab.Pane attached={false}>
+													// 			{(isNewSearch || searchLoading) && <hr />}
+													// 			{ this._renderVideoList(searchLoading, video_search, isNewSearch, null, false, false, true)}
+													// 		</Tab.Pane>
+													// 	)
+													// }
 												]}
 											/>
 										</div>
@@ -410,11 +455,11 @@ class GridCameraDisplay extends Component {
 									null
 						}
 						{
-							selectedCamera.id < 100513 || selectedCamera.id > 100547 ?
+							selectedCamera.id < 513 || selectedCamera.id > 547 ?
 								// selectedCamera.id !== 1 && selectedCamera.id !== 2 ?
 
 								<div className="col-4 matchesgrid" align="center">
-									Historial
+									{localStorage.getItem(LANG) === "english" ? "History" : "Historial"}
 									<br />
 
 									{selectedCamera.dataCamValue ? selectedCamera.dataCamValue.is_lpr ? this._showPlates(true, selectedCamera) : null : null}
@@ -446,6 +491,7 @@ class GridCameraDisplay extends Component {
 		);
 	}
 
+
 	_showPlates = (state = false, selectedCamera) => {
 		return (
 			<Placas reset={state} selectedCamera={selectedCamera} />
@@ -462,7 +508,7 @@ class GridCameraDisplay extends Component {
 	};
 
 	download = async (params, dns) => {
-		let { apiStorageKey, dnsPort, typeMBOX, historyServerProtocol, historicalPassword, historicalUser, historyServerDns } = this.state;
+		let { apiStorageKey, dnsPort, typeMBOX, historyServerProtocol, historicalPassword, historicalUser, historyServerDns, isAxxonSearch } = this.state;
 		if (typeMBOX === 'light') {
 			const URI = apiStorageKey ? `${params.relative_path_video}${apiStorageKey}` : dnsPort === 80 ? `${historyServerProtocol}://${dns}/${params.relative_path_video}` : `${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`;
 			axios({
@@ -481,73 +527,92 @@ class GridCameraDisplay extends Component {
 			});
 		} else {
 			if (typeMBOX === 'axxon') {
-				const { access_point, begin, end, camera_id, storage } = params;
+				const { access_point, begin, end, camera_id, storage, archive, search_start_time_utc, search_end_time_utc, format, search_start_time, search_end_time, fecha, real_hour } = params;
+
 				const body = {
 					access_point,
-					begin,
-					end,
+					begin: begin ? begin : search_start_time_utc,
+					end: end ? end : search_end_time_utc,
 					cam_id: camera_id,
-					storage,
-					format: "mp4"
+					storage: storage ? storage : archive,
+					format: format ? format : "mp4"
 				};
-				const archive = await conections.exportArchive(body);
-				const { file_path, id, route } = archive.data && archive.data.archive;
-				let level = null, message = null;
-				if (file_path) {
-					message = 'Descarga iniciada exitosamente.';
-					level = 'info';
 
-					this.addNotification({ message, level });
-					let url = null;
-					const password = historicalPassword;
-					const user = historicalUser;
+				const responseArchive = await conections.exportArchive(body);
+				let level = null, message = null, title = null;
+				if (responseArchive && responseArchive.data && responseArchive.data.success) {
+					const { file_path, id, route } = responseArchive.data && responseArchive.data.archive;
+					if (file_path) {
+						message = localStorage.getItem(LANG) === "english" ? Strings.downloadEnglishStarted : Strings.downloadStarted;
+						level = 'success';
+						title = localStorage.getItem(LANG) === "english" ? 'Historic download' : 'Descarga de histórico';
+						this.addNotification({ message, level, title });
+						let url = null;
+						const password = historicalPassword;
+						const user = historicalUser;
 
-					if (dnsPort == 80 || dnsPort == 443) {
-						url = `${historyServerProtocol}://${user}:${password}@${historyServerDns}/export/${id}/file?name=${file_path}`;
-					} else {
-						url = `${historyServerProtocol}://${user}:${password}@${historyServerDns}:${dnsPort}/export/${id}/file?name=${file_path}`;
+						if (dnsPort == 80 || dnsPort == 443) {
+							url = `${historyServerProtocol}://${historyServerDns}/export/${id}/file?name=${file_path}`;
+						} else {
+							url = `${historyServerProtocol}://${historyServerDns}:${dnsPort}/export/${id}/file?name=${file_path}`;
+						}
+
+						const info = { cam_id: camera_id, route };
+
+
+						let xhr = new XMLHttpRequest();
+						xhr.withCredentials = true;
+						const credentials = Buffer.from(`${user}:${password}`).toString('Base64')
+
+						xhr.open('GET', url, true);
+						xhr.setRequestHeader("Authorization", "Basic " + credentials)
+						xhr.responseType = 'blob';
+						xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+						xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+						xhr.onerror = (e) => {
+							if (xhr.status == 401) {
+								console.log("onerror:", xhr.status)
+							}
+						};
+						xhr.onload = (e) => {
+							let blob = xhr.response;
+							if (blob) {
+								let fileName = null;
+								if (!isAxxonSearch) {
+									fileName = (fecha && real_hour) ? `CAM${camera_id}_${fecha}-${real_hour}.mp4` : `CAM${camera_id}_${search_start_time.split(" ")[0]}_${search_start_time.split(" ")[1]}-${search_end_time.split(" ")[1]}.${format}`
+								} else {
+									fileName = `CAM${camera_id}_${search_start_time}-${search_end_time}.${format}`
+								}
+								this.saveFile(blob, fileName);
+							}
+							conections.finalizExportProcess(info);
+
+							if (xhr.status == 401) {
+								console.log("onload:", xhr.status)
+							}
+
+						};
+
+						xhr.onprogress = (e) => {
+
+							const percentages = [5, 20, 40, 60, 80, 95];
+							let progress = Math.floor((e.loaded / e.total) * 100);
+							percentages.forEach((t => {
+								if (t === progress) {
+									console.log(`progress: ${progress}`);
+								}
+							}))
+						};
+
+						xhr.send();
 					}
-
-					window.open(url);
-					const info = { cam_id: camera_id, route };
-
-					setTimeout(() => {
-						conections.finalizExportProcess(info);
-					}, 5000)
-
-					// const info = { cam_id: camera_id, route };
-					// let xhr = new XMLHttpRequest();
-					// xhr.withCredentials = true;
-					// const credentials = Buffer.from(`${user}:${password}`).toString('Base64')
-
-					// xhr.open('GET', url, true);
-					// xhr.setRequestHeader("Authorization", "Basic " + credentials)
-					// xhr.responseType = 'blob';
-					// xhr.onload = (e) => {
-					// 	let blob = xhr.response;
-					// 	if (blob) {
-					// 		this.saveFile(blob, params.fecha, params.real_hour, params.camera_id);
-					// 	}
-					// 	conections.finalizExportProcess(info);
-					// };
-
-					// xhr.onprogress = (e) => {
-
-					// 	const percentages = [5, 20, 40, 60, 80, 95];
-					// 	let progress = Math.floor((e.loaded / e.total) * 100);
-					// 	percentages.forEach((t => {
-					// 		if (t === progress) {
-					// 			console.log(`progress: ${progress}`);
-					// 		}
-					// 	}))
-					// };
-
-					// xhr.send();
 				} else {
-					message = 'No se pudo iniciar la descarga.';
+					message = localStorage.getItem(LANG) === "english" ? 'Could not start the download.' : 'No se pudo iniciar la descarga.';
 					level = 'error';
+					title = localStorage.getItem(LANG) === "english" ? 'Historic download' : 'Descarga de histórico';
 
-					this.addNotification({ message, level });
+					this.addNotification({ message, level, title });
 				}
 			} else {
 				const URI = `${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`;
@@ -569,8 +634,7 @@ class GridCameraDisplay extends Component {
 
 	}
 
-	saveFile = (blob, fecha, real_hour, camera_id) => {
-		let fileName = `CAM${camera_id}_${fecha}-${real_hour}.mp4`
+	saveFile = (blob, fileName) => {
 		let tempEl = document.createElement("a");
 		document.body.appendChild(tempEl);
 		tempEl.style = "display: none";
@@ -586,7 +650,9 @@ class GridCameraDisplay extends Component {
 		notification.addNotification({
 			message: info.message,
 			level: info.level,
-			position: 'tc'
+			position: 'tc',
+			title: info.title,
+			autoDismiss: info.level === "warning" ? 0 : 7
 		});
 	};
 
@@ -610,7 +676,7 @@ class GridCameraDisplay extends Component {
 	}
 
 	_renderVideoList = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false, isDownload = false, isRecord = false, noButtons = false) => {
-		let { servidorMultimedia, dnsArray, camURL, apiStorageKey, portContainer, dnsContainer, typeMBOX, historyServerDns, historyServerPort, historyServerProtocol, selectedCamera, protocolDownload } = this.state;
+		let { servidorMultimedia, dnsArray, camURL, apiStorageKey, portContainer, dnsContainer, typeMBOX, historyServerDns, historyServerPort, historyServerProtocol, selectedCamera, protocolDownload, historicCurrentDay } = this.state;
 		// const userIdContainer = this.getUserID()
 
 		return loading ? (
@@ -641,12 +707,14 @@ class GridCameraDisplay extends Component {
 					historyServerPort={historyServerPort}
 					historyServerProtocol={historyServerProtocol}
 					renderLoading={this._renderLoading}
+					getHistoricsByHour={this._getHistoricsByHour}
+					historicCurrentDay={historicCurrentDay}
 				/>
 			</>
 
 		) : showNoFiles ? (
 			<div align="center">
-				<p className="big-letter">No hay archivos que mostrar</p>
+				<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
 				<i className="fa fa-image fa-5x" />
 			</div>
 		) : null
@@ -654,64 +722,149 @@ class GridCameraDisplay extends Component {
 
 
 	_renderVideoListSearch = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false, isDownloadSearch = false, isRecord = false, noButtons = false) => {
-		let { servidorMultimedia, dnsArray, camURL, apiStorageKey, awsApiStreamsCams, selectedCamera, portContainer, dnsContainer, typeMBOX, protocolDownload, historyServerDns, historyServerPort, historyServerProtocol, loadingHistorics } = this.state;
+		let { servidorMultimedia, dnsArray, camURL, apiStorageKey, awsApiStreamsCams, selectedCamera, portContainer, dnsContainer, typeMBOX, protocolDownload, historyServerDns, historyServerPort, historyServerProtocol, loadingHistorics, isAxxonSearch, historicCurrentDay } = this.state;
 
-		if (videoList.length > 0) {
+		if (videoList && videoList.length > 0 && !isAxxonSearch) {
 			if (!videoList[0].active) {
 				videoList.shift()
 			}
 		}
 
 		let sortVideoList = videoList;
-		if (videoList[0] && videoList[0].fecha < videoList[videoList.length - 1].fecha) {
+		if (!isAxxonSearch && videoList[0] && videoList[0].fecha < videoList[videoList.length - 1].fecha) {
 			sortVideoList = videoList.reverse()
+		}
+
+		let newArray = [];
+
+		if (sortVideoList.length > 0 && !Array.isArray(sortVideoList[0])) {
+			sortVideoList.forEach(el => {
+				if (!newArray.some(element => element.hour === el.hour)) {
+					let nuevoObjeto = {
+						hour: el.hour,
+						fecha: el.fecha,
+						videos: [el]
+					}
+					newArray.push(nuevoObjeto)
+
+				} else {
+					let idx = newArray.findIndex(e => e.hour === el.hour)
+					newArray[idx].videos.push(el)
+				}
+			})
+
 		}
 
 		return loadingHistorics ? (
 			this._renderLoading()
-		) : videoList && videoList.length > 0 ? (
-			<PaginationList
-				awsApiStreamsCams={awsApiStreamsCams}
-				numberVideos={40}
-				videoList={sortVideoList}
-				isDownloadSearch={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : isDownloadSearch}
-				dnsArray={dnsArray}
-				hasDns={hasDns}
-				camURL={camURL}
-				dnsContainer={dnsContainer}
-				portContainer={portContainer}
-				servidorMultimedia={servidorMultimedia}
-				apiStorageKey={apiStorageKey}
-				noButtons={noButtons}
-				isRecord={isRecord}
-				typeMBOX={typeMBOX}
-				selectedCamera={selectedCamera}
-				reloadData={this._loadFiles}
-				download={this.download}
-				renderPagination={this._renderPagination}
-				protocolDownload={protocolDownload}
-				historyServerDns={historyServerDns}
-				historyServerPort={historyServerPort}
-				historyServerProtocol={historyServerProtocol}
-				renderLoading={this._renderLoading}
-			/>
 		) :
-			showNoFiles ? (
-				<div align="center">
-					<p className="big-letter">No hay archivos que mostrar</p>
-					<i className="fa fa-image fa-5x" />
-				</div>
-			) : null
+			typeMBOX === "axxon" && !isAxxonSearch ?
+				this._renderAxxonByHalfHour(dnsArray)
+				:
+				videoList && videoList.length > 0 ?
+					(
+						<PaginationList
+							awsApiStreamsCams={awsApiStreamsCams}
+							numberVideos={40}
+							videoList={isAxxonSearch ? videoList : newArray.length > 0 ? newArray : sortVideoList}
+							withAccordion={newArray.length > 0}
+							isDownloadSearch={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : isDownloadSearch}
+							dnsArray={dnsArray}
+							hasDns={hasDns}
+							camURL={camURL}
+							dnsContainer={dnsContainer}
+							portContainer={portContainer}
+							servidorMultimedia={servidorMultimedia}
+							apiStorageKey={apiStorageKey}
+							noButtons={noButtons}
+							isRecord={isRecord}
+							typeMBOX={typeMBOX}
+							selectedCamera={selectedCamera}
+							reloadData={this._loadFiles}
+							download={this.download}
+							renderPagination={this._renderPagination}
+							protocolDownload={protocolDownload}
+							historyServerDns={historyServerDns}
+							historyServerPort={historyServerPort}
+							historyServerProtocol={historyServerProtocol}
+							renderLoading={this._renderLoading}
+							isAxxonSearch={isAxxonSearch}
+							getHistoricsByHour={this._getHistoricsByHour}
+							historicCurrentDay={historicCurrentDay}
+						/>
+					) :
+					showNoFiles ? (
+						<div align="center">
+							<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+							<i className="fa fa-image fa-5x" />
+						</div>
+					) : null
 	};
 
 	_snapShot = async (camera) => {
+		const { dnsPort, typeMBOX, historyServerProtocol, historicalPassword, historicalUser, historyServerDns } = this.state;
 		this.setState({ loadingSnap: true });
-		let response = await conections.snapShotV2(camera.id);
-		const data = response.data;
-		if (data.success) {
-			this._loadFiles(camera, false, false, false, true)
-		};
-		this.setState({ loadingSnap: false });
+		let title = 'Descarga de fotografía', message = Strings.unprocessed, level = 'warning';
+		if (removeSpaces(typeMBOX) === 'axxon') {
+			const payload = { cam_id: camera.id };
+			const getVideoStream = await conections.getVideoStreams(payload);
+			if (getVideoStream.data && getVideoStream.data.success) {
+				const { data: { data } } = getVideoStream;
+				const videoSourceId = data[0].accessPoint;
+				const password = historicalPassword;
+				const user = historicalUser;
+				let url = null;
+
+				if (historyServerProtocol && historyServerDns) {
+					if (dnsPort == 80 || dnsPort == 443) {
+						url = `${historyServerProtocol}://${historyServerDns}/live/media/snapshot/${videoSourceId}`;
+					} else {
+						url = `${historyServerProtocol}://${historyServerDns}:${dnsPort}/live/media/snapshot/${videoSourceId}`;
+					}
+
+					const credentials = Buffer.from(`${user}:${password}`).toString('Base64')
+					let xhr = new XMLHttpRequest();
+					xhr.withCredentials = true;
+					xhr.open('GET', url, true);
+					xhr.setRequestHeader("Authorization", "Basic " + credentials)
+					xhr.responseType = 'blob';
+					xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+					xhr.onerror = () => {
+						if (xhr.status == 401) { console.log("onerror:", xhr.status) }
+						this.setState({ loadingSnap: false });
+						this.addNotification({ message, level, title });
+					};
+
+					xhr.onload = (e) => {
+						let blob = xhr.response;
+						if (blob && xhr.status === 200) {
+							const fileName = `CAM${camera.id}.jpeg`;
+							this.saveFile(blob, fileName);
+							this.setState({ loadingSnap: false });
+						} else {
+							this.addNotification({ message, level, title });
+							this.setState({ loadingSnap: false });
+						}
+					};
+					xhr.send();
+				} else {
+					this.addNotification({ message, level, title });
+					this.setState({ loadingSnap: false });
+				}
+			} else {
+				this.addNotification({ message, level, title });
+				this.setState({ loadingSnap: false });
+			}
+		} else {
+			let response = await conections.snapShotV2(camera.id);
+			const data = response.data;
+			if (data.success) {
+				this._loadFiles(camera, false, false, false, true)
+			};
+			this.setState({ loadingSnap: false });
+		}
 	};
 
 	_recordignToggle = async (selectedCamera) => {
@@ -752,6 +905,107 @@ class GridCameraDisplay extends Component {
 		}
 	};
 
+	_renderAxxonByHalfHour = (dnsArray) => {
+
+		const { isAxxonSearch, historicCurrentDay } = this.state;
+
+		let currentDate = new Date();
+		let currentDay = moment().subtract(Math.abs(historicCurrentDay), 'days').format().split("T")[0];
+		let currentHour = currentDate.toLocaleTimeString();
+		let todayDate = historicCurrentDay === 0;
+
+		let arrayByHalfHour = this._createArrayHours(currentHour, todayDate);
+
+		const searchVideos = (hour) => {
+			let body = {
+				startDateTime: `${currentDay} ${hour}`,
+				dateTimeEnd: hour === "23:30" ? `${moment().subtract(historicCurrentDay - 1, 'days').format().split("T")[0]} 00:00` : `${currentDay} ${hour.split(":")[1] === "00" ? hour.split(":")[0] + ":30" : (parseInt(hour.split(":")[0]) + 1) + ":00"}`,
+				search_axxon: true,
+				format: "mkv",
+				search_auto: true,
+				dnsArray: dnsArray,
+			}
+
+			this._searchFilesAxxon(body);
+		};
+
+		let newArray = [];
+		let auxArray = [];
+
+		arrayByHalfHour.forEach(el => {
+			if (auxArray.length === 3) {
+				newArray.push(auxArray);
+				auxArray = [];
+				auxArray.push(el);
+			} else {
+				auxArray.push(el);
+			};
+		});
+
+		if (auxArray.length > 0) {
+			newArray.push(auxArray)
+		}
+
+		if (!isAxxonSearch) {
+			return (
+				<div style={{ padding: "0.5rem 0" }}>
+					{
+						newArray.map((el, index) => {
+							return (
+								<div key={index} style={{ display: "flex", padding: "0.5rem 0" }}>
+									{
+										el.map((element, idx) => {
+											return (
+												<div key={element} className="col-4">
+													<button key={idx} className={"btn btn-outline-primary ml-auto mr-auto mb-2 fake-btn"} onClick={() => searchVideos(element)} >
+														{`${element} - ${element.split(":")[1] === "00" ? element.split(":")[0] + ":30" : element === "23:30" ? "00:00" : (parseInt(element.split(":")[0]) + 1) + ":00"}`}
+													</button>
+												</div>
+											);
+										})
+									}
+								</div>
+							);
+						})
+					}
+				</div>
+			);
+		};
+	};
+
+	_createArrayHours = (actualHour, actualDay) => {
+		let half = actualHour.split(":")[1] > 30;
+		let hour = actualHour.split(":")[0];
+		let arrayHours = [];
+		let finalArray = [];
+
+		if (actualDay) {
+			for (let i = hour; i > -1; i--) {
+				arrayHours.push(i.toString());
+			};
+
+			arrayHours.forEach((el, idx) => {
+				if (idx === 0 && half) {
+					finalArray.push(arrayHours[0] + ":00")
+				} else {
+					finalArray.push(el + ":30")
+					finalArray.push(el + ":00")
+				}
+			})
+
+		} else {
+			for (let i = 23; i > -1; i--) {
+				arrayHours.push(i.toString());
+			};
+
+			arrayHours.forEach((el) => {
+				finalArray.push(el + ":30")
+				finalArray.push(el + ":00")
+			})
+		}
+		return finalArray;
+	}
+
 	_getHistoricsByHour = (daysBack) => {
 
 		this.setState({ loadingHistorics: true })
@@ -765,40 +1019,42 @@ class GridCameraDisplay extends Component {
 		}, 1000);
 	}
 
-	_changeStatus = (changeStatus) => {
-		this.setState({ moduleSearch: changeStatus });
-	}
-
 	_backToHistorics = () => {
-		let momentToMount = [moment().startOf('date').format('YYYY-MM-DD')];
+		const { arrayHistoricsByHour, arrayWeek } = this.state;
+		const copyAuxWeek = JSON.parse(JSON.stringify(arrayWeek));
+		const orderDates = copyAuxWeek.sort((a, b) => { return new Date(b) - new Date(a) });
+		let index = 0, startDate = arrayHistoricsByHour[0];
+
+		if (orderDates && startDate) { index = orderDates.indexOf(startDate); }
+
+		let momentToMount = [moment(startDate).startOf('date').format('YYYY-MM-DD')];
 		this._searchFileVideosNotqnap(momentToMount, "00", "24");
 		this._changeStatus(false);
+		this.setState({ isAxxonSearch: false, axxonList: [], historicCurrentDay: index });
 	}
 
 	_renderButtonsByHour = () => {
-
-		let { arrayWeek, arrayHistoricsByHour, historicCurrentDay } = this.state
+		let { historicCurrentDay } = this.state
 		moment.locale('es');
+
+		let totalWeekArray = [0, 1];
 
 		return (
 			<div style={{ display: "flex", justifyContent: "space-between" }}>
 				{
-					arrayWeek.map((el, idx) => {
-						if (arrayHistoricsByHour.includes(el)) {
-							let buttonDate = moment().subtract(Math.abs(idx - 1), 'days').startOf('date').format('ll');
-							return (
-								<button key={Math.abs(idx - 1)} className={historicCurrentDay === Math.abs(idx - 1) ? "btn btn-primary ml-auto mr-auto mb-2" : "btn btn-outline-primary ml-auto mr-auto mb-2"} onClick={() => this._getHistoricsByHour(Math.abs(idx - 1))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
-							)
-						} else {
-							let buttonDate = moment().subtract(Math.abs(idx - 1), 'days').startOf('date').format('ll');
-							return (
-								<button key={Math.abs(idx - 1)} className="btn btn-outline-primary ml-auto mr-auto mb-2" disabled >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
-							);
-						};
+					totalWeekArray.map((el) => {
+						let buttonDate = moment().subtract(Math.abs(el - 1), 'days').startOf('date').format('ll');
+						return (
+							<button key={Math.abs(el - 1)} className={historicCurrentDay === Math.abs(el - 1) ? "btn btn-primary ml-auto mr-auto mb-2" : "btn btn-outline-primary ml-auto mr-auto mb-2"} onClick={() => this._getHistoricsByHour(Math.abs(el - 1))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
+						);
 					})
 				}
 			</div>
 		)
+	}
+
+	_changeStatus = (changeStatus) => {
+		this.setState({ moduleSearch: changeStatus });
 	}
 
 	_checkLiveTimeRecording = () => {
@@ -875,24 +1131,6 @@ class GridCameraDisplay extends Component {
 			}
 		})
 
-		// if(element[0].hour < "23:00"){
-		// 	let extraHalfString = JSON.stringify(element[0]);
-		// 	let extraOClockString = JSON.stringify(element[1]);
-
-		// 	let extraHalf = JSON.parse(extraHalfString);
-		// 	let extraOClock = JSON.parse(extraOClockString);
-
-		// 	extraHalf.hour = (parseInt(extraHalf.hour.split(":")[0]) + 1).toString() + ":" + extraHalf.hour.split(":")[1];
-		// 	extraHalf.real_hour = (parseInt(extraHalf.real_hour.split(":")[0]) + 1).toString() + ":" + extraHalf.real_hour.split(":")[1];
-		// 	extraHalf.relative_path_video = "Process";
-
-		// 	extraOClock.hour = (parseInt(extraOClock.hour.split(":")[0]) + 1).toString() + ":" + extraOClock.hour.split(":")[1];
-		// 	extraOClock.real_hour = (parseInt(extraOClock.real_hour.split(":")[0]) + 1).toString() + ":" + extraOClock.real_hour.split(":")[1];
-		// 	extraOClock.relative_path_video = "Process";
-
-		// 	element.unshift(extraHalf, extraOClock)
-		// }
-
 		if (dates.length <= 1) {
 			element.filter(filter => (filter.fecha === dates[0])).filter(filter => filter.hour >= `${startHour}:00`).filter(filter => filter.hour < `${endHour}:00`).map(videos => result.push(videos))
 			result.unshift([video_advanced[0]])
@@ -927,6 +1165,64 @@ class GridCameraDisplay extends Component {
 			true)
 
 
+	}
+
+	_searchFilesAxxon = async (params) => {
+		const { selectedCamera } = this.state;
+		this.setState({ isAxxonSearch: true, loadingHistorics: true });
+
+		let notificationFirstAlert = {
+			message: "Aguarde unos segundos mientras se realiza la búsqueda de históricos.",
+			level: "info",
+			position: 'tc',
+			title: "Búsqueda de históricos",
+			autoDismiss: 35,
+		};
+
+		this.addNotification(notificationFirstAlert);
+
+		const payload = {
+			cam_id: selectedCamera.id
+		}
+
+		const getArchives = await conections.getArchives(payload);
+
+		if (getArchives.data.data) {
+			let listAvailablefiles = getArchives.data.data;
+			let search = {
+				cam_id: selectedCamera.id,
+				begin: params.startDateTime,
+				end: params.dateTimeEnd,
+				archives: listAvailablefiles
+			};
+
+			const recordingsAvailable = await conections.searchArchive(search);
+			const data = recordingsAvailable.data;
+			let copyList, info, list;
+			if (data.success) {
+				info = data.data;
+				copyList = info.map(a => { return { ...a } })
+				if (copyList.length > 0) {
+					list = copyList.map((d) => {
+						d.format = params.format;
+						d.camera_id = selectedCamera.id;
+						return d
+					});
+					if (params.search_auto) {
+						this.setState({ isAxxonSearch: false })
+						this.download(list[0], params.dnsArray);
+					}
+				}
+				this.setState({ axxonList: list ? list : [] })
+			} else {
+				let message = 'No se encontraron grabaciones, intente con otro horario.';
+				let level = 'warning';
+				let title = 'Búsqueda de histórico';
+				this.addNotification({ message, level, title });
+				this.setState({ isAxxonSearch: false });
+			}
+			this.setState({ loadingHistorics: false });
+		}
 	}
 
 	_searchFileVideos = async (dates, startHour, endHour, stateNames, setNewState = true, searchFileHours = false) => {
@@ -1013,10 +1309,18 @@ class GridCameraDisplay extends Component {
 		}
 	};
 
-	_destroyFileVideos = async (loading = false, setNewState = true, lastState = this.state.qnapServer) => {
+	_destroyFileVideos = async (loading = false, setNewState = true, lastState = this.state.qnapServer, typeMbox = false) => {
 		if (setNewState) {
+
+			if (typeMbox === 'axxon') {
+				const historialTab = 1;
+				this.setState({ activeIndex: historialTab });
+			} else {
+				this.setState({ activeIndex: 0 });
+			}
+
 			this.setState({
-				activeIndex: 0, videos: [], video_history: [], photos: [], video_search: [], video_ssid: [],
+				videos: [], video_history: [], photos: [], video_search: [], video_ssid: [],
 				videosLoading: loading, historyLoading: loading, photosLoading: loading, searchLoading: false, isNewSearch: false,
 				scroll: [], hasMore: true, scrollInitialDate: moment().startOf('date'), showPTZ: false
 			});
@@ -1077,11 +1381,12 @@ class GridCameraDisplay extends Component {
 	};
 
 	_loadFiles = async (cam, destroyFiles = false, onlyCurrent = false, onlyHistory = false, onlyPhotos = false) => {
-		if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos));
 		let { selectedCamera } = this.state;
-		// console.log(selectedCamera)
 		let camera = cam && cam.id ? cam : selectedCamera;
-		let tipoMBOX = camera.dataCamValue.tipombox
+		let tipoMBOX = camera.dataCamValue.tipombox;
+		
+		if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos), null, tipoMBOX);
+
 		let dnsMbox = camera.dataCamValue.urlhistory;
 		const dns_portMbox = camera.dataCamValue.urlhistoryport
 		const protocol = camera.dataCamValue.protocolhistory
@@ -1170,7 +1475,7 @@ class GridCameraDisplay extends Component {
 							if (resHistory.items.length > 0) {
 								let dns_ip = dnsMbox
 								let dns_port = dns_portMbox
-								this.setState({ dns_portdnsPort: dns_port })
+								this.setState({ dns_portdnsPort: dns_port, dnsPort: dns_port });
 								if (resHistory) {
 									let dates = createArrDate(resHistory.items);
 									if (dates[last_day]) {
@@ -1263,10 +1568,17 @@ class GridCameraDisplay extends Component {
 										this.spinnerif();
 									}
 								}
+
+
 							}
 						}
+
 					}
+
+
 				}
+
+
 				catch (err) {
 					this.setState({ video_history: [], historyLoading: false });
 				}
@@ -1307,8 +1619,7 @@ class GridCameraDisplay extends Component {
 
 
 	_loadfilesForSearch = async (cam, destroyFiles = false, onlyCurrent = false, onlyHistory = false, onlyPhotos = false, dnsMbox = null, portMbox = null) => {
-
-		if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos));
+		if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos), null, this.state.typeMBOX);
 		let { selectedCamera } = this.state;
 		let camera = cam && cam.id ? cam : selectedCamera;
 		// History
@@ -1337,7 +1648,7 @@ class GridCameraDisplay extends Component {
 				};
 
 				let resHistory = this.state.resHistorySearch
-				if (resHistory.items.length > 0) {
+				if (resHistory && resHistory.items.length > 0) {
 					let dns_ip = dnsMbox
 					let dns_port = portMbox
 					this.setState({ dnsPort: dns_port })
@@ -1388,10 +1699,12 @@ class GridCameraDisplay extends Component {
 						if (resHistory.items.length > 0) {
 							if (resHistory) {
 								let dates = createArrDate(resHistory.items);
-								let hours_last_day = createArrHour(dates[last_day].videos);
-								conjunto.push(Object.values(hours_last_day).reverse().reverse())
-								pruebas[0][1].push(conjunto)
-								this.setState({ video_advancedSearch: pruebas })
+								if (dates[last_day]) {
+									let hours_last_day = createArrHour(dates[last_day].videos);
+									conjunto.push(Object.values(hours_last_day).reverse().reverse())
+									pruebas[0][1].push(conjunto)
+									this.setState({ video_advancedSearch: pruebas })
+								}
 							} else {
 								this.setState({ video_history: [], historyLoading: false });
 								this.spinnerif();
@@ -1457,9 +1770,9 @@ class GridCameraDisplay extends Component {
 						conjunto2[0].map(videos => {
 							return pruebas[0][1].push(videos)
 						})
+					this.addButtons(pruebas);
+					this.setState({ video_advancedSearch: pruebas })
 				}
-				this.addButtons(pruebas);
-				this.setState({ video_advancedSearch: pruebas })
 			}
 		};
 
@@ -1472,7 +1785,7 @@ class GridCameraDisplay extends Component {
 		if (this.state.arrayHistoricsByHour.length === 0) {
 			if (video_advancedSearch[0]) {
 				video_advancedSearch[0][1].forEach(el => {
-					if (el.videos && !arrayButtons.includes(el.videos[0].fecha)) {
+					if (!arrayButtons.includes(el.videos[0].fecha)) {
 						arrayButtons.push(el.videos[0].fecha);
 					}
 				})
@@ -1480,7 +1793,7 @@ class GridCameraDisplay extends Component {
 		}
 
 		if (this.state.arrayWeek.length === 0) {
-			for (let i = 0; i < 2; i++) {
+			for (let i = 0; i < 7; i++) {
 				auxWeek.unshift(moment().subtract(i, 'days').startOf('date').format('YYYY-MM-DD'));
 			}
 		}
@@ -1488,10 +1801,16 @@ class GridCameraDisplay extends Component {
 		if (arrayButtons.length > 0 && auxWeek.length > 0) {
 			this.setState({ arrayWeek: auxWeek, arrayHistoricsByHour: arrayButtons });
 		}
-		this._getHistoricsByHour(0);
 
+		const copyAuxWeek = JSON.parse(JSON.stringify(auxWeek));
+		const orderDates = copyAuxWeek.sort((a, b) => { return new Date(b) - new Date(a) });
+		let index = 0, startDate = arrayButtons[0];
 
-		let momentToMount = [moment().startOf('date').format('YYYY-MM-DD')];
+		if (orderDates && startDate) { index = orderDates.indexOf(startDate); }
+		this._getHistoricsByHour(index);
+
+		let momentToMount = [moment(startDate).startOf('date').format('YYYY-MM-DD')];
+
 		this._searchFileVideosNotqnap(momentToMount, "00", "24", null, null, null, video_advancedSearch);
 
 	};
@@ -1525,6 +1844,11 @@ class GridCameraDisplay extends Component {
 			*/
 
 			// --- matches forzados
+			if (marker.extraData && removeSpaces(marker.extraData.dataCamValue.tipombox) === 'axxon') {
+				const historialTab = 1;
+				this.setState({ activeIndex: historialTab, historyLoading: true });
+			}
+
 			this.setState({
 				selectedCamera: marker.extraData,
 				qnapServer: marker.extraData.dataCamValue.qnap_server_id,
@@ -1606,6 +1930,22 @@ class GridCameraDisplay extends Component {
 
 		}
 	};
+
+	componentDidUpdate(prevProps) {
+		const { update, changeUpdate } = this.props
+		const { update: updatePrev } = prevProps;
+
+		if (update !== updatePrev) {
+			if (update) {
+				this.setState({ loadingUpdate: true })
+				changeUpdate(false)
+				this._openCameraInfo(false)
+				setTimeout(() => {
+					this.setState({ loadingUpdate: false });
+				}, 2500);
+			}
+		}
+	}
 
 	componentDidMount() {
 		let markersForLoop = [];

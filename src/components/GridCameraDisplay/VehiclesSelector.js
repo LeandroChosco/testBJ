@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Row } from "reactstrap";
 
-
 export default function VehiclesSelector(props) {
 
     const [filterGraphic, setFilterGraphic] = useState("week")

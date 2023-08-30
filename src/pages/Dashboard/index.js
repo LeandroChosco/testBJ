@@ -128,6 +128,8 @@ class Dashboard extends Component {
     totalEvents: [],
     personsperDay: [],
     attendedVSclosed: [],
+    filterCam: "0",
+    allFilters: [],
     panes: [
       { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
       { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
@@ -159,56 +161,71 @@ class Dashboard extends Component {
   renderCamsDashboard() {
     // const c = shuffle(COLORS);
     return (
-      <div className='container-flex'>
+      <div className="container-flex">
         <h1>Logística de cámaras</h1>
         <p>Powered by Radar ®</p>
         <hr />
         <p>La logística de Radar realiza un recuento del estado y registro de cámaras en la alcaldía. De esta manera, los monitoristas tienen un control más eficaz de las instalaciones.</p>
         <br />
-        <div className='row'>
-          <div className='col chart overflow table-responsive' align='center'>
-            {
-              this.state.loadingCamsGrid ?
-                <Loading />
-                :
-                this.state.lastCreatedCams ?
-                  <LastCreadedCams lastCreatedCams={this.state.lastCreatedCams} />
-                  : null}
-
+        <div className="row">
+          <div className="col chart overflow table-responsive" align="center">
+            {this.state.loadingCamsGrid ? (
+              <Loading />
+            ) : this.state.lastCreatedCams ? (
+              <LastCreadedCams lastCreatedCams={this.state.lastCreatedCams} />
+            ) : null}
           </div>
-          <div className='col chart' align='center'>
-            <h3>Estado de camaras</h3>
-            {
-              this.state.loadingCams ?
-                <Loading />
-                :
-                <DataCamsDash dataCams={this.state.dataCams} />
-            }
+          <div className="col chart" align="center">
+            <div style={{ display: "flex", justifyContent: "space-around" }}>
+              <h3>Estado de cámaras</h3>
+              <div>
+                <p>Filtrar por modelo</p>
+                <select name="filterCam" onChange={this.changeFilter} className="selectFilter" >
+                  <option key={0} value={0} className="optionsFilter">TODAS</option>
+                  {
+                    this.state.allFilters ? this.state.allFilters.map((el) => {
+                      return (
+                        <option key={el.id} value={el.id} className="optionsFilter">{el.name.toUpperCase()}</option>
+                      )
+                    }) : null
+                  }
+                </select>
+              </div>
+            </div>
+            {this.state.loadingCams ? (
+              <Loading />
+            ) : (
+              <DataCamsDash dataCams={this.state.dataCams} />
+            )}
           </div>
         </div>
         <div className="row">
-          <div className='col-6 chart' align='center'>
-            <h3>Cámaras instaladas por mes</h3>
-            {
-              this.state.loadingCams ?
-                <Loading />
-                :
-                <CamsInstalledByMonth installed_by_moth={this.state.installed_by_moth} />
-            }
+          <div className="col-6 chart" align="center">
+            <h3>Cámaras activas instaladas por mes</h3>
+            {this.state.loadingCams ? (
+              <Loading />
+            ) : (
+              <CamsInstalledByMonth
+                installed_by_moth={this.state.installed_by_moth}
+              />
+            )}
           </div>
-          <div className='col-6 chart' align='center'>
-            <h3>Cámaras instaladas el último mes</h3>
-            {
-              this.state.loadingCams ?
-                <Loading />
-                :
-                <IntalledLastMonth installed_last_moth={this.state.installed_last_moth} />
-            }
+
+          <div className="col-6 chart" align="center">
+            <h3>Cámaras activas instaladas el último mes</h3>
+            {this.state.loadingCams ? (
+              <Loading />
+            ) : (
+              <IntalledLastMonth
+                installed_last_moth={this.state.installed_last_moth}
+              />
+            )}
           </div>
         </div>
       </div>
     );
   }
+
 
   renderEmebidoDashboard() {
 
@@ -429,31 +446,51 @@ class Dashboard extends Component {
       loadingPersons: true
     })
     this.processMicrofono()
-    conections.dashboardCams().then(response => {
+    conections.dashboardCams(this.state.filterCam).then((response) => {
       const data = response.data;
-      // console.log('datilla: ', data)
       this.setState({
         loadingCams: false,
         dataCams: [
-          { name: 'Activas', value: data.active },
-          { name: 'Inactivas', value: data.deactive },
-          { name: 'Desconectadas', value: data.disconnected }
+          { name: "Activas", value: data.active },
+          { name: "Inactivas", value: data.deactive },
+          { name: "Desconectadas", value: data.disconnected },
         ],
-        installed_by_moth: data.installed_by_moth.map(v => { v.fecha = moment(v.fecha).format('MMM-YYYY'); return v }),
-        installed_last_moth: data.installed_last_moth.map(v => { v.fecha = moment(v.fecha).format('DD-MM-YYYY'); return v })
-      })
-    })
+        installed_by_moth: data.installed_by_moth.sort((a, b) => {
+          if (a.fecha > b.fecha) {
+            return 1
+          } else {
+            return -1
+          }
+        }).map((v) => {
+          v.fecha = moment(v.fecha).format("MMM-YYYY");
+          return v;
+        }),
+        installed_last_moth: data.installed_last_moth.sort((a, b) => {
+          if (a.fecha > b.fecha) {
+            return 1
+          } else {
+            return -1
+          }
+        }).map((v) => {
+          v.fecha = moment(v.fecha).format("DD-MM-YYYY");
+          return v;
+        }),
+        lastCreatedCams: data.return_all_cams.sort((a,b) => a.num_cam - b.num_cam),
+        loadingCamsGrid: false
+      });
+    });
     conections.dashboardTickets().then(this.processTicketsData)
     conections.dashboardTotalRecognition().then(this.processDetected)
     conections.dashboardRecognitionAges().then(this.processAges)
     conections.dashboardRecognitionPerDay('?enddate=' + moment().format('YYYY-MM-DD') + '&startdate=' + moment().add(-15, 'days').format('YYYY-MM-DD')).then(this.processPerDay)
     conections.dashboardRecognitionMood().then(this.processMood)
-    conections.loadCams().then(this.lastCreatedCams).catch(err => {
-      console.log('Cargando camaras', err)
-    })
+    // conections.loadCams().then(this.lastCreatedCams).catch(err => {
+    //   console.log('Cargando camaras', err)
+    // })
     conections.dashboardCameraPerPerson().then(this.getPersonsPerCamera);
     conections.dashboardPersons().then(this.getPersons);
-    conections.getDashboardEmbebed().then(this.getDashboardEmbebed)
+    conections.getDashboardEmbebed().then(this.getDashboardEmbebed);
+    conections.getCameraTypes().then(response => this.setState({ allFilters: response.data }))
     /*let io;
     if (socketIOClient.sails) {
       io = socketIOClient;
@@ -471,7 +508,7 @@ class Dashboard extends Component {
   processMood = (response) => {
     let data = []
     let indexes = []
-    response.data.data.forEach(v => {
+    response.data.data && response.data.data.forEach(v => {
       if (v && v.mood !== "") {
         v.mood = MOODS[v.mood] ? MOODS[v.mood] : v.mood
         if (indexes.indexOf(v.mood) > -1) {
@@ -502,7 +539,7 @@ class Dashboard extends Component {
   }
   processMicrofono = () => {
     const data = this.props.totalEvents
-    console.log("EVENTOS", this.props.fechasEventos)
+    // console.log("EVENTOS", this.props.fechasEventos)
     if (data.length > 0) {
       this.setState({
         totalEvents: [
@@ -520,7 +557,7 @@ class Dashboard extends Component {
   }
   processDetected = (response) => {
     const data = response.data.data
-    if (Object.keys(data).length > 0) {
+    if (data && Object.keys(data).length > 0) {
       this.setState({
         genderDetected: [
           {
@@ -572,14 +609,27 @@ class Dashboard extends Component {
     }
   }
 
+  changeFilter = (event, data) => {
+    if (data) {
+      this.setState({ filterCam: data.value })
+      // conections.dashboardCams(data.value);
+    } else {
+      this.setState({ filterCam: event.target.value })
+      // conections.dashboardCams(event.target.value);
+    }
+    setTimeout(() => {
+      this.loadData()
+    }, 0);
+  };
+
   componentDidMount() {
     this.loadData()
   }
 
-  lastCreatedCams = (response) => {
-    const data = response.data
-    this.setState({ lastCreatedCams: data, loadingCamsGrid: false })
-  }
+  // lastCreatedCams = (response) => {
+  //   const data = response.data
+  //   this.setState({ lastCreatedCams: data, loadingCamsGrid: false })
+  // }
 
   getPersonsPerCamera = (response) => {
     const data = response.data;

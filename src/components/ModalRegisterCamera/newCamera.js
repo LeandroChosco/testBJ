@@ -11,7 +11,7 @@ import { CircleSpinner } from "react-spinners-kit";
 import { ToastsStore } from "react-toasts";
 import { CAMERA_USER } from '../../graphql/mutations'
 import { useMutation } from '@apollo/client'
-import { RADAR_ID, TOKEN_FIX } from '../../constants/token'
+import { LANG, RADAR_ID, TOKEN_FIX } from '../../constants/token'
 import { allQueries } from "./queries";
 
 
@@ -105,7 +105,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
     })
   }, {
     dataField: "dns",
-    text: 'IP cámara',
+    text: localStorage.getItem(LANG) === "english" ? "IP camera" : 'IP cámara',
     filter: textFilter({
       placeholder: "🔎"
     })
@@ -117,19 +117,19 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
 
   const columnsCarrier = [{
     dataField: "carrier",
-    text: 'Nombre Carrier',
+    text: localStorage.getItem(LANG) === "english" ? "Name Carrier" : 'Nombre Carrier',
     filter: textFilter({
       placeholder: "🔎"
     })
   }, {
     dataField: "description",
-    text: 'Descripción',
+    text: localStorage.getItem(LANG) === "english" ? "Description" : 'Descripción',
     filter: textFilter({
       placeholder: "🔎"
     })
   }, {
     dataField: "active",
-    text: 'Activa?',
+    text: localStorage.getItem(LANG) === "english" ? "Active?" : 'Activa?',
     filter: textFilter({
       placeholder: "🔎"
     })
@@ -141,7 +141,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
 
   const columnsApi = [{
     dataField: "name_instance",
-    text: 'Nombre',
+    text: localStorage.getItem(LANG) === "english" ? "Name" : 'Nombre',
     filter: textFilter({
       placeholder: "🔎"
     })
@@ -153,13 +153,13 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
     })
   }, {
     dataField: "active",
-    text: 'Activa?',
+    text: localStorage.getItem(LANG) === "english" ? "Active?" : 'Activa?',
     filter: textFilter({
       placeholder: "🔎"
     })
   }, {
     dataField: "type",
-    text: 'Tipo',
+    text: localStorage.getItem(LANG) === "english" ? "Type" : 'Tipo',
     filter: textFilter({
       placeholder: "🔎"
     })
@@ -171,7 +171,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
 
   const columnsStream = [{
     dataField: "name",
-    text: 'Nombre',
+    text: localStorage.getItem(LANG) === "english" ? "Name" : 'Nombre',
     filter: textFilter({
       placeholder: "🔎"
     })
@@ -183,7 +183,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
     })
   }, {
     dataField: "active",
-    text: 'Activa?',
+    text: localStorage.getItem(LANG) === "english" ? "Active?" : 'Activa?',
     filter: textFilter({
       placeholder: "🔎"
     })
@@ -207,7 +207,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
     })
   }, {
     dataField: "client_bucket_bold",
-    text: 'Cliente',
+    text: localStorage.getItem(LANG) === "english" ? "Client" : 'Cliente',
     filter: textFilter({
       placeholder: "🔎"
     })
@@ -219,19 +219,19 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
 
   const columnsZip = [{
     dataField: "d_cp",
-    text: 'Código Postal',
+    text: localStorage.getItem(LANG) === "english" ? "ZIP" : 'Código Postal',
     filter: textFilter({
       placeholder: "🔎"
     })
   }, {
     dataField: "d_estado",
-    text: 'Estado',
+    text: localStorage.getItem(LANG) === "english" ? "State" : 'Estado',
     filter: textFilter({
       placeholder: "🔎"
     })
   }, {
     dataField: "d_ciudad",
-    text: 'Ciudad',
+    text: localStorage.getItem(LANG) === "english" ? "City" : 'Ciudad',
     filter: textFilter({
       placeholder: "🔎"
     })
@@ -243,27 +243,27 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
 
   const columnsUsers = [{
     dataField: "user_nicename",
-    text: 'NOMBRE',
+    text: localStorage.getItem(LANG) === "english" ? "NAME" : 'NOMBRE',
     filter: textFilter({
-      placeholder: 'Buscar por nombre'
+      placeholder: localStorage.getItem(LANG) === "english" ? "Search by name" : 'Buscar por nombre'
     })
   }, {
     dataField: "user_login",
     text: 'USER',
     filter: textFilter({
-      placeholder: 'Buscar por user'
+      placeholder: localStorage.getItem(LANG) === "english" ? "Search by user" : 'Buscar por user'
     })
   }, {
     dataField: "user_email",
     text: 'EMAIL',
     filter: textFilter({
-      placeholder: 'Buscar por correo'
+      placeholder: localStorage.getItem(LANG) === "english" ? "Search by e-mail" : 'Buscar por correo'
     })
   }, {
     dataField: "cellphone",
-    text: 'TELÉFONO',
+    text: localStorage.getItem(LANG) === "english" ? "PHONE" : 'TELÉFONO',
     filter: textFilter({
-      placeholder: 'Buscar por teléfono'
+      placeholder: localStorage.getItem(LANG) === "english" ? "Search by phone" : 'Buscar por teléfono'
     })
   }, {
     dataField: "actions",
@@ -379,33 +379,33 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
 
   const addCamera = (event) => {
     event.preventDefault();
-    let data = {
-      google_cordenate: dataForm.google_cordenate,
-      num_cam: parseInt(dataForm.num_cam),
-      dns_ip: dataForm.dns_ip,
-      cam_user: dataForm.cam_user,
-      cam_pass: dataForm.cam_pass,
-      street: dataForm.street,
-      number: dataForm.number,
-      township: dataForm.township,
-      town: dataForm.town,
-      state: dataForm.state,
-      cat_carrier_id: parseInt(dataForm.cat_carrier_id),
-      ssid_name: dataForm.ssid_name,
-      password: dataForm.password,
-      between_streets: dataForm.between_streets,
-      model_id: parseInt(dataForm.model_id),
-      zip: dataForm.zip,
-      userId: dataForm.userId,
-      url_id: dataForm.url_id,
-      stream_id: dataForm.stream_id,
-      storage_id: dataForm.storage_id,
-      amazon_stream: parseInt(isAmazonStream),
-      amazon_arn_channel: dataForm.amazon_arn_channel,
-      amazon_region: dataForm.amazon_region,
-      update_data: updateData,
-      id_camara: dataForm.id_camara,
-    };
+    // let data = {
+    //   google_cordenate: dataForm.google_cordenate,
+    //   num_cam: parseInt(dataForm.num_cam),
+    //   dns_ip: dataForm.dns_ip,
+    //   cam_user: dataForm.cam_user,
+    //   cam_pass: dataForm.cam_pass,
+    //   street: dataForm.street,
+    //   number: dataForm.number,
+    //   township: dataForm.township,
+    //   town: dataForm.town,
+    //   state: dataForm.state,
+    //   cat_carrier_id: parseInt(dataForm.cat_carrier_id),
+    //   ssid_name: dataForm.ssid_name,
+    //   password: dataForm.password,
+    //   between_streets: dataForm.between_streets,
+    //   model_id: parseInt(dataForm.model_id),
+    //   zip: dataForm.zip,
+    //   userId: dataForm.userId,
+    //   url_id: dataForm.url_id,
+    //   stream_id: dataForm.stream_id,
+    //   storage_id: dataForm.storage_id,
+    //   amazon_stream: parseInt(isAmazonStream),
+    //   amazon_arn_channel: dataForm.amazon_arn_channel,
+    //   amazon_region: dataForm.amazon_region,
+    //   update_data: updateData,
+    //   id_camara: dataForm.id_camara,
+    // };
 
     setIsloading(true);
     if (dataForm.zip === "-") {
@@ -447,13 +447,21 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
         if (response.data && response.data.registerUserCameraWeb.success) {
           setTimeout(() => {
             setIsloading(false);
-            ToastsStore.success("Cámara actualizada con éxito");
+            if (localStorage.getItem(LANG) === "english") {
+              ToastsStore.success("Cámara actualizada con éxito");
+            } else {
+              ToastsStore.success("Camera successfully updated");
+            }
             stateModal(false);
           }, 2000);
         } else {
           setTimeout(() => {
             setIsloading(false);
-            ToastsStore.error("No se pudo actualizar la cámara");
+            if (localStorage.getItem(LANG) === "english") {
+              ToastsStore.error("No se pudo actualizar la cámara");
+            } else {
+              ToastsStore.error("Failed to update camera");
+            }
             stateModal(false);
           }, 2000);
         }
@@ -461,7 +469,11 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
         console.log(err);
         setTimeout(() => {
           setIsloading(false);
-          ToastsStore.error("Algo falló. Comuníquese con soporte");
+          if (localStorage.getItem(LANG) === "english") {
+            ToastsStore.error(`Algo falló. Contáctese con soporte`);
+          } else {
+            ToastsStore.error(`Something went wrong. Contact support`);
+          }
           stateModal(false);
         }, 2000);
       });
@@ -505,19 +517,31 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
         if (response.data && response.data.registerUserCameraWeb.success) {
           setTimeout(() => {
             setIsloading(false);
-            ToastsStore.success("Cámara agregada con éxito");
+            if (localStorage.getItem(LANG) === "english") {
+              ToastsStore.success("Cámara agregada con éxito");
+            } else {
+              ToastsStore.success("Camera added successfully");
+            }
             stateModal(false);
           }, 2000);
         } else if (response.data.registerUserCameraWeb.error === "el numero de la camara ya existe") {
           setTimeout(() => {
             setIsloading(false);
-            ToastsStore.error("Ya existe una cámara con ese número. Pruebe con otro número");
+            if (localStorage.getItem(LANG) === "english") {
+              ToastsStore.error("Ya existe una cámara con ese número. Pruebe con otro número");
+            } else {
+              ToastsStore.error("A camera with that number already exists. Try another number");
+            }
             stateModal(false);
           }, 2000);
         } else {
           setTimeout(() => {
             setIsloading(false);
-            ToastsStore.error("No se pudo agregar la cámara");
+            if (localStorage.getItem(LANG) === "english") {
+              ToastsStore.error("No se pudo agregar la cámara");
+            } else {
+              ToastsStore.error("Failed to add camera");
+            }
             stateModal(false);
           }, 2000);
         }
@@ -525,7 +549,11 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
         console.log(err);
         setTimeout(() => {
           setIsloading(false);
-          ToastsStore.error("Algo falló. Comuníquese con soporte");
+          if (localStorage.getItem(LANG) === "english") {
+            ToastsStore.error(`Algo falló. Contáctese con soporte`);
+          } else {
+            ToastsStore.error(`Something went wrong. Contact support`);
+          }
           stateModal(false);
         }, 2000);
       });
@@ -614,7 +642,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
   return (
     <Modal size="lg" backdrop={"static"} show={modal} onHide={hide}>
       <Modal.Header closeButton>
-        <h3>Nueva cámara</h3>
+        <h3>{localStorage.getItem(LANG) === "english" ? "New camera" : "Nueva cámara"}</h3>
       </Modal.Header>
       <Modal.Body className="styleContent" style={{ height: "27rem" }}>
         <Form onSubmit={addCamera}>
@@ -622,7 +650,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
             updateData === 1 && typeModal === "dns_ip" ?
               <Modal size="xl" backdrop={"static"} show={showModal} onHide={hideModalCameraInputs} centered={true}>
                 <Modal.Header closeButton>
-                  <h3>Elija IP</h3>
+                  <h3>{localStorage.getItem(LANG) === "english" ? "Choose IP" : "Elija IP"}</h3>
                 </Modal.Header>
                 <Modal.Body style={{ padding: !allCamerasToServers && "4rem" }}>
                   {
@@ -639,7 +667,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
               updateCarrier === 1 && typeModal === "carrier" ?
                 <Modal size="xl" backdrop={"static"} show={showModal} onHide={hideModalCameraInputs} centered={true}>
                   <Modal.Header closeButton>
-                    <h3>Elija Carrier</h3>
+                    <h3>{localStorage.getItem(LANG) === "english" ? "Choose Carrier" : "Elija Carrier"}</h3>
                   </Modal.Header>
                   <Modal.Body>
                     <BootstrapTable className="styleTable" hover="true" keyField='id' data={carrier ? carrier : []} columns={columnsCarrier} filter={filterFactory()} pagination={paginationFactory()} />
@@ -649,7 +677,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                 typeModal === "apiName" ?
                   <Modal size="xl" backdrop={"static"} show={showModal} onHide={hideModalCameraInputs} centered={true}>
                     <Modal.Header closeButton>
-                      <h3>Elija API</h3>
+                      <h3>{localStorage.getItem(LANG) === "english" ? "Choose API" : "Elija API"}</h3>
                     </Modal.Header>
                     <Modal.Body>
                       <BootstrapTable className="styleTable" hover="true" keyField='id' data={allApiUrl ? allApiUrl : []} columns={columnsApi} filter={filterFactory()} pagination={paginationFactory()} />
@@ -659,7 +687,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                   typeModal === "dnsStream" ?
                     <Modal size="xl" backdrop={"static"} show={showModal} onHide={hideModalCameraInputs} centered={true}>
                       <Modal.Header closeButton>
-                        <h3>Elija Stream</h3>
+                        <h3>{localStorage.getItem(LANG) === "english" ? "Choose Stream" : "Elija Stream"}</h3>
                       </Modal.Header>
                       <Modal.Body>
                         <BootstrapTable className="styleTable" hover="true" keyField='id' data={streamUrl ? streamUrl : []} columns={columnsStream} filter={filterFactory()} pagination={paginationFactory()} />
@@ -669,7 +697,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                     typeModal === "dnsStorage" ?
                       <Modal size="xl" backdrop={"static"} show={showModal} onHide={hideModalCameraInputs} centered={true}>
                         <Modal.Header closeButton>
-                          <h3>Elija Vault Storage</h3>
+                          <h3>{localStorage.getItem(LANG) === "english" ? "Choose Vault Storage" : "Elija Vault Storage"}</h3>
                         </Modal.Header>
                         <Modal.Body>
                           <BootstrapTable className="styleTable" hover="true" keyField='id' data={storageUrl ? storageUrl : []} columns={columnsStorage} filter={filterFactory()} pagination={paginationFactory()} />
@@ -679,7 +707,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                       typeModal === "zip" ?
                         <Modal size="xl" backdrop={"static"} show={showModal} onHide={hideModalCameraInputs} centered={true}>
                           <Modal.Header closeButton>
-                            <h3>Elija ZIP</h3>
+                            <h3>{localStorage.getItem(LANG) === "english" ? "Choose ZIP" : "Elija ZIP"}</h3>
                           </Modal.Header>
                           <Modal.Body>
                             <BootstrapTable className="styleTable" hover="true" keyField='id' data={allCatAddress ? allCatAddress : []} columns={columnsZip} filter={filterFactory()} pagination={paginationFactory()} />
@@ -689,7 +717,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                         typeModal === "userId" ?
                           <Modal size="xl" backdrop={"static"} show={showModal} onHide={hideModalCameraInputs} centered={true}>
                             <Modal.Header closeButton>
-                              <h3>Elija USER ID</h3>
+                              <h3>{localStorage.getItem(LANG) === "english" ? "Choose USER ID" : "Elija USER ID"}</h3>
                             </Modal.Header>
                             <Modal.Body>
                               <BootstrapTable className="styleTable" hover="true" keyField='id' data={allUsers ? allUsers : []} columns={columnsUsers} filter={filterFactory()} pagination={paginationFactory()} />
@@ -704,7 +732,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
               <Form.Group>
                 <Col md={4} lg={4}>
                   <Form.Field>
-                    <label>Modelo Cam</label>
+                    <label>{localStorage.getItem(LANG) === "english" ? "Model Cam" : "Modelo Cam"}</label>
                     <select name="model_id" onChange={changeInfo} disabled={updateData === 1}>
                       {
                         allBrand ? allBrand.map((el) => {
@@ -718,9 +746,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                 </Col>
                 <Col md={3} lg={3}>
                   <Form.Field>
-                    <label>Número de cámara</label>
+                    <label>{localStorage.getItem(LANG) === "english" ? "Camera number" : "Número de cámara"}</label>
                     <input
-                      placeholder="Ingrese número..."
+                      placeholder={localStorage.getItem(LANG) === "english" ? "Enter number..." : "Ingrese número..."}
                       name="num_cam"
                       type="number"
                       value={dataForm.num_cam}
@@ -730,7 +758,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                 </Col>
                 <Col md={3} lg={3}>
                   <Form.Field>
-                    <label>Actualizar existente?</label>
+                    <label>{localStorage.getItem(LANG) === "english" ? "Update existing?" : "Actualizar existente?"}</label>
                     <Form.Radio
                       label="NO"
                       value={0}
@@ -738,7 +766,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                       onChange={changeUpdate}
                     />
                     <Form.Radio
-                      label="SÍ"
+                      label={localStorage.getItem(LANG) === "english" ? "YES" : "SÍ"}
                       value={1}
                       checked={updateData === 1}
                       onChange={changeUpdate}
@@ -749,7 +777,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
               <Form.Group>
                 <Col md={3} lg={3}>
                   <Form.Field>
-                    <label>Editar IP?</label>
+                    <label>{localStorage.getItem(LANG) === "english" ? "Edit IP?" : "Editar IP?"}</label>
                     <Form.Radio
                       label="NO"
                       value={0}
@@ -758,7 +786,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                       disabled={updateData === 0}
                     />
                     <Form.Radio
-                      label="SÍ"
+                      label={localStorage.getItem(LANG) === "english" ? "YES" : "SÍ"}
                       value={1}
                       checked={updateIp === 1}
                       onChange={changeIp}
@@ -770,9 +798,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                   <Form.Field>
                     {updateData === 1 && updateIp === 0 ?
                       <>
-                        <label>IP Cámara</label>
+                        <label>{localStorage.getItem(LANG) === "english" ? "IP Camera" : "IP Cámara"}</label>
                         <input
-                          placeholder="Ingrese IP..."
+                          placeholder={localStorage.getItem(LANG) === "english" ? "Enter IP..." : "Ingrese IP..."}
                           name="dns_ip"
                           type="button"
                           onClick={handleSelect}
@@ -783,9 +811,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                       :
                       updateData === 1 && updateIp === 1 ?
                         <>
-                          <label>IP Cámara</label>
+                          <label>{localStorage.getItem(LANG) === "english" ? "IP Camera" : "IP Cámara"}</label>
                           <input
-                            placeholder="Ingrese IP..."
+                            placeholder={localStorage.getItem(LANG) === "english" ? "Enter IP..." : "Ingrese IP..."}
                             name="dns_ip"
                             type="text"
                             value={dataForm.dns_ip}
@@ -794,9 +822,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                         </>
                         :
                         <>
-                          <label>IP Cámara</label>
+                          <label>{localStorage.getItem(LANG) === "english" ? "IP Camera" : "IP Cámara"}</label>
                           <input
-                            placeholder="Ingrese IP..."
+                            placeholder={localStorage.getItem(LANG) === "english" ? "Enter IP..." : "Ingrese IP..."}
                             name="dns_ip"
                             type="text"
                             value={dataForm.dns_ip}
@@ -808,9 +836,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                 </Col>
                 <Col md={4} lg={4}>
                   <Form.Field>
-                    <label>Coordenadas</label>
+                    <label>{localStorage.getItem(LANG) === "english" ? "Coordinates" : "Coordenadas"}</label>
                     <input
-                      placeholder="Ingrese coordenadas..."
+                      placeholder={localStorage.getItem(LANG) === "english" ? "Enter coordinates..." : "Ingrese coordenadas..."}
                       name="google_cordenate"
                       type="text"
                       value={dataForm.google_cordenate}
@@ -826,9 +854,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                 <Form.Group>
                   <Col md={5} lg={5}>
                     <Form.Field>
-                      <label>Usuario de cámara</label>
+                      <label>{localStorage.getItem(LANG) === "english" ? "Camera user" : "Usuario de cámara"}</label>
                       <input
-                        placeholder="Ingrese usuario..."
+                        placeholder={localStorage.getItem(LANG) === "english" ? "Enter user..." : "Ingrese usuario..."}
                         name="cam_user"
                         type="text"
                         value={dataForm.cam_user}
@@ -838,9 +866,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                   </Col>
                   <Col md={5} lg={5}>
                     <Form.Field>
-                      <label>Contraseña de cámara</label>
+                      <label>{localStorage.getItem(LANG) === "english" ? "Camera password" : "Contraseña de cámara"}</label>
                       <input
-                        placeholder="Ingrese contraseña..."
+                        placeholder={localStorage.getItem(LANG) === "english" ? "Enter password..." : "Ingrese contraseña..."}
                         name="cam_pass"
                         type="text"
                         value={dataForm.cam_pass}
@@ -852,9 +880,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                 <Form.Group>
                   <Col md={3} lg={3}>
                     <Form.Field>
-                      <label>Calle</label>
+                      <label>{localStorage.getItem(LANG) === "english" ? "Street" : "Calle"}</label>
                       <input
-                        placeholder="Ingrese calle..."
+                        placeholder={localStorage.getItem(LANG) === "english" ? "Enter street..." : "Ingrese calle..."}
                         name="street"
                         type="text"
                         value={dataForm.street}
@@ -864,9 +892,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                   </Col>
                   <Col md={2} lg={2}>
                     <Form.Field>
-                      <label>Número</label>
+                      <label>{localStorage.getItem(LANG) === "english" ? "Number" : "Número"}</label>
                       <input
-                        placeholder="Ingrese número..."
+                        placeholder={localStorage.getItem(LANG) === "english" ? "Enter number..." : "Ingrese número..."}
                         name="number"
                         type="number"
                         value={dataForm.number}
@@ -876,7 +904,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                   </Col>
                   <Col md={3} lg={3}>
                     <Form.Field>
-                      <label>Es LPR?</label>
+                      <label>{localStorage.getItem(LANG) === "english" ? "Is LPR?" : "Es LPR?"}</label>
                       <Form.Radio
                         label="NO"
                         value={0}
@@ -884,7 +912,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                         onChange={changeLPR}
                       />
                       <Form.Radio
-                        label="SÍ"
+                        label={localStorage.getItem(LANG) === "english" ? "YES" : "SÍ"}
                         value={1}
                         checked={dataForm.is_lpr === 1}
                         onChange={changeLPR}
@@ -893,7 +921,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                   </Col>
                   <Col md={3} lg={3}>
                     <Form.Field>
-                      <label>Tiene micrófono?</label>
+                      <label>{localStorage.getItem(LANG) === "english" ? "Has a microphone?" : "Tiene micrófono?"}</label>
                       <Form.Radio
                         label="NO"
                         value={0}
@@ -901,7 +929,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                         onChange={changeMic}
                       />
                       <Form.Radio
-                        label="SÍ"
+                        label={localStorage.getItem(LANG) === "english" ? "YES" : "SÍ"}
                         value={1}
                         checked={dataForm.is_mic === 1}
                         onChange={changeMic}
@@ -916,9 +944,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                   <Form.Group>
                     <Col md={5} lg={5}>
                       <Form.Field>
-                        <label>Estado</label>
+                        <label>{localStorage.getItem(LANG) === "english" ? "State" : "Estado"}</label>
                         <input
-                          placeholder="Ingrese Estado..."
+                          placeholder={localStorage.getItem(LANG) === "english" ? "Enter State..." : "Ingrese Estado..."}
                           name="state"
                           type="text"
                           value={dataForm.state}
@@ -930,9 +958,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                   <Form.Group>
                     <Col md={5} lg={5}>
                       <Form.Field>
-                        <label>Municipio o delegación</label>
+                        <label>{localStorage.getItem(LANG) === "english" ? "Township" : "Municipio o delegación"}</label>
                         <input
-                          placeholder="Ingrese municipio o delegación..."
+                          placeholder={localStorage.getItem(LANG) === "english" ? "Enter township..." : "Ingrese municipio o delegación..."}
                           name="township"
                           type="text"
                           value={dataForm.township}
@@ -942,9 +970,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                     </Col>
                     <Col md={5} lg={5}>
                       <Form.Field>
-                        <label>Colonia</label>
+                        <label>{localStorage.getItem(LANG) === "english" ? "Town" : "Colonia"}</label>
                         <input
-                          placeholder="Ingrese colonia..."
+                          placeholder={localStorage.getItem(LANG) === "english" ? "Enter town..." : "Ingrese colonia..."}
                           name="town"
                           type="text"
                           value={dataForm.town}
@@ -968,7 +996,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                             onChange={changeCarrier}
                           />
                           <Form.Radio
-                            label="SÍ"
+                            label={localStorage.getItem(LANG) === "english" ? "YES" : "SÍ"}
                             value={1}
                             checked={updateCarrier === 1}
                             onChange={changeCarrier}
@@ -1002,9 +1030,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                     <Form.Group>
                       <Col md={5} lg={5}>
                         <Form.Field>
-                          <label>Nombre SSID</label>
+                          <label>{localStorage.getItem(LANG) === "english" ? "SSID Name" : "Nombre SSID"}</label>
                           <input
-                            placeholder="Ingrese nombre de SSID..."
+                            placeholder={localStorage.getItem(LANG) === "english" ? "Enter SSID name..." : "Ingrese nombre de SSID..."}
                             name="ssid_name"
                             type="text"
                             value={updateCarrier === 0 ? null : dataForm.ssid_name}
@@ -1015,9 +1043,9 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                       </Col>
                       <Col md={5} lg={5}>
                         <Form.Field>
-                          <label>Contraseña módem</label>
+                          <label>{localStorage.getItem(LANG) === "english" ? "Modem password" : "Contraseña módem"}</label>
                           <input
-                            placeholder="Ingrese contraseña..."
+                            placeholder={localStorage.getItem(LANG) === "english" ? "Enter password..." : "Ingrese contraseña..."}
                             name="password"
                             type="text"
                             value={updateCarrier === 0 ? "" : dataForm.password}
@@ -1034,13 +1062,13 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                       <Form.Group>
                         <Col md={4} lg={4}>
                           <Form.Field>
-                            <label>Código Postal</label>
+                            <label>{localStorage.getItem(LANG) === "english" ? "ZIP" : "Código Postal"}</label>
                             <input
-                              placeholder="Ingrese DNS..."
+                              placeholder={localStorage.getItem(LANG) === "english" ? "Enter DNS..." : "Ingrese DNS..."}
                               name="zip"
                               type="button"
                               onClick={handleSelect}
-                              value={dataToShow.cat_address_name ? dataToShow.cat_address_name : "Buscar"}
+                              value={dataToShow.cat_address_name ? dataToShow.cat_address_name : localStorage.getItem(LANG) === "english" ? "Search" : "Buscar"}
                               className="btnSearch"
                             />
                           </Form.Field>
@@ -1049,13 +1077,13 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                       <Form.Group>
                         <Col md={4} lg={4}>
                           <Form.Field>
-                            <label>ID Usuario</label>
+                            <label>{localStorage.getItem(LANG) === "english" ? "User ID" : "ID Usuario"}</label>
                             <input
-                              placeholder="Ingrese DNS..."
+                              placeholder={localStorage.getItem(LANG) === "english" ? "Enter DNS..." : "Ingrese DNS..."}
                               name="userId"
                               type="button"
                               onClick={handleSelect}
-                              value={dataToShow.user_name ? dataToShow.user_name : "Buscar"}
+                              value={dataToShow.user_name ? dataToShow.user_name : localStorage.getItem(LANG) === "english" ? "Search" : "Buscar"}
                               className="btnSearch"
                             />
                           </Form.Field>
@@ -1070,11 +1098,11 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                             <Form.Field>
                               <label>URL ID</label>
                               <input
-                                placeholder="Ingrese nombre..."
+                                placeholder={localStorage.getItem(LANG) === "english" ? "Enter name..." : "Ingrese nombre..."}
                                 name="apiName"
                                 type="button"
                                 onClick={handleSelect}
-                                value={dataToShow.url_name ? dataToShow.url_name : "Buscar"}
+                                value={dataToShow.url_name ? dataToShow.url_name : localStorage.getItem(LANG) === "english" ? "Search" : "Buscar"}
                                 className="btnSearch"
                               />
                             </Form.Field>
@@ -1085,11 +1113,11 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                             <Form.Field>
                               <label>Stream ID</label>
                               <input
-                                placeholder="Ingrese nombre..."
+                                placeholder={localStorage.getItem(LANG) === "english" ? "Enter name..." : "Ingrese nombre..."}
                                 name="dnsStream"
                                 type="button"
                                 onClick={handleSelect}
-                                value={dataToShow.stream_name ? dataToShow.stream_name : "Buscar"}
+                                value={dataToShow.stream_name ? dataToShow.stream_name : localStorage.getItem(LANG) === "english" ? "Search" :  "Buscar"}
                                 className="btnSearch"
                               />
                             </Form.Field>
@@ -1098,11 +1126,11 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                             <Form.Field>
                               <label>Storage ID</label>
                               <input
-                                placeholder="Ingrese nombre..."
+                                placeholder={localStorage.getItem(LANG) === "english" ? "Enter name..." : "Ingrese nombre..."}
                                 name="dnsStorage"
                                 type="button"
                                 onClick={handleSelect}
-                                value={dataToShow.storage_name ? dataToShow.storage_name : "Buscar"}
+                                value={dataToShow.storage_name ? dataToShow.storage_name : localStorage.getItem(LANG) === "english" ? "Search" : "Buscar"}
                                 className="btnSearch"
                               />
                             </Form.Field>
@@ -1123,7 +1151,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                                   onChange={changeType}
                                 />
                                 <Form.Radio
-                                  label="SÍ"
+                                  label={localStorage.getItem(LANG) === "english" ? "YES" : "SÍ"}
                                   value={1}
                                   checked={isAmazonStream === 1}
                                   onChange={changeType}
@@ -1136,7 +1164,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                               <Form.Field>
                                 <label>Amazon ARN Channel</label>
                                 <input
-                                  placeholder="Ingrese ARN Channel..."
+                                  placeholder={localStorage.getItem(LANG) === "english" ? "Enter ARN Channel" : "Ingrese ARN Channel..."}
                                   name="amazon_arn_channel"
                                   type="text"
                                   value={dataForm.amazon_arn_channel ? dataForm.amazon_arn_channel : ""}
@@ -1149,7 +1177,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                               <Form.Field>
                                 <label>Amazon Region</label>
                                 <input
-                                  placeholder="Ingrese región..."
+                                  placeholder={localStorage.getItem(LANG) === "english" ? "Enter region..." : "Ingrese región..."}
                                   name="amazon_region"
                                   type="text"
                                   value={dataForm.amazon_region ? dataForm.amazon_region : ""}
@@ -1166,8 +1194,8 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
 
           <div className="page-btn">
 
-            {pageModal === 1 ? <div /> : <input type="button" className="btn btnAdd" value="Anterior" onClick={previousPage} />}
-            {pageModal === 7 ? null : <input type="button" className="btn btnAdd" value="Siguiente" onClick={nextPage} />}
+            {pageModal === 1 ? <div /> : <input type="button" className="btn btnAdd" value={localStorage.getItem(LANG) === "english" ? "Previous" : "Anterior"} onClick={previousPage} />}
+            {pageModal === 7 ? null : <input type="button" className="btn btnAdd" value={localStorage.getItem(LANG) === "english" ? "Next" : "Siguiente"} onClick={nextPage} />}
 
           </div>
           {
@@ -1193,7 +1221,7 @@ const ModalRegisterCamera = ({ modal, clientId, hide, stateModal, modalInputs })
                     // dataForm.id_camara === ""
                   }
                 >
-                  AGREGAR CÁMARA
+                  {localStorage.getItem(LANG) === "english" ? "ADD CAMERA" : "AGREGAR CÁMARA"}
                 </Button>
               </div>
               :

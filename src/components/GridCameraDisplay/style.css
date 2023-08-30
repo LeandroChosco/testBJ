@@ -3,6 +3,7 @@
 	margin: auto;
 	padding-bottom: 30px;
 	height: 100vh;
+	background-color: white;
 }
 
 .camGridControl {
@@ -12,12 +13,35 @@
 	background-color: lightgray;
 	width: 100%;
 	display: none;
+	padding: 0 !important;
+	min-height: 30%;
+	max-height: 80%;
 }
+
+.iconGrid {
+	position: relative;
+	z-index: -2;
+	margin-top: 0rem;
+	height: 1.5rem;
+	cursor: ns-resize;
+}
+
+/* @keyframes show-grid {
+	0% {
+		top: 100%;
+	}
+
+	100% {
+		top: 70%;
+	}
+} */
 
 .showfiles {
 	height: 30%;
 	overflow-y: hidden;
 	display: block;
+	animation-name: show-grid;
+	animation-duration: 1s;
 }
 
 .hidefiles {
@@ -34,6 +58,7 @@
 
 .stiky-top {
 	position: sticky;
+	padding: 0.5rem 2rem 1rem 0;
 }
 
 .recording {
@@ -62,13 +87,16 @@
 .matchesgrid {
 	height: 100%;
 	overflow-y: auto;
+	padding-bottom: 6rem;
+	padding-top: 0.5rem;
 }
+
 .platesgrid {
 	height: 200px;
 	overflow-y: auto;
 }
 
-.videosgrid > div > div > video {
+.videosgrid>div>div>video {
 	width: 100%;
 	height: 100%;
 }
@@ -114,20 +142,20 @@
 	justify-content: space-around;
 }
 
-.pagination > li {
+.pagination>li {
 	background-color: #fafafa;
 	border-radius: 5px;
 	width: 100%;
 }
 
-.pagination > li > a {
+.pagination>li>a {
 	width: 100%;
 	display: block;
 	cursor: pointer;
 	color: black;
 }
 
-.pagination > .active {
+.pagination>.active {
 	background-color: #afafaf;
 	border: 1px solid #fbfbfb;
 	border-radius: 5px;
@@ -154,7 +182,7 @@
 	margin: 0;
 }
 
-.camcolgridholder > .card {
+.camcolgridholder>.card {
 	height: 100%;
 }
 
@@ -164,6 +192,32 @@
 }
 */
 
-.camcolgridholder > .card > .card-body > .camHolder {
+.camcolgridholder>.card>.card-body>.camHolder {
 	height: initial;
+}
+
+.accordionBorders{
+	border: solid 0.1rem darkgray;
+	border-radius: 0.5rem;
+}
+
+.navBarStyle{
+	background-color: var(--main-bg-color);
+	border: solid 1px #f5f5f5;
+	box-shadow: 2px 2px 10px;
+}
+
+.date-toggle{
+	padding: 0.5rem;
+	transition: 0.3s;
+	color: white;
+}
+
+.date-toggle:hover{
+	transition: 0.3s;
+	color: black;
+}
+
+.fake-btn{
+	width: 10rem !important;
 }

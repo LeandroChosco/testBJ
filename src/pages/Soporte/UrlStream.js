@@ -6,6 +6,7 @@ import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.m
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
 import { CircleSpinner } from "react-spinners-kit";
+import { LANG } from '../../constants/token';
 
 const styles = {
     spinner: {
@@ -22,7 +23,7 @@ const styles = {
 
 export default function UrlApi(props) {
 
-    const { setShowModalUrlStream, streamUrl, columnsStream } = props;
+    const { /*setShowModalUrlStream,*/ streamUrl, columnsStream } = props;
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -38,10 +39,10 @@ export default function UrlApi(props) {
             <div className="row containerTitle">
                 <div className="col">
                     {/* <div>
-                        <input type="button" className="btn btnAdd" value="Agregar Url Stream" style={{ marginRight: "50px" }} onClick={() => setShowModalUrlStream("Agregar Url Stream")} />
+                        <input type="button" className="btn btnAdd" value={localStorage.getItem(LANG) === "english" ? "Add Url Stream" : "Agregar Url Stream"} style={{ marginRight: "50px" }} onClick={() => setShowModalUrlStream("Agregar Url Stream")} />
                     </div> */}
                     <hr />
-                    <h3 className="pt-2">Lista de Url Stream</h3>
+                    <h3 className="pt-2">{localStorage.getItem(LANG) === "english" ? "Url Stream List" : "Lista de Url Stream"}</h3>
                 </div>
             </div>
             {
@@ -53,7 +54,7 @@ export default function UrlApi(props) {
                     streamUrl && streamUrl.length === 0 ?
                         <div className="row">
                             <div className="col">
-                                <p>No hay Url Stream que mostrar</p>
+                                <p>{localStorage.getItem(LANG) === "english" ? "No Url Stream to show" : "No hay Url Stream que mostrar"}</p>
                             </div>
                         </div>
                         :

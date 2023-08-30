@@ -1,7 +1,8 @@
 import Axios from 'axios';
 import constants from './constants/constants';
 import { SAILS_ACCESS_TOKEN, ACCESS_TOKEN } from './constants/token'
-import { remove } from './helpers/remove'
+
+// import {remove} from './helpers/remove'
 let SailsToken = localStorage.getItem(SAILS_ACCESS_TOKEN);
 let token = localStorage.getItem(ACCESS_TOKEN)
 
@@ -14,23 +15,24 @@ const connectedSails = Axios.create({
 })
 
 
-const logOut = (config, TOKEN) => {
-  SailsToken = localStorage.getItem(TOKEN);
-  if (!SailsToken || SailsToken == null) {
+/* const logOut = (config,TOKEN)=>{
+  SailsToken = localStorage.getItem(TOKEN);  
+   if(!SailsToken || SailsToken==null){
     remove();
-  } else {
-    config.headers.Authorization = SailsToken;
-  }
+   }else{
+     config.headers.Authorization=SailsToken;
+   }
 }
-
+ */
 const controlError = (err) => {
   if (err.message === "Request failed with status code 500") {
-    remove();
+    // remove();
+    console.log("Error", err)
   }
 }
 
 connectedSails.interceptors.request.use(config => {
-  logOut(config, SAILS_ACCESS_TOKEN)
+  //logOut(config,SAILS_ACCESS_TOKEN)
   return config;
 }, (err) => {
   return Promise.reject(err);
@@ -42,23 +44,61 @@ connectedSails.interceptors.response.use(response => {
   return Promise.reject(err);
 })
 
-connectedRadar.interceptors.request.use(config => {
-  logOut(config, ACCESS_TOKEN)
-  return config;
-}, (err) => {
+/* connectedRadar.interceptors.request.use(config=>{
+  logOut(config,ACCESS_TOKEN)
+ return config;
+},(err)=>{
   return Promise.reject(err);
 })
 
-connectedRadar.interceptors.response.use(response => {
+connectedRadar.interceptors.response.use(response=>{
   return response;
-}, (err) => {
-  controlError(err)
+}, (err)=>{
+ controlError(err)
   return Promise.reject(err);
-})
-
+}) */
 
 
 export default {
+  getOnTermicPhotoData: (name) => {
+    return connectedSails.get(constants.sails_url + '/termicfiles-one/' + name);
+  },
+  getDesconocidos: () => {
+    return connectedSails.get(constants.sails_url + '/getUnknow/?limit=50');
+  },
+  getDetecciones: () => {
+    return connectedSails.get(constants.sails_url + '/getMatches/');
+  },
+  createPersons: (data) => {
+    return connectedSails.post(constants.sails_url + '/create/persons/', data);
+  },
+  getPersons: (type) => {
+    if (type) return connectedSails.get(constants.sails_url + '/getPersons/?type=' + type);
+    else return connectedSails.get(constants.sails_url + '/getPersons/');
+  },
+  makeLogin: (data) => {
+    return Axios.post(constants.sails_url + '/login', data);
+  },
+  restartStream: (dns = constants.apiStream) => {
+    return connectedSails.put(dns + ':' + constants.apiPort + '/control-cams/restart-streaming3/all');
+  },
+  restartOneStream: (dns = constants.apiStream, id) => {
+    return connectedSails.put(dns + ':' + constants.apiPort + '/control-cams/restart-streaming3/' + id);
+  },
+  sendTicket: (data) => {
+    return connectedSails.post(constants.sails_url + '/tickets/create/', data);
+  },
+
+  // Count vehicles
+
+  getVehiclesCount: (start, end) => {
+    let data = {
+      start_date: start ? start : "",
+      end_date: end ? end : "",
+    }
+    return connectedSails.post(constants.sails_url + '/vehicle/filter/detections', data);
+  },
+
 
   // Dashboard LPR
 
@@ -108,34 +148,7 @@ export default {
   },
 
   ////////////////////////////////////////////////////////////////////
-  getOnTermicPhotoData: (name) => {
-    return connectedSails.get(constants.sails_url + '/termicfiles-one/' + name);
-  },
-  getDesconocidos: () => {
-    return connectedSails.get(constants.sails_url + '/getUnknow/?limit=50');
-  },
-  getDetecciones: () => {
-    return connectedSails.get(constants.sails_url + '/getMatches/');
-  },
-  createPersons: (data) => {
-    return connectedSails.post(constants.sails_url + '/create/persons/', data);
-  },
-  getPersons: (type) => {
-    if (type) return connectedSails.get(constants.sails_url + '/getPersons/?type=' + type);
-    else return connectedSails.get(constants.sails_url + '/getPersons/');
-  },
-  makeLogin: (data) => {
-    return Axios.post(constants.sails_url + '/login', data);
-  },
-  restartStream: (dns = constants.apiStream) => {
-    return connectedSails.put(dns + ':' + constants.apiPort + '/control-cams/restart-streaming3/all');
-  },
-  restartOneStream: (dns = constants.apiStream, id) => {
-    return connectedSails.put(dns + ':' + constants.apiPort + '/control-cams/restart-streaming3/' + id);
-  },
-  sendTicket: (data) => {
-    return connectedSails.post(constants.sails_url + '/tickets/create/', data);
-  },
+
   /*
   snapShot: (camara_id) => {
     const user_id = getUserID();
@@ -155,12 +168,13 @@ export default {
   },
   */
   // Nuevos endpoint para menejor de media
+  getCamerasInternal: () => {
+    return connectedSails.get(constants.sails_url + '/control-cams/internal-cameras')
+  },
+
   snapShotV2: (camara_id) => {
     const user_id = getUserID();
     return connectedSails.post(constants.sails_url + '/control-cams/screenshotV2/' + camara_id + '/?user_id=' + user_id);
-  },
-  getCamerasInternal: () => {
-    return connectedSails.get(constants.sails_url + '/control-cams/internal-cameras')
   },
   stopRecordV2: (data, camera_id) => {
     const user_id = getUserID();
@@ -186,6 +200,7 @@ export default {
     const user_id = getUserID();
     return connectedSails.get(constants.sails_url + '/control-cams/cams-offline/?user_id=' + user_id);
   },
+
   getTokenApiStreamsCams: (protocol, dnsMbox, dns_port, secretKeyBody) => {
     if (dns_port === 80 || dns_port === 443) {
       return Axios.post(protocol + '://' + dnsMbox + '/users/login', secretKeyBody)
@@ -196,27 +211,27 @@ export default {
   getCamDataHistoryApiCams: (protocol, dnsMbox, dns_port, protocolStorage, dnsStorage, tokenStorage, numCam, token, portApiStore) => {
 
     if ((dns_port === 80 || dns_port === 443) && (portApiStore === 80 || portApiStore === 443)) {
-      return Axios.get(protocol + '://' + dnsMbox + '/historics/' + numCam + '/' + "?protocol=" + protocolStorage + "&dns=" + dnsStorage + "&token=" + tokenStorage, {
+      return Axios.get(`${protocol}://${dnsMbox}/historics/${numCam}/?protocol=${protocolStorage}&dns=${dnsStorage}&token=${tokenStorage}`, {
         headers: {
           'Authorization': token
         }
       });
     }
     if ((dns_port === 80 || dns_port === 443) && (portApiStore !== 80 || portApiStore !== 443)) {
-      return Axios.get(protocol + '://' + dnsMbox + '/historics/' + numCam + '/' + "?protocol=" + protocolStorage + "&dns=" + dnsStorage + "&token=" + tokenStorage, {
+      return Axios.get(`${protocol}://${dnsMbox}/historics/${numCam}/?protocol=${protocolStorage}&dns=${dnsStorage}&token=${tokenStorage}`, {
         headers: {
           'Authorization': token
         }
       });
     }
     if ((dns_port !== 80 || dns_port !== 443) && (portApiStore === 80 || portApiStore === 443)) {
-      return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam + '/' + "?protocol=" + protocolStorage + "&dns=" + dnsStorage + "&token=" + tokenStorage, {
+      return Axios.get(`${protocol}://${dnsMbox}:${dns_port}/historics/${numCam}/?protocol=${protocolStorage}&dns=${dnsStorage}&token=${tokenStorage}`, {
         headers: {
           'Authorization': token
         }
       });
     }
-    return Axios.get(protocol + '://' + dnsMbox + ':' + dns_port + '/historics/' + numCam + '/' + "?protocol=" + protocolStorage + "&dns=" + dnsStorage + "&token=" + tokenStorage, {
+    return Axios.get(`${protocol}://${dnsMbox}:${dns_port}/historics/${numCam}/?protocol=${protocolStorage}&dns=${dnsStorage}&token=${tokenStorage}`, {
       headers: {
         'Authorization': token
       }
@@ -255,12 +270,19 @@ export default {
     const user_id = getUserID();
     return connectedSails.get(constants.sails_url + '/control-cams/' + camera_id + '/' + num_cam + '/video-history/?user_id=' + user_id + '&type_mbox=' + typeMBOX);
   },
+
   getTickets: () => {
     return connectedSails.get(constants.sails_url + '/tickets');
   },
   getTicket: (id) => {
     return connectedSails.get(constants.sails_url + '/tickets/?ticket_id=' + id);
   },
+
+  getCameraTypes: () => {
+    // return connectedSails.get(constants.sails_url + '/register-cams/camera-types');
+    return connectedSails.get(constants.sails_url + '/register-cams/camera-types');
+  },
+
   // Endpoint para ticket en pingüino
   toProcess: (data) => {
     data.user_id = getUserID();
@@ -270,14 +292,25 @@ export default {
     data.user_id = getUserID();
     return connectedSails.put(constants.sails_url + '/tickets/toclose/', data);
   },
-  dashboardCams: () => {
-    return connectedSails.get(constants.sails_url + '/dashboard/cams');
+  dashboardCams: (type_filter) => {
+    if (type_filter !== "0") {
+      return connectedSails.get(constants.sails_url + '/dashboard/cams?type_filter=' + type_filter);
+    } else {
+      return connectedSails.get(constants.sails_url + '/dashboard/cams');
+    }
   },
   dashboardTickets: () => {
     return connectedSails.get(constants.sails_url + '/dashboard/tickets');
   },
   dashboardTotalRecognition: () => {
-    return connectedSails.get(constants.sails_url + '/dashboard/detected');
+    return connectedSails.get(constants.sails_url + '/demographic/people');
+  },
+  dashboardDemographicFilter: (start, end) => {
+    let data = {
+      start_date: start ? start : "",
+      end_date: end ? end : "",
+    }
+    return connectedSails.post(constants.sails_url + '/demographic/filter/mood', data);
   },
   dashboardRecognitionAges: () => {
     return connectedSails.get(constants.sails_url + '/dashboard/ageranges');
@@ -286,7 +319,7 @@ export default {
     return connectedSails.get(constants.sails_url + '/dashboard/peoplefordays' + filter);
   },
   dashboardRecognitionMood: () => {
-    return connectedSails.get(constants.sails_url + '/dashboard/mood');
+    return connectedSails.get(constants.sails_url + '/demographic/mood');
   },
   dashboardCameraPerPerson: () => {
     return connectedSails.get(`${constants.sails_url}/dashboard/numberofpeoplepercamera`);
@@ -295,7 +328,7 @@ export default {
     return connectedSails.get(`${constants.sails_url}/dashboard/person`)
   },
   loadCams: () => {
-    return connectedSails.get(constants.sails_url + '/cams?sort=num_cam asc&active=1&limit=1000&populate=false');
+    return connectedSails.get(constants.sails_url + '/cams?sort=num_cam asc&active=1&limit=3000&populate=false');
   },
   filterCams: (data) => {
     return connectedSails.post(constants.sails_url + '/control-cams/filter/cams', data);
@@ -434,13 +467,66 @@ export default {
   postChangeChat: (data) => {
     return connectedSails.post(constants.sails_url + '/update/change/', data);
   },
-  //DashBOard link
-  getDashboardEmbebed: () => {
-    return connectedSails.get(constants.dashboard);
+  getReports: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getReport`);
+    return data
   },
-  getDetailDashboard: (id) => {
-    return connectedSails.get(constants.detialDashboard + id + '?user_id=1')
+
+  getAVGLastSevenDays: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getAVGLastWeek`);
+    return data;
   },
+
+  getAVGLastSevenDaysEsc: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getAVGLastWeekEsc`);
+    return data;
+  },
+
+  getHTG: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getHTG`);
+    return data;
+  },
+
+  getHTGEsc: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getHTGEsc`);
+    return data;
+  },
+
+  getAVG_HTG: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getTheFastest`);
+    return data;
+  },
+
+  getAVG_HTGEsc: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getTheFastestEsc`);
+    return data;
+  },
+
+  getPopularTimes: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getPopularTimes`);
+    return data;
+  },
+
+  getPopularTimesEsc: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getPopularTimesEsc`);
+    return data;
+  },
+
+  getPN: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getPersonNames`);
+    return data;
+  },
+
+  getReportGen: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getFullReport`);
+    return data
+  },
+
+  getImageEmpleados: async (id) => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/getOneImage/${id}`);
+    return data;
+  },
+
   // Opciones PTZ
   newOnvifDevice: (urlhistory, urlhistoryport, data, protocoPTZ) => {
 
@@ -455,7 +541,7 @@ export default {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post(protocoPTZ + "://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/new/device', data);
+    return Axios.post("https://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/new/device', data);
   },
   getProfilePTZ: (urlhistory, urlhistoryport, data, protocoPTZ) => {
 
@@ -470,12 +556,13 @@ export default {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post(protocoPTZ + "://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/get/profile', data);
+    return Axios.post("https://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/get/profile', data);
   },
+
   continuousMovePTZ: (urlhistory, urlhistoryport, data) => {
 
-    var getUrlHistory = "0.0.0.0"
-    var getUrlHistoryPort = "00"
+    let getUrlHistory = "0.0.0.0"
+    let getUrlHistoryPort = "00"
 
     if (urlhistory != null) {
       getUrlHistory = urlhistory.toString()
@@ -485,12 +572,12 @@ export default {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/continuous/move/ptz', data);
+    return Axios.post("https://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/continuous/move/ptz', data);
   },
   stopPTZ: (urlhistory, urlhistoryport, data) => {
 
-    var getUrlHistory = "0.0.0.0"
-    var getUrlHistoryPort = "00"
+    let getUrlHistory = "0.0.0.0"
+    let getUrlHistoryPort = "00"
 
     if (urlhistory != null) {
       getUrlHistory = urlhistory.toString()
@@ -500,7 +587,7 @@ export default {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/stop/ptz', data);
+    return Axios.post("https://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/stop/ptz', data);
   },
   // Presets PTZ
   setPreset: (urlhistory, urlhistoryport, data) => {
@@ -516,7 +603,7 @@ export default {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/set/preset', data);
+    return Axios.post("https://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/set/preset', data);
   },
   getPresets: (urlhistory, urlhistoryport, data) => {
 
@@ -531,8 +618,9 @@ export default {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/get/presets', data);
+    return Axios.post("https://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/get/presets', data);
   },
+
   goToPresets: (urlhistory, urlhistoryport, data) => {
 
     let getUrlHistory = "0.0.0.0"
@@ -546,7 +634,7 @@ export default {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/go/to/presets', data);
+    return Axios.post("https://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/go/to/presets', data);
   },
   removePreset: (urlhistory, urlhistoryport, data) => {
 
@@ -561,8 +649,17 @@ export default {
       getUrlHistoryPort = urlhistoryport.toString()
     }
 
-    return Axios.post("http://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/remove/preset', data);
+    return Axios.post("https://" + getUrlHistory + ':' + getUrlHistoryPort + '/onvif/remove/preset', data);
   },
+
+  //// REGISTER ////////
+
+  camerasToServers: (data) => {
+    return connectedSails.post(constants.sails_url + "/register/camara/servers", data)
+  },
+
+  ////////////////
+
   makeLoginRadar: (params) => {
     return Axios.post(constants.radar_backend, {
       query:
@@ -578,7 +675,7 @@ export default {
          token
          userData{
           id
-         }
+        }
         }
       }      
       `,
@@ -589,7 +686,6 @@ export default {
       }
     })
   },
-
   getClients: () => {
     return Axios.post(constants.radar_backend, {
       query: `
@@ -597,13 +693,67 @@ export default {
         getClients{
           id
           name
-          admin_email
-          clave_municipal,
-          photo_path
+          admin_email,
+          photo_path,
+          clave_municipal
         }
       }`
     }
     );
+  },
+  updateComplaint: async (params) => {
+    let data = await connectedRadar.post(constants.radar_backend, {
+      query: `
+       mutation 
+        updateComplaint(
+          $complaintId:Int
+          $state:String
+          $state_cod:String
+          $complaint_state:String
+          $complaint_state_cod:String
+          $status_note:String
+        ){
+          updateComplaint(
+            complaintId:$complaintId
+            state:$state
+            state_cod:$state_cod
+            complaint_state:$complaint_state
+            complaint_state_cod:$complaint_state_cod
+            status_note:$status_note
+            ){
+            id
+            state
+            state_cod
+            complaint_state
+            complaint_state_cod
+            status_note
+          }
+        }
+      `,
+      variables: {
+        complaintId: params.complaintId,
+        state: params.state,
+        state_cod: params.state_cod,
+        complaint_state: params.complaint_state,
+        complaint_state_cod: params.complaint_state_cod,
+        status_note: params.status_note
+      }
+    });
+    return data;
+  },
+
+  //DashBOard link
+  getDashboardEmbebed: () => {
+    return Axios.get(constants.dashboard);
+  },
+  getDetailDashboard: (id) => {
+    return Axios.get(constants.detialDashboard + id + '?user_id=1')
+  },
+
+  //Map filters 
+  getMapFilters: async () => {
+    const { data } = await connectedSails.get(`${constants.sails_url}/map/filters`);
+    return data;
   },
   cancelRadarAlert: (params) => {
     return connectedRadar.post(constants.radar_backend, {
@@ -624,8 +774,7 @@ export default {
             }
           }`,
       variables: params
-    }
-    );
+    });
   },
   sendNotificationByProfile: (params) => {
     return connectedRadar.post(constants.radar_backend, {
@@ -642,8 +791,7 @@ export default {
           }
         }`,
       variables: params
-    }
-    );
+    });
   },
   getAllPoliceIncidentType: () => {
     return connectedRadar.post(constants.radar_backend, {
@@ -655,8 +803,7 @@ export default {
             can_write
           }
         }`
-    }
-    );
+    });
   },
   getAllPoliceSector: () => {
     return connectedRadar.post(constants.radar_backend, {
@@ -667,11 +814,25 @@ export default {
             name
           }
         }`
-    }
-    );
-  }
-};
+    });
+  },
+  exportArchive: (data) => {
+    return connectedSails.post(`${constants.sails_url}/axxon/export-archive`, data);
+  },
+  finalizExportProcess: (data) => {
+    return connectedSails.delete(`${constants.sails_url}/axxon/export/delete`, { data });
+  },
+  getArchives: (params) => {
+    return connectedSails.get(`${constants.sails_url}/axxon/archives`, { params });
+  },
+  searchArchive: (data) => {
+    return connectedSails.post(`${constants.sails_url}/axxon/search-archive`, data);
+  },
+  getVideoStreams: (params) => {
+    return connectedSails.get(`${constants.sails_url}/axxon/videoStreams`, { params });
+  },
 
+};
 
 function getUserID() {
   const isAuth = sessionStorage.getItem('isAuthenticated');
@@ -681,3 +842,4 @@ function getUserID() {
   }
   return 0;
 }
+

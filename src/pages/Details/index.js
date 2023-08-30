@@ -7,9 +7,10 @@ import firebase from "../../constants/config";
 import { Modal, Navbar } from "react-bootstrap";
 import confirmMatch from "../../constants/confirmMatch";
 import conections from "../../conections";
+import constants from "../../constants/constants";
 const mapOptions = {
   center: { lat: 19.45943, lng: -99.208588 },
-  zoom: 15,
+  zoom: constants.zoomAlert,
   mapTypeId: "roadmap",
   zoomControl: false,
   mapTypeControl: false,
@@ -45,7 +46,7 @@ class Details extends Component {
     return (
       <div>
         <Navbar sticky="top" expand="lg" variant="light" bg="mh">
-          <Navbar.Text>Camara {this.state.idCamera}</Navbar.Text>
+          <Navbar.Text>Cámara {this.state.idCamera}</Navbar.Text>
         </Navbar>
         <div className="mapContainerForDetail">
           <MapContainer
@@ -72,20 +73,20 @@ class Details extends Component {
                         }
                       />
                     ) : (
-                      <Image
-                        wrapped
-                        size="small"
-                        src={
-                          this.state.match.name
-                            ? "http://95.216.37.253:3000/images/" +
+                        <Image
+                          wrapped
+                          size="small"
+                          src={
+                            this.state.match.name
+                              ? "http://95.216.37.253:3000/images/" +
                               this.state.match.name.replace(/ /g, "") +
                               "/" +
                               this.state.match.messageId +
                               "-face.jpeg"
-                            : this.state.imageCamera
-                        }
-                      />
-                    )}
+                              : this.state.imageCamera
+                          }
+                        />
+                      )}
                   </div>
                 </div>
               </div>
@@ -120,8 +121,8 @@ class Details extends Component {
                         this.state.match
                           ? this.state.match.name
                             ? "http://95.216.37.253:3000/images/" +
-                              this.state.match.name.replace(/ /g, "") +
-                              "/databaseImage.jpeg"
+                            this.state.match.name.replace(/ /g, "") +
+                            "/databaseImage.jpeg"
                             : ""
                           : ""
                       }
@@ -215,16 +216,16 @@ class Details extends Component {
         <div className="row">&nbsp;</div>
         <div className="row">
           {this.state.match.status === false ||
-          this.state.match.status === undefined ? (
-            <div className="col center" align="center">
-              <Button
-                positive
-                onClick={() => this.setState({ openConfirm: true })}
-              >
-                Confirmar evento
+            this.state.match.status === undefined ? (
+              <div className="col center" align="center">
+                <Button
+                  positive
+                  onClick={() => this.setState({ openConfirm: true })}
+                >
+                  Confirmar evento
               </Button>
-            </div>
-          ) : null}
+              </div>
+            ) : null}
         </div>
         <div className="row">&nbsp;</div>
 
@@ -251,14 +252,14 @@ class Details extends Component {
           <Modal.Body>
             {this.state.typeConfirm !== undefined
               ? confirmMatch[this.state.typeConfirm].map(value => (
-                  <Radio
-                    label={value.msg}
-                    onChange={() => {
-                      this.setState({ checked: value.type });
-                    }}
-                    checked={this.state.checked === value.type}
-                  />
-                ))
+                <Radio
+                  label={value.msg}
+                  onChange={() => {
+                    this.setState({ checked: value.type });
+                  }}
+                  checked={this.state.checked === value.type}
+                />
+              ))
               : null}
           </Modal.Body>
           <Modal.Footer>

@@ -5,6 +5,7 @@ import axios from 'axios';
 import * as KNSFunctions from '../../functions/getAmazonKinesis';
 import Spinner from 'react-bootstrap/Spinner';
 import constants from '../../constants/constants';
+import { removeSpaces } from '../../functions/removeSpaces';
 
 const HlsPlayer = (props) => {
 	const [src, setSrc] = useState(null);
@@ -15,25 +16,31 @@ const HlsPlayer = (props) => {
 	useEffect(() => {
 		setLoading(true);
 		if (!props.channelARN) {
-			let body = {
-				"server": constants.server_axxon,
-				"user": "root",
-				"password": "root",
-				"serial_number": props.dataCamValue.display_number,
-			};
-			if (props.dataCamValue.display_number) {
-				axios.post(constants.api_axxon, body)
-					.then(response => {
-						if (response.data.success && response.data.data && response.data.data.length > 0) {
-							let newSrc = constants.server_axxon + response.data.data[0].hls;
-							setSrc(newSrc);
-							_handleCreatePlayer(newSrc);
-						} else {
-							setSrc(props.src);
-							_handleCreatePlayer(props.src);
-						}
-					})
-					.catch(err => console.log(err));
+			if (props.dataCamValue && props.dataCamValue.display_number) {
+				let body = {
+					// "server": constants.server_axxon,
+					// "user": "root",
+					// "password": "root",
+					"serial_number": props.dataCamValue.display_number || "LEGA123123",
+				};
+				if (props.dataCamValue.display_number && removeSpaces(props.dataCamValue.tipombox) === "axxon") {
+					axios.post(constants.api_axxon, body)
+						.then(response => {
+							if (response.data.success && response.data.data && response.data.data.length > 0) {
+								let newSrc = constants.server_axxon + response.data.data[0].hls;
+								setSrc(newSrc);
+								_handleCreatePlayer(newSrc);
+							} else {
+								setSrc(props.src);
+								_handleCreatePlayer(props.src);
+							}
+						})
+						.catch(err => console.log(err));
+				}
+				else {
+					setSrc(props.src);
+					_handleCreatePlayer(props.src);
+				}
 			}
 			else {
 				setSrc(props.src);
@@ -41,7 +48,6 @@ const HlsPlayer = (props) => {
 			}
 
 		} else KNSFunctions.GetHlsStream(props).then((res) => setAmazonSrc(res));
-
 	}, []);
 	useEffect(() => {
 		if (amazonSrc) {
@@ -63,7 +69,7 @@ const HlsPlayer = (props) => {
 
 	// Functions
 	const _handleCreatePlayer = async (src = null) => {
-		if (props.dataCamValue.display_number) {
+		if (props.dataCamValue && props.dataCamValue.display_number) {
 			setTimeout(async () => {
 				if (player) await player.destroy();
 				await _newPlayer(src);
@@ -172,7 +178,7 @@ const HlsPlayer = (props) => {
 								};
 							}
 						}
-						else if (props.dataCamValue.display_number && src !== props.src) {
+						else if (props.dataCamValue && props.dataCamValue.display_number && src !== props.src) {
 							const password = "root";
 							const user = "root";
 							xhr.withCredentials = true;
@@ -203,18 +209,18 @@ const HlsPlayer = (props) => {
 	const _loadPlayer = () => {
 		player.on(Clappr.Events.PLAYER_ERROR, (err) => {
 			// props.setCountError && props.setCountError(props.dataCamValue.num_cam);
-				console.log('error en el player', err);
-				console.log('error en el player code', err.code);
-				if (
-					err.code === 'hls:3' ||
-					err.code === 'hls:networkError_levelLoadTimeOut' ||
-					err.code === 'hls:networkError_levelLoadError' ||
-					err.code === 'hls:networkError_manifestLoadTimeOut'
-				) {
-					console.log('network error', src);
-					player.load(src);
-					player.play();
-				}
+			console.log('error en el player', err);
+			console.log('error en el player code', err.code);
+			if (
+				err.code === 'hls:3' ||
+				err.code === 'hls:networkError_levelLoadTimeOut' ||
+				err.code === 'hls:networkError_levelLoadError' ||
+				err.code === 'hls:networkError_manifestLoadTimeOut'
+			) {
+				console.log('network error', src);
+				player.load(src);
+				player.play();
+			}
 		});
 	};
 
@@ -226,9 +232,11 @@ const HlsPlayer = (props) => {
 				style={{ height: props.height ? props.height : '100%' }}
 			/>
 			{loading && (
-				<Spinner animation="border" variant="info" role="status" size="xl">
-					<span className="sr-only">Loading...</span>
-				</Spinner>
+				<div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "360px" }}>
+					<Spinner animation="border" variant="info" role="status" size="xl">
+						<span className="sr-only">Loading...</span>
+					</Spinner>
+				</div>
 			)}
 		</div>
 	);

@@ -21,7 +21,9 @@ const client = 'Benito Juárez';
 const clientFirebase="Benito Juárez";
 const urlSoftGuard = "http://softguard.radarapptechnologies.com:8080/";
 const urlPath = favicon;
-const socket_url = "https://service-io-general-socket.radarapptechnologies.com/"
+const socket_url = "https://service-io-general-socket.radarapptechnologies.com/";
+const api_axxon = "https://customer-alvaro-obregon-axxon-api.radarapptechnologies.com/axxon/camera/hls/serial-number";
+const server_axxon = "https://apiaxxonhistory.radarapptechnologies.com";
 
 
 export default {
@@ -38,5 +40,7 @@ export default {
   client,
   urlPath,
   urlSoftGuard,
-  socket_url
+  socket_url,
+  api_axxon,
+  server_axxon
 };

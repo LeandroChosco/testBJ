@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Icon, Input, Dropdown, Tab } from "semantic-ui-react";
+import { Card, Icon, Input, Tab } from "semantic-ui-react";
 import FadeLoader from "react-spinners/FadeLoader";
 import Spinner from 'react-bootstrap/Spinner';
 import { Button } from "react-bootstrap";
@@ -19,6 +19,7 @@ import noCamera from "../../assets/images/noCamera.png"
 import firebaseC5Benito from "../../constants/configC5CJ";
 import "./style.css";
 import conections from "../../conections";
+import { LANG } from "../../constants/token";
 
 const refSOS = firebaseC5Benito
   .app("c5benito")
@@ -32,18 +33,32 @@ const COLORS = {
   Médico: "#28df99",
 };
 
-const SEARCHOPTIONS = [
-  {
-    key: "name",
-    text: "Nombre de Usuario",
-    value: "name",
-  },
-  {
-    key: "date",
-    text: "Fecha",
-    value: "date",
-  },
-];
+// const SEARCHOPTIONS = [
+//   {
+//     key: "name",
+//     text: "Nombre de Usuario",
+//     value: "name",
+//   },
+//   {
+//     key: "date",
+//     text: "Fecha",
+//     value: "date",
+//   },
+// ];
+
+// const SEARCHENGLISHOPTIONS = [
+//   {
+//     key: "name",
+//     text: "User name",
+//     value: "name",
+//   },
+//   {
+//     key: "date",
+//     text: "Date",
+//     value: "date",
+//   },
+// ];
+
 
 const session_user = JSON.parse(sessionStorage.getItem("isAuthenticated"))
 
@@ -94,7 +109,7 @@ class Chat extends Component {
     ]
     : [
       {
-        menuItem: "Policia",
+        menuItem: localStorage.getItem(LANG) === "english" ? "Police" : "Policía",
         render: () => (
           <Tab.Pane attached={false} style={styles.tab}>
             {this.renderListChats("Policia")}
@@ -102,7 +117,7 @@ class Chat extends Component {
         ),
       },
       {
-        menuItem: "Fuego",
+        menuItem: localStorage.getItem(LANG) === "english" ? "Fire" : "Fuego",
         render: () => (
           <Tab.Pane attached={false} style={styles.tab}>
             {this.renderListChats("Fuego")}
@@ -110,7 +125,7 @@ class Chat extends Component {
         ),
       },
       {
-        menuItem: "Medico",
+        menuItem: localStorage.getItem(LANG) === "english" ? "Doctor" : "Médico",
         render: () => (
           <Tab.Pane attached={false} style={styles.tab}>
             {this.renderListChats("Médico")}
@@ -186,19 +201,19 @@ class Chat extends Component {
       <div>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Input
-            placeholder="Buscar chat"
+            placeholder={localStorage.getItem(LANG) === "english" ? "Search user" : "Buscar usuario"}
             style={{ flex: 2 }}
             onChange={this.filterAction}
           ></Input>
-          <Dropdown
-            placeholder="Buscar por"
+          {/* <Dropdown
+            placeholder={localStorage.getItem(LANG) === "english" ? "Search by" : "Buscar por"}
             fluid
             selection
-            options={SEARCHOPTIONS}
+            options={localStorage.getItem(LANG) === "english" ? SEARCHENGLISHOPTIONS : SEARCHOPTIONS}
             defaultValue="name"
             onChange={this.handleChangeOption}
             style={{ flex: 1 }}
-          />
+          /> */}
         </div>
         <div
           style={{
@@ -246,8 +261,8 @@ class Chat extends Component {
                               : "C5") +
                             ": " +
                             chat.messages[chat.messages.length - 1].msg //msg
-                            : "No hay mensajes que mostrar"
-                          : "No hay mensajes que mostrar"}
+                            : localStorage.getItem(LANG) === "english" ? "No messages to show" : "No hay mensajes que mostrar"
+                          : localStorage.getItem(LANG) === "english" ? "No messages to show" : "No hay mensajes que mostrar"}
                       </p>
                     ) : (
                       <p></p>
@@ -451,8 +466,9 @@ class Chat extends Component {
                                 propsIniciales={this.props}
                                 marker={(camData)}
                               />
-                            ) :
-                              null
+                            ) : (
+                              <p>{localStorage.getItem(LANG) === "english" ? "No camera assigned" : "Sin camara asignada..."}</p>
+                            )
                             }
                           </div>
                         </div>
@@ -475,7 +491,7 @@ class Chat extends Component {
                                       className="col-6"
                                       style={{ fontSize: 13, paddingRight: 0 }}
                                     >
-                                      <b>Nombre: </b> {chats[index].user_name}
+                                      <b>{localStorage.getItem(LANG) === "english" ? "Name: " : "Nombre: "}</b> {chats[index].user_name}
                                     </div>
                                     <div
                                       className="col-3"
@@ -485,7 +501,7 @@ class Chat extends Component {
                                         paddingRight: 0,
                                       }}
                                     >
-                                      <b>Celular: </b> +{infoCurrentCamera.phone ? infoCurrentCamera.phone : chats[index].user_cam.phone}
+                                      <b>{localStorage.getItem(LANG) === "english" ? "Phone " : "Celular: "}</b> {chats[index].user_cam.phone}
                                     </div>
                                   </div>
                                   <div className="row" style={{ padding: "5px" }}>
@@ -493,7 +509,7 @@ class Chat extends Component {
                                       className="col-6"
                                       style={{ fontSize: 13, paddingRight: 0 }}
                                     >
-                                      <b>Dirección: </b>
+                                      <b>{localStorage.getItem(LANG) === "english" ? "Address " : "Dirección: "}</b>
                                       {infoCurrentCamera.street ? infoCurrentCamera.street : chats[index].street}{" "}
                                       {infoCurrentCamera.number ? infoCurrentCamera.number : chats[index].number},{" "}
                                       {infoCurrentCamera.town ? infoCurrentCamera.town : chats[index].town},{" "}
@@ -509,8 +525,9 @@ class Chat extends Component {
                                           paddingRight: 0,
                                         }}
                                       >
-                                        <b>Cámara: </b> #cam{infoCurrentCamera.num_cam ? infoCurrentCamera.num_cam : chats[index].num_cam}
+                                        <b>{localStorage.getItem(LANG) === "english" ? "Camera: " : "Cámara: "}</b> #cam{camData && camData.extraData.num_cam}
                                       </div>
+
                                     }
 
                                   </div>
@@ -521,7 +538,7 @@ class Chat extends Component {
                                     >
                                       {infoCurrentCamera.entrecalles ? (
                                         <p>
-                                          <b>Entre Calles: </b>
+                                          <b>{localStorage.getItem(LANG) === "english" ? "Between streets: " : "Entre Calles: "}</b>
                                           {infoCurrentCamera.entrecalles}
                                           {/* {console.log("chats ", chats[index])} */}
                                         </p>
@@ -534,7 +551,7 @@ class Chat extends Component {
                                         className="col-6"
                                         style={{ fontSize: 13, paddingRight: 0 }}
                                       >
-                                        <b>Descripción: </b>
+                                        <b>{localStorage.getItem(LANG) === "english" ? "Description: " : "Descripción: "}</b>
                                         {personalInformation.description
                                           ? personalInformation.description
                                           : ""}
@@ -547,7 +564,7 @@ class Chat extends Component {
                                           paddingRight: 0,
                                         }}
                                       >
-                                        <b>Alarma: </b>{" "}
+                                        <b>{localStorage.getItem(LANG) === "english" ? "Alarm" : "Alarma: "}</b>{" "}
                                         {personalInformation.alarmType
                                           ? personalInformation.alarmType
                                           : ""}
@@ -560,7 +577,7 @@ class Chat extends Component {
                                           paddingRight: 0,
                                         }}
                                       >
-                                        <b>Alarma NS: </b>{" "}
+                                        <b>{localStorage.getItem(LANG) === "english" ? "NS Alarm" : "Alarma NS: "}</b>{" "}
                                         {personalInformation.alarmSN
                                           ? personalInformation.alarmSN
                                           : ""}
@@ -572,7 +589,7 @@ class Chat extends Component {
                                   className="col-4"
                                   style={{ margin: "auto" }}
                                 >
-                                  <Button onClick={this.refreshButton}>Actualizar</Button>
+                                  <Button onClick={this.refreshButton}>{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}</Button>
                                 </div>
                               </div>
                             </Card.Content>
@@ -632,12 +649,12 @@ class Chat extends Component {
                               css={styles.centered}
                             />
                             <p style={{ position: "fixed", top: "56%", left: "62%" }}>
-                              Cargando chat
+                              {localStorage.getItem(LANG) === "english" ? "Loading chat" : "Cargando chat"}
                             </p>
                           </>
                         ) : (
                           <p style={{ position: "fixed", top: "50%", left: "60%" }}>
-                            No se ha seleccionado ningun chat
+                            {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
                           </p>
                         )
                       ) : loading === true ? (
@@ -651,12 +668,12 @@ class Chat extends Component {
                             css={styles.centered}
                           />
                           <p style={{ position: "fixed", top: "56%", left: "62%" }}>
-                            Cargando chat
+                            {localStorage.getItem(LANG) === "english" ? "Loading chat" : "Cargando chat"}
                           </p>
                         </>
                       ) : (
                         <p style={{ position: "fixed", top: "50%", left: "60%" }}>
-                          No se ha seleccionado ningun chat
+                          {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
                         </p>
                       )}
                     </div>
@@ -668,7 +685,7 @@ class Chat extends Component {
                             <div style={{ position: "relative" }}>
                               <textarea
                                 disabled={textareaDisabled}
-                                placeholder="Escriba su mensaje"
+                                placeholder={localStorage.getItem(LANG) === "english" ? "Text your message" : "Escriba su mensaje"}
                                 name="text"
                                 autoComplete="on"
                                 autoCorrect="on"
@@ -687,7 +704,7 @@ class Chat extends Component {
                             </div>
                           ) : (
                             <div className="closed-ticked">
-                              El ticket ya se encuentra cerrado
+                              {localStorage.getItem(LANG) === "english" ? "The ticket is already closed" : "El ticket ya se encuentra cerrado"}
                             </div>
                           )}
                         </div>
@@ -711,14 +728,17 @@ class Chat extends Component {
                                   className="row-9"
                                   style={{ fontSize: 13, paddingRight: 0 }}
                                 >
-                                  El usuario <b>{chats[index].user_name} </b> se encuentra <b>DESACTIVADO</b>
+                                  {localStorage.getItem(LANG) === "english" ? "El usuario " : "The user "}
+                                  <b>{chats[index].user_name}</b>
+                                  {localStorage.getItem(LANG) === "english" ? " is " : " se encuentra "}
+                                  <b>{localStorage.getItem(LANG) === "english" ? "deactivated" : "DESACTIVADO"}</b>
                                 </div>
                                 <br />
                                 <div
                                   className="row-9"
                                   style={{ fontSize: 13, paddingRight: 0 }}
                                 >
-                                  <p>Contáctese con soporte para reactivar este usuario</p>
+                                  <p>{localStorage.getItem(LANG) === "english" ? "Contact support to reactivate this user" : "Contáctese con soporte para reactivar este usuario"}</p>
                                 </div>
                               </div>
                             </div>
@@ -913,9 +933,7 @@ class Chat extends Component {
       this.getMessages(chat.id);
       this.setState({ loading: true, camData: undefined }, () => {
         this._changeUserCam(chat);
-        setTimeout(() => {
-          this.props.stopNotification();
-        }, 1000)
+        this.props.stopNotification();
 
         this.setState({
           // chatId: chat.id,
@@ -1017,9 +1035,7 @@ class Chat extends Component {
     //   console.log(currentChat)
     // }
 
-    setTimeout(() => {
-      this.props.stopNotification();
-    }, 1000)
+    this.props.stopNotification();
 
     refSOS
       .doc(chatId)

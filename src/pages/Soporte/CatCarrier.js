@@ -6,6 +6,7 @@ import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.m
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
 import { CircleSpinner } from "react-spinners-kit";
+import { LANG } from '../../constants/token';
 
 const styles = {
     spinner: {
@@ -22,7 +23,7 @@ const styles = {
 
 export default function CatAddress(props) {
 
-    const { setShowModalCatCarrier, carrier, columnsCatCarrier } = props;
+    const { /*setShowModalCatCarrier,*/ carrier, columnsCatCarrier } = props;
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -38,10 +39,10 @@ export default function CatAddress(props) {
             <div className="row containerTitle">
                 <div className="col">
                     {/* <div>
-                        <input type="button" className="btn btnAdd" value="Agregar Cat Carrier" style={{ marginRight: "50px" }} onClick={() => setShowModalCatCarrier("Agregar Cat Carrier")} />
+                        <input type="button" className="btn btnAdd" value={localStorage.getItem(LANG) === "english" ? "Add Cat Carrier" : "Agregar Cat Carrier"} style={{ marginRight: "50px" }} onClick={() => setShowModalCatCarrier("Agregar Cat Carrier")} />
                     </div> */}
                     <hr />
-                    <h3 className="pt-2">Lista de Cat Carrier</h3>
+                    <h3 className="pt-2">{localStorage.getItem(LANG) === "english" ? "Cat Carrier List" : "Lista de Cat Carrier"}</h3>
                 </div>
             </div>
             {
@@ -53,7 +54,7 @@ export default function CatAddress(props) {
                     carrier && carrier.length === 0 ?
                         <div className="row">
                             <div className="col">
-                                <p>No hay Cat Carrier que mostrar</p>
+                                <p>{localStorage.getItem(LANG) === "english" ? "No Cat Carrier to show" : "No hay Cat Carrier que mostrar"}</p>
                             </div>
                         </div>
                         :
