@@ -967,7 +967,7 @@ class CameraStream extends Component {
           totalWeekArray.map((el) => {
             let buttonDate = moment().subtract(Math.abs(el - 1), 'days').startOf('date').format('ll');
             return (
-              <button key={Math.abs(el - 1)} className={historicCurrentDay === Math.abs(el - 1) ? "btn btn-primary ml-auto mr-auto mb-2" : "btn btn-outline-primary ml-auto mr-auto mb-2"} onClick={() => this._getHistoricsByHour(Math.abs(el - 6))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
+              <button key={Math.abs(el - 1)} className={historicCurrentDay === Math.abs(el - 1) ? "btn btn-primary ml-auto mr-auto mb-2" : "btn btn-outline-primary ml-auto mr-auto mb-2"} onClick={() => this._getHistoricsByHour(Math.abs(el - 1))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
             );
           })
         }
