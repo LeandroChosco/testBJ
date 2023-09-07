@@ -264,7 +264,7 @@ class Map extends Component {
           height={'300px'}
           showExternal
           hideButton={extraData.dataCamValue.control === 0 ? false : true}
-          showButtons={extraData.dataCamValue.control === 1 ? true : false}
+          showButtons={true}
         />
       </Provider>
     );

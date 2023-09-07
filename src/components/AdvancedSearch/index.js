@@ -28,7 +28,7 @@ class AdvancedSearch extends Component {
 				{/* Modal */}
 				<Modal show={showModal} onHide={this._onHide}>
 					<Form onSubmit={(e) => this._onSubmit(e)}>
-						<Modal.Header closeButton>Busqueda Avanzada</Modal.Header>
+						<Modal.Header closeButton>Búsqueda Avanzada</Modal.Header>
 						<Modal.Body>
 							{!_.isEmpty(error) && <Alert variant="danger">{error}</Alert>}
 							<Form.Group as={Row} controlId="startDate">

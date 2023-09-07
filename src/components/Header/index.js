@@ -9,13 +9,16 @@ import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 import ModalChangePassword from "./ModalChangePassword";
+import ModalVersions from "./ModalVersions";
 import { LANG, MODE } from "../../constants/token";
-// import { Dropdown } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
+import versions from "./versionInfo";
 
 class Header extends Component {
 
   state = {
     showModal: false,
+    showVersions: false,
     language: "spanish",
     mode: "light",
   }
@@ -222,6 +225,20 @@ class Header extends Component {
     this.setState({ showModal: false })
   }
 
+  _handleCuadrantes = () => {
+    if (!this.state.showCuadrantes) {
+      this.setState({ showCuadrantes: true })
+    }
+  }
+
+  _hideCuadrantes = () => {
+    this.setState({ showCuadrantes: false })
+  }
+
+  _showVersions = () => {
+    this.setState({ showVersions: !this.state.showVersions })
+  }
+
   _logOut = () => {
     if (this.props.sideMenu) {
       this.props._toggleSideMenu();
@@ -239,7 +256,7 @@ class Header extends Component {
   };
 
   render() {
-    const { showModal } = this.state;
+    const { showModal, showVersions } = this.state;
     // const languages = [
     //   {
     //     key: 'Español',
@@ -393,7 +410,7 @@ class Header extends Component {
                 color: "white",
                 border: "none",
                 width: "8.5rem"
-              }}
+              }} 
             /> */}
             <NavDropdown
               className="light"
@@ -412,6 +429,13 @@ class Header extends Component {
               <NavDropdown.Item onClick={this._logOut}>
                 {this.props.lang === "english" ? "Log out" : "Cerrar sesión"}
               </NavDropdown.Item>
+              <NavDropdown.Item onClick={this._showVersions}>
+                <p style={{display: "flex", justifyContent: "center", marginTop: "0.2rem"}}>Versión {versions[0].version}</p>
+              </NavDropdown.Item>
+              {
+                showVersions && <ModalVersions currentVersion={versions[0].version} modal={showVersions} hideModal={this._showVersions} />
+              }
+
             </NavDropdown>
             {this.props.userInfo.role_id === 1 ? (
               <Button variant="outline-light" onClick={this._cameraSideInfo}>

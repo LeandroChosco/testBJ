@@ -1,74 +1,70 @@
-import React, { Component } from 'react';
-import '../../assets/styles/util.css';
-import '../../assets/styles/main.css';
-import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css'
-import './style.css'
-import conections from '../../conections';
-import { Text } from 'recharts';
+import React, { Component } from "react";
+import "../../assets/styles/util.css";
+import "../../assets/styles/main.css";
+import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
+import "./style.css";
+import conections from "../../conections";
+import { Text } from "recharts";
 import Card from "../../components/Card/Card";
 import CardHeader from "../../components/Card/CardHeader";
-import CardBody from '../../components/Card/CardBody';
-import { Tab } from 'semantic-ui-react'
+import CardBody from "../../components/Card/CardBody";
+import { Tab } from "semantic-ui-react";
 // import socketIOClient from 'socket.io-client';
 // import sailsIOClient from 'sails.io.js';
 import constants from '../../constants/constants';
-import * as moment from 'moment';
-// import CameraPerPerson from '../../components/Dashboard/cameraPerPerson';
-// import PeoplePerDay from '../../components/Dashboard/persons';
-import Loading from '../../components/Loading/index';
-import IntalledLastMonth from '../../components/Dashboard/camerasInstalledLastMonth';
-// import AgeDetected from '../../components/Dashboard/ageDetected';
-import PersonsMood from '../../components/Dashboard/personsMood';
-import GenderDetected from '../../components/Dashboard/genderDetected';
-// import DataCams from '../../components/Dashboard/dataCams';
-import DataCamsDash from '../../components/Dashboard/dataCamsDash';
-import CamsInstalledByMonth from '../../components/Dashboard/camsInstalledByMonth';
-// import DataTickets from '../../components/Dashboard/dataTickets';
-import DataTicketsDash from '../../components/Dashboard/dataTicketsDash';
-// import DataTicketsPerUser from '../../components/Dashboard/dataTicketsPerUser';
-import DataTicketsPerUserRedesign from '../../components/Dashboard/dataTicketsPerUserRedesign';
-import AttendedVSclosed from '../../components/Dashboard/attendedVScloded';
-import LastCreadedCams from '../../components/Dashboard/lastCreatedCams';
+import * as moment from "moment";
+// import CameraPerPerson from "../../components/Dashboard/cameraPerPerson";
+// import PeoplePerDay from "../../components/Dashboard/persons";
+import Loading from "../../components/Loading/index";
+import IntalledLastMonth from "../../components/Dashboard/camerasInstalledLastMonth";
+// import AgeDetected from "../../components/Dashboard/ageDetected";
+import PersonsMood from "../../components/Dashboard/personsMood";
+import GenderDetected from "../../components/Dashboard/genderDetected";
+// import DataCams from "../../components/Dashboard/dataCams";
+import DataCamsDash from "../../components/Dashboard/dataCamDash";
+import CamsInstalledByMonth from "../../components/Dashboard/camsInstalledByMonth";
+// import DataTickets from "../../components/Dashboard/dataTickets";
+import DataTicketsDash from "../../components/Dashboard/dataTicketsDash";
 import Placas from "../../components/Dashboard/Placas"
+// import DataTicketsPerUser from "../../components/Dashboard/dataTicketsPerUser";
+import DataTicketsPerUserRedesign from "../../components/Dashboard/dataTicketsPerUserRedesign";
+import AgeDemographic from "../../components/Dashboard/AgeDemographic";
+import RegisterMood from "../../components/Dashboard/RegisterMood";
 import { IS_DEMOGRAPHIC, IS_LPR } from '../../constants/token';
+import AttendedVSclosed from "../../components/Dashboard/attendedVScloded";
+import LastCreadedCams from "../../components/Dashboard/lastCreatedCams";
 import {
+  // RiArrowDropUpLine,
+  // RiCloseCircleFill,
   RiEye2Fill
 } from "react-icons/ri";
-import AgeDemographic from '../../components/Dashboard/AgeDemographic';
-import RegisterMood from '../../components/Dashboard/RegisterMood';
-import MicrofonosDash from '../../components/Dashboard/microfonosDash';
-let isLPR=localStorage.getItem(IS_LPR)
-let isDemographic=localStorage.getItem(IS_DEMOGRAPHIC)
+let isLPR = localStorage.getItem(IS_LPR)
+let isDemographic = localStorage.getItem(IS_DEMOGRAPHIC)
+
 const MOODS = {
-  "Happy": "Feliz",
-  "Happiness": "Feliz",
-  "Sad": "Triste",
-  "Sadness": "Triste",
-  "Angry": "Enojado",
-  "Anger": "Enojado",
-  "Surprised": "Sorprendido",
-  "Surprise": "Sorprendido",
-  "Disgusted": "Disgustado",
-  "Contemptuous": "Desprecio",
+  neutral: "Neutral",
+  happy: "Feliz",
+  surprise: "Sorprendido",
+  sad: "Triste",
+  anger: "Enojado"
 }
 
 const style = {
   height: {
-    height: '100%',
-    backgroundColor: '#f5f5f5'
+    height: "100%",
+    backgroundColor: "#f5f5f5"
   },
   adjustX: {
-    height: '100%',
+    height: "100%",
     overflowX: "auto",
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-}
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+};
 
 class Dashboard extends Component {
-
   state = {
     loadingCams: true,
     dataCams: [],
@@ -79,68 +75,73 @@ class Dashboard extends Component {
     dataTicketsPerUser: {
       closed: [],
       attended: [],
-      created: []
+      created: [],
     },
+    setDropDown: [],
+    drop: false,
+    tags: [],
+    conditionalRender: false,
     loadTotalRecognition: true,
     loadRecognitionAges: true,
     loadingRecognitionPerDay: true,
     loadingRecognitionMood: true,
+    loadingRegisterMood: true,
     loadingCamsGrid: true,
     personsMood: [
       {
-        "mood": "Neutral",
-        "total": 0,
-        "fullMark": 100
+        mood: "Neutral",
+        total: 0,
+        fullMark: 100,
       },
       {
-        "mood": "Sorprendido",
-        "total": 0,
-        "fullMark": 100
+        mood: "Sorprendido",
+        total: 0,
+        fullMark: 100,
       },
       {
-        "mood": "Triste",
-        "total": 0,
-        "fullMark": 100
+        mood: "Triste",
+        total: 0,
+        fullMark: 100,
       },
       {
-        "mood": "Feliz",
-        "total": 0,
-        "fullMark": 100
+        mood: "Feliz",
+        total: 0,
+        fullMark: 100,
       },
       {
-        "mood": "Enojado",
-        "total": 0,
-        "fullMark": 100
-      }
-      // {
-      //   "mood": "Procupado",
-      //   "total": 0,
-      //   "fullMark": 100
-      // },
-      // {
-      //   "mood": "Ansioso",
-      //   "total": 0,
-      //   "fullMark": 100
-      // }
+        mood: "Enojado",
+        total: 0,
+        fullMark: 100,
+      },
     ],
+    registerMood: [],
     genderDetected: [],
     agesDetected: [],
-    totalEvents: [],
-    personsperDay: [],
     attendedVSclosed: [],
+    lastAges: "",
+    lastMood: "",
+    lastGender: "",
     filterCam: "0",
     allFilters: [],
     panes: [
-      { menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane> },
-      { menuItem: 'Tickets', render: () => <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane> },
-      isDemographic && { menuItem: 'Reconocimiento', render: () => <Tab.Pane attached={false}>{this.renderRecognitionDashboardRedesign()}</Tab.Pane> },
-      { menuItem: 'Micrófonos', render: () => <Tab.Pane attached={false}> {this.renderEvents()}</Tab.Pane> },
-      isLPR &&
       {
-        menuItem: "LPR",
+        menuItem: "Cámaras",
+        render: () => (
+          <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane>
+        ),
+      },
+      {
+        menuItem: "Tickets",
+        render: () => (
+          <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane>
+        ),
+      },
+      isDemographic &&
+      {
+        menuItem: "Reconocimiento",
         render: () => (
           <Tab.Pane attached={false}>
-            {this.renderLPRDashboard()}
+            {this.renderRecognitionDashboard()}
           </Tab.Pane>
         ),
       },
@@ -153,10 +154,17 @@ class Dashboard extends Component {
           </Tab.Pane>
         ),
       },
-    
-    ]
-  }
-
+      isLPR &&
+      {
+        menuItem: "LPR",
+        render: () => (
+          <Tab.Pane attached={false}>
+            {this.renderLPRDashboard()}
+          </Tab.Pane>
+        ),
+      },
+    ],
+  };
 
   renderCamsDashboard() {
     // const c = shuffle(COLORS);
@@ -225,7 +233,22 @@ class Dashboard extends Component {
       </div>
     );
   }
-
+  renderLPRDashboard() {
+    return (
+      <div className='container-flex'>
+        <h1>Licence Plate Recognition</h1>
+        <p>Powered by Radar ®</p>
+        <hr />
+        <p>El análisis de reconocimiento de matrículas (LPR) de Radar lee
+          automáticamente la información de matrículas y la vincula a videos en
+          vivo y grabados. Gracias a esto, los operadores de seguridad pueden
+          buscar y encontrar rápidamente videos específicos de matrículas de
+          vehículos capturadas para su verificación e investigación.</p>
+        <br />
+        <Placas />
+      </div>
+    )
+  }
 
   renderEmebidoDashboard() {
 
@@ -252,101 +275,65 @@ class Dashboard extends Component {
                 <RiEye2Fill />
               </button>
             </div>
+
+
+
           ))
+
         }
       </div>
     )
   }
-
   renderTicketsDashboard() {
     return (
-      <div className='container-flex'>
+      <div className="container-flex">
         <h1>Bitácora de tickets</h1>
         <p>Powered by Radar ®</p>
         <hr />
         <p>La bitácora de Radar exhibe el estado de los tickets de atención a los ciudadanos de la alcaldía, facilitando un histórico del desempeño de cada monitorista.</p>
         <br />
-        <div className='row'>
+        <div className="row">
           <div className='col-6 chart overflow table-responsive' style={{ height: "375px" }} align='center'>
             <h3>Tickets creados por usuario</h3>
-            {
-              this.state.loadingTickets ?
-                <Loading />
-                :
-                <DataTicketsPerUserRedesign dataTicketsPerUser={this.state.dataTicketsPerUser} customLabel={customLabel} />
-            }
+            {this.state.loadingTickets ? (
+              <Loading />
+            ) : (
+              <DataTicketsPerUserRedesign
+                dataTicketsPerUser={this.state.dataTicketsPerUser}
+                customLabel={customLabel}
+              />
+            )}
           </div>
-          <div className='col-6 chart' align='center'>
+          <div className="col-6 chart" align="center">
             <h3>Estado de tickets</h3>
-            <br />
-            {
-              this.state.loadingTickets ?
-                <Loading />
-                :
-                <DataTicketsDash dataTickets={this.state.dataTickets} dataTotalTickets={this.state.dataTotalTickets} />
-            }
+            {this.state.loadingTickets ? (
+              <Loading />
+            ) : (
+              <DataTicketsDash
+                dataTickets={this.state.dataTickets}
+                dataTotalTickets={this.state.dataTotalTickets}
+              />
+            )}
           </div>
         </div>
-        <div className='row'>
-          <div className='col-12 chart2x' align='center'>
+        <div className="row">
+          <div className="col-12 chart2x" align="center">
             <h3>Tickets atendidos y cerrados por usuario</h3>
-            {
-              this.state.loadingTickets ?
-                <Loading />
-                :
-                <AttendedVSclosed attendedVSclosed={this.state.attendedVSclosed} />
-            }
+            {this.state.loadingTickets ? (
+              <Loading />
+            ) : (
+              <AttendedVSclosed
+                attendedVSclosed={this.state.attendedVSclosed}
+              />
+            )}
           </div>
         </div>
       </div>
     );
   }
-  renderEvents() {
-    return (
-      <div className='container-flex'>
-        <h1>Micrófonos</h1>
-        <p>Powered by Radar ®</p>
-        <hr />
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-          nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui oﬃcia deserunt mollit anim id est laborum.</p>
-        <div className='row'>
-          <div className='col-12 chart' align='center'>
-            <Card style={style.height}>
-              <CardHeader>
-                <h3 className="pt-2">Total de eventos</h3>
-              </CardHeader>
-              {this.state.loadTotalRecognition ? <Loading /> :
-                <MicrofonosDash eventDetected={this.state.totalEvents} dataTickets={this.state.dataTickets} />
-              }
-            </Card>
-          </div>
-        </div>
-      </div>
-    )
 
-  }
-
-  renderLPRDashboard() {
-    return (
-      <div className='container-flex'>
-        <h1>Licence Plate Recognition</h1>
-        <p>Powered by Radar ®</p>
-        <hr />
-        <p>El análisis de reconocimiento de matrículas (LPR) de Radar lee
-          automáticamente la información de matrículas y la vincula a videos en
-          vivo y grabados. Gracias a esto, los operadores de seguridad pueden
-          buscar y encontrar rápidamente videos específicos de matrículas de
-          vehículos capturadas para su verificación e investigación.</p>
-        <br />
-        <Placas />
-      </div>
-    )
-  }
-
-  renderRecognitionDashboardRedesign() {
-    // const { loadingPeoplePerCamera, personsPerCamera, persons, loadingPersons } = this.state;
-
+  renderRecognitionDashboard() {
+    // console.log(this.state.loadingRecognitionMood)
     return (
       <div className='container-flex'>
         <h1>Reconocimiento Facial</h1>
@@ -358,39 +345,45 @@ class Dashboard extends Component {
             <Card style={style.adjustX}>
               <CardBody>
                 {
-                  this.state.loadingRecognitionMood ?
-                    <Loading />
-                    :
-                    <PersonsMood personsMood={this.state.personsMood} />
+                  // this.state.loadingRecognitionMood ?
+                  //   <Loading />
+                  //   :
+                  <PersonsMood personsMood={this.state.personsMood} />
                 }
               </CardBody>
             </Card>
           </div>
         </div>
-        <br />
+
         <div style={{ backgroundColor: "#f5f5f5", padding: "4rem" }}>
           <div className='row'>
-            <div className='col-12 chart' align='center'>
-              <Card>
-                <CardHeader>
-                  <h3 className="pt-2" style={{ display: "flex" }}>Emociones registradas</h3>
-                </CardHeader>
-                <RegisterMood />
-              </Card>
-            </div>
+            <Card>
+              <CardHeader>
+                <h3 className="pt-2" style={{ display: "flex" }}>Emociones registradas</h3>
+                <p><i>Actualizado el {this.state.lastMood.split(" ")[0]} a las {this.state.lastMood.split(" ")[1]}.</i></p>
+              </CardHeader>
+              <div className='col-12 chart' align='center'>
+                {
+                  // this.state.loadingRegisterMood ?
+                  //   <Loading />
+                  //   :
+                  <RegisterMood registerMood={this.state.registerMood} />
+                }
+              </div>
+            </Card>
             <br />
           </div>
-          <br />
           <div className='row'>
             <div className='col-6 chart' align='center'>
               <Card style={{ height: "30rem" }}>
                 <CardHeader>
                   <h3 className="pt-2" style={{ display: "flex" }}>Personas registradas</h3>
+                  <p><i>Actualizado el {this.state.lastAges.split(" ")[0]} a las {this.state.lastAges.split(" ")[1]}.</i></p>
                 </CardHeader>          {
-                  this.state.loadTotalRecognition ?
-                    <Loading />
-                    :
-                    <GenderDetected genderDetected={this.state.genderDetected} dataTickets={this.state.dataTickets} />
+                  // this.state.loadTotalRecognition ?
+                  //   <Loading />
+                  //   :
+                  <GenderDetected agesDetected={this.state.agesDetected} genderDetected={this.state.genderDetected} lastAges={this.state.lastAges} />
                 }
               </Card>
             </div>
@@ -398,12 +391,13 @@ class Dashboard extends Component {
               <Card style={{ height: "30rem" }}>
                 <CardHeader>
                   <h3 style={{ display: "flex" }}>Edades registradas</h3>
+                  <p><i>Actualizado el {this.state.lastAges.split(" ")[0]} a las {this.state.lastAges.split(" ")[1]}.</i></p>
                 </CardHeader>
                 {
-                  this.state.loadRecognitionAges ?
-                    <Loading />
-                    :
-                    <AgeDemographic />
+                  // this.state.loadRecognitionAges ?
+                  //   <Loading />
+                  //   :
+                  <AgeDemographic agesDetected={this.state.agesDetected} genderDetected={this.state.genderDetected} lastAges={this.state.lastAges} />
                 }
               </Card>
             </div>
@@ -413,16 +407,25 @@ class Dashboard extends Component {
     )
   }
 
+
   render() {
     return (
-      <div className={!this.props.showMatches ? "hide-matches" : "show-matches"}>
-        <div className={this.props.showMatches ? "hide-matches" : "show-matches"}>
-
-          <button className='btn clear pull-right' onClick={this.loadData}><i className={'fa fa-repeat'}></i>Actualizar</button>
+      <div
+        className={!this.props.showMatches ? "hide-matches" : "show-matches"}
+      >
+        <div
+          className={this.props.showMatches ? "hide-matches" : "show-matches"}
+        >
+          <button className="btn clear pull-right" onClick={this.loadData}>
+            <i className={"fa fa-repeat"}></i>Actualizar
+          </button>
         </div>
-        <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
+        <Tab
+          menu={{ secondary: true, pointing: true }}
+          panes={this.state.panes}
+        ></Tab>
       </div>
-    )
+    );
   }
 
   componentWillUnmount() {
@@ -441,11 +444,11 @@ class Dashboard extends Component {
       loadRecognitionAges: true,
       loadingRecognitionPerDay: true,
       loadingRecognitionMood: true,
+      loadingRegisterMood: true,
       loadingCamsGrid: true,
       loadingPeoplePerCamera: true,
-      loadingPersons: true
-    })
-    this.processMicrofono()
+      loadingPersons: true,
+    });
     conections.dashboardCams(this.state.filterCam).then((response) => {
       const data = response.data;
       this.setState({
@@ -479,14 +482,17 @@ class Dashboard extends Component {
         loadingCamsGrid: false
       });
     });
-    conections.dashboardTickets().then(this.processTicketsData)
-    conections.dashboardTotalRecognition().then(this.processDetected)
-    conections.dashboardRecognitionAges().then(this.processAges)
-    conections.dashboardRecognitionPerDay('?enddate=' + moment().format('YYYY-MM-DD') + '&startdate=' + moment().add(-15, 'days').format('YYYY-MM-DD')).then(this.processPerDay)
-    conections.dashboardRecognitionMood().then(this.processMood)
-    // conections.loadCams().then(this.lastCreatedCams).catch(err => {
-    //   console.log('Cargando camaras', err)
-    // })
+    conections.dashboardRecognitionMood().then(this.processMood);
+    conections.dashboardDemographicFilter().then(this.processRegisterMood);
+    conections.dashboardTotalRecognition().then(this.processDetected);
+    conections.dashboardTickets().then(this.processTicketsData);
+    conections.dashboardRecognitionAges().then(this.processAges);
+    // conections
+    //   .loadCams()
+    //   .then(this.lastCreatedCams)
+    //   .catch((err) => {
+    //     console.log("Cargando camaras", err);
+    //   });
     conections.dashboardCameraPerPerson().then(this.getPersonsPerCamera);
     conections.dashboardPersons().then(this.getPersons);
     conections.getDashboardEmbebed().then(this.getDashboardEmbebed);
@@ -503,111 +509,148 @@ class Dashboard extends Component {
     this.setState({io:io})    
     io.sails.url = constants.sails_url+':1337';
     io.socket.get('/cams?sort=num_cam asc&active=1&limit=10000', this.lastCreatedCams) */
-  }
+  };
+
+  /*  processDropDown = (response) => {
+    let data []
+    let indexes= []
+    response.data.data
+  } */
 
   processMood = (response) => {
-    let data = []
-    let indexes = []
-    response.data.data && response.data.data.forEach(v => {
+    let data = [];
+    let indexes = [];
+
+    response.data.data.current_date.forEach((v) => {
       if (v && v.mood !== "") {
-        v.mood = MOODS[v.mood] ? MOODS[v.mood] : v.mood
+        v.mood = MOODS[v.mood] ? MOODS[v.mood] : v.mood;
         if (indexes.indexOf(v.mood) > -1) {
-          data[indexes.indexOf(v.mood)].percentage = (v.percentage + data[indexes.indexOf(v.mood)].percentage) / 2
+          data[indexes.indexOf(v.mood)].percentage =
+            (v.percentage + data[indexes.indexOf(v.mood)].percentage) / 2;
         } else {
-          data.push(v)
-          indexes.push(v.mood)
+          data.push(v);
+          indexes.push(v.mood);
         }
       }
     });
 
+
     const personsMood_copy = [...this.state.personsMood];
-    const aux = personsMood_copy.map(item => {
-      const found = data.find(d => d.mood === item.mood);
+    const aux = personsMood_copy.map((item) => {
+      const found = data.find((d) => d.mood === item.mood);
       if (found) {
+
         return found;
       } else {
-        item['percentage'] = null;
+        item["percentage"] = null;
         return item;
       }
-    })
-    this.setState({ personsMood: aux, loadingRecognitionMood: false })
-  }
+    });
 
-  processPerDay = (response) => {
-    const data = response.data.data
-    this.setState({ personsperDay: data, loadingRecognitionPerDay: false })
-  }
-  processMicrofono = () => {
-    const data = this.props.totalEvents
-    // console.log("EVENTOS", this.props.fechasEventos)
-    if (data.length > 0) {
-      this.setState({
-        totalEvents: [
-          {
-            name: 'Disparos',
-            value: data[0]
-          }, {
-            name: 'Rotura de vidrios',
-            value: data[1]
-          }
-        ],
-        loadTotalRecognition: false
-      })
+    this.setState({ personsMood: aux, loadingRecognitionMood: false });
+  };
+
+  getDashboardEmbebed = (response) => {
+    const data = response.data;
+    let newData = [];
+    if (data && data.data) {
+
+      data.data.map((item) => {
+        if (item.id === 18) {
+          return (
+
+            newData.push({
+              id: item.id,
+              nombre: item.nombre,
+              script: item.script,
+              token: item.token
+            })
+          )
+        } else {
+          return (
+            null
+          )
+        }
+
+
+      });
+      this.setState({ embebedDashboard: newData });
     }
   }
+
   processDetected = (response) => {
-    const data = response.data.data
-    if (data && Object.keys(data).length > 0) {
+    const data = response.data.data;
+    // console.log(data)
+    if (Object.keys(data).length > 0) {
       this.setState({
         genderDetected: [
           {
-            name: 'Mujer',
-            value: data.women_detected
-          }, {
-            name: 'Hombre',
-            value: data.men_detected
-          }
+            name: "Mujer",
+            value: data.femeleData[0].currentAgeRange.total,
+            rangeAge: ["-18", "18-30", "31-50", "+50"],
+            detectedArray: [data.femeleData[0].currentAgeRange.women_under_18, data.femeleData[0].currentAgeRange.women_between_18_30, data.femeleData[0].currentAgeRange.women_between_31_50, data.femeleData[0].currentAgeRange.women_over_50]
+          },
+          {
+            name: "Hombre",
+            value: data.maleData[0].currentAgeRange.total,
+            rangeAge: ["-18", "18-30", "31-50", "+50"],
+            detectedArray: [data.maleData[0].currentAgeRange.men_under_18, data.maleData[0].currentAgeRange.men_between_18_30, data.maleData[0].currentAgeRange.men_between_31_50, data.maleData[0].currentAgeRange.men_over_50]
+          },
         ],
-        loadTotalRecognition: false
-      })
+        loadTotalRecognition: false,
+      });
     } else {
-      this.setState({ genderDetected: [], loadTotalRecognition: false })
+      this.setState({ genderDetected: [], loadTotalRecognition: false });
     }
-  }
+  };
 
   processAges = (response) => {
-    const data = response.data.data
+    const data = response.data.data;
+
+    this.setState({
+      lastAges: data.date_update
+    })
+
     if (Object.keys(data).length > 0) {
+
       this.setState({
         agesDetected: [
           {
-            name: '-18',
+            name: "-18",
             total: data.total_under_18,
             Hombres: data.men_under_18,
-            Mujeres: data.women_under_18
-          }, {
-            name: '18-30',
+            Mujeres: data.women_under_18,
+          },
+          {
+            name: "18-30",
             total: data.total_between_18_30,
             Hombres: data.men_between_18_30,
-            Mujeres: data.women_between_18_30
-          }, {
-            name: '31-50',
+            Mujeres: data.women_between_18_30,
+          },
+          {
+            name: "31-50",
             total: data.total_between_31_50,
             Hombres: data.men_between_31_50,
-            Mujeres: data.women_between_31_50
-          }, {
-            name: '50+',
+            Mujeres: data.women_between_31_50,
+          },
+          {
+            name: "50+",
             total: data.total_over_50,
             Hombres: data.men_over_50,
-            Mujeres: data.women_over_50
-          }
+            Mujeres: data.women_over_50,
+          },
         ],
-        loadRecognitionAges: false
-      })
+        loadRecognitionAges: false,
+      });
+      if (data.date_update) {
+        this.setState({
+          lastAges: data.date_update
+        })
+      }
     } else {
-      this.setState({ agesDetected: [], loadRecognitionAges: false })
+      this.setState({ agesDetected: [], loadRecognitionAges: false });
     }
-  }
+  };
 
   changeFilter = (event, data) => {
     if (data) {
@@ -622,63 +665,210 @@ class Dashboard extends Component {
     }, 0);
   };
 
+  processRegisterMood = (response) => {
+    const data = response.data.data
+
+    this.setState({
+      lastMood: data[data.length - 1] ? data[data.length - 1].date_update : "XX NN"
+    })
+
+    if (Object.keys(data).length > 0) {
+
+      let dataNeutral = []
+      let dataSorprendido = []
+      let dataTriste = []
+      let dataFeliz = []
+      let dataEnojado = []
+
+      let dates = []
+
+      data.forEach(element => {
+
+        if (dataNeutral.length < dates.length) {
+          dataNeutral.push(0)
+        }
+        if (dataSorprendido.length < dates.length) {
+          dataSorprendido.push(0)
+        }
+        if (dataTriste.length < dates.length) {
+          dataTriste.push(0)
+        }
+        if (dataFeliz.length < dates.length) {
+          dataFeliz.push(0)
+        }
+        if (dataEnojado.length < dates.length) {
+          dataEnojado.push(0)
+        }
+
+        const newDate = element.date.split("-").reverse()[0] + "/" + element.date.split("-").reverse()[1]
+        dates.push(newDate)
+
+        element.data.forEach(el => {
+
+          switch (el.mood) {
+            case "neutral":
+              dataNeutral.push(el.total)
+              break;
+            case "sad":
+              dataTriste.push(el.total)
+              break;
+            case "anger":
+              dataEnojado.push(el.total)
+              break;
+            case "happy":
+              dataFeliz.push(el.total)
+              break;
+            case "surprise":
+              dataSorprendido.push(el.total)
+              break;
+            default:
+              break;
+          }
+
+        })
+      })
+
+      if (dataNeutral.length < dates.length) {
+        dataNeutral.push(0)
+      }
+      if (dataSorprendido.length < dates.length) {
+        dataSorprendido.push(0)
+      }
+      if (dataTriste.length < dates.length) {
+        dataTriste.push(0)
+      }
+      if (dataFeliz.length < dates.length) {
+        dataFeliz.push(0)
+      }
+      if (dataEnojado.length < dates.length) {
+        dataEnojado.push(0)
+      }
+
+      const series = [
+        {
+          name: "Neutral",
+          data: dataNeutral
+        },
+        {
+          name: "Sorprendido",
+          data: dataSorprendido
+        },
+        {
+          name: "Triste",
+          data: dataTriste
+        },
+        {
+          name: "Feliz",
+          data: dataFeliz
+        },
+        {
+          name: "Enojado",
+          data: dataEnojado
+        },
+      ]
+
+
+      this.setState({
+        registerMood: {
+          series: series,
+          dates: dates
+        },
+        loadingRegisterMood: false,
+      });
+    } else {
+      this.setState({ registerMood: [], loadingRegisterMood: false });
+    }
+  }
+
   componentDidMount() {
-    this.loadData()
+    this.loadData();
   }
 
   // lastCreatedCams = (response) => {
-  //   const data = response.data
-  //   this.setState({ lastCreatedCams: data, loadingCamsGrid: false })
-  // }
+  //   const data = response.data;
+  //   this.setState({ lastCreatedCams: data, loadingCamsGrid: false });
+  // };
 
   getPersonsPerCamera = (response) => {
     const data = response.data;
     let newData = [];
+    let dropDownData = [];
     if (data && data.results) {
       let { results } = data;
-      results.forEach((item) => {
-        newData.push({
-          x: item.camera_name,
-          y: item.total_face
-        });
-      });
-      this.setState({ personsPerCamera: newData, loadingPeoplePerCamera: false });
-    };
 
-  }
+      results.map((item) => {
+        return (
+          newData.push({
+            x: item.endpoint_name ? item.endpoint_name : item.camera_name,
+            y: item.total_face,
+          })
+        )
+      });
+
+      results.map((item) => {
+        if (item.endpoint_name || item.camera_name) {
+          dropDownData.push({
+            name: item.endpoint_name || item.camera_name,
+          })
+        }
+        return dropDownData;
+      });
+      this.setState({
+        personsPerCamera: newData,
+        setDropDown: dropDownData,
+        loadingPeoplePerCamera: false,
+      });
+    }
+  };
 
   getPersons = (response) => {
     const data = response.data;
     let newData = [];
     if (data && data.data) {
-      data.data.forEach((item) => {
-        newData.push({
-          fecha: item.date,
-          total: item.total
-        });
+      data.data.map((item) => {
+        return (
+          newData.push({
+            fecha: item.date,
+            total: item.total,
+          })
+        )
+
       });
       this.setState({ persons: newData, loadingPersons: false });
-    };
-  }
+    }
+  };
 
   processTicketsData = (response) => {
     const dataTickets = response.data;
-    const ticketStatus = [{
-      name: 'Abiertos', value: dataTickets.open
-    }, {
-      name: 'En proceso', value: dataTickets.process
-    }, {
-      name: 'Cerrados', value: dataTickets.closed
-    }]
-    const totaltickets = [{
-      name: 'Total', value: dataTickets.total
-    }]
+    const ticketStatus = [
+      {
+        name: "Abiertos",
+        value: dataTickets.open,
+      },
+      {
+        name: "En proceso",
+        value: dataTickets.process,
+      },
+      {
+        name: "Cerrados",
+        value: dataTickets.closed,
+      },
+    ];
+    const totaltickets = [
+      {
+        name: "Total",
+        value: dataTickets.total,
+      },
+    ];
 
-
-    let attendedVSclosed = dataTickets.total_closed_tickets_by_user.map(v => {
-      let found = false
+    let attendedVSclosed = dataTickets.total_closed_tickets_by_user.map((v) => {
+      let found = false;
       v.Cerrados = parseInt(v.total.toString());
-      for (let index = 0; index < dataTickets.total_attended_tickets_by_user.length; index++) {
+      for (
+        let index = 0;
+        index < dataTickets.total_attended_tickets_by_user.length;
+        index++
+      ) {
         const element = dataTickets.total_attended_tickets_by_user[index];
         if (element.name === v.name) {
           found = true;
@@ -689,11 +879,11 @@ class Dashboard extends Component {
       if (!found) {
         v.Proceso = 0;
       }
-      delete v.total
+      delete v.total;
       return v;
-    })
-    dataTickets.total_attended_tickets_by_user.map(v => {
-      let found = false
+    });
+    dataTickets.total_attended_tickets_by_user.map((v) => {
+      let found = false;
       for (let index = 0; index < attendedVSclosed.length; index++) {
         const element = attendedVSclosed[index];
         if (element.name === v.name) {
@@ -702,10 +892,10 @@ class Dashboard extends Component {
         }
       }
       if (!found) {
-        attendedVSclosed.push({ name: v.name, Cerrados: 0, Proceso: v.total })
+        attendedVSclosed.push({ name: v.name, Cerrados: 0, Proceso: v.total });
       }
       return v;
-    })
+    });
     this.setState({
       loadingTickets: false,
       dataTickets: ticketStatus,
@@ -713,19 +903,18 @@ class Dashboard extends Component {
       dataTicketsPerUser: {
         created: dataTickets.total_created_tickets_by_user,
         attended: dataTickets.total_attended_tickets_by_user,
-        closed: dataTickets.total_closed_tickets_by_user
+        closed: dataTickets.total_closed_tickets_by_user,
       },
-      attendedVSclosed: attendedVSclosed
+      attendedVSclosed: attendedVSclosed,
     });
-  }
-
+  };
 }
 
 function customLabel(p) {
   return (
     <Text
-      fontSizeAdjust='true'
-      verticalAnchor='middle'
+      fontSizeAdjust="true"
+      verticalAnchor="middle"
       width={300}
       height={p.height}
       x={p.x + 5}
@@ -733,7 +922,7 @@ function customLabel(p) {
     >
       {p.value}
     </Text>
-  )
+  );
 }
 
 // function shuffle(array) {

@@ -283,7 +283,7 @@ class Cuadrantes extends Component {
               </Fragment>
               : this.state.cuadrantes.length !== 0
                 ? <div className="errorContainer">
-                  {localStorage.getItem(LANG) === "english" ? "Quadrant without cameras" : "Cuadrante sin camaras asignadas"}
+                  {localStorage.getItem(LANG) === "english" ? "Quadrant without cameras" : "Cuadrante sin cámaras asignadas"}
                 </div>
                 : <div className="errorContainer">
                   {localStorage.getItem(LANG) === "english" ? "No quadrants to show" : "No hay cuadrantes que mostrar"}

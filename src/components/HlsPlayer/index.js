@@ -13,6 +13,7 @@ const HlsPlayer = (props) => {
 	const [loading, setLoading] = useState(false);
 	const [amazonSrc, setAmazonSrc] = useState(null);
 
+
 	useEffect(() => {
 		setLoading(true);
 		if (!props.channelARN) {
@@ -232,7 +233,7 @@ const HlsPlayer = (props) => {
 				style={{ height: props.height ? props.height : '100%' }}
 			/>
 			{loading && (
-				<div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "360px" }}>
+				<div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "450px" }}>
 					<Spinner animation="border" variant="info" role="status" size="xl">
 						<span className="sr-only">Loading...</span>
 					</Spinner>

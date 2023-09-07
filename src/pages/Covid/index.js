@@ -9,7 +9,6 @@ import LoopCamerasDisplay from '../../components/LoopCamerasDisplay';
 import GridCovidDisplay from '../../components/GridCovidDisplay';
 import CameraStream from '../../components/CameraStream';
 import constants from '../../constants/constants'
-import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 // import { JellyfishSpinner } from "react-spinners-kit";
 import conections from '../../conections'
 import SearchCamera from '../../components/SearchCamera';
@@ -28,6 +27,7 @@ import CovidItem from "../../components/CovidItem"
 import Spinner from "react-bootstrap/Spinner";
 import ColorScheme from 'color-scheme'
 import Strings from '../../constants/strings';
+import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 const scm = new ColorScheme();
 const COLORS = scm.from_hue(235)
   .scheme('analogic')
@@ -69,7 +69,7 @@ class Analysis extends Component {
     moduleActions: {},
     id_cam: 0,
     panes: [
-      { menuItem: 'En linea', render: () => <Tab.Pane attached={false}>{this._renderOnlineTab()}</Tab.Pane> },
+      { menuItem: 'En línea', render: () => <Tab.Pane attached={false}>{this._renderOnlineTab()}</Tab.Pane> },
       { menuItem: 'Dashboard', render: () => <Tab.Pane attached={false}>{this._renderCovidPerDay()}</Tab.Pane> },
     ],
     covidPerDay: [
@@ -113,8 +113,8 @@ class Analysis extends Component {
     imageLoading: false,
     loadingCovidGrid: false,
     showSearch: false,
-    is_filter:false,
-    filterData:[]
+    is_filter: false,
+    filterData: []
   }
 
   render() {
@@ -127,10 +127,10 @@ class Analysis extends Component {
             loading={this.state.loading}
           /> */}
           <img
-							className="spinner"
-							src={constants.urlPath}
-							style={{ width: "10%", borderRadius: "50%" }}
-							alt={constants.urlPath} />
+            className="spinner"
+            src={constants.clientLogo}
+            style={{ width: "10%", borderRadius: "40%" }}
+            alt={constants.clientLogo} />
         </div>
       )
     }
@@ -144,7 +144,7 @@ class Analysis extends Component {
 
   _filterButtons = () => {
     return (
-      <div style={{ justifyContent: "right", display: "flex",  marginBottom :  5 }} className='col-12'>
+      <div style={{ justifyContent: "right", display: "flex", marginBottom: 5 }} className='col-12'>
         <Button onClick={() => this.setState({ showSearch: true })} basic >Filtrar</Button>
         {this.state.is_filter && <Button onClick={() => this._loadCameras()} basic>Limpiar filtro</Button>}
       </div>
@@ -156,23 +156,23 @@ class Analysis extends Component {
     return (
       <Fragment>
         {
-          (places.length > 0 || is_filter ) &&
+          (places.length > 0 || is_filter) &&
           this._filterButtons()
         }
         {this.state.displayTipe !== 3 && !this.state.loading ? <div className="toggleViewButton row">
-          { 
+          {
             places.length > 0 &&
             <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe}>
-            <ToggleButton value={1} variant='outline-dark' ><Icon name="grid layout" /></ToggleButton>
-            <ToggleButton value={2} variant='outline-dark' ><Icon name="clone" /></ToggleButton>
-            {this.state.cameraID ? <ToggleButton value={3} variant='outline-dark' ><Icon name="square" /></ToggleButton> : null}
-          </ToggleButtonGroup>
-          }  
+              <ToggleButton value={1} variant='outline-dark' ><Icon name="grid layout" /></ToggleButton>
+              <ToggleButton value={2} variant='outline-dark' ><Icon name="clone" /></ToggleButton>
+              {this.state.cameraID ? <ToggleButton value={3} variant='outline-dark' ><Icon name="square" /></ToggleButton> : null}
+            </ToggleButtonGroup>
+          }
           {
             places.length === 0 && is_filter &&
             <div align="center" className='col-12'><br />
-           {Strings.noResults}
-          </div>
+              {Strings.noResults}
+            </div>
           }
         </div> : null}
         <div style={{ position: 'absolute', top: '30%', background: 'transparent', width: '100%' }} align='center'>
@@ -271,7 +271,7 @@ class Analysis extends Component {
           covidTmp.push(element);
         }
       });
-    }else{
+    } else {
       console.log('Sin informaciòn');
     }
     setTimeout(() => {
@@ -378,7 +378,7 @@ class Analysis extends Component {
 
   _loadCameras = () => {
     // console.log('este es _loadCamera')
-    this.setState({ loading: true, is_filter:false, filterData:[] }, console.log('loading'))
+    this.setState({ loading: true, is_filter: false, filterData: [] }, console.log('loading'))
     conections.getAllCams()
       .then((response) => {
         // console.log(response)
@@ -397,12 +397,12 @@ class Analysis extends Component {
             var urlHistory = null
             var urlHistoryPort = null
 
-            if ("urlhistory" in value){
-                urlHistory = value.urlhistory
+            if ("urlhistory" in value) {
+              urlHistory = value.urlhistory
             }
 
-            if ("urlhistoryport" in value){
-                urlHistoryPort = value.urlhistoryport
+            if ("urlhistoryport" in value) {
+              urlHistoryPort = value.urlhistoryport
             }
 
             // let url = 'rtmp://18.212.185.68/live/cam';                                               
@@ -514,8 +514,8 @@ class Analysis extends Component {
     this.setState({ loading: true, showSearch: false });
   }
 
-  _clear =()=>{
-    this.setState({filterData:[]});
+  _clear = () => {
+    this.setState({ filterData: [] });
   }
 
 
@@ -523,7 +523,7 @@ class Analysis extends Component {
     if (params) {
       this.setState({ filterData: params });
     }
-    let auxCamaras = [],actualCamera = {};
+    let auxCamaras = [], actualCamera = {};
     let title = '', idCamera = null, index = 1
     if (data.length > 0) {
       data.map(value => {
@@ -582,12 +582,12 @@ class Analysis extends Component {
         return true;
       })
       if (idCamera == null) {
-        this.setState({ places: auxCamaras, loading: false, error: undefined, is_filter:true })
+        this.setState({ places: auxCamaras, loading: false, error: undefined, is_filter: true })
       } else {
-        this.setState({ places: auxCamaras, loading: false, cameraID: idCamera, actualCamera: { title: title, extraData: actualCamera }, error: undefined, displayTipe: 3, is_filter:true  })
+        this.setState({ places: auxCamaras, loading: false, cameraID: idCamera, actualCamera: { title: title, extraData: actualCamera }, error: undefined, displayTipe: 3, is_filter: true })
       }
     } else {
-      this.setState({ places: auxCamaras, loading: false, cameraID: idCamera, actualCamera: { title: title, extraData: actualCamera }, error: undefined, is_filter:true })
+      this.setState({ places: auxCamaras, loading: false, cameraID: idCamera, actualCamera: { title: title, extraData: actualCamera }, error: undefined, is_filter: true })
     }
   }
 }

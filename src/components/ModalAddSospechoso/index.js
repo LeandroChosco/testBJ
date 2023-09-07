@@ -235,9 +235,9 @@ const ModalAddSospechoso = ({modal, hide}) => {
                         </textarea>
                     </Form.Field>
                     <Form.Field>
-                        <label>Motivo de busqueda</label>
+                        <label>Motivo de búsqueda</label>
                         <textarea 
-                            placeholder="Ingrese motivo de busqueda..." 
+                            placeholder="Ingrese motivo de búsqueda..." 
                             rows="2"
                             name="motivo"
                             type="text" 

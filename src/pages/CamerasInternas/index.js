@@ -266,7 +266,7 @@ class CamarasInternas extends Component {
 			phones: this.state.phones.join(),
 			mails: this.state.mails.join(),
 			type_report: this.state.typeReport,
-			user_id: 1
+			user_id: JSON.parse(sessionStorage.getItem("isAuthenticated")).userInfo.user_id || 1
 		})
 			.then((response) => {
 				const data = response.data;
@@ -532,7 +532,7 @@ class CamarasInternas extends Component {
 			.then((response) => {
                 
 				const camaras = response.data.data;
-				console.log("Camaras Internas", camaras)
+				// console.log("Camaras Internas", camaras)
 				let auxCamaras = [];
 				let offlineCamaras = [];
 				let disconnectedCameras = [];
@@ -707,3 +707,4 @@ class CamarasInternas extends Component {
 }
 
 export default CamarasInternas;
+

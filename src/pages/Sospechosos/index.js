@@ -6,7 +6,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
-import './style.css'
+import './style.css'; 
 import ModalAddSospechoso from '../../components/ModalAddSospechoso';
 import conections from '../../conections';
 import moment from 'moment';
@@ -43,6 +43,7 @@ const Sospechosos = ({ showMatches }) => {
     }
   ]
   const [showModal, actualizarShowModal] = useState(false);
+  
   const columnsSospechos = [{
     dataField: "id_match",
     text: 'Id Match',
@@ -81,7 +82,7 @@ const Sospechosos = ({ showMatches }) => {
     text: 'Visto por ultima vez'
   }, {
     dataField: "motivo",
-    text: 'Motivo de busqueda'
+    text: 'Motivo de búsqueda'
   }, {
     dataField: "comentario",
     text: 'Comentario'
@@ -200,6 +201,7 @@ const Sospechosos = ({ showMatches }) => {
     conections.getPersons().then(res => {
       if (res.status === 200) {
         let resPersons = res.data
+        //console.log('resPersons',resPersons)
         if (resPersons.success) {
           if (resPersons.data.sospechosos.length > 0) {
             resPersons.data.sospechosos.forEach(so => {
@@ -212,6 +214,7 @@ const Sospechosos = ({ showMatches }) => {
               em.date = moment(em.date).format("DD-MM-YYYY, HH:mm:ss")
             })
           }
+
           actualizarSospechosos(resPersons.data.sospechosos);
           actualizarEmpleados(resPersons.data.empleados);
         }

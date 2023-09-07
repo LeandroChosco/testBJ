@@ -118,12 +118,16 @@ class Analysis extends Component {
           </div>
         ) : (
           <div id="analisis_holder" style={{ background: "transparent", color: "red !important" }} className={!this.props.showMatches ? 'hide-matches' : 'show-matches'}>
-            <Tab
-              menu={{ color: localStorage.getItem(MODE) === "darkTheme" ? "rgb(12, 48, 78)" : "white", inverted: localStorage.getItem(MODE) === "darkTheme" ? true : false, secondary: true, pointing: true }}
-              panes={localStorage.getItem(LANG) === "english" ? englishPanes : panes}
-              onTabChange={this.handleChangeTab}
-              defaultActiveIndex={activeIndex}
-            />
+            {
+              window.location.pathname === "/analisis" ? <Tab
+                menu={{ color: localStorage.getItem(MODE) === "darkTheme" ? "rgb(12, 48, 78)" : "white", inverted: localStorage.getItem(MODE) === "darkTheme" ? true : false, secondary: true, pointing: true }}
+                panes={localStorage.getItem(LANG) === "english" ? englishPanes : panes}
+                onTabChange={this.handleChangeTab}
+                defaultActiveIndex={activeIndex}
+              />
+                :
+                this._renderOnlineTab()
+            }
             {this._renderModals()}
             {this._searchModal()}
           </div>
@@ -211,7 +215,7 @@ class Analysis extends Component {
     return (
       <Fragment>
         <Modal style={{ color: localStorage.getItem(MODE) === "darkTheme" && "white" }} size="lg" show={modalProblem} onHide={() => this.setState({ modalProblem: false, cameraProblem: {}, problemDescription: '', phones: [], mails: [] })}>
-          <Modal.Header className={localStorage.getItem(MODE) === "darkTheme" && "darkTheme"}>{localStorage.getItem(LANG) === "english" ? `Report problem in camera ${cameraProblem.num_cam}` : `Reportar problema en cámara ${cameraProblem.num_cam}`}<CloseButton onClick={this._closeModal} style={{color: localStorage.getItem(MODE) === "darkTheme" && "red"}} /></Modal.Header>
+          <Modal.Header className={localStorage.getItem(MODE) === "darkTheme" && "darkTheme"}>{localStorage.getItem(LANG) === "english" ? `Report problem in camera ${cameraProblem.num_cam}` : `Reportar problema en cámara ${cameraProblem.num_cam}`}<CloseButton onClick={this._closeModal} style={{ color: localStorage.getItem(MODE) === "darkTheme" && "red" }} /></Modal.Header>
           <Modal.Body className={localStorage.getItem(MODE) === "darkTheme" && "darkTheme"}>
             <Form>
               <Form.Field>
@@ -462,7 +466,7 @@ class Analysis extends Component {
     switch (displayTipe) {
       case 1:
         return (
-          <GridCameraDisplay
+          window.location.pathname === "/analisis" && <GridCameraDisplay
             ref="myChild"
             error={error}
             loading={loading}
