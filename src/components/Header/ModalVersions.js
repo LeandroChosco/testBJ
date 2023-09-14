@@ -21,24 +21,10 @@ const ModalVersions = ({ currentVersion, modal, hideModal }) => {
 
     return (
         <div>
-            <Modal size="xl" backdrop={"static"} show={modal} onHide={hideModal}>
+            <Modal size="xl" backdrop={"static"} show={modal} onHide={hideModal} contentClassName={"margin-modal"}>
                 <Modal.Header closeButton>
                     <h3>{localStorage.getItem(LANG) === "english" ? `Version history (Current V${currentVersion})` : `Historial de versiones (Actual V${currentVersion})`}</h3>
                 </Modal.Header>
-                {/* <div className="container-login100 cityBackground" style={{ minHeight: "10rem", padding: "3.5rem", maxHeight: "55rem" }}>
-                    <div className="wrap-login100 wrap-version" style={{ alignItems: 'center', justifyContent: 'center', marginBottom: "3rem", marginTop: "2rem", height: "45rem", overflowY: "scroll" }}>
-                        <span className="login100-form-logo">
-                            <img
-                                src={logo}
-                                style={{ width: "100%", borderRadius: "50%" }}
-                                alt="Benito"
-                            />
-                        </span>
-                        <br />
-
-
-                    </div>
-                </div> */}
                 <Modal.Body>
                     <div style={{ maxHeight: "55rem", overflowY: "scroll" }}>
                         <Accordion className="accordion-version" open={showVersions} toggle={toggle}>

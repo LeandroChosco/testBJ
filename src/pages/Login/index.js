@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import logo from "../../assets/images/logo.jpeg"
 import logo from '../../assets/images/icons/favicon.jpg';
 import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
@@ -48,34 +47,38 @@ class Login extends Component {
       }
       //Crear una funcion de control si sale error
       const dataToken = await Conections.makeLoginRadar(userInfoRadar);
-      const token = `Bearer ${dataToken.data.data.userSignIn.token}`
 
-      token && localStorage.setItem(RADAR_ID, dataToken.data.data.userSignIn.userData.id);
+      if (dataToken.data.errors) {
+        ToastsStore.error("Credenciales inválidas");
+      } else {
+        const token = `Bearer ${dataToken.data.data.userSignIn.token}`
 
-      
-      this.setState({ loading: true });
-      Conections.makeLogin(userInfo)
-        .then(response => {
-          localStorage.setItem(SAILS_ACCESS_TOKEN, response.data.data.info_user.token)
-          localStorage.setItem(ACCESS_TOKEN, token);
-          Conections.getClients().then(res => {
-            const data = res.data.data.getClients.filter(c => c.name === constants.client);
-            constants.urlPath =
-              data[0].photo_path != null ? constants.urlPath = data[0].photo_path :
-                constants.urlPath
+        token && localStorage.setItem(RADAR_ID, dataToken.data.data.userSignIn.userData.id);
+
+        this.setState({ loading: true });
+        Conections.makeLogin(userInfo)
+          .then(response => {
+            localStorage.setItem(SAILS_ACCESS_TOKEN, response.data.data.info_user.token)
+            localStorage.setItem(ACCESS_TOKEN, token);
+            Conections.getClients().then(res => {
+              const data = res.data.data.getClients.filter(c => c.name === constants.client);
+              constants.urlPath =
+                data[0].photo_path != null ? constants.urlPath = data[0].photo_path :
+                  constants.urlPath
+            })
+            const userResponse = response.data;
+            if (userResponse.success && userResponse.data.login) {
+              this.props.makeAuth(userResponse.data.info_user);
+            } else {
+              ToastsStore.error(userResponse.msg);
+              this.setState({ loading: false, error: userResponse.msg });
+            }
+            this.setState({ loading: false });
           })
-          const userResponse = response.data;
-          if (userResponse.success && userResponse.data.login) {
-            this.props.makeAuth(userResponse.data.info_user);
-          } else {
-            ToastsStore.error(userResponse.msg);
-            this.setState({ loading: false, error: userResponse.msg });
-          }
-          this.setState({ loading: false });
-        })
-        .catch(error => {
-          this.setState({ loading: false, error: error });
-        });
+          .catch(error => {
+            this.setState({ loading: false, error: error });
+          });
+      };
     } else {
       ToastsStore.error("Los campos no pueden estar vacios");
     }
