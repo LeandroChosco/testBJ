@@ -26,7 +26,7 @@ const ModalVersions = ({ currentVersion, modal, hideModal }) => {
                     <h3>{localStorage.getItem(LANG) === "english" ? `Version history (Current V${currentVersion})` : `Historial de versiones (Actual V${currentVersion})`}</h3>
                 </Modal.Header>
                 <Modal.Body>
-                    <div style={{ maxHeight: "55rem", overflowY: "scroll" }}>
+                    <div style={{ maxHeight: "48rem", overflowY: "scroll" }}>
                         <Accordion className="accordion-version" open={showVersions} toggle={toggle}>
                             {
                                 versions.map((el, idx) => {
