@@ -728,7 +728,7 @@ class Chat extends Component {
                                   className="row-9"
                                   style={{ fontSize: 13, paddingRight: 0 }}
                                 >
-                                  {localStorage.getItem(LANG) === "english" ? "El usuario " : "The user "}
+                                  {localStorage.getItem(LANG) === "english" ? "The user " : "El usuario "}
                                   <b>{chats[index].user_name}</b>
                                   {localStorage.getItem(LANG) === "english" ? " is " : " se encuentra "}
                                   <b>{localStorage.getItem(LANG) === "english" ? "deactivated" : "DESACTIVADO"}</b>

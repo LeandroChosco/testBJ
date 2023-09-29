@@ -512,8 +512,8 @@ class Analysis extends Component {
             snapShot={this._snapShot}
             changeStatus={this._chageCamStatus}
             propsIniciales={this.props}
-          />
-        );
+            />
+            );
       case 3:
         return (
           <div className="camUniqueHolder">
@@ -524,6 +524,7 @@ class Analysis extends Component {
               hideFileButton
               showFilesBelow
               moduleActions={moduleActions}
+              propsIniciales={this.props}
             />
           </div>
         );

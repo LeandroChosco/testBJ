@@ -1317,7 +1317,7 @@ class Main extends Component {
           <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated} />} />
           <Route path="/resetpassword" exact render={() => <ResetPassword />} />
           <Route path="/analisis" exact render={(props) => <Analysis showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
-          <Route path="/analisis/:id" exact render={(props) => <Analysis canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
+          <Route path="/analisis/:id" exact render={(props) => <Analysis canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} chats={this.state.chats} toggleControls={this._toggleControls} />} />
           <Route path="/camarasInternas" exact render={(props) => <CamarasInternas showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/detalles/covid/:id" exact render={(props) => <CovidItemDetail  {...props} alertaCovidd={this.state.alertaCovidd} alertaCovid={this.state.alertaCovid} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/detalles/emergency/:id" exact render={(props) => <DetailsEmergency  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />

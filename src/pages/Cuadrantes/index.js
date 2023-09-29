@@ -19,6 +19,7 @@ import SearchCamera from '../../components/SearchCamera';
 import LoadingLogo from '../../components/LoadingLogo';
 import Strings from '../../constants/strings';
 import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
+import NotificationSystem from 'react-notification-system';
 
 import './style.css';
 import '../../assets/styles/util.css';
@@ -27,6 +28,7 @@ import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
 import { LANG } from '../../constants/token';
 
 class Cuadrantes extends Component {
+  notificationSystem = React.createRef();
   state = {
     cuadrantes: [],
     index: 2,
@@ -124,6 +126,7 @@ class Cuadrantes extends Component {
     const { camsCuadrante, is_quadrant_filter, showAllQuadrants } = this.state;
     return (
       <div style={{ background: "white" }}>
+        <NotificationSystem ref={this.notificationSystem} />
         {showAllQuadrants ?
           <>
         <div className="containerCuadrantes">
@@ -350,6 +353,7 @@ class Cuadrantes extends Component {
           propsIniciales={this.props}
           update={this.state.update}
           changeUpdate={this.changeUpdate}
+          quadrantNotification={this._quadrantNotification}
           />
           )
       case 2:
@@ -470,8 +474,17 @@ class Cuadrantes extends Component {
       this.setState({ loading: true })
       this._camsCuadrante(id)
     }
-
   }
+
+  _quadrantNotification = (info) => {
+    const notification = this.notificationSystem.current;
+    notification.addNotification({
+      message: info.message,
+      level: info.level,
+      position: 'tc',
+      title: info.title
+    });
+  };
 
   _addCams = (dataCam) => {
     //console.log('datadataCam',dataCam)

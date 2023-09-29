@@ -13,6 +13,7 @@ import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import firebaseSos from '../../constants/configSOS';
 import { POLICE_TRACKING_COLLECTION } from '../../Api/sos';
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
+import NotificationSystem from 'react-notification-system';
 
 import police_blue from '../../assets/images/icons/maps/p1_blue_car.png';
 import police_yellow from '../../assets/images/icons/maps/p1_yellow_car.png';
@@ -60,6 +61,7 @@ const styles = {
 }
 
 class Map extends Component {
+  notificationSystem = React.createRef();
   state = {
     map: null,
     places: [],
@@ -123,6 +125,7 @@ class Map extends Component {
   render() {
     return (
       <div className='map'>
+        <NotificationSystem ref={this.notificationSystem} />
         <div style={this.state.loadingFilter ? styles.loadingFilter : styles.loadingStart} align='center'>
           {/* <JellyfishSpinner size={250} color='#686769' loading={this.state.loading} /> */}
           <img
@@ -265,6 +268,7 @@ class Map extends Component {
           showExternal
           hideButton={extraData.dataCamValue.control === 0 ? false : true}
           showButtons={true}
+          mapNotification={this._mapNotification}
         />
       </Provider>
     );
@@ -464,6 +468,16 @@ class Map extends Component {
 
   }
 
+  _mapNotification = (info) => {
+    const notification = this.notificationSystem.current;
+    notification.addNotification({
+      message: info.message,
+      level: info.level,
+      position: 'tc',
+      title: info.title
+    });
+  };
+
 
   _loadPolices = () => {
     const { map } = this.state;
@@ -502,7 +516,7 @@ class Map extends Component {
             const { active, policeId } = d.doc.data();
             const marker = markersPolice[policeId];
 
-            if (active && marker && marker.extraData !== { id: `pol-${policeId}`, ...d.doc.data() }) {
+            if (active && marker /*&& marker.extraData !== { id: `pol-${policeId}`, ...d.doc.data() }*/) {
               this._removeMarker({ id: `pol-${policeId}`, ...d.doc.data() });
               this._addMarker({ id: `pol-${policeId}`, ...d.doc.data() }, map);
             } else {

@@ -37,10 +37,12 @@ export default function PaginationList(props) {
     // }
 
     useEffect(() => {
-        if((videoList[0] && videoList[0].length > 0) || videoList[0] && !videoList[0].hour){
-            getHistoricsByHour(historicCurrentDay)
-        }
-    },[])
+        if(!videoList[0].format){
+            if ((videoList[0] && videoList[0].length > 0) || videoList[0] && !videoList[0].hour) {
+                getHistoricsByHour(historicCurrentDay);
+            };
+        };
+    }, []);
 
     return (
         <>
@@ -130,125 +132,125 @@ export default function PaginationList(props) {
                         </Accordion>
                     </div>
                     :
-                        awsApiStreamsCams && currentPost[0].videos ?
-                            <div>
-                                {currentPost.map((list, idx) => (
-                                    <div key={idx} className="row">
-                                        {(!isRecord && dnsArray) || (list.fecha && list.hour) ? (
-                                            <div className="col-12">
-                                                {!isDownloadSearch ?
-                                                    <>
-                                                        {!isQnap ?
-                                                            <h4 className="title-date">{`${dnsArray !== null || videoList.length > 0 ? list.videos[0].fecha : list.fecha} - ${dnsArray !== null || videoList.length > 0 ? list.videos[0].hour : list.hour}`}</h4>
-                                                            :
-                                                            <h4>{"Date no available"}</h4>}
-                                                    </>
-                                                    :
-                                                    null
-                                                }
-                                            </div>
-                                        ) : null}
-                                        {list.videos.map((video, idx) => (
+                    awsApiStreamsCams && currentPost[0].videos ?
+                        <div>
+                            {currentPost.map((list, idx) => (
+                                <div key={idx} className="row">
+                                    {(!isRecord && dnsArray) || (list.fecha && list.hour) ? (
+                                        <div className="col-12">
+                                            {!isDownloadSearch ?
+                                                <>
+                                                    {!isQnap ?
+                                                        <h4 className="title-date">{`${dnsArray !== null || videoList.length > 0 ? list.videos[0].fecha : list.fecha} - ${dnsArray !== null || videoList.length > 0 ? list.videos[0].hour : list.hour}`}</h4>
+                                                        :
+                                                        <h4>{"Date no available"}</h4>}
+                                                </>
+                                                :
+                                                null
+                                            }
+                                        </div>
+                                    ) : null}
+                                    {list.videos.map((video, idx) => (
 
-                                            !isDownloadSearch ?
+                                        !isDownloadSearch ?
+                                            <MediaContainer
+                                                key={idx}
+                                                value={video}
+                                                isQnap={selectedCamera.dataCamValue.qnap_server_id ? true : false}
+                                                dns_ip={hasDns && `http://${hasDns}`}
+                                                exists_video={true}
+                                                cam={selectedCamera}
+                                                dnsContainer={dnsContainer}
+                                                port={portContainer}
+                                                src={video.relative_url ? video.relative_url : video.relative_path_video}
+                                                real_hour={video.real_hour}
+                                                reloadData={reloadData}
+                                                servidorMultimedia={servidorMultimedia}
+                                                awsApiStreamsCams={awsApiStreamsCams}
+                                                noButtons={noButtons}
+                                                isRecord={isRecord}
+                                                typeMBOX={typeMBOX}
+                                                exists_image_historic={video.exists_image}
+                                                historyServerDns={historyServerDns}
+                                                historyServerPort={historyServerPort}
+                                                historyServerProtocol={historyServerProtocol}
+                                                coverImage={video.relative_path_image}
+                                            />
+                                            :
+                                            (<button key={idx} className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => download(video, dnsArray, protocolDownload)}>{`${dnsArray !== null ? video.fecha : video.fecha} - ${video.real_hour ? video.real_hour : null}`}</button>)
+                                    ))}
+                                </div>
+                            ))
+                            }
+                        </div >
+                        :
+                        currentPost[0] && currentPost[0].archive ?
+                            (<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => download(currentPost[0], dnsArray, protocolDownload)}>{`${currentPost[0].search_start_time} - ${currentPost[0].search_end_time} (Format ${currentPost[0].format})`}</button>)
+                            :
+                            currentPost[0] && currentPost[0].fecha ?
+                                <div className="row">
+                                    {currentPost.map((list, idx) => (
+                                        (!isDownloadSearch ? (
+                                            <>
+                                                {idx % 2 === 0 ?
+                                                    <div className="col-12">
+                                                        {!isRecord && !isDownloadSearch ?
+                                                            <>
+                                                                {!isQnap ?
+                                                                    <h4>{`${dnsArray !== null || videoList.length > 0 ? list.fecha : null} - ${dnsArray !== null || videoList.length > 0 ? list.hour : null}`}</h4>
+                                                                    :
+                                                                    <h4>{"Date no available"}</h4>}
+                                                            </>
+                                                            // <h4>{`${dnsArray !== null ? list.datetime_start : null} - ${dnsArray !== null ? list.datetime_start : null}`}</h4>
+                                                            :
+                                                            null
+                                                        }
+                                                    </div> : null}
                                                 <MediaContainer
                                                     key={idx}
-                                                    value={video}
+                                                    value={list}
                                                     isQnap={selectedCamera.dataCamValue.qnap_server_id ? true : false}
                                                     dns_ip={hasDns && `http://${hasDns}`}
                                                     exists_video={true}
                                                     cam={selectedCamera}
                                                     dnsContainer={dnsContainer}
                                                     port={portContainer}
-                                                    src={video.relative_url ? video.relative_url : video.relative_path_video}
-                                                    real_hour={video.real_hour}
+                                                    src={list.relative_url ? list.relative_url : list.relative_path_video}
+                                                    real_hour={list.real_hour}
                                                     reloadData={reloadData}
                                                     servidorMultimedia={servidorMultimedia}
                                                     awsApiStreamsCams={awsApiStreamsCams}
                                                     noButtons={noButtons}
                                                     isRecord={isRecord}
                                                     typeMBOX={typeMBOX}
-                                                    exists_image_historic={video.exists_image}
+                                                    exists_image_historic={list.exists_image}
                                                     historyServerDns={historyServerDns}
                                                     historyServerPort={historyServerPort}
                                                     historyServerProtocol={historyServerProtocol}
-                                                    coverImage={video.relative_path_image}
+                                                    coverImage={list.relative_path_image}
                                                 />
-                                                :
-                                                (<button key={idx} className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => download(video, dnsArray, protocolDownload)}>{`${dnsArray !== null ? video.fecha : video.fecha} - ${video.real_hour ? video.real_hour : null}`}</button>)
-                                        ))}
-                                    </div>
-                                ))
-                                }
-                            </div >
-                            :
-                            currentPost[0] && currentPost[0].archive ?
-                                (<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => download(currentPost[0], dnsArray, protocolDownload)}>{`${currentPost[0].search_start_time} - ${currentPost[0].search_end_time} (Format ${currentPost[0].format})`}</button>)
+                                            </>
+                                        ) :
+                                            <>
+                                                {
+                                                    isAxxonSearch ?
+                                                        <button key={idx} className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => download(list, dnsArray, protocolDownload)}>{`Opción ${idx + 1}(${list.format}) :${list.search_start_time} - ${list.search_end_time}`}</button>
+                                                        :
+                                                        <button key={idx} className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => download(list, dnsArray, protocolDownload)}>{`${dnsArray !== null ? list.fecha : list.fecha} - ${list.real_hour ? list.real_hour : null}`}</button>
+
+                                                }
+                                            </>
+
+                                        )
+
+                                    ))}
+
+                                </div>
                                 :
-                                currentPost[0] && currentPost[0].fecha ?
-                                    <div className="row">
-                                        {currentPost.map((list, idx) => (
-                                            (!isDownloadSearch ? (
-                                                <>
-                                                    {idx % 2 === 0 ?
-                                                        <div className="col-12">
-                                                            {!isRecord && !isDownloadSearch ?
-                                                                <>
-                                                                    {!isQnap ?
-                                                                        <h4>{`${dnsArray !== null || videoList.length > 0 ? list.fecha : null} - ${dnsArray !== null || videoList.length > 0 ? list.hour : null}`}</h4>
-                                                                        :
-                                                                        <h4>{"Date no available"}</h4>}
-                                                                </>
-                                                                // <h4>{`${dnsArray !== null ? list.datetime_start : null} - ${dnsArray !== null ? list.datetime_start : null}`}</h4>
-                                                                :
-                                                                null
-                                                            }
-                                                        </div> : null}
-                                                    <MediaContainer
-                                                        key={idx}
-                                                        value={list}
-                                                        isQnap={selectedCamera.dataCamValue.qnap_server_id ? true : false}
-                                                        dns_ip={hasDns && `http://${hasDns}`}
-                                                        exists_video={true}
-                                                        cam={selectedCamera}
-                                                        dnsContainer={dnsContainer}
-                                                        port={portContainer}
-                                                        src={list.relative_url ? list.relative_url : list.relative_path_video}
-                                                        real_hour={list.real_hour}
-                                                        reloadData={reloadData}
-                                                        servidorMultimedia={servidorMultimedia}
-                                                        awsApiStreamsCams={awsApiStreamsCams}
-                                                        noButtons={noButtons}
-                                                        isRecord={isRecord}
-                                                        typeMBOX={typeMBOX}
-                                                        exists_image_historic={list.exists_image}
-                                                        historyServerDns={historyServerDns}
-                                                        historyServerPort={historyServerPort}
-                                                        historyServerProtocol={historyServerProtocol}
-                                                        coverImage={list.relative_path_image}
-                                                    />
-                                                </>
-                                            ) :
-                                                <>
-                                                    {
-                                                        isAxxonSearch ?
-                                                            <button key={idx} className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => download(list, dnsArray, protocolDownload)}>{`Opción ${idx + 1}(${list.format}) :${list.search_start_time} - ${list.search_end_time}`}</button>
-                                                            :
-                                                            <button key={idx} className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => download(list, dnsArray, protocolDownload)}>{`${dnsArray !== null ? list.fecha : list.fecha} - ${list.real_hour ? list.real_hour : null}`}</button>
-
-                                                    }
-                                                </>
-
-                                            )
-
-                                        ))}
-
-                                    </div>
-                                    :
-                                    <div align="center">
-                                        <p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
-                                        <i className="fa fa-image fa-5x" />
-                                    </div>
+                                <div align="center">
+                                    <p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+                                    <i className="fa fa-image fa-5x" />
+                                </div>
             }
 
         </>

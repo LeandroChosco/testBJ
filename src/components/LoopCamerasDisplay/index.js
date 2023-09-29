@@ -197,7 +197,7 @@ class LoopCamerasDisplay extends Component {
                     )
                   },
                   moduleActions && moduleActions.viewHistorial && {
-                    menuItem: localStorage.getItem(LANG) === "english" ? "Last 24 Hours" : "Últimas 24 Horas",
+                    menuItem: localStorage.getItem(LANG) === "english" ? "Historics" : "Históricos",
                     render: () => (
                       <Tab.Pane attached={false}>
                         {this._renderVideoList(

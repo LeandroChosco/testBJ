@@ -22,17 +22,17 @@ import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
 
 const TAB = {
-  ONLINE: 0,
-  OFFLINE: 1,
-  DISCONNECTED: 2
+	ONLINE: 0,
+	OFFLINE: 1,
+	DISCONNECTED: 2
 }
 
 const styles = {
- tab: { 
- display: "flex",
- justifyContent: "flex-end", 
- marginBottom : 10
-}
+	tab: {
+		display: "flex",
+		justifyContent: "flex-end",
+		marginBottom: 10
+	}
 }
 class CamarasInternas extends Component {
 	state = {
@@ -62,18 +62,18 @@ class CamarasInternas extends Component {
 		moduleActions: {},
 		id_cam: 0,
 		panes: [
-			{ menuItem: 'Camaras', render: () => <Tab.Pane attached={false}>{this._renderOnlineTab()}</Tab.Pane> }
+			{ menuItem: 'Cámaras', render: () => <Tab.Pane attached={false}>{this._renderOnlineTab()}</Tab.Pane> }
 		],
 		offlineCamaras: [],
 		disconnectedCameras: [],
 		camerasQnap: [],
-    showSearch: false,
-    is_filter: false,
-    filterData: [],
-    activeIndex: TAB.ONLINE,
-    filterOnLine:false,
-    filterOff:false,
-    filterDiss:false
+		showSearch: false,
+		is_filter: false,
+		filterData: [],
+		activeIndex: TAB.ONLINE,
+		filterOnLine: false,
+		filterOff: false,
+		filterDiss: false
 	};
 
 	componentDidMount() {
@@ -96,7 +96,7 @@ class CamarasInternas extends Component {
 	}
 
 	render() {
-    const { loading, panes, activeIndex } = this.state;
+		const { loading, panes, activeIndex } = this.state;
 		return (
 			<div>
 				{loading ? (
@@ -110,48 +110,48 @@ class CamarasInternas extends Component {
 					</div>
 				) : (
 					<div id="analisis_holder" className={!this.props.showMatches ? 'hide-matches' : 'show-matches'}>
-            <Tab menu={{ secondary: true, pointing: true }} panes={panes} onTabChange={this.handleChangeTab} defaultActiveIndex={activeIndex} />
-            {this._renderModals()}
-            {this._searchModal()}
+						<Tab menu={{ secondary: true, pointing: true }} panes={panes} onTabChange={this.handleChangeTab} defaultActiveIndex={activeIndex} />
+						{this._renderModals()}
+						{this._searchModal()}
 					</div>
 				)}
 			</div>
 		);
 	}
 
-  handleChangeTab = (e, data, ) => {
-    this.setState({ activeIndex: data.activeIndex });
-  }
+	handleChangeTab = (e, data,) => {
+		this.setState({ activeIndex: data.activeIndex });
+	}
 
-  _filterButtons = (data, is_visible ) => {
-    return (
-      <div style={styles.tab} className='col-12'>
-        { (data.length > 0 || is_visible) &&<Button onClick={() => this.setState({ showSearch: true })} basic >Filtrar</Button>}
-        {( is_visible) && <Button onClick={() => this._loadCameras()} basic>Limpiar filtro</Button>}
-      </div>
-    )
-  }
+	_filterButtons = (data, is_visible) => {
+		return (
+			<div style={styles.tab} className='col-12'>
+				{(data.length > 0 || is_visible) && <Button onClick={() => this.setState({ showSearch: true })} basic >Filtrar</Button>}
+				{(is_visible) && <Button onClick={() => this._loadCameras()} basic>Limpiar filtro</Button>}
+			</div>
+		)
+	}
 
 	// Components Render
-	
+
 	_renderOnlineTab = () => {
-    let { displayTipe, loading, cameraID, places } = this.state;
-    return (
-      <Fragment>
-        {displayTipe !== 3 && !loading ? (
-        <Fragment>
-        
-        {
-          places.length > 0 &&
-					<div className="toggleViewButton row">
-						<ToggleButtonGroup className="col-12" type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={displayTipe}>
-							
-							
-							{cameraID && (<ToggleButton value={3} variant="outline-dark"><Icon name="square" /></ToggleButton>)}
-						</ToggleButtonGroup>
-					</div>
-        }
-        </Fragment>
+		let { displayTipe, loading, cameraID, places } = this.state;
+		return (
+			<Fragment>
+				{displayTipe !== 3 && !loading ? (
+					<Fragment>
+
+						{
+							places.length > 0 &&
+							<div className="toggleViewButton row">
+								<ToggleButtonGroup className="col-12" type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={displayTipe}>
+
+
+									{cameraID && (<ToggleButton value={3} variant="outline-dark"><Icon name="square" /></ToggleButton>)}
+								</ToggleButtonGroup>
+							</div>
+						}
+					</Fragment>
 				) : null}
 				<div
 					style={{ position: 'absolute', top: '30%', background: 'transparent', width: '100%' }}
@@ -388,7 +388,7 @@ class CamarasInternas extends Component {
 		this.setState({ modalProblem: true, cameraProblem: camera });
 	};
 	_showDisplay = () => {
-    let { displayTipe, error, loading, places, loadingRcord, isRecording, recordingCams, recordingProcess, loadingSnap, loadingFiles, moduleActions, actualCamera, activeIndex, filterOnLine } = this.state;
+		let { displayTipe, error, loading, places, loadingRcord, isRecording, recordingCams, recordingProcess, loadingSnap, loadingFiles, moduleActions, actualCamera, activeIndex, filterOnLine } = this.state;
 		let { matches, showMatches } = this.props;
 		switch (displayTipe) {
 			case 1:
@@ -415,7 +415,7 @@ class CamarasInternas extends Component {
 						showMatches={showMatches}
 						propsIniciales={this.props}
 						activeHideButton={true}
-            is_filter={activeIndex === TAB.ONLINE ? filterOnLine : false }
+						is_filter={activeIndex === TAB.ONLINE ? filterOnLine : false}
 					/>
 				);
 			case 2:
@@ -478,13 +478,13 @@ class CamarasInternas extends Component {
 				let filename = f.name;
 				let portCam = "";
 
-				if (camera.urlHistoryPort ) {
-					if (camera.urlHistoryPort != null){
+				if (camera.urlHistoryPort) {
+					if (camera.urlHistoryPort != null) {
 						portCam = camera.urlHistoryPort
-					}else{
+					} else {
 						portCam = "3000"
 					}
-				}else{
+				} else {
 					portCam = "3000"
 				}
 
@@ -498,13 +498,13 @@ class CamarasInternas extends Component {
 				let filename = f.name;
 				let portCam = "";
 
-				if (camera.urlHistoryPort ) {
-					if (camera.urlHistoryPort != null){
+				if (camera.urlHistoryPort) {
+					if (camera.urlHistoryPort != null) {
 						portCam = camera.urlHistoryPort
-					}else{
+					} else {
 						portCam = "3000"
 					}
-				}else{
+				} else {
 					portCam = "3000"
 				}
 
@@ -527,10 +527,10 @@ class CamarasInternas extends Component {
 		this.setState({ displayTipe: value });
 	};
 	_loadCameras = () => {
-    this.setState({ loading: true, is_filter: false, filterData: [], activeIndex: 0, filterButton:false, filterOnLine:false, filterDiss:false, filterOff:false });
+		this.setState({ loading: true, is_filter: false, filterData: [], activeIndex: 0, filterButton: false, filterOnLine: false, filterDiss: false, filterOff: false });
 		conections.getCamerasInternal()
 			.then((response) => {
-                
+
 				const camaras = response.data.data;
 				// console.log("Camaras Internas", camaras)
 				let auxCamaras = [];
@@ -542,7 +542,7 @@ class CamarasInternas extends Component {
 				let index = 1;
 
 				camaras.map((value) => {
-					if (value.active === 1 && value.flag_streaming === 1 && value.UrlStreamMediaServer ) {
+					if (value.active === 1 && value.flag_streaming === 1 && value.UrlStreamMediaServer) {
 						var urlHistory = null
 						var urlHistoryPort = null
 
@@ -612,8 +612,6 @@ class CamarasInternas extends Component {
 					return true;
 				});
 
-				
-				
 
 				if (idCamera === null) {
 					this.setState({
@@ -654,7 +652,7 @@ class CamarasInternas extends Component {
 				}
 			})
 			.catch((error) => {
-        console.log("error ", error)
+				console.log("error ", error)
 				this.setState({ loading: false, error: 'Error de conexion' });
 			});
 	};
@@ -674,35 +672,35 @@ class CamarasInternas extends Component {
 			});
 	}
 
-  _searchModal = () => {
-    return (
-      <SearchCamera
-        _filterCameras={this._filterCameras}
-        _setLoading={this._setLoading}
-        showSearch={this.state.showSearch}
-        handleClose={this._handleClose}
-        is_covid={false}
-        is_quadrant={false}
-        filterData={this.state.filterData}
-        _clear={this._clear}
-        tab={this.state.activeIndex}
-      />
-    )
-  }
+	_searchModal = () => {
+		return (
+			<SearchCamera
+				_filterCameras={this._filterCameras}
+				_setLoading={this._setLoading}
+				showSearch={this.state.showSearch}
+				handleClose={this._handleClose}
+				is_covid={false}
+				is_quadrant={false}
+				filterData={this.state.filterData}
+				_clear={this._clear}
+				tab={this.state.activeIndex}
+			/>
+		)
+	}
 
-  _handleClose = () => {
-    this.setState({ showSearch: false });
-  }
+	_handleClose = () => {
+		this.setState({ showSearch: false });
+	}
 
-  _setLoading = () => {
-    this.setState({ loading: true, showSearch: false });
-  }
+	_setLoading = () => {
+		this.setState({ loading: true, showSearch: false });
+	}
 
-  _clear = () => {
-    this.setState({ filterData: [] });
-  }
+	_clear = () => {
+		this.setState({ filterData: [] });
+	}
 
- 
+
 
 }
 

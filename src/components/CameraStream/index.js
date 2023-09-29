@@ -285,7 +285,7 @@ class CameraStream extends Component {
                       //   )
                       // },
                       this.props.moduleActions && this.props.moduleActions.viewHistorial && {
-                        menuItem: localStorage.getItem(LANG) === "english" ? `Last 24 Hours` : 'Últimas 24 Horas',
+                        menuItem: localStorage.getItem(LANG) === "english" ? `Historics` : 'Históricos',
                         render: () => (
                           <>
                             <div>
@@ -325,7 +325,7 @@ class CameraStream extends Component {
                 </div>
               </div>
             ) : null}
-            <div className={showData ? 'camHolder hideCamHolder' : 'camHolder'} style={{ width: '100%', height: showPTZ && "28rem", alignItems: showPTZ && "flex-start" }} align={!showPTZ ? "center" : "none"}>
+            <div className={showData ? 'camHolder hideCamHolder' : 'camHolder'} style={{ width: '100%', height: (showPTZ && window.location.pathname.split("/").length < 3) && "28rem", alignItems: showPTZ && "flex-start" }} align={!showPTZ ? "center" : "none"}>
               <div ref="camHolder" style={{ width: '100%', height: this.props.height ? this.props.height : '100%' }}>
                 {this.props.marker.extraData.isRtmp ? (
                   <RtmpPlayer
@@ -406,7 +406,10 @@ class CameraStream extends Component {
                 {this.props.hideButton ? null : (
                   <div>
                     <br />
-                    <Button onClick={() => this.setState({ showModalMoreInformation: true })} className="ml-2 mt-1">{localStorage.getItem(LANG) === "english" ? "More information" : "Más información"}</Button>
+                    {
+                      window.location.pathname !== "/camarasInternas" &&
+                      <Button onClick={() => this.setState({ showModalMoreInformation: true })} className="ml-2 mt-1">{localStorage.getItem(LANG) === "english" ? "More information" : "Más información"}</Button>
+                    }
                     {
                       !copyButton ?
                         <Button className="ml-2 mt-1" style={{ backgroundColor: "#4B4A49", color: "#f5f5f5" }} onClick={() => { this._handleCopy(); this.setState({ copyText: document.getElementById(`cameraInfo-${this.props.marker.extraData.num_cam}`).textContent }) }}>
@@ -451,97 +454,85 @@ class CameraStream extends Component {
         )}
         {this.props.showFilesBelow ? (
           <div className="row dataHolder p10">
-            {showPTZ ?
-              <div className="col ptz">
-                <i>{localStorage.getItem(LANG) === "english" ? `Controls` : `Controles`}</i>
-                <ControlPTZ
-                  camera={data}
-                  isInMap={false}
-                  hasMatch={false}
-                />
-              </div>
-              :
-              <>
-                {typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
-                  <div className="col snapshots">
-                    {localStorage.getItem(LANG) === "english" ? "Photos" : "Fotos"}
-                    <div>
-                      {photosLoading ? (
-                        this._renderLoading()
-                      ) : photos.length > 0 ? (
-                        <div className="row">
-                          {photos.map((value, index) => (
-                            <MediaContainer
-                              cam={data}
-                              key={index}
-                              value={value}
-                              isQnap={qnapServer && qnapChannel}
-                              exists_image={true}
-                              src={value.relative_url}
-                              reloadData={this._loadFiles}
-                              servidorMultimedia={servidorMultimedia}
-                              port={portContainer}
-                              dnsContainer={dnsContainer}
-                              userIdContainer={this.getUserID()}
-                            />
-                          ))}
-                        </div>
-                      ) : (
-                        <div align="center">
-                          <p className="big-letter">No hay archivos que mostrar</p>
-                          <i className="fa fa-image fa-5x" />
-                        </div>
-                      )}
+            {/* {typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
+              <div className="col snapshots">
+                {localStorage.getItem(LANG) === "english" ? "Photos" : "Fotos"}
+                <div>
+                  {photosLoading ? (
+                    this._renderLoading()
+                  ) : photos.length > 0 ? (
+                    <div className="row">
+                      {photos.map((value, index) => (
+                        <MediaContainer
+                          cam={data}
+                          key={index}
+                          value={value}
+                          isQnap={qnapServer && qnapChannel}
+                          exists_image={true}
+                          src={value.relative_url}
+                          reloadData={this._loadFiles}
+                          servidorMultimedia={servidorMultimedia}
+                          port={portContainer}
+                          dnsContainer={dnsContainer}
+                          userIdContainer={this.getUserID()}
+                        />
+                      ))}
                     </div>
-                  </div>
-                }
-                <div id={`scrollVideo#${data.id}`} className="col videos">
-                  {localStorage.getItem(LANG) === "english" ? `Videos` : `Videos`}
-                  <Tab
-                    align="center"
-                    activeIndex={activeIndex}
-                    onTabChange={(e, { activeIndex }) => { this.tabHandler(activeIndex) }}
-                    menu={{ secondary: true, pointing: true }}
-                    panes={[
-                      typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && {
-                        menuItem: localStorage.getItem(LANG) === "english" ? `Recordings` : 'Grabaciones',
-                        render: () => (
-                          <Tab.Pane attached={false}>
-                            {this._renderVideoListSearch(videosLoading, videos)}
-                          </Tab.Pane>
-                        )
-                      },
-                      this.props.moduleActions && this.props.moduleActions.viewHistorial && {
-                        menuItem: localStorage.getItem(LANG) === "english" ? `Last 24 Hours` : 'Últimas 24 Horas',
-                        render: () => (
-                          <Tab.Pane attached={false}>
-                            {this._renderVideoListSearch(
-                              historyLoading,
-                              video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
-                              true,
-                              video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
-                              true, inputCkecked, false, true
-                            )}
-                          </Tab.Pane>
-                        )
-                      },
-                      qnapServer && qnapChannel && {
-                        menuItem: localStorage.getItem(LANG) === "english" ? `Advanced Search` : 'Búsqueda Avanzada',
-                        render: () => (
-                          <Tab.Pane attached={false}>
-                            <AdvancedSearch
-                              loading={searchLoading}
-                              _searchFileVideos={this._searchFileVideos}
-                            />
-                            {(isNewSearch || searchLoading) && <hr />}
-                            {this._renderVideoListSearch(searchLoading, video_search, isNewSearch)}
-                          </Tab.Pane>
-                        )
-                      }
-                    ]}
-                  />
+                  ) : (
+                    <div align="center">
+                      <p className="big-letter">No hay archivos que mostrar</p>
+                      <i className="fa fa-image fa-5x" />
+                    </div>
+                  )}
                 </div>
-              </>}
+              </div>
+            } */}
+            <div id={`scrollVideo#${data.id}`} className="col videos">
+              {localStorage.getItem(LANG) === "english" ? `Videos` : `Videos`}
+              <Tab
+                align="center"
+                activeIndex={activeIndex}
+                onTabChange={(e, { activeIndex }) => { this.tabHandler(activeIndex) }}
+                menu={{ secondary: true, pointing: true }}
+                panes={[
+                  // typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && {
+                  //   menuItem: localStorage.getItem(LANG) === "english" ? `Recordings` : 'Grabaciones',
+                  //   render: () => (
+                  //     <Tab.Pane attached={false}>
+                  //       {this._renderVideoListSearch(videosLoading, videos)}
+                  //     </Tab.Pane>
+                  //   )
+                  // },
+                  this.props.moduleActions && this.props.moduleActions.viewHistorial && {
+                    menuItem: localStorage.getItem(LANG) === "english" ? `Historics` : 'Históricos',
+                    render: () => (
+                      <Tab.Pane attached={false}>
+                        {this._renderVideoListSearch(
+                          historyLoading,
+                          video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
+                          true,
+                          video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
+                          true, inputCkecked, false, true
+                        )}
+                      </Tab.Pane>
+                    )
+                  },
+                  qnapServer && qnapChannel && {
+                    menuItem: localStorage.getItem(LANG) === "english" ? `Advanced Search` : 'Búsqueda Avanzada',
+                    render: () => (
+                      <Tab.Pane attached={false}>
+                        <AdvancedSearch
+                          loading={searchLoading}
+                          _searchFileVideos={this._searchFileVideos}
+                        />
+                        {(isNewSearch || searchLoading) && <hr />}
+                        {this._renderVideoListSearch(searchLoading, video_search, isNewSearch)}
+                      </Tab.Pane>
+                    )
+                  }
+                ]}
+              />
+            </div>
           </div>
         ) : null}
         <Modal size="lg" show={modal} onHide={() => this.setState({ modal: false })}>
@@ -827,13 +818,96 @@ class CameraStream extends Component {
           ) : null
   };
 
+  // _renderVideoListSearch = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false, isDownloadSearch = false, isRecord = false, noButtons = false) => {
+	// 	let { servidorMultimedia, dnsArray, camURL, apiStorageKey, awsApiStreamsCams, selectedCamera, portContainer, dnsContainer, typeMBOX, protocolDownload, historyServerDns, historyServerPort, historyServerProtocol, loadingHistorics, isAxxonSearch, historicCurrentDay } = this.state;
+  //   // console.log("entra", videoList)
+	// 	if (videoList && videoList.length > 0 && !isAxxonSearch) {
+	// 		if (!videoList[0].active) {
+	// 			videoList.shift()
+	// 		}
+	// 	}
+
+	// 	let sortVideoList = videoList;
+	// 	if (!isAxxonSearch && videoList[0] && videoList[0].fecha < videoList[videoList.length - 1].fecha) {
+	// 		sortVideoList = videoList.reverse()
+	// 	}
+
+	// 	let newArray = [];
+
+	// 	if (sortVideoList.length > 0 && !Array.isArray(sortVideoList[0])) {
+	// 		sortVideoList.forEach(el => {
+	// 			if (!newArray.some(element => element.hour === el.hour)) {
+	// 				let nuevoObjeto = {
+	// 					hour: el.hour,
+	// 					fecha: el.fecha,
+	// 					videos: [el]
+	// 				}
+	// 				newArray.push(nuevoObjeto)
+
+	// 			} else {
+	// 				let idx = newArray.findIndex(e => e.hour === el.hour)
+	// 				newArray[idx].videos.push(el)
+	// 			}
+	// 		})
+
+	// 	}
+
+	// 	return loadingHistorics ? (
+	// 		this._renderLoading()
+	// 	) :
+	// 		typeMBOX === "axxon" && !isAxxonSearch ?
+	// 			this._renderAxxonByHalfHour(dnsArray)
+	// 			:
+	// 			videoList && videoList.length > 0 ?
+	// 				(
+	// 					<PaginationList
+	// 						awsApiStreamsCams={awsApiStreamsCams}
+	// 						numberVideos={40}
+	// 						videoList={isAxxonSearch ? videoList : newArray.length > 0 ? newArray : sortVideoList}
+	// 						withAccordion={newArray.length > 0}
+	// 						isDownloadSearch={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : isDownloadSearch}
+	// 						dnsArray={dnsArray}
+	// 						hasDns={hasDns}
+	// 						camURL={camURL}
+	// 						dnsContainer={dnsContainer}
+	// 						portContainer={portContainer}
+	// 						servidorMultimedia={servidorMultimedia}
+	// 						apiStorageKey={apiStorageKey}
+	// 						noButtons={noButtons}
+	// 						isRecord={isRecord}
+	// 						typeMBOX={typeMBOX}
+	// 						selectedCamera={selectedCamera}
+	// 						reloadData={this._loadFiles}
+	// 						download={this.download}
+	// 						renderPagination={this._renderPagination}
+	// 						protocolDownload={protocolDownload}
+	// 						historyServerDns={historyServerDns}
+	// 						historyServerPort={historyServerPort}
+	// 						historyServerProtocol={historyServerProtocol}
+	// 						renderLoading={this._renderLoading}
+	// 						isAxxonSearch={isAxxonSearch}
+	// 						getHistoricsByHour={this._getHistoricsByHour}
+	// 						historicCurrentDay={historicCurrentDay}
+	// 					/>
+	// 				) :
+	// 				showNoFiles ? (
+	// 					<div align="center" className='no-data-show'>
+	// 						<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+	// 						<i className="fa fa-image fa-5x" />
+	// 					</div>
+	// 				) : null
+	// };
+
   _renderAxxonByHalfHour = (dnsArray) => {
 
     const { isAxxonSearch, historicCurrentDay } = this.state;
 
     let currentDate = new Date();
     let currentDay = moment().subtract(Math.abs(historicCurrentDay), 'days').format().split("T")[0];
-    let currentHour = currentDate.toLocaleTimeString();
+    let hourUTC = currentDate.getUTCHours();
+    let hourToCurrent = hourUTC - 6 >= 0 ? hourUTC - 6 : 24 + (hourUTC - 6);
+    let minutesUTC = currentDate.getUTCMinutes();
+    let currentHour = `${hourToCurrent}:${minutesUTC}`
     let todayDate = historicCurrentDay === 0;
 
     let arrayByHalfHour = this._createArrayHours(currentHour, todayDate);
@@ -902,7 +976,7 @@ class CameraStream extends Component {
     let finalArray = [];
 
     if (actualDay) {
-      for (let i = hour; i > -1; i--) {
+      for (let i = half ? hour : hour - 1; i > -1; i--) {
         arrayHours.push(i.toString());
       };
 
@@ -959,15 +1033,15 @@ class CameraStream extends Component {
     let { historicCurrentDay } = this.state
     moment.locale('es');
 
-    let totalWeekArray = [0, 1]
+    let totalWeekArray = [0, 1, 2, 3, 4, 5, 6]
 
     return (
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         {
           totalWeekArray.map((el) => {
-            let buttonDate = moment().subtract(Math.abs(el - 1), 'days').startOf('date').format('ll');
+            let buttonDate = moment().subtract(Math.abs(el - 6), 'days').startOf('date').format('ll');
             return (
-              <button key={Math.abs(el - 1)} className={historicCurrentDay === Math.abs(el - 1) ? "btn btn-primary ml-auto mr-auto mb-2" : "btn btn-outline-primary ml-auto mr-auto mb-2"} onClick={() => this._getHistoricsByHour(Math.abs(el - 1))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
+              <button key={Math.abs(el - 6)} className={historicCurrentDay === Math.abs(el - 6) ? "btn btn-primary ml-auto mr-auto mb-2" : "btn btn-outline-primary ml-auto mr-auto mb-2"} onClick={() => this._getHistoricsByHour(Math.abs(el - 6))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
             );
           })
         }
@@ -993,7 +1067,7 @@ class CameraStream extends Component {
       autoDismiss: 35,
     };
 
-    this.addNotification(notificationFirstAlert);
+    window.location.pathname !== "/map" ? this.addNotification(notificationFirstAlert) : this.props.mapNotification(notificationFirstAlert)
 
     const payload = {
       cam_id: selectedCamera ? selectedCamera.id : stateData.id
@@ -1032,7 +1106,8 @@ class CameraStream extends Component {
         let message = 'No se encontraron grabaciones, intente con otro horario.';
         let level = 'warning';
         let title = 'Búsqueda de histórico';
-        this.addNotification({ message, level, title });
+        // this.addNotification({ message, level, title });
+        window.location.pathname !== "/map" ? this.addNotification({ message, level, title }) : this.props.mapNotification({ message, level, title })
         this.setState({ isAxxonSearch: false });
       }
       this.setState({ loadingHistorics: false });
@@ -1040,131 +1115,133 @@ class CameraStream extends Component {
   }
 
   download = async (params, dns) => {
-		let { apiStorageKey, dnsPort, typeMBOX, historyServerProtocol, historicalPassword, historicalUser, historyServerDns, isAxxonSearch } = this.state;
-		if (typeMBOX === 'light') {
-			const URI = apiStorageKey ? `${params.relative_path_video}${apiStorageKey}` : dnsPort === 80 ? `${historyServerProtocol}://${dns}/${params.relative_path_video}` : `${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`;
-			axios({
-				url: URI,
-				method: "GET",
-				responseType: "blob"
-			}).then((response) => {
+    let { apiStorageKey, dnsPort, typeMBOX, historyServerProtocol, historicalPassword, historicalUser, historyServerDns, isAxxonSearch } = this.state;
+    if (typeMBOX === 'light') {
+      const URI = apiStorageKey ? `${params.relative_path_video}${apiStorageKey}` : dnsPort === 80 ? `${historyServerProtocol}://${dns}/${params.relative_path_video}` : `${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`;
+      axios({
+        url: URI,
+        method: "GET",
+        responseType: "blob"
+      }).then((response) => {
 
-				const url = window.URL.createObjectURL(new Blob([response.data]));
-				const link = document.createElement("a");
-				link.href = url;
-				link.setAttribute("download", `CAM${params.camera_id}_${params.fecha}-${params.real_hour}.mp4`);
-				document.body.appendChild(link);
-				link.click();
-				document.body.removeChild(link);
-			});
-		} else {
-			if (typeMBOX === 'axxon') {
-				const { access_point, begin, end, camera_id, storage, archive, search_start_time_utc, search_end_time_utc, format, search_start_time, search_end_time, fecha, real_hour } = params;
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `CAM${params.camera_id}_${params.fecha}-${params.real_hour}.mp4`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    } else {
+      if (typeMBOX === 'axxon') {
+        const { access_point, begin, end, camera_id, storage, archive, search_start_time_utc, search_end_time_utc, format, search_start_time, search_end_time, fecha, real_hour } = params;
 
-				const body = {
-					access_point,
-					begin: begin ? begin : search_start_time_utc,
-					end: end ? end : search_end_time_utc,
-					cam_id: camera_id,
-					storage: storage ? storage : archive,
-					format: format ? format : "mp4"
-				};
+        const body = {
+          access_point,
+          begin: begin ? begin : search_start_time_utc,
+          end: end ? end : search_end_time_utc,
+          cam_id: camera_id,
+          storage: storage ? storage : archive,
+          format: format ? format : "mp4"
+        };
 
-				const responseArchive = await conections.exportArchive(body);
-				let level = null, message = null, title = null;
-				if (responseArchive && responseArchive.data && responseArchive.data.success) {
-					const { file_path, id, route } = responseArchive.data && responseArchive.data.archive;
-					if (file_path) {
-						message = localStorage.getItem(LANG) === "english" ? Strings.downloadEnglishStarted : Strings.downloadStarted;
-						level = 'success';
-						title = localStorage.getItem(LANG) === "english" ? 'Historic download' : 'Descarga de histórico';
-						this.addNotification({ message, level, title });
-						let url = null;
-						const password = historicalPassword;
-						const user = historicalUser;
+        const responseArchive = await conections.exportArchive(body);
+        let level = null, message = null, title = null;
+        if (responseArchive && responseArchive.data && responseArchive.data.success) {
+          const { file_path, id, route } = responseArchive.data && responseArchive.data.archive;
+          if (file_path) {
+            message = localStorage.getItem(LANG) === "english" ? Strings.downloadEnglishStarted : Strings.downloadStarted;
+            level = 'success';
+            title = localStorage.getItem(LANG) === "english" ? 'Historic download' : 'Descarga de histórico';
+            // this.addNotification({ message, level, title });
+            window.location.pathname !== "/map" ? this.addNotification({ message, level, title }) : this.props.mapNotification({ message, level, title })
+            let url = null;
+            const password = historicalPassword;
+            const user = historicalUser;
 
-						if (dnsPort == 80 || dnsPort == 443) {
-							url = `${historyServerProtocol}://${historyServerDns}/export/${id}/file?name=${file_path}`;
-						} else {
-							url = `${historyServerProtocol}://${historyServerDns}:${dnsPort}/export/${id}/file?name=${file_path}`;
-						}
+            if (dnsPort == 80 || dnsPort == 443) {
+              url = `${historyServerProtocol}://${historyServerDns}/export/${id}/file?name=${file_path}`;
+            } else {
+              url = `${historyServerProtocol}://${historyServerDns}:${dnsPort}/export/${id}/file?name=${file_path}`;
+            }
 
-						const info = { cam_id: camera_id, route };
+            const info = { cam_id: camera_id, route };
 
 
-						let xhr = new XMLHttpRequest();
-						xhr.withCredentials = true;
-						const credentials = Buffer.from(`${user}:${password}`).toString('Base64')
+            let xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            const credentials = Buffer.from(`${user}:${password}`).toString('Base64')
 
-						xhr.open('GET', url, true);
-						xhr.setRequestHeader("Authorization", "Basic " + credentials)
-						xhr.responseType = 'blob';
-						xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-						xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.open('GET', url, true);
+            xhr.setRequestHeader("Authorization", "Basic " + credentials)
+            xhr.responseType = 'blob';
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
-						xhr.onerror = (e) => {
-							if (xhr.status == 401) {
-								console.log("onerror:", xhr.status)
-							}
-						};
-						xhr.onload = (e) => {
-							let blob = xhr.response;
-							if (blob) {
-								let fileName = null;
-								if (!isAxxonSearch) {
-									fileName = (fecha && real_hour) ? `CAM${camera_id}_${fecha}-${real_hour}.mp4` : `CAM${camera_id}_${search_start_time.split(" ")[0]}_${search_start_time.split(" ")[1]}-${search_end_time.split(" ")[1]}.${format}`
-								} else {
-									fileName = `CAM${camera_id}_${search_start_time}-${search_end_time}.${format}`
-								}
-								this.saveFile(blob, fileName);
-							}
-							conections.finalizExportProcess(info);
+            xhr.onerror = (e) => {
+              if (xhr.status == 401) {
+                console.log("onerror:", xhr.status)
+              }
+            };
+            xhr.onload = (e) => {
+              let blob = xhr.response;
+              if (blob) {
+                let fileName = null;
+                if (!isAxxonSearch) {
+                  fileName = (fecha && real_hour) ? `CAM${camera_id}_${fecha}-${real_hour}.mp4` : `CAM${camera_id}_${search_start_time.split(" ")[0]}_${search_start_time.split(" ")[1]}-${search_end_time.split(" ")[1]}.${format}`
+                } else {
+                  fileName = `CAM${camera_id}_${search_start_time}-${search_end_time}.${format}`
+                }
+                this.saveFile(blob, fileName);
+              }
+              conections.finalizExportProcess(info);
 
-							if (xhr.status == 401) {
-								console.log("onload:", xhr.status)
-							}
+              if (xhr.status == 401) {
+                console.log("onload:", xhr.status)
+              }
 
-						};
+            };
 
-						xhr.onprogress = (e) => {
+            xhr.onprogress = (e) => {
 
-							const percentages = [5, 20, 40, 60, 80, 95];
-							let progress = Math.floor((e.loaded / e.total) * 100);
-							percentages.forEach((t => {
-								if (t === progress) {
-									console.log(`progress: ${progress}`);
-								}
-							}))
-						};
+              const percentages = [5, 20, 40, 60, 80, 95];
+              let progress = Math.floor((e.loaded / e.total) * 100);
+              percentages.forEach((t => {
+                if (t === progress) {
+                  console.log(`progress: ${progress}`);
+                }
+              }))
+            };
 
-						xhr.send();
-					}
-				} else {
-					message = localStorage.getItem(LANG) === "english" ? 'Could not start the download.' : 'No se pudo iniciar la descarga.';
-					level = 'error';
-					title = localStorage.getItem(LANG) === "english" ? 'Historic download' : 'Descarga de histórico';
+            xhr.send();
+          }
+        } else {
+          message = localStorage.getItem(LANG) === "english" ? 'Could not start the download.' : 'No se pudo iniciar la descarga.';
+          level = 'error';
+          title = localStorage.getItem(LANG) === "english" ? 'Historic download' : 'Descarga de histórico';
 
-					this.addNotification({ message, level, title });
-				}
-			} else {
-				const URI = `${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`;
-				axios({
-					url: URI,
-					method: "GET",
-					responseType: "blob",
-				}).then((response) => {
-					const url = window.URL.createObjectURL(new Blob([response.data]));
-					const link = document.createElement("a");
-					link.href = url;
-					link.setAttribute("download", `CAM${params.camera_id}_${params.fecha}-${params.real_hour}.mp4`);
-					document.body.appendChild(link);
-					link.click();
-					document.body.removeChild(link);
-				});
-			}
-		}
+          // this.addNotification({ message, level, title });
+          window.location.pathname !== "/map" ? this.addNotification({ message, level, title }) : this.props.mapNotification({ message, level, title })
+        }
+      } else {
+        const URI = `${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`;
+        axios({
+          url: URI,
+          method: "GET",
+          responseType: "blob",
+        }).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `CAM${params.camera_id}_${params.fecha}-${params.real_hour}.mp4`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+      }
+    }
 
-	}
+  }
 
   _goToCuadrante = (id_cuadrante) => {
     window.location.assign(
@@ -1423,7 +1500,8 @@ class CameraStream extends Component {
           xhr.onerror = () => {
             if (xhr.status == 401) { console.log("onerror:", xhr.status) }
             this.setState({ loadingSnap: false });
-            this.addNotification({ message, level, title });
+            // this.addNotification({ message, level, title });
+            window.location.pathname !== "/map" ? this.addNotification({ message, level, title }) : this.props.mapNotification({ message, level, title })
           };
 
           xhr.onload = (e) => {
@@ -1433,17 +1511,20 @@ class CameraStream extends Component {
               this.saveFile(blob, fileName);
               this.setState({ loadingSnap: false });
             } else {
-              this.addNotification({ message, level, title });
+              // this.addNotification({ message, level, title });
+              window.location.pathname !== "/map" ? this.addNotification({ message, level, title }) : this.props.mapNotification({ message, level, title })
               this.setState({ loadingSnap: false });
             }
           };
           xhr.send();
         } else {
-          this.addNotification({ message, level, title });
+          // this.addNotification({ message, level, title });
+          window.location.pathname !== "/map" ? this.addNotification({ message, level, title }) : this.props.mapNotification({ message, level, title })
           this.setState({ loadingSnap: false });
         }
       } else {
-        this.addNotification({ message, level, title });
+        // this.addNotification({ message, level, title });
+        window.location.pathname !== "/map" ? this.addNotification({ message, level, title }) : this.props.mapNotification({ message, level, title })
         this.setState({ loadingSnap: false });
       }
     } else {

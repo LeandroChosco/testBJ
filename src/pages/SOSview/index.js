@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Icon, Button, Input, Dropdown, Tab } from 'semantic-ui-react';
+import { Card, Icon, Button, Input, Tab } from 'semantic-ui-react';
 import FadeLoader from 'react-spinners/FadeLoader';
 import firebase from 'firebase';
 import moment from 'moment';
@@ -22,6 +22,7 @@ import shoes_green from '../../assets/images/icons/maps/shoes_green.png';
 import shoes_yellow from '../../assets/images/icons/maps/shoes_yellow.png';
 import shoes_red from '../../assets/images/icons/maps/shoes_red.png';
 import destination from '../../assets/images/icons/maps/destination.png';
+import { LANG } from '../../constants/token';
 
 const refSOS = firebaseSos.app('sos').firestore().collection(MESSAGES_COLLECTION);
 const refTracking = firebaseSos.app('sos').firestore().collection(SOS_COLLECTION);
@@ -533,7 +534,7 @@ class Chat extends Component {
     return (
       <div>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
-          {optionSelected && optionSelected === 'critical' ? (
+          {/* {optionSelected && optionSelected === 'critical' ? (
             <Dropdown
               placeholder='Buscar por'
               fluid
@@ -555,7 +556,12 @@ class Chat extends Component {
             defaultValue='name'
             onChange={this.handleChangeOption}
             style={{ flex: 1 }}
-          />
+          /> */}
+          <Input
+          placeholder={localStorage.getItem(LANG) === "english" ? "Search user" : "Buscar usuario"}
+          style={{ flex: 2 }}
+          onChange={this.filterAction}
+        ></Input>
         </div>
         <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
           {chats.map((chat, i) => {

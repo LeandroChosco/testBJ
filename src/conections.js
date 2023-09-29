@@ -99,6 +99,15 @@ export default {
     return connectedSails.post(constants.sails_url + '/vehicle/filter/detections', data);
   },
 
+  // TAB de conexión en historial GridCamera
+
+  getHistorialConection: (cam_id, page) => {
+    return connectedSails.get(`${constants.sails_url}/supervisor/camera-status?cam_id=${cam_id}&page=${page}`);
+  },
+
+  getHistorialToDownload: (data) => {
+    return connectedSails.post(`${constants.sails_url}/supervisor/filter/camera`, data);
+  },
 
   // Dashboard LPR
 
@@ -193,8 +202,12 @@ export default {
     return connectedSails.get(constants.sails_url + '/control-cams/' + camera_id + '/data?user_id=' + user_id);
   },
   getAllCams: () => {
+    // if (all) {
+    // return connectedSails.get(constants.sails_url + '/control-cams/all-cams/?user_id=2');
+    // } else {
     const user_id = getUserID();
     return connectedSails.get(constants.sails_url + '/control-cams/all-cams/?user_id=' + user_id);
+    // }
   },
   getCamsOffline: () => {
     const user_id = getUserID();
@@ -362,6 +375,7 @@ export default {
     }
     return connectedSails.post(constants.sails_url + '/relation/user/quadrants', data)
   },
+
   newCuadrante: (data) => {
     return connectedSails.post(constants.sails_url + '/control-cams/newcuadrante/', data);
   },
@@ -425,6 +439,7 @@ export default {
     return connectedSails.post(constants.sails_url + '/status/support/', data);
   },
   postSupportToProcess: (data) => {
+    https://customer-aob-api-dev.radarapptechnologies.com/supervisor/camera-status?cam_id=49&page=91
     data.user_id = getUserID();
     return connectedSails.post(constants.sails_url + '/postsupport/toprocess/', data);
   },
