@@ -966,7 +966,10 @@ class GridCameraDisplay extends Component {
 
 		let currentDate = new Date();
 		let currentDay = moment().subtract(Math.abs(historicCurrentDay), 'days').format().split("T")[0];
-		let currentHour = currentDate.toLocaleTimeString();
+		let hourUTC = currentDate.getUTCHours();
+		let hourToCurrent = hourUTC - 6 >= 0 ? hourUTC - 6 : 24 + (hourUTC - 6);
+		let minutesUTC = currentDate.getUTCMinutes();
+		let currentHour = `${hourToCurrent}:${minutesUTC}`
 		let todayDate = historicCurrentDay === 0;
 
 		let arrayByHalfHour = this._createArrayHours(currentHour, todayDate);
