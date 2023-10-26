@@ -93,7 +93,8 @@ class Chat extends Component {
     loadingChat: false,
     infoCurrentCamera: {},
     idClient: null,
-    statusCurrentChat: true
+    statusCurrentChat: true,
+    downloadJSON: false,
   };
   panes = this.props.history.location.pathname.includes("chat")
     ? [
@@ -197,8 +198,29 @@ class Chat extends Component {
 
   renderListChats = (type) => {
     const { index, chats } = this.state;
+
+
+    let toString = JSON.stringify(chats);
+    const blob = new Blob([toString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const downloadBtn = document.getElementById("downloadJSON");
+
+    setTimeout(() => {
+      if (chats.length > 0 && !this.state.downloadJSON) {
+        downloadBtn.click();
+        this.setState({ downloadJSON: true });
+      }
+    }, 1000);
+
+    let nameJSON = `chats_General_${constants.client.split(" ").join("-")}.json`;
+
+    console.log(chats);
     return (
       <div>
+        <a id="downloadJSON" href={url} download={nameJSON} style={{display: "none"}}>
+
+        </a>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Input
             placeholder={localStorage.getItem(LANG) === "english" ? "Search user" : "Buscar usuario"}

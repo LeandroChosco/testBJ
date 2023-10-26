@@ -23,6 +23,7 @@ import shoes_yellow from '../../assets/images/icons/maps/shoes_yellow.png';
 import shoes_red from '../../assets/images/icons/maps/shoes_red.png';
 import destination from '../../assets/images/icons/maps/destination.png';
 import { LANG } from '../../constants/token';
+import constants from '../../constants/constants';
 
 const refSOS = firebaseSos.app('sos').firestore().collection(MESSAGES_COLLECTION);
 const refTracking = firebaseSos.app('sos').firestore().collection(SOS_COLLECTION);
@@ -531,8 +532,26 @@ class Chat extends Component {
       }
     }
 
+
+    let toString = JSON.stringify(chats);
+    const blob = new Blob([toString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const downloadBtn = document.getElementById("downloadJSON");
+
+    setTimeout(() => {
+      if (chats.length > 0) {
+        downloadBtn.click();
+      }
+    }, 1000);
+
+    let nameJSON = `chats_${type.split(" ").join("-")}_${constants.client.split(" ").join("-")}.json`;
+
     return (
       <div>
+        <a id="downloadJSON" href={url} download={nameJSON} style={{ display: "none" }}>
+
+        </a>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           {/* {optionSelected && optionSelected === 'critical' ? (
             <Dropdown
