@@ -1,6 +1,19 @@
 import React from 'react';
 import Chart from 'react-apexcharts'
 
+const styles = {
+    noData: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        display: "flex"
+    }
+}
+
 class AgeDemographic extends React.Component {
     constructor(props) {
         super(props);
@@ -68,10 +81,16 @@ class AgeDemographic extends React.Component {
         };
     }
 
+
     render() {
         return (
             <div id="chart">
-                <Chart options={this.state.options} series={this.state.series} type="bar" height={350} />
+                {
+                    this.props.lastAges ?
+                        <Chart options={this.state.options} series={this.state.series} type="bar" height={350} />
+                        :
+                        <div style={styles.noData}>No hay datos disponibles</div>
+                }
             </div>
         )
     }
