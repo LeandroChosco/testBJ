@@ -38,8 +38,23 @@
   margin: 0;
 }
 
+.messagesHistorialContainer {
+  height: 100%;
+  width: 91%;
+  position: absolute;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  padding: 3rem 0.5rem 0 0.5rem;
+}
+
 .cameraView {
   height: 57%;
+  width: 100%;
+}
+
+.historialView {
+  height: 100%;
   width: 100%;
 }
 
