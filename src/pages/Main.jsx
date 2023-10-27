@@ -707,117 +707,117 @@ class Main extends Component {
 
 
 
-    firebaseC5Benito.app('c5benito').firestore().collection('help').orderBy('dateTime', 'desc').onSnapshot(docs => {
-      if (this.state.sos.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeHelp) {
-        this.showNot('SOS', 'Nueva alerta de ayuda generada', 'error', 'Ver detalles', 5, docs.docs[docs.docs.length - 1].id)
-        this.setState({ reproducirSonido: true })
-      }
-      if (this.state.fisrtTimeHelp)
-        this.setState({ fisrtTimeHelp: false })
-      this.setState({
-        sos: docs.docs.map(v => {
-          let value = v.data();
-          if (value.dateTime.toDate)
-            value.dateTime = new Date(value.dateTime.toDate()).toString()
-          else
-            value.dateTime = value.date
-          value.id = v.id
-          return value
-        })
-      })
-    })
+    // firebaseC5Benito.app('c5benito').firestore().collection('help').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    //   if (this.state.sos.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeHelp) {
+    //     this.showNot('SOS', 'Nueva alerta de ayuda generada', 'error', 'Ver detalles', 5, docs.docs[docs.docs.length - 1].id)
+    //     this.setState({ reproducirSonido: true })
+    //   }
+    //   if (this.state.fisrtTimeHelp)
+    //     this.setState({ fisrtTimeHelp: false })
+    //   this.setState({
+    //     sos: docs.docs.map(v => {
+    //       let value = v.data();
+    //       if (value.dateTime.toDate)
+    //         value.dateTime = new Date(value.dateTime.toDate()).toString()
+    //       else
+    //         value.dateTime = value.date
+    //       value.id = v.id
+    //       return value
+    //     })
+    //   })
+    // })
 
-    firebaseC5Benito.app('c5benito').firestore().collection('support').orderBy('dateTime', 'desc').onSnapshot(docs => {
-      if (this.state.support.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeSupport) {
-        this.showNot('Solicitud de soporte', 'Nueva solicitud de soporte generada', 'info', 'Ver detalles', 4, docs.docs[0].id)
-      }
-      if (this.state.fisrtTimeSupport)
-        this.setState({ fisrtTimeSupport: false })
-      this.setState({
-        support: docs.docs.map(v => {
-          let value = v.data()
-          if (value.dateTime.toDate)
-            value.dateTime = new Date(value.dateTime.toDate()).toString()
-          else
-            value.dateTime = value.date
-          value.id = v.id
-          return value
-        })
-      })
-    })
+    // firebaseC5Benito.app('c5benito').firestore().collection('support').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    //   if (this.state.support.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeSupport) {
+    //     this.showNot('Solicitud de soporte', 'Nueva solicitud de soporte generada', 'info', 'Ver detalles', 4, docs.docs[0].id)
+    //   }
+    //   if (this.state.fisrtTimeSupport)
+    //     this.setState({ fisrtTimeSupport: false })
+    //   this.setState({
+    //     support: docs.docs.map(v => {
+    //       let value = v.data()
+    //       if (value.dateTime.toDate)
+    //         value.dateTime = new Date(value.dateTime.toDate()).toString()
+    //       else
+    //         value.dateTime = value.date
+    //       value.id = v.id
+    //       return value
+    //     })
+    //   })
+    // })
 
-    firebaseC5Benito.app('c5benito').firestore().collection('complaints').orderBy('dateTime', 'desc').onSnapshot(docs => {
-      if (this.state.complaiments.length !== docs.size && this.state.showNotification && !this.state.fisrtTimecomplaiments) {
-        this.showNot('Nueva denuncia', 'Se ha recibido una nueva denuncia', 'info', 'Ver detalles', 2, docs.docs[0].id)
-        this.setState({ reproducirSonido: true })
-      }
-      if (this.state.fisrtTimecomplaiments)
-        this.setState({ fisrtTimecomplaiments: false })
-      this.setState({
-        complaiments: docs.docs.map(v => {
-          let value = v.data()
-          value.id = v.id
-          return value
-        })
-      })
-    })
+    // firebaseC5Benito.app('c5benito').firestore().collection('complaints').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    //   if (this.state.complaiments.length !== docs.size && this.state.showNotification && !this.state.fisrtTimecomplaiments) {
+    //     this.showNot('Nueva denuncia', 'Se ha recibido una nueva denuncia', 'info', 'Ver detalles', 2, docs.docs[0].id)
+    //     this.setState({ reproducirSonido: true })
+    //   }
+    //   if (this.state.fisrtTimecomplaiments)
+    //     this.setState({ fisrtTimecomplaiments: false })
+    //   this.setState({
+    //     complaiments: docs.docs.map(v => {
+    //       let value = v.data()
+    //       value.id = v.id
+    //       return value
+    //     })
+    //   })
+    // })
 
-    firebaseC5Benito.app('c5benito').firestore().collection('calls').orderBy('dateTime', 'desc').onSnapshot(docs => {
-      if (this.state.showNotification && !this.state.fisrtTimeCall && !this.state.callIsGoing) {
-        // const notification = this.refs.notificationSystem;
-        this.setState({ stopNotification: false })
-        this.setState({ callIsGoing: false })
-        this.setState({ reproducirSonido: false })
-        if (call) {
-          call = false
-          this.setState({ callIsGoing: false })
-          return
-        }
-        call = false
-        //firebaseC5.app('c5cuajimalpa').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
-        /* notification.addNotification({
-          title: 'Llama entrante de ' + docs && docs.docs.length > 0 && docs.docs[0].data().user_nicename,
-          message: 'Se registro una llamada entrante',
-          level: 'error',
-          action: {
-            label: 'Ver detalles',
-            callback: () => {
-              let userFound = false;
+    // firebaseC5Benito.app('c5benito').firestore().collection('calls').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    //   if (this.state.showNotification && !this.state.fisrtTimeCall && !this.state.callIsGoing) {
+    //     // const notification = this.refs.notificationSystem;
+    //     this.setState({ stopNotification: false })
+    //     this.setState({ callIsGoing: false })
+    //     this.setState({ reproducirSonido: false })
+    //     if (call) {
+    //       call = false
+    //       this.setState({ callIsGoing: false })
+    //       return
+    //     }
+    //     call = false
+    //     //firebaseC5.app('c5cuajimalpa').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
+    //     /* notification.addNotification({
+    //       title: 'Llama entrante de ' + docs && docs.docs.length > 0 && docs.docs[0].data().user_nicename,
+    //       message: 'Se registro una llamada entrante',
+    //       level: 'error',
+    //       action: {
+    //         label: 'Ver detalles',
+    //         callback: () => {
+    //           let userFound = false;
 
-              this.state.chats.forEach((chat) => {
-                if (chat.user_creation === docs.docs[0].data().user_id && this.state.chats.length > 0) {
-                  userFound = true;
-                  // window.location.href = window.location.href.replace(window.location.pathname, '/chat#'+chat.user_creation)
-                  // this.props.history.push('/chat?f=2&u='+chat.user_creation);
-                  if (userFound) {
-                    this.setState({
-                      roberyNotification: {
-                        display: true,
-                        data: chat
-                      },
-                      callIsGoing: false
-                    })
-                  }
+    //           this.state.chats.forEach((chat) => {
+    //             if (chat.user_creation === docs.docs[0].data().user_id && this.state.chats.length > 0) {
+    //               userFound = true;
+    //               // window.location.href = window.location.href.replace(window.location.pathname, '/chat#'+chat.user_creation)
+    //               // this.props.history.push('/chat?f=2&u='+chat.user_creation);
+    //               if (userFound) {
+    //                 this.setState({
+    //                   roberyNotification: {
+    //                     display: true,
+    //                     data: chat
+    //                   },
+    //                   callIsGoing: false
+    //                 })
+    //               }
 
-                }
-              })
-            }
+    //             }
+    //           })
+    //         }
 
 
-          }
-        }); */
-        this.setState({ callIsGoing: false })
-      }
-      if (this.state.fisrtTimeCall)
-        this.setState({ fisrtTimeCall: false })
-      this.setState({
-        calls: docs.docs.map(doc => {
-          let value = doc.data()
-          return value
-        })
-      })
-      this.setState({ callIsGoing: false })
-    })
+    //       }
+    //     }); */
+    //     this.setState({ callIsGoing: false })
+    //   }
+    //   if (this.state.fisrtTimeCall)
+    //     this.setState({ fisrtTimeCall: false })
+    //   this.setState({
+    //     calls: docs.docs.map(doc => {
+    //       let value = doc.data()
+    //       return value
+    //     })
+    //   })
+    //   this.setState({ callIsGoing: false })
+    // })
 
 
     // Socket desarollo conectado a alarma
@@ -852,78 +852,78 @@ class Main extends Component {
 
         }
       });
-      firebaseSos
-      .app("sos")
-      .firestore()
-      .collection('event')
-      .orderBy('lastModification', 'desc')
-      .onSnapshot((docs) => {
-        let { eventMic, showNotification, callIsGoing } = this.state;
-        if (eventMic.length > 0) {
-          let changes = docs.docChanges();
-          if (changes.length > 0 && changes.length < 5) {
-            const CREATED_ID = changes[0].doc.id;
-            if (changes[0].type === 'added') {
-              let founded = eventMic.find((item) => item.id === CREATED_ID);
-              if (!founded) {
-                if (showNotification && !callIsGoing) {
-                  this.setState({ reproducirSonido: true });
-                  this.showEventNot(
-                    'Evento',
-                    'Nuevo evento encontrado',
-                    'info',
-                    'Ver detalles',
-                    CREATED_ID
-                  );
-                }
-              }
-            }
-          }
-        }
-        let countShoot = 0
-        let countBrokenGlass = 0
-        let fechas = []
-        let today =  moment().format('L'),
-            fechaActual = [],
-            fecha1 = [],
-            fecha2 = [],
-            fecha3 = [],
-            fecha4 = [],
-            fecha5 = [],
-            fecha6 = [],
-            infoDay = null;
-        docs.docs.map(doc => {
-          //let DateEvent = doc.data().eventDate.split(" ", 1)
-          //let formatDate = moment(DateEvent, 'YYYY/MM/DD').format('L')
-          fechas.push(doc.data())
-          if(doc.data().nameEvent === 'Detección de disparo de arma'){
-            countShoot +=1
-          }
-          if(doc.data().nameEvent === 'Rotura de vidrio'){
-            countBrokenGlass +=1
-          }
-        })
-        /* fechas.map((day) =>{
-          let fechaDay = day.eventDate.split(" ", 1)
-          if( moment(fechaDay, 'YYYY/MM/DD').format('L') === today){
-            fechaActual.push(day)
-          }
-        })
+      // firebaseSos
+      // .app("sos")
+      // .firestore()
+      // .collection('event')
+      // .orderBy('lastModification', 'desc')
+      // .onSnapshot((docs) => {
+      //   let { eventMic, showNotification, callIsGoing } = this.state;
+      //   if (eventMic.length > 0) {
+      //     let changes = docs.docChanges();
+      //     if (changes.length > 0 && changes.length < 5) {
+      //       const CREATED_ID = changes[0].doc.id;
+      //       if (changes[0].type === 'added') {
+      //         let founded = eventMic.find((item) => item.id === CREATED_ID);
+      //         if (!founded) {
+      //           if (showNotification && !callIsGoing) {
+      //             this.setState({ reproducirSonido: true });
+      //             this.showEventNot(
+      //               'Evento',
+      //               'Nuevo evento encontrado',
+      //               'info',
+      //               'Ver detalles',
+      //               CREATED_ID
+      //             );
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      //   let countShoot = 0
+      //   let countBrokenGlass = 0
+      //   let fechas = []
+      //   let today =  moment().format('L'),
+      //       fechaActual = [],
+      //       fecha1 = [],
+      //       fecha2 = [],
+      //       fecha3 = [],
+      //       fecha4 = [],
+      //       fecha5 = [],
+      //       fecha6 = [],
+      //       infoDay = null;
+      //   docs.docs.map(doc => {
+      //     //let DateEvent = doc.data().eventDate.split(" ", 1)
+      //     //let formatDate = moment(DateEvent, 'YYYY/MM/DD').format('L')
+      //     fechas.push(doc.data())
+      //     if(doc.data().nameEvent === 'Detección de disparo de arma'){
+      //       countShoot +=1
+      //     }
+      //     if(doc.data().nameEvent === 'Rotura de vidrio'){
+      //       countBrokenGlass +=1
+      //     }
+      //   })
+      //   /* fechas.map((day) =>{
+      //     let fechaDay = day.eventDate.split(" ", 1)
+      //     if( moment(fechaDay, 'YYYY/MM/DD').format('L') === today){
+      //       fechaActual.push(day)
+      //     }
+      //   })
 
-        for (let index = 1; index <= 6; index++) {
-          infoDay = moment().subtract(index, 'days').format('L');
-          fechas.map((day)=>{
-          let fechaDay = day.eventDate.split(" ", 1)
-          console.log('infoDay-----', infoDay)
-          //console.log('fechaDAY----', moment(fechaDay, 'YYYY/MM/DD').format('L'))
-          if(moment(fechaDay, 'YYYY/MM/DD').format('L') === infoDay){
-            `fecha${index}`.push(day)
-          }
-          })  
-        } */
-        let newEvents = docs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        this.setState({ eventMic: newEvents, countEvent: [countShoot, countBrokenGlass], fechasEventos:[fechaActual, fecha1, fecha2, fecha3, fecha4, fecha5, fecha6] });
-      });
+      //   for (let index = 1; index <= 6; index++) {
+      //     infoDay = moment().subtract(index, 'days').format('L');
+      //     fechas.map((day)=>{
+      //     let fechaDay = day.eventDate.split(" ", 1)
+      //     console.log('infoDay-----', infoDay)
+      //     //console.log('fechaDAY----', moment(fechaDay, 'YYYY/MM/DD').format('L'))
+      //     if(moment(fechaDay, 'YYYY/MM/DD').format('L') === infoDay){
+      //       `fecha${index}`.push(day)
+      //     }
+      //     })  
+      //   } */
+      //   let newEvents = docs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      //   this.setState({ eventMic: newEvents, countEvent: [countShoot, countBrokenGlass], fechasEventos:[fechaActual, fecha1, fecha2, fecha3, fecha4, fecha5, fecha6] });
+      // });
 
 
 
