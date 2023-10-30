@@ -33,7 +33,7 @@ const MARKERS = {
   police_unavailable: police_yellow
 };
 const MAP_OPTIONS = {
-  center: { lat: 19.45943, lng: -99.208588 },
+  center: { lat: 19.3805297, lng: -99.1821412 },
   zoom: 14,
   mapTypeId: 'roadmap',
   zoomControl: false,
