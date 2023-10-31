@@ -134,34 +134,7 @@ class Main extends Component {
           constants.urlPath
     })
 
-    firebaseC5Benito
-      .app('c5benito')
-      .firestore()
-      .collection('messages')
-      .orderBy('lastModification', 'desc')
-      .get()
-      .then((docs) => {
-        if (docs.docs.length > 0) {
-          const chats = docs.docs.map((v) => {
-            let value = v.data();
-            value.lastModification = new Date(
-              value.lastModification
-            ).toString();
-            value.id = v.id;
-            return value;
-          });
-          chats.sort((a, b) => {
-            let first = new Date(a.lastModification)
-            let second = new Date(b.lastModification)
-            if (first < second) {
-              return 1
-            } else {
-              return -1
-            }
-          })
-          this.setState({ chats });
-        }
-      });
+
     io.sails.url = `${constants.sails_url}`;
     io.socket.get('/termicfiles', (data) => {
       let covidTmp = [];
@@ -234,25 +207,6 @@ class Main extends Component {
           datosAlcaldia: limits.data
         })
         // const { clave_municipal } = limits.data;
-        firebaseSos
-          .app("sos")
-          .firestore()
-          .collection(MESSAGES_COLLECTION)
-          // .where("c5_admin_clave", "==", clave_municipal)
-          .orderBy("lastModification", "desc")
-          .get()
-          .then(docs => {
-            const chatSOS = docs.docs.map((i) => {
-              let data = i.data();
-              data.lastModification = new Date(
-                data.lastModification.toDate()
-              ).toString();
-              data.id = i.id;
-              return data;
-            });
-            this.setState({ stateSos: chatSOS })
-            this.loadData()
-          });
       }
     }
   }
@@ -1211,6 +1165,14 @@ class Main extends Component {
 
   }
 
+  _setChats = (chats) => {
+    this.setState({ chats })
+  }
+
+  _setSOS = (stateSos) => {
+    this.setState({ stateSos })
+  }
+
   canAccess = (module_id) => {
     let isValid = false
     const isAuth = JSON.parse(sessionStorage.getItem('isAuthenticated'))
@@ -1339,7 +1301,10 @@ class Main extends Component {
             exact
             render={(props) => (
               <Chat
-                chats={this.state.chats.filter(item => (typeof item.alarmType !== 'string'))}
+                // chats={this.state.chats.filter(item => (typeof item.alarmType !== 'string'))}
+                chats={this.state.chats}
+                setChats={this._setChats}
+                setSOS={this._setSOS}
                 {...props}
                 userInfo={this.state.userInfo}
                 chatFirebase={this.state.chatFirebase}

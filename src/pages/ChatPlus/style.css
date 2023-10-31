@@ -1,18 +1,18 @@
-.userList{
+.userList {
     height: 100%;
     background-color: #dadada;
     padding: 25px;
     overflow-x: hidden;
-    overflow-y: auto;       
+    overflow-y: auto;
 }
 
-.userList > .card{
+.userList>.card {
     width: 100%;
     overflow-x: hidden;
-    overflow-y: auto;   
+    overflow-y: auto;
 }
 
-.fullHeight{
+.fullHeight {
     bottom: 0;
     right: 0;
     left: 0;
@@ -20,7 +20,7 @@
     background-color: #fafafa;
 }
 
-.messages{
+.messages {
     margin-top: 15px;
     width: 93%;
     height: 95%;
@@ -29,7 +29,7 @@
 }
 
 
-.messagesContainer{
+.messagesContainer {
     height: 27%;
     width: 91%;
     position: absolute;
@@ -39,28 +39,40 @@
     margin: 0;
 }
 
-.cameraView{
+.messagesHistorialContainer {
+    height: 100%;
+    width: 91%;
+    position: absolute;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0;
+    padding: 3rem 0.5rem 0 0.5rem;
+    max-height: 48rem;
+}
+
+.cameraView {
     height: 57%;
     width: 100%;
 }
 
-.cameraView >.row>.col >.card{
+.cameraView>.row>.col>.card {
     height: 100% !important;
 }
 
-.cameraView >.row>.col>.card>.card-body{
+.cameraView>.row>.col>.card>.card-body {
     height: 100% !important;
 }
 
-.cameraView >.row>.card>.card-body>.dataHolder{
+.cameraView>.row>.card>.card-body>.dataHolder {
     height: 100% !important;
 }
-.app-container{
+
+.app-container {
     position: absolute;
     bottom: 0;
     right: 0;
     left: 0;
-    top:51px;
+    top: 51px;
 }
 
 
@@ -71,10 +83,10 @@
     width: 85%;
     padding: 5px;
     color: white;
-    margin-top:10px;
+    margin-top: 10px;
 }
 
-.user >p {
+.user>p {
     color: white;
 }
 
@@ -98,12 +110,12 @@
     background: var(--main-bg-color);
     border-radius: .4em;
     padding: 5px;
-    margin-top:10px;
+    margin-top: 10px;
     width: 85%;
     margin-left: 15%;
 }
 
-.support > p{
+.support>p {
     color: white;
 }
 
@@ -122,74 +134,74 @@
     margin-right: -20px;
 }*/
 
-.messages_send_box{
+.messages_send_box {
     position: fixed;
     bottom: 0px;
     width: 92%;
     height: 10vh;
     background-color: #c0c0c0;
-    padding: 5px;    
+    padding: 5px;
 }
 
-#messsageTextarea{
+#messsageTextarea {
     background-color: white;
     border: 1px solid black;
-    border-radius: 5px;    
+    border-radius: 5px;
     width: 100%;
     height: 8vh;
     resize: none;
 }
 
-#sendbutton{
+#sendbutton {
     position: absolute;
     right: 0;
-    top: 0;    
-    bottom:0;  
-    margin:auto;  
+    top: 0;
+    bottom: 0;
+    margin: auto;
     font-size: 2rem;
 }
 
-.activeChat{
+.activeChat {
     background-color: #afafaf !important;
 }
 
 
-.Alerta.Robo.Habitacion{
+.Alerta.Robo.Habitacion {
     background-color: var(--main-bg-color);
     border-radius: 15px;
     color: white;
 }
 
 
-.Chat.Soporte{
+.Chat.Soporte {
     background-color: #ffaa20;
     border-radius: 15px;
     color: white;
 }
 
-.Chat.C5{
+.Chat.C5 {
     background-color: #ffaa20;
     border-radius: 15px;
     color: white;
 }
 
-.notificationNumber{
+.notificationNumber {
     height: 20px;
     width: 20px;
     position: absolute;
     right: 10px;
     top: 10px;
     margin: auto;
-    background: red;    
+    background: red;
     border-radius: 15px;
 }
 
-.notificationNumber > p {
+.notificationNumber>p {
     color: #fafafa;
     text-align: center;
 }
 
-.camContainerChatDiv>.card>.card-body>.camHolder{
+.camContainerChatDiv>.card>.card-body>.camHolder {
     height: 100% !important;
 }
 

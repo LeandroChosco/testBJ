@@ -46,6 +46,7 @@
   overflow-y: auto;
   margin: 0;
   padding: 3rem 0.5rem 0 0.5rem;
+  max-height: 48rem;
 }
 
 .cameraView {

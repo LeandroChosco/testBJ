@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Icon, Input, Tab } from "semantic-ui-react";
+import { Card, Icon, Input, Tab, Radio } from "semantic-ui-react";
 import FadeLoader from "react-spinners/FadeLoader";
 import Spinner from 'react-bootstrap/Spinner';
 import { Button } from "react-bootstrap";
@@ -17,9 +17,12 @@ import noCamera from "../../assets/images/noCamera.png"
 
 
 import firebaseC5Benito from "../../constants/configC5CJ";
+import firebaseSos from "../../constants/configSOS";
 import "./style.css";
 import conections from "../../conections";
 import { LANG } from "../../constants/token";
+import { MESSAGES_COLLECTION } from "../../Api/sos";
+import chatGeneral from '../../historial/chats_General_Benito-Juárez.json';
 
 const refSOS = firebaseC5Benito
   .app("c5benito")
@@ -93,12 +96,15 @@ class Chat extends Component {
     loadingChat: false,
     infoCurrentCamera: {},
     idClient: null,
-    statusCurrentChat: true
+    statusCurrentChat: true,
+    showHistorial: false,
+    loadingHistorial: false,
+    currentHistorial: {},
   };
   panes = this.props.history.location.pathname.includes("chat")
     ? [
       {
-        menuItem: "C5",
+        menuItem: "C5 Chat",
         render: () => (
           <Tab.Pane attached={false} style={styles.tab}>
             {" "}
@@ -133,6 +139,18 @@ class Chat extends Component {
         ),
       },
     ];
+
+  panesHistorial = [
+    {
+      menuItem: "C5 Historial",
+      render: () => (
+        <Tab.Pane attached={false} style={styles.tab}>
+          {" "}
+          {this.renderListHistorial("C5")}
+        </Tab.Pane>
+      ),
+    },
+  ];
 
   FILTERSOPTIONS = this.props.history.location.pathname.includes("chat")
     ? [undefined]
@@ -197,6 +215,59 @@ class Chat extends Component {
 
   renderListChats = (type) => {
     const { index, chats } = this.state;
+    const { setChats, setSOS } = this.props
+
+    firebaseC5Benito
+      .app('c5benito')
+      .firestore()
+      .collection('messages')
+      .orderBy('lastModification', 'desc')
+      .get()
+      .then((docs) => {
+        if (docs.docs.length > 0) {
+          const chats = docs.docs.map((v) => {
+            let value = v.data();
+            value.lastModification = new Date(
+              value.lastModification
+            ).toString();
+            value.id = v.id;
+            return value;
+          });
+          chats.sort((a, b) => {
+            let first = new Date(a.lastModification)
+            let second = new Date(b.lastModification)
+            if (first < second) {
+              return 1
+            } else {
+              return -1
+            }
+          })
+          setChats(chats);
+        }
+      });
+
+    firebaseSos
+      .app("sos")
+      .firestore()
+      .collection(MESSAGES_COLLECTION)
+      // .where("c5_admin_clave", "==", clave_municipal)
+      .orderBy("lastModification", "desc")
+      .get()
+      .then(docs => {
+        const chatSOS = docs.docs.map((i) => {
+          let data = i.data();
+          data.lastModification = new Date(
+            data.lastModification.toDate()
+          ).toString();
+          data.id = i.id;
+          return data;
+        });
+        setSOS(chatSOS)
+        this.loadData()
+      })
+      .catch(err => console.log("ERR", err));
+
+
     return (
       <div>
         <div style={{ display: "flex", flexDirection: "row" }}>
@@ -295,6 +366,129 @@ class Chat extends Component {
     );
   };
 
+  renderListHistorial = (type) => {
+    const { index } = this.state;
+    // const { setChats, setSOS } = this.props
+
+    let chats;
+
+    if (type === "C5") {
+      chats = chatGeneral;
+    }
+
+    return (
+      <div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Input
+            placeholder={localStorage.getItem(LANG) === "english" ? "Search user" : "Buscar usuario"}
+            style={{ flex: 2 }}
+            onChange={this.filterAction}
+          ></Input>
+          {/* <Dropdown
+              placeholder={localStorage.getItem(LANG) === "english" ? "Search by" : "Buscar por"}
+              fluid
+              selection
+              options={localStorage.getItem(LANG) === "english" ? SEARCHENGLISHOPTIONS : SEARCHOPTIONS}
+              defaultValue="name"
+              onChange={this.handleChangeOption}
+              style={{ flex: 1 }}
+            /> */}
+        </div>
+        <div
+          style={{
+            height: "81vh",
+            overflow: "scroll",
+            backgroundColor: "#dadada",
+            padding: "20px",
+          }}
+        >
+          {chats.map((chat, i) => {
+            const date =
+              chat && chat.create_at
+                ? moment(chat.create_at).format("DD-MM-YYYY, HH:mm:ss")
+                : moment(chat.lastModification).format("DD-MM-YYYY, HH:mm:ss");
+
+            let badgeNumber = 0;
+            if (this.state.chatId) {
+              badgeNumber = this.state.chatId === chat.id ? 0 : chat.c5Unread;
+            }
+            return (
+              <Card
+                className={i === index ? "activeChat" : ""}
+                style={{ width: "100%" }}
+                key={i}
+                onClick={() => this.changeHistorial(chat, i)}
+              >
+                <Card.Content>
+                  <div style={{ position: "relative" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <h4 style={{ marginRight: "0.3rem" }}>{chat.user_name}</h4> <p>{date}</p>
+                    </div>
+                    {chat.active !== undefined && chat.active ? (
+                      <p>
+                        {chat.messages
+                          ? chat.messages.length > 0
+                            ? (chat.messages[chat.messages.length - 1].from ===
+                              "user"
+                              ? chat.user_name.split(" ")[0]
+                              : "C5") +
+                            ": " +
+                            chat.messages[chat.messages.length - 1].msg //msg
+                            : localStorage.getItem(LANG) === "english" ? "No messages to show" : "No hay mensajes que mostrar"
+                          : localStorage.getItem(LANG) === "english" ? "No messages to show" : "No hay mensajes que mostrar"}
+                      </p>
+                    ) : (
+                      <p></p>
+                    )}
+
+                    {chat.c5Unread !== undefined && badgeNumber !== 0 ? (
+                      <div
+                        className="notificationNumber"
+                        style={{ marginTop: 15 }}
+                      >
+                        <p>{chat.c5Unread}</p>
+                      </div>
+                    ) : null}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                      }}
+                    >
+                      {/* <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : null}</strong> </small></div> */}
+                    </div>
+                  </div>
+                </Card.Content>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  _changeView = () => {
+    let { showHistorial } = this.state;
+
+    if (window.location.pathname.includes("chat")) {
+      this.props.history.push(`/chat`)
+    }
+
+    this.setState({ showHistorial: !showHistorial, loadingHistorial: true, currentHistorial: {} });
+
+    setTimeout(() => {
+      this.setState({ loadingHistorial: false });
+    }, 2000);
+
+  }
+
   render() {
     const { alarmIndex } = this.props.match.params;
     const {
@@ -305,7 +499,10 @@ class Chat extends Component {
       camData,
       personalInformation,
       loadingChat,
-      infoCurrentCamera
+      infoCurrentCamera,
+      loadingHistorial,
+      showHistorial,
+      currentHistorial,
     } = this.state;
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
@@ -340,33 +537,84 @@ class Chat extends Component {
       >
         <div className="row fullHeight">
           <div className="col-4 userList">
-            <Tab
-              menu={{ pointing: true }}
-              panes={this.panes}
-              defaultActiveIndex={alarmIndex ? alarmIndex : 0}
-              onTabChange={(t, i) => {
-                const { chats } = this.props;
-                const { index } = this.state;
-                let newChats = chats.filter(
-                  (e) => e.alarmType === this.FILTERSOPTIONS[i.activeIndex]
-                );
-                if (index) {
-                  let selected =
-                    newChats.length !== 0 && newChats[index]
-                      ? newChats[index].alarmType
-                      : newChats[0].alarmType;
-                  this.setState({
-                    from: selected ? selected : "Error getting data",
-                  });
-                }
-                this.setState({
-                  chats: newChats,
-                  activeIndex: i.activeIndex,
-                  index: null,
-                  tabIndex: i.activeIndex,
-                });
-              }}
-            />
+            <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem" }}>
+              <p>Historial</p>
+              <Radio
+                toggle
+                onClick={this._changeView}
+                id="toggle24"
+                checked={this.state.showHistorial}
+                style={{ margin: "0 1rem" }}
+              />
+              <p>Chats</p>
+            </div>
+            <hr />
+
+            {loadingHistorial ?
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
+                <Spinner animation="border" variant="info" role="status" size="xl">
+                  <span className="sr-only">Loading...</span>
+                </Spinner>
+              </div>
+              :
+              !showHistorial ?
+                <Tab
+                  menu={{ pointing: true }}
+                  panes={this.panesHistorial}
+                  defaultActiveIndex={alarmIndex ? alarmIndex : 0}
+                  onTabChange={(t, i) => {
+                    const { chats } = this.props;
+                    const { index } = this.state;
+                    let newChats = chats.filter(
+                      (e) => e.alarmType === this.FILTERSOPTIONS[i.activeIndex]
+                    );
+                    if (index) {
+                      let selected =
+                        newChats.length !== 0 && newChats[index]
+                          ? newChats[index].alarmType
+                          : newChats[0].alarmType;
+                      this.setState({
+                        from: selected ? selected : "Error getting data",
+                      });
+                    }
+                    this.setState({
+                      chats: newChats,
+                      activeIndex: i.activeIndex,
+                      index: null,
+                      tabIndex: i.activeIndex,
+                    });
+                  }}
+                />
+                :
+                <Tab
+                  menu={{ pointing: true }}
+                  panes={this.panes}
+                  defaultActiveIndex={alarmIndex ? alarmIndex : 0}
+                  onTabChange={(t, i) => {
+                    const { chats } = this.props;
+                    const { index } = this.state;
+                    let newChats = chats.filter(
+                      (e) => e.alarmType === this.FILTERSOPTIONS[i.activeIndex]
+                    );
+                    if (index) {
+                      let selected =
+                        newChats.length !== 0 && newChats[index]
+                          ? newChats[index].alarmType
+                          : newChats[0].alarmType;
+                      this.setState({
+                        from: selected ? selected : "Error getting data",
+                      });
+                    }
+                    this.setState({
+                      chats: newChats,
+                      activeIndex: i.activeIndex,
+                      index: null,
+                      tabIndex: i.activeIndex,
+                    });
+                  }}
+                />
+            }
+
           </div>
           <div className="col-8">
             {
@@ -375,268 +623,356 @@ class Chat extends Component {
                   <Spinner style={{ marginTop: "3rem" }} animation="border" variant="info" role="status" size="xl" />
                 </div>
                 :
-
-                this.state.statusCurrentChat ?
-
-                  <div className="messages">
-                    {!loading && chatId !== "" && chats[index] ? (
-                      <div className="cameraView">
+                !showHistorial ? Object.keys(currentHistorial).length === 0 ?
+                  <>
+                    <p style={{ position: 'fixed', top: '50%', left: '60%' }}>No se ha seleccionado ningún chat</p>
+                  </>
+                  :
+                  <>
+                    <div className='messages' style={{ height: '88%' }}>
+                      <div className='historialView' style={{ height: '100% !important' }}>
                         <h2
-                          className={"Chat C5"}
+                          className={'Chat C5'}
                           style={{
-                            textAlign: "center",
-                            backgroundColor:
-                              COLORS[
-                              chats[index].alarmType ? chats[index].alarmType : "c5"
-                              ],
-                            height: "30px",
+                            textAlign: 'center',
+                            backgroundColor: COLORS.c5,
+                            height: '30px'
                           }}
                         >
-                          {chats[index].alarmType
-                            ? chats[index].alarmType
-                            : "Chat C5"}
+                          {currentHistorial.from}
                         </h2>
-                        <div className="row" style={{ height: "70%", margin: 0 }}>
-                          <div className="col" style={{ height: "100%" }}>
-                            {infoCurrentCamera.google_cordenate ? (
-                              <MapContainer
-                                options={{
-                                  center: {
-                                    lat: parseFloat(
-                                      infoCurrentCamera.google_cordenate.split(
-                                        ","
-                                      )[0]
-                                    ),
-                                    lng: parseFloat(
-                                      infoCurrentCamera.google_cordenate.split(
-                                        ","
-                                      )[1]
-                                    ),
-                                  },
-                                  zoom: 15,
-                                  mapTypeId: "roadmap",
-                                  zoomControl: false,
-                                  mapTypeControl: false,
-                                  streetViewControl: false,
-                                  fullscreenControl: false,
-                                  openConfirm: false,
-                                  typeConfirm: false,
-                                  openSelection: false,
-                                  checked: "",
-                                }}
-                                onMapLoad={this._onMapLoad}
-                              />
-                            ) : infoCurrentCamera.location ? (
-                              <MapContainer
-                                options={{
-                                  center: {
-                                    lat: parseFloat(infoCurrentCamera.location.latitude),
-                                    lng: parseFloat(infoCurrentCamera.location.longitude),
-                                  },
-                                  zoom: 15,
-                                  mapTypeId: "roadmap",
-                                  zoomControl: false,
-                                  mapTypeControl: false,
-                                  streetViewControl: false,
-                                  fullscreenControl: false,
-                                  openConfirm: false,
-                                  typeConfirm: false,
-                                  openSelection: false,
-                                  checked: "",
-                                }}
-                                onMapLoad={this._onMapLoad}
-                              />
-                            )
-                              :
-                              <div className="row-6" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem" }}>
-                                <img style={{ height: "22rem", marginTop: "-18rem" }} src={noCamera} alt="Imagen-No-Disponible" />
-                              </div>
-                            }
-                          </div>
-                          <div
-                            className="col camContainerChatDiv"
-                            style={{ height: "100%" }}
-                          >
-                            {camData && !loadingChat ? (
-                              <CameraStream
-                                hideTitle
-                                height="250px"
-                                hideButton
-                                hideInfo
-                                propsIniciales={this.props}
-                                marker={(camData)}
-                              />
-                            ) : (
-                              <p>{localStorage.getItem(LANG) === "english" ? "No camera assigned" : "Sin camara asignada..."}</p>
-                            )
-                            }
-                          </div>
-                        </div>
-
-                        <div
-                          className="row"
-                          style={{
-                            height: "20%",
-                            width: "100%",
-                            margin: 0,
-                            marginTop: "5px",
-                          }}
-                        >
-                          <Card style={{ width: "100%" }}>
+                        <div className='row' style={{ height: '100%', width: '100%', margin: 0, marginTop: '5px' }}>
+                          <Card style={{ width: '100%' }}>
                             <Card.Content>
-                              <div className="row">
-                                <div className="col-8">
-                                  <div className="row" style={{ padding: "5px" }}>
-                                    <div
-                                      className="col-6"
-                                      style={{ fontSize: 13, paddingRight: 0 }}
-                                    >
-                                      <b>{localStorage.getItem(LANG) === "english" ? "Name: " : "Nombre: "}</b> {chats[index].user_name}
+                              <div className='row'>
+                                <div className='col-9'>
+                                  <div className='row'>
+                                    <div className='col-6' style={styles.text}>
+                                      <b>Nombre: </b>
+                                      {currentHistorial.user_name}
                                     </div>
-                                    <div
-                                      className="col-3"
-                                      style={{
-                                        fontSize: 13,
-                                        paddingLeft: 0,
-                                        paddingRight: 0,
-                                      }}
-                                    >
-                                      <b>{localStorage.getItem(LANG) === "english" ? "Phone " : "Celular: "}</b> {chats[index].user_cam.phone}
+                                    <div className='col' style={styles.text}>
+                                      <b>Fecha: </b>
+                                      {currentHistorial.lastModification}
                                     </div>
                                   </div>
-                                  <div className="row" style={{ padding: "5px" }}>
-                                    <div
-                                      className="col-6"
-                                      style={{ fontSize: 13, paddingRight: 0 }}
-                                    >
-                                      <b>{localStorage.getItem(LANG) === "english" ? "Address " : "Dirección: "}</b>
-                                      {infoCurrentCamera.street ? infoCurrentCamera.street : chats[index].street}{" "}
-                                      {infoCurrentCamera.number ? infoCurrentCamera.number : chats[index].number},{" "}
-                                      {infoCurrentCamera.town ? infoCurrentCamera.town : chats[index].town},{" "}
-                                      {infoCurrentCamera.township ? infoCurrentCamera.township : chats[index].township}
-                                    </div>
-                                    {
-                                      camData !== undefined &&
-                                      <div
-                                        className="col-3"
-                                        style={{
-                                          fontSize: 13,
-                                          paddingLeft: 0,
-                                          paddingRight: 0,
-                                        }}
-                                      >
-                                        <b>{localStorage.getItem(LANG) === "english" ? "Camera: " : "Cámara: "}</b> #cam{camData && camData.extraData.num_cam}
-                                      </div>
-
-                                    }
-
-                                  </div>
-                                  <div className="row" style={{ padding: "5px" }}>
-                                    <div
-                                      className="col-12"
-                                      style={{ fontSize: 13, paddingRight: 0 }}
-                                    >
-                                      {infoCurrentCamera.entrecalles ? (
-                                        <p>
-                                          <b>{localStorage.getItem(LANG) === "english" ? "Between streets: " : "Entre Calles: "}</b>
-                                          {infoCurrentCamera.entrecalles}
-                                          {/* {console.log("chats ", chats[index])} */}
-                                        </p>
-                                      ) : null}
-                                    </div>
-                                  </div>
-                                  {personalInformation.alarmType ? (
-                                    <div className="row" style={{ padding: "5px" }}>
-                                      <div
-                                        className="col-6"
-                                        style={{ fontSize: 13, paddingRight: 0 }}
-                                      >
-                                        <b>{localStorage.getItem(LANG) === "english" ? "Description: " : "Descripción: "}</b>
-                                        {personalInformation.description
-                                          ? personalInformation.description
-                                          : ""}
-                                      </div>
-                                      <div
-                                        className="col-3"
-                                        style={{
-                                          fontSize: 13,
-                                          paddingLeft: 0,
-                                          paddingRight: 0,
-                                        }}
-                                      >
-                                        <b>{localStorage.getItem(LANG) === "english" ? "Alarm" : "Alarma: "}</b>{" "}
-                                        {personalInformation.alarmType
-                                          ? personalInformation.alarmType
-                                          : ""}
-                                      </div>
-                                      <div
-                                        className="col-3"
-                                        style={{
-                                          fontSize: 13,
-                                          paddingLeft: 0,
-                                          paddingRight: 0,
-                                        }}
-                                      >
-                                        <b>{localStorage.getItem(LANG) === "english" ? "NS Alarm" : "Alarma NS: "}</b>{" "}
-                                        {personalInformation.alarmSN
-                                          ? personalInformation.alarmSN
-                                          : ""}
-                                      </div>
-                                    </div>
-                                  ) : null}
                                 </div>
-                                <div
-                                  className="col-4"
-                                  style={{ margin: "auto" }}
-                                >
-                                  <Button onClick={this.refreshButton}>{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}</Button>
-                                </div>
+                              </div>
+                              <div className='messagesHistorialContainer' id='messagesContainer' style={{ top: "20% !important", height: "100%", padding: "0.5rem !important" }}>
+                                {this.state.messages.map((value, ref) => {
+                                  return (
+                                    <div
+                                      key={ref}
+                                      className={value.from === "user" ? "user" : "support"}
+                                      ref={"message" + ref
+                                      }
+                                      id={"message" + ref}
+                                    >
+                                      <p>{value.msg}</p>
+                                      <small>
+                                        {value.dateTime.toDate
+                                          ?
+                                          value.userName || value.userEmail
+                                            ?
+                                            moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                                            :
+                                            moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
+                                          : null}
+                                      </small>
+                                    </div>
+                                  )
+                                }
+                                )}
                               </div>
                             </Card.Content>
                           </Card>
                         </div>
                       </div>
-                    ) : null}
-                    <div className="messagesContainer" id="messagesContainer">
-                      {/* {console.log(chats[index])} */}
+                    </div>
+
+                  </>
+                  :
+
+                  this.state.statusCurrentChat ?
+
+                    <div className="messages">
                       {!loading && chatId !== "" && chats[index] ? (
-                        chats[index].messages ? (
-                          this.state.messages !== undefined &&
-                          this.state.messages.map((value, ref) => {
-                            return (
-                              <div
-                                key={ref}
-                                className={value.from === "user" ? "user" : "support"}
-                                ref={
-                                  ref === chats[index].messages.length - 1
-                                    ? "message"
-                                    : "message" + ref
-                                }
-                                id={
-                                  ref === chats[index].messages.length - 1
-                                    ? "lastMessage"
-                                    : "message" + ref
-                                }
-                                style={
-                                  {
-                                    backgroundColor: (value.from === 1 || value.from === 2) && "#5ab86d"
+                        <div className="cameraView">
+                          <h2
+                            className={"Chat C5"}
+                            style={{
+                              textAlign: "center",
+                              backgroundColor:
+                                COLORS[
+                                chats[index].alarmType ? chats[index].alarmType : "c5"
+                                ],
+                              height: "30px",
+                            }}
+                          >
+                            {chats[index].alarmType
+                              ? chats[index].alarmType
+                              : "Chat C5"}
+                          </h2>
+                          <div className="row" style={{ height: "70%", margin: 0 }}>
+                            <div className="col" style={{ height: "100%" }}>
+                              {infoCurrentCamera.google_cordenate ? (
+                                <MapContainer
+                                  options={{
+                                    center: {
+                                      lat: parseFloat(
+                                        infoCurrentCamera.google_cordenate.split(
+                                          ","
+                                        )[0]
+                                      ),
+                                      lng: parseFloat(
+                                        infoCurrentCamera.google_cordenate.split(
+                                          ","
+                                        )[1]
+                                      ),
+                                    },
+                                    zoom: 15,
+                                    mapTypeId: "roadmap",
+                                    zoomControl: false,
+                                    mapTypeControl: false,
+                                    streetViewControl: false,
+                                    fullscreenControl: false,
+                                    openConfirm: false,
+                                    typeConfirm: false,
+                                    openSelection: false,
+                                    checked: "",
+                                  }}
+                                  onMapLoad={this._onMapLoad}
+                                />
+                              ) : infoCurrentCamera.location ? (
+                                <MapContainer
+                                  options={{
+                                    center: {
+                                      lat: parseFloat(infoCurrentCamera.location.latitude),
+                                      lng: parseFloat(infoCurrentCamera.location.longitude),
+                                    },
+                                    zoom: 15,
+                                    mapTypeId: "roadmap",
+                                    zoomControl: false,
+                                    mapTypeControl: false,
+                                    streetViewControl: false,
+                                    fullscreenControl: false,
+                                    openConfirm: false,
+                                    typeConfirm: false,
+                                    openSelection: false,
+                                    checked: "",
+                                  }}
+                                  onMapLoad={this._onMapLoad}
+                                />
+                              )
+                                :
+                                <div className="row-6" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem" }}>
+                                  <img style={{ height: "22rem", marginTop: "-18rem" }} src={noCamera} alt="Imagen-No-Disponible" />
+                                </div>
+                              }
+                            </div>
+                            <div
+                              className="col camContainerChatDiv"
+                              style={{ height: "100%" }}
+                            >
+                              {camData && !loadingChat ? (
+                                <CameraStream
+                                  hideTitle
+                                  height="250px"
+                                  hideButton
+                                  hideInfo
+                                  propsIniciales={this.props}
+                                  marker={(camData)}
+                                />
+                              ) : (
+                                <p>{localStorage.getItem(LANG) === "english" ? "No camera assigned" : "Sin camara asignada..."}</p>
+                              )
+                              }
+                            </div>
+                          </div>
+
+                          <div
+                            className="row"
+                            style={{
+                              height: "20%",
+                              width: "100%",
+                              margin: 0,
+                              marginTop: "5px",
+                            }}
+                          >
+                            <Card style={{ width: "100%" }}>
+                              <Card.Content>
+                                <div className="row">
+                                  <div className="col-8">
+                                    <div className="row" style={{ padding: "5px" }}>
+                                      <div
+                                        className="col-6"
+                                        style={{ fontSize: 13, paddingRight: 0 }}
+                                      >
+                                        <b>{localStorage.getItem(LANG) === "english" ? "Name: " : "Nombre: "}</b> {chats[index].user_name}
+                                      </div>
+                                      <div
+                                        className="col-3"
+                                        style={{
+                                          fontSize: 13,
+                                          paddingLeft: 0,
+                                          paddingRight: 0,
+                                        }}
+                                      >
+                                        <b>{localStorage.getItem(LANG) === "english" ? "Phone " : "Celular: "}</b> {chats[index].user_cam.phone}
+                                      </div>
+                                    </div>
+                                    <div className="row" style={{ padding: "5px" }}>
+                                      <div
+                                        className="col-6"
+                                        style={{ fontSize: 13, paddingRight: 0 }}
+                                      >
+                                        <b>{localStorage.getItem(LANG) === "english" ? "Address " : "Dirección: "}</b>
+                                        {infoCurrentCamera.street ? infoCurrentCamera.street : chats[index].street}{" "}
+                                        {infoCurrentCamera.number ? infoCurrentCamera.number : chats[index].number},{" "}
+                                        {infoCurrentCamera.town ? infoCurrentCamera.town : chats[index].town},{" "}
+                                        {infoCurrentCamera.township ? infoCurrentCamera.township : chats[index].township}
+                                      </div>
+                                      {
+                                        camData !== undefined &&
+                                        <div
+                                          className="col-3"
+                                          style={{
+                                            fontSize: 13,
+                                            paddingLeft: 0,
+                                            paddingRight: 0,
+                                          }}
+                                        >
+                                          <b>{localStorage.getItem(LANG) === "english" ? "Camera: " : "Cámara: "}</b> #cam{camData && camData.extraData.num_cam}
+                                        </div>
+
+                                      }
+
+                                    </div>
+                                    <div className="row" style={{ padding: "5px" }}>
+                                      <div
+                                        className="col-12"
+                                        style={{ fontSize: 13, paddingRight: 0 }}
+                                      >
+                                        {infoCurrentCamera.entrecalles ? (
+                                          <p>
+                                            <b>{localStorage.getItem(LANG) === "english" ? "Between streets: " : "Entre Calles: "}</b>
+                                            {infoCurrentCamera.entrecalles}
+                                            {/* {console.log("chats ", chats[index])} */}
+                                          </p>
+                                        ) : null}
+                                      </div>
+                                    </div>
+                                    {personalInformation.alarmType ? (
+                                      <div className="row" style={{ padding: "5px" }}>
+                                        <div
+                                          className="col-6"
+                                          style={{ fontSize: 13, paddingRight: 0 }}
+                                        >
+                                          <b>{localStorage.getItem(LANG) === "english" ? "Description: " : "Descripción: "}</b>
+                                          {personalInformation.description
+                                            ? personalInformation.description
+                                            : ""}
+                                        </div>
+                                        <div
+                                          className="col-3"
+                                          style={{
+                                            fontSize: 13,
+                                            paddingLeft: 0,
+                                            paddingRight: 0,
+                                          }}
+                                        >
+                                          <b>{localStorage.getItem(LANG) === "english" ? "Alarm" : "Alarma: "}</b>{" "}
+                                          {personalInformation.alarmType
+                                            ? personalInformation.alarmType
+                                            : ""}
+                                        </div>
+                                        <div
+                                          className="col-3"
+                                          style={{
+                                            fontSize: 13,
+                                            paddingLeft: 0,
+                                            paddingRight: 0,
+                                          }}
+                                        >
+                                          <b>{localStorage.getItem(LANG) === "english" ? "NS Alarm" : "Alarma NS: "}</b>{" "}
+                                          {personalInformation.alarmSN
+                                            ? personalInformation.alarmSN
+                                            : ""}
+                                        </div>
+                                      </div>
+                                    ) : null}
+                                  </div>
+                                  <div
+                                    className="col-4"
+                                    style={{ margin: "auto" }}
+                                  >
+                                    <Button onClick={this.refreshButton}>{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}</Button>
+                                  </div>
+                                </div>
+                              </Card.Content>
+                            </Card>
+                          </div>
+                        </div>
+                      ) : null}
+                      <div className="messagesContainer" id="messagesContainer">
+                        {/* {console.log(chats[index])} */}
+                        {!loading && chatId !== "" && chats[index] ? (
+                          chats[index].messages ? (
+                            this.state.messages !== undefined &&
+                            this.state.messages.map((value, ref) => {
+                              return (
+                                <div
+                                  key={ref}
+                                  className={value.from === "user" ? "user" : "support"}
+                                  ref={
+                                    ref === chats[index].messages.length - 1
+                                      ? "message"
+                                      : "message" + ref
                                   }
-                                }
-                              >
-                                <p>{value.msg}</p>
-                                <small>
-                                  {value.dateTime.toDate
-                                    ?
-                                    value.userName || value.userEmail
+                                  id={
+                                    ref === chats[index].messages.length - 1
+                                      ? "lastMessage"
+                                      : "message" + ref
+                                  }
+                                  style={
+                                    {
+                                      backgroundColor: (value.from === 1 || value.from === 2) && "#5ab86d"
+                                    }
+                                  }
+                                >
+                                  <p>{value.msg}</p>
+                                  <small>
+                                    {value.dateTime.toDate
                                       ?
-                                      moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
-                                      :
-                                      moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
-                                    : null}
-                                </small>
-                              </div>
+                                      value.userName || value.userEmail
+                                        ?
+                                        moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                                        :
+                                        moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
+                                      : null}
+                                  </small>
+                                </div>
+                              )
+                            }
                             )
-                          }
+                          ) : loading === true ? (
+                            <>
+                              <FadeLoader
+                                height={20}
+                                width={7}
+                                radius={20}
+                                margin={5}
+                                loading={loading}
+                                css={styles.centered}
+                              />
+                              <p style={{ position: "fixed", top: "56%", left: "62%" }}>
+                                {localStorage.getItem(LANG) === "english" ? "Loading chat" : "Cargando chat"}
+                              </p>
+                            </>
+                          ) : (
+                            <p style={{ position: "fixed", top: "50%", left: "60%" }}>
+                              {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
+                            </p>
                           )
                         ) : loading === true ? (
                           <>
@@ -656,102 +992,83 @@ class Chat extends Component {
                           <p style={{ position: "fixed", top: "50%", left: "60%" }}>
                             {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
                           </p>
-                        )
-                      ) : loading === true ? (
-                        <>
-                          <FadeLoader
-                            height={20}
-                            width={7}
-                            radius={20}
-                            margin={5}
-                            loading={loading}
-                            css={styles.centered}
-                          />
-                          <p style={{ position: "fixed", top: "56%", left: "62%" }}>
-                            {localStorage.getItem(LANG) === "english" ? "Loading chat" : "Cargando chat"}
-                          </p>
-                        </>
-                      ) : (
-                        <p style={{ position: "fixed", top: "50%", left: "60%" }}>
-                          {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
-                        </p>
-                      )}
-                    </div>
+                        )}
+                      </div>
 
-                    {
-                      chatId !== "" && chats[index] ? (
-                        <div className="messages_send_box">
-                          {!textareaDisabled ? (
-                            <div style={{ position: "relative" }}>
-                              <textarea
-                                disabled={textareaDisabled}
-                                placeholder={localStorage.getItem(LANG) === "english" ? "Text your message" : "Escriba su mensaje"}
-                                name="text"
-                                autoComplete="on"
-                                autoCorrect="on"
-                                id="messsageTextarea"
-                                value={this.state.text}
-                                onKeyPress={this.checkKey}
-                                onChange={(event) => {
-                                  this.setState({ text: event.target.value });
-                                }}
-                              ></textarea>
-                              <Icon
-                                name="send"
-                                id="sendbutton"
-                                onClick={this.sendMessage}
-                              />
-                            </div>
-                          ) : (
-                            <div className="closed-ticked">
-                              {localStorage.getItem(LANG) === "english" ? "The ticket is already closed" : "El ticket ya se encuentra cerrado"}
-                            </div>
-                          )}
-                        </div>
-                      ) : null
-                    }
-                  </div>
-                  :
-                  <>
-                    <div className="row-6" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem" }}>
-                      <img style={{ height: "30rem" }} src={noChat} alt="Imagen-No-Disponible" />
+                      {
+                        chatId !== "" && chats[index] ? (
+                          <div className="messages_send_box">
+                            {!textareaDisabled ? (
+                              <div style={{ position: "relative" }}>
+                                <textarea
+                                  disabled={textareaDisabled}
+                                  placeholder={localStorage.getItem(LANG) === "english" ? "Text your message" : "Escriba su mensaje"}
+                                  name="text"
+                                  autoComplete="on"
+                                  autoCorrect="on"
+                                  id="messsageTextarea"
+                                  value={this.state.text}
+                                  onKeyPress={this.checkKey}
+                                  onChange={(event) => {
+                                    this.setState({ text: event.target.value });
+                                  }}
+                                ></textarea>
+                                <Icon
+                                  name="send"
+                                  id="sendbutton"
+                                  onClick={this.sendMessage}
+                                />
+                              </div>
+                            ) : (
+                              <div className="closed-ticked">
+                                {localStorage.getItem(LANG) === "english" ? "The ticket is already closed" : "El ticket ya se encuentra cerrado"}
+                              </div>
+                            )}
+                          </div>
+                        ) : null
+                      }
                     </div>
-                    <div className="row-6" style={{ display: "flex", width: "95%", height: "auto", padding: "3rem" }}>
-                      <Card
-                        style={{ display: "flex", padding: "2rem", width: "95%" }}
-                      >
-                        <Card.Content>
-                          <div className="row">
-                            <div className="col-10">
-                              <div className="col-6" style={{ padding: "5px" }}>
-                                <div
-                                  className="row-9"
-                                  style={{ fontSize: 13, paddingRight: 0 }}
-                                >
-                                  {localStorage.getItem(LANG) === "english" ? "The user " : "El usuario "}
-                                  <b>{chats[index].user_name}</b>
-                                  {localStorage.getItem(LANG) === "english" ? " is " : " se encuentra "}
-                                  <b>{localStorage.getItem(LANG) === "english" ? "deactivated" : "DESACTIVADO"}</b>
-                                </div>
-                                <br />
-                                <div
-                                  className="row-9"
-                                  style={{ fontSize: 13, paddingRight: 0 }}
-                                >
-                                  <p>{localStorage.getItem(LANG) === "english" ? "Contact support to reactivate this user" : "Contáctese con soporte para reactivar este usuario"}</p>
+                    :
+                    <>
+                      <div className="row-6" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem" }}>
+                        <img style={{ height: "30rem" }} src={noChat} alt="Imagen-No-Disponible" />
+                      </div>
+                      <div className="row-6" style={{ display: "flex", width: "95%", height: "auto", padding: "3rem" }}>
+                        <Card
+                          style={{ display: "flex", padding: "2rem", width: "95%" }}
+                        >
+                          <Card.Content>
+                            <div className="row">
+                              <div className="col-10">
+                                <div className="col-6" style={{ padding: "5px" }}>
+                                  <div
+                                    className="row-9"
+                                    style={{ fontSize: 13, paddingRight: 0 }}
+                                  >
+                                    {localStorage.getItem(LANG) === "english" ? "The user " : "El usuario "}
+                                    <b>{chats[index].user_name}</b>
+                                    {localStorage.getItem(LANG) === "english" ? " is " : " se encuentra "}
+                                    <b>{localStorage.getItem(LANG) === "english" ? "deactivated" : "DESACTIVADO"}</b>
+                                  </div>
+                                  <br />
+                                  <div
+                                    className="row-9"
+                                    style={{ fontSize: 13, paddingRight: 0 }}
+                                  >
+                                    <p>{localStorage.getItem(LANG) === "english" ? "Contact support to reactivate this user" : "Contáctese con soporte para reactivar este usuario"}</p>
+                                  </div>
                                 </div>
                               </div>
+                              <div
+                                className="col-2"
+                                style={{ margin: "auto" }}
+                              >
+                              </div>
                             </div>
-                            <div
-                              className="col-2"
-                              style={{ margin: "auto" }}
-                            >
-                            </div>
-                          </div>
-                        </Card.Content>
-                      </Card>
-                    </div>
-                  </>
+                          </Card.Content>
+                        </Card>
+                      </div>
+                    </>
             }
           </div>
         </div>
@@ -953,6 +1270,63 @@ class Chat extends Component {
       });
     }
   };
+  changeHistorial = (chat, i) => {
+
+    this.setState({ messages: chat.messages, currentHistorial: chat })
+
+    this.getUserInfo(chat);
+
+    if (chat) {
+      this.setState({ loadingChat: true })
+      this.getInfoC5Radar(chat.user_creation).then(response => {
+        if (response.success) {
+          this.setState({ statusCurrentChat: true })
+        } else {
+          this.setState({ statusCurrentChat: false })
+        }
+        if (response.responseuserc5[0].user_login) {
+          this.getInfoCameraUpdate(response.responseuserc5[0].user_login).then(res => {
+            let cameraData = res.data.updateInformationFirebaseCamera.response[0]
+            // console.log("CAM NUM", cameraData.num_cam)
+            this.setState({ infoCurrentCamera: cameraData })
+            this._changeUserCam(cameraData)
+          })
+            .catch(err => {
+              this.setState({ infoCurrentCamera: {} })
+              console.log(err)
+            })
+        }
+      })
+        .catch(err => {
+          this.setState({ infoCurrentCamera: {} })
+          console.log(err)
+        })
+      // }
+      setTimeout(() => {
+        this.setState({ loadingChat: false })
+      }, 2000);
+    }
+
+    if (this.props.history.location.pathname.includes("chat")) {
+      this.props.history.push(`/chat/${this.state.activeIndex}/${chat.id}`);
+    }
+
+    this.getMessages(chat.id);
+
+    this.setState({ loading: true, camData: undefined }, () => {
+
+      this.props.stopNotification();
+
+      this.setState({
+        index: i,
+        from: chat.from,
+        loading: false,
+        alarmType: chat.alarmType,
+        alarm: chat.alarm,
+      });
+    });
+
+  };
 
   getMessages = (chatId) => {
     // const {chatFirebase, chats} = this.props
@@ -1073,8 +1447,13 @@ class Chat extends Component {
         this.setState({ chats: filtered_chats });
       }
     }
-    var messageBody = document.querySelector("#messagesContainer");
-    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+    let messageBody;
+
+    if (document.querySelector('#messagesContainer')) {
+
+      messageBody = document.querySelector('#messagesContainer');
+      messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+    }
   }
 
   QueryStringToJSON(query) {
