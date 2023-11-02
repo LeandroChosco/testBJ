@@ -215,58 +215,9 @@ class Chat extends Component {
 
   renderListChats = (type) => {
     const { index, chats } = this.state;
-    const { setChats, setSOS } = this.props
+    const { getChats, setSOS } = this.props
 
-    firebaseC5Benito
-      .app('c5benito')
-      .firestore()
-      .collection('messages')
-      .orderBy('lastModification', 'desc')
-      .get()
-      .then((docs) => {
-        if (docs.docs.length > 0) {
-          const chats = docs.docs.map((v) => {
-            let value = v.data();
-            value.lastModification = new Date(
-              value.lastModification
-            ).toString();
-            value.id = v.id;
-            return value;
-          });
-          chats.sort((a, b) => {
-            let first = new Date(a.lastModification)
-            let second = new Date(b.lastModification)
-            if (first < second) {
-              return 1
-            } else {
-              return -1
-            }
-          })
-          setChats(chats);
-        }
-      });
-
-    firebaseSos
-      .app("sos")
-      .firestore()
-      .collection(MESSAGES_COLLECTION)
-      // .where("c5_admin_clave", "==", clave_municipal)
-      .orderBy("lastModification", "desc")
-      .get()
-      .then(docs => {
-        const chatSOS = docs.docs.map((i) => {
-          let data = i.data();
-          data.lastModification = new Date(
-            data.lastModification.toDate()
-          ).toString();
-          data.id = i.id;
-          return data;
-        });
-        setSOS(chatSOS)
-        this.loadData()
-      })
-      .catch(err => console.log("ERR", err));
-
+    getChats()
 
     return (
       <div>
@@ -485,7 +436,7 @@ class Chat extends Component {
 
     setTimeout(() => {
       this.setState({ loadingHistorial: false });
-    }, 2000);
+    }, 6000);
 
   }
 
@@ -1159,6 +1110,7 @@ class Chat extends Component {
 
   getInfoCameraUpdate = async (email) => {
     let responseData;
+    console.log("TA")
     await apolloClient.query({
       query: GET_CAMERA_INFO,
       variables: {
@@ -1233,12 +1185,12 @@ class Chat extends Component {
       } else {
         this.props.history.push(`/alarm/${this.state.activeIndex}/${chat.id}`);
       }
-      refSOS
-        .doc(chat.id)
-        .update({ c5Unread: 0 })
-        .then(() => {
-          this.setState({ from: "Chat C5" });
-        });
+      // refSOS
+      //   .doc(chat.id)
+      //   .update({ c5Unread: 0 })
+      //   .then(() => {
+      //     this.setState({ from: "Chat C5" });
+      //   });
     }
     if (chat === undefined && i === -1) {
       if (this.props.history.location.pathname.includes("chat")) {
@@ -1261,12 +1213,12 @@ class Chat extends Component {
           alarmType: chat.alarmType,
           alarm: chat.alarm,
         });
-        refSOS
-          .doc(chat.id)
-          .update({ c5Unread: 0 })
-          .then(() => {
-            this.setState({ text: "", from: "Chat C5" });
-          });
+        // refSOS
+        //   .doc(chat.id)
+        //   .update({ c5Unread: 0 })
+        //   .then(() => {
+        //     this.setState({ text: "", from: "Chat C5" });
+        //   });
       });
     }
   };
@@ -1329,9 +1281,9 @@ class Chat extends Component {
   };
 
   getMessages = (chatId) => {
-    // const {chatFirebase, chats} = this.props
-    // const indexChat = chats.findIndex(e => e.id === chatId)
-    // this.setState({messages: chats[indexChat].messages, chatId})
+    const { chatFirebase, chats } = this.props
+    const indexChat = chats.findIndex(e => e.id === chatId)
+    this.setState({ messages: chats[indexChat].messages, chatId })
     this.messageListener = refSOS.doc(chatId).onSnapshot((snapShot) => {
       this.setState({ messages: snapShot.get("messages"), chatId });
     });
@@ -1411,21 +1363,21 @@ class Chat extends Component {
 
     this.props.stopNotification();
 
-    refSOS
-      .doc(chatId)
-      .update({
-        messages: messagesAux,
-        from: "Chat C5",
-        userUnread: this.props.chats[this.state.index].userUnread
-          ? this.props.chats[this.state.index].userUnread + 1
-          : 1,
-        policeUnread: this.props.chats[this.state.index].policeUnread
-          ? this.props.chats[this.state.index].policeUnread + 1
-          : 1,
-      })
-      .then(() => {
-        this.setState({ text: "" });
-      });
+    // refSOS
+    //   .doc(chatId)
+    //   .update({
+    //     messages: messagesAux,
+    //     from: "Chat C5",
+    //     userUnread: this.props.chats[this.state.index].userUnread
+    //       ? this.props.chats[this.state.index].userUnread + 1
+    //       : 1,
+    //     policeUnread: this.props.chats[this.state.index].policeUnread
+    //       ? this.props.chats[this.state.index].policeUnread + 1
+    //       : 1,
+    //   })
+    //   .then(() => {
+    //     this.setState({ text: "" });
+    //   });
   };
   refreshButton = () => {
 
@@ -1435,75 +1387,13 @@ class Chat extends Component {
     this.changeChat(this.props.chats[chatIndex], chatIndex, true)
   }
 
-  componentDidMount() {
-    const { alarmIndex } = this.props.match.params;
-    if (this.props.chats) {
-      if (alarmIndex) {
-        this.setState({ chats: this.props.chats, activeIndex: alarmIndex });
-      } else {
-        const filtered_chats = this.props.chats.filter(
-          (item) => item.alarmType === this.FILTERSOPTIONS[this.state.tabIndex]
-        );
-        this.setState({ chats: filtered_chats });
-      }
-    }
-    let messageBody;
-
-    if (document.querySelector('#messagesContainer')) {
-
-      messageBody = document.querySelector('#messagesContainer');
-      messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
-    }
-  }
-
-  QueryStringToJSON(query) {
-    query = query.replace("?", "");
-    var pairs = query.split("&");
-
-    var result = {};
-    pairs.forEach(function (pair) {
-      pair = pair.split("=");
-      result[pair[0]] = decodeURIComponent(pair[1] || "");
-    });
-
-    return JSON.parse(JSON.stringify(result));
-  }
-
-  componentWillUnmount() {
-    this.setState({
-      messages: [],
-      chats: [],
-      activeIndex: 0,
-      chatId: "",
-      text: "",
-      from: "",
-      fisrt: {},
-      searching: "",
-      tracking: {},
-      camData: undefined,
-      loading: false,
-      hashUsed: false,
-      personalInformation: {
-        cellPhone: null,
-        address: null,
-        alarmType: null,
-        description: null,
-        alarmSN: null,
-      },
-      optionSelected: "name",
-      marker: null,
-      firebaseSub: null,
-      tabIndex: 0,
-      flagUpdate: 0,
-    });
-  }
-
-  componentDidUpdate(prevProps) {
+  updateChats = (prevProps) => {
     const { alarmIndex, chatId } = this.props.match.params;
     const { chats: chatsPrev } = prevProps;
     const { chats } = this.props;
     // if (this.state.flagUpdate === 0) {
     if (chatsPrev !== chats) {
+      console.log("IF")
       if (
         chats &&
         chatsPrev &&
@@ -1575,12 +1465,85 @@ class Chat extends Component {
             break;
         }
       }
+    } else {
+      console.log("else")
     }
     // }
-    if (document.querySelector("#messagesContainer")) {
-      var messageBody = document.querySelector("#messagesContainer");
+    // if (document.querySelector("#messagesContainer")) {
+    //   var messageBody = document.querySelector("#messagesContainer");
+    //   messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+    // }
+  }
+
+  componentDidMount() {
+    const { alarmIndex } = this.props.match.params;
+
+
+    this.props.history.location.pathname.split("/").length > 2 && this.setState({ showHistorial: !this.state.showHistorial })
+
+    if (this.props.chats) {
+      if (alarmIndex) {
+        this.setState({ chats: this.props.chats, activeIndex: alarmIndex });
+      } else {
+        const filtered_chats = this.props.chats.filter(
+          (item) => item.alarmType === this.FILTERSOPTIONS[this.state.tabIndex]
+        );
+        this.setState({ chats: filtered_chats });
+      }
+    }
+    let messageBody;
+
+    if (document.querySelector('#messagesContainer')) {
+      messageBody = document.querySelector('#messagesContainer');
       messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
     }
+  }
+
+  QueryStringToJSON(query) {
+    query = query.replace("?", "");
+    var pairs = query.split("&");
+
+    var result = {};
+    pairs.forEach(function (pair) {
+      pair = pair.split("=");
+      result[pair[0]] = decodeURIComponent(pair[1] || "");
+    });
+
+    return JSON.parse(JSON.stringify(result));
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      messages: [],
+      chats: [],
+      activeIndex: 0,
+      chatId: "",
+      text: "",
+      from: "",
+      fisrt: {},
+      searching: "",
+      tracking: {},
+      camData: undefined,
+      loading: false,
+      hashUsed: false,
+      personalInformation: {
+        cellPhone: null,
+        address: null,
+        alarmType: null,
+        description: null,
+        alarmSN: null,
+      },
+      optionSelected: "name",
+      marker: null,
+      firebaseSub: null,
+      tabIndex: 0,
+      flagUpdate: 0,
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log("ENTRA", prevProps)
+    // this.updateChats(prevProps);
   }
 }
 
