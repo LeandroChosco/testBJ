@@ -1542,6 +1542,8 @@ class Chat extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log(this.state)
+    console.log(this.props)
     console.log("ENTRA", prevProps)
     // this.updateChats(prevProps);
   }
