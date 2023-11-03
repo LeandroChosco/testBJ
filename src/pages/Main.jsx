@@ -147,7 +147,7 @@ class Main extends Component {
 
       // Cambiar chats: chatVivo por lo que se traiga de Firebase.
       this.setState({ loadChats: true });
-      this._getChats()
+      this._getChats();
     };
 
 
@@ -1115,6 +1115,7 @@ class Main extends Component {
       .firestore()
       .collection('messages')
       .orderBy('lastModification', 'desc')
+      .limit(30)
       .get()
       .then((docs) => {
         if (docs.docs.length > 0) {
@@ -1554,6 +1555,7 @@ class Main extends Component {
                 {...props}
                 chats={this.state.chats}
                 setChats={this._setChats}
+                getAllChats={this._getChats}
                 //historial={this.state.historial} OJO REVISAR ACÁ PARA HACERLO DINÁMICO O NO
                 historial={chatHistorial}
                 userInfo={this.state.userInfo}

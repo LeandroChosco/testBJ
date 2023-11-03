@@ -22,7 +22,6 @@ const ChatGeneral = (props) => {
     // const [allHistorial, setAllHistorial] = useState([]);
 
     const [indexChat, setIndexChat] = useState("");
-    const [messageToSend, setMessageToSend] = useState("");
 
     const [currentChat, setCurrentChat] = useState({});
 
@@ -64,36 +63,36 @@ const ChatGeneral = (props) => {
             ),
         },
     ];
-    const dateFromISO8601 = (internetStandardString) => {
-        const match = new RegExp(/^([A-Z]{3}) ([A-Za-z]{3}) ([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2}) ([A-Za-z]{3}-[0-9]{2}-[0-9]{2}) ([+-][0-9]{2}:[0-9]{2}) (.*)$/).exec(internetStandardString);
-      
-        if (match) {
-          const day = match[1];
-          const month = match[2];
-          const year = match[3];
-          const hour = match[4];
-          const minute = match[5];
-          const second = match[6];
-          const timezone = match[7];
-          const offset = match[8];
-          const text = match[9];
-      
-          // Convertir la zona horaria a una diferencia horaria
-          const offsetInMinutes = (offset.charAt(0) === "-" ? -1 : 1) * (parseInt(offset.slice(1, 3), 10) * 60 + parseInt(offset.slice(4, 6), 10));
-      
-          // Crear un objeto Date con la fecha y hora especificadas
-          const date = new Date(year, month - 1, day, hour, minute, second);
-      
-          // Ajustar la hora de la fecha según la diferencia horaria
-          date.setHours(date.getHours() + offsetInMinutes / 60);
-          date.setMinutes(date.getMinutes() + offsetInMinutes % 60);
-      
-          return date;
-        } else {
-          return null;
-        }
-      };
-      
+    // const dateFromISO8601 = (internetStandardString) => {
+    //     const match = new RegExp(/^([A-Z]{3}) ([A-Za-z]{3}) ([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2}) ([A-Za-z]{3}-[0-9]{2}-[0-9]{2}) ([+-][0-9]{2}:[0-9]{2}) (.*)$/).exec(internetStandardString);
+
+    //     if (match) {
+    //         const day = match[1];
+    //         const month = match[2];
+    //         const year = match[3];
+    //         const hour = match[4];
+    //         const minute = match[5];
+    //         const second = match[6];
+    //         const timezone = match[7];
+    //         const offset = match[8];
+    //         const text = match[9];
+
+    //         // Convertir la zona horaria a una diferencia horaria
+    //         const offsetInMinutes = (offset.charAt(0) === "-" ? -1 : 1) * (parseInt(offset.slice(1, 3), 10) * 60 + parseInt(offset.slice(4, 6), 10));
+
+    //         // Crear un objeto Date con la fecha y hora especificadas
+    //         const date = new Date(year, month - 1, day, hour, minute, second);
+
+    //         // Ajustar la hora de la fecha según la diferencia horaria
+    //         date.setHours(date.getHours() + offsetInMinutes / 60);
+    //         date.setMinutes(date.getMinutes() + offsetInMinutes % 60);
+
+    //         return date;
+    //     } else {
+    //         return null;
+    //     }
+    // };
+
     const renderListChats = (type) => {
         return (
             <div>
@@ -363,70 +362,81 @@ const ChatGeneral = (props) => {
     };
 
     const onKeySend = (e) => {
+        let messageToSend = document.getElementById("messsageTextarea");
         if (e.key === "Enter") {
             e.preventDefault();
             sendMessage();
-            setMessageToSend("");
+            messageToSend.value = "";
         };
     };
 
     const sendMessage = () => {
-        if (messageToSend !== "") {
+
+        let messageToSend = document.getElementById("messsageTextarea");
+        if (messageToSend.value !== "") {
             let messagesAux = [...currentChat.messages];
 
             messagesAux.push({
                 from: user_data.from,
                 dateTime: new Date(),
-                msg: messageToSend, //msg
+                msg: messageToSend.value, //msg
                 userName: user_data.name,
                 userEmail: user_data.email,
             });
 
 
-            setMessageToSend("");
-
+            messageToSend.value = "";
 
             //props.stopNotification();
 
             firebaseC5Benito
-            .app("c5benito")
-            .firestore()
-            .collection("messages")
-              .doc(currentChat.id)
-              .update({
-                messages: messagesAux,
-                from: "Chat C5",
-                userUnread: currentChat.userUnread
-                  ? currentChat.userUnread + 1
-                  : 1,
-                policeUnread: currentChat.policeUnread
-                  ? currentChat.policeUnread + 1
-                  : 1,
-              })
+                .app("c5benito")
+                .firestore()
+                .collection("messages")
+                .doc(currentChat.id)
+                .update({
+                    messages: messagesAux,
+                    from: "Chat C5",
+                    userUnread: currentChat.userUnread
+                        ? currentChat.userUnread + 1
+                        : 1,
+                    policeUnread: currentChat.policeUnread
+                        ? currentChat.policeUnread + 1
+                        : 1,
+                })
+
+            // liveChat();
         }
-        
+
     }
-    const ref = firebaseC5Benito.app("c5benito").firestore().collection("messages");
 
-    const unsubscribe = ref.onSnapshot((snapshot) => {
-      const chats = snapshot.docChanges().map((change) => {
-        let value = change.doc.data();
+    // const liveChat = () => {
+    //     let idx = indexChat;
+    //     setCurrentChat({});
+    //     setLoadingChat(true);
+    //     props.getAllChats();
         
-        value.lastModification =  new Date(dateFromISO8601(value.lastModification)).toString()
-        value.id = change.doc.id;
-        return value;
-      });
-     console.log("chats", chats)
-      unsubscribe();
-    });
-    
+    //     setTimeout(() => {
+    //         setCurrentChat(chats[idx]);
+    //         setLoadingChat(false);
+    //     }, 2000);
+    // }
 
-    // useEffect(() => {
-    //     setAllChats(chats);
-    //     setAllHistorial(historial);
-    // }, [])
- 
-      
+    // const ref = firebaseC5Benito.app("c5benito").firestore().collection("messages");
+
+    // const unsubscribe = ref.onSnapshot((snapshot) => {
+    //   const chats = snapshot.docChanges().map((change) => {
+    //     let value = change.doc.data();
+
+    //     value.lastModification =  new Date(dateFromISO8601(value.lastModification)).toString()
+    //     value.id = change.doc.id;
+    //     return value;
+    //   });
+    // //  console.log("chats", chats)
+    //  unsubscribe();
+    // });
+
+
     return (
         <div
             className={
@@ -831,9 +841,7 @@ const ChatGeneral = (props) => {
                                                                 autoComplete="on"
                                                                 autoCorrect="on"
                                                                 id="messsageTextarea"
-                                                                value={messageToSend}
                                                                 onKeyDown={onKeySend}
-                                                                onChange={(e) => { setMessageToSend(e.target.value) }}
                                                             />
                                                             <Icon
                                                                 name="send"
