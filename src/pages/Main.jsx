@@ -34,6 +34,11 @@ import Settings from "./Settings";
 import AlarmChat from "./AlarmChat/index";
 import Complaint from "./Complaint";
 import ChatTracking from "./ChatTracking";
+
+import ChatGeneral from "./ChatGeneral";
+import chatHistorial from "../historial/chats_General_Benito-Juárez.json"
+import chatVivo from "../historial/chats_General_BJ.json"
+
 import constants from '../constants/constants';
 import Sound from 'react-sound';
 import sonido from '../assets/tonos/notificacion.mp3';
@@ -120,7 +125,8 @@ class Main extends Component {
     datosAlcaldia: {},
     chatFirebase: undefined,
     indexSos: undefined,
-    complaints: []
+    complaints: [],
+    loadChats: false,
   }
 
 
@@ -132,7 +138,15 @@ class Main extends Component {
           ?
           constants.urlPath = data[0].photo_path :
           constants.urlPath
-    })
+    });
+
+    if (!this.state.loadChats) {
+      // setear chats e historial como una única vez y no se pide nunca más a Firebase.
+      // Quedaría ver los snapshot pero podemos vivir sin ellos mientras creo.
+
+      // Cambiar chats: chatVivo por lo que se traiga de Firebase.
+      this.setState({ loadChats: true, chats: chatVivo });
+    };
 
 
     io.sails.url = `${constants.sails_url}`;
@@ -352,7 +366,7 @@ class Main extends Component {
         this.setState({ complaints: newComplaints });
       });
 
-      firebaseC5Benito
+    firebaseC5Benito
       .app('c5cuajimalpa')
       .firestore()
       .collection('analytics')
@@ -909,12 +923,12 @@ class Main extends Component {
     //       sos: docs.docs.map(v => {
     //         let value = v.data();
     //         if (value.lastModification)
-      //         value.lastModification = new Date(value.lastModification.toDate()).toString()
-      //       value.id = v.id
-      //       return value
-      //     })
-      //   })
-      // });
+    //         value.lastModification = new Date(value.lastModification.toDate()).toString()
+    //       value.id = v.id
+    //       return value
+    //     })
+    //   })
+    // });
 
 
     // firebaseSos.app('sos').firestore().collection('support').orderBy("lastModification", "desc").where('clientId', '==', client.id).onSnapshot(docs => {
@@ -1407,7 +1421,7 @@ class Main extends Component {
   render() {
     return (
       <Router>
-        
+
         {
           this.state.roberyNotification.display &&
           <RoberyNotification notificationRoute={this.notificationRoute} userId={this.state.roberyNotification.data} />
@@ -1512,7 +1526,7 @@ class Main extends Component {
           <Route path="/detalles/soporte/:id" exact render={(props) => <DetailsSupport  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
-          <Route
+          {/* <Route
             path="/chat/:alarmIndex?/:chatId?"
             exact
             render={(props) => (
@@ -1524,6 +1538,22 @@ class Main extends Component {
                 userInfo={this.state.userInfo}
                 chatFirebase={this.state.chatFirebase}
                 getChats={this._getChats}
+                stopNotification={() =>
+                  this.setState({ stopNotification: true })
+                }
+              />
+            )}
+          /> */}
+          <Route
+            path="/chat/:alarmIndex?/:chatId?"
+            exact
+            render={(props) => (
+              <ChatGeneral
+                {...props}
+                chats={this.state.chats}
+                //historial={this.state.historial} OJO REVISAR ACÁ PARA HACERLO DINÁMICO O NO
+                historial={chatHistorial}
+                userInfo={this.state.userInfo}
                 stopNotification={() =>
                   this.setState({ stopNotification: true })
                 }
@@ -1570,7 +1600,7 @@ class Main extends Component {
               />
             )}
           />
-                    {/* <Route
+          {/* <Route
             path="/microfonos/:complaintId?"
             exact
             render={(props) => (
