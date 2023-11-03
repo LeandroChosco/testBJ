@@ -133,6 +133,7 @@ class Main extends Component {
   componentDidMount() {
     conections.getClients().then(res => {
       const data = res.data.data.getClients.filter(c => c.name === constants.client);
+      console.log("client aaaaaaaaaaaaaa", data);  
       constants.urlPath =
         data[0].photo_path != null
           ?
@@ -145,7 +146,8 @@ class Main extends Component {
       // Quedaría ver los snapshot pero podemos vivir sin ellos mientras creo.
 
       // Cambiar chats: chatVivo por lo que se traiga de Firebase.
-      this.setState({ loadChats: true, chats: chatVivo });
+      this.setState({ loadChats: true });
+      this._getChats()
     };
 
 
@@ -218,7 +220,7 @@ class Main extends Component {
     if (prevClients !== clients) {
       if (clients && clients.data && clients.data.length > 0) {
         const client = clients.data.find((cl) => cl.name.includes(`${constants.clientFirebase}`));
-        // console.log(client);  
+  
         if (client && client.id) {
           firebaseC5Benito
             .app('c5cuajimalpa')
@@ -554,10 +556,10 @@ class Main extends Component {
     // });
 
     firebaseC5Benito
-      .app('c5cuajimalpa')
+      .app('c5benito')
       .firestore()
       .collection('messages')
-      .where('clientId', '==', client.id)
+      .where('clientId', '==', 1)
       .orderBy('lastModification', 'desc')
       .onSnapshot(docs => {
         let changes = docs.docChanges();
@@ -588,7 +590,7 @@ class Main extends Component {
                 !this.state.fisrtTimeChat &&
                 !this.state.callIsGoing
               ) {
-                // console.log(chats);
+                //console.log("chaaaaatttttss", chats);
                 this.setState({ reproducirSonido: true, chats, stopNotification: false });
                 if (typeof data.alarmType === 'string') {
                   switch (data.alarmType) {
@@ -1551,6 +1553,7 @@ class Main extends Component {
               <ChatGeneral
                 {...props}
                 chats={this.state.chats}
+                setChats={this._setChats}
                 //historial={this.state.historial} OJO REVISAR ACÁ PARA HACERLO DINÁMICO O NO
                 historial={chatHistorial}
                 userInfo={this.state.userInfo}
