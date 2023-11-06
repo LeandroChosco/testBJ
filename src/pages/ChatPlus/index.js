@@ -217,7 +217,7 @@ class Chat extends Component {
     const { index, chats } = this.state;
     const { getChats, setSOS } = this.props
 
-    getChats()
+    // getChats()
 
     return (
       <div>
@@ -1110,7 +1110,7 @@ class Chat extends Component {
 
   getInfoCameraUpdate = async (email) => {
     let responseData;
-    console.log("TA")
+    // console.log("TA")
     await apolloClient.query({
       query: GET_CAMERA_INFO,
       variables: {
@@ -1221,6 +1221,12 @@ class Chat extends Component {
         //   });
       });
     }
+
+    setTimeout(() => {
+      let messageBody = document.querySelector("#messagesContainer");
+      messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+    }, 2010);
+
   };
   changeHistorial = (chat, i) => {
 
@@ -1393,7 +1399,7 @@ class Chat extends Component {
     const { chats } = this.props;
     // if (this.state.flagUpdate === 0) {
     if (chatsPrev !== chats) {
-      console.log("IF")
+      // console.log("IF")
       if (
         chats &&
         chatsPrev &&
@@ -1466,7 +1472,7 @@ class Chat extends Component {
         }
       }
     } else {
-      console.log("else")
+      // console.log("else")
     }
     // }
     // if (document.querySelector("#messagesContainer")) {
@@ -1494,6 +1500,7 @@ class Chat extends Component {
     let messageBody;
 
     if (document.querySelector('#messagesContainer')) {
+      console.log("ENTRA?")
       messageBody = document.querySelector('#messagesContainer');
       messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
     }
@@ -1542,9 +1549,9 @@ class Chat extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.state)
-    console.log(this.props)
-    console.log("ENTRA", prevProps)
+    // console.log(this.state)
+    // console.log(this.props)
+    // console.log("ENTRA", prevProps)
     // this.updateChats(prevProps);
   }
 }

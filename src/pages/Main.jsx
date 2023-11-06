@@ -133,7 +133,7 @@ class Main extends Component {
   componentDidMount() {
     conections.getClients().then(res => {
       const data = res.data.data.getClients.filter(c => c.name === constants.client);
-      console.log("client aaaaaaaaaaaaaa", data);  
+      // console.log("client aaaaaaaaaaaaaa", data);  
       constants.urlPath =
         data[0].photo_path != null
           ?
@@ -1529,13 +1529,13 @@ class Main extends Component {
           <Route path="/detalles/soporte/:id" exact render={(props) => <DetailsSupport  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/detalles/:id" exact render={(props) => <Details  {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/mobile_help/:id" exact render={(props) => <MobileHelp  {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
-          {/* <Route
+          <Route
             path="/chat/:alarmIndex?/:chatId?"
             exact
             render={(props) => (
               <Chat
-                // chats={this.state.chats.filter(item => (typeof item.alarmType !== 'string'))}
-                chats={this.state.chats}
+                chats={this.state.chats.filter(item => (typeof item.alarmType !== 'string'))}
+                // chats={this.state.chats}
                 setSOS={this._setSOS}
                 {...props}
                 userInfo={this.state.userInfo}
@@ -1544,9 +1544,10 @@ class Main extends Component {
                 stopNotification={() =>
                   this.setState({ stopNotification: true })
                 }
-              />
-            )}
-          /> */}
+                />
+                )}
+                /> 
+          {/* 
           <Route
             path="/chat/:alarmIndex?/:chatId?"
             exact
@@ -1565,6 +1566,7 @@ class Main extends Component {
               />
             )}
           />
+          */}
           <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/dashboard" exact render={(props) => <Dashboard showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
