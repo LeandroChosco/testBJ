@@ -214,8 +214,8 @@ class Chat extends Component {
     this.setState({ optionSelected: value });
 
   renderListChats = (type) => {
-    const { index, chats } = this.state;
-    const { getChats, setSOS } = this.props
+    const { index } = this.state;
+    const { chats, setSOS } = this.props
 
     // getChats()
 
@@ -443,7 +443,6 @@ class Chat extends Component {
   render() {
     const { alarmIndex } = this.props.match.params;
     const {
-      chats,
       chatId,
       index,
       loading,
@@ -455,6 +454,7 @@ class Chat extends Component {
       showHistorial,
       currentHistorial,
     } = this.state;
+    const { chats } = this.props
     if (index !== undefined && chatId === "" && chats.length > 0) {
       this.setState({ chatId: null });
     }
@@ -1139,6 +1139,7 @@ class Chat extends Component {
 
   changeChat = async (chat, i, flag = true, newMsg) => {
     // this.setState({ infoCurrentCamera: {}})
+
     this.getUserInfo(chat);
 
     // if(this.state.infoCurrentCamera){
@@ -1289,6 +1290,7 @@ class Chat extends Component {
   getMessages = (chatId) => {
     const { chatFirebase, chats } = this.props
     const indexChat = chats.findIndex(e => e.id === chatId)
+    console.log(indexChat)
     this.setState({ messages: chats[indexChat].messages, chatId })
     this.messageListener = refSOS.doc(chatId).onSnapshot((snapShot) => {
       this.setState({ messages: snapShot.get("messages"), chatId });

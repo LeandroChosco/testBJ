@@ -1114,7 +1114,7 @@ class Main extends Component {
       .app('c5benito')
       .firestore()
       .collection('messages')
-      .orderBy('lastModification', 'desc')
+      .orderBy('updateDate', 'desc')
       .limit(30)
       .get()
       .then((docs) => {
@@ -1127,6 +1127,7 @@ class Main extends Component {
             value.id = v.id;
             return value;
           });
+          // console.log(chats)
           chats.sort((a, b) => {
             let first = new Date(a.lastModification)
             let second = new Date(b.lastModification)
