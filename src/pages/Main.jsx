@@ -1129,8 +1129,8 @@ class Main extends Component {
           });
           // console.log(chats)
           chats.sort((a, b) => {
-            let first = new Date(a.lastModification)
-            let second = new Date(b.lastModification)
+            let first = new Date(a.updateDate)
+            let second = new Date(b.updateDate)
             if (first < second) {
               return 1
             } else {

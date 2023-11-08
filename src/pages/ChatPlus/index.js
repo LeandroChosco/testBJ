@@ -271,7 +271,7 @@ class Chat extends Component {
                         justifyContent: "space-between",
                       }}
                     >
-                      <h4 style={{ marginRight: "0.3rem" }}>{chat.user_name}</h4> <p>{date}</p>
+                      <h4 style={{ marginRight: "0.3rem" }}>{chat.user_name}</h4> <p>{chat.updateDate}</p>
                     </div>
                     {chat.active !== undefined && chat.active ? (
                       <p>
@@ -1290,7 +1290,7 @@ class Chat extends Component {
   getMessages = (chatId) => {
     const { chatFirebase, chats } = this.props
     const indexChat = chats.findIndex(e => e.id === chatId)
-    console.log(indexChat)
+    // console.log(indexChat)
     this.setState({ messages: chats[indexChat].messages, chatId })
     this.messageListener = refSOS.doc(chatId).onSnapshot((snapShot) => {
       this.setState({ messages: snapShot.get("messages"), chatId });
@@ -1338,6 +1338,18 @@ class Chat extends Component {
 
     // VER LINEAS COMENTADAS PARA FINALIZAR ACTIVIDAD
 
+    function formatDate(date) {
+
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const seconds = date.getSeconds().toString().padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
     // let newMessageDate = moment(new Date()).format("DD-MM-YYYY")
     let messagesAux = messages.map((e) => e);
 
@@ -1371,21 +1383,25 @@ class Chat extends Component {
 
     this.props.stopNotification();
 
-    // refSOS
-    //   .doc(chatId)
-    //   .update({
-    //     messages: messagesAux,
-    //     from: "Chat C5",
-    //     userUnread: this.props.chats[this.state.index].userUnread
-    //       ? this.props.chats[this.state.index].userUnread + 1
-    //       : 1,
-    //     policeUnread: this.props.chats[this.state.index].policeUnread
-    //       ? this.props.chats[this.state.index].policeUnread + 1
-    //       : 1,
-    //   })
-    //   .then(() => {
-    //     this.setState({ text: "" });
-    //   });
+    let dateToUpdate = new Date();
+    console.log(formatDate(dateToUpdate));
+
+    refSOS
+      .doc(chatId)
+      .update({
+        updateDate: formatDate(dateToUpdate),
+        messages: messagesAux,
+        from: "Chat C5",
+        userUnread: this.props.chats[this.state.index].userUnread
+          ? this.props.chats[this.state.index].userUnread + 1
+          : 1,
+        policeUnread: this.props.chats[this.state.index].policeUnread
+          ? this.props.chats[this.state.index].policeUnread + 1
+          : 1,
+      })
+      .then(() => {
+        this.setState({ text: "" });
+      });
   };
   refreshButton = () => {
 
