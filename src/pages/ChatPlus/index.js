@@ -1384,7 +1384,6 @@ class Chat extends Component {
     this.props.stopNotification();
 
     let dateToUpdate = new Date();
-    console.log(formatDate(dateToUpdate));
 
     refSOS
       .doc(chatId)

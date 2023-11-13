@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Header, Button, Grid } from "semantic-ui-react";
 
 import firebaseC5cuajimalpa from "../../constants/configC5CJ";
-const handleComplaintsRedirect = (userId,chatId) => {
+const handleComplaintsRedirect = (userId, chatId) => {
   return window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/${userId}/${chatId}`)
 }
 
@@ -16,11 +16,25 @@ const UserDetailsComponent = props => {
       if (chat.user_creation === dataUser.u_user_id) {
         userFound = true;
         // props.propsIniciales.history.push("/chat?f=2&u=" + dataUser.u_user_id);
-        handleComplaintsRedirect(chat.c5Unread,chat.id)
+        handleComplaintsRedirect(chat.c5Unread, chat.id)
       }
     });
 
     if (!userFound) {
+
+      function formatDate(date) {
+
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      }
+
+      let dateToUpdate = new Date();
       //console.log('no encontrado, cree chat');
       //console.log(props.dataCamValue);
       firebaseC5cuajimalpa
@@ -28,6 +42,7 @@ const UserDetailsComponent = props => {
         .firestore()
         .collection("messages")
         .add({
+          updateDate: formatDate(dateToUpdate),
           c5Unread: 0,
           lastModification: new Date(),
           from: "Chat Soporte",
@@ -43,15 +58,15 @@ const UserDetailsComponent = props => {
           user_name: dataUser.display_name,
           user_cam: dataCamValue
         })
-        .then((data)=>{
+        .then((data) => {
           setTimeout(() => {
-            handleComplaintsRedirect(0,data.id)
+            handleComplaintsRedirect(0, data.id)
           }, 1000);
         })
 
         ;
 
-     
+
     }
   };
 
