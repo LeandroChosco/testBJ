@@ -34,11 +34,6 @@ import Settings from "./Settings";
 import AlarmChat from "./AlarmChat/index";
 import Complaint from "./Complaint";
 import ChatTracking from "./ChatTracking";
-
-import ChatGeneral from "./ChatGeneral";
-import chatHistorial from "../historial/chats_General_Benito-Juárez.json"
-import chatVivo from "../historial/chats_General_BJ.json"
-
 import constants from '../constants/constants';
 import Sound from 'react-sound';
 import sonido from '../assets/tonos/notificacion.mp3';
@@ -140,17 +135,25 @@ class Main extends Component {
           constants.urlPath
     })
 
-    if (!this.state.loadChats) {
-      // setear chats e historial como una única vez y no se pide nunca más a Firebase.
-      // Quedaría ver los snapshot pero podemos vivir sin ellos mientras creo.
-
-      // Cambiar chats: chatVivo por lo que se traiga de Firebase.
-      this.setState({ loadChats: true });
-      this._getChats();
-      this._getSOS();
-    };
-
-
+    firebaseC5Benito
+      .app('c5benito')
+      .firestore()
+      .collection('messages')
+      .orderBy('lastModification', 'desc')
+      .get()
+      .then((docs) => {
+        if (docs.docs.length > 0) {
+          const chats = docs.docs.map((v) => {
+            let value = v.data();
+            value.lastModification = new Date(
+              value.lastModification.toDate()
+            ).toString();
+            value.id = v.id;
+            return value;
+          });
+          this.setState({ chats });
+        }
+      });
     io.sails.url = `${constants.sails_url}`;
     io.socket.get('/termicfiles', (data) => {
       let covidTmp = [];
@@ -215,18 +218,21 @@ class Main extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { clients: prevClients } = prevProps;
-    const { clients } = this.props;
-    if (prevClients !== clients) {
-      if (clients && clients.data && clients.data.length > 0) {
-        const client = clients.data.find((cl) => cl.name.includes(`${constants.clientFirebase}`));
+    const { limits: prevLimits } = prevProps;
+    const { limits } = this.props;
+    if (prevLimits !== limits) {
+      if (limits && limits.data && limits.data.id) {
+        this.setState({
+          datosAlcaldia: limits.data
+        })
+        // const { clave_municipal } = limits.data;
 
-        if (client && client.id) {
-          firebaseC5Benito
-            .app('c5cuajimalpa')
+
+        firebaseC5Benito
+            .app('c5benito')
             .firestore()
             .collection('messages')
-            .where('clientId', '==', client.id)
+            // .where('clientId', '==', client.id)
             .orderBy('lastModification', 'desc')
             .get()
             .then((docs) => {
@@ -250,14 +256,29 @@ class Main extends Component {
               }
             });
 
-          if (this.state.isAuthenticated) {
-            this.loadFirebaseSnapshot(client); //Socket en tiempo real, avisa notificaciones nuevas
-            this.loadData(client);  //Enlista todas las notificaciones
-          }
-        }
+        firebaseSos
+          .app("sos")
+          .firestore()
+          .collection(MESSAGES_COLLECTION)
+          // .where("c5_admin_clave", "==", clave_municipal)
+          .orderBy("lastModification", "desc")
+          .get()
+          .then(docs => {
+            const chatSOS = docs.docs.map((i) => {
+              let data = i.data();
+              data.lastModification = new Date(
+                data.lastModification.toDate()
+              ).toString();
+              data.id = i.id;
+              return data;
+            });
+            this.setState({ stateSos: chatSOS })
+            this.loadData()
+          });
       }
     }
   }
+
   //  ----- matches reales ----
   /* sortConvs = (a, b) => {
     if (b.DwellTime < a.DwellTime) {
@@ -372,7 +393,7 @@ class Main extends Component {
     io.socket.on('/matchApi', this.matchesApiHandler)
  
     */
-    //  console.log(this.state.datosAlcaldia);
+  //  console.log(this.state.datosAlcaldia);
     if (this.state.datosAlcaldia && this.state.datosAlcaldia.clave_municipal) {
       firebaseSos
         .app('sos')
@@ -862,7 +883,7 @@ class Main extends Component {
 
         }
       });
-    firebaseSos
+      firebaseSos
       .app("sos")
       .firestore()
       .collection('event')
@@ -893,24 +914,24 @@ class Main extends Component {
         let countShoot = 0
         let countBrokenGlass = 0
         let fechas = []
-        let today = moment().format('L'),
-          fechaActual = [],
-          fecha1 = [],
-          fecha2 = [],
-          fecha3 = [],
-          fecha4 = [],
-          fecha5 = [],
-          fecha6 = [],
-          infoDay = null;
+        let today =  moment().format('L'),
+            fechaActual = [],
+            fecha1 = [],
+            fecha2 = [],
+            fecha3 = [],
+            fecha4 = [],
+            fecha5 = [],
+            fecha6 = [],
+            infoDay = null;
         docs.docs.map(doc => {
           //let DateEvent = doc.data().eventDate.split(" ", 1)
           //let formatDate = moment(DateEvent, 'YYYY/MM/DD').format('L')
           fechas.push(doc.data())
-          if (doc.data().nameEvent === 'Detección de disparo de arma') {
-            countShoot += 1
+          if(doc.data().nameEvent === 'Detección de disparo de arma'){
+            countShoot +=1
           }
-          if (doc.data().nameEvent === 'Rotura de vidrio') {
-            countBrokenGlass += 1
+          if(doc.data().nameEvent === 'Rotura de vidrio'){
+            countBrokenGlass +=1
           }
         })
         /* fechas.map((day) =>{
@@ -932,7 +953,7 @@ class Main extends Component {
           })  
         } */
         let newEvents = docs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        this.setState({ eventMic: newEvents, countEvent: [countShoot, countBrokenGlass], fechasEventos: [fechaActual, fecha1, fecha2, fecha3, fecha4, fecha5, fecha6] });
+        this.setState({ eventMic: newEvents, countEvent: [countShoot, countBrokenGlass], fechasEventos:[fechaActual, fecha1, fecha2, fecha3, fecha4, fecha5, fecha6] });
       });
 
   }
@@ -999,6 +1020,7 @@ class Main extends Component {
 
 
 
+  
 
   notificationRoute = () => {
     this.setState({
@@ -1297,7 +1319,7 @@ class Main extends Component {
   render() {
     return (
       <Router>
-
+        
         {
           this.state.roberyNotification.display &&
           <RoberyNotification notificationRoute={this.notificationRoute} userId={this.state.roberyNotification.data} />
@@ -1412,7 +1434,7 @@ class Main extends Component {
             )}
           />
           <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
-          <Route path="/dashboard" exact render={(props) => <Dashboard showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} totalEvents={this.state.countEvent} fechasEventos={this.state.fechasEventos} />} />
+          <Route path="/dashboard" exact render={(props) => <Dashboard showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} totalEvents={this.state.countEvent}  fechasEventos={this.state.fechasEventos} />} />
           <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path='/personas' exact render={(props) => <Sospechosos showMatches={this.state.showMatches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this - this._toggleControls} />} />

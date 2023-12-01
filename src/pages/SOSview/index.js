@@ -191,8 +191,6 @@ class Chat extends Component {
       this.setState({ chats: filtered, activeIndex: tabIndex ? tabIndex : activeIndex });
     }
 
-    console.log(this.props)
-
     let messageBody;
 
     if (document.querySelector('#messagesContainer')) {
@@ -215,7 +213,9 @@ class Chat extends Component {
       this.setState({ chats: filteredChats, flagUpdate: 1 });
       if (chatId) {
         const idxChat = filteredChats.findIndex((e) => e.id === chatId);
-        this.changeChat(filteredChats[idxChat], idxChat, false);
+        if (!window.location.pathname.includes(chatId)) {
+          this.changeChat(filteredChats[idxChat], idxChat, false);
+        }
       }
     }
     // }
@@ -727,7 +727,7 @@ class Chat extends Component {
   _changeView = () => {
     let { showHistorial } = this.state;
 
-    if(window.location.pathname.includes("sos")){
+    if (window.location.pathname.includes("sos")) {
       this.props.history.push(`/sos`)
     } else {
       this.props.history.push(`/seguimiento`)
@@ -1227,10 +1227,9 @@ class Chat extends Component {
       this.setState({ from: "Seguimiento" });
     }
 
-
-
-    // this.getMessages(chat.id); --->     this.messageListener = refSOS.doc(chatId).onSnapshot((snapShot) => {
-    //   this.setState({ messages: snapShot.get("messages"), chatId });
+    this.getMessages(chat.id);
+    // this.messageListener = refSOS.doc(chat.id).onSnapshot((snapShot) => {
+    //   this.setState({ messages: snapShot.get("messages"), chatId: chat.id });
     // });
     this.setState({ loading: true, camData: undefined }, () => {
 
