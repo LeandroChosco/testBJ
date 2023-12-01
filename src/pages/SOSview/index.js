@@ -191,6 +191,8 @@ class Chat extends Component {
       this.setState({ chats: filtered, activeIndex: tabIndex ? tabIndex : activeIndex });
     }
 
+    console.log(this.props)
+
     let messageBody;
 
     if (document.querySelector('#messagesContainer')) {
