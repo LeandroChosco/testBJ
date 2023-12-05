@@ -139,15 +139,17 @@ class Main extends Component {
     //   .app('c5benito')
     //   .firestore()
     //   .collection('messages')
-    //   .orderBy('lastModification', 'desc')
+    //   .orderBy('updateDate', 'desc')
+    //   .limit(30)
     //   .get()
     //   .then((docs) => {
     //     if (docs.docs.length > 0) {
     //       const chats = docs.docs.map((v) => {
     //         let value = v.data();
-    //         value.lastModification = new Date(
-    //           value.lastModification.toDate()
-    //         ).toString();
+    //         // value.lastModification = new Date(
+    //         //   value.lastModification.toDate()
+    //         // ).toString();
+    //         value.lastModification = new Date(value.lastModification).toString();
     //         value.id = v.id;
     //         return value;
     //       });
@@ -256,25 +258,25 @@ class Main extends Component {
         //       }
         //     });
 
-        firebaseSos
-          .app("sos")
-          .firestore()
-          .collection(MESSAGES_COLLECTION)
-          // .where("c5_admin_clave", "==", clave_municipal)
-          .orderBy("lastModification", "desc")
-          .get()
-          .then(docs => {
-            const chatSOS = docs.docs.map((i) => {
-              let data = i.data();
-              data.lastModification = new Date(
-                data.lastModification.toDate()
-              ).toString();
-              data.id = i.id;
-              return data;
-            });
-            this.setState({ stateSos: chatSOS })
-            this.loadData()
-          });
+        // firebaseSos
+        //   .app("sos")
+        //   .firestore()
+        //   .collection(MESSAGES_COLLECTION)
+        //   // .where("c5_admin_clave", "==", clave_municipal)
+        //   .orderBy("lastModification", "desc")
+        //   .get()
+        //   .then(docs => {
+        //     const chatSOS = docs.docs.map((i) => {
+        //       let data = i.data();
+        //       data.lastModification = new Date(
+        //         data.lastModification.toDate()
+        //       ).toString();
+        //       data.id = i.id;
+        //       return data;
+        //     });
+        //     this.setState({ stateSos: chatSOS })
+        //     this.loadData()
+        //   });
       }
     }
   }
@@ -623,118 +625,118 @@ class Main extends Component {
         this.setState({ complaints: newComplaints });
       });
 
-    // firebaseC5Benito
-    //   .app('c5benito')
-    //   .firestore()
-    //   .collection('messages')
-    //   .orderBy('lastModification', 'desc')
-    //   .onSnapshot(docs => {
-    //     let changes = docs.docChanges();
-    //     if (changes.length > 0) {
-    //       const index = changes[0].oldIndex;
-    //       const data = changes[0].doc.data();
-    //       const changed_id = changes[0].doc.id;
-    //       if (this.state.chats[index]) {
-    //         if (this.state.chats[index].messages.length === data.messages.length) {
-    //           this.setState({ stopNotification: true });
-    //         } else {
-    //           if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
-    //           const chats = docs.docs.map(v => {
-    //             let value = v.data()
-    //             value.lastModification = new Date(
-    //               value.lastModification.toDate()
-    //             ).toString()
-    //             value.id = v.id
-    //             return value
-    //           });
+    firebaseC5Benito
+      .app('c5benito')
+      .firestore()
+      .collection('messages')
+      .orderBy('lastModification', 'desc')
+      .onSnapshot(docs => {
+        let changes = docs.docChanges();
+        if (changes.length > 0) {
+          const index = changes[0].oldIndex;
+          const data = changes[0].doc.data();
+          const changed_id = changes[0].doc.id;
+          if (this.state.chats[index]) {
+            if (this.state.chats[index].messages.length === data.messages.length) {
+              this.setState({ stopNotification: true });
+            } else {
+              if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
+              const chats = docs.docs.map(v => {
+                let value = v.data()
+                value.lastModification = new Date(
+                  value.lastModification.toDate()
+                ).toString()
+                value.id = v.id
+                return value
+              });
 
-    //           if (
-    //             this.state.showNotification &&
-    //             !this.state.fisrtTimeChat &&
-    //             !this.state.callIsGoing
-    //           ) {
-    //             this.setState({ reproducirSonido: true, chats, stopNotification: false });
-    //             if (typeof data.alarmType === 'string') {
-    //               switch (data.alarmType) {
-    //                 case 'Policia':
-    //                   this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Policia', 'success', 'Ir a chat', 0, changes[0].doc.id)
-    //                   break;
-    //                 case 'Fuego':
-    //                   this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Fuego', 'success', 'Ir a chat', 1, changes[0].doc.id)
-    //                   break;
-    //                 case 'Médico':
-    //                   this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Médico', 'success', 'Ir a chat', 2, changes[0].doc.id)
-    //                   break;
-    //                 default:
-    //                   break;
-    //               }
-    //             } else {
-    //               this.showNot(
-    //                 'Mensaje de usuario',
-    //                 'Nuevo mensaje de usuario',
-    //                 'success',
-    //                 'Ver detalles',
-    //                 0,
-    //                 changes[0].doc.id
-    //               );
-    //             }
-    //           }
-    //         }
-    //       } else {
-    //         const { chats } = this.state;
-    //         if (changes[0].type === "added" && chats.length > 0) {
-    //           let founded = this.state.chats.find(item => item.id === changed_id);
+              if (
+                this.state.showNotification &&
+                !this.state.fisrtTimeChat &&
+                !this.state.callIsGoing
+              ) {
+                this.setState({ reproducirSonido: true, chats, stopNotification: false });
+                if (typeof data.alarmType === 'string') {
+                  switch (data.alarmType) {
+                    case 'Policia':
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Policia', 'success', 'Ir a chat', 0, changes[0].doc.id)
+                      break;
+                    case 'Fuego':
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Fuego', 'success', 'Ir a chat', 1, changes[0].doc.id)
+                      break;
+                    case 'Médico':
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Médico', 'success', 'Ir a chat', 2, changes[0].doc.id)
+                      break;
+                    default:
+                      break;
+                  }
+                } else {
+                  this.showNot(
+                    'Mensaje de usuario',
+                    'Nuevo mensaje de usuario',
+                    'success',
+                    'Ver detalles',
+                    0,
+                    changes[0].doc.id
+                  );
+                }
+              }
+            }
+          } else {
+            const { chats } = this.state;
+            if (changes[0].type === "added" && chats.length > 0) {
+              let founded = this.state.chats.find(item => item.id === changed_id);
 
-    //           if (!founded) {
-    //             if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
-    //             const chats = docs.docs.map(v => {
-    //               let value = v.data()
-    //               value.lastModification = new Date(
-    //                 value.lastModification.toDate()
-    //               ).toString()
-    //               value.id = v.id
-    //               return value
-    //             });
-    //             this.setState({ reproducirSonido: true, chats, stopNotification: false });
-    //             if (
-    //               this.state.showNotification &&
-    //               !this.state.fisrtTimeChat &&
-    //               !this.state.callIsGoing
-    //             ) {
-    //               this.showNot(
-    //                 'Mensaje de usuario',
-    //                 'Nuevo mensaje de usuario',
-    //                 'success',
-    //                 'Ver detalles',
-    //                 0,
-    //                 changes[0].doc.id
-    //               );
-    //             }
-    //           }
-    //         }
-    //       }
-    //       //   let index = changes[0].oldIndex;
-    //       //   let data = changes[0].doc.data();
-    //       //   if (this.state.chats[index]) {
-    //       //     if (
-    //       //       this.state.chats[index].messages.length === data.messages.length
-    //       //     ) {
-    //       //       this.setState({ stopNotification: true });
-    //       //     }
-    //       //   }
-    //       // if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
-    //       // const chats = docs.docs.map(v => {
-    //       //     let value = v.data()
-    //       //     value.lastModification = new Date(
-    //       //         value.lastModification.toDate()
-    //       //     ).toString()
-    //       //     value.id = v.id
-    //       //     return value
-    //       // })
+              if (!founded) {
+                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+                const chats = docs.docs.map(v => {
+                  let value = v.data()
+                  value.lastModification = new Date(
+                    value.lastModification.toDate()
+                  ).toString()
+                  value.id = v.id
+                  return value
+                });
+                this.setState({ reproducirSonido: true, chats, stopNotification: false });
+                if (
+                  this.state.showNotification &&
+                  !this.state.fisrtTimeChat &&
+                  !this.state.callIsGoing
+                ) {
+                  this.showNot(
+                    'Mensaje de usuario',
+                    'Nuevo mensaje de usuario',
+                    'success',
+                    'Ver detalles',
+                    0,
+                    changes[0].doc.id
+                  );
+                }
+              }
+            }
+          }
+          //   let index = changes[0].oldIndex;
+          //   let data = changes[0].doc.data();
+          //   if (this.state.chats[index]) {
+          //     if (
+          //       this.state.chats[index].messages.length === data.messages.length
+          //     ) {
+          //       this.setState({ stopNotification: true });
+          //     }
+          //   }
+          // if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
+          // const chats = docs.docs.map(v => {
+          //     let value = v.data()
+          //     value.lastModification = new Date(
+          //         value.lastModification.toDate()
+          //     ).toString()
+          //     value.id = v.id
+          //     return value
+          // })
 
-    //       // this.setState({ chats })
-    //     }
-    //   })
+          // this.setState({ chats })
+        }
+      })
 
 
 
@@ -958,38 +960,38 @@ class Main extends Component {
 
   }
 
-  // _getChats = () => {
-  //   firebaseC5Benito
-  //     .app('c5benito')
-  //     .firestore()
-  //     .collection('messages')
-  //     .orderBy('updateDate', 'desc')
-  //     .limit(20)
-  //     .get()
-  //     .then((docs) => {
-  //       if (docs.docs.length > 0) {
-  //         const chats = docs.docs.map((v) => {
-  //           let value = v.data();
-  //           value.lastModification = new Date(
-  //             value.lastModification
-  //           ).toString();
-  //           value.id = v.id;
-  //           return value;
-  //         });
-  //         // console.log(chats)
-  //         chats.sort((a, b) => {
-  //           let first = new Date(a.updateDate)
-  //           let second = new Date(b.updateDate)
-  //           if (first < second) {
-  //             return 1
-  //           } else {
-  //             return -1
-  //           }
-  //         })
-  //         this._setChats(chats);
-  //       }
-  //     });
-  // }
+  _getChats = () => {
+    firebaseC5Benito
+      .app('c5benito')
+      .firestore()
+      .collection('messages')
+      .orderBy('updateDate', 'desc')
+      .limit(20)
+      .get()
+      .then((docs) => {
+        if (docs.docs.length > 0) {
+          const chats = docs.docs.map((v) => {
+            let value = v.data();
+            value.lastModification = new Date(
+              value.lastModification
+            ).toString();
+            value.id = v.id;
+            return value;
+          });
+          // console.log(chats)
+          chats.sort((a, b) => {
+            let first = new Date(a.updateDate)
+            let second = new Date(b.updateDate)
+            if (first < second) {
+              return 1
+            } else {
+              return -1
+            }
+          })
+          this._setChats(chats);
+        }
+      });
+  }
 
   _getSOS = () => {
     firebaseSos
@@ -1425,6 +1427,8 @@ class Main extends Component {
               <Chat
                 chats={this.state.chats.filter(item => (typeof item.alarmType !== 'string'))}
                 {...props}
+                getChats={this._getChats}
+                setChats={this._setChats}
                 userInfo={this.state.userInfo}
                 chatFirebase={this.state.chatFirebase}
                 stopNotification={() =>

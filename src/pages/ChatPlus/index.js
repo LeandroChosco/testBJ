@@ -22,7 +22,7 @@ import "./style.css";
 import conections from "../../conections";
 import { LANG } from "../../constants/token";
 import { MESSAGES_COLLECTION } from "../../Api/sos";
-import chatGeneral from '../../historial/chats_General_Benito-Juárez.json';
+import chatGeneral from '../../historial/BJ_Chat-General.json';
 
 const refSOS = firebaseC5Benito
   .app("c5benito")
@@ -161,7 +161,7 @@ class Chat extends Component {
       target: { value },
     } = event;
     const { activeIndex } = this.state;
-    const { chats: chatsProps } = this.props;
+    const { chats: chatsProps, setChats, getChats } = this.props;
     const { optionSelected, searching } = this.state;
     this.setState({ searching: value.trim() }, () => {
       let filterData = chatsProps;
@@ -188,7 +188,9 @@ class Chat extends Component {
             expresion.test(c.user_name)
           );
         }
-        this.setState({ chats: newFilterSearch });
+        // console.log(newFilterSearch)
+        // setChats(newFilterSearch);
+        // this.setState({ chats: newFilterSearch });
       }
       if (value.trim().length === 0) {
         let newChats = chatsProps;
@@ -197,7 +199,8 @@ class Chat extends Component {
             (c) => c.alarmType === this.FILTERSOPTIONS[activeIndex]
           );
         }
-        this.setState({ chats: newChats });
+        // setChats(newChats);
+        // this.setState({ chats: newChats });
       }
     });
   };
@@ -215,9 +218,11 @@ class Chat extends Component {
 
   renderListChats = (type) => {
     const { index } = this.state;
-    const { chats, setSOS } = this.props
+    const { chats, setSOS, getChats } = this.props
 
-    // getChats()
+    if(chats.length === 0){
+      getChats();
+    }
 
     return (
       <div>
@@ -432,7 +437,7 @@ class Chat extends Component {
       this.props.history.push(`/chat`)
     }
 
-    this.setState({ showHistorial: !showHistorial, loadingHistorial: true, currentHistorial: {} });
+    this.setState({ showHistorial: !showHistorial, loadingHistorial: true, currentHistorial: {}, index: "" });
 
     setTimeout(() => {
       this.setState({ loadingHistorial: false });
@@ -997,7 +1002,7 @@ class Chat extends Component {
                                     style={{ fontSize: 13, paddingRight: 0 }}
                                   >
                                     {localStorage.getItem(LANG) === "english" ? "The user " : "El usuario "}
-                                    <b>{chats[index].user_name}</b>
+                                    <b>{chats[index] ? chats[index].user_name : ""}</b>
                                     {localStorage.getItem(LANG) === "english" ? " is " : " se encuentra "}
                                     <b>{localStorage.getItem(LANG) === "english" ? "deactivated" : "DESACTIVADO"}</b>
                                   </div>
@@ -1231,7 +1236,7 @@ class Chat extends Component {
   };
   changeHistorial = (chat, i) => {
 
-    this.setState({ messages: chat.messages, currentHistorial: chat })
+    this.setState({ messages: chat.messages, currentHistorial: chat, index: i })
 
     this.getUserInfo(chat);
 
@@ -1270,7 +1275,7 @@ class Chat extends Component {
       this.props.history.push(`/chat/${this.state.activeIndex}/${chat.id}`);
     }
 
-    this.getMessages(chat.id);
+    this.getMessages(chat.id, true);
 
     this.setState({ loading: true, camData: undefined }, () => {
 
@@ -1287,14 +1292,16 @@ class Chat extends Component {
 
   };
 
-  getMessages = (chatId) => {
+  getMessages = (chatId, historial) => {
     const { chatFirebase, chats } = this.props
     const indexChat = chats.findIndex(e => e.id === chatId)
     // console.log(indexChat)
-    this.setState({ messages: chats[indexChat].messages, chatId })
-    this.messageListener = refSOS.doc(chatId).onSnapshot((snapShot) => {
-      this.setState({ messages: snapShot.get("messages"), chatId });
-    });
+    if (!historial) {
+      this.setState({ messages: chats[indexChat].messages, chatId })
+      this.messageListener = refSOS.doc(chatId).onSnapshot((snapShot) => {
+        this.setState({ messages: snapShot.get("messages"), chatId });
+      });
+    }
   };
 
   checkKey = (event) => {
@@ -1504,16 +1511,16 @@ class Chat extends Component {
 
     this.props.history.location.pathname.split("/").length > 2 && this.setState({ showHistorial: !this.state.showHistorial })
 
-    if (this.props.chats) {
-      if (alarmIndex) {
-        this.setState({ chats: this.props.chats, activeIndex: alarmIndex });
-      } else {
-        const filtered_chats = this.props.chats.filter(
-          (item) => item.alarmType === this.FILTERSOPTIONS[this.state.tabIndex]
-        );
-        this.setState({ chats: filtered_chats });
-      }
-    }
+    // if (this.props.chats) {
+    //   if (alarmIndex) {
+    //     this.setState({ chats: this.props.chats, activeIndex: alarmIndex });
+    //   } else {
+    //     const filtered_chats = this.props.chats.filter(
+    //       (item) => item.alarmType === this.FILTERSOPTIONS[this.state.tabIndex]
+    //     );
+    //     this.setState({ chats: filtered_chats });
+    //   }
+    // }
     let messageBody;
 
     if (document.querySelector('#messagesContainer')) {
