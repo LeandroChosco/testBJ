@@ -97,7 +97,7 @@ class Chat extends Component {
     infoCurrentCamera: {},
     idClient: null,
     statusCurrentChat: true,
-    showHistorial: false,
+    showHistorial: true,
     loadingHistorial: false,
     currentHistorial: {},
   };
@@ -220,7 +220,7 @@ class Chat extends Component {
     const { index } = this.state;
     const { chats, setSOS, getChats } = this.props
 
-    if(chats.length === 0){
+    if (chats.length === 0) {
       getChats();
     }
 
@@ -494,15 +494,15 @@ class Chat extends Component {
         <div className="row fullHeight">
           <div className="col-4 userList">
             <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem" }}>
-              <p>Historial</p>
+              <p>Chats</p>
               <Radio
                 toggle
                 onClick={this._changeView}
                 id="toggle24"
-                checked={this.state.showHistorial}
+                checked={!this.state.showHistorial}
                 style={{ margin: "0 1rem" }}
               />
-              <p>Chats</p>
+              <p>Historial</p>
             </div>
             <hr />
 
