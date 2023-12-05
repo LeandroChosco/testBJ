@@ -360,7 +360,10 @@ class Dashboard extends Component {
             <Card>
               <CardHeader>
                 <h3 className="pt-2" style={{ display: "flex" }}>Emociones registradas</h3>
-                <p><i>Actualizado el {this.state.lastMood.split(" ")[0]} a las {this.state.lastMood.split(" ")[1]}.</i></p>
+                {
+                  this.state.lastMood &&
+                  <p><i>Actualizado el {this.state.lastMood.split(" ")[0]} a las {this.state.lastMood.split(" ")[1]}.</i></p>
+                }
               </CardHeader>
               <div className='col-12 chart' align='center'>
                 {
@@ -378,7 +381,10 @@ class Dashboard extends Component {
               <Card style={{ height: "30rem" }}>
                 <CardHeader>
                   <h3 className="pt-2" style={{ display: "flex" }}>Personas registradas</h3>
-                  <p><i>Actualizado el {this.state.lastAges.split(" ")[0]} a las {this.state.lastAges.split(" ")[1]}.</i></p>
+                  {
+                    this.state.lastAges &&
+                    <p><i>Actualizado el {this.state.lastAges.split(" ")[0]} a las {this.state.lastAges.split(" ")[1]}.</i></p>
+                  }
                 </CardHeader>          {
                   // this.state.loadTotalRecognition ?
                   //   <Loading />
@@ -391,7 +397,10 @@ class Dashboard extends Component {
               <Card style={{ height: "30rem" }}>
                 <CardHeader>
                   <h3 style={{ display: "flex" }}>Edades registradas</h3>
-                  <p><i>Actualizado el {this.state.lastAges.split(" ")[0]} a las {this.state.lastAges.split(" ")[1]}.</i></p>
+                  {
+                    this.state.lastAges &&
+                    <p><i>Actualizado el {this.state.lastAges.split(" ")[0]} a las {this.state.lastAges.split(" ")[1]}.</i></p>
+                  }
                 </CardHeader>
                 {
                   // this.state.loadRecognitionAges ?
@@ -478,12 +487,12 @@ class Dashboard extends Component {
           v.fecha = moment(v.fecha).format("DD-MM-YYYY");
           return v;
         }),
-        lastCreatedCams: data.return_all_cams.sort((a,b) => a.num_cam - b.num_cam),
+        lastCreatedCams: data.return_all_cams.sort((a, b) => a.num_cam - b.num_cam),
         loadingCamsGrid: false
       });
     });
     conections.dashboardRecognitionMood().then(this.processMood);
-    conections.dashboardDemographicFilter().then(this.processRegisterMood);
+    // conections.dashboardDemographicFilter().then(this.processRegisterMood);
     conections.dashboardTotalRecognition().then(this.processDetected);
     conections.dashboardTickets().then(this.processTicketsData);
     conections.dashboardRecognitionAges().then(this.processAges);
@@ -521,7 +530,7 @@ class Dashboard extends Component {
     let data = [];
     let indexes = [];
 
-    response.data.data.current_date.forEach((v) => {
+    response.data.data && response.data.data.current_date.forEach((v) => {
       if (v && v.mood !== "") {
         v.mood = MOODS[v.mood] ? MOODS[v.mood] : v.mood;
         if (indexes.indexOf(v.mood) > -1) {
@@ -581,7 +590,7 @@ class Dashboard extends Component {
   processDetected = (response) => {
     const data = response.data.data;
     // console.log(data)
-    if (Object.keys(data).length > 0) {
+    if (data && Object.keys(data).length > 0) {
       this.setState({
         genderDetected: [
           {

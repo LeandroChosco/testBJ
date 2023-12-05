@@ -247,6 +247,12 @@ class Main extends Component {
         this.setState({
           datosAlcaldia: limits.data
         })
+
+        if (this.state.isAuthenticated) {
+          this.loadData();  //Enlista todas las notificaciones
+          this.loadFirebaseSnapshot(); //Socket en tiempo real, avisa notificaciones nuevas
+        }
+
         // const { clave_municipal } = limits.data;
 
 
@@ -278,25 +284,25 @@ class Main extends Component {
         //       }
         //     });
 
-        firebaseSos
-          .app("sos")
-          .firestore()
-          .collection(MESSAGES_COLLECTION)
-          // .where("c5_admin_clave", "==", clave_municipal)
-          .orderBy("lastModification", "desc")
-          .get()
-          .then(docs => {
-            const chatSOS = docs.docs.map((i) => {
-              let data = i.data();
-              data.lastModification = new Date(
-                data.lastModification.toDate()
-              ).toString();
-              data.id = i.id;
-              return data;
-            });
-            this.setState({ stateSos: chatSOS })
-            this.loadData()
-          });
+        // firebaseSos
+        //   .app("sos")
+        //   .firestore()
+        //   .collection(MESSAGES_COLLECTION)
+        //   // .where("c5_admin_clave", "==", clave_municipal)
+        //   .orderBy("lastModification", "desc")
+        //   .get()
+        //   .then(docs => {
+        //     const chatSOS = docs.docs.map((i) => {
+        //       let data = i.data();
+        //       data.lastModification = new Date(
+        //         data.lastModification.toDate()
+        //       ).toString();
+        //       data.id = i.id;
+        //       return data;
+        //     });
+        //     this.setState({ stateSos: chatSOS })
+        //     this.loadData()
+        //   });
       }
     }
   }
@@ -415,7 +421,6 @@ class Main extends Component {
     io.socket.on('/matchApi', this.matchesApiHandler)
  
     */
-    //  console.log(this.state.datosAlcaldia);
     if (this.state.datosAlcaldia && this.state.datosAlcaldia.clave_municipal) {
       firebaseSos
         .app('sos')
@@ -471,145 +476,145 @@ class Main extends Component {
           }
         });
 
-      firebaseSos
-        .app("sos")
-        .firestore()
-        .collection(MESSAGES_COLLECTION)
-        // .where("c5_admin_clave", "==", this.state.datosAlcaldia.clave_municipal)
-        .orderBy("lastModification", "desc")
-        .onSnapshot((docs) => {
-          if (this.state.stateSos.length > 0) {
-            let changes = docs.docChanges();
-            if (changes.length > 0 && changes.length < 5) {
-              const changed_data = changes[0].doc.data();
-              const changed_id = changes[0].doc.id;
-              if (changes[0].type === "added") {
+      // firebaseSos
+      //   .app("sos")
+      //   .firestore()
+      //   .collection(MESSAGES_COLLECTION)
+      //   // .where("c5_admin_clave", "==", this.state.datosAlcaldia.clave_municipal)
+      //   .orderBy("lastModification", "desc")
+      //   .onSnapshot((docs) => {
+      //     if (this.state.stateSos.length > 0) {
+      //       let changes = docs.docChanges();
+      //       if (changes.length > 0 && changes.length < 5) {
+      //         const changed_data = changes[0].doc.data();
+      //         const changed_id = changes[0].doc.id;
+      //         if (changes[0].type === "added") {
 
-                let founded = this.state.stateSos.find(item => item.id === changed_id);
-                if (!founded) {
-                  if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
-                  changed_data['id'] = changed_id;
-                  let aux_chat_sos = [...this.state.stateSos];
-                  aux_chat_sos.unshift(changed_data)
-                  this.setState({
-                    stateSos: aux_chat_sos
-                  });
-                  if (
-                    this.state.showNotification &&
-                    !this.state.fisrtTimeChat &&
-                    !this.state.callIsGoing
-                  ) {
-                    this.setState({ reproducirSonido: true });
-                    switch (changed_data.trackingType) {
-                      case 'Seguridad':
-                        this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
-                        break;
-                      case 'Protección Civil':
-                        this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
-                        break;
-                      case 'Emergencia Médica':
-                        this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
-                        break;
-                      case 'Seguimiento Por Hora':
-                        this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
-                        break;
-                      case 'Seguimiento Por Destino':
-                        this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
-                        break;
-                      default:
-                        break;
-                    }
-                  }
-                }
-              } else {
-                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
-                const find_conv_index = this.state.stateSos.findIndex(item => item.id === changed_id);
-                let aux_sos_chat = [...this.state.stateSos];
-                let aux_obj = Object.assign(changed_data, {});
-                if (find_conv_index >= 0) {
-                  if (this.state.stateSos[find_conv_index].messages.length !== changed_data.messages.length) {
-                    const aux_array = [...changed_data.messages];
-                    const current_message = aux_array.pop();
-                    aux_obj = {
-                      ...aux_obj,
-                      lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
-                      id: changed_id
-                    }
-                    aux_sos_chat[find_conv_index] = aux_obj;
-                    this.setState({
-                      stateSos: aux_sos_chat
-                    }, () => {
-                      if (
-                        this.state.showNotification &&
-                        !this.state.fisrtTimeChat &&
-                        !this.state.callIsGoing
-                      ) {
-                        if (current_message && current_message.from.includes("user")) {
-                          this.setState({ reproducirSonido: true });
-                          switch (changed_data.trackingType) {
-                            case 'Seguridad':
-                              this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
-                              break;
-                            case 'Protección Civil':
-                              this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
-                              break;
-                            case 'Emergencia Médica':
-                              this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
-                              break;
-                            case 'Seguimiento Por Hora':
-                              this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
-                              break;
-                            case 'Seguimiento Por Destino':
-                              this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
-                              break;
-                            default:
-                              break;
-                          }
-                        }
-                      }
-                    });
-                  } else {
-                    if (this.state.stateSos[find_conv_index].critical_state !== changed_data.critical_state) {
-                      aux_obj = {
-                        ...aux_obj,
-                        lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
-                        id: changed_id
-                      }
-                      aux_sos_chat[find_conv_index] = aux_obj;
-                      this.setState({
-                        stateSos: aux_sos_chat
-                      }, () => {
-                        this.setState({ reproducirSonido: true });
-                        switch (changed_data.trackingType) {
-                          case 'Seguimiento Por Hora':
-                            this.showTrackingNot("Seguimiento - Por Hora", "Cambio en el nivel de criticidad", "error", "Ver detalles", 0, changed_id);
-                            break;
-                          case 'Seguimiento Por Destino':
-                            this.showTrackingNot("Seguimiento - Por Destino", "Cambio en el nivel de criticidad", "error", "Ver detalles", 1, changed_id);
-                            break;
-                          default:
-                            break;
-                        }
-                      })
-                    } else if (this.state.stateSos[find_conv_index].c5Unread !== changed_data.c5Unread) {
-                      aux_obj = {
-                        ...aux_obj,
-                        lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
-                        id: changed_id
-                      }
-                      aux_sos_chat[find_conv_index] = aux_obj;
-                      this.setState({
-                        stateSos: aux_sos_chat
-                      })
-                    } else {
+      //           let founded = this.state.stateSos.find(item => item.id === changed_id);
+      //           if (!founded) {
+      //             if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+      //             changed_data['id'] = changed_id;
+      //             let aux_chat_sos = [...this.state.stateSos];
+      //             aux_chat_sos.unshift(changed_data)
+      //             this.setState({
+      //               stateSos: aux_chat_sos
+      //             });
+      //             if (
+      //               this.state.showNotification &&
+      //               !this.state.fisrtTimeChat &&
+      //               !this.state.callIsGoing
+      //             ) {
+      //               this.setState({ reproducirSonido: true });
+      //               switch (changed_data.trackingType) {
+      //                 case 'Seguridad':
+      //                   this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+      //                   break;
+      //                 case 'Protección Civil':
+      //                   this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+      //                   break;
+      //                 case 'Emergencia Médica':
+      //                   this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
+      //                   break;
+      //                 case 'Seguimiento Por Hora':
+      //                   this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+      //                   break;
+      //                 case 'Seguimiento Por Destino':
+      //                   this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+      //                   break;
+      //                 default:
+      //                   break;
+      //               }
+      //             }
+      //           }
+      //         } else {
+      //           if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+      //           const find_conv_index = this.state.stateSos.findIndex(item => item.id === changed_id);
+      //           let aux_sos_chat = [...this.state.stateSos];
+      //           let aux_obj = Object.assign(changed_data, {});
+      //           if (find_conv_index >= 0) {
+      //             if (this.state.stateSos[find_conv_index].messages.length !== changed_data.messages.length) {
+      //               const aux_array = [...changed_data.messages];
+      //               const current_message = aux_array.pop();
+      //               aux_obj = {
+      //                 ...aux_obj,
+      //                 lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+      //                 id: changed_id
+      //               }
+      //               aux_sos_chat[find_conv_index] = aux_obj;
+      //               this.setState({
+      //                 stateSos: aux_sos_chat
+      //               }, () => {
+      //                 if (
+      //                   this.state.showNotification &&
+      //                   !this.state.fisrtTimeChat &&
+      //                   !this.state.callIsGoing
+      //                 ) {
+      //                   if (current_message && current_message.from.includes("user")) {
+      //                     this.setState({ reproducirSonido: true });
+      //                     switch (changed_data.trackingType) {
+      //                       case 'Seguridad':
+      //                         this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+      //                         break;
+      //                       case 'Protección Civil':
+      //                         this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+      //                         break;
+      //                       case 'Emergencia Médica':
+      //                         this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
+      //                         break;
+      //                       case 'Seguimiento Por Hora':
+      //                         this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+      //                         break;
+      //                       case 'Seguimiento Por Destino':
+      //                         this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+      //                         break;
+      //                       default:
+      //                         break;
+      //                     }
+      //                   }
+      //                 }
+      //               });
+      //             } else {
+      //               if (this.state.stateSos[find_conv_index].critical_state !== changed_data.critical_state) {
+      //                 aux_obj = {
+      //                   ...aux_obj,
+      //                   lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+      //                   id: changed_id
+      //                 }
+      //                 aux_sos_chat[find_conv_index] = aux_obj;
+      //                 this.setState({
+      //                   stateSos: aux_sos_chat
+      //                 }, () => {
+      //                   this.setState({ reproducirSonido: true });
+      //                   switch (changed_data.trackingType) {
+      //                     case 'Seguimiento Por Hora':
+      //                       this.showTrackingNot("Seguimiento - Por Hora", "Cambio en el nivel de criticidad", "error", "Ver detalles", 0, changed_id);
+      //                       break;
+      //                     case 'Seguimiento Por Destino':
+      //                       this.showTrackingNot("Seguimiento - Por Destino", "Cambio en el nivel de criticidad", "error", "Ver detalles", 1, changed_id);
+      //                       break;
+      //                     default:
+      //                       break;
+      //                   }
+      //                 })
+      //               } else if (this.state.stateSos[find_conv_index].c5Unread !== changed_data.c5Unread) {
+      //                 aux_obj = {
+      //                   ...aux_obj,
+      //                   lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+      //                   id: changed_id
+      //                 }
+      //                 aux_sos_chat[find_conv_index] = aux_obj;
+      //                 this.setState({
+      //                   stateSos: aux_sos_chat
+      //                 })
+      //               } else {
 
-                    }
-                  }
-                }
-              }
-            }
-          }
-        });
+      //               }
+      //             }
+      //           }
+      //         }
+      //       }
+      //     }
+      //   });
     }
 
     firebaseSos
@@ -645,118 +650,119 @@ class Main extends Component {
         this.setState({ complaints: newComplaints });
       });
 
-    firebaseC5Benito
-      .app('c5benito')
-      .firestore()
-      .collection('messages')
-      .orderBy('lastModification', 'desc')
-      .onSnapshot(docs => {
-        let changes = docs.docChanges();
-        if (changes.length > 0) {
-          const index = changes[0].oldIndex;
-          const data = changes[0].doc.data();
-          const changed_id = changes[0].doc.id;
-          if (this.state.chats[index]) {
-            if (this.state.chats[index].messages.length === data.messages.length) {
-              this.setState({ stopNotification: true });
-            } else {
-              if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
-              const chats = docs.docs.map(v => {
-                let value = v.data()
-                value.lastModification = new Date(
-                  value.lastModification.toDate()
-                ).toString()
-                value.id = v.id
-                return value
-              });
+    // firebaseC5Benito
+    //   .app('c5benito')
+    //   .firestore()
+    //   .collection('messages')
+    //   .orderBy('lastModification', 'desc')
+    //   .onSnapshot(docs => {
+    //     let changes = docs.docChanges();
+    //     if (changes.length > 0) {
+    //       const index = changes[0].oldIndex;
+    //       const data = changes[0].doc.data();
+    //       const changed_id = changes[0].doc.id;
+    //       if (this.state.chats[index]) {
+    //         if (this.state.chats[index].messages.length === data.messages.length) {
+    //           this.setState({ stopNotification: true });
+    //         } else {
+    //           if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
+    //           const chats = docs.docs.map(v => {
+    //             let value = v.data()
+    //             value.lastModification = new Date(
+    //               value.lastModification
+    //             ).toString()
+    //             value.id = v.id
+    //             return value
+    //           });
 
-              if (
-                this.state.showNotification &&
-                !this.state.fisrtTimeChat &&
-                !this.state.callIsGoing
-              ) {
-                this.setState({ reproducirSonido: true, chats, stopNotification: false });
-                if (typeof data.alarmType === 'string') {
-                  switch (data.alarmType) {
-                    case 'Policia':
-                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Policia', 'success', 'Ir a chat', 0, changes[0].doc.id)
-                      break;
-                    case 'Fuego':
-                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Fuego', 'success', 'Ir a chat', 1, changes[0].doc.id)
-                      break;
-                    case 'Médico':
-                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Médico', 'success', 'Ir a chat', 2, changes[0].doc.id)
-                      break;
-                    default:
-                      break;
-                  }
-                } else {
-                  this.showNot(
-                    'Mensaje de usuario',
-                    'Nuevo mensaje de usuario',
-                    'success',
-                    'Ver detalles',
-                    0,
-                    changes[0].doc.id
-                  );
-                }
-              }
-            }
-          } else {
-            const { chats } = this.state;
-            if (changes[0].type === "added" && chats.length > 0) {
-              let founded = this.state.chats.find(item => item.id === changed_id);
+    //           if (
+    //             this.state.showNotification &&
+    //             !this.state.fisrtTimeChat &&
+    //             !this.state.callIsGoing
+    //           ) {
+    //             this.setState({ reproducirSonido: true, chats, stopNotification: false });
+    //             if (typeof data.alarmType === 'string') {
+    //               switch (data.alarmType) {
+    //                 case 'Policia':
+    //                   this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Policia', 'success', 'Ir a chat', 0, changes[0].doc.id)
+    //                   break;
+    //                 case 'Fuego':
+    //                   this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Fuego', 'success', 'Ir a chat', 1, changes[0].doc.id)
+    //                   break;
+    //                 case 'Médico':
+    //                   this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Médico', 'success', 'Ir a chat', 2, changes[0].doc.id)
+    //                   break;
+    //                 default:
+    //                   break;
+    //               }
+    //             } else {
+    //               this.showNot(
+    //                 'Mensaje de usuario',
+    //                 'Nuevo mensaje de usuario',
+    //                 'success',
+    //                 'Ver detalles',
+    //                 0,
+    //                 changes[0].doc.id
+    //               );
+    //             }
+    //           }
+    //         }
+    //       } else {
+    //         const { chats } = this.state;
+    //         if (changes[0].type === "added" && chats.length > 0) {
+    //           let founded = this.state.chats.find(item => item.id === changed_id);
 
-              if (!founded) {
-                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
-                const chats = docs.docs.map(v => {
-                  let value = v.data()
-                  value.lastModification = new Date(
-                    value.lastModification.toDate()
-                  ).toString()
-                  value.id = v.id
-                  return value
-                });
-                this.setState({ reproducirSonido: true, chats, stopNotification: false });
-                if (
-                  this.state.showNotification &&
-                  !this.state.fisrtTimeChat &&
-                  !this.state.callIsGoing
-                ) {
-                  this.showNot(
-                    'Mensaje de usuario',
-                    'Nuevo mensaje de usuario',
-                    'success',
-                    'Ver detalles',
-                    0,
-                    changes[0].doc.id
-                  );
-                }
-              }
-            }
-          }
-          //   let index = changes[0].oldIndex;
-          //   let data = changes[0].doc.data();
-          //   if (this.state.chats[index]) {
-          //     if (
-          //       this.state.chats[index].messages.length === data.messages.length
-          //     ) {
-          //       this.setState({ stopNotification: true });
-          //     }
-          //   }
-          // if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
-          // const chats = docs.docs.map(v => {
-          //     let value = v.data()
-          //     value.lastModification = new Date(
-          //         value.lastModification.toDate()
-          //     ).toString()
-          //     value.id = v.id
-          //     return value
-          // })
+    //           if (!founded) {
+    //             if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+    //             const chats = docs.docs.map(v => {
+    //               let value = v.data()
+    //               // value.lastModification = new Date(
+    //               //   value.lastModification.toDate()
+    //               // ).toString()
+    //               value.lastModification = new Date(value.lastModification).toString();
+    //               value.id = v.id
+    //               return value
+    //             });
+    //             this.setState({ reproducirSonido: true, chats, stopNotification: false });
+    //             if (
+    //               this.state.showNotification &&
+    //               !this.state.fisrtTimeChat &&
+    //               !this.state.callIsGoing
+    //             ) {
+    //               this.showNot(
+    //                 'Mensaje de usuario',
+    //                 'Nuevo mensaje de usuario',
+    //                 'success',
+    //                 'Ver detalles',
+    //                 0,
+    //                 changes[0].doc.id
+    //               );
+    //             }
+    //           }
+    //         }
+    //       }
+    //       //   let index = changes[0].oldIndex;
+    //       //   let data = changes[0].doc.data();
+    //       //   if (this.state.chats[index]) {
+    //       //     if (
+    //       //       this.state.chats[index].messages.length === data.messages.length
+    //       //     ) {
+    //       //       this.setState({ stopNotification: true });
+    //       //     }
+    //       //   }
+    //       // if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
+    //       // const chats = docs.docs.map(v => {
+    //       //     let value = v.data()
+    //       //     value.lastModification = new Date(
+    //       //         value.lastModification.toDate()
+    //       //     ).toString()
+    //       //     value.id = v.id
+    //       //     return value
+    //       // })
 
-          // this.setState({ chats })
-        }
-      })
+    //       // this.setState({ chats })
+    //     }
+    //   })
 
 
 
@@ -978,6 +984,267 @@ class Main extends Component {
         this.setState({ eventMic: newEvents, countEvent: [countShoot, countBrokenGlass], fechasEventos: [fechaActual, fecha1, fecha2, fecha3, fecha4, fecha5, fecha6] });
       });
 
+  }
+
+  loadFirebaseSnapshot = () => {
+    firebaseC5Benito
+      .app('c5benito')
+      .firestore()
+      .collection('messages')
+      .orderBy('updateDate', 'desc')
+      .onSnapshot(docs => {
+        let changes = docs.docChanges();
+        if (changes.length > 0) {
+          const index = changes[0].oldIndex;
+          const data = changes[0].doc.data();
+          const changed_id = changes[0].doc.id;
+          if (this.state.chats[index]) {
+            if (this.state.chats[index].messages.length === data.messages.length) {
+              this.setState({ stopNotification: true });
+            } else {
+              if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
+              const chats = docs.docs.map(v => {
+                let value = v.data()
+                value.lastModification = new Date(
+                  value.lastModification
+                ).toString()
+                value.id = v.id
+                return value
+              });
+
+              if (
+                this.state.showNotification &&
+                !this.state.fisrtTimeChat &&
+                !this.state.callIsGoing &&
+                data.messages[data.messages.length - 1].from === "user"
+              ) {
+                this.setState({ reproducirSonido: true, chats, stopNotification: false });
+                if (typeof data.alarmType === 'string') {
+                  switch (data.alarmType) {
+                    case 'Policia':
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Policia', 'success', 'Ir a chat', 0, changes[0].doc.id)
+                      break;
+                    case 'Fuego':
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Fuego', 'success', 'Ir a chat', 1, changes[0].doc.id)
+                      break;
+                    case 'Médico':
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Médico', 'success', 'Ir a chat', 2, changes[0].doc.id)
+                      break;
+                    default:
+                      break;
+                  }
+                } else {
+                  this.showNot(
+                    'Mensaje de usuario',
+                    'Nuevo mensaje de usuario',
+                    'success',
+                    'Ver detalles',
+                    0,
+                    changes[0].doc.id
+                  );
+                }
+              }
+            }
+          } else {
+            const { chats } = this.state;
+            if (changes[0].type === "added" && chats.length > 0) {
+              let founded = this.state.chats.find(item => item.id === changed_id);
+
+              let data = changes[0].doc.data();
+
+              if (!founded) {
+                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+                const chats = docs.docs.map(v => {
+                  let value = v.data()
+                  // value.lastModification = new Date(
+                  //   value.lastModification.toDate()
+                  // ).toString()
+                  value.lastModification = new Date(value.lastModification).toString();
+                  value.id = v.id
+                  return value
+                });
+                // this.setState({ reproducirSonido: true, chats, stopNotification: false });
+                if (
+                  this.state.showNotification &&
+                  !this.state.fisrtTimeChat &&
+                  !this.state.callIsGoing && 
+                  data.messages[data.messages.length - 1].from === "user"
+                  ) {
+                  this.setState({ reproducirSonido: true, chats, stopNotification: false });
+                  this.showNot(
+                    'Mensaje de usuario',
+                    'Nuevo mensaje de usuario',
+                    'success',
+                    'Ver detalles',
+                    0,
+                    changes[0].doc.id
+                  );
+                }
+              }
+            }
+          }
+          //   let index = changes[0].oldIndex;
+          //   let data = changes[0].doc.data();
+          //   if (this.state.chats[index]) {
+          //     if (
+          //       this.state.chats[index].messages.length === data.messages.length
+          //     ) {
+          //       this.setState({ stopNotification: true });
+          //     }
+          //   }
+          // if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
+          // const chats = docs.docs.map(v => {
+          //     let value = v.data()
+          //     value.lastModification = new Date(
+          //         value.lastModification.toDate()
+          //     ).toString()
+          //     value.id = v.id
+          //     return value
+          // })
+
+          // this.setState({ chats })
+        }
+      })
+
+    firebaseSos
+      .app("sos")
+      .firestore()
+      .collection(MESSAGES_COLLECTION)
+      // .where("c5_admin_clave", "==", this.state.datosAlcaldia.clave_municipal)
+      .orderBy("lastModification", "desc")
+      .onSnapshot((docs) => {
+        if (this.state.stateSos.length > 0) {
+          let changes = docs.docChanges();
+          if (changes.length > 0 && changes.length < 5) {
+            const changed_data = changes[0].doc.data();
+            const changed_id = changes[0].doc.id;
+            if (changes[0].type === "added") {
+
+              let founded = this.state.stateSos.find(item => item.id === changed_id);
+              if (!founded) {
+                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+                changed_data['id'] = changed_id;
+                let aux_chat_sos = [...this.state.stateSos];
+                aux_chat_sos.unshift(changed_data)
+                this.setState({
+                  stateSos: aux_chat_sos
+                });
+                if (
+                  this.state.showNotification &&
+                  !this.state.fisrtTimeChat &&
+                  !this.state.callIsGoing
+                ) {
+                  this.setState({ reproducirSonido: true });
+                  switch (changed_data.trackingType) {
+                    case 'Seguridad':
+                      this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                      break;
+                    case 'Protección Civil':
+                      this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+                      break;
+                    case 'Emergencia Médica':
+                      this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
+                      break;
+                    case 'Seguimiento Por Hora':
+                      this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                      break;
+                    case 'Seguimiento Por Destino':
+                      this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+                      break;
+                    default:
+                      break;
+                  }
+                }
+              }
+            } else {
+              if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+              const find_conv_index = this.state.stateSos.findIndex(item => item.id === changed_id);
+              let aux_sos_chat = [...this.state.stateSos];
+              let aux_obj = Object.assign(changed_data, {});
+              if (find_conv_index >= 0) {
+                if (this.state.stateSos[find_conv_index].messages.length !== changed_data.messages.length) {
+                  const aux_array = [...changed_data.messages];
+                  const current_message = aux_array.pop();
+                  aux_obj = {
+                    ...aux_obj,
+                    lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+                    id: changed_id
+                  }
+                  aux_sos_chat[find_conv_index] = aux_obj;
+                  this.setState({
+                    stateSos: aux_sos_chat
+                  }, () => {
+                    if (
+                      this.state.showNotification &&
+                      !this.state.fisrtTimeChat &&
+                      !this.state.callIsGoing
+                    ) {
+                      if (current_message && current_message.from.includes("user")) {
+                        this.setState({ reproducirSonido: true });
+                        switch (changed_data.trackingType) {
+                          case 'Seguridad':
+                            this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                            break;
+                          case 'Protección Civil':
+                            this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+                            break;
+                          case 'Emergencia Médica':
+                            this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
+                            break;
+                          case 'Seguimiento Por Hora':
+                            this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                            break;
+                          case 'Seguimiento Por Destino':
+                            this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+                            break;
+                          default:
+                            break;
+                        }
+                      }
+                    }
+                  });
+                } else {
+                  if (this.state.stateSos[find_conv_index].critical_state !== changed_data.critical_state) {
+                    aux_obj = {
+                      ...aux_obj,
+                      lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+                      id: changed_id
+                    }
+                    aux_sos_chat[find_conv_index] = aux_obj;
+                    this.setState({
+                      stateSos: aux_sos_chat
+                    }, () => {
+                      this.setState({ reproducirSonido: true });
+                      switch (changed_data.trackingType) {
+                        case 'Seguimiento Por Hora':
+                          this.showTrackingNot("Seguimiento - Por Hora", "Cambio en el nivel de criticidad", "error", "Ver detalles", 0, changed_id);
+                          break;
+                        case 'Seguimiento Por Destino':
+                          this.showTrackingNot("Seguimiento - Por Destino", "Cambio en el nivel de criticidad", "error", "Ver detalles", 1, changed_id);
+                          break;
+                        default:
+                          break;
+                      }
+                    })
+                  } else if (this.state.stateSos[find_conv_index].c5Unread !== changed_data.c5Unread) {
+                    aux_obj = {
+                      ...aux_obj,
+                      lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+                      id: changed_id
+                    }
+                    aux_sos_chat[find_conv_index] = aux_obj;
+                    this.setState({
+                      stateSos: aux_sos_chat
+                    })
+                  } else {
+
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
   }
 
   _getChats = () => {

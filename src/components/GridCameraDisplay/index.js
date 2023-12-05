@@ -125,7 +125,7 @@ class GridCameraDisplay extends Component {
 		let { activeIndex, historialIndex, historialConections, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays, filterCount, typeMBOX, isAxxonSearch, axxonList, loadingUpdate, gridActive } = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, is_filter } = this.props;
 
-		
+
 		if (document.getElementById("gridCameraControl") && document.getElementById("iconGrid")) {
 			let gridCameraControl = document.getElementById("gridCameraControl");
 			let iconGrid = document.getElementById("iconGrid");
@@ -452,7 +452,7 @@ class GridCameraDisplay extends Component {
 										</div>
 									</>
 									:
-									<div className="col-8 platesgrid" align="center">
+									<div className="col-7 platesgrid" align="center">
 										<CurveGridCamera camera={selectedCamera.dataCamValue} stateHeight="200" dataGraphic={true} />
 									</div>
 									:
@@ -466,7 +466,7 @@ class GridCameraDisplay extends Component {
 									{localStorage.getItem(LANG) === "english" ? "History" : "Historial"}
 									<br />
 
-									{selectedCamera.dataCamValue.type_camare_id === 2 &&
+									{(selectedCamera.dataCamValue.type_camare_id === 2 && !selectedCamera.dataCamValue.is_lpr) &&
 										<Tab
 											align="center"
 											menu={{ secondary: true, pointing: true }}

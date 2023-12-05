@@ -1143,6 +1143,13 @@ class Chat extends Component {
   }
 
   changeChat = async (chat, i, flag = true, newMsg) => {
+    
+    const {chats, setChats} = this.props
+
+    const auxChats = [...chats];
+    const findIndex = auxChats.findIndex(el => el.id === chat.id);
+    auxChats[findIndex].c5Unread = 0;
+    setChats(auxChats)
     // this.setState({ infoCurrentCamera: {}})
 
     this.getUserInfo(chat);
@@ -1219,12 +1226,12 @@ class Chat extends Component {
           alarmType: chat.alarmType,
           alarm: chat.alarm,
         });
-        // refSOS
-        //   .doc(chat.id)
-        //   .update({ c5Unread: 0 })
-        //   .then(() => {
-        //     this.setState({ text: "", from: "Chat C5" });
-        //   });
+        refSOS
+          .doc(chat.id)
+          .update({ c5Unread: 0 })
+          .then(() => {
+            this.setState({ text: "", from: "Chat C5" });
+          });
       });
     }
 
@@ -1509,7 +1516,7 @@ class Chat extends Component {
     const { alarmIndex } = this.props.match.params;
 
 
-    this.props.history.location.pathname.split("/").length > 2 && this.setState({ showHistorial: !this.state.showHistorial })
+    // this.props.history.location.pathname.split("/").length > 2 && this.setState({ showHistorial: !this.state.showHistorial })
 
     // if (this.props.chats) {
     //   if (alarmIndex) {
@@ -1524,7 +1531,6 @@ class Chat extends Component {
     let messageBody;
 
     if (document.querySelector('#messagesContainer')) {
-      console.log("ENTRA?")
       messageBody = document.querySelector('#messagesContainer');
       messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
     }
