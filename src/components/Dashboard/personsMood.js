@@ -17,14 +17,37 @@ const MOODS_EMOJIS = {
   Enojado: angryEmoji
 }
 
+const fakeMood = [
+  {
+    mood: "Neutral",
+    total: 3714
+  },
+  {
+    mood: "Sorprendido",
+    total: 3393
+  },
+  {
+    mood: "Triste",
+    total: 3122
+  },
+  {
+    mood: "Feliz",
+    total: 3193
+  },
+  {
+    mood: "Enojado",
+    total: 3122
+  },
+]
+
 const PersonsMood = (props) => {
-  const { personsMood } = props;
+  // const { personsMood } = props;
 
   return (
     <ul className="cardlist">
       {
-        personsMood.length > 0 ?
-          personsMood.map((item, index) => item.mood !== "" && (
+        fakeMood.length > 0 ?
+          fakeMood.map((item, index) => item.mood !== "" && (
             <li style={{ padding: "1.5rem", marginRight: "1rem" }} key={index}>
               <Row>
                 <Col>
