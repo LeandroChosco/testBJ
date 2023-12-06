@@ -514,7 +514,7 @@ class GridCameraDisplay extends Component {
 
 									{selectedCamera.dataCamValue ? selectedCamera.dataCamValue.is_lpr ? this._showPlates(true, selectedCamera) : null : null}
 
-									{selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ? this._showPlates(false, selectedCamera) : null : null}
+									{/* {selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ? this._showPlates(false, selectedCamera) : null : null} */}
 
 									{/*  ---matches reales---
 								{
