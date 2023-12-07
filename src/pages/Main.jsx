@@ -997,6 +997,17 @@ class Main extends Component {
         if (changes.length > 0) {
           const index = changes[0].oldIndex;
           const data = changes[0].doc.data();
+          const id_change = changes[0].doc.id;
+
+          if(this.state.chats.length > 0){
+            const auxChats = [...this.state.chats];
+            const findIndex = auxChats.findIndex(el => el.id === id_change);
+            if(auxChats[findIndex]){
+              auxChats[findIndex].c5Unread = data.c5Unread;
+              this._setChats(auxChats);
+            }
+          }
+
           const changed_id = changes[0].doc.id;
           if (this.state.chats[index]) {
             if (this.state.chats[index].messages.length === data.messages.length) {
@@ -1302,7 +1313,7 @@ class Main extends Component {
           return data;
         });
         chatSOS.sort((a, b) => (new Date(b.lastModification) - new Date(a.lastModification)));
-        console.log(chatSOS)
+        // console.log(chatSOS)
         this.setState({ stateSos: chatSOS })
       });
   }

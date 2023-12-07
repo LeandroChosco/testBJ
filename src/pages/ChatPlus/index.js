@@ -256,10 +256,10 @@ class Chat extends Component {
                 ? moment(chat.create_at).format("DD-MM-YYYY, HH:mm:ss")
                 : moment(chat.lastModification).format("DD-MM-YYYY, HH:mm:ss");
 
-            let badgeNumber = 0;
-            if (this.state.chatId) {
-              badgeNumber = this.state.chatId === chat.id ? 0 : chat.c5Unread;
-            }
+            // let badgeNumber = 0;
+            // if (this.state.chatId) {
+            //   badgeNumber = this.state.chatId === chat.id ? 0 : chat.c5Unread;
+            // }
             return (
               <Card
                 className={i === index ? "activeChat" : ""}
@@ -295,14 +295,14 @@ class Chat extends Component {
                       <p></p>
                     )}
 
-                    {chat.c5Unread !== undefined && badgeNumber !== 0 ? (
+                    {chat.c5Unread > 0 &&
                       <div
                         className="notificationNumber"
                         style={{ marginTop: 15 }}
                       >
                         <p>{chat.c5Unread}</p>
                       </div>
-                    ) : null}
+                    }
                     <div
                       style={{
                         display: "flex",
@@ -364,10 +364,10 @@ class Chat extends Component {
                 ? moment(chat.create_at).format("DD-MM-YYYY, HH:mm:ss")
                 : moment(chat.lastModification).format("DD-MM-YYYY, HH:mm:ss");
 
-            let badgeNumber = 0;
-            if (this.state.chatId) {
-              badgeNumber = this.state.chatId === chat.id ? 0 : chat.c5Unread;
-            }
+            // let badgeNumber = 0;
+            // if (this.state.chatId) {
+            //   badgeNumber = this.state.chatId === chat.id ? 0 : chat.c5Unread;
+            // }
             return (
               <Card
                 className={i === index ? "activeChat" : ""}
@@ -403,14 +403,14 @@ class Chat extends Component {
                       <p></p>
                     )}
 
-                    {chat.c5Unread !== undefined && badgeNumber !== 0 ? (
+                    {/* {chat.c5Unread !== undefined && badgeNumber !== 0 ? (
                       <div
                         className="notificationNumber"
                         style={{ marginTop: 15 }}
                       >
                         <p>{chat.c5Unread}</p>
                       </div>
-                    ) : null}
+                    ) : null} */}
                     <div
                       style={{
                         display: "flex",
@@ -1143,13 +1143,18 @@ class Chat extends Component {
   }
 
   changeChat = async (chat, i, flag = true, newMsg) => {
-    
-    const {chats, setChats} = this.props
+
+    const { chats, setChats } = this.props
+
+    // console.log(chat)
 
     const auxChats = [...chats];
     const findIndex = auxChats.findIndex(el => el.id === chat.id);
-    auxChats[findIndex].c5Unread = 0;
-    setChats(auxChats)
+    if (auxChats[findIndex]) {
+      auxChats[findIndex].c5Unread = 0;
+      setChats(auxChats)
+    }
+
     // this.setState({ infoCurrentCamera: {}})
 
     this.getUserInfo(chat);
@@ -1513,7 +1518,7 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    const { alarmIndex } = this.props.match.params;
+    const { alarmIndex, chatId } = this.props.match.params;
 
 
     // this.props.history.location.pathname.split("/").length > 2 && this.setState({ showHistorial: !this.state.showHistorial })
@@ -1528,6 +1533,17 @@ class Chat extends Component {
     //     this.setState({ chats: filtered_chats });
     //   }
     // }
+
+    if (chatId) {
+      setTimeout(() => {
+
+        const chatToOpen = this.props.chats.find(el => el.id === chatId);
+        const indexChat = this.props.chats.findIndex(el => el.id === chatId);
+
+        this.changeChat(chatToOpen, indexChat);
+      }, 2500);
+    }
+
     let messageBody;
 
     if (document.querySelector('#messagesContainer')) {
@@ -1579,6 +1595,15 @@ class Chat extends Component {
   }
 
   componentDidUpdate(prevProps) {
+
+    let messageBody;
+
+    if (document.querySelector('#messagesContainer')) {
+      messageBody = document.querySelector('#messagesContainer');
+      messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+    }
+
+
     // console.log(this.state)
     // console.log(this.props)
     // console.log("ENTRA", prevProps)
