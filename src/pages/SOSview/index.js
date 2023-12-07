@@ -180,7 +180,7 @@ class Chat extends Component {
 
   // LIFECYCLES
   componentDidMount() {
-    const { tabIndex } = this.props.match.params;
+    const { tabIndex, chatId } = this.props.match.params;
     let { activeIndex } = this.state;
     let { chats } = this.props;
     let filtered = [];
@@ -189,6 +189,16 @@ class Chat extends Component {
       if (tabIndex) filtered = chats.filter((item) => item.trackingType === this.FILTERSOPTIONS[tabIndex]);
       else filtered = chats.filter((item) => item.trackingType === this.FILTERSOPTIONS[activeIndex]);
       this.setState({ chats: filtered, activeIndex: tabIndex ? tabIndex : activeIndex });
+    }
+
+    if (chatId) {
+      setTimeout(() => {
+
+        const chatToOpen = this.props.chats.find(el => el.id === chatId);
+        const indexChat = this.props.chats.findIndex(el => el.id === chatId);
+
+        this.changeChat(chatToOpen, indexChat);
+      }, 3000);
     }
 
     let messageBody;
