@@ -21,9 +21,25 @@ const styles = {
 }
 
 const GenderDetected = (props) => {
-  const { genderDetected } = props;
+  // const { genderDetected } = props;
   const [options, setOptions] = useState();
   const [series, setSeries] = useState();
+
+
+  const genderDetected = [
+    {
+      name: "Mujer",
+      value: 337,
+      rangeAge: ["-18", "18-30", "31-50", "+50"],
+      detectedArray: [54, 207, 48, 28]
+    },
+    {
+      name: "Hombre",
+      value: 416,
+      rangeAge: ["-18", "18-30", "31-50", "+50"],
+      detectedArray: [120, 55, 201, 40]
+    },
+  ]
 
   useEffect(() => {
     let xAxis = [], yAxis = [];
@@ -116,6 +132,9 @@ const GenderDetected = (props) => {
       setSeries(series)
     }
   }, [])
+
+
+
 
   return (
     <ResponsiveContainer >
