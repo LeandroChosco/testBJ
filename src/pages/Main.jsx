@@ -999,10 +999,10 @@ class Main extends Component {
           const data = changes[0].doc.data();
           const id_change = changes[0].doc.id;
 
-          if(this.state.chats.length > 0){
+          if (this.state.chats.length > 0) {
             const auxChats = [...this.state.chats];
             const findIndex = auxChats.findIndex(el => el.id === id_change);
-            if(auxChats[findIndex]){
+            if (auxChats[findIndex]) {
               auxChats[findIndex].c5Unread = data.c5Unread;
               this._setChats(auxChats);
             }
@@ -1027,7 +1027,8 @@ class Main extends Component {
                 this.state.showNotification &&
                 !this.state.fisrtTimeChat &&
                 !this.state.callIsGoing &&
-                data.messages[data.messages.length - 1].from === "user"
+                data.messages[data.messages.length - 1].from === "user" &&
+                JSON.parse(sessionStorage.getItem("isAuthenticated"))
               ) {
                 this.setState({ reproducirSonido: true, chats, stopNotification: false });
                 if (typeof data.alarmType === 'string') {
@@ -1078,9 +1079,10 @@ class Main extends Component {
                 if (
                   this.state.showNotification &&
                   !this.state.fisrtTimeChat &&
-                  !this.state.callIsGoing && 
-                  data.messages[data.messages.length - 1].from === "user"
-                  ) {
+                  !this.state.callIsGoing &&
+                  data.messages[data.messages.length - 1].from === "user" &&
+                  JSON.parse(sessionStorage.getItem("isAuthenticated"))
+                ) {
                   this.setState({ reproducirSonido: true, chats, stopNotification: false });
                   this.showNot(
                     'Mensaje de usuario',
@@ -1114,6 +1116,20 @@ class Main extends Component {
           // })
 
           // this.setState({ chats })
+          if (changes.length === 1 && this.state.chats.length === 0) {
+            let data = changes[0].doc.data();
+            if (data.messages[data.messages.length - 1].from === "user" && JSON.parse(sessionStorage.getItem("isAuthenticated"))) {
+              this.setState({ reproducirSonido: true, stopNotification: false });
+              this.showNot(
+                'Mensaje de usuario',
+                'Nuevo mensaje de usuario',
+                'success',
+                'Ver detalles',
+                0,
+                changes[0].doc.id
+              );
+            }
+          }
         }
       })
 
@@ -1143,7 +1159,8 @@ class Main extends Component {
                 if (
                   this.state.showNotification &&
                   !this.state.fisrtTimeChat &&
-                  !this.state.callIsGoing
+                  !this.state.callIsGoing &&
+                  JSON.parse(sessionStorage.getItem("isAuthenticated"))
                 ) {
                   this.setState({ reproducirSonido: true });
                   switch (changed_data.trackingType) {
@@ -1188,7 +1205,8 @@ class Main extends Component {
                     if (
                       this.state.showNotification &&
                       !this.state.fisrtTimeChat &&
-                      !this.state.callIsGoing
+                      !this.state.callIsGoing &&
+                      JSON.parse(sessionStorage.getItem("isAuthenticated"))
                     ) {
                       if (current_message && current_message.from.includes("user")) {
                         this.setState({ reproducirSonido: true });
@@ -1215,7 +1233,7 @@ class Main extends Component {
                     }
                   });
                 } else {
-                  if (this.state.stateSos[find_conv_index].critical_state !== changed_data.critical_state) {
+                  if (this.state.stateSos[find_conv_index].critical_state !== changed_data.critical_state && JSON.parse(sessionStorage.getItem("isAuthenticated"))) {
                     aux_obj = {
                       ...aux_obj,
                       lastModification: new Date(aux_obj.lastModification.toDate()).toString(),

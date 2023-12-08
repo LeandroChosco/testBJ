@@ -1164,7 +1164,7 @@ class Chat extends Component {
     // }
 
     if (chat && newMsg !== "NO") {
-      this.setState({ loadingChat: true })
+      this.setState({ loadingChat: true, chatId: chat.id })
       // console.log("ID USER", chat.user_creation)
       // console.log("CHAT", chat.user_cam.num_cam)
       // console.log("CHAT", chat)
@@ -1223,7 +1223,7 @@ class Chat extends Component {
         this.props.stopNotification();
 
         this.setState({
-          // chatId: chat.id,
+          chatId: chat.id,
           // messages: chat.messages,
           index: i,
           from: chat.from,
@@ -1308,12 +1308,14 @@ class Chat extends Component {
     const { chatFirebase, chats } = this.props
     const indexChat = chats.findIndex(e => e.id === chatId)
     // console.log(indexChat)
-    if (!historial) {
-      this.setState({ messages: chats[indexChat].messages, chatId })
-      this.messageListener = refSOS.doc(chatId).onSnapshot((snapShot) => {
+    // console.log("chat", chatId)
+    // console.log("statechat", this.state.chatId)
+    // this.setState({ messages: chats[indexChat].messages, chatId })
+    this.messageListener = refSOS.doc(chatId).onSnapshot((snapShot) => {
+      if (chatId === this.state.chatId) {
         this.setState({ messages: snapShot.get("messages"), chatId });
-      });
-    }
+      }
+    });
   };
 
   checkKey = (event) => {
