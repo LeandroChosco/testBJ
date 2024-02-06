@@ -16,7 +16,7 @@ export class MapContainer extends Component {
       s.type = 'text/javascript';
       let key = 'AIzaSyCHiHNfeGxYKOZRj-57F957Xe08f64fLHo';
       if (process.env.NODE_ENV === 'production') {
-        key = 'AIzaSyCWBcQ5HVHcDQyqyaunFzE8LtOxBTpj0Dc';
+        key = 'AIzaSyDsakmYn4LDC1s7lzYZHCK3ZKh1u3ILr9s';
       }
       s.src = `https://maps.google.com/maps/api/js?key=${key}`;
       var x = document.getElementsByTagName('script')[0];
