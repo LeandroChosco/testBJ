@@ -11,6 +11,7 @@ import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css
 import './style.css'
 import ModalViewBinnacle from '../../components/ModalViewBinnacle';
 import PoliceContentDashboard from '../../components/Dashboard/PoliceContentDashboard';
+import dataFake from './dataFake.json';
 
 const Policia = ({ showMatches }) => {
   const [binnacles, setBinnacles] = useState([])
@@ -39,7 +40,7 @@ const Policia = ({ showMatches }) => {
     },
     {
       menuItem: 'Dashboard',
-      render: () => <PoliceContentDashboard data={binnacles} /> ,
+      render: () => <PoliceContentDashboard data={dataFake} /> ,
     }
   ]
 
@@ -48,28 +49,28 @@ const Policia = ({ showMatches }) => {
     dataField: "date",
     text: 'Fecha',
     filter: textFilter({
-      placeholder: 'Buscar Fecha'
+      placeholder: 'Buscar por fecha'
     })
     },
     {
     dataField: "hour",
     text: 'Hora',
     filter: textFilter({
-      placeholder: 'Buscar Hora'
+      placeholder: 'Buscar por hora'
     })
     },
     {
     dataField: "incidentName",
     text: 'Incidencia',
     filter: textFilter({
-      placeholder: 'Buscar Incidecncia'
+      placeholder: 'Buscar incidencia'
     })
     },
     {
     dataField: "incidentNameOther",
     text: 'Incidencia alterna',
     filter: textFilter({
-      placeholder: 'Buscar Incidecncia a.'
+      placeholder: 'Buscar incidencia a.'
     })
     },
     {
@@ -83,14 +84,14 @@ const Policia = ({ showMatches }) => {
     dataField: "name",
     text: 'Nombre',
     filter: textFilter({
-      placeholder: 'Buscar Nombre'
+      placeholder: 'Buscar nombre'
     })
     },    
     {
     dataField: "nameOficial",
     text: 'Oficial',
     filter: textFilter({
-      placeholder: 'Buscar Oficial'
+      placeholder: 'Buscar oficial'
     })
     },   
   ]
@@ -168,13 +169,13 @@ const Policia = ({ showMatches }) => {
             <h3 className="pt-2">Bitacora Policia</h3>
           </div>
         </div>
-        {binnacles.length === 0 ?
+        {dataFake.length === 0 ?
           <div className="row">
             <div className="col">
               <p>No hay bitacoras</p>
             </div>
           </div>
-          : <BootstrapTable className="styleTable" keyField='id' data={binnacles} columns={columnsBinnacle} rowEvents={tableRowEvents} pagination={paginationFactory()} filter={filterFactory()} />}
+          : <BootstrapTable className="styleTable" keyField='id' data={dataFake} columns={columnsBinnacle} /*rowEvents={tableRowEvents}*/ pagination={paginationFactory()} filter={filterFactory()} />}
       </div>
     )
   }

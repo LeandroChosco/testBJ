@@ -1,0 +1,92 @@
+[
+    {
+        "date": "01/02/2024",
+        "hour": "12:04",
+        "incidentName": "Robo a casa habitación sin violencia",
+        "incidentNameOther": "",
+        "sector": "NAPOLES",
+        "name": "Juan",
+        "nameOficial": "PoliciaBJ"
+    },
+    {
+        "date": "01/02/2024",
+        "hour": "14:01",
+        "incidentName": "Otro",
+        "incidentNameOther": "Protección Civil",
+        "sector": "NARVARTE",
+        "name": "Pedro",
+        "nameOficial": "PoliciaBJ"
+    },
+    {
+        "date": "03/02/2024",
+        "hour": "11:21",
+        "incidentName": "Otro",
+        "incidentNameOther": "Agresiones",
+        "sector": "NARVARTE",
+        "name": "Ricardo",
+        "nameOficial": "Pt. 1°65011"
+    },
+    {
+        "date": "01/02/2024",
+        "hour": "12:15",
+        "incidentName": "Otro",
+        "incidentNameOther": "",
+        "sector": "NAPOLES",
+        "name": "",
+        "nameOficial": "Policia_flota 1"
+    },
+    {
+        "date": "01/02/2024",
+        "hour": "10:01",
+        "incidentName": "Robo a negocio sin violencia",
+        "incidentNameOther": "",
+        "sector": "PORTALES",
+        "name": "Pedro",
+        "nameOficial": "PoliciaBJ"
+    },
+    {
+        "date": "03/02/2024",
+        "hour": "16:21",
+        "incidentName": "Robo a casa habitación sin violencia",
+        "incidentNameOther": "",
+        "sector": "NAPOLES",
+        "name": "Ricardo",
+        "nameOficial": "PoliciaBJ"
+    },
+    {
+        "date": "01/02/2024",
+        "hour": "14:12",
+        "incidentName": "Otro",
+        "incidentNameOther": "Seguridad",
+        "sector": "",
+        "name": "Juan",
+        "nameOficial": "SupervisionConstitucion 2"
+    },
+    {
+        "date": "01/02/2024",
+        "hour": "14:11",
+        "incidentName": "Robo a casa habitación con violencia",
+        "incidentNameOther": "",
+        "sector": "PORTALES",
+        "name": "Pedro",
+        "nameOficial": "PoliciaBJ"
+    },
+    {
+        "date": "03/02/2024",
+        "hour": "18:30",
+        "incidentName": "Otro",
+        "incidentNameOther": "Seguimiento Por Destino",
+        "sector": "DEL VALLE",
+        "name": "Ricardo",
+        "nameOficial": "PoliciaBJ"
+    },
+    {
+        "date": "03/02/2024",
+        "hour": "10:42",
+        "incidentName": "Robo de auto partes",
+        "incidentNameOther": "",
+        "sector": "",
+        "name": "",
+        "nameOficial": "PoliciaBJ"
+    }
+]
