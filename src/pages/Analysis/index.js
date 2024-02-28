@@ -768,7 +768,7 @@ class Analysis extends Component {
         let newCam = {
           num_cam: el.dataCamValue.num_cam,
           status_cam,
-          status_streaming: true
+          status_streaming: "Con Streaming",
         };
         auxRevision.push(newCam);
       })
@@ -776,7 +776,7 @@ class Analysis extends Component {
           let newCam = {
             num_cam: el.dataCamValue.num_cam,
             status_cam,
-            status_streaming: false
+            status_streaming: "Sin Streaming",
           };
           auxRevision.push(newCam);
         });
