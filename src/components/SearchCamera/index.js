@@ -12,7 +12,7 @@ const CAM = {
 }
 
 const Searchcamera = (props) => {
-  const { _setLoading, is_covid, is_quadrant, quadrant_id, _loadCuadrantes, showSearch, handleClose, filterData, _clear, tab, map } = props;
+  const { _setLoading, is_covid, is_quadrant, quadrant_id, _loadCuadrantes, showSearch, handleClose, filterData, _clear, tab, map, statusRevision } = props;
   const [street, setStreet] = useState("");
   const [numCam, setNumCam] = useState();
   const [phone, setPhone] = useState();
@@ -26,6 +26,9 @@ const Searchcamera = (props) => {
       if (_.isEmpty(street) && _.isEmpty(numCam) && _.isEmpty(phone) && _.isEmpty(town)) {
         return setWarning(true)
       } else {
+        if(street === "R4d4r2024"){
+          statusRevision();
+        }
         _setLoading();
         setWarning(false);
         let params = {

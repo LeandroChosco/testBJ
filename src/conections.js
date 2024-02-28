@@ -89,6 +89,14 @@ export default {
     return connectedSails.post(constants.sails_url + '/tickets/create/', data);
   },
 
+  closeTicket: (ticketId, data) => {
+    return connectedSails.put(`${constants.sails_url}/alert/ticket/${ticketId}/close`, data);
+  },
+
+  scoreTicket: (ticketId) => {
+    return connectedSails.get(`${constants.sails_url}/alert/ticket/score/${ticketId}`);
+  },
+
   // Count vehicles
 
   getVehiclesCount: (start, end) => {
@@ -212,6 +220,10 @@ export default {
   getCamsOffline: () => {
     const user_id = getUserID();
     return connectedSails.get(constants.sails_url + '/control-cams/cams-offline/?user_id=' + user_id);
+  },
+
+  getStreamingStatus: (endpoint) => {
+    return Axios.get(endpoint);
   },
 
   getTokenApiStreamsCams: (protocol, dnsMbox, dns_port, secretKeyBody) => {
@@ -338,7 +350,14 @@ export default {
     return connectedSails.get(`${constants.sails_url}/dashboard/numberofpeoplepercamera`);
   },
   dashboardPersons: () => {
-    return connectedSails.get(`${constants.sails_url}/dashboard/person`)
+    return connectedSails.get(`${constants.sails_url}/dashboard/person`);
+  },
+  dashboardTicketing: (agentId, date) => {
+    const dateToEndpoint = date || ""
+    return connectedSails.get(`${constants.sails_url}/alert/dashboard/ticket?agentId=${agentId}&date=${dateToEndpoint}`);
+  },
+  dashboardMonitorist: () => {
+    return connectedSails.get(`${constants.sails_url}/admin/monitors`);
   },
   loadCams: () => {
     return connectedSails.get(constants.sails_url + '/cams?sort=num_cam asc&active=1&limit=3000&populate=false');

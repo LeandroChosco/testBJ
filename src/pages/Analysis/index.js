@@ -82,7 +82,8 @@ class Analysis extends Component {
     activeIndex: TAB.ONLINE,
     filterOnLine: false,
     filterOff: false,
-    filterDiss: false
+    filterDiss: false,
+    arrayStatusCam: [],
   };
 
   componentDidMount() {
@@ -107,7 +108,7 @@ class Analysis extends Component {
   render() {
     const { loading, panes, englishPanes, activeIndex } = this.state;
     return (
-      <div style={{ background: localStorage.getItem(MODE) === "darkTheme" ? "rgb(12, 48, 78)" : "transparent" }}>
+      <div style={{ background: localStorage.getItem(MODE) === "darkTheme" ? "rgb(12, 48, 78)" : "white" }}>
         {loading ? (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: 'absolute', background: localStorage.getItem(MODE) === "darkTheme" ? "rgb(12, 48, 78)" : "transparent", width: '100%', height: "100%", transition: "all 0.25s linear" }} align="center">
             <img
@@ -143,6 +144,8 @@ class Analysis extends Component {
   _filterButtons = (data, is_visible) => {
     return (
       <div style={styles.tab} className='col-12'>
+        {/*  */}
+        <Button id="download-button" onClick={() => this._statusRevision()} style={{ display: "none" }}>Descargar</Button>
         {(data.length > 0 || is_visible) && <Button onClick={() => this.setState({ showSearch: true })} >{localStorage.getItem(LANG) === "english" ? "Filter" : "Filtrar"}</Button>}
         {(is_visible) && <Button onClick={() => this._loadCameras()}>{localStorage.getItem(LANG) === "english" ? "Delete filter" : "Limpiar filtro"}</Button>}
       </div>
@@ -512,8 +515,8 @@ class Analysis extends Component {
             snapShot={this._snapShot}
             changeStatus={this._chageCamStatus}
             propsIniciales={this.props}
-            />
-            );
+          />
+        );
       case 3:
         return (
           <div className="camUniqueHolder">
@@ -525,6 +528,7 @@ class Analysis extends Component {
               showFilesBelow
               moduleActions={moduleActions}
               propsIniciales={this.props}
+            // setCountError={this._setCountError}
             />
           </div>
         );
@@ -749,9 +753,47 @@ class Analysis extends Component {
       });
   }
 
+  _statusRevision = () => {
+
+    const { places, offlineCamaras, disconnectedCameras, activeIndex } = this.state;
+    let cameras = activeIndex === 0 ? places : activeIndex === 1 ? offlineCamaras : activeIndex === 2 && disconnectedCameras;
+    let auxRevision = [];
+
+    cameras.forEach(el => {
+
+      let status_cam = el.dataCamValue.active === 1 ? el.dataCamValue.flag_streaming === 1 ? "Online" : "Offline" : "Disconnect";
+
+      conections.getStreamingStatus(el.url).then(() => {
+
+        let newCam = {
+          num_cam: el.dataCamValue.num_cam,
+          status_cam,
+          status_streaming: true
+        };
+        auxRevision.push(newCam);
+      })
+        .catch(() => {
+          let newCam = {
+            num_cam: el.dataCamValue.num_cam,
+            status_cam,
+            status_streaming: false
+          };
+          auxRevision.push(newCam);
+        });
+    });
+
+    setTimeout(() => {
+      console.warn("Process ended to revision");
+      this.setState({ arrayStatusCam: [...auxRevision] });
+      localStorage.setItem("arrayStatusCam", JSON.stringify(auxRevision));
+    }, (cameras.length * 15) + 2000);
+
+  };
+
   _searchModal = () => {
     return (
       <SearchCamera
+        statusRevision={this._statusRevision}
         _filterCameras={this._filterCameras}
         _setLoading={this._setLoading}
         showSearch={this.state.showSearch}

@@ -222,7 +222,7 @@ class GridCameraDisplay extends Component {
 				) : null}
 				<div id="gridCameraControl" style={{ zIndex: 3 }} className={!autoplay ? !showMatches ? ('sin-margin camGridControl showfiles') : ('con-margin camGridControl showfiles') : !showMatches ? ('sin-margin camGridControl') : ('con-margin camGridControl')}>
 					<div id="iconGrid" className="iconGrid">
-						<BsArrowsExpand />
+						<BsArrowsExpand id="expand-grid" />
 					</div>
 					<div className="row stiky-top">
 						<div className='col-4' style={{ display: "flex", justifyContent: "center", alignItems: "flex-end", marginBottom: "0.5rem" }}>
