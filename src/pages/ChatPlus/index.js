@@ -384,7 +384,7 @@ class Chat extends Component {
                         justifyContent: "space-between",
                       }}
                     >
-                      <h4 style={{ marginRight: "0.3rem" }}>{chat.user_name}</h4> <p>{date}</p>
+                      <h4 style={{ marginRight: "0.3rem" }}>{chat.user_name}</h4> <p>{date !== "Fecha inválida" ? date : chat.updateDate}</p>
                     </div>
                     {chat.active !== undefined && chat.active ? (
                       <p>
@@ -609,7 +609,7 @@ class Chat extends Component {
                                     </div>
                                     <div className='col' style={styles.text}>
                                       <b>Fecha: </b>
-                                      {currentHistorial.lastModification}
+                                      {currentHistorial.lastModification !== "Fecha inválida" ? currentHistorial.lastModification : currentHistorial.updateDate }
                                     </div>
                                   </div>
                                 </div>
