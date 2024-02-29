@@ -609,13 +609,14 @@ class Chat extends Component {
                                     </div>
                                     <div className='col' style={styles.text}>
                                       <b>Fecha: </b>
-                                      {currentHistorial.lastModification !== "Fecha inválida" ? currentHistorial.lastModification : currentHistorial.updateDate }
+                                      {currentHistorial.lastModification !== "Fecha inválida" ? currentHistorial.lastModification : currentHistorial.updateDate}
                                     </div>
                                   </div>
                                 </div>
                               </div>
                               <div className='messagesHistorialContainer' id='messagesContainer' style={{ top: "20% !important", height: "100%", padding: "0.5rem !important" }}>
                                 {this.state.messages.map((value, ref) => {
+                                  const formatDate = new Date(value.dateTime.seconds * 1000);
                                   return (
                                     <div
                                       key={ref}
@@ -633,7 +634,12 @@ class Chat extends Component {
                                             moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
                                             :
                                             moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
-                                          : null}
+                                          :
+                                          value.userName || value.userEmail
+                                            ?
+                                            moment(formatDate).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                                            :
+                                            moment(formatDate).format("DD-MM-YYYY, HH:mm:ss")}
                                       </small>
                                     </div>
                                   )
@@ -876,6 +882,7 @@ class Chat extends Component {
                           chats[index].messages ? (
                             this.state.messages !== undefined &&
                             this.state.messages.map((value, ref) => {
+                              const formatDate = new Date(value.dateTime.seconds * 1000);
                               return (
                                 <div
                                   key={ref}
@@ -905,7 +912,13 @@ class Chat extends Component {
                                         moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
                                         :
                                         moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
-                                      : null}
+                                      :
+                                      value.userName || value.userEmail
+                                        ?
+                                        moment(formatDate).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                                        :
+                                        moment(formatDate).format("DD-MM-YYYY, HH:mm:ss")
+                                    }
                                   </small>
                                 </div>
                               )
