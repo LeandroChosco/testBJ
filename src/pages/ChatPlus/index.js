@@ -104,7 +104,7 @@ class Chat extends Component {
   panes = this.props.history.location.pathname.includes("chat")
     ? [
       {
-        menuItem: "C5 Chat",
+        menuItem: "Chat C2",
         render: () => (
           <Tab.Pane attached={false} style={styles.tab}>
             {" "}
@@ -142,7 +142,7 @@ class Chat extends Component {
 
   panesHistorial = [
     {
-      menuItem: "C5 Historial",
+      menuItem: "Historial C2",
       render: () => (
         <Tab.Pane attached={false} style={styles.tab}>
           {" "}
@@ -673,7 +673,7 @@ class Chat extends Component {
                           >
                             {chats[index].alarmType
                               ? chats[index].alarmType
-                              : "Chat C5"}
+                              : "Chat C2"}
                           </h2>
                           <div className="row" style={{ height: "70%", margin: 0 }}>
                             <div className="col" style={{ height: "100%" }}>
@@ -1248,7 +1248,7 @@ class Chat extends Component {
           .doc(chat.id)
           .update({ c5Unread: 0 })
           .then(() => {
-            this.setState({ text: "", from: "Chat C5" });
+            this.setState({ text: "", from: "Chat C2" });
           });
       });
     }
@@ -1424,7 +1424,7 @@ class Chat extends Component {
       .update({
         updateDate: formatDate(dateToUpdate),
         messages: messagesAux,
-        from: "Chat C5",
+        from: "Chat C2",
         userUnread: this.props.chats[this.state.index].userUnread
           ? this.props.chats[this.state.index].userUnread + 1
           : 1,
