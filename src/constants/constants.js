@@ -1,7 +1,7 @@
 import favicon from '../assets/images/icons/favicon.jpg'
 // Produccion
-const sails_url = "https://customer-bj-api.radarapptechnologies.com";
-const radar_backend = "https://api.radarapptechnologies.com/graphql";
+const sails_url = "https://adminc5-bj.radarapp.click";
+const radar_backend = "https://api-radar.radarapp.click/graphql";
 const express_url = "http://3.15.181.186";
 
 //ligas de dashboard embebed
