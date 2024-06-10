@@ -147,7 +147,7 @@ class CameraStream extends Component {
     let { activeIndex, display, num_cam, cameraID, cameraName, showData, photos, data, qnapServer, qnapChannel, servidorMultimedia, photosLoading, videosLoading, videos, historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, loadingSnap, isLoading, isRecording, restarting, loadingFiles, modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription, showPTZ, inputCkecked, portContainer, dnsContainer, copyButton, typeMBOX } = this.state;
 
     return (
-      <Card style={{ display: display, padding: "0.75rem" }}>
+      <Card style={{ display: display, padding: "0.75rem", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>
         <NotificationSystem ref={this.notificationSystem} />
         {this.props.horizontal ? (
           <Card.Body>
@@ -208,31 +208,6 @@ class CameraStream extends Component {
           </Card.Body>
         ) : (
           <Card.Body>
-            {this.props.hideTitle ? null : (
-              <Card.Title>
-                <div align="left">
-                  {
-                    data.dataCamValue && data.dataCamValue.is_mic ?
-                      <Row>
-                        <Col md={8} lg={8}>
-                          <i className="fa fa-video-camera" /> {localStorage.getItem(LANG) === "english" ? `Camera ${num_cam}   ` : `Cámara ${num_cam}   `}
-                        </Col>
-                        <Col md={4} lg={4} style={{ display: "flex", justifyContent: "flex-end" }}>
-                          <HiMicrophone />
-                        </Col>
-                      </Row>
-                      :
-                      <>
-                        <i className="fa fa-video-camera" /> {localStorage.getItem(LANG) === "english" ? `Camera ${num_cam}   ` : `Cámara ${num_cam}   `}
-                      </>
-                  }
-                  {this.props.marker.extraData.dataCamValue === undefined || this.props.marker.extraData.tipo_camara === undefined ? null :
-                    this.props.marker.extraData.dataCamValue.tipo_camara === 2 || this.props.marker.extraData.tipo_camara === 2 ? (
-                      <i>{localStorage.getItem(LANG) === "english" ? `, Type: PTZ` : `, Tipo: PTZ`}</i>
-                    ) : null}
-                </div>
-              </Card.Title>
-            )}
             {showData ? (
               <div className="row dataHolder p10">
                 {/* {typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
@@ -289,7 +264,7 @@ class CameraStream extends Component {
                         render: () => (
                           <>
                             <div>
-                              <button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
+                              <button className={`btn btn-outline-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
                                 {localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}
                               </button>
                             </div>
@@ -383,42 +358,44 @@ class CameraStream extends Component {
               </div>
             </div>
             {this.props.hideText ? null : (
-              <div align="left">
-                <div id={`cameraInfo-${this.props.marker.extraData.num_cam}`}>
+              <div align="left" style={{ padding: "1rem 0.5rem" }}>
+                <h2>{localStorage.getItem(LANG) === "english" ? `Camera ${num_cam}   ` : `Cámara ${num_cam}   `}{this.props.marker.extraData.dataCamValue === undefined || this.props.marker.extraData.tipo_camara === undefined ? null :
+                  this.props.marker.extraData.dataCamValue.tipo_camara === 2 || this.props.marker.extraData.tipo_camara === 2 ? (
+                    <i>{localStorage.getItem(LANG) === "english" ? `, Type: PTZ` : `, Tipo: PTZ`}</i>
+                  ) : null}</h2>
+                <div id={`cameraInfo-${this.props.marker.extraData.num_cam}`} style={{ marginBottom: "1rem" }}>
 
                   {cameraName && !this.props.hideInfo ? <p>
                     {localStorage.getItem(LANG) === "english" ? `Address: ${cameraName}` : `Dirección: ${cameraName}`}
-                  </p> : null}
-                  {this.props.marker.extraData.dataCamValue.entrecalles ? <p>
-                    {localStorage.getItem(LANG) === "english" ? `Between streets: ${this.props.marker.extraData.dataCamValue.entrecalles}` : `Entre calles: ${this.props.marker.extraData.dataCamValue.entrecalles}`}
+                    {this.props.marker.extraData.dataCamValue.entrecalles ?
+                      <b>
+                        {localStorage.getItem(LANG) === "english" ? ` (Between streets ${this.props.marker.extraData.dataCamValue.entrecalles})` : ` (Entre calles ${this.props.marker.extraData.dataCamValue.entrecalles})`}
+                      </b> : null}
                   </p> : null}
                 </div>
-                <hr />
-
                 {data.rel_cuadrante ? data.rel_cuadrante.length !== 0 ? (
                   data.rel_cuadrante.map(
                     (item) =>
                       item.Cuadrante && item.Cuadrante.activo ? (
-                        <Label key={item.id} className="styleTag" as="a" tag onClick={() => this._goToCuadrante(item.id_cuadrante)}>{item.Cuadrante.name}</Label>
+                        <button key={item.id} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-secondary"} styleTag`} as="a" tag onClick={() => this._goToCuadrante(item.id_cuadrante)}>{item.Cuadrante.name}</button>
                       ) : null
                   )
                 ) : null : null}
                 {this.props.hideButton ? null : (
-                  <div>
-                    <br />
+                  <div style={{ paddingTop: "1rem" }}>
                     {
                       window.location.pathname !== "/camarasInternas" &&
-                      <Button onClick={() => this.setState({ showModalMoreInformation: true })} className="ml-2 mt-1">{localStorage.getItem(LANG) === "english" ? "More information" : "Más información"}</Button>
+                      <button onClick={() => this.setState({ showModalMoreInformation: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i class="fa fa-info" aria-hidden="true"></i></button>
                     }
                     {
                       !copyButton ?
-                        <Button className="ml-2 mt-1" style={{ backgroundColor: "#4B4A49", color: "#f5f5f5" }} onClick={() => { this._handleCopy(); this.setState({ copyText: document.getElementById(`cameraInfo-${this.props.marker.extraData.num_cam}`).textContent }) }}>
+                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-2 mt-1`} onClick={() => { this._handleCopy(); this.setState({ copyText: document.getElementById(`cameraInfo-${this.props.marker.extraData.num_cam}`).textContent }) }} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>
                           <i data-content="Hello. This is an inverted popup" data-variation="inverted">
                             <FaClipboard />
                           </i>
-                        </Button>
+                        </button>
                         :
-                        <Button className="ml-2 mt-1" style={{ backgroundColor: "#4B4A49", color: "#f5f5f5" }} disabled><FaClipboardCheck /></Button>
+                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-2 mt-1`} disabled><FaClipboardCheck /></button>
                     }
                   </div>
                 )}
@@ -544,10 +521,10 @@ class CameraStream extends Component {
           size="lg"
           show={modalProblem}
           onHide={() => this.setState({ modalProblem: false, problemDescription: '', phones: [], mails: [] })}
-          style={{ color: localStorage.getItem(MODE) === "darkTheme" && "white" }}
+          style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white" }}
         >
-          <Modal.Header className={localStorage.getItem(MODE) === "darkTheme" && "darkTheme"} closeButton>Reportar problema en camara {data.num_cam}</Modal.Header>
-          <Modal.Body className={localStorage.getItem(MODE) === "darkTheme" && "darkTheme"}>
+          <Modal.Header className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "darkTheme"} closeButton>Reportar problema en camara {data.num_cam}</Modal.Header>
+          <Modal.Body className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "darkTheme"}>
             <Form>
               <Form.Field>
                 <Form.Field>
@@ -819,84 +796,84 @@ class CameraStream extends Component {
   };
 
   // _renderVideoListSearch = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false, isDownloadSearch = false, isRecord = false, noButtons = false) => {
-	// 	let { servidorMultimedia, dnsArray, camURL, apiStorageKey, awsApiStreamsCams, selectedCamera, portContainer, dnsContainer, typeMBOX, protocolDownload, historyServerDns, historyServerPort, historyServerProtocol, loadingHistorics, isAxxonSearch, historicCurrentDay } = this.state;
+  // 	let { servidorMultimedia, dnsArray, camURL, apiStorageKey, awsApiStreamsCams, selectedCamera, portContainer, dnsContainer, typeMBOX, protocolDownload, historyServerDns, historyServerPort, historyServerProtocol, loadingHistorics, isAxxonSearch, historicCurrentDay } = this.state;
   //   // console.log("entra", videoList)
-	// 	if (videoList && videoList.length > 0 && !isAxxonSearch) {
-	// 		if (!videoList[0].active) {
-	// 			videoList.shift()
-	// 		}
-	// 	}
+  // 	if (videoList && videoList.length > 0 && !isAxxonSearch) {
+  // 		if (!videoList[0].active) {
+  // 			videoList.shift()
+  // 		}
+  // 	}
 
-	// 	let sortVideoList = videoList;
-	// 	if (!isAxxonSearch && videoList[0] && videoList[0].fecha < videoList[videoList.length - 1].fecha) {
-	// 		sortVideoList = videoList.reverse()
-	// 	}
+  // 	let sortVideoList = videoList;
+  // 	if (!isAxxonSearch && videoList[0] && videoList[0].fecha < videoList[videoList.length - 1].fecha) {
+  // 		sortVideoList = videoList.reverse()
+  // 	}
 
-	// 	let newArray = [];
+  // 	let newArray = [];
 
-	// 	if (sortVideoList.length > 0 && !Array.isArray(sortVideoList[0])) {
-	// 		sortVideoList.forEach(el => {
-	// 			if (!newArray.some(element => element.hour === el.hour)) {
-	// 				let nuevoObjeto = {
-	// 					hour: el.hour,
-	// 					fecha: el.fecha,
-	// 					videos: [el]
-	// 				}
-	// 				newArray.push(nuevoObjeto)
+  // 	if (sortVideoList.length > 0 && !Array.isArray(sortVideoList[0])) {
+  // 		sortVideoList.forEach(el => {
+  // 			if (!newArray.some(element => element.hour === el.hour)) {
+  // 				let nuevoObjeto = {
+  // 					hour: el.hour,
+  // 					fecha: el.fecha,
+  // 					videos: [el]
+  // 				}
+  // 				newArray.push(nuevoObjeto)
 
-	// 			} else {
-	// 				let idx = newArray.findIndex(e => e.hour === el.hour)
-	// 				newArray[idx].videos.push(el)
-	// 			}
-	// 		})
+  // 			} else {
+  // 				let idx = newArray.findIndex(e => e.hour === el.hour)
+  // 				newArray[idx].videos.push(el)
+  // 			}
+  // 		})
 
-	// 	}
+  // 	}
 
-	// 	return loadingHistorics ? (
-	// 		this._renderLoading()
-	// 	) :
-	// 		typeMBOX === "axxon" && !isAxxonSearch ?
-	// 			this._renderAxxonByHalfHour(dnsArray)
-	// 			:
-	// 			videoList && videoList.length > 0 ?
-	// 				(
-	// 					<PaginationList
-	// 						awsApiStreamsCams={awsApiStreamsCams}
-	// 						numberVideos={40}
-	// 						videoList={isAxxonSearch ? videoList : newArray.length > 0 ? newArray : sortVideoList}
-	// 						withAccordion={newArray.length > 0}
-	// 						isDownloadSearch={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : isDownloadSearch}
-	// 						dnsArray={dnsArray}
-	// 						hasDns={hasDns}
-	// 						camURL={camURL}
-	// 						dnsContainer={dnsContainer}
-	// 						portContainer={portContainer}
-	// 						servidorMultimedia={servidorMultimedia}
-	// 						apiStorageKey={apiStorageKey}
-	// 						noButtons={noButtons}
-	// 						isRecord={isRecord}
-	// 						typeMBOX={typeMBOX}
-	// 						selectedCamera={selectedCamera}
-	// 						reloadData={this._loadFiles}
-	// 						download={this.download}
-	// 						renderPagination={this._renderPagination}
-	// 						protocolDownload={protocolDownload}
-	// 						historyServerDns={historyServerDns}
-	// 						historyServerPort={historyServerPort}
-	// 						historyServerProtocol={historyServerProtocol}
-	// 						renderLoading={this._renderLoading}
-	// 						isAxxonSearch={isAxxonSearch}
-	// 						getHistoricsByHour={this._getHistoricsByHour}
-	// 						historicCurrentDay={historicCurrentDay}
-	// 					/>
-	// 				) :
-	// 				showNoFiles ? (
-	// 					<div align="center" className='no-data-show'>
-	// 						<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
-	// 						<i className="fa fa-image fa-5x" />
-	// 					</div>
-	// 				) : null
-	// };
+  // 	return loadingHistorics ? (
+  // 		this._renderLoading()
+  // 	) :
+  // 		typeMBOX === "axxon" && !isAxxonSearch ?
+  // 			this._renderAxxonByHalfHour(dnsArray)
+  // 			:
+  // 			videoList && videoList.length > 0 ?
+  // 				(
+  // 					<PaginationList
+  // 						awsApiStreamsCams={awsApiStreamsCams}
+  // 						numberVideos={40}
+  // 						videoList={isAxxonSearch ? videoList : newArray.length > 0 ? newArray : sortVideoList}
+  // 						withAccordion={newArray.length > 0}
+  // 						isDownloadSearch={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : isDownloadSearch}
+  // 						dnsArray={dnsArray}
+  // 						hasDns={hasDns}
+  // 						camURL={camURL}
+  // 						dnsContainer={dnsContainer}
+  // 						portContainer={portContainer}
+  // 						servidorMultimedia={servidorMultimedia}
+  // 						apiStorageKey={apiStorageKey}
+  // 						noButtons={noButtons}
+  // 						isRecord={isRecord}
+  // 						typeMBOX={typeMBOX}
+  // 						selectedCamera={selectedCamera}
+  // 						reloadData={this._loadFiles}
+  // 						download={this.download}
+  // 						renderPagination={this._renderPagination}
+  // 						protocolDownload={protocolDownload}
+  // 						historyServerDns={historyServerDns}
+  // 						historyServerPort={historyServerPort}
+  // 						historyServerProtocol={historyServerProtocol}
+  // 						renderLoading={this._renderLoading}
+  // 						isAxxonSearch={isAxxonSearch}
+  // 						getHistoricsByHour={this._getHistoricsByHour}
+  // 						historicCurrentDay={historicCurrentDay}
+  // 					/>
+  // 				) :
+  // 				showNoFiles ? (
+  // 					<div align="center" className='no-data-show'>
+  // 						<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+  // 						<i className="fa fa-image fa-5x" />
+  // 					</div>
+  // 				) : null
+  // };
 
   _renderAxxonByHalfHour = (dnsArray) => {
 
@@ -953,7 +930,7 @@ class CameraStream extends Component {
                     el.map((element, idx) => {
                       return (
                         <div key={element} className="col-4">
-                          <button key={idx} className={"btn btn-outline-primary ml-auto mr-auto mb-2 fake-btn"} onClick={() => searchVideos(element)} >
+                          <button key={idx} className={`btn btn-outline-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-auto mr-auto mb-2 fake-btn`} onClick={() => searchVideos(element)} >
                             {`${element} - ${element.split(":")[1] === "00" ? element.split(":")[0] + ":30" : element === "23:30" ? "00:00" : (parseInt(element.split(":")[0]) + 1) + ":00"}`}
                           </button>
                         </div>
@@ -1041,7 +1018,7 @@ class CameraStream extends Component {
           totalWeekArray.map((el) => {
             let buttonDate = moment().subtract(Math.abs(el - 6), 'days').startOf('date').format('ll');
             return (
-              <button key={Math.abs(el - 6)} className={historicCurrentDay === Math.abs(el - 6) ? "btn btn-primary ml-auto mr-auto mb-2" : "btn btn-outline-primary ml-auto mr-auto mb-2"} onClick={() => this._getHistoricsByHour(Math.abs(el - 6))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
+              <button key={Math.abs(el - 6)} className={historicCurrentDay === Math.abs(el - 6) ? `btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-auto mr-auto mb-2` : `btn btn-outline-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(Math.abs(el - 6))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
             );
           })
         }

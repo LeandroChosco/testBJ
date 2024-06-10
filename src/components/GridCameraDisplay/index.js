@@ -31,7 +31,7 @@ import { CurveGridCamera } from '../Dashboard/Placas/CurveGridCamera';
 import { VehiclesCount } from './VehiclesCount';
 import VehiclesSelector from './VehiclesSelector';
 import { removeSpaces } from '../../functions/removeSpaces';
-import { LANG } from '../../constants/token';
+import { LANG, MODE } from '../../constants/token';
 import LoadingLogo from '../LoadingLogo';
 import MockupConection from './MockupConection';
 
@@ -93,7 +93,7 @@ class GridCameraDisplay extends Component {
 		isRecording: false,
 		recordingCams: [],
 		recordingProcess: [],
-		loadingRcord: false,
+		loadingRecord: false,
 		limit: 10,
 		start: 0,
 		pageCount: 1,
@@ -122,7 +122,7 @@ class GridCameraDisplay extends Component {
 	};
 
 	render() {
-		let { activeIndex, historialIndex, historialConections, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRcord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays, filterCount, typeMBOX, isAxxonSearch, axxonList, loadingUpdate, gridActive } = this.state;
+		let { activeIndex, historialIndex, historialConections, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRecord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays, filterCount, typeMBOX, isAxxonSearch, axxonList, loadingUpdate, gridActive } = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, is_filter } = this.props;
 
 
@@ -156,7 +156,7 @@ class GridCameraDisplay extends Component {
 		}
 
 		return (
-			<div className="gridCameraContainer" align="center">
+			<div className="gridCameraContainer" align="center" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>
 				<NotificationSystem ref={this.notificationSystem} />
 				<Row style={{ marginBottom: gridActive && "18rem" }}>
 					{loadingUpdate ?
@@ -220,30 +220,29 @@ class GridCameraDisplay extends Component {
 						{Strings.noResults}
 					</div>
 				) : null}
-				<div id="gridCameraControl" style={{ zIndex: 3 }} className={!autoplay ? !showMatches ? ('sin-margin camGridControl showfiles') : ('con-margin camGridControl showfiles') : !showMatches ? ('sin-margin camGridControl') : ('con-margin camGridControl')}>
+				<div id="gridCameraControl" style={{ zIndex: 3, background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" : "lightgray", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} className={`${!autoplay ? !showMatches ? ('sin-margin camGridControl showfiles') : ('con-margin camGridControl showfiles') : !showMatches ? ('sin-margin camGridControl') : ('con-margin camGridControl')} ${!gridActive ? "hidefiles" : ""}`}>
 					<div id="iconGrid" className="iconGrid">
 						<BsArrowsExpand id="expand-grid" />
 					</div>
 					<div className="row stiky-top">
-						<div className='col-4' style={{ display: "flex", justifyContent: "center", alignItems: "flex-end", marginBottom: "0.5rem" }}>
-							<p><b>{localStorage.getItem(LANG) === "english" ? "Address: " : "Dirección: "}</b> {selectedCamera.name}</p>
-						</div>
-						<div className="col-4" style={{ display: "flex", justifyContent: "space-between", marginLeft: "1.1rem" }}>
-							{moduleActions && moduleActions.btnsnap && (<Button basic circular disabled={photos.length >= 5 || loadingSnap || loadingRcord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1} loading={loadingSnap} onClick={() => this._snapShot(selectedCamera)}><i className="fa fa-camera" /></Button>)}
-							{/* <Button basic disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={this._playPause}><i className={isplay?'fa fa-pause':'fa fa-play'}/></Button> */}
-							{moduleActions && moduleActions.btnrecord && typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && (<Button basic circular disabled={videos.length >= 5 || loadingSnap || loadingRcord || loadingFiles || restarting} loading={loadingRcord} onClick={() => this._recordignToggle(selectedCamera)}><i className={recordingCams.indexOf(selectedCamera) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button>)}
-							<Button basic disabled={loadingSnap || loadingRcord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1} circular onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + selectedCamera.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link" /></Button>
-							<Button basic disabled={loadingSnap || loadingRcord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1 || videosLoading || photosLoading || (photos.length <= 0 && videos.length <= 0)} circular onClick={() => this.props.downloadFiles(selectedCamera, { videos, photos, servidorMultimedia })} loading={loadingFiles}><i className="fa fa-download" /></Button>
-							<Button basic disabled={loadingSnap || loadingRcord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1} circular onClick={() => this.props.makeReport(selectedCamera)}><i className="fa fa-warning" /></Button>
-							{/* <Button basic circular disabled={loadingSnap||loadingRcord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/></Button> */}
-							<Button basic circular onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange" /></Button>
-							{selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.dns != null ? <Button basic circular onClick={() => this.Clicked(selectedCamera.dataCamValue.dns)}><i className="fa fa-sliders" /></Button> : null}
-							{selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.camera_ip != null ? <Button basic circular onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows" /></Button> : null}
+						<div className="col-11" style={{ display: "flex", justifyContent: "space-around", marginLeft: "1.1rem" }}>
+							{moduleActions && moduleActions.btnsnap && (<Button basic circular className="actions-btn-grid" disabled={photos.length >= 5 || loadingSnap || loadingRecord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1} loading={loadingSnap} onClick={() => this._snapShot(selectedCamera)}><i className="fa fa-camera" />{!loadingSnap && <p style={{ marginTop: "0.2rem" }}>Toma de foto</p>}</Button>)}
+							{/* <Button basic disabled={loadingSnap||loadingRecord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={this._playPause}><i className={isplay?'fa fa-pause':'fa fa-play'}/><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button> */}
+							{moduleActions && moduleActions.btnrecord && typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && (<Button basic circular className="actions-btn-grid" disabled={videos.length >= 5 || loadingSnap || loadingRecord || loadingFiles || restarting} loading={loadingRecord} onClick={() => this._recordignToggle(selectedCamera)}><i className={recordingCams.indexOf(selectedCamera) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} />{!loadingRecord && <p style={{ marginTop: "0.2rem" }}>Toma de video</p>}</Button>)}
+							{/* {!(loadingSnap || loadingRecord || loadingFiles || restarting) && <Button basic circular className="actions-btn-grid" disabled={recordingCams.indexOf(selectedCamera) > -1} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + selectedCamera.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link" /><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button>} */}
+							{<Button basic circular className="actions-btn-grid" disabled={(photos.length <= 0 && videos.length <= 0) || loadingSnap || loadingRecord || loadingFiles || restarting || videosLoading || photosLoading || recordingCams.indexOf(selectedCamera) > -1} onClick={() => this.props.downloadFiles(selectedCamera, { videos, photos, servidorMultimedia })} loading={loadingFiles}><i className="fa fa-download" /><p style={{ marginTop: "0.2rem" }}>Descargar</p></Button>}
+							{/* {!(loadingSnap || loadingRecord || loadingFiles || restarting) && <Button basic circular className="actions-btn-grid" disabled={recordingCams.indexOf(selectedCamera) > -1} onClick={() => this.props.makeReport(selectedCamera)}><i className="fa fa-warning" /><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button>} */}
+							{/* <Button basic circular className="actions-btn-grid" disabled={loadingSnap||loadingRecord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button> */}
+							<Button basic circular className="actions-btn-grid" onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange" /><p style={{ marginTop: "0.2rem" }}>Cambiar estado</p></Button>
+							{/* {selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.dns != null ? <Button basic circular className="actions-btn-grid" onClick={() => this.Clicked(selectedCamera.dataCamValue.dns)}><i className="fa fa-sliders" /><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button> : null} */}
+							{selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.camera_ip != null ? <Button basic circular className="actions-btn-grid" onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows" /><p style={{ marginTop: "0.2rem" }}>Controles PTZ</p></Button> : null}
 							{!qnapServer && !qnapChannel && (<AdvancedSearchNotqnap loading={searchLoading} _searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus} countDays={countDays} navButton={true} isAxxon={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : false} _searchFilesAxxon={this._searchFilesAxxon} />)}
 							{qnapServer && qnapChannel && (<AdvancedSearch loading={searchLoading} _searchFileVideos={this._searchFileVideos} />)}
 						</div>
-						<div className='col-4' style={{ marginLeft: "-2rem" }}>
-							<Button onClick={() => this._openCameraInfo(false)} className='pull-right' primary> {autoplay ? '' : localStorage.getItem(LANG) === "english" ? "Hide controls" : 'Ocultar controles'} <i className={autoplay ? 'fa fa-chevron-up' : 'fa fa-chevron-down'} /></Button>
+						<div className='col-1' style={{ marginLeft: "-2rem" }}>
+							<Button onClick={() => this._openCameraInfo(false)} className='pull-right' primary style={{ margin: "0.5rem", height: "3rem", width: "3rem", display: "flex", justifyContent: "center", aligntItems: "center" }}><i className={autoplay ? 'fa fa-chevron-up' : 'fa fa-chevron-down'} />
+								{/* <p style={{color: "white"}}>Ocultar</p> */}
+							</Button>
 						</div>
 					</div>
 					<div className={!autoplay ? 'row showfilesinfocameragrid' : 'row hidefiles'}>
@@ -276,39 +275,53 @@ class GridCameraDisplay extends Component {
 									<>
 										{typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
 											<div className="col-3 snapshotsgrid">
-												{localStorage.getItem(LANG) === "english" ? "Photos" : "Fotos"}
-												<div style={{ marginTop: "2rem" }}>
-													{photosLoading ? (
-														this._renderLoading()
-													) : photos.length > 0 ? (
-														<div className="row">
-															{photos.map((value, index) => (
-																<MediaContainer
-																	key={index}
-																	value={value}
-																	isQnap={false}
-																	exists_image={true}
-																	cam={selectedCamera}
-																	src={value.relative_url}
-																	reloadData={this._loadFiles}
-																	servidorMultimedia={servidorMultimedia}
-																	port={portContainer}
-																	dnsContainer={dnsContainer}
-																	userIdContainer={this.getUserID()}
-																/>
-															))}
-														</div>
-													) : (
-														<div align="center" className='no-data-show' style={{ marginLeft: "1rem" }}>
-															<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
-															<i className="fa fa-image fa-5x" />
-														</div>
-													)}
-												</div>
+												{/* {localStorage.getItem(LANG) === "english" ? "Photos" : "Fotos"} */}
+												<Tab
+													align="center"
+													menu={{ secondary: true, pointing: true }}
+													activeIndex={historialIndex}
+													onTabChange={(e, { activeIndex }) => { this.setState({ historialIndex: activeIndex }) }}
+													panes={[
+														{
+															menuItem: localStorage.getItem(LANG) === "english" ? "Photos" : 'Fotos',
+															render: () => (
+																<Tab.Pane attached={false}>
+																	{photosLoading ? (
+																		this._renderLoading()
+																	) : photos.length > 0 ? (
+																		<div className="row">
+																			{photos.map((value, index) => (
+																				<MediaContainer
+																					key={index}
+																					value={value}
+																					isQnap={false}
+																					exists_image={true}
+																					cam={selectedCamera}
+																					src={value.relative_url}
+																					reloadData={this._loadFiles}
+																					servidorMultimedia={servidorMultimedia}
+																					port={portContainer}
+																					dnsContainer={dnsContainer}
+																					userIdContainer={this.getUserID()}
+																				/>
+																			))}
+																		</div>
+																	) : (
+																		// <div align="center" className='no-data-show' style={{ marginLeft: "1rem" }}>
+																		<div align="center" style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
+																			<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+																			<i className="fa fa-image fa-5x" />
+																		</div>
+																	)}
+																</Tab.Pane>
+															)
+														},
+													]}
+												/>
 											</div>
 										}
 										<div id="scrollVideo" className="col videosgrid">
-											{localStorage.getItem(LANG) === "english" ? "Videos" : "Videos"}
+											{/* {localStorage.getItem(LANG) === "english" ? "Videos" : "Videos"} */}
 											<Tab
 												align="center"
 												activeIndex={activeIndex}
@@ -462,10 +475,8 @@ class GridCameraDisplay extends Component {
 							selectedCamera.id < 513 || selectedCamera.id > 547 ?
 								// selectedCamera.id !== 1 && selectedCamera.id !== 2 ?
 
-								<div className={`${(typeMBOX && removeSpaces(typeMBOX) !== 'axxon') ? "col-5" : "col-6"} matchesgrid`} align="center">
-									{localStorage.getItem(LANG) === "english" ? "History" : "Historial"}
-									<br />
-
+								<div className={`${(typeMBOX && removeSpaces(typeMBOX) !== 'axxon') ? "col-4" : "col-5"} matchesgrid`} align="center">
+									{/* {localStorage.getItem(LANG) === "english" ? "History" : "Historial"} */}
 									{(selectedCamera.dataCamValue.type_camare_id === 2 && !selectedCamera.dataCamValue.is_lpr) &&
 										<Tab
 											align="center"
@@ -925,7 +936,7 @@ class GridCameraDisplay extends Component {
 	_recordignToggle = async (selectedCamera) => {
 		let response = {};
 		if (this.state.recordingCams.indexOf(selectedCamera) > -1) {
-			this.setState({ loadingRcord: true });
+			this.setState({ loadingRecord: true });
 			let process_id = 0;
 			this.state.recordingProcess.map((value) => {
 				if (value.cam_id === selectedCamera.id) process_id = value.process_id;
@@ -939,7 +950,7 @@ class GridCameraDisplay extends Component {
 				let stateRecordingCams = this.state.recordingCams;
 				stateRecordingCams = stateRecordingCams.filter((el) => el !== selectedCamera);
 				stateRecordingProcess = stateRecordingProcess.filter((el) => el.cam_id !== selectedCamera.id);
-				this.setState({ recordingCams: stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false, loadingRcord: false, modal: true, recordMessage: response.msg });
+				this.setState({ recordingCams: stateRecordingCams, recordingProcess: stateRecordingProcess, isRecording: false, loadingRecord: false, modal: true, recordMessage: response.msg });
 				if (response.success) this._loadFiles(selectedCamera, false, true, false, false);
 			}
 		} else {
@@ -1129,7 +1140,7 @@ class GridCameraDisplay extends Component {
 							recordingCams: stateRecordingCams,
 							recordingProcess: stateRecordingProcess,
 							isRecording: false,
-							loadingRcord: false
+							loadingRecord: false
 						});
 						this._loadFiles({}, false, true, true, true);
 					});
@@ -1943,8 +1954,11 @@ class GridCameraDisplay extends Component {
 			});
 			this._loadFiles(marker.extraData, true, true, true, true);
 		} else {
-			this._destroyFileVideos(true, true, this.state.qnapServer);
-			this.setState({ autoplay: true, selectedCamera: {}, qnapServer: null, qnapChannel: null, gridActive: false });
+			this.setState({ gridActive: false })
+			setTimeout(() => {
+				this._destroyFileVideos(true, true, this.state.qnapServer);
+				this.setState({ autoplay: true, selectedCamera: {}, qnapServer: null, qnapChannel: null, gridActive: false });
+			}, 950);
 		}
 	};
 

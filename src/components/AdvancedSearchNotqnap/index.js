@@ -65,8 +65,9 @@ class AdvancedSearchNotqnap extends Component {
 		return (
 			<div>
 				{navButton ?
-					<Button className='btn-custom-style' variant="info" disabled={loading} onClick={() => this._openModal()} basic circular >
+					<Button className='btn-custom-style actions-btn-grid' variant="info" disabled={loading} onClick={() => this._openModal()} basic circular >
 						<i className="fa fa-search-plus" />
+						<p style={{ marginTop: "0.2rem" }}>Búsqueda avanzada</p>
 					</Button>
 					:
 					<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => this._openModal()} >{localStorage.getItem(LANG) === "english" ? "Advanced Search" : 'Búsqueda Avanzada'}</button>

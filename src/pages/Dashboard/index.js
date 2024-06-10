@@ -530,7 +530,7 @@ class Dashboard extends Component {
     let data = [];
     let indexes = [];
 
-    response.data.data && response.data.data.current_date.forEach((v) => {
+    response.data.data && response.data.data.current_date && response.data.data.current_date.length > 0 && response.data.data.current_date.forEach((v) => {
       if (v && v.mood !== "") {
         v.mood = MOODS[v.mood] ? MOODS[v.mood] : v.mood;
         if (indexes.indexOf(v.mood) > -1) {
@@ -804,7 +804,7 @@ class Dashboard extends Component {
     let dropDownData = [];
     if (data && data.results) {
       let { results } = data;
-
+      results && results.length > 0 &&
       results.map((item) => {
         return (
           newData.push({
@@ -814,6 +814,7 @@ class Dashboard extends Component {
         )
       });
 
+      results && results.length > 0 &&
       results.map((item) => {
         if (item.endpoint_name || item.camera_name) {
           dropDownData.push({

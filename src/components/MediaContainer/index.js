@@ -185,7 +185,7 @@ class MediaContainer extends Component {
   _deleteFile = async () => {
     let { cam, value, exists_video, exists_image, userIdContainer, completeCamera } = this.props;
     let SailsToken = localStorage.getItem(SAILS_ACCESS_TOKEN);
-    let response = await axios.delete(`${constants.sails_url}/cams/${cam.id}/${value.id}/${userIdContainer}/V2`, {headers:{
+    let response = await axios.delete(`${constants.sails_url}/cams/${cam.id}/${value.id}/${userIdContainer || 1}/V2`, {headers:{
       'Authorization': SailsToken
     }});
     if (response.data && response.data.success) {

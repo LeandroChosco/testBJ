@@ -54,9 +54,11 @@ export default function MapaGoogle({ setMarket, dataMap }) {
       return parseInt(dm);
     };
     useEffect(() => {
-      dataMap.sort(function (a, b) {
-        return b.totalCount - a.totalCount;
-      });
+      if(dataMap.length > 0){
+        dataMap.sort(function (a, b) {
+          return b.totalCount - a.totalCount;
+        });
+      }
     }, [center]);
     // useEffect(() => {}, [startDate,endDate]);
     return (
@@ -102,7 +104,7 @@ export default function MapaGoogle({ setMarket, dataMap }) {
               sm={3}
               style={{ position: "absolute", marginLeft: "50%", bottom: "60%" }}
             >
-              {dataMap && (
+              {dataMap && dataMap.length > 0 && (
                 <Row className="infoMap">
                   {/* <h1>Detecciones por Cámara</h1> */}
                   {dataMap
@@ -170,7 +172,7 @@ export default function MapaGoogle({ setMarket, dataMap }) {
                     </Col>
                   </Row>
                 </div>
-              ) : (
+              ) : dataMap.length > 0 && (
                 <div className="infoMap" style={{ position: "absolute" }}>
                   <Row>
                     <Col className="py-4" xl={12}>

@@ -14,13 +14,13 @@ const SummaryCount = () => {
 
   const init = async () => {
     const perDay = await conections.getLPRTotalDay();
-    if (perDay.data && perDay.data.msg === "ok" && perDay.data.success) {
+    if (perDay.data && perDay.data.msg === "ok" && perDay.data.success && Object.keys(perDay.data.data).length > 0) {
          perDay.data.data.forEach((element) => {
         setTotalDay(element.total);
       });
     }
     const perWeek = await conections.getLPRTotalWeek();
-    if (perWeek.data && perWeek.data.msg === "ok" && perWeek.data.success) {
+    if (perWeek.data && perWeek.data.msg === "ok" && perWeek.data.success && Object.keys(perWeek.data.data).length > 0) {
       perWeek.data.data.forEach((element) => {
         incrementWeek += element.total;
       });
@@ -28,7 +28,7 @@ const SummaryCount = () => {
     }
 
     const perMonth = await conections.getLPRTotalMonth();
-    if (perMonth.data && perMonth.data.msg === "ok" && perMonth.data.success) {
+    if (perMonth.data && perMonth.data.msg === "ok" && perMonth.data.success && Object.keys(perMonth.data.data).length > 0) {
       perMonth.data.data.forEach((element) => {
         incrementMonth += element.total;
       });

@@ -54,6 +54,7 @@ import Chat from './ChatPlus/index'
 import Policia from './Policia';
 import { remove } from '../helpers/remove';
 import ResetPassword from './ResetPassword';
+import { MODE } from '../constants/token';
 // import { ContentSort } from 'material-ui/svg-icons';
 
 var io = sailsIOClient(socketIOClient);
@@ -105,7 +106,7 @@ class Main extends Component {
     callIsGoing: false,
     fisrtTimeCall: true,
     reproducirSonido: false,
-    showMatches: true,
+    showMatches: false,
     alertaCovid: [],
     alertaCovidd: [],
     alertaCovidState: false,
@@ -122,6 +123,7 @@ class Main extends Component {
     indexSos: undefined,
     complaints: [],
     loadChats: false,
+    darkMode: false,
   }
 
 
@@ -134,6 +136,11 @@ class Main extends Component {
           constants.urlPath = data[0].photo_path :
           constants.urlPath
     })
+      .catch(err => console.error(err));
+
+    if (localStorage.getItem(MODE)) {
+      this.setState({ darkMode: JSON.parse(localStorage.getItem(MODE)) });
+    };
 
     firebaseSos
       .app("sos")
@@ -1634,6 +1641,13 @@ class Main extends Component {
       showMatches: value
     })
   }
+
+  setDarkMode = () => {
+    const darkMode = !this.state.darkMode;
+    this.setState({ darkMode });
+    localStorage.setItem(MODE, JSON.stringify(darkMode));
+  };
+
   render() {
     return (
       <Router>
@@ -1665,12 +1679,14 @@ class Main extends Component {
               isSidemenuShow={this.state.sideMenu}
               cameraSideInfo={this._cameraSideInfo}
               userInfo={this.state.userInfo}
-              _reloadCams={this._reloadCams} />
+              _reloadCams={this._reloadCams}
+              darkMode={this.state.darkMode}
+              setDarkMode={this.setDarkMode} />
             : null
           }
           {this.state.isAuthenticated && this.state.showHeader ?
             (<React.Fragment>
-              <ArrowToggle ocultarMatches={this.ocultarMatches} />
+              {/* <ArrowToggle ocultarMatches={this.ocultarMatches} /> */}
               {/* {this.state.showMatches ?
                 <Matches
                   toggleSideMenu={this._cameraSideInfo}

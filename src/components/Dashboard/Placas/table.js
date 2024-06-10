@@ -20,7 +20,7 @@ const TableD = () =>{
  
 
     const dataTable = await conections.getLPRTableList()
-    if(dataTable.data && dataTable.data.msg ==='ok' && dataTable.data.success && dataTable.data.data){
+    if(dataTable.data && dataTable.data.msg ==='ok' && dataTable.data.success && Object.keys(dataTable.data.data).length > 0){
       dataTable.data.data.forEach(element => {
       if(!element.data[0]){
       }else{

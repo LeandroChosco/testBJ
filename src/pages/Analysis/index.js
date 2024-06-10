@@ -64,14 +64,14 @@ class Analysis extends Component {
     moduleActions: {},
     id_cam: 0,
     panes: [
-      { menuItem: 'En línea', render: () => <Tab.Pane style={{ background: "transparent", color: localStorage.getItem(MODE) === "darkTheme" ? "white" : "black", border: localStorage.getItem(MODE) === "darkTheme" && "solid 1px lightgray" }} attached={false}>{this._renderOnlineTab()}</Tab.Pane> },
-      { menuItem: 'Fuera de línea', render: () => <Tab.Pane style={{ background: "transparent", color: localStorage.getItem(MODE) === "darkTheme" ? "white" : "black", border: localStorage.getItem(MODE) === "darkTheme" && "solid 1px lightgray" }} attached={false}>{this._renderDisconnectedOfflineTab(false)}</Tab.Pane> },
-      { menuItem: 'Desconectadas', render: () => <Tab.Pane style={{ background: "transparent", color: localStorage.getItem(MODE) === "darkTheme" ? "white" : "black", border: localStorage.getItem(MODE) === "darkTheme" && "solid 1px lightgray" }} attached={false}>{this._renderDisconnectedOfflineTab(true)}</Tab.Pane> }
+      { menuItem: 'En línea', render: () => <Tab.Pane style={{ transition: "all 0.2s linear", background: "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", border: "none", boxShadow: "none" }} attached={false}>{this._renderOnlineTab()}</Tab.Pane> },
+      { menuItem: 'Fuera de línea', render: () => <Tab.Pane style={{ transition: "all 0.2s linear", background: "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", border: "none", boxShadow: "none" }} attached={false}>{this._renderDisconnectedOfflineTab(false)}</Tab.Pane> },
+      { menuItem: 'Desconectadas', render: () => <Tab.Pane style={{ transition: "all 0.2s linear", background: "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", border: "none", boxShadow: "none" }} attached={false}>{this._renderDisconnectedOfflineTab(true)}</Tab.Pane> }
     ],
     englishPanes: [
-      { menuItem: 'Online', render: () => <Tab.Pane style={{ background: "transparent", color: localStorage.getItem(MODE) === "darkTheme" ? "white" : "black", border: localStorage.getItem(MODE) === "darkTheme" && "solid 1px lightgray" }} attached={false}>{this._renderOnlineTab()}</Tab.Pane> },
-      { menuItem: 'Offline', render: () => <Tab.Pane style={{ background: "transparent", color: localStorage.getItem(MODE) === "darkTheme" ? "white" : "black", border: localStorage.getItem(MODE) === "darkTheme" && "solid 1px lightgray" }} attached={false}>{this._renderDisconnectedOfflineTab(false)}</Tab.Pane> },
-      { menuItem: 'Disconnected', render: () => <Tab.Pane style={{ background: "transparent", color: localStorage.getItem(MODE) === "darkTheme" ? "white" : "black", border: localStorage.getItem(MODE) === "darkTheme" && "solid 1px lightgray" }} attached={false}>{this._renderDisconnectedOfflineTab(true)}</Tab.Pane> }
+      { menuItem: 'Online', render: () => <Tab.Pane style={{ transition: "all 0.2s linear", background: "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", border: "none", boxShadow: "none" }} attached={false}>{this._renderOnlineTab()}</Tab.Pane> },
+      { menuItem: 'Offline', render: () => <Tab.Pane style={{ transition: "all 0.2s linear", background: "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", border: "none", boxShadow: "none" }} attached={false}>{this._renderDisconnectedOfflineTab(false)}</Tab.Pane> },
+      { menuItem: 'Disconnected', render: () => <Tab.Pane style={{ transition: "all 0.2s linear", background: "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", border: "none", boxShadow: "none" }} attached={false}>{this._renderDisconnectedOfflineTab(true)}</Tab.Pane> }
     ],
     offlineCamaras: [],
     disconnectedCameras: [],
@@ -108,9 +108,9 @@ class Analysis extends Component {
   render() {
     const { loading, panes, englishPanes, activeIndex } = this.state;
     return (
-      <div style={{ background: localStorage.getItem(MODE) === "darkTheme" ? "rgb(12, 48, 78)" : "white" }}>
+      <div style={{ transition: "all 0.2s linear", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white" }}>
         {loading ? (
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: 'absolute', background: localStorage.getItem(MODE) === "darkTheme" ? "rgb(12, 48, 78)" : "transparent", width: '100%', height: "100%", transition: "all 0.25s linear" }} align="center">
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: 'absolute', transition: "all 0.2s linear", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "transparent", width: '100%', height: "100%", transition: "all 0.25s linear" }} align="center">
             <img
               className="spinner"
               src={constants.urlPath}
@@ -118,10 +118,10 @@ class Analysis extends Component {
               alt={constants.urlPath} />
           </div>
         ) : (
-          <div id="analisis_holder" style={{ background: "transparent", color: "red !important" }} className={!this.props.showMatches ? 'hide-matches' : 'show-matches'}>
+          <div id="analisis_holder" style={{ transition: "all 0.2s linear", background: "transparent", color: "red !important" }} className={!this.props.showMatches ? 'hide-matches' : 'show-matches'}>
             {
               window.location.pathname === "/analisis" ? <Tab
-                menu={{ color: localStorage.getItem(MODE) === "darkTheme" ? "rgb(12, 48, 78)" : "white", inverted: localStorage.getItem(MODE) === "darkTheme" ? true : false, secondary: true, pointing: true }}
+                menu={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))), secondary: true, pointing: true }}
                 panes={localStorage.getItem(LANG) === "english" ? englishPanes : panes}
                 onTabChange={this.handleChangeTab}
                 defaultActiveIndex={activeIndex}
@@ -146,8 +146,9 @@ class Analysis extends Component {
       <div style={styles.tab} className='col-12'>
         {/*  */}
         <Button id="download-button" onClick={() => this._statusRevision()} style={{ display: "none" }}>Descargar</Button>
-        {(data.length > 0 || is_visible) && <Button onClick={() => this.setState({ showSearch: true })} >{localStorage.getItem(LANG) === "english" ? "Filter" : "Filtrar"}</Button>}
-        {(is_visible) && <Button onClick={() => this._loadCameras()}>{localStorage.getItem(LANG) === "english" ? "Delete filter" : "Limpiar filtro"}</Button>}
+        {!(is_visible) && <button onClick={() => this._changeDisplay(this.state.displayTipe === 1 ? 2 : 1)} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "light" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>{this.state.displayTipe === 1 ? <i class="fa fa-refresh" aria-hidden="true"></i> : <i class="fa fa-th" aria-hidden="true"></i>}</button>}
+        {(data.length > 0 || is_visible) && <button onClick={() => this.setState({ showSearch: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "light" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }} ><i class="fa fa-filter" aria-hidden="true"></i></button>}
+        {(is_visible) && <button onClick={() => this._loadCameras()} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "light" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>{localStorage.getItem(LANG) === "english" ? "Delete filter" : "Limpiar filtro"}</button>}
       </div>
     )
   }
@@ -189,11 +190,11 @@ class Analysis extends Component {
   _renderOnlineTab = () => {
     let { displayTipe, loading, cameraID, places, filterOnLine } = this.state;
     return (
-      <Fragment>
+      <div>
         {displayTipe !== 3 && !loading ? (
           <Fragment>
             {this._filterButtons(places, filterOnLine)}
-            {
+            {/* {
               places.length > 0 &&
               <div className="toggleViewButton row">
                 <ToggleButtonGroup className="col-12" type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={displayTipe}>
@@ -202,24 +203,24 @@ class Analysis extends Component {
                   {cameraID && (<ToggleButton value={3} variant="outline-dark"><Icon name="square" /></ToggleButton>)}
                 </ToggleButtonGroup>
               </div>
-            }
+            } */}
           </Fragment>
         ) : null}
         <div
-          style={{ position: 'absolute', top: '30%', background: 'transparent', width: '100%' }}
+          style={{ position: 'absolute', top: '30%', transition: "all 0.2s linear", background: 'transparent', width: '100%' }}
           align="center"
         />
         {this._showDisplay()}
-      </Fragment>
+      </div>
     );
   };
   _renderModals = () => {
     let { modalProblem, cameraProblem, typeReport, phones, mails, problemDescription, modal, recordMessage } = this.state;
     return (
       <Fragment>
-        <Modal style={{ color: localStorage.getItem(MODE) === "darkTheme" && "white" }} size="lg" show={modalProblem} onHide={() => this.setState({ modalProblem: false, cameraProblem: {}, problemDescription: '', phones: [], mails: [] })}>
-          <Modal.Header className={localStorage.getItem(MODE) === "darkTheme" && "darkTheme"}>{localStorage.getItem(LANG) === "english" ? `Report problem in camera ${cameraProblem.num_cam}` : `Reportar problema en cámara ${cameraProblem.num_cam}`}<CloseButton onClick={this._closeModal} style={{ color: localStorage.getItem(MODE) === "darkTheme" && "red" }} /></Modal.Header>
-          <Modal.Body className={localStorage.getItem(MODE) === "darkTheme" && "darkTheme"}>
+        <Modal style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white" }} size="lg" show={modalProblem} onHide={() => this.setState({ modalProblem: false, cameraProblem: {}, problemDescription: '', phones: [], mails: [] })}>
+          <Modal.Header className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "darkTheme"}>{localStorage.getItem(LANG) === "english" ? `Report problem in camera ${cameraProblem.num_cam}` : `Reportar problema en cámara ${cameraProblem.num_cam}`}<CloseButton onClick={this._closeModal} style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "red" }} /></Modal.Header>
+          <Modal.Body className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "darkTheme"}>
             <Form>
               <Form.Field>
                 <Form.Field>
@@ -229,7 +230,7 @@ class Analysis extends Component {
                     checked={typeReport === 1}
                     onChange={this.handleChange}
                   />
-                  <Label style={{ background: "transparent", color: localStorage.getItem(MODE) === "darkTheme" && "white" }}>
+                  <Label style={{ transition: "all 0.2s linear", background: "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white" }}>
                     {localStorage.getItem(LANG) === "english" ? "Report emergency" : "Reportar emergencia"}
                   </Label>
                 </Form.Field>
@@ -240,7 +241,7 @@ class Analysis extends Component {
                     checked={typeReport === 2}
                     onChange={this.handleChange}
                   />
-                  <Label style={{ background: "transparent", color: localStorage.getItem(MODE) === "darkTheme" && "white" }}>
+                  <Label style={{ transition: "all 0.2s linear", background: "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white" }}>
                     {localStorage.getItem(LANG) === "english" ? "Camera maintenance" : "Mantenimiento de cámara"}
                   </Label>
                 </Form.Field>
@@ -311,9 +312,9 @@ class Analysis extends Component {
             </Button>
           </Modal.Body>
         </Modal>
-        <Modal style={{ color: localStorage.getItem(MODE) === "darkTheme" && "white" }} size="lg" show={modal} onHide={() => this.setState({ modal: false })}>
-          <Modal.Header className={localStorage.getItem(MODE) === "darkTheme" && "darkTheme"} closeButton>{localStorage.getItem(LANG) === "english" ? "Finished recording" : "Grabación terminada"}</Modal.Header>
-          <Modal.Body className={localStorage.getItem(MODE) === "darkTheme" && "darkTheme"}>{recordMessage}</Modal.Body>
+        <Modal style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white" }} size="lg" show={modal} onHide={() => this.setState({ modal: false })}>
+          <Modal.Header className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "darkTheme"} closeButton>{localStorage.getItem(LANG) === "english" ? "Finished recording" : "Grabación terminada"}</Modal.Header>
+          <Modal.Body className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "darkTheme"}>{recordMessage}</Modal.Body>
         </Modal>
       </Fragment>
     );

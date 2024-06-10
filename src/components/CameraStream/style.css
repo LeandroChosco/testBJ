@@ -28,8 +28,9 @@
 }
 
 .styleTag {
-	margin-left: 20px !important;
-	margin-top: 2px !important;
+	margin-right: 0.5rem !important;
+	margin-top: 0.5rem !important;
+	border-radius: 2rem;
 }
 
 .ptz,

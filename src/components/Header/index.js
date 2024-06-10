@@ -10,7 +10,7 @@ import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 import ModalChangePassword from "./ModalChangePassword";
 import ModalVersions from "./ModalVersions";
-import { LANG, MODE } from "../../constants/token";
+import { LANG } from "../../constants/token";
 // import { Dropdown } from "semantic-ui-react";
 import versions from "./versionInfo";
 
@@ -20,7 +20,6 @@ class Header extends Component {
     showModal: false,
     showVersions: false,
     language: "spanish",
-    mode: "light",
   }
 
 
@@ -276,12 +275,8 @@ class Header extends Component {
       this.setState({ language: localStorage.getItem(LANG) });
     };
 
-    if (localStorage.getItem(MODE) && this.state.mode !== localStorage.getItem(MODE)) {
-      this.setState({ mode: localStorage.getItem(MODE) });
-    };
-
     return (
-      <Navbar sticky="top" expand="lg" variant="dark" bg="mh">
+      <Navbar style={{ transition: "all .2s linear" }} sticky="top" expand="lg" variant="dark" bg={this.props.darkMode ? "darkmode" : "mh"}>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse className="justify-content-end">
           <Nav className="mr-auto">
@@ -430,7 +425,7 @@ class Header extends Component {
                 {this.props.lang === "english" ? "Log out" : "Cerrar sesión"}
               </NavDropdown.Item>
               <NavDropdown.Item onClick={this._showVersions}>
-                <p style={{display: "flex", justifyContent: "center", marginTop: "0.2rem"}}>Versión {versions[0].version}</p>
+                <p style={{ display: "flex", justifyContent: "center", marginTop: "0.2rem" }}>Versión {versions[0].version}</p>
               </NavDropdown.Item>
               {
                 showVersions && <ModalVersions currentVersion={versions[0].version} modal={showVersions} hideModal={this._showVersions} />
@@ -444,6 +439,14 @@ class Header extends Component {
             ) : null}
             <Button variant="outline-light">
               <i className="arrow_forward"></i>
+            </Button>
+            <Button variant="outline-light" onClick={() => this.props.setDarkMode()}>
+              {
+                this.props.darkMode ?
+                  <i class="fa fa-sun-o" aria-hidden="true"></i>
+                  :
+                  <i class="fa fa-moon-o" aria-hidden="true"></i>
+              }
             </Button>
           </Nav>
         </Navbar.Collapse>

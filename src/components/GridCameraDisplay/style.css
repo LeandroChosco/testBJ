@@ -13,9 +13,10 @@
 	background-color: lightgray;
 	width: 100%;
 	display: none;
-	padding: 0 !important;
+	padding: 0 0 0 2rem !important;
 	min-height: 30%;
 	max-height: 80%;
+	right: 0;
 }
 
 .iconGrid {
@@ -26,7 +27,7 @@
 	cursor: ns-resize;
 }
 
-/* @keyframes show-grid {
+@keyframes show-grid {
 	0% {
 		top: 100%;
 	}
@@ -34,7 +35,17 @@
 	100% {
 		top: 70%;
 	}
-} */
+}
+
+@keyframes hide-grid {
+	0% {
+		top: 70%;
+	}
+
+	100% {
+		top: 100%;
+	}
+}
 
 .showfiles {
 	height: 30%;
@@ -46,6 +57,8 @@
 
 .hidefiles {
 	height: 0;
+	animation-name: hide-grid;
+	animation-duration: 1s;
 }
 
 .hiddenCameraNotshow {
@@ -59,6 +72,7 @@
 .stiky-top {
 	position: sticky;
 	padding: 0.5rem 2rem 1rem 0;
+	width: 100%
 }
 
 .recording {
@@ -79,6 +93,8 @@
 .showfilesinfocameragrid {
 	background-color: white;
 	height: 100%;
+	padding-left: 1rem;
+	margin-right: 1rem;
 }
 
 .ptzgrid,
@@ -184,6 +200,7 @@
 
 .camcolgridholder>.card {
 	height: 100%;
+	border: none !important;
 }
 
 /*
@@ -244,4 +261,11 @@
 	border-radius: .28571429rem;
 	border: 1px solid rgba(34, 36, 38, .15);
 	padding-bottom: 3rem;
+}
+
+.actions-btn-grid{
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	box-shadow: none !important;
 }

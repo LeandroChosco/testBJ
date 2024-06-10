@@ -18,7 +18,8 @@ export const CurveDash = ({camId}) => {
     if (
       alertPerHour.data &&
       alertPerHour.data.msg === "ok" &&
-      alertPerHour.data.success
+      alertPerHour.data.success &&
+      Object.keys(alertPerHour.data.data).length > 0
     ) {
       const sortAlertPerHour = await alertPerHour.data.data.sort((a, b) => {
         if (a.hour > b.hour) return 1;
@@ -79,7 +80,7 @@ export const DonoutDash = () => {
   const init = async () => {
     let typeLPR = await conections.getLPRGroupType();
 
-    if (typeLPR.data && typeLPR.data.msg === "ok" && typeLPR.data.success) {
+    if (typeLPR.data && typeLPR.data.msg === "ok" && typeLPR.data.success && Object.keys(typeLPR.data.data).length > 0) {
       typeLPR.data.data.forEach((element) => {
         dataArray.push(element.total);
       });
@@ -157,7 +158,7 @@ export const HeatMapChart = ({camId}) => {
   }
   const init = async () => {
     const dataWeek = await conections.getLPRAlertWeek();
-    if (dataWeek.data && dataWeek.data.msg === "ok" && dataWeek.data.success) {
+    if (dataWeek.data && dataWeek.data.msg === "ok" && dataWeek.data.success && Object.keys(dataWeek.data.data).length > 0) {
 
       if(camId){
         let dataArrayFilter=[]
@@ -386,7 +387,8 @@ export const ColumnChart = ({month,cam}) => {
     if (
       alertPerWeek.data &&
       alertPerWeek.data.msg === "ok" &&
-      alertPerWeek.data.success
+      alertPerWeek.data.success &&
+      Object.keys(alertPerWeek.data.data).length > 0
     ) {
       alertPerWeek.data.data.forEach((element) => {
         switch (element.day) {
@@ -513,7 +515,8 @@ export const ColumnMonthChart = ({ month,cam }) => {
     if (
       alertPerWeek.data &&
       alertPerWeek.data.msg === "ok" &&
-      alertPerWeek.data.success
+      alertPerWeek.data.success &&
+      Object.keys(alertPerWeek.data.data).length > 0
     ) {
       alertPerWeek.data.data.forEach((element) => {
         let current = new Date(element.date);
