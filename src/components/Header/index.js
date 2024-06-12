@@ -10,7 +10,7 @@ import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 import ModalChangePassword from "./ModalChangePassword";
 import ModalVersions from "./ModalVersions";
-import { LANG } from "../../constants/token";
+import { LANG, MODE } from "../../constants/token";
 // import { Dropdown } from "semantic-ui-react";
 import versions from "./versionInfo";
 
@@ -443,9 +443,9 @@ class Header extends Component {
             <Button variant="outline-light" onClick={() => this.props.setDarkMode()}>
               {
                 this.props.darkMode ?
-                  <i class="fa fa-sun-o" aria-hidden="true"></i>
+                  <i className="fa fa-sun-o" aria-hidden="true"></i>
                   :
-                  <i class="fa fa-moon-o" aria-hidden="true"></i>
+                  <i className="fa fa-moon-o" aria-hidden="true"></i>
               }
             </Button>
           </Nav>

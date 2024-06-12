@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Header, Button, Grid } from "semantic-ui-react";
 
 import firebaseC5cuajimalpa from "../../constants/configC5CJ";
+import { MODE } from "../../constants/token";
 const handleComplaintsRedirect = (userId, chatId) => {
   return window.location.href = window.location.href.replace(window.location.search, '').replace(window.location.hash, '').replace(window.location.pathname, `/chat/${userId}/${chatId}`)
 }
@@ -75,21 +76,21 @@ const UserDetailsComponent = props => {
   }, []);
 
   return (
-    <React.Fragment>
-      <Grid centered divided columns={2} className="containerInfo">
+    <React.Fragment style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
+      <Grid style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }} centered divided columns={2} className="containerInfo">
         <Grid.Column textAlign="center">
           <Header as="h4">Información del Vecino</Header>
-          <p>
+          <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
             <b>Nombre: </b> {dataUser.display_name}
           </p>
-          <p>
+          <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
             <b>Telefono: </b> {dataUser.phone}
           </p>
-          <p>
+          <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
             <b>Celular: </b> {dataUser.cellphone}
           </p>
         </Grid.Column>
-        <Grid.Column textAlign="center">
+        <Grid.Column style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }} textAlign="center">
           <Button onClick={_gotoChats}>Enviar Mensaje</Button>
         </Grid.Column>
       </Grid>

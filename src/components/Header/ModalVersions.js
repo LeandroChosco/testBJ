@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Accordion, AccordionBody, AccordionHeader, AccordionItem } from 'reactstrap';
-import { LANG, /*MODE, SAILS_ACCESS_TOKEN */ } from '../../constants/token';
+import { LANG, MODE, /*MODE, SAILS_ACCESS_TOKEN */ } from '../../constants/token';
 
 import versions from "./versionInfo";
 
@@ -22,10 +22,10 @@ const ModalVersions = ({ currentVersion, modal, hideModal }) => {
     return (
         <div>
             <Modal size="xl" backdrop={"static"} show={modal} onHide={hideModal} contentClassName={"margin-modal"}>
-                <Modal.Header closeButton>
+                <Modal.Header style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#0c304e" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }} closeButton>
                     <h3>{localStorage.getItem(LANG) === "english" ? `Version history (Current V${currentVersion})` : `Historial de versiones (Actual V${currentVersion})`}</h3>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#0c304e" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                     <div style={{ maxHeight: "48rem", overflowY: "scroll" }}>
                         <Accordion className="accordion-version" open={showVersions} toggle={toggle}>
                             {
@@ -44,20 +44,20 @@ const ModalVersions = ({ currentVersion, modal, hideModal }) => {
                                                         el.changes.map((element, index) => {
                                                             return (
                                                                 <li>
-                                                                    <p key={index} className="change-version">{index + 1}{") "} {element}</p>
+                                                                    <p key={index} className="change-version" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>{index + 1}{") "} {element}</p>
                                                                 </li>
                                                             )
                                                         })
                                                     }
                                                 </ul>
-                                                <hr />
+                                                <hr style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }} />
                                                 <h5>Bugs</h5>
                                                 <ul>
                                                     {
                                                         el.bugs.map((element, index) => {
                                                             return (
                                                                 <li>
-                                                                    <p key={index} className="change-version">{index + 1}{") "} {element}</p>
+                                                                    <p key={index} className="change-version" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>{index + 1}{") "} {element}</p>
                                                                 </li>
                                                             )
                                                         })

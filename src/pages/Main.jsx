@@ -1739,7 +1739,7 @@ class Main extends Component {
               />
             )}
           ></Route>
-          <Route path="/map" exact render={(props) => <Map showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} chats={this.state.chats} />} />
+          <Route path="/map" exact render={(props) => <Map showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} chats={this.state.chats} darkMode={this.state.darkMode} />} />
           <Route path="/welcome" exact render={(props) => <Welcome {...props} />} />
           <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated} />} />
           <Route path="/resetpassword" exact render={() => <ResetPassword />} />

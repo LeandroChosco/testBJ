@@ -12,6 +12,7 @@ import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
 import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "semantic-ui-css/semantic.min.css";
+import { MODE } from "../../constants/token";
 
 class Notifications extends Component {
   state = {
@@ -32,15 +33,16 @@ class Notifications extends Component {
       <div
         ref="camInfoSideMenu"
         className="sidenav-right"
-        style={{ overflow: "hidden" }}
+        style={{ overflow: "hidden", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}
       >
-        <button className="closebtn" onClick={this._toggle}>
+        <button className="closebtn" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} onClick={this._toggle}>
           &times;
         </button>
-        <Accordion styled style={{ height: "100%", paddingBottom: "100px" }}>
+        <Accordion styled style={{ height: "100%", paddingBottom: "100px", background: "transparent" }}>
           <Accordion.Title
             active={activeIndex === 0}
             index={0}
+            style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}
             onClick={this.handleClick}
           >
             <Icon name="dropdown" />
@@ -63,6 +65,7 @@ class Notifications extends Component {
           <Accordion.Title
             active={activeIndex === 1}
             index={1}
+            style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}
             onClick={this.handleClick}
           >
             <Icon name="dropdown" />
@@ -85,6 +88,7 @@ class Notifications extends Component {
           <Accordion.Title
             active={activeIndex === 2}
             index={2}
+            style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}
             onClick={this.handleClick}
           >
             <Icon name="dropdown" />
@@ -105,6 +109,7 @@ class Notifications extends Component {
           <Accordion.Title
             active={activeIndex === 3}
             index={3}
+            style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}
             onClick={this.handleClick}
           >
             <Icon name="dropdown" />
@@ -130,6 +135,7 @@ class Notifications extends Component {
           <Accordion.Title
             active={activeIndex === 4}
             index={4}
+            style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}
             onClick={this.handleClick}
           >
             <Icon name="dropdown" />

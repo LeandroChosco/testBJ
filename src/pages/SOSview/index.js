@@ -22,7 +22,7 @@ import shoes_green from '../../assets/images/icons/maps/shoes_green.png';
 import shoes_yellow from '../../assets/images/icons/maps/shoes_yellow.png';
 import shoes_red from '../../assets/images/icons/maps/shoes_red.png';
 import destination from '../../assets/images/icons/maps/destination.png';
-import { LANG } from '../../constants/token';
+import { LANG, MODE } from '../../constants/token';
 import { Spinner } from 'react-bootstrap';
 
 import chatSeguridad from '../../historial/chats_Seguridad_Benito-Juárez.json';
@@ -116,25 +116,25 @@ class Chat extends Component {
     ? [
       {
         menuItem: 'Seguridad',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguridad')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Seguridad')}</Tab.Pane>
       },
       {
         menuItem: 'Protección Civil',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Protección Civil')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Protección Civil')}</Tab.Pane>
       },
       {
         menuItem: 'Emergencia Médica',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Emergencia Médica')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Emergencia Médica')}</Tab.Pane>
       }
     ]
     : [
       {
         menuItem: 'Por Hora',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Hora')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Seguimiento Por Hora')}</Tab.Pane>
       },
       {
         menuItem: 'Por Seguimiento',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Destino')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Seguimiento Por Destino')}</Tab.Pane>
       }
     ];
 
@@ -142,25 +142,25 @@ class Chat extends Component {
     ? [
       {
         menuItem: 'Seguridad',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListHistorial('Seguridad')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Seguridad')}</Tab.Pane>
       },
       {
         menuItem: 'Protección Civil',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListHistorial('Protección Civil')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Protección Civil')}</Tab.Pane>
       },
       {
         menuItem: 'Emergencia Médica',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListHistorial('Emergencia Médica')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Emergencia Médica')}</Tab.Pane>
       }
     ]
     : [
       {
         menuItem: 'Por Hora',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListHistorial('Seguimiento Por Hora')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Seguimiento Por Hora')}</Tab.Pane>
       },
       {
         menuItem: 'Por Seguimiento',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListHistorial('Seguimiento Por Destino')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Seguimiento Por Destino')}</Tab.Pane>
       }
     ];
 
@@ -259,18 +259,18 @@ class Chat extends Component {
 
     return (
       <div className={!this.props.showMatches ? 'hide-matches app-container' : 'show-matches app-container'}>
-        <div className='row fullHeight'>
-          <div className='col-4 userList'>
+        <div className="row fullHeight" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#0c304e", transition: "all 0.2s linear" }}>
+          <div className="col-4 userList" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#2e597d", transition: "all 0.2s linear" }}>
             <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem" }}>
-              <p>Chats</p>
+              <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>Chats</p>
               <Radio
                 toggle
-                onClick={this._changeView}
+                // onClick={this._changeView}
                 id="toggle24"
                 checked={this.state.showHistorial}
                 style={{ margin: "0 1rem" }}
               />
-              <p>Historial</p>
+              <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>Historial</p>
             </div>
             <hr />
 
@@ -349,12 +349,12 @@ class Chat extends Component {
                     <span className="sr-only">Loading...</span>
                   </Spinner>
                 </div>
-                <p style={{ position: 'fixed', top: '56%', left: '62%' }}>Cargando chat</p>
+                {/* <p style={{ position: 'fixed', top: '56%', left: '62%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>Cargando chat</p> */}
               </>
               :
               showHistorial ? Object.keys(currentHistorial).length === 0 ?
                 <>
-                  <p style={{ position: 'fixed', top: '50%', left: '60%' }}>No se ha seleccionado ningún chat</p>
+                  <p style={{ position: 'fixed', top: '50%', left: '60%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>No se ha seleccionado ningún chat</p>
                 </>
                 :
                 <>
@@ -494,7 +494,7 @@ class Chat extends Component {
                         </div>
 
                         <div className='row' style={{ height: '20%', width: '100%', margin: 0, marginTop: '5px' }}>
-                          <Card style={{ width: '100%' }}>
+                        <Card style={{ width: "100%", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#598fbd", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear", zIndex: 1 }}>
                             <Card.Content>
                               <div className='row'>
                                 <div className='col-9'>
@@ -667,17 +667,17 @@ class Chat extends Component {
                       ) : loading === true ? (
                         <>
                           <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
-                          <p style={{ position: 'fixed', top: '56%', left: '62%' }}>Cargando chat</p>
+                          {/* <p style={{ position: 'fixed', top: '56%', left: '62%' }}>Cargando chat</p> */}
                         </>
                       ) : (
-                        <p style={{ position: 'fixed', top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p>
+                        <p style={{ position: 'fixed', top: '50%', left: '60%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>No se ha seleccionado ningún chat</p>
                       ) : loading === true ? (
                         <>
                           <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
-                          <p style={{ position: 'fixed', top: '56%', left: '62%' }}>Cargando chat</p>
+                          {/* <p style={{ position: 'fixed', top: '56%', left: '62%' }}>Cargando chat</p> */}
                         </>
                       ) : (
-                        <p style={{ position: 'fixed', top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p>
+                        <p style={{ position: 'fixed', top: '50%', left: '60%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>No se ha seleccionado ningún chat</p>
                       )}
                   </div>
                   {chatId !== '' && chats[index] ? (
@@ -824,7 +824,7 @@ class Chat extends Component {
             onChange={this.filterAction}
           ></Input>
         </div>
-        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
+        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada", transition: "all 0.2s linear", padding: '20px' }}>
           {chats.map((chat, i) => {
             const critical_color =
               chat && chat.critical_state && chat.critical_state !== 0 ? CRITICAL_COLORS[chat.critical_state] : null;
@@ -839,9 +839,9 @@ class Chat extends Component {
                 className={i === index ? 'activeChat' : ''}
                 style={
                   critical_color !== null && type.includes('Seguimiento ') ? (
-                    { width: '100%', boxShadow: critical_color.boxShadow }
+                    { width: '100%', boxShadow: critical_color.boxShadow, color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#598fbd", transition: "all 0.2s linear" }
                   ) : (
-                    { width: '100%' }
+                    { width: '100%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#598fbd", transition: "all 0.2s linear" }
                   )
                 }
                 key={i}
@@ -850,7 +850,7 @@ class Chat extends Component {
                 <Card.Content>
                   <div style={{ position: 'relative' }}>
                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <h4>{chat.user_name}</h4> <p>{date}</p>
+                      <h4>{chat.user_name}</h4> <p style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear"}}>{date}</p>
                     </div>
                     {chat.active !== undefined && chat.active ? (
                       <p>
@@ -861,9 +861,9 @@ class Chat extends Component {
                           ': ' +
                           chat.messages[chat.messages.length - 1].msg //msg
                         ) : (
-                          'No hay mensajes que mostart'
+                          'No hay mensajes que mostar'
                         ) : (
-                          'No hay mensajes que mostart'
+                          'No hay mensajes que mostar'
                         )}
                       </p>
                     ) : (
@@ -960,7 +960,7 @@ class Chat extends Component {
             onChange={this.filterAction}
           ></Input>
         </div>
-        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
+        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada", transition: "all 0.2s linear", padding: '20px' }}>
           {chats.map((chat, i) => {
             const critical_color =
               chat && chat.critical_state && chat.critical_state !== 0 ? CRITICAL_COLORS[chat.critical_state] : null;
@@ -997,9 +997,9 @@ class Chat extends Component {
                           ': ' +
                           chat.messages[chat.messages.length - 1].msg //msg
                         ) : (
-                          'No hay mensajes que mostart'
+                          'No hay mensajes que mostar'
                         ) : (
-                          'No hay mensajes que mostart'
+                          'No hay mensajes que mostar'
                         )}
                       </p>
                     ) : (

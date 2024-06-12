@@ -11,6 +11,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
+import { MODE } from '../../constants/token';
 class ModalAddCams extends Component {
     state = {
         auxCams: [],
@@ -51,18 +52,18 @@ class ModalAddCams extends Component {
             // onSelectAll: (isSelect, rows, e) => this._selectionAll(isSelect, rows, e)
         }
         return (
-            <Modal style={{ display: this.state.showModalView ? 'none' : 'block' }} size="xl" backdrop={'static'} show={this.props.modal} onHide={this.props.hide}>
-                <Modal.Header closeButton>
-                    <p>Agregar Cámaras <b style={{ color: 'black' }}>{this.props.name_cuadrante.name}</b></p>
+            <Modal style={{ display: this.state.showModalView ? 'none' : 'block', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white" }} size="xl" backdrop={'static'} show={this.props.modal} onHide={this.props.hide}>
+                <Modal.Header style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#598fbd" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }} closeButton>
+                    <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>Agregar cámaras a cuadrante: <b style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>{this.props.name_cuadrante.name}</b></p>
                 </Modal.Header>
-                <Modal.Body className="camsGroup">
+                <Modal.Body style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#598fbd" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }} className="camsGroup">
                     {this.state.loading ?
-                        <Segment style={{ height: '100%' }}>
+                        <Segment style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#598fbd" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", height: "100%" }}>
 
                             <Image src={img} />
                         </Segment>
                         :
-                        <Fragment>
+                        <Fragment style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
                             <BootstrapTable keyField='id' data={this.state.auxCams} columns={columns} pagination={paginationFactory()} filter={filterFactory()} selectRow={selectRow} />
                             <div style={{ textAlign: 'center', padding: "0 0 0.3rem 0", marginTop: 10 }} className="col">
                                 <Button style={{ width: '360px', marginLeft: '30px', marginBottom: "1rem" }} onClick={this._addCam} disabled={this.state.selection.length === 0}>Actualizar<Icon style={{ marginLeft: '3px' }} name='add' /></Button>

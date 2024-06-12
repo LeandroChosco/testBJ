@@ -359,10 +359,13 @@ class CameraStream extends Component {
             </div>
             {this.props.hideText ? null : (
               <div align="left" style={{ padding: "1rem 0.5rem" }}>
-                <h2>{localStorage.getItem(LANG) === "english" ? `Camera ${num_cam}   ` : `Cámara ${num_cam}   `}{this.props.marker.extraData.dataCamValue === undefined || this.props.marker.extraData.tipo_camara === undefined ? null :
-                  this.props.marker.extraData.dataCamValue.tipo_camara === 2 || this.props.marker.extraData.tipo_camara === 2 ? (
-                    <i>{localStorage.getItem(LANG) === "english" ? `, Type: PTZ` : `, Tipo: PTZ`}</i>
-                  ) : null}</h2>
+                {
+                  (window.location.pathname.includes("analisis") || window.location.pathname.includes("map") || window.location.pathname.includes("cuadrantes")) &&
+                  <h2>{localStorage.getItem(LANG) === "english" ? `Camera ${num_cam}   ` : `Cámara ${num_cam}   `}{this.props.marker.extraData.dataCamValue === undefined || this.props.marker.extraData.tipo_camara === undefined ? null :
+                    this.props.marker.extraData.dataCamValue.tipo_camara === 2 || this.props.marker.extraData.tipo_camara === 2 ? (
+                      <i>{localStorage.getItem(LANG) === "english" ? `, Type: PTZ` : `, Tipo: PTZ`}</i>
+                    ) : null}</h2>
+                }
                 <div id={`cameraInfo-${this.props.marker.extraData.num_cam}`} style={{ marginBottom: "1rem" }}>
 
                   {cameraName && !this.props.hideInfo ? <p>
@@ -385,7 +388,7 @@ class CameraStream extends Component {
                   <div style={{ paddingTop: "1rem" }}>
                     {
                       window.location.pathname !== "/camarasInternas" &&
-                      <button onClick={() => this.setState({ showModalMoreInformation: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i class="fa fa-info" aria-hidden="true"></i></button>
+                      <button onClick={() => this.setState({ showModalMoreInformation: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-info" aria-hidden="true"></i></button>
                     }
                     {
                       !copyButton ?

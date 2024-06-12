@@ -97,9 +97,9 @@ const Placas = () => {
         <div className="py-4 px-5" style={{ background: "transparent" }}>
           <h6>Periodo</h6>
           <Row>
-            <div class="form-check px-4 mt-3 mr-1" style={{ background: "transparent" }}>
+            <div className="form-check px-4 mt-3 mr-1" style={{ background: "transparent" }}>
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="exampleRadios"
                 id="exampleRadios1"
@@ -109,13 +109,13 @@ const Placas = () => {
                   setIsWeek(true);
                 }}
               />
-              <label class="form-check-label" for="exampleRadios1">
+              <label className="form-check-label" for="exampleRadios1">
                 Semana
               </label>
             </div>
-            <div class="form-check mt-3" style={{ background: "transparent" }}>
+            <div className="form-check mt-3" style={{ background: "transparent" }}>
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="exampleRadios"
                 id="exampleRadios2"
@@ -125,7 +125,7 @@ const Placas = () => {
                   setIsWeek(false);
                 }}
               />
-              <label class="form-check-label" for="exampleRadios2">
+              <label className="form-check-label" for="exampleRadios2">
                 Mes
               </label>
             </div>
@@ -134,7 +134,7 @@ const Placas = () => {
           <Row>
             <div className="px-4 mt-3 mr-1" style={{ background: "transparent" }}>
               <label for="inputState">Camara</label>
-              <select id="inputState" class="form-control" onChangeCapture={(value) => {
+              <select id="inputState" className="form-control" onChangeCapture={(value) => {
                 setCam(value.target.value)
               }}>
                 {
@@ -166,7 +166,7 @@ const Placas = () => {
           </Col>
           <Col className="" xl={6} lg={12} md={12}>
             <div className="hfull card " style={{ background: "transparent" }}>
-              <div class="card-header">Conteo de placas por día</div>
+              <div className="card-header">Conteo de placas por día</div>
               <div className="w-100 center">
                 <CurveDash camId={cam} />
               </div>
