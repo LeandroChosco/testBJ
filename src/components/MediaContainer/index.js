@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Button } from 'semantic-ui-react';
 import { Modal } from 'react-bootstrap';
-import {SAILS_ACCESS_TOKEN} from '../../constants/token'
+import { MODE, SAILS_ACCESS_TOKEN } from '../../constants/token'
 import Spinner from 'react-bootstrap/Spinner';
 import ReactPlayer from 'react-player';
 import axios from 'axios';
@@ -17,15 +17,15 @@ class MediaContainer extends Component {
 
   render() {
     let { modal, loading } = this.state;
-    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value,  port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo, coverImage, historyServerDns, historyServerPort, historyServerProtocol, exists_image_historic, servidorMultimedia } = this.props;
+    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value, port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo, coverImage, historyServerDns, historyServerPort, historyServerProtocol, exists_image_historic, servidorMultimedia } = this.props;
     let dnsIp = ""
     let portCam = ""
 
-    let poster = !exists_image_historic && src === "images/no_video.jpg" ? noHistoric: coverImage !== "images/no_imagen.jpg"? coverImage ? urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol) : noDisponible : noDisponible;
+    let poster = !exists_image_historic && src === "images/no_video.jpg" ? noHistoric : coverImage !== "images/no_imagen.jpg" ? coverImage ? urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol) : noDisponible : noDisponible;
     // let poster = value.relative_path_image === "images/no_imagen.jpg" ? noDisponible : value.relative_path_image === "images/no_video.jpg" ? noHistoric : (servidorMultimedia + "/" + value.relative_path_image);
 
 
-    let protocol= null;
+    let protocol = null;
     if (dnsContainer) {
       dnsIp = dnsContainer
     } else {
@@ -38,14 +38,14 @@ class MediaContainer extends Component {
       portCam = "3000"
     }
 
-    if(cam.dataCamValue && cam.dataCamValue.protocolhistory){
-      protocol= cam.dataCamValue.protocolhistory;
+    if (cam.dataCamValue && cam.dataCamValue.protocolhistory) {
+      protocol = cam.dataCamValue.protocolhistory;
     }
 
-    if(cam.protocolhistory && !cam.dataCamValue){
-      protocol= cam.protocolhistory;
+    if (cam.protocolhistory && !cam.dataCamValue) {
+      protocol = cam.protocolhistory;
     }
-    
+
     return (
       <div className={!covid ? 'mediaContainer col-6 p10' : 'col-3 p-3'}>
         <Card onClick={src !== 'images/no_video.jpg' ? () => this.setState({ modal: true }) : null}>
@@ -54,18 +54,18 @@ class MediaContainer extends Component {
               url={
                 isQnap ? (`${src}&open=normal`)
                   : typeMBOX === 'light' && isRecord === false && lightTwo ? (`${protocol}://${dnsIp}/${src}`)
-                  :typeMBOX === 'light' && isRecord === false && lightTwo === false ? (`${src}`)
-                  : typeMBOX === 'light' && isRecord === true ? urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol): urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
+                    : typeMBOX === 'light' && isRecord === false && lightTwo === false ? (`${src}`)
+                      : typeMBOX === 'light' && isRecord === true ? urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol) : urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
               }
               style={{ backgroundColor: '#000' }}
               width="100%"
               height="120px"
               config={{
-                file: { 
-                  attributes: { 
+                file: {
+                  attributes: {
                     poster: poster,
-                  } 
-                } 
+                  }
+                }
               }}
             />
           )}
@@ -73,7 +73,7 @@ class MediaContainer extends Component {
             <img
               src={
                 covid ? (`${constants.sails_url}/${value.path}/${value.name}`)
-                  :urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
+                  : urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
               }
               style={{ width: '100%' }}
               alt="img"
@@ -84,7 +84,7 @@ class MediaContainer extends Component {
 
         {/* Modal */}
         <Modal show={modal} onHide={() => src !== 'images/no_video.jpg' ? this.setState({ modal: false }) : null}>
-          <Modal.Header closeButton>{
+          <Modal.Header closeButton style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white" }}>{
             loading ? (
               <div>
                 <Button variant="primary" disabled>
@@ -94,21 +94,21 @@ class MediaContainer extends Component {
               </div>
             ) : noButtons ? null : (
               <div>
-                <Button basic onClick={this._saveFile}><i className="fa fa-download" /> Descargar</Button>
+                <Button style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }} basic onClick={this._saveFile}><i className="fa fa-download" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }} /> <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>Descargar</p></Button>
                 {!covid && !dns_ip && !isQnap && (
-                  <Button basic negative onClick={this._deleteFile}><i className="fa fa-trash" /> Eliminar</Button>
+                  <Button basic negative onClick={this._deleteFile}><i className="fa fa-trash" /> <p style={{color: "red"}}>Eliminar</p></Button>
                 )}
               </div>
             )
           }</Modal.Header>
-          <Modal.Body>
+          <Modal.Body closeButton style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white" }}>
             {exists_video && (
               <ReactPlayer
                 url={
                   isQnap ? (`${src}&open=normal`)
-                    :typeMBOX === 'light' && isRecord === false && lightTwo ? (`${protocol}://${dnsIp}/${src}`)
-                    :typeMBOX === 'light' && isRecord === false && lightTwo === false ? (`${src}`)
-                    : typeMBOX === 'light' && isRecord === true ? urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol): urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
+                    : typeMBOX === 'light' && isRecord === false && lightTwo ? (`${protocol}://${dnsIp}/${src}`)
+                      : typeMBOX === 'light' && isRecord === false && lightTwo === false ? (`${src}`)
+                        : typeMBOX === 'light' && isRecord === true ? urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol) : urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
                 }
                 playing={true}
                 controls={true}
@@ -122,7 +122,7 @@ class MediaContainer extends Component {
                 id="imagecontainerfrommedia"
                 src={
                   covid ? (`${constants.sails_url}/${value.path}/${value.name}`)
-                    :urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
+                    : urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
                 }
                 style={{ width: '100%' }}
                 crossOrigin={!isQnap}
@@ -141,7 +141,7 @@ class MediaContainer extends Component {
 
     let dnsIp = ""
     let portCam = ""
-    let protocol= null;
+    let protocol = null;
 
     if (dnsContainer) {
       dnsIp = dnsContainer
@@ -155,12 +155,12 @@ class MediaContainer extends Component {
       portCam = "3000"
     }
 
-    if(cam.dataCamValue && cam.dataCamValue.protocolhistory){
-      protocol= cam.dataCamValue.protocolhistory;
+    if (cam.dataCamValue && cam.dataCamValue.protocolhistory) {
+      protocol = cam.dataCamValue.protocolhistory;
     }
 
-    if(cam.protocolhistory && !cam.dataCamValue){
-      protocol= cam.protocolhistory;
+    if (cam.protocolhistory && !cam.dataCamValue) {
+      protocol = cam.protocolhistory;
     }
 
     let response = {};
@@ -168,7 +168,7 @@ class MediaContainer extends Component {
       isQnap && !covid ? `${src}${exists_video ? '&open=forcedownload' : ''}`
         : covid ? `${constants.sails_url}/${value.relative_path}/${value.name}`
           : awsApiStreamsCams ? `${src}${apiStorageKey}`
-          : urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
+            : urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
     );
 
     if (isQnap && !covid && exists_video) {
@@ -185,9 +185,11 @@ class MediaContainer extends Component {
   _deleteFile = async () => {
     let { cam, value, exists_video, exists_image, userIdContainer, completeCamera } = this.props;
     let SailsToken = localStorage.getItem(SAILS_ACCESS_TOKEN);
-    let response = await axios.delete(`${constants.sails_url}/cams/${cam.id}/${value.id}/${userIdContainer || 1}/V2`, {headers:{
-      'Authorization': SailsToken
-    }});
+    let response = await axios.delete(`${constants.sails_url}/cams/${cam.id}/${value.id}/${userIdContainer || 1}/V2`, {
+      headers: {
+        'Authorization': SailsToken
+      }
+    });
     if (response.data && response.data.success) {
       this.setState({ modal: false, display: 'none' });
       this.props.reloadData(completeCamera, false, exists_video, false, exists_image);

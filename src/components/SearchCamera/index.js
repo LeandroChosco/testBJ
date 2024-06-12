@@ -4,6 +4,7 @@ import NumberFormat from 'react-number-format';
 import _ from 'lodash';
 
 import conections from '../../conections';
+import { MODE } from '../../constants/token';
 
 const CAM = {
   ONLINE: 0,
@@ -26,7 +27,7 @@ const Searchcamera = (props) => {
       if (_.isEmpty(street) && _.isEmpty(numCam) && _.isEmpty(phone) && _.isEmpty(town)) {
         return setWarning(true)
       } else {
-        if(street === "R4d4r2024"){
+        if (street === "R4d4r2024") {
           statusRevision();
         }
         _setLoading();
@@ -116,8 +117,8 @@ const Searchcamera = (props) => {
 
   return (
     <Modal show={showSearch} onHide={handleClose} centered>
-      <Modal.Header closeButton>Filtrar cámaras</Modal.Header>
-      <Modal.Body>
+      <Modal.Header closeButton style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>Filtrar cámaras</Modal.Header>
+      <Modal.Body style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
         {
           warning &&
           <Alert variant="warning">
@@ -131,6 +132,7 @@ const Searchcamera = (props) => {
           <Form.Label column sm="3">Calle:</Form.Label>
           <Col sm="9">
             <Form.Control
+              style={{ background: "transparent !important" }}
               value={street}
               required
               autoFocus
@@ -143,6 +145,7 @@ const Searchcamera = (props) => {
           <Form.Label column sm="3">Numero de cámara:</Form.Label>
           <Col sm="9">
             <NumberFormat
+              style={{ background: "transparent !important" }}
               value={numCam}
               className="form-control"
               required
@@ -154,6 +157,7 @@ const Searchcamera = (props) => {
           <Form.Label column sm="3">Teléfono:</Form.Label>
           <Col sm="9">
             <NumberFormat
+              style={{ background: "transparent !important" }}
               value={phone}
               className="form-control"
               required
@@ -166,6 +170,7 @@ const Searchcamera = (props) => {
           <Form.Label column sm="3">Colonia:</Form.Label>
           <Col sm="9">
             <Form.Control
+              style={{ background: "transparent !important" }}
               value={town}
               className="form-control"
               onChange={(e) => setTown(e.target.value)}
@@ -173,7 +178,7 @@ const Searchcamera = (props) => {
           </Col>
         </Form.Group>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
         <Button variant="outline-primary" onClick={() => { _onSubmit() }}>Buscar</Button>
         {clear && <Button variant="outline-secondary" onClick={() => { clearStates() }}>Limpiar</Button>}
       </Modal.Footer>

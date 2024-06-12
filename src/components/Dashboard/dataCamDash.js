@@ -5,6 +5,7 @@ import {
     ResponsiveContainer
 } from 'recharts';
 import { BsCameraVideoFill, BsCameraVideoOffFill, BsCameraVideoOff } from 'react-icons/bs'
+import { MODE } from '../../constants/token';
 
 const styles = {
     noData: {
@@ -137,7 +138,7 @@ const DataCamsDash = (props) => {
 
             {
                 options && series ?
-                    <Row>
+                    <Row style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
                         <Col>
                             {
                                 (series[0] === 0 && series[1] === 0 && series[2] === 0) ?
@@ -181,7 +182,7 @@ const DataCamsDash = (props) => {
                         </Col>
                     </Row>
                     :
-                    <div style={styles.noData}>No hay datos dispononibles</div>
+                    <div style={styles.noData}>No hay datos disponibles</div>
 
             }
 

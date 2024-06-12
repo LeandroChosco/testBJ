@@ -97,6 +97,13 @@
 	margin-right: 1rem;
 }
 
+.showfilesdarkmodegrid {
+	background-color: var(--dark-mode-color);
+	height: 100%;
+	padding-left: 1rem;
+	margin-right: 1rem;
+}
+
 .ptzgrid,
 .snapshotsgrid,
 .videosgrid,
@@ -240,7 +247,7 @@
 }
 
 .conection-card {
-	border-color: rgba(34, 36, 38, .15) ;
+	border-color: rgba(34, 36, 38, .15);
 	box-shadow: 0 1px 2px 0 rgba(34, 36, 38, .15);
 	background-color: #f5f5f5;
 	transition: 0.2s;
@@ -263,7 +270,7 @@
 	padding-bottom: 3rem;
 }
 
-.actions-btn-grid{
+.actions-btn-grid {
 	display: grid;
 	justify-content: center;
 	align-items: center;

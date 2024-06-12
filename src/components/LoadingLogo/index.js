@@ -1,13 +1,14 @@
 import React from 'react';
 import constants from '../../constants/constants';
+import { MODE } from '../../constants/token';
 
 const LoadingLogo = () => {
     return (
-        <div style={{ position: 'absolute', top: '30%', background: 'transparent', width: '100%' }} align='center'>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: 'absolute', width: '100%', height: "100%", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white" }} align='center'>
             <img
                 className="spinner"
                 src={constants.urlPath}
-                style={{ width: "10%", borderRadius: "40%" }}
+                style={{ width: "10%", height: "20%", marginBottom: "12.5%" }}
                 alt={constants.urlPath} />
         </div>
     )

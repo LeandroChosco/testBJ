@@ -1,4 +1,5 @@
 import React from 'react';
+import { MODE } from '../../constants/token';
 
 const DataTicketsPerUserRedesign = (props) => {
   const { dataTicketsPerUser } = props;
@@ -15,7 +16,7 @@ const DataTicketsPerUserRedesign = (props) => {
             <th>Total de Tickets</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
           {dataToTable.map ? dataToTable.map((value, index) =>
             <tr key={index} >
               <td >{index + 1}</td>

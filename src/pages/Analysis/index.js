@@ -121,7 +121,7 @@ class Analysis extends Component {
           <div id="analisis_holder" style={{ transition: "all 0.2s linear", background: "transparent", color: "red !important" }} className={!this.props.showMatches ? 'hide-matches' : 'show-matches'}>
             {
               window.location.pathname === "/analisis" ? <Tab
-                menu={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))), secondary: true, pointing: true }}
+                menu={{ inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))), secondary: true, pointing: true }}
                 panes={localStorage.getItem(LANG) === "english" ? englishPanes : panes}
                 onTabChange={this.handleChangeTab}
                 defaultActiveIndex={activeIndex}

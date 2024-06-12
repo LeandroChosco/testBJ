@@ -75,6 +75,7 @@ const TableD = () =>{
 
 
     return(
+      (dataQuery && dataQuery.length > 0) &&
         <>
             <BootstrapTable keyField='id' data={ dataQuery } columns={ columns } pagination={paginationFactory()} filter={filterFactory()} />
         </>

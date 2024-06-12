@@ -7,6 +7,7 @@ import {
 import { BsEnvelopeOpenFill, BsFillFileEarmarkCheckFill } from 'react-icons/bs'
 import { FaLayerGroup } from 'react-icons/fa'
 import { MdAccessTimeFilled } from 'react-icons/md'
+import { MODE } from '../../constants/token';
 
 const styles = {
     noData: {
@@ -137,7 +138,7 @@ const DataTicketsDash = (props) => {
 
             {
                 options && series ?
-                    <Row>
+                    <Row style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
                         <Col>
                             <Chart options={options} series={series} type="donut" height={320} />
                         </Col>
@@ -185,7 +186,7 @@ const DataTicketsDash = (props) => {
                         </Col>
                     </Row>
                     :
-                    <div style={styles.noData}>No hay datos dispononibles</div>
+                    <div style={styles.noData}>No hay datos disponibles</div>
 
             }
 

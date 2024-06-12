@@ -323,9 +323,6 @@ export const HeatMapChart = ({camId}) => {
         enabled: false,
       },
       colors: ["#008FFB"],
-      title: {
-        text: "Mapa de Calor",
-      },
     },
   };
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import conections from "../../../conections";
 import "./styles.css";
 import { Icon } from "semantic-ui-react";
+import { MODE } from "../../../constants/token";
 const SummaryCount = () => {
   // Variables Auxiliares
   let incrementWeek = 0;
@@ -15,7 +16,7 @@ const SummaryCount = () => {
   const init = async () => {
     const perDay = await conections.getLPRTotalDay();
     if (perDay.data && perDay.data.msg === "ok" && perDay.data.success && Object.keys(perDay.data.data).length > 0) {
-         perDay.data.data.forEach((element) => {
+      perDay.data.data.forEach((element) => {
         setTotalDay(element.total);
       });
     }
@@ -56,10 +57,10 @@ const SummaryCount = () => {
             <div className="flex-row d-flex justify-content-between"></div>
             <div className="row">
               <div>
-                <div className="top-0 mb-0 textSize text-black text-start">
+                <div className="top-0 mb-0 textSize text-black text-start" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
                   {totalDay}
                 </div>
-                <p className="mb-0  pt-4 text-xxs text-capitalize text-center text-black">
+                <p className="mb-0  pt-4 text-xxs text-center text-black" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
                   Conteo por <b>día</b>
                 </p>
               </div>
@@ -87,10 +88,10 @@ const SummaryCount = () => {
             <div className="flex-row d-flex justify-content-between"></div>
             <div className="row">
               <div>
-                <div className="top-0 mb-0 textSize text-black text-start">
+                <div className="top-0 mb-0 textSize text-black text-start" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
                   {totalWeek}
                 </div>
-                <p className="mb-0  pt-4 text-xxs text-capitalize text-center text-black">
+                <p className="mb-0  pt-4 text-xxs text-center text-black" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
                   Conteo por <b>semana</b>
                 </p>
               </div>
@@ -118,10 +119,10 @@ const SummaryCount = () => {
             <div className="flex-row d-flex justify-content-between"></div>
             <div className="row">
               <div>
-                <div className="top-0 mb-0 textSize text-black text-start">
+                <div className="top-0 mb-0 textSize text-black text-start" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
                   {totalMonth}
                 </div>
-                <p className="mb-0  pt-4 text-xxs text-capitalize text-center text-black">
+                <p className="mb-0  pt-4 text-xxs text-center text-black" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
                   Conteo por <b>mes</b>
                 </p>
               </div>
@@ -149,10 +150,10 @@ const SummaryCount = () => {
             <div className="flex-row d-flex justify-content-between"></div>
             <div className="row">
               <div>
-                <div className="top-0 mb-0 textSize text-black text-start">
+                <div className="top-0 mb-0 textSize text-black text-start" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
                   {totalAlerts}
                 </div>
-                <p className="mb-0  pt-4 text-xxs text-capitalize text-center text-black">
+                <p className="mb-0  pt-4 text-xxs text-center text-black" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
                   Coincidencias por <b>mes</b>
                 </p>
               </div>

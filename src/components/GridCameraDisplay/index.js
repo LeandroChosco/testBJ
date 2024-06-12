@@ -156,7 +156,7 @@ class GridCameraDisplay extends Component {
 		}
 
 		return (
-			<div className="gridCameraContainer" align="center" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>
+			<div className="gridCameraContainer" align="center" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "black", transition: "all 0.2s linear" }}>
 				<NotificationSystem ref={this.notificationSystem} />
 				<Row style={{ marginBottom: gridActive && "18rem" }}>
 					{loadingUpdate ?
@@ -216,36 +216,36 @@ class GridCameraDisplay extends Component {
 					</div>
 				) : null}
 				{is_filter && markers.length === 0 ? (
-					<div align="center">
+					<div align="center" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
 						{Strings.noResults}
 					</div>
 				) : null}
-				<div id="gridCameraControl" style={{ zIndex: 3, background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" : "lightgray", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} className={`${!autoplay ? !showMatches ? ('sin-margin camGridControl showfiles') : ('con-margin camGridControl showfiles') : !showMatches ? ('sin-margin camGridControl') : ('con-margin camGridControl')} ${!gridActive ? "hidefiles" : ""}`}>
+				<div id="gridCameraControl" style={{ zIndex: 3, background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" : "lightgray", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "black", transition: "all 0.2s linear" }} className={`${!autoplay ? !showMatches ? ('sin-margin camGridControl showfiles') : ('con-margin camGridControl showfiles') : !showMatches ? ('sin-margin camGridControl') : ('con-margin camGridControl')} ${!gridActive ? "hidefiles" : ""}`}>
 					<div id="iconGrid" className="iconGrid">
 						<BsArrowsExpand id="expand-grid" />
 					</div>
 					<div className="row stiky-top">
 						<div className="col-11" style={{ display: "flex", justifyContent: "space-around", marginLeft: "1.1rem" }}>
-							{moduleActions && moduleActions.btnsnap && (<Button basic circular className="actions-btn-grid" disabled={photos.length >= 5 || loadingSnap || loadingRecord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1} loading={loadingSnap} onClick={() => this._snapShot(selectedCamera)}><i className="fa fa-camera" />{!loadingSnap && <p style={{ marginTop: "0.2rem" }}>Toma de foto</p>}</Button>)}
+							{moduleActions && moduleActions.btnsnap && (<Button basic circular className="actions-btn-grid" disabled={photos.length >= 5 || loadingSnap || loadingRecord || loadingFiles || restarting || recordingCams.indexOf(selectedCamera) > -1} loading={loadingSnap} onClick={() => this._snapShot(selectedCamera)}><i className="fa fa-camera" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }} />{!loadingSnap && <p style={{ marginTop: "0.2rem", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }} >Toma de foto</p>}</Button>)}
 							{/* <Button basic disabled={loadingSnap||loadingRecord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} circular onClick={this._playPause}><i className={isplay?'fa fa-pause':'fa fa-play'}/><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button> */}
-							{moduleActions && moduleActions.btnrecord && typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && (<Button basic circular className="actions-btn-grid" disabled={videos.length >= 5 || loadingSnap || loadingRecord || loadingFiles || restarting} loading={loadingRecord} onClick={() => this._recordignToggle(selectedCamera)}><i className={recordingCams.indexOf(selectedCamera) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} />{!loadingRecord && <p style={{ marginTop: "0.2rem" }}>Toma de video</p>}</Button>)}
+							{moduleActions && moduleActions.btnrecord && typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && (<Button basic circular className="actions-btn-grid" disabled={videos.length >= 5 || loadingSnap || loadingRecord || loadingFiles || restarting} loading={loadingRecord} onClick={() => this._recordignToggle(selectedCamera)}><i className={recordingCams.indexOf(selectedCamera) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} />{!loadingRecord && <p style={{ marginTop: "0.2rem", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>Toma de video</p>}</Button>)}
 							{/* {!(loadingSnap || loadingRecord || loadingFiles || restarting) && <Button basic circular className="actions-btn-grid" disabled={recordingCams.indexOf(selectedCamera) > -1} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + selectedCamera.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link" /><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button>} */}
-							{<Button basic circular className="actions-btn-grid" disabled={(photos.length <= 0 && videos.length <= 0) || loadingSnap || loadingRecord || loadingFiles || restarting || videosLoading || photosLoading || recordingCams.indexOf(selectedCamera) > -1} onClick={() => this.props.downloadFiles(selectedCamera, { videos, photos, servidorMultimedia })} loading={loadingFiles}><i className="fa fa-download" /><p style={{ marginTop: "0.2rem" }}>Descargar</p></Button>}
+							{<Button basic circular className="actions-btn-grid" disabled={(photos.length <= 0 && videos.length <= 0) || loadingSnap || loadingRecord || loadingFiles || restarting || videosLoading || photosLoading || recordingCams.indexOf(selectedCamera) > -1} onClick={() => this.props.downloadFiles(selectedCamera, { videos, photos, servidorMultimedia })} loading={loadingFiles}><i className="fa fa-download" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }} /><p style={{ marginTop: "0.2rem", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>Descargar</p></Button>}
 							{/* {!(loadingSnap || loadingRecord || loadingFiles || restarting) && <Button basic circular className="actions-btn-grid" disabled={recordingCams.indexOf(selectedCamera) > -1} onClick={() => this.props.makeReport(selectedCamera)}><i className="fa fa-warning" /><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button>} */}
 							{/* <Button basic circular className="actions-btn-grid" disabled={loadingSnap||loadingRecord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button> */}
-							<Button basic circular className="actions-btn-grid" onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange" /><p style={{ marginTop: "0.2rem" }}>Cambiar estado</p></Button>
+							<Button basic circular className="actions-btn-grid" onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }} /><p style={{ marginTop: "0.2rem", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }}>Cambiar estado</p></Button>
 							{/* {selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.dns != null ? <Button basic circular className="actions-btn-grid" onClick={() => this.Clicked(selectedCamera.dataCamValue.dns)}><i className="fa fa-sliders" /><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button> : null} */}
-							{selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.camera_ip != null ? <Button basic circular className="actions-btn-grid" onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows" /><p style={{ marginTop: "0.2rem" }}>Controles PTZ</p></Button> : null}
+							{selectedCamera.dataCamValue && selectedCamera.dataCamValue.tipo_camara === 2 && selectedCamera.dataCamValue.camera_ip != null ? <Button basic circular className="actions-btn-grid" onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }} /><p style={{ marginTop: "0.2rem", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>Controles PTZ</p></Button> : null}
 							{!qnapServer && !qnapChannel && (<AdvancedSearchNotqnap loading={searchLoading} _searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus} countDays={countDays} navButton={true} isAxxon={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : false} _searchFilesAxxon={this._searchFilesAxxon} />)}
 							{qnapServer && qnapChannel && (<AdvancedSearch loading={searchLoading} _searchFileVideos={this._searchFileVideos} />)}
 						</div>
 						<div className='col-1' style={{ marginLeft: "-2rem" }}>
-							<Button onClick={() => this._openCameraInfo(false)} className='pull-right' primary style={{ margin: "0.5rem", height: "3rem", width: "3rem", display: "flex", justifyContent: "center", aligntItems: "center" }}><i className={autoplay ? 'fa fa-chevron-up' : 'fa fa-chevron-down'} />
+							<Button onClick={() => this._openCameraInfo(false)} className={`pull-right`} primary style={{ margin: "0.5rem", height: "3rem", width: "3rem", display: "flex", justifyContent: "center", aligntItems: "center" }}><i className={autoplay ? 'fa fa-chevron-up' : 'fa fa-chevron-down'} />
 								{/* <p style={{color: "white"}}>Ocultar</p> */}
 							</Button>
 						</div>
 					</div>
-					<div className={!autoplay ? 'row showfilesinfocameragrid' : 'row hidefiles'}>
+					<div className={!autoplay ? `row ${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "showfilesdarkmodegrid" : "showfilesinfocameragrid"}` : 'row hidefiles'}>
 						{showPTZ &&
 							<div className="col ptzgrid">
 								{localStorage.getItem(LANG) === "english" ? "Controls" : "Controles"}
@@ -278,14 +278,14 @@ class GridCameraDisplay extends Component {
 												{/* {localStorage.getItem(LANG) === "english" ? "Photos" : "Fotos"} */}
 												<Tab
 													align="center"
-													menu={{ secondary: true, pointing: true }}
-													activeIndex={historialIndex}
-													onTabChange={(e, { activeIndex }) => { this.setState({ historialIndex: activeIndex }) }}
+													menu={{ secondary: true, pointing: true, inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) }}
+													// activeIndex={historialIndex}
+													// onTabChange={(e, { activeIndex }) => { this.setState({ historialIndex: activeIndex }) }}
 													panes={[
 														{
 															menuItem: localStorage.getItem(LANG) === "english" ? "Photos" : 'Fotos',
 															render: () => (
-																<Tab.Pane attached={false}>
+																<Tab.Pane style={{ background: "transparent" }} attached={false}>
 																	{photosLoading ? (
 																		this._renderLoading()
 																	) : photos.length > 0 ? (
@@ -309,7 +309,7 @@ class GridCameraDisplay extends Component {
 																	) : (
 																		// <div align="center" className='no-data-show' style={{ marginLeft: "1rem" }}>
 																		<div align="center" style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
-																			<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+																			<p className="big-letter" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666"}}>{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
 																			<i className="fa fa-image fa-5x" />
 																		</div>
 																	)}
@@ -326,13 +326,13 @@ class GridCameraDisplay extends Component {
 												align="center"
 												activeIndex={activeIndex}
 												onTabChange={(e, { activeIndex }) => this.setState({ activeIndex })}
-												menu={{ secondary: true, pointing: true }}
+												menu={{ secondary: true, pointing: true, inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) }}
 												panes={[
 													typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
 													{
 														menuItem: localStorage.getItem(LANG) === "english" ? "Recordings" : 'Grabaciones',
 														render: () => (
-															<Tab.Pane attached={false}>
+															<Tab.Pane style={{ background: "transparent" }} attached={false}>
 																{this._renderVideoList(videosLoading, videos, true, null, false, false, true)}
 															</Tab.Pane>
 														)
@@ -370,7 +370,7 @@ class GridCameraDisplay extends Component {
 																			<hr />
 																			{this._renderButtonsByHour()}
 
-																			{!inputCkecked ? (<Tab.Pane attached={false}>
+																			{!inputCkecked ? (<Tab.Pane style={{ background: "transparent" }} attached={false}>
 																				{this._renderVideoListSearch(
 																					historyLoading,
 																					arrPares.length > 0 ? arrPares : video_history,
@@ -378,7 +378,7 @@ class GridCameraDisplay extends Component {
 																					arrPares.length > 0 ? arrPares[0] : null,
 																					true, inputCkecked, false, true
 																				)}
-																			</Tab.Pane>) : (<Tab.Pane attached={false}>
+																			</Tab.Pane>) : (<Tab.Pane style={{ background: "transparent" }} attached={false}>
 																				{this._renderVideoListSearch(
 																					historyLoading,
 																					arrPares.length > 0 ? arrPares : video_history,
@@ -417,7 +417,7 @@ class GridCameraDisplay extends Component {
 																	<hr />
 																	{ }
 
-																	{!inputCkecked ? (<Tab.Pane attached={false}>
+																	{!inputCkecked ? (<Tab.Pane style={{ background: "transparent" }} attached={false}>
 																		{this._renderVideoListSearch(
 																			historyLoading,
 																			isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares : video_history,
@@ -425,7 +425,7 @@ class GridCameraDisplay extends Component {
 																			isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares[0] : null,
 																			true, inputCkecked, false, true
 																		)}
-																	</Tab.Pane>) : (<Tab.Pane attached={false}>
+																	</Tab.Pane>) : (<Tab.Pane style={{ background: "transparent" }} attached={false}>
 																		{this._renderVideoListSearch(
 																			historyLoading,
 																			isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares : video_history,
@@ -454,7 +454,7 @@ class GridCameraDisplay extends Component {
 													// qnapServer && qnapChannel && {
 													// 	menuItem: 'Resultados de busqueda',
 													// 	render: () => (
-													// 		<Tab.Pane attached={false}>
+													// 		<Tab.Pane style={{ background: "transparent"}} attached={false}>
 													// 			{(isNewSearch || searchLoading) && <hr />}
 													// 			{ this._renderVideoList(searchLoading, video_search, isNewSearch, null, false, false, true)}
 													// 		</Tab.Pane>
@@ -480,19 +480,19 @@ class GridCameraDisplay extends Component {
 									{(selectedCamera.dataCamValue.type_camare_id === 2 && !selectedCamera.dataCamValue.is_lpr) &&
 										<Tab
 											align="center"
-											menu={{ secondary: true, pointing: true }}
+											menu={{ secondary: true, pointing: true, inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) }}
 											activeIndex={historialIndex}
 											onTabChange={(e, { activeIndex }) => { this.setState({ historialIndex: activeIndex }) }}
 											panes={[
 												{
 													menuItem: localStorage.getItem(LANG) === "english" ? "Detections" : 'Detecciones',
 													render: () => (
-														<Tab.Pane attached={false}>
+														<Tab.Pane style={{ background: "transparent" }} attached={false}>
 															{photosLoading ?
 																this._renderLoading()
 																:
 																<div align="center" style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
-																	<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No detections to show" : "No hay detecciones que mostrar"}</p>
+																	<p className="big-letter" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666"}}>{localStorage.getItem(LANG) === "english" ? "No detections to show" : "No hay detecciones que mostrar"}</p>
 																	<i className="fa fa-image fa-5x" />
 																</div>}
 														</Tab.Pane>
@@ -501,7 +501,7 @@ class GridCameraDisplay extends Component {
 												{
 													menuItem: localStorage.getItem(LANG) === "english" ? "Conection" : 'Conexión',
 													render: () => (
-														<Tab.Pane attached={false}>
+														<Tab.Pane style={{ background: "transparent" }} attached={false}>
 															<div style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
 																{
 																	photosLoading ?
@@ -511,7 +511,7 @@ class GridCameraDisplay extends Component {
 																			<MockupConection info={historialConections} searchHistorialConections={this._searchHistorialConections} renderLoading={this._renderLoading} version={true} showNotification={this.addNotification} />
 																			:
 																			<div align="center">
-																				<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No logs to show" : "No hay registros que mostrar"}</p>
+																				<p className="big-letter" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666"}}>{localStorage.getItem(LANG) === "english" ? "No logs to show" : "No hay registros que mostrar"}</p>
 																				<i className="fa fa-image fa-5x" />
 																			</div>
 																}
@@ -776,7 +776,7 @@ class GridCameraDisplay extends Component {
 
 		) : showNoFiles ? (
 			<div align="center" style={{ paddingBottom: "3rem" }}>
-				<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+				<p className="big-letter" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666"}}>{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
 				<i className="fa fa-image fa-5x" />
 			</div>
 		) : null
@@ -857,7 +857,7 @@ class GridCameraDisplay extends Component {
 					) :
 					showNoFiles ? (
 						<div align="center" className='no-data-show'>
-							<p className="big-letter">{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+							<p className="big-letter" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666"}}>{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
 							<i className="fa fa-image fa-5x" />
 						</div>
 					) : null

@@ -64,7 +64,7 @@ class RegisterMood extends React.Component {
 
     render() {
         return (
-            <div id="chart">
+            <div id="chart" style={{width: "100%"}}>
                 <Chart options={this.state.options} series={this.state.series} type="line" height={350} />
             </div>
         );

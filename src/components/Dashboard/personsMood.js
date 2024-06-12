@@ -6,6 +6,7 @@ import angryEmoji from '../../assets/images/emojis/enojado.png'
 import surpriseEmoji from '../../assets/images/emojis/sorprendido.png'
 // import { Icon } from "semantic-ui-react";
 import { Col, Row } from 'reactstrap';
+import { MODE } from '../../constants/token';
 
 // import { fakeData } from './personsMoodFakeData';
 
@@ -54,10 +55,10 @@ const PersonsMood = (props) => {
                   <img alt={item.mood} src={MOODS_EMOJIS[item.mood]} width='75%'></img>
                 </Col>
                 <Col>
-                  <h1>
+                  <h1 style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
                     {item.total}
                   </h1>
-                  <p>
+                  <p style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
                     {item.mood.toUpperCase()}
                   </p>
                 </Col>

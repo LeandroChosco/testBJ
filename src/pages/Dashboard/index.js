@@ -30,7 +30,7 @@ import Placas from "../../components/Dashboard/Placas"
 import DataTicketsPerUserRedesign from "../../components/Dashboard/dataTicketsPerUserRedesign";
 import AgeDemographic from "../../components/Dashboard/AgeDemographic";
 import RegisterMood from "../../components/Dashboard/RegisterMood";
-import { IS_DEMOGRAPHIC, IS_LPR } from '../../constants/token';
+import { IS_DEMOGRAPHIC, IS_LPR, MODE } from '../../constants/token';
 import AttendedVSclosed from "../../components/Dashboard/attendedVScloded";
 import LastCreadedCams from "../../components/Dashboard/lastCreatedCams";
 import {
@@ -61,6 +61,7 @@ const style = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2f5c81" : "transparent"
   },
 };
 
@@ -127,20 +128,20 @@ class Dashboard extends Component {
       {
         menuItem: "Cámaras",
         render: () => (
-          <Tab.Pane attached={false}>{this.renderCamsDashboard()}</Tab.Pane>
+          <Tab.Pane style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} attached={false}>{this.renderCamsDashboard()}</Tab.Pane>
         ),
       },
       {
         menuItem: "Tickets",
         render: () => (
-          <Tab.Pane attached={false}>{this.renderTicketsDashboard()}</Tab.Pane>
+          <Tab.Pane style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} attached={false}>{this.renderTicketsDashboard()}</Tab.Pane>
         ),
       },
       isDemographic &&
       {
         menuItem: "Reconocimiento",
         render: () => (
-          <Tab.Pane attached={false}>
+          <Tab.Pane style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} attached={false}>
             {this.renderRecognitionDashboard()}
           </Tab.Pane>
         ),
@@ -149,7 +150,7 @@ class Dashboard extends Component {
       {
         menuItem: "Análisis",
         render: () => (
-          <Tab.Pane attached={false}>
+          <Tab.Pane style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} attached={false}>
             {this.renderEmebidoDashboard()}
           </Tab.Pane>
         ),
@@ -158,7 +159,7 @@ class Dashboard extends Component {
       {
         menuItem: "LPR",
         render: () => (
-          <Tab.Pane attached={false}>
+          <Tab.Pane style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} attached={false}>
             {this.renderLPRDashboard()}
           </Tab.Pane>
         ),
@@ -171,9 +172,9 @@ class Dashboard extends Component {
     return (
       <div className="container-flex">
         <h1>Logística de cámaras</h1>
-        <p>Powered by Radar ®</p>
+        <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>Powered by Radar ®</p>
         <hr />
-        <p>La logística de Radar realiza un recuento del estado y registro de cámaras en la alcaldía. De esta manera, los monitoristas tienen un control más eficaz de las instalaciones.</p>
+        <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>La logística de Radar realiza un recuento del estado y registro de cámaras en la alcaldía. De esta manera, los monitoristas tienen un control más eficaz de las instalaciones.</p>
         <br />
         <div className="row">
           <div className="col chart overflow table-responsive" align="center">
@@ -187,7 +188,7 @@ class Dashboard extends Component {
             <div style={{ display: "flex", justifyContent: "space-around" }}>
               <h3>Estado de cámaras</h3>
               <div>
-                <p>Filtrar por modelo</p>
+                <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>Filtrar por modelo</p>
                 <select name="filterCam" onChange={this.changeFilter} className="selectFilter" >
                   <option key={0} value={0} className="optionsFilter">TODAS</option>
                   {
@@ -237,9 +238,9 @@ class Dashboard extends Component {
     return (
       <div className='container-flex'>
         <h1>Licence Plate Recognition</h1>
-        <p>Powered by Radar ®</p>
+        <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>Powered by Radar ®</p>
         <hr />
-        <p>El análisis de reconocimiento de matrículas (LPR) de Radar lee
+        <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>El análisis de reconocimiento de matrículas (LPR) de Radar lee
           automáticamente la información de matrículas y la vincula a videos en
           vivo y grabados. Gracias a esto, los operadores de seguridad pueden
           buscar y encontrar rápidamente videos específicos de matrículas de
@@ -288,9 +289,9 @@ class Dashboard extends Component {
     return (
       <div className="container-flex">
         <h1>Bitácora de tickets</h1>
-        <p>Powered by Radar ®</p>
+        <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>Powered by Radar ®</p>
         <hr />
-        <p>La bitácora de Radar exhibe el estado de los tickets de atención a los ciudadanos de la alcaldía, facilitando un histórico del desempeño de cada monitorista.</p>
+        <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>La bitácora de Radar exhibe el estado de los tickets de atención a los ciudadanos de la alcaldía, facilitando un histórico del desempeño de cada monitorista.</p>
         <br />
         <div className="row">
           <div className='col-6 chart overflow table-responsive' style={{ height: "375px" }} align='center'>
@@ -317,7 +318,7 @@ class Dashboard extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-12 chart2x" align="center">
+          <div className="col-12 chart" align="center">
             <h3>Tickets atendidos y cerrados por usuario</h3>
             {this.state.loadingTickets ? (
               <Loading />
@@ -337,12 +338,20 @@ class Dashboard extends Component {
     return (
       <div className='container-flex'>
         <h1>Reconocimiento Facial</h1>
-        <p>Powered by Radar ®</p>
+        <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>Powered by Radar ®</p>
         <hr />
-        <p>El sistema de reconocimiento de Radar utiliza inteligencia artificial para detectar expresiones faciales en las personas y registrarlas en tiempo real. Los monitoristas pueden seccionar por tiempo los eventos almacenados, diferenciándolos por sexo o edad.</p>
+        <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>El sistema de reconocimiento de Radar utiliza inteligencia artificial para detectar expresiones faciales en las personas y registrarlas en tiempo real. Los monitoristas pueden seccionar por tiempo los eventos almacenados, diferenciándolos por sexo o edad.</p>
         <div className='row'>
           <div className='col-12 chart' style={{ height: "auto" }} align='center'>
-            <Card style={style.adjustX}>
+            <Card style={{
+              height: "100%",
+              overflowX: "auto",
+              position: "relative",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2f5c81" : "transparent"
+            }}>
               <CardBody>
                 {
                   // this.state.loadingRecognitionMood ?
@@ -355,11 +364,11 @@ class Dashboard extends Component {
           </div>
         </div>
 
-        <div style={{ backgroundColor: "#f5f5f5", padding: "4rem" }}>
+        <div style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "transparent" : "#f5f5f5", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear", padding: "4rem" }}>
           <div className='row'>
-            <Card>
+            <Card style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2f5c81" : "transparent" }}>
               <CardHeader>
-                <h3 className="pt-2" style={{ display: "flex" }}>Emociones registradas</h3>
+                <h3 className="pt-2" style={{ display: "flex", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>Emociones registradas</h3>
                 {
                   this.state.lastMood &&
                   <p><i>Actualizado el {this.state.lastMood.split(" ")[0]} a las {this.state.lastMood.split(" ")[1]}.</i></p>
@@ -378,7 +387,7 @@ class Dashboard extends Component {
           </div>
           <div className='row'>
             <div className='col-6 chart' align='center'>
-              <Card style={{ height: "30rem" }}>
+              <Card style={{ height: "30rem", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2f5c81" : "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>
                 <CardHeader>
                   <h3 className="pt-2" style={{ display: "flex" }}>Personas registradas</h3>
                   {
@@ -394,7 +403,7 @@ class Dashboard extends Component {
               </Card>
             </div>
             <div className='col-6 chart' align='center'>
-              <Card style={{ height: "30rem" }}>
+              <Card style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2f5c81" : "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear", height: "30rem" }}>
                 <CardHeader>
                   <h3 style={{ display: "flex" }}>Edades registradas</h3>
                   {
@@ -425,12 +434,12 @@ class Dashboard extends Component {
         <div
           className={this.props.showMatches ? "hide-matches" : "show-matches"}
         >
-          <button className="btn clear pull-right" onClick={this.loadData}>
+          <button className="btn clear pull-right" onClick={this.loadData} style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>
             <i className={"fa fa-repeat"}></i>Actualizar
           </button>
         </div>
         <Tab
-          menu={{ secondary: true, pointing: true }}
+          menu={{ secondary: true, pointing: true, inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) }}
           panes={this.state.panes}
         ></Tab>
       </div>
@@ -805,24 +814,24 @@ class Dashboard extends Component {
     if (data && data.results) {
       let { results } = data;
       results && results.length > 0 &&
-      results.map((item) => {
-        return (
-          newData.push({
-            x: item.endpoint_name ? item.endpoint_name : item.camera_name,
-            y: item.total_face,
-          })
-        )
-      });
+        results.map((item) => {
+          return (
+            newData.push({
+              x: item.endpoint_name ? item.endpoint_name : item.camera_name,
+              y: item.total_face,
+            })
+          )
+        });
 
       results && results.length > 0 &&
-      results.map((item) => {
-        if (item.endpoint_name || item.camera_name) {
-          dropDownData.push({
-            name: item.endpoint_name || item.camera_name,
-          })
-        }
-        return dropDownData;
-      });
+        results.map((item) => {
+          if (item.endpoint_name || item.camera_name) {
+            dropDownData.push({
+              name: item.endpoint_name || item.camera_name,
+            })
+          }
+          return dropDownData;
+        });
       this.setState({
         personsPerCamera: newData,
         setDropDown: dropDownData,

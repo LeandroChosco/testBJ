@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { MODE } from '../../constants/token';
 
 const LastCreadedCams = (props) => {
   const { lastCreatedCams } = props;
@@ -14,7 +15,7 @@ const LastCreadedCams = (props) => {
             <th>Fecha de instalación</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
           {lastCreatedCams.map && lastCreatedCams.length > 0 ? lastCreatedCams.map((value, index) => {
             const date = moment(value.date_creation).isValid() ? new Date(value.date_creation).toLocaleString() : 'Sin Fecha';
             const colorDot = value.active === 0 ? 'state0' : value.flag_streaming === 0 ? 'state1' : 'state2'

@@ -1668,7 +1668,7 @@ class Main extends Component {
           : null
         }
         {this.state.modalCall ? <ModalCall data={this.state.callInfo} modal={this.state.modalCall} hideModal={() => this.setState({ modalCall: false, callInfo: {} })} /> : null}
-        <div className="fullcontainer">
+        <div className="fullcontainer" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", transition: "all 0.2s linear" }}>
           {this.state.isAuthenticated && this.state.showHeader ?
             <Header
               sideMenu={this.state.sideMenu}
