@@ -61,7 +61,7 @@ const style = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2f5c81" : "transparent"
+    background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#424242" : "transparent"
   },
 };
 
@@ -146,24 +146,24 @@ class Dashboard extends Component {
           </Tab.Pane>
         ),
       },
-      constants.clientFirebase === "Modelorama" &&
-      {
-        menuItem: "Análisis",
-        render: () => (
-          <Tab.Pane style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} attached={false}>
-            {this.renderEmebidoDashboard()}
-          </Tab.Pane>
-        ),
-      },
-      isLPR &&
-      {
-        menuItem: "LPR",
-        render: () => (
-          <Tab.Pane style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} attached={false}>
-            {this.renderLPRDashboard()}
-          </Tab.Pane>
-        ),
-      },
+      // constants.clientFirebase === "Modelorama" &&
+      // {
+      //   menuItem: "Análisis",
+      //   render: () => (
+      //     <Tab.Pane style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} attached={false}>
+      //       {this.renderEmebidoDashboard()}
+      //     </Tab.Pane>
+      //   ),
+      // },
+      // isLPR &&
+      // {
+      //   menuItem: "LPR",
+      //   render: () => (
+      //     <Tab.Pane style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} attached={false}>
+      //       {this.renderLPRDashboard()}
+      //     </Tab.Pane>
+      //   ),
+      // },
     ],
   };
 
@@ -350,14 +350,14 @@ class Dashboard extends Component {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2f5c81" : "transparent"
+              background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#424242" : "transparent"
             }}>
               <CardBody>
                 {
-                  // this.state.loadingRecognitionMood ?
-                  //   <Loading />
-                  //   :
-                  <PersonsMood personsMood={this.state.personsMood} />
+                  this.state.loadingCamsGrid ?
+                    <Loading />
+                    :
+                    <PersonsMood personsMood={this.state.personsMood} />
                 }
               </CardBody>
             </Card>
@@ -366,7 +366,7 @@ class Dashboard extends Component {
 
         <div style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "transparent" : "#f5f5f5", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear", padding: "4rem" }}>
           <div className='row'>
-            <Card style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2f5c81" : "transparent" }}>
+            <Card style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#424242" : "transparent" }}>
               <CardHeader>
                 <h3 className="pt-2" style={{ display: "flex", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>Emociones registradas</h3>
                 {
@@ -374,12 +374,12 @@ class Dashboard extends Component {
                   <p><i>Actualizado el {this.state.lastMood.split(" ")[0]} a las {this.state.lastMood.split(" ")[1]}.</i></p>
                 }
               </CardHeader>
-              <div className='col-12 chart' align='center'>
+              <div className='col-11 charts' align='center'>
                 {
-                  // this.state.loadingRegisterMood ?
-                  //   <Loading />
-                  //   :
-                  <RegisterMood registerMood={this.state.registerMood} />
+                  this.state.loadingCamsGrid ?
+                    <Loading />
+                    :
+                    <RegisterMood registerMood={this.state.registerMood} />
                 }
               </div>
             </Card>
@@ -387,7 +387,7 @@ class Dashboard extends Component {
           </div>
           <div className='row'>
             <div className='col-6 chart' align='center'>
-              <Card style={{ height: "30rem", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2f5c81" : "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>
+              <Card style={{ height: "30rem", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#424242" : "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>
                 <CardHeader>
                   <h3 className="pt-2" style={{ display: "flex" }}>Personas registradas</h3>
                   {
@@ -395,15 +395,15 @@ class Dashboard extends Component {
                     <p><i>Actualizado el {this.state.lastAges.split(" ")[0]} a las {this.state.lastAges.split(" ")[1]}.</i></p>
                   }
                 </CardHeader>          {
-                  // this.state.loadTotalRecognition ?
-                  //   <Loading />
-                  //   :
-                  <GenderDetected agesDetected={this.state.agesDetected} genderDetected={this.state.genderDetected} lastAges={this.state.lastAges} />
+                  this.state.loadingCamsGrid ?
+                    <Loading />
+                    :
+                    <GenderDetected agesDetected={this.state.agesDetected} genderDetected={this.state.genderDetected} lastAges={this.state.lastAges} />
                 }
               </Card>
             </div>
             <div className='col-6 chart' align='center'>
-              <Card style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2f5c81" : "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear", height: "30rem" }}>
+              <Card style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#424242" : "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear", height: "30rem" }}>
                 <CardHeader>
                   <h3 style={{ display: "flex" }}>Edades registradas</h3>
                   {
@@ -412,10 +412,10 @@ class Dashboard extends Component {
                   }
                 </CardHeader>
                 {
-                  // this.state.loadRecognitionAges ?
-                  //   <Loading />
-                  //   :
-                  <AgeDemographic agesDetected={this.state.agesDetected} genderDetected={this.state.genderDetected} lastAges={this.state.lastAges} />
+                  this.state.loadingCamsGrid ?
+                    <Loading />
+                    :
+                    <AgeDemographic agesDetected={this.state.agesDetected} genderDetected={this.state.genderDetected} lastAges={this.state.lastAges} />
                 }
               </Card>
             </div>
@@ -800,7 +800,13 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.loadData();
-  }
+  };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.darkMode !== this.props.darkMode) {
+      this.loadData();
+    };
+  };
 
   // lastCreatedCams = (response) => {
   //   const data = response.data;

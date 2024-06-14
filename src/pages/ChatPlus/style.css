@@ -135,9 +135,10 @@
 }*/
 
 .messages_send_box {
+    display: flex;
     position: fixed;
     bottom: 0px;
-    width: 92%;
+    width: 66%;
     height: 10vh;
     background-color: #c0c0c0;
     padding: 5px;

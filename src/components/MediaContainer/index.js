@@ -95,9 +95,12 @@ class MediaContainer extends Component {
             ) : noButtons ? null : (
               <div>
                 <Button style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }} basic onClick={this._saveFile}><i className="fa fa-download" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }} /> <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>Descargar</p></Button>
-                {!covid && !dns_ip && !isQnap && (
-                  <Button basic negative onClick={this._deleteFile}><i className="fa fa-trash" /> <p style={{color: "red"}}>Eliminar</p></Button>
-                )}
+                {(!covid && !dns_ip && !isQnap) &&
+                  ((localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ?
+                    <Button negative onClick={this._deleteFile}><i className="fa fa-trash" /> <p style={{color: "white"}}>Eliminar</p></Button>
+                    :
+                    <Button basic negative onClick={this._deleteFile}><i className="fa fa-trash" /> <p style={{ color: "red" }}>Eliminar</p></Button>
+                  )}
               </div>
             )
           }</Modal.Header>

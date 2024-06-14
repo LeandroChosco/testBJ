@@ -1,0 +1,4 @@
+.google-map{
+    filter: invert(1);
+    transition: all 0.2s linear;
+}

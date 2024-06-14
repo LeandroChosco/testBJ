@@ -106,7 +106,7 @@ class Chat extends Component {
       {
         menuItem: "Chat C2",
         render: () => (
-          <Tab.Pane attached={false} style={{backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)))? "#2e597d" : "#dadada"}}>
+          <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }}>
             {" "}
             {this.renderListChats("C5")}
           </Tab.Pane>
@@ -117,7 +117,7 @@ class Chat extends Component {
       {
         menuItem: localStorage.getItem(LANG) === "english" ? "Police" : "Policía",
         render: () => (
-          <Tab.Pane attached={false} style={{backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)))? "#2e597d" : "#dadada"}}>
+          <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }}>
             {this.renderListChats("Policia")}
           </Tab.Pane>
         ),
@@ -125,7 +125,7 @@ class Chat extends Component {
       {
         menuItem: localStorage.getItem(LANG) === "english" ? "Fire" : "Fuego",
         render: () => (
-          <Tab.Pane attached={false} style={{backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)))? "#2e597d" : "#dadada"}}>
+          <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }}>
             {this.renderListChats("Fuego")}
           </Tab.Pane>
         ),
@@ -133,7 +133,7 @@ class Chat extends Component {
       {
         menuItem: localStorage.getItem(LANG) === "english" ? "Doctor" : "Médico",
         render: () => (
-          <Tab.Pane attached={false} style={{backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)))? "#2e597d" : "#dadada"}}>
+          <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }}>
             {this.renderListChats("Médico")}
           </Tab.Pane>
         ),
@@ -144,7 +144,7 @@ class Chat extends Component {
     {
       menuItem: "Historial C2",
       render: () => (
-        <Tab.Pane attached={false} style={{backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)))? "#2e597d" : "#dadada"}}>
+        <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }}>
           {" "}
           {this.renderListHistorial("C5")}
         </Tab.Pane>
@@ -263,7 +263,7 @@ class Chat extends Component {
             return (
               <Card
                 className={i === index ? "activeChat" : ""}
-                style={{ width: "100%", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#598fbd",color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear"}}
+                style={{ width: "100%", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#598fbd", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}
                 key={i}
                 onClick={() => this.changeChat(chat, i)}
               >
@@ -276,10 +276,10 @@ class Chat extends Component {
                         justifyContent: "space-between",
                       }}
                     >
-                      <h4 style={{ marginRight: "0.3rem" }}>{chat.user_name}</h4> <p style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear"}}>{chat.updateDate}</p>
+                      <h4 style={{ marginRight: "0.3rem" }}>{chat.user_name}</h4> <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>{chat.updateDate}</p>
                     </div>
                     {chat.active !== undefined && chat.active ? (
-                      <p style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear"}}>
+                      <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>
                         {chat.messages
                           ? chat.messages.length > 0
                             ? (chat.messages[chat.messages.length - 1].from ===
@@ -491,10 +491,10 @@ class Chat extends Component {
             : "show-matches app-container"
         }
       >
-        <div className="row fullHeight" style={{background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#0c304e", transition: "all 0.2s linear"}}>
-          <div className="col-4 userList" style={{background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#2e597d", transition: "all 0.2s linear"}}>
+        <div className="row fullHeight" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#0c304e", transition: "all 0.2s linear" }}>
+          <div className="col-4 userList" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#2e597d", transition: "all 0.2s linear" }}>
             <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem" }}>
-              <p style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear"}}>Chats</p>
+              <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>Chats</p>
               <Radio
                 toggle
                 // onClick={this._changeView}
@@ -502,7 +502,7 @@ class Chat extends Component {
                 checked={!this.state.showHistorial}
                 style={{ margin: "0 1rem" }}
               />
-              <p style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear"}}>Historial</p>
+              <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>Historial</p>
             </div>
             <hr />
 
@@ -816,7 +816,7 @@ class Chat extends Component {
                                         style={{ fontSize: 13, paddingRight: 0 }}
                                       >
                                         {infoCurrentCamera.entrecalles ? (
-                                          <p>
+                                          <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                                             <b>{localStorage.getItem(LANG) === "english" ? "Between streets: " : "Entre Calles: "}</b>
                                             {infoCurrentCamera.entrecalles}
                                             {/* {console.log("chats ", chats[index])} */}
@@ -868,7 +868,12 @@ class Chat extends Component {
                                     className="col-4"
                                     style={{ margin: "auto" }}
                                   >
-                                    <Button onClick={this.refreshButton}>{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}</Button>
+                                    {
+                                      (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ?
+                                        <Button className="btn btn-secondary" onClick={this.refreshButton}>{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}</Button>
+                                        :
+                                        <Button onClick={this.refreshButton}>{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}</Button>
+                                    }
                                   </div>
                                 </div>
                               </Card.Content>
@@ -899,7 +904,7 @@ class Chat extends Component {
                                   }
                                   style={
                                     {
-                                      backgroundColor: (value.from === 1 || value.from === 2) && "#5ab86d"
+                                      backgroundColor: (value.from === 1 || value.from === 2) && ((localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#5ab86d")
                                     }
                                   }
                                 >
@@ -958,7 +963,7 @@ class Chat extends Component {
                             </p>
                           </>
                         ) : (
-                          <p style={{ position: "fixed", top: "50%", left: "60%",color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>
+                          <p style={{ position: "fixed", top: "50%", left: "60%", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>
                             {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
                           </p>
                         )}
@@ -966,9 +971,9 @@ class Chat extends Component {
 
                       {
                         chatId !== "" && chats[index] ? (
-                          <div className="messages_send_box">
+                          <div className="messages_send_box" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" : "#c0c0c0", transition: "all 0.2s linear" }}>
                             {!textareaDisabled ? (
-                              <div style={{ position: "relative" }}>
+                              <div style={{ position: "relative", width: "100%", display: "flex" }}>
                                 <textarea
                                   disabled={textareaDisabled}
                                   placeholder={localStorage.getItem(LANG) === "english" ? "Text your message" : "Escriba su mensaje"}
@@ -981,12 +986,16 @@ class Chat extends Component {
                                   onChange={(event) => {
                                     this.setState({ text: event.target.value });
                                   }}
+                                  style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "transparent" : "white", width: "95%" }}
                                 ></textarea>
-                                <Icon
+                                <button style={{ width: "5%", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} onClick={this.sendMessage}>
+                                  <i className="fa fa-envelope" aria-hidden="true"></i>
+                                </button>
+                                {/* <Icon
                                   name="send"
                                   id="sendbutton"
                                   onClick={this.sendMessage}
-                                />
+                                /> */}
                               </div>
                             ) : (
                               <div className="closed-ticked">
@@ -1367,6 +1376,7 @@ class Chat extends Component {
   };
 
   sendMessage = () => {
+    if(this.state.text === "") console.log("MENSAJE VACÍO")
     if (this.state.text === "") return;
     const { chatId, messages } = this.state;
 

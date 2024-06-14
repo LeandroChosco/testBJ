@@ -146,9 +146,9 @@ class Analysis extends Component {
       <div style={styles.tab} className='col-12'>
         {/*  */}
         <Button id="download-button" onClick={() => this._statusRevision()} style={{ display: "none" }}>Descargar</Button>
-        {!(is_visible) && <button onClick={() => this._changeDisplay(this.state.displayTipe === 1 ? 2 : 1)} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "light" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>{this.state.displayTipe === 1 ? <i className="fa fa-refresh" aria-hidden="true"></i> : <i className="fa fa-th" aria-hidden="true"></i>}</button>}
-        {(data.length > 0 || is_visible) && <button onClick={() => this.setState({ showSearch: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "light" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }} ><i className="fa fa-filter" aria-hidden="true"></i></button>}
-        {(is_visible) && <button onClick={() => this._loadCameras()} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "light" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>{localStorage.getItem(LANG) === "english" ? "Delete filter" : "Limpiar filtro"}</button>}
+        {!(is_visible) && <button onClick={() => this._changeDisplay(this.state.displayTipe === 1 ? 2 : 1)} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>{this.state.displayTipe === 1 ? <i className="fa fa-retweet" aria-hidden="true"></i> : <i className="fa fa-th" aria-hidden="true"></i>}</button>}
+        {(data.length > 0 || is_visible) && <button onClick={() => this.setState({ showSearch: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }} ><i className="fa fa-filter" aria-hidden="true"></i></button>}
+        {(is_visible) && <button onClick={() => this._loadCameras()} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-trash" aria-hidden="true"></i></button>}
       </div>
     )
   }

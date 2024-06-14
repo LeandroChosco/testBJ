@@ -264,7 +264,7 @@ class CameraStream extends Component {
                         render: () => (
                           <>
                             <div>
-                              <button className={`btn btn-outline-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
+                              <button className={`btn btn-outline-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
                                 {localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}
                               </button>
                             </div>
@@ -368,7 +368,7 @@ class CameraStream extends Component {
                 }
                 <div id={`cameraInfo-${this.props.marker.extraData.num_cam}`} style={{ marginBottom: "1rem" }}>
 
-                  {cameraName && !this.props.hideInfo ? <p>
+                  {cameraName && !this.props.hideInfo ? <p style={{color: localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)) ? "white" : "#666666"}}>
                     {localStorage.getItem(LANG) === "english" ? `Address: ${cameraName}` : `Dirección: ${cameraName}`}
                     {this.props.marker.extraData.dataCamValue.entrecalles ?
                       <b>
@@ -388,17 +388,17 @@ class CameraStream extends Component {
                   <div style={{ paddingTop: "1rem" }}>
                     {
                       window.location.pathname !== "/camarasInternas" &&
-                      <button onClick={() => this.setState({ showModalMoreInformation: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-info" aria-hidden="true"></i></button>
+                      <button onClick={() => this.setState({ showModalMoreInformation: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-info" aria-hidden="true"></i></button>
                     }
                     {
                       !copyButton ?
-                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-2 mt-1`} onClick={() => { this._handleCopy(); this.setState({ copyText: document.getElementById(`cameraInfo-${this.props.marker.extraData.num_cam}`).textContent }) }} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>
+                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-2 mt-1`} onClick={() => { this._handleCopy(); this.setState({ copyText: document.getElementById(`cameraInfo-${this.props.marker.extraData.num_cam}`).textContent }) }} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>
                           <i data-content="Hello. This is an inverted popup" data-variation="inverted">
                             <FaClipboard />
                           </i>
                         </button>
                         :
-                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-2 mt-1`} disabled><FaClipboardCheck /></button>
+                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-2 mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }} disabled><FaClipboardCheck /></button>
                     }
                   </div>
                 )}
@@ -933,7 +933,7 @@ class CameraStream extends Component {
                     el.map((element, idx) => {
                       return (
                         <div key={element} className="col-4">
-                          <button key={idx} className={`btn btn-outline-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-auto mr-auto mb-2 fake-btn`} onClick={() => searchVideos(element)} >
+                          <button key={idx} className={`btn btn-outline-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "primary"} ml-auto mr-auto mb-2 fake-btn`} onClick={() => searchVideos(element)} >
                             {`${element} - ${element.split(":")[1] === "00" ? element.split(":")[0] + ":30" : element === "23:30" ? "00:00" : (parseInt(element.split(":")[0]) + 1) + ":00"}`}
                           </button>
                         </div>
@@ -1021,7 +1021,7 @@ class CameraStream extends Component {
           totalWeekArray.map((el) => {
             let buttonDate = moment().subtract(Math.abs(el - 6), 'days').startOf('date').format('ll');
             return (
-              <button key={Math.abs(el - 6)} className={historicCurrentDay === Math.abs(el - 6) ? `btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-auto mr-auto mb-2` : `btn btn-outline-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(Math.abs(el - 6))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
+              <button key={Math.abs(el - 6)} className={historicCurrentDay === Math.abs(el - 6) ? `btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "primary"} ml-auto mr-auto mb-2` : `btn btn-outline-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(Math.abs(el - 6))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
             );
           })
         }

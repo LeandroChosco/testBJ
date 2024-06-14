@@ -70,13 +70,13 @@ class AdvancedSearchNotqnap extends Component {
 						<p style={{ marginTop: "0.2rem", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }}>Búsqueda avanzada</p>
 					</Button>
 					:
-					<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => this._openModal()} >{localStorage.getItem(LANG) === "english" ? "Advanced Search" : 'Búsqueda Avanzada'}</button>
+					<button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-auto mr-auto mb-2`} onClick={() => this._openModal()} >{localStorage.getItem(LANG) === "english" ? "Advanced Search" : 'Búsqueda Avanzada'}</button>
 				}
 
 				{/* Modal */}
 				<Modal show={showModal} onHide={this._onHide}>
 					<Form onSubmit={(e) => this._onSubmit(e)}>
-						<Modal.Header style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }} closeButton>{localStorage.getItem(LANG) === "english" ? "Advanced search" : "Búsqueda avanzada"}</Modal.Header>
+						<Modal.Header style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "Advanced search" : "Búsqueda avanzada"}</Modal.Header>
 						<Modal.Body style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
 							{!_.isEmpty(error) && <Alert variant="danger">{error}</Alert>}
 							<>

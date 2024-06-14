@@ -129,8 +129,8 @@ const Searchcamera = (props) => {
         }
 
         <Form.Group as={Row} controlId="street">
-          <Form.Label column sm="3">Calle:</Form.Label>
-          <Col sm="9">
+          <Form.Label column sm="4">Calle:</Form.Label>
+          <Col sm="8">
             <Form.Control
               style={{ background: "transparent !important" }}
               value={street}
@@ -142,8 +142,8 @@ const Searchcamera = (props) => {
         </Form.Group>
 
         <Form.Group as={Row} controlId="numCam">
-          <Form.Label column sm="3">Numero de cámara:</Form.Label>
-          <Col sm="9">
+          <Form.Label column sm="4">Numero de cámara:</Form.Label>
+          <Col sm="8">
             <NumberFormat
               style={{ background: "transparent !important" }}
               value={numCam}
@@ -154,8 +154,8 @@ const Searchcamera = (props) => {
           </Col>
         </Form.Group>
         <Form.Group as={Row} controlId="phone">
-          <Form.Label column sm="3">Teléfono:</Form.Label>
-          <Col sm="9">
+          <Form.Label column sm="4">Teléfono:</Form.Label>
+          <Col sm="8">
             <NumberFormat
               style={{ background: "transparent !important" }}
               value={phone}
@@ -167,8 +167,8 @@ const Searchcamera = (props) => {
         </Form.Group>
 
         <Form.Group as={Row} controlId="town">
-          <Form.Label column sm="3">Colonia:</Form.Label>
-          <Col sm="9">
+          <Form.Label column sm="4">Colonia:</Form.Label>
+          <Col sm="8">
             <Form.Control
               style={{ background: "transparent !important" }}
               value={town}
@@ -179,8 +179,10 @@ const Searchcamera = (props) => {
         </Form.Group>
       </Modal.Body>
       <Modal.Footer style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>
-        <Button variant="outline-primary" onClick={() => { _onSubmit() }}>Buscar</Button>
-        {clear && <Button variant="outline-secondary" onClick={() => { clearStates() }}>Limpiar</Button>}
+      
+        <Button variant={`${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"}`} onClick={() => { _onSubmit() }}>Buscar</Button>
+        {clear && <Button variant={`${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-secondary"}`} onClick={() => { clearStates() }}>Limpiar</Button>}
+      
       </Modal.Footer>
     </Modal>
   );

@@ -430,7 +430,8 @@ class Chat extends Component {
                           className={'Chat C5'}
                           style={{
                             textAlign: 'center',
-                            backgroundColor: COLORS[chats[index].trackingType],
+                            backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#598fbd" : 
+                            COLORS[chats[index].trackingType],
                             height: '30px'
                           }}
                         >

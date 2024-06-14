@@ -1,5 +1,6 @@
 import React from 'react';
 import Chart from 'react-apexcharts'
+import { MODE } from '../../constants/token';
 
 class RegisterMood extends React.Component {
     constructor(props) {
@@ -43,13 +44,23 @@ class RegisterMood extends React.Component {
                 stroke: {
                     curve: 'straight'
                 },
+                theme: {
+                    mode: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? 'dark' : "light", 
+                    palette: 'palette6', 
+                    monochrome: {
+                        enabled: false,
+                        color: '#255aee',
+                        shadeTo: 'light',
+                        shadeIntensity: 0.65
+                    },
+                },
                 // title: {
                 //     text: 'Emociones registradas',
                 //     align: 'left'
                 // },
                 grid: {
                     row: {
-                        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                        // colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
                         opacity: 0.5
                     },
                 },
@@ -57,14 +68,12 @@ class RegisterMood extends React.Component {
                     categories: ['12/11', '15/11', '18/11', '21/11', '24/11', '27/11', '30/11', '03/12', '06/12'],
                 }
             },
-
-
         };
     }
 
     render() {
         return (
-            <div id="chart" style={{width: "100%"}}>
+            <div id="chart">
                 <Chart options={this.state.options} series={this.state.series} type="line" height={350} />
             </div>
         );

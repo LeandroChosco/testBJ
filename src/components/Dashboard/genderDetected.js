@@ -29,16 +29,16 @@ const GenderDetected = (props) => {
 
   const genderDetected = [
     {
-      name: "Mujer",
-      value: 337,
-      rangeAge: ["-18", "18-30", "31-50", "+50"],
-      detectedArray: [54, 207, 48, 28]
-    },
-    {
       name: "Hombre",
       value: 416,
       rangeAge: ["-18", "18-30", "31-50", "+50"],
       detectedArray: [120, 55, 201, 40]
+    },
+    {
+      name: "Mujer",
+      value: 337,
+      rangeAge: ["-18", "18-30", "31-50", "+50"],
+      detectedArray: [54, 207, 48, 28]
     },
   ]
 
@@ -81,8 +81,18 @@ const GenderDetected = (props) => {
             },
           },
         },
+        theme: {
+          mode: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? 'dark' : "light",
+          palette: 'palette1',
+          monochrome: {
+            enabled: false,
+            color: '#255aee',
+            shadeTo: 'light',
+            shadeIntensity: 0.65
+          },
+        },
 
-        colors: ['#098f62', '#008ffb'],
+        // colors: ['#098f62', '#008ffb'],
         legend: {
           show: true,
           showForSingleSeries: false,

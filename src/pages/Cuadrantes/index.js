@@ -257,9 +257,9 @@ class Cuadrantes extends Component {
               <Fragment>
                 {this.state.displayTipe !== 3 && !this.state.loading ? <div className="toggleViewButton row" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", transition: "all 0.2s linear" }}>
                   <div className='col-12' style={{ marginTop: "1rem" }}>
-                    {this.state.is_quadrant_filter && <Button onClick={() => this._loadCuadrantes()} className='btn pull-right'>{localStorage.getItem(LANG) === "english" ? "Delete filter" : "Limpiar filtro"}</Button>}
-                    <Button onClick={() => this.setState({ showSearch: true })} className='btn pull-right'>{localStorage.getItem(LANG) === "english" ? "Filter" : "Filtrar"}</Button>
-                    <Button onClick={() => this.setState({ update: true })} className='btn pull-right'>{localStorage.getItem(LANG) === "english" ? "Update" : "Actualizar"}</Button>
+                    {this.state.is_quadrant_filter && <Button onClick={() => this._loadCuadrantes()} className={`pull-right btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-trash" aria-hidden="true"></i></Button>}
+                    <button onClick={() => this.setState({ showSearch: true })} className={`pull-right btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-filter" aria-hidden="true"></i></button>
+                    <button onClick={() => this.setState({ update: true })} className={`pull-right btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-refresh" aria-hidden="true"></i></button>
                   </div>
                   {/* {camsCuadrante.length !== 0 &&
                     <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe} style={{ marginTop: '1%' }}>

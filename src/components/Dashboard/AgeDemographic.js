@@ -1,5 +1,6 @@
 import React from 'react';
 import Chart from 'react-apexcharts'
+import { MODE } from '../../constants/token';
 
 class AgeDemographic extends React.Component {
     constructor(props) {
@@ -24,6 +25,16 @@ class AgeDemographic extends React.Component {
                     zoom: {
                         enabled: true
                     }
+                },
+                theme: {
+                    mode: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? 'dark' : "light", 
+                    palette: 'palette1', 
+                    monochrome: {
+                        enabled: false,
+                        color: '#255aee',
+                        shadeTo: 'light',
+                        shadeIntensity: 0.65
+                    },
                 },
                 responsive: [{
                     breakpoint: 480,
@@ -70,7 +81,7 @@ class AgeDemographic extends React.Component {
 
     render() {
         return (
-            <div id="chart" style={{ width: "100%" }}>
+            <div id="chart" style={{ width: "90%" }}>
                 <Chart options={this.state.options} series={this.state.series} type="bar" height={350} />
             </div>
         )

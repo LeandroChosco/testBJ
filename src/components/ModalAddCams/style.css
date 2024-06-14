@@ -5,3 +5,38 @@
     overflow-x: hidden !important;
     padding-bottom: 0px !important;
 }
+
+.dark-row{
+    color: white !important;
+}
+
+.light-row{
+    color: black !important;
+}
+
+.dark-header{
+    background-color: #2e597d;
+    color: white;
+}
+
+.light-header{
+    background-color: #c5c5c5;
+    color: black;
+}
+
+.pagination .page-item{
+    background: transparent !important;
+}
+.pagination .page-item .page-link{
+    background: transparent !important;
+    color: #858585
+}
+
+.pagination .active{
+    background: var(--dark-mode-bar);
+    color: #575757;
+}
+.pagination .active .page-link{
+    background: var(--dark-mode-bar);
+    color: #575757;
+}

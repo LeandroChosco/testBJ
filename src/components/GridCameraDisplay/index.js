@@ -176,7 +176,7 @@ class GridCameraDisplay extends Component {
 						)}
 				</Row>
 				{loading ? null : (
-					<Row className={!showMatches ? ('hide-matches paginatorContainerOnGrid2') : ('show-matches paginatorContainerOnGrid')} style={{ width: "100%" }}>
+					<Row className={!showMatches ? ('hide-matches paginatorContainerOnGrid2') : ('show-matches paginatorContainerOnGrid')} style={{ width: "100%", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "black", transition: "all 0.2s linear" }}>
 						<Col style={{ height: '100%' }}>
 							{localStorage.getItem(LANG) === "english" ? "Cameras per page    " : "Cámaras por página    "}
 							<Select
@@ -187,20 +187,22 @@ class GridCameraDisplay extends Component {
 									const pageCount = Math.ceil(markers.length / value.value);
 									this.setState({ start: 0, limit: value.value, pageCount: pageCount });
 								}}
+								style={{ background: "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "black", transition: "all 0.2s linear" }}
 							/>
 						</Col>
-						<Col>
+						<Col style={{ alignContent: "center" }}>
 							<ReactPaginate
-								previousLabel={localStorage.getItem(LANG) === "english" ? "Previous" : 'Anterior'}
-								nextLabel={localStorage.getItem(LANG) === "english" ? "Next" : 'Siguiente'}
+								previousLabel={"<"}
+								nextLabel={">"}
 								breakLabel={'...'}
 								pageCount={pageCount}
 								marginPagesDisplayed={2}
 								pageRangeDisplayed={5}
 								onPageChange={this.handlePageClick}
-								containerClassName={'pagination'}
+								containerClassName={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? 'pagination dark-pagination' : 'pagination light-pagination'}
 								subContainerClassName={'pages pagination'}
 								activeClassName={'active'}
+								style={{ background: "transparent", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}
 							/>
 						</Col>
 					</Row>
@@ -216,7 +218,7 @@ class GridCameraDisplay extends Component {
 					</div>
 				) : null}
 				{is_filter && markers.length === 0 ? (
-					<div align="center" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
+					<div align="center" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
 						{Strings.noResults}
 					</div>
 				) : null}
@@ -240,9 +242,16 @@ class GridCameraDisplay extends Component {
 							{qnapServer && qnapChannel && (<AdvancedSearch loading={searchLoading} _searchFileVideos={this._searchFileVideos} />)}
 						</div>
 						<div className='col-1' style={{ marginLeft: "-2rem" }}>
-							<Button onClick={() => this._openCameraInfo(false)} className={`pull-right`} primary style={{ margin: "0.5rem", height: "3rem", width: "3rem", display: "flex", justifyContent: "center", aligntItems: "center" }}><i className={autoplay ? 'fa fa-chevron-up' : 'fa fa-chevron-down'} />
-								{/* <p style={{color: "white"}}>Ocultar</p> */}
-							</Button>
+							{
+								(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ?
+									<Button onClick={() => this._openCameraInfo(false)} className={`pull-right`} secondary style={{ margin: "0.5rem", height: "3rem", width: "3rem", display: "flex", justifyContent: "center", aligntItems: "center" }}><i className={autoplay ? 'fa fa-chevron-up' : 'fa fa-chevron-down'} />
+										{/* <p style={{color: "white"}}>Ocultar</p> */}
+									</Button>
+									:
+									<Button onClick={() => this._openCameraInfo(false)} className={`pull-right`} primary style={{ margin: "0.5rem", height: "3rem", width: "3rem", display: "flex", justifyContent: "center", aligntItems: "center" }}><i className={autoplay ? 'fa fa-chevron-up' : 'fa fa-chevron-down'} />
+										{/* <p style={{color: "white"}}>Ocultar</p> */}
+									</Button>
+							}
 						</div>
 					</div>
 					<div className={!autoplay ? `row ${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "showfilesdarkmodegrid" : "showfilesinfocameragrid"}` : 'row hidefiles'}>
@@ -309,7 +318,7 @@ class GridCameraDisplay extends Component {
 																	) : (
 																		// <div align="center" className='no-data-show' style={{ marginLeft: "1rem" }}>
 																		<div align="center" style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
-																			<p className="big-letter" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666"}}>{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+																			<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
 																			<i className="fa fa-image fa-5x" />
 																		</div>
 																	)}
@@ -352,16 +361,18 @@ class GridCameraDisplay extends Component {
 																						<p>{localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}</p>
 																						:
 																						<Radio
-																							toggle
+																							slider
 																							onClick={this._statusChange}
 																							id="toggle24"
-																							label={localStorage.getItem(LANG) === "english" ? "Download videos (links)" : "Descarga de videos (links)"}
+																							// label={localStorage.getItem(LANG) === "english" ? "Download videos (links)" : "Descarga de videos (links)"}
+																							label={<label className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-toggle" : "light-toggle"}>Descarga de videos (links)</label>}
 																							checked={this.state.inputCkecked}
+																						// className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-toggle" : "light-toggle"}
 																						/>
 																				}
 																				<AdvancedSearchNotqnap loading={searchLoading} _searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus} countDays={countDays} navButton={false} isAxxon={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : false} _searchFilesAxxon={this._searchFilesAxxon} />
 																				<div>
-																					<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
+																					<button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
 																						{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}
 																					</button>
 																				</div>
@@ -401,15 +412,16 @@ class GridCameraDisplay extends Component {
 																		{typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
 																			<p>{localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}</p> :
 																			<Radio
-																				toggle
+																				slider
 																				onClick={this._statusChange}
 																				id="toggle24"
 																				label={localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}
 																				checked={this.state.inputCkecked}
+																				className="full-toggle"
 																			/>
 																		}
 																		<div>
-																			<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => this._backToHistorics()} >
+																			<button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-auto mr-auto mb-2`} onClick={() => this._backToHistorics()} >
 																				{localStorage.getItem(LANG) === "english" ? "Back to historics" : "Volver a históricos"}
 																			</button>
 																		</div>
@@ -440,11 +452,12 @@ class GridCameraDisplay extends Component {
 																				null
 																				:
 																				<Radio
-																					toggle
+																					slider
 																					onClick={this._statusChange}
 																					id="toggle24"
-																					label={localStorage.getItem(LANG) === "english" ? "Download videos (links)" : "Descarga de videos (links)"}
+																					label={<label className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-toggle" : "light-toggle"}>Descarga de videos (links)</label>}
 																					checked={this.state.inputCkecked}
+																					className="full-toggle"
 																				/>
 																		}
 																	</div>
@@ -492,7 +505,7 @@ class GridCameraDisplay extends Component {
 																this._renderLoading()
 																:
 																<div align="center" style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
-																	<p className="big-letter" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666"}}>{localStorage.getItem(LANG) === "english" ? "No detections to show" : "No hay detecciones que mostrar"}</p>
+																	<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No detections to show" : "No hay detecciones que mostrar"}</p>
 																	<i className="fa fa-image fa-5x" />
 																</div>}
 														</Tab.Pane>
@@ -511,7 +524,7 @@ class GridCameraDisplay extends Component {
 																			<MockupConection info={historialConections} searchHistorialConections={this._searchHistorialConections} renderLoading={this._renderLoading} version={true} showNotification={this.addNotification} />
 																			:
 																			<div align="center">
-																				<p className="big-letter" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666"}}>{localStorage.getItem(LANG) === "english" ? "No logs to show" : "No hay registros que mostrar"}</p>
+																				<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No logs to show" : "No hay registros que mostrar"}</p>
 																				<i className="fa fa-image fa-5x" />
 																			</div>
 																}
@@ -776,7 +789,7 @@ class GridCameraDisplay extends Component {
 
 		) : showNoFiles ? (
 			<div align="center" style={{ paddingBottom: "3rem" }}>
-				<p className="big-letter" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666"}}>{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+				<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
 				<i className="fa fa-image fa-5x" />
 			</div>
 		) : null
@@ -857,7 +870,7 @@ class GridCameraDisplay extends Component {
 					) :
 					showNoFiles ? (
 						<div align="center" className='no-data-show'>
-							<p className="big-letter" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666"}}>{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+							<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
 							<i className="fa fa-image fa-5x" />
 						</div>
 					) : null
@@ -1026,7 +1039,7 @@ class GridCameraDisplay extends Component {
 										el.map((element, idx) => {
 											return (
 												<div key={element} className="col-4">
-													<button key={idx} className={"btn btn-outline-primary ml-auto mr-auto mb-2 fake-btn"} onClick={() => searchVideos(element)} >
+													<button key={idx} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-auto mr-auto mb-2 fake-btn`} onClick={() => searchVideos(element)} >
 														{`${element} - ${element.split(":")[1] === "00" ? element.split(":")[0] + ":30" : element === "23:30" ? "00:00" : (parseInt(element.split(":")[0]) + 1) + ":00"}`}
 													</button>
 												</div>
@@ -1114,7 +1127,7 @@ class GridCameraDisplay extends Component {
 					totalWeekArray.map((el) => {
 						let buttonDate = moment().subtract(Math.abs(el - 6), 'days').startOf('date').format('ll');
 						return (
-							<button key={Math.abs(el - 6)} className={historicCurrentDay === Math.abs(el - 6) ? "btn btn-primary ml-auto mr-auto mb-2" : "btn btn-outline-primary ml-auto mr-auto mb-2"} onClick={() => this._getHistoricsByHour(Math.abs(el - 6))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
+							<button key={Math.abs(el - 6)} className={historicCurrentDay === Math.abs(el - 6) ? `btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "primary"} ml-auto mr-auto mb-2` : `btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "outline-secondary" : "outline-primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(Math.abs(el - 6))} >{buttonDate.split(" de ")[0] + " " + buttonDate.split(" de ")[1].split(".")[0].slice(0, 1)[0].toUpperCase() + buttonDate.split(" de ")[1].split(".")[0].slice(1)}</button>
 						);
 					})
 				}

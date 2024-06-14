@@ -19,7 +19,7 @@ import Soporte from '../Soporte'
 import conections from '../../conections';
 import { ToastsContainer, ToastsStore } from "react-toasts";
 import constants from '../../constants/constants'
-import { TOKEN_FIX } from '../../constants/token'
+import { MODE, TOKEN_FIX } from '../../constants/token'
 
 import Actions from './Actions';
 import RenderCamaras from './RenderCamaras';
@@ -38,19 +38,19 @@ const Settings = (props, { showMatches }) => {
   const panes = [
     {
       menuItem: 'Registro de usuarios',
-      render: () => <Tab.Pane attached={false}><RenderUsuarios data={[setShowModalUser, users, setUsers, columnsUsers, clientId, token]} /></Tab.Pane>,
+      render: () => <Tab.Pane style={{ background: "transparent" }} attached={false}><RenderUsuarios data={[setShowModalUser, users, setUsers, columnsUsers, clientId, token]} /></Tab.Pane>,
     },
     {
       menuItem: 'Registro de cámaras',
-      render: () => <Tab.Pane attached={false}><RenderCamaras data={[setShowModalCamera, cameras, setCameras, columnsCameras, clientId, token]} /></Tab.Pane>,
+      render: () => <Tab.Pane style={{ background: "transparent" }} attached={false}><RenderCamaras data={[setShowModalCamera, cameras, setCameras, columnsCameras, clientId, token]} /></Tab.Pane>,
     },
     // {
     //   menuItem: 'Asignación de cuadrantes',
-    //   render: () => <Tab.Pane attached={false}><RenderCuadrantes data={[cuadrantes, setCuadrantes, columnsCuadrantes, clientId, token]} /></Tab.Pane>,
+    //   render: () => <Tab.Pane style={{background: "transparent"}} attached={false}><RenderCuadrantes data={[cuadrantes, setCuadrantes, columnsCuadrantes, clientId, token]} /></Tab.Pane>,
     // },
     {
       menuItem: 'Acciones sobre catálogos',
-      render: () => <Tab.Pane attached={false}><Soporte /></Tab.Pane>,
+      render: () => <Tab.Pane style={{ background: "transparent" }} attached={false}><Soporte /></Tab.Pane>,
     },
   ]
 
@@ -226,7 +226,7 @@ const Settings = (props, { showMatches }) => {
 
   return (
     <div className={!showMatches ? "hide-matches" : "show-matches"}>
-      <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
+      <Tab menu={{ secondary: true, pointing: true, inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) }} panes={panes} />
       <ToastsContainer store={ToastsStore} />
       {showModalUser ?
         <ModalRegisterUser modal={showModalUser} stateModal={setShowModalUser} clientId={clientId} hide={() => hideModal("Nuevo usuario")} ></ModalRegisterUser>

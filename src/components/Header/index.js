@@ -3,6 +3,7 @@ import { Navbar, NavDropdown, Button, Nav } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import { FaShoePrints } from 'react-icons/fa';
 import { ToastsContainer, ToastsStore } from "react-toasts";
+import { Radio } from "semantic-ui-react";
 import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
@@ -13,6 +14,7 @@ import ModalVersions from "./ModalVersions";
 import { LANG, MODE } from "../../constants/token";
 // import { Dropdown } from "semantic-ui-react";
 import versions from "./versionInfo";
+import { BsMoon, BsMoonFill, BsSun, BsSunFill } from "react-icons/bs";
 
 class Header extends Component {
 
@@ -275,6 +277,9 @@ class Header extends Component {
       this.setState({ language: localStorage.getItem(LANG) });
     };
 
+    console.log(this.props.history);
+    console.log(this.props.userInfo.modules)
+
     return (
       <Navbar style={{ transition: "all .2s linear" }} sticky="top" expand="lg" variant="dark" bg={this.props.darkMode ? "darkmode" : "mh"}>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -388,6 +393,29 @@ class Header extends Component {
               ))
               : null}
           </Nav>
+          <div style={{
+            display: "flex",
+            marginRight: "1.5rem",
+            padding: "0.67rem",
+            alignItems: "center",
+          }}>
+            {!(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ?
+              <BsSunFill style={{ color: "white", marginRight: "1.5rem" }} />
+              :
+              <BsSun style={{ color: "white", marginRight: "1.5rem" }} />
+            }
+            <Radio
+              slider
+              onChange={() => this.props.setDarkMode()}
+              checked={this.props.darkMode}
+              style={{ marginRight: "1.5rem" }}
+            />
+            {(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ?
+              <BsMoonFill style={{ color: "white", marginRight: "1.5rem" }} />
+              :
+              <BsMoon style={{ color: "white", marginRight: "1.5rem" }} />
+            }
+          </div>
           <Nav style={{ paddingRight: "3.5rem" }}>
             {/*this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this.props._reloadCams}>
                         <i className={this.props.loadingRestart?'fa fa-repeat fa-spin':"fa fa-repeat"}></i>
@@ -440,14 +468,7 @@ class Header extends Component {
             <Button variant="outline-light">
               <i className="arrow_forward"></i>
             </Button>
-            <Button variant="outline-light" onClick={() => this.props.setDarkMode()}>
-              {
-                this.props.darkMode ?
-                  <i className="fa fa-sun-o" aria-hidden="true"></i>
-                  :
-                  <i className="fa fa-moon-o" aria-hidden="true"></i>
-              }
-            </Button>
+
           </Nav>
         </Navbar.Collapse>
       </Navbar>
