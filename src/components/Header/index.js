@@ -277,9 +277,6 @@ class Header extends Component {
       this.setState({ language: localStorage.getItem(LANG) });
     };
 
-    console.log(this.props.history);
-    console.log(this.props.userInfo.modules)
-
     return (
       <Navbar style={{ transition: "all .2s linear" }} sticky="top" expand="lg" variant="dark" bg={this.props.darkMode ? "darkmode" : "mh"}>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

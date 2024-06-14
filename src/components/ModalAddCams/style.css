@@ -15,7 +15,7 @@
 }
 
 .dark-header{
-    background-color: #2e597d;
+    background-color: var(--dark-mode-color);
     color: white;
 }
 

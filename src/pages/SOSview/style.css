@@ -173,9 +173,24 @@
   padding: 5px;
   color: white;
   margin-top: 10px;
+  transition: all 0.2s linear;
 }
 
 .sistema > p {
+  color: white;
+}
+.sistema-dark {
+  position: relative;
+  background: var(--dark-mode-bar);
+  border-radius: .4em;
+  width: 85%;
+  padding: 5px;
+  color: white;
+  margin-top: 10px;
+  transition: all 0.2s linear;
+}
+
+.sistema-dark > p {
   color: white;
 }
 

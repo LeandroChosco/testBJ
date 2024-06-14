@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Card,
@@ -62,15 +62,15 @@ export default function Incident(props) {
       let results = (dataMap.filter((data) => data.tag === element));
       results.map((data) => {
         auxArray.push(data);
-      })  
+      })
       console.log(results)
     })
-    if(auxArray.length > 0){
-      auxArray.sort((a,b) => {
-        if(a.lastModification.seconds > b.lastModification.seconds){
+    if (auxArray.length > 0) {
+      auxArray.sort((a, b) => {
+        if (a.lastModification.seconds > b.lastModification.seconds) {
           return -1;
         }
-        if(a.lastModification.seconds < b.lastModification.seconds){
+        if (a.lastModification.seconds < b.lastModification.seconds) {
           return 1;
         }
       })
@@ -80,49 +80,71 @@ export default function Incident(props) {
     }
   }
 
-  function handleReset(){
+  function handleReset() {
     setDataMapState(dataMap);
   }
 
   return (
     <Container fluid>
       <Row>
-        <Col lg={6} md={6} className="justify-content-center">
+        <Col lg={4} md={4} className="justify-content-center">
           <Card
             bg={"white"}
             text={"black"}
             style={{
               width: "100%",
-              height: "100%",
+              height: "450px",
               margin: "0px",
               padding: "0px",
+              overflow: "scroll",
+              overflowX: "hidden",
+              alignItems: "center"
             }}
           >
-            <Card.Header style={{ textAlign: "center", fontWeight: "bold" }}>
-              INCIDENT MAP
-            </Card.Header>
-            <Card.Body
-              style={{ padding: "0px", width: "100%", height: "100%" }}
+            <Card.Header
+              style={{ textAlign: "center", fontWeight: "bold", backgroundColor: "white", border: "none" }}
             >
-              {(dataMap && dataMap.length > 0) &&(
-                <MapaGoogle dataMap={dataMapState.length > 0 ? dataMapState : dataMap} />
-              )}
-            </Card.Body>
+              TIME LINE
+            </Card.Header>
+            <TimeLine data={(dataMap && dataMap.length > 0) ? dataMapState : dataMap} />
           </Card>
         </Col>
-        <Col lg={6} md={6}>
+        <Col lg={8} md={8}>
           <Col>
-          <Row style={{marginTop: '5px'}}>
-            <Col lg={12} md={12}>
-            <SearchBar data={(dataMap && dataMap.length > 0)? tagsFilter : null} handleSearch={handleSearch} handleReset={handleReset} />
-            <TotalIncidents dataMap = {dataMap} tags = {conjuntoIncidentes} />
-            </Col>
-          </Row>
+            <Row style={{ marginTop: '5px' }}>
+              <Col lg={12} md={12}>
+                <SearchBar data={(dataMap && dataMap.length > 0) ? tagsFilter : null} handleSearch={handleSearch} handleReset={handleReset} />
+                <TotalIncidents dataMap={dataMap} tags={conjuntoIncidentes} />
+              </Col>
+            </Row>
             <Row>
-              <Col style={{height: '230px'}}>
+              <Card
+                bg={"white"}
+                text={"black"}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  margin: "0px",
+                  padding: "0px",
+                }}
+              >
+                <Card.Header style={{ textAlign: "center", fontWeight: "bold" }}>
+                  INCIDENT MAP
+                </Card.Header>
+                <Card.Body
+                  style={{ padding: "0px", width: "100%", height: "100%" }}
+                >
+                  {(dataMap && dataMap.length > 0) && (
+                    <MapaGoogle dataMap={dataMapState.length > 0 ? dataMapState : dataMap} />
+                  )}
+                </Card.Body>
+              </Card>
+            </Row>
+            <Row>
+              <Col style={{ height: '230px' }}>
                 {conjuntoIncidentes.length > 0 ? (
                   <PeoplePerDay data={conjuntoIncidentes}
-                  filename="Incidents"
+                    filename="Incidents"
                   />
                 ) : (
                   <div>
@@ -133,28 +155,6 @@ export default function Incident(props) {
                   </div>
                 )}
               </Col>
-            </Row>
-            <Row>
-              <Card
-                bg={"white"}
-                text={"black"}
-                style={{
-                  width: "100%",
-                  height: "450px",
-                  margin: "0px",
-                  padding: "0px",
-                  overflow: "scroll",
-                  overflowX: "hidden",
-                  alignItems: "center"
-                }}
-              >
-                <Card.Header
-                  style={{ textAlign: "center", fontWeight: "bold", backgroundColor: "white", border: "none" }}
-                >
-                  TIME LINE
-                </Card.Header>
-                <TimeLine data = {(dataMap && dataMap.length > 0) ? dataMapState : dataMap} />
-              </Card>
             </Row>
           </Col>
         </Col>

@@ -138,7 +138,7 @@ class Cuadrantes extends Component {
                       ? <Button style={{ borderRadius: '.28571429rem' }} color='red' icon='minus' onClick={() => this._deleteCuadrante(value)} />
                       : null
                   }
-                  <Label as='a' basic pointing='right' className={this.state.cuadranteActual === value.id ? 'colorSelected' : 'colorNormal'} onClick={() => this._camsCuadrante(value.id)}>
+                  <Label as='a' basic pointing='right' className={this.state.cuadranteActual === value.id ? 'colorSelected' : (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "colorNormalDark" : 'colorNormal'} onClick={() => this._camsCuadrante(value.id)}>
                     {value.name}
                   </Label>
                   <Button icon onClick={() => this._addCams(value)}>
@@ -190,7 +190,7 @@ class Cuadrantes extends Component {
                       ? <Button style={{ borderRadius: '.28571429rem' }} color='red' icon='minus' onClick={() => this._deleteCuadrante(value)} />
                       : null
                   }
-                  <Label as='a' basic pointing='right' className={this.state.cuadranteActual === value.id ? 'colorSelected' : 'colorNormal'} onClick={() => this._camsCuadrante(value.id)}>
+                  <Label as='a' basic pointing='right' className={this.state.cuadranteActual === value.id ? 'colorSelected' : (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "colorNormalDark" : 'colorNormal'} onClick={() => this._camsCuadrante(value.id)}>
                     {value.name}
                   </Label>
                   <Button icon onClick={() => this._addCams(value)}>

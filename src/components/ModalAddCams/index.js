@@ -249,7 +249,7 @@ class ModalAddCams extends Component {
 
     _buttonVer = (cell, row) => {
         return (
-            <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "secondary"}`} onClick={() => this._viewCam(row)} style={{ fontSize: '14px', margin: 'auto', textAlign: 'center', padding: '0px', height: '30px', width: '150px' }}>Ver</button>
+            <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "secondary"}`} onClick={() => this._viewCam(row)} style={{ fontSize: '14px', margin: 'auto', textAlign: 'center', padding: '0px', height: '30px', width: '150px' }}><i className="fa fa-eye" aria-hidden="true"></i></button>
         )
     }
 

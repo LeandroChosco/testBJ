@@ -1823,13 +1823,13 @@ class Main extends Component {
             )}
           />
 
-          {/* <Route
+          <Route
             path="/Incident"
             exact
             render={(props) => (
               <Incident {...props} dataMap={this.state.dataMap} />
             )}
-          /> */}
+          />
 
 
           <Route

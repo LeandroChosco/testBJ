@@ -263,7 +263,7 @@ class Chat extends Component {
             return (
               <Card
                 className={i === index ? "activeChat" : ""}
-                style={{ width: "100%", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#598fbd", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}
+                style={{ width: "100%", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}
                 key={i}
                 onClick={() => this.changeChat(chat, i)}
               >
@@ -572,7 +572,7 @@ class Chat extends Component {
             }
 
           </div>
-          <div className="col-8">
+          <div className="col-8" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear"}}>
             {
               loadingChat ?
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
@@ -591,7 +591,7 @@ class Chat extends Component {
                           className={'Chat C5'}
                           style={{
                             textAlign: 'center',
-                            backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#598fbd" : COLORS.c5,
+                            backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : COLORS.c5,
                             height: '30px'
                           }}
                         >
@@ -664,7 +664,7 @@ class Chat extends Component {
                             className={"Chat C5"}
                             style={{
                               textAlign: "center",
-                              backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#598fbd" :
+                              backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" :
                                 COLORS[
                                 chats[index].alarmType ? chats[index].alarmType : "c5"
                                 ],
@@ -761,7 +761,7 @@ class Chat extends Component {
                               marginTop: "5px",
                             }}
                           >
-                            <Card style={{ width: "100%", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#598fbd", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear", zIndex: 1 }}>
+                            <Card style={{ width: "100%", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-bar)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear", zIndex: 1 }}>
                               <Card.Content>
                                 <div className="row">
                                   <div className="col-8">
@@ -1376,7 +1376,7 @@ class Chat extends Component {
   };
 
   sendMessage = () => {
-    if(this.state.text === "") console.log("MENSAJE VACÍO")
+    if (this.state.text === "") console.log("MENSAJE VACÍO")
     if (this.state.text === "") return;
     const { chatId, messages } = this.state;
 

@@ -4,6 +4,7 @@ import HlsPlayer from '../HlsPlayer';
 import WssPlayer from '../WssPlayer';
 import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
 import './style.css';
+import { MODE } from '../../constants/token';
 
 class ModalViewCam extends Component {
 	state = {};
@@ -11,10 +12,10 @@ class ModalViewCam extends Component {
 		let { modal, hide, dataCam } = this.props;
 		return (
 			<Modal show={modal} onHide={hide}>
-				<Modal.Header closeButton>
+				<Modal.Header style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white !important" : "#666666" }} closeButton>
 					<p>Camara {dataCam.num_cam}</p>
 				</Modal.Header>
-				<Modal.Body style={{ height: '400px' }}>
+				<Modal.Body style={{ height: '400px', background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
 					{!dataCam.is_amazon_stream && dataCam.amazon_arn_channel ? (
 						<WssPlayer
 							channelARN={dataCam.amazon_arn_channel}

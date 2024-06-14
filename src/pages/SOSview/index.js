@@ -341,7 +341,7 @@ class Chat extends Component {
                 />
             }
           </div>
-          <div className='col-8' style={{ padding: showHistorial && "2rem" }}>
+          <div className='col-8' style={{ padding: showHistorial && "2rem", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear" }}>
             {loading ?
               <>
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
@@ -430,7 +430,7 @@ class Chat extends Component {
                           className={'Chat C5'}
                           style={{
                             textAlign: 'center',
-                            backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#598fbd" : 
+                            backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" : 
                             COLORS[chats[index].trackingType],
                             height: '30px'
                           }}
@@ -495,7 +495,7 @@ class Chat extends Component {
                         </div>
 
                         <div className='row' style={{ height: '20%', width: '100%', margin: 0, marginTop: '5px' }}>
-                        <Card style={{ width: "100%", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#598fbd", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear", zIndex: 1 }}>
+                        <Card style={{ width: "100%", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-bar)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear", zIndex: 1 }}>
                             <Card.Content>
                               <div className='row'>
                                 <div className='col-9'>
@@ -647,6 +647,8 @@ class Chat extends Component {
                               ) : value.from === 'Policia' ? (
                                 'policia'
                               ) : value.from === 'Sistema' ? (
+                                (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? 'sistema-dark'
+                                :
                                 'sistema'
                               ) : (
                                 'support'
@@ -840,9 +842,9 @@ class Chat extends Component {
                 className={i === index ? 'activeChat' : ''}
                 style={
                   critical_color !== null && type.includes('Seguimiento ') ? (
-                    { width: '100%', boxShadow: critical_color.boxShadow, color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#598fbd", transition: "all 0.2s linear" }
+                    { width: '100%', boxShadow: critical_color.boxShadow, color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear" }
                   ) : (
-                    { width: '100%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#598fbd", transition: "all 0.2s linear" }
+                    { width: '100%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear" }
                   )
                 }
                 key={i}
