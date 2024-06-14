@@ -27,8 +27,10 @@ Primary Colors
   --secong-color:var(--bj-second);
   --third-color:var(--bj-third);
 
-  --dark-mode-color: #0c304e;
-  --dark-mode-bar: rgb(29, 11, 54);
+  /* --dark-mode-color: #0c304e; */
+  --dark-mode-color: #1e2732;
+  /* --dark-mode-bar: rgb(29, 11, 54); */
+  --dark-mode-bar: #0c304e;
 }
 
 /*//////////////////////////////////////////////////////////////////

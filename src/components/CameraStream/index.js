@@ -361,10 +361,10 @@ class CameraStream extends Component {
               <div align="left" style={{ padding: "1rem 0.5rem" }}>
                 {
                   (window.location.pathname.includes("analisis") || window.location.pathname.includes("map") || window.location.pathname.includes("cuadrantes")) &&
-                  <h2>{localStorage.getItem(LANG) === "english" ? `Camera ${num_cam}   ` : `Cámara ${num_cam}   `}{this.props.marker.extraData.dataCamValue === undefined || this.props.marker.extraData.tipo_camara === undefined ? null :
+                  <h3>{localStorage.getItem(LANG) === "english" ? `Camera ${num_cam}   ` : `Cámara ${num_cam}   `}{this.props.marker.extraData.dataCamValue === undefined || this.props.marker.extraData.tipo_camara === undefined ? null :
                     this.props.marker.extraData.dataCamValue.tipo_camara === 2 || this.props.marker.extraData.tipo_camara === 2 ? (
                       <i>{localStorage.getItem(LANG) === "english" ? `, Type: PTZ` : `, Tipo: PTZ`}</i>
-                    ) : null}</h2>
+                    ) : null}</h3>
                 }
                 <div id={`cameraInfo-${this.props.marker.extraData.num_cam}`} style={{ marginBottom: "1rem" }}>
 
@@ -388,17 +388,17 @@ class CameraStream extends Component {
                   <div style={{ paddingTop: "1rem" }}>
                     {
                       window.location.pathname !== "/camarasInternas" &&
-                      <button onClick={() => this.setState({ showModalMoreInformation: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-info" aria-hidden="true"></i></button>
+                      <button onClick={() => this.setState({ showModalMoreInformation: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary border-0"} mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-info" aria-hidden="true"></i></button>
                     }
                     {
                       !copyButton ?
-                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-2 mt-1`} onClick={() => { this._handleCopy(); this.setState({ copyText: document.getElementById(`cameraInfo-${this.props.marker.extraData.num_cam}`).textContent }) }} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>
+                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary border-0"} ml-2 mt-1`} onClick={() => { this._handleCopy(); this.setState({ copyText: document.getElementById(`cameraInfo-${this.props.marker.extraData.num_cam}`).textContent }) }} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>
                           <i data-content="Hello. This is an inverted popup" data-variation="inverted">
                             <FaClipboard />
                           </i>
                         </button>
                         :
-                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-2 mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }} disabled><FaClipboardCheck /></button>
+                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary border-0"} ml-2 mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }} disabled><FaClipboardCheck /></button>
                     }
                   </div>
                 )}

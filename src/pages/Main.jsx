@@ -33,6 +33,7 @@ import Sospechosos from "./Sospechosos";
 import Settings from "./Settings";
 import AlarmChat from "./AlarmChat/index";
 import Complaint from "./Complaint";
+import Incident from "./Incident";
 import ChatTracking from "./ChatTracking";
 import constants from '../constants/constants';
 import Sound from 'react-sound';
@@ -1821,6 +1822,14 @@ class Main extends Component {
               />
             )}
           />
+
+          {/* <Route
+            path="/Incident"
+            exact
+            render={(props) => (
+              <Incident {...props} dataMap={this.state.dataMap} />
+            )}
+          /> */}
 
 
           <Route
