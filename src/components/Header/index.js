@@ -390,7 +390,7 @@ class Header extends Component {
               ))
               : null}
           </Nav>
-          <div style={{
+          {/* <div style={{
             display: "flex",
             marginRight: "1.5rem",
             padding: "0.67rem",
@@ -412,7 +412,7 @@ class Header extends Component {
               :
               <BsMoon style={{ color: "white", marginRight: "1.5rem" }} />
             }
-          </div>
+          </div> */}
           <Nav style={{ paddingRight: "3.5rem" }}>
             {/*this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this.props._reloadCams}>
                         <i className={this.props.loadingRestart?'fa fa-repeat fa-spin':"fa fa-repeat"}></i>
