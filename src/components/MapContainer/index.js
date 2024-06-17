@@ -15,10 +15,11 @@ export class MapContainer extends Component {
     if (!window.google) {
       var s = document.createElement('script');
       s.type = 'text/javascript';
-      // let key = 'AIzaSyCHiHNfeGxYKOZRj-57F957Xe08f64fLHo';
-      // if (process.env.NODE_ENV === 'production') {
-        let key = 'AIzaSyBz_MJT1pf14hIqVQ-Sy43pKby3hrhmmEo';
-      // }
+      let key = 'AIzaSyCHiHNfeGxYKOZRj-57F957Xe08f64fLHo';
+      if (process.env.NODE_ENV === 'production') {
+        key = 'AIzaSyBz_MJT1pf14hIqVQ-Sy43pKby3hrhmmEo';
+      }
+      // let key = 'AIzaSyBz_MJT1pf14hIqVQ-Sy43pKby3hrhmmEo'; // Prod para pruebas en dev
       s.src = `https://maps.google.com/maps/api/js?key=${key}`;
       var x = document.getElementsByTagName('script')[0];
       x.parentNode.insertBefore(s, x);

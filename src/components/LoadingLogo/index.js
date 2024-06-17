@@ -8,7 +8,7 @@ const LoadingLogo = () => {
             <img
                 className="spinner"
                 src={constants.urlPath}
-                style={{ width: "10%", height: "20%", marginBottom: "12.5%" }}
+                style={{ width: "12.5rem", height: "12.5rem", marginBottom: "12.5%" }}
                 alt={constants.urlPath} />
         </div>
     )
