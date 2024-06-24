@@ -15,19 +15,20 @@ import PeoplePerDay from "../../components/Dashboard/persons";
 import * as moment from "moment";
 import { ContactSupportOutlined } from "@material-ui/icons";
 import './style.css'
+import dataMap from './dataFake.json';
 
 
 
 export default function Incident(props) {
-  const dataMap = props.dataMap;
-  const [dataMapState, setDataMapState] = useState(dataMap);
+  // const dataMap = props.dataMap;
+  const [dataMapState, setDataMapState] = useState(dataMap.sort((a, b) => a.creationDate > b.creationDate ? -1 : 1));
   const dayWeek = [];
   const week = [];
   const incident = [];
   if ((dataMap && dataMap.length > 0)) {
 
     dataMap.map((days) => {
-      dayWeek.push(days.creationDate.toDate());
+      dayWeek.push(days.creationDate);
       if (days.tag) {
         incident.push(days.tag);
       }
@@ -63,14 +64,14 @@ export default function Incident(props) {
       results.map((data) => {
         auxArray.push(data);
       })
-      console.log(results)
+      // console.log(results)
     })
     if (auxArray.length > 0) {
       auxArray.sort((a, b) => {
-        if (a.lastModification.seconds > b.lastModification.seconds) {
+        if (a.creationDate > b.creationDate) {
           return -1;
         }
-        if (a.lastModification.seconds < b.lastModification.seconds) {
+        if (a.creationDate < b.creationDate) {
           return 1;
         }
       })
@@ -93,7 +94,7 @@ export default function Incident(props) {
             text={"black"}
             style={{
               width: "100%",
-              height: "450px",
+              height: "60rem",
               margin: "0px",
               padding: "0px",
               overflow: "scroll",
@@ -110,14 +111,14 @@ export default function Incident(props) {
           </Card>
         </Col>
         <Col lg={8} md={8}>
-          <Col>
+          <Col style={{ height: "100%" }}>
             <Row style={{ marginTop: '5px' }}>
               <Col lg={12} md={12}>
                 <SearchBar data={(dataMap && dataMap.length > 0) ? tagsFilter : null} handleSearch={handleSearch} handleReset={handleReset} />
                 <TotalIncidents dataMap={dataMap} tags={conjuntoIncidentes} />
               </Col>
             </Row>
-            <Row>
+            <Row style={{ height: "80%" }}>
               <Card
                 bg={"white"}
                 text={"black"}
@@ -140,7 +141,7 @@ export default function Incident(props) {
                 </Card.Body>
               </Card>
             </Row>
-            <Row>
+            {/* <Row>
               <Col style={{ height: '230px' }}>
                 {conjuntoIncidentes.length > 0 ? (
                   <PeoplePerDay data={conjuntoIncidentes}
@@ -155,7 +156,7 @@ export default function Incident(props) {
                   </div>
                 )}
               </Col>
-            </Row>
+            </Row> */}
           </Col>
         </Col>
       </Row>

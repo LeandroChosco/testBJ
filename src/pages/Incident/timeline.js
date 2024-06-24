@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
     Card,
     Image,
@@ -17,8 +17,8 @@ export default function TimeLine(props) {
             dataMap.map((value, index) => {
                 return (
                     <React.Fragment key={index}>
-                        <Card.Body id="cardBody" style={{ backgroundColor: '#f5f5f5', marginTop: '8px', borderRadius: '5px', width: '620px' }}  >
-                            <Row>
+                        <Card.Body id="cardBody" style={{ backgroundColor: '#f5f5f5', marginTop: '8px', borderRadius: '5px', width: '620px', padding: "2rem" }}  >
+                            <Row style={{ alignItems: "center" }}>
                                 <Col lg={1} md={1}>
                                     <Image
                                         src={profile}
@@ -28,8 +28,8 @@ export default function TimeLine(props) {
                                     />
                                 </Col>
                                 <Col
-                                    lg={2}
-                                    md={2}
+                                    lg={6}
+                                    md={6}
                                     style={{
                                         textAlign: "left !important",
                                         padding: "0px",
@@ -62,7 +62,7 @@ export default function TimeLine(props) {
                                     }}
                                 >
                                     Date:{" "}
-                                    {moment(value.creationDate.toDate()).format(
+                                    {moment(value.creationDate).format(
                                         "LLL"
                                     )}{" "}
                                 </p>

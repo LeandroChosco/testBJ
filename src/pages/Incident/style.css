@@ -83,9 +83,9 @@
   }
   .dataResult {
     position: absolute;
-    margin-top: 25px;
+    margin-top: 8rem;
     width: 29%;
-    height: auto;
+    height: 6rem;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     overflow: hidden;

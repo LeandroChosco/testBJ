@@ -75,20 +75,18 @@ export default class searchBar extends Component {
                         }
                     </div>
                 )}
-                {filterData != 0 && (
-                    input.value ?
-                        <div className='dataResult' >
-                            {filterData.map((data, index) => {
-                                return (input.value ?
-                                    <p key={index} className="datosTag" onClick={() => {
-                                        handleSelector(data);
-                                        this.setState({ searchSelect: data, filterActive: true });
-                                        input.value = ''
-                                    }} >#{data} </p>
-                                    : null)
-                            })}
-
-                        </div> : null
+                {filterData !== 0 && filterData.filter(el => !tagList.includes(el)).length > 0 && (
+                    input.value &&
+                    <div className='dataResult' >
+                        {filterData.filter(el => !tagList.includes(el)).map((data, index) => {
+                            return (input.value &&
+                                <p key={index} className="datosTag" onClick={() => {
+                                    handleSelector(data);
+                                    this.setState({ searchSelect: data, filterActive: true });
+                                    input.value = ''
+                                }} >#{data} </p>)
+                        })}
+                    </div>
                 )}
             </div>
         )
