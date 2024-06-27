@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     Card,
     Image,
@@ -8,13 +8,27 @@ import {
 import profile from "../../assets/images/profile.jpg";
 import imagenPost from "../../assets/images/imagenPost.jpg";
 import * as moment from "moment";
+import conections from "../../conections";
 
 export default function TimeLine(props) {
 
-    let dataMap = props.data;
+    const [dataTL, setDataTL] = useState(props.data);
+
+    // let dataMap = props.data;
+
+    useEffect(() => {
+        conections.getTimeline(1).then(response => {
+            if (response.data.success) {
+                // console.log("DATA", response.data.current_page)
+                setDataTL(response.data.current_page);
+            };
+        })
+            .catch(err => console.log(err));
+    }, []);
+
     return (
-        (dataMap && dataMap.length > 0) ?
-            dataMap.map((value, index) => {
+        (dataTL && dataTL.length > 0) ?
+            dataTL.map((value, index) => {
                 return (
                     <React.Fragment key={index}>
                         <Card.Body id="cardBody" style={{ backgroundColor: '#f5f5f5', marginTop: '8px', borderRadius: '5px', width: '620px', padding: "2rem" }}  >
@@ -39,9 +53,9 @@ export default function TimeLine(props) {
                                 >
                                     <h6 style={{ textAlign: "left !important" }}>
                                         {" "}
-                                        {value.firstname && value.lastname ?
+                                        {!value.anonymous ?
                                             <b>
-                                                {value.firstname} {value.lastname}
+                                                {value.user_c5}
                                             </b>
                                             :
                                             <b>
@@ -53,16 +67,24 @@ export default function TimeLine(props) {
                             </Row>
                             <h3 style={{ textAlign: "left !important" }}>
                                 {" "}
-                                Description: {value.description} <br></br>{" "}
-                                <p style={{ color: "blue" }}> #{value.tag} </p>{" "}
+                                Descripción: {value.description}
+                                <div style={{ display: "flex" }}>
+                                    {
+                                        value.tags.map((el, idx) => {
+                                            return (
+                                                <p key={idx} style={{ color: "blue", marginRight: "1rem" }}>{`#${el} `}</p>
+                                            )
+                                        })
+                                    }
+                                </div>
                                 <p
                                     style={{
                                         textAlign: "right !important",
                                         fontSize: "10px",
                                     }}
                                 >
-                                    Date:{" "}
-                                    {moment(value.creationDate).format(
+                                    Fecha:{" "}
+                                    {moment(value.createdAt).format(
                                         "LLL"
                                     )}{" "}
                                 </p>
@@ -71,14 +93,24 @@ export default function TimeLine(props) {
                             <Image
                                 id="imagenTimeLine"
                                 src={
-                                    value.incidence_photo
-                                        ? value.incidence_photo
+                                    value.image_url
+                                        ? value.image_url
                                         : imagenPost
                                 }
                                 width={500}
                                 height={240}
                                 rounded
                             />
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                <div className='col-1'>
+                                    <i className="fa fa-thumbs-o-up" style={{ color: "blue" }} aria-hidden="true"></i>
+                                    <p>{value.like}</p>
+                                </div>
+                                <div className='col-1'>
+                                    <i className="fa fa-thumbs-o-down" style={{ color: "blue" }} aria-hidden="true"></i>
+                                    <p>{value.dislike}</p>
+                                </div>
+                            </div>
                         </Card.Body>
                     </React.Fragment>
                 )

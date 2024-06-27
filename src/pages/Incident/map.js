@@ -7,12 +7,31 @@ import {
   Marker,
   InfoWindow,
 } from "react-google-maps";
-import warning from "../../assets/images/warning.svg";
+import warning from "../../assets/images/warnings/warning.svg";
+import { arrayWarnings } from './arrayWarnings';
+// import dataMap from './dataMap.json';
+import dataMapById from './dataMapById.json';
+import ModalIncident from '../../components/ModalIncident';
+import conections from '../../conections';
+
 export default function MapaGoogle(props) {
 
   function Map() {
-    const { dataMap } = props
+    const { dataMap } = props;
     const [selectMarker, setSelectMarker] = useState(null);
+
+    const filterMarker = (id) => {
+      if (id) {
+        conections.getIncidentById(id).then(response => {
+          if (response.data.success) {
+            setSelectMarker(response.data.data);
+          };
+        })
+          .catch(err => console.log(err));
+      } else {
+        setSelectMarker(id);
+      }
+    };
 
     return (
       <GoogleMap
@@ -26,38 +45,45 @@ export default function MapaGoogle(props) {
               key={index}
               position={{
                 lat: parseFloat(
-                  incident.camera.camData.google_cordenate.split(",")[0]
+                  incident.coordinates.latitude
                 ),
                 lng: parseFloat(
-                  incident.camera.camData.google_cordenate.split(",")[1]
+                  incident.coordinates.longitude
                 ),
               }}
-              onClick={() => setSelectMarker(incident)}
+              onClick={() => filterMarker(incident._id)}
               icon={{
-                url: warning,
+                url: arrayWarnings.some(el => el.color === "#123123") ? arrayWarnings.find(el => el.color === "#123123").icon : warning,
                 scaledSize: new window.google.maps.Size(25, 25),
               }}
             />
           ))}
-        {selectMarker && (
+        {
+          selectMarker && <ModalIncident marker={selectMarker} hideModal={() => filterMarker(null)} />
+        }
+        {/* {selectMarker && (
           <InfoWindow
             position={{
               lat: parseFloat(
-                selectMarker.camera.camData.google_cordenate.split(",")[0]
+                selectMarker.coordinates.latitude
               ),
               lng: parseFloat(
-                selectMarker.camera.camData.google_cordenate.split(",")[1]
+                selectMarker.coordinates.longitude
               ),
             }}
             onCloseClick={() => {
-              setSelectMarker(null);
+              filterMarker(null);
             }}
           >
             <div>
-              <h3>{selectMarker.tag} </h3>
+              {
+                selectMarker.tags.map((el, idx) => {
+                  return <h3 key={idx}>{`#${el} `}</h3>
+                })
+              }
             </div>
           </InfoWindow>
-        )}
+        )} */}
       </GoogleMap>
     );
   }

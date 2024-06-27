@@ -1,0 +1,227 @@
+[
+    {
+        "id": "667d8ee995c4c1cf8f21add5",
+        "description": "Hay un desorden del 70%",
+        "tags": ["Infraestructura", "AccidenteDeTráfico"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.3775862",
+            "longitude": "-99.1829029"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-24T12:00:15Z",
+        "like": 3,
+        "dislike": 1,
+        "user_c5": "Alejandro Chico"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21add6",
+        "description": "Se reporta un robo en la zona.",
+        "tags": ["Residuos", "DesastresNaturales"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.3858234",
+            "longitude": "-99.1622347"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-15T08:30:25Z",
+        "like": 4,
+        "dislike": 2,
+        "user_c5": "Juan Perez"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21add7",
+        "description": "Accidente vehicular en la avenida principal.",
+        "tags": ["AccidenteDeTráfico"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.3895762",
+            "longitude": "-99.1750023"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-16T10:15:40Z",
+        "like": 2,
+        "dislike": 0,
+        "user_c5": "María González"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21add8",
+        "description": "Presencia de armas en la zona.",
+        "tags": ["Infraestructura", "AccidenteDeTráfico"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.3912231",
+            "longitude": "-99.1681234"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-17T11:45:55Z",
+        "like": 3,
+        "dislike": 4,
+        "user_c5": "Carlos Ramírez"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21add9",
+        "description": "Se reporta un robo en un comercio.",
+        "tags": ["Residuos", "Alumbrado"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.3928765",
+            "longitude": "-99.1802234"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-18T09:20:30Z",
+        "like": 1,
+        "dislike": 2,
+        "user_c5": "Ana López"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21adda",
+        "description": "Choque múltiple en la intersección.",
+        "tags": ["Infraestructura"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.3945321",
+            "longitude": "-99.1723345"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-19T07:55:10Z",
+        "like": 4,
+        "dislike": 1,
+        "user_c5": "Luis Martínez"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21addb",
+        "description": "Se detectan armas en la vía pública.",
+        "tags": ["AccidenteDeTráfico"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.3967890",
+            "longitude": "-99.1841234"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-20T14:05:45Z",
+        "like": 3,
+        "dislike": 5,
+        "user_c5": "Sofía Fernández"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21addc",
+        "description": "Robo a mano armada en la esquina.",
+        "tags": ["Infraestructura", "Alumbrado"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.3981234",
+            "longitude": "-99.1764567"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-21T12:35:20Z",
+        "like": 1,
+        "dislike": 2,
+        "user_c5": "Diego Hernández"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21addd",
+        "description": "Accidente peatonal en la avenida.",
+        "tags": ["DesastresNaturales", "Residuos"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.3994567",
+            "longitude": "-99.1787890"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-22T08:10:50Z",
+        "like": 5,
+        "dislike": 0,
+        "user_c5": "Laura García"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21adde",
+        "description": "Se detecta un arma en la vía pública.",
+        "tags": ["DrenajesDeAguas"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.4007890",
+            "longitude": "-99.1811234"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-23T10:50:25Z",
+        "like": 3,
+        "dislike": 3,
+        "user_c5": "Fernando Morales"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21addf",
+        "description": "Robo de vehículo en la calle principal.",
+        "tags": ["AccidenteDeTráfico", "DesastresNaturales"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.4021234",
+            "longitude": "-99.1834567"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-24T14:25:15Z",
+        "like": 2,
+        "dislike": 1,
+        "user_c5": "Elena Torres"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21ade0",
+        "description": "Accidente automovilístico en la esquina.",
+        "tags": ["Alumbrado", "Residuos"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.4034567",
+            "longitude": "-99.1857890"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-25T09:00:05Z",
+        "like": 4,
+        "dislike": 0,
+        "user_c5": "Paula Vega"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21ade1",
+        "description": "Individuo armado visto en la calle.",
+        "tags": ["DrenajesDeAguas", "Infraestructura"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.4047890",
+            "longitude": "-99.1881234"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-26T11:15:45Z",
+        "like": 1,
+        "dislike": 1,
+        "user_c5": "Ricardo Pérez"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21ade2",
+        "description": "Robo de motocicleta en el parque.",
+        "tags": ["AccidenteDeTráfico"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.4061234",
+            "longitude": "-99.1704567"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-17T07:35:30Z",
+        "like": 5,
+        "dislike": 0,
+        "user_c5": "Sara Martínez"
+    },
+    {
+        "id": "667d8ee995c4c1cf8f21ade3",
+        "description": "Accidente de bicicleta en la avenida.",
+        "tags": ["Alumbrado"],
+        "image_url": null,
+        "coordinates": {
+            "latitude": "19.4074567",
+            "longitude": "-99.1721234"
+        },
+        "anonymous": false,
+        "createdAt": "2024-06-18T08:45:00Z",
+        "like": 4,
+        "dislike": 1,
+        "user_c5": "Miguel Romero"
+    }
+]

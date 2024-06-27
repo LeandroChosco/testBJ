@@ -13,14 +13,16 @@ import TotalIncidents from "./totalIncidents";
 import GenderDetected from "../../components/Dashboard/genderDetected";
 import PeoplePerDay from "../../components/Dashboard/persons";
 import * as moment from "moment";
-import { ContactSupportOutlined } from "@material-ui/icons";
+import dataMap from './dataMapById.json';
 import './style.css'
-import dataMap from './dataFake.json';
+import FilterButtons from "./FilterButtons";
+import conections from "../../conections";
 
 
 
 export default function Incident(props) {
   // const dataMap = props.dataMap;
+  const [loading, setLoading] = useState(false);
   const [dataMapState, setDataMapState] = useState(dataMap.sort((a, b) => a.creationDate > b.creationDate ? -1 : 1));
   const dayWeek = [];
   const week = [];
@@ -56,34 +58,53 @@ export default function Incident(props) {
 
   }
 
-  function handleSearch(value) {
+  // function handleSearch(value) {
 
-    let auxArray = [];
-    value.map((element) => {
-      let results = (dataMap.filter((data) => data.tag === element));
-      results.map((data) => {
-        auxArray.push(data);
-      })
-      // console.log(results)
-    })
-    if (auxArray.length > 0) {
-      auxArray.sort((a, b) => {
-        if (a.creationDate > b.creationDate) {
-          return -1;
-        }
-        if (a.creationDate < b.creationDate) {
-          return 1;
-        }
-      })
-      setDataMapState(auxArray);
-    } else {
-      setDataMapState(dataMap);
-    }
-  }
+  //   let auxArray = [];
+  //   value.map((element) => {
+  //     let results = (dataMap.filter((data) => data.tag === element));
+  //     results.map((data) => {
+  //       auxArray.push(data);
+  //     })
+  //     // console.log(results)
+  //   })
+  //   if (auxArray.length > 0) {
+  //     auxArray.sort((a, b) => {
+  //       if (a.creationDate > b.creationDate) {
+  //         return -1;
+  //       }
+  //       if (a.creationDate < b.creationDate) {
+  //         return 1;
+  //       }
+  //     })
+  //     setDataMapState(auxArray);
+  //   } else {
+  //     setDataMapState(dataMap);
+  //   }
+  // }
 
   function handleReset() {
     setDataMapState(dataMap);
-  }
+  };
+
+  function loadData(filter){
+    setLoading(true);
+    // Acá dentro hay que hacer el endpoint.
+    conections.getIncidentsMap(filter).then(response => {
+      if(response.data.success){
+        let incidentsMap = response.data.data.sort((a, b) => a.creationDate > b.creationDate ? -1 : 1);
+        setDataMapState(incidentsMap);
+      };
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    })
+    .catch(err => console.log(err));
+  };
+
+  useEffect(() => {
+    loadData();
+  },[]);
 
   return (
     <Container fluid>
@@ -113,12 +134,13 @@ export default function Incident(props) {
         <Col lg={8} md={8}>
           <Col style={{ height: "100%" }}>
             <Row style={{ marginTop: '5px' }}>
-              <Col lg={12} md={12}>
-                <SearchBar data={(dataMap && dataMap.length > 0) ? tagsFilter : null} handleSearch={handleSearch} handleReset={handleReset} />
-                <TotalIncidents dataMap={dataMap} tags={conjuntoIncidentes} />
+              <Col lg={12} md={12} style={{ padding: "1.5rem 0" }}>
+                {/* <SearchBar data={(dataMap && dataMap.length > 0) ? tagsFilter : null} handleSearch={handleSearch} handleReset={handleReset} /> */}
+                {/*<TotalIncidents dataMap={dataMap} tags={conjuntoIncidentes} />*/}
+                <FilterButtons handleSearch={loadData} handleReset={handleReset} />
               </Col>
             </Row>
-            <Row style={{ height: "80%" }}>
+            <Row style={{ height: "85%" }}>
               <Card
                 bg={"white"}
                 text={"black"}
