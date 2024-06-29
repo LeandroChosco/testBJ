@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import mapStyles from "./mapStyles";
 import {
   GoogleMap,
@@ -9,19 +9,19 @@ import {
 } from "react-google-maps";
 import warning from "../../assets/images/warnings/warning.svg";
 import { arrayWarnings } from './arrayWarnings';
-// import dataMap from './dataMap.json';
-import dataMapById from './dataMapById.json';
 import ModalIncident from '../../components/ModalIncident';
 import conections from '../../conections';
 
 export default function MapaGoogle(props) {
+  const { dataMap } = props;
+  const [center, setCenter] = useState({ lat: 19.3984, lng: -99.15766 });
 
   function Map() {
-    const { dataMap } = props;
     const [selectMarker, setSelectMarker] = useState(null);
 
     const filterMarker = (id) => {
       if (id) {
+        setSelectMarker(true)
         conections.getIncidentById(id).then(response => {
           if (response.data.success) {
             setSelectMarker(response.data.data);
@@ -36,7 +36,7 @@ export default function MapaGoogle(props) {
     return (
       <GoogleMap
         defaultZoom={14}
-        defaultCenter={{ lat: 19.3984, lng: -99.15766 }}
+        defaultCenter={{ lat: center.lat, lng: center.lng }}
         defaultOptions={{ styles: mapStyles }}
       >
         {dataMap.length > 0 &&
@@ -89,6 +89,26 @@ export default function MapaGoogle(props) {
   }
 
   const WrappedMap = withScriptjs(withGoogleMap(Map));
+
+  useEffect(() => {
+    let averageLat = 0;
+    let averageLng = 0;
+
+    dataMap.forEach(el => {
+      averageLat += parseFloat(el.coordinates.latitude);
+      averageLng += parseFloat(el.coordinates.longitude);
+    });
+
+    if(!isNaN(averageLat) && !isNaN(averageLng)){
+      let newCenter = {
+        lat: averageLat / dataMap.length,
+        lng: averageLng / dataMap.length,
+      }; 
+      setCenter(newCenter);
+    };
+    
+  }, [dataMap]);
+
   return (
 
     <WrappedMap

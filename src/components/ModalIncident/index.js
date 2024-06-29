@@ -34,7 +34,8 @@ const ModalIncident = ({ marker, hideModal }) => {
                     <h3>{localStorage.getItem(LANG) === "english" ? `Incident details` : `Detalles del incidente`}</h3>
                 </Modal.Header>
                 <Modal.Body style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "36rem", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#0c304e" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
-                    {loading ?
+                    {(Object.keys(marker).length === 0) ?
+                        loading &&
                         <div>
                             <Spinner animation="border" variant="info" role="status" size="xl">
                                 <span className="sr-only">Loading...</span>
@@ -114,7 +115,7 @@ const ModalIncident = ({ marker, hideModal }) => {
                                     }
                                     width={500}
                                     height={240}
-                                    rounded
+                                    style={{ margin: "1rem", borderRadius: "2rem 5rem 2rem 5rem" }}
                                 />
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                                     <div className='col-1'>

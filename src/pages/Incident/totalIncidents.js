@@ -4,44 +4,27 @@ import {
     Card,
     Col
 } from "react-bootstrap";
+import conections from "../../conections";
 
-export default function TotalIncidents(props) {
+export default function TotalIncidents() {
 
-    const { dataMap, tags } = props;
-
-    const [maxIncident, setMaxIncident] = useState({
-        tag: "",
-        total: 0
-    })
+    const [dataWidgets, setDataWidgets] = useState({});
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-
-        const sortTags = tags.sort((a, b) => a.total > b.total ? -1 : 1);
-
-        if (sortTags[0].total === sortTags[1].total) {
-            const newMaxIncident = {
-                tag: `Many tags`,
-                total: sortTags[0].total
-            };
-            setMaxIncident(newMaxIncident);
-        } else {
-            const newMaxIncident = {
-                tag: sortTags[0].tag,
-                total: sortTags[0].total,
-            };
-            setMaxIncident(newMaxIncident);
-        }
-
-        // tags.forEach((tag) => {
-        //     console.log("LOS TAGS", tag)
-        //     if (tag.total > maxIncident.total) {
-        //         maxIncident.tag = tag.tag;
-        //         maxIncident.total = tag.total;
-        //     };
-        //     if (tag.total === maxIncident.total && tag.total !== 0) {
-
-        //     }
-        // });
+        setLoading(true);
+        conections.getDataWidgets().then(response => {
+            if (response.data.success) {
+                const newDataWidgets = {
+                    totalCount: response.data.total_items,
+                    mostReported: `${response.data.most_used_tag._id.toUpperCase()} (${response.data.most_used_tag.count})`
+                };
+                setDataWidgets(newDataWidgets);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 1000);
+            }
+        })
     }, [])
 
     return (
@@ -60,7 +43,7 @@ export default function TotalIncidents(props) {
                         className="mb-2"
                     >
                         <b>
-                            TOTAL INCIDENTS : {(dataMap && dataMap.length > 0) ? dataMap.length : 0}
+                            {loading ? "Cargando datos" : `TOTAL INCIDENTS : ${dataWidgets.totalCount || "NO DATA"}`}
                         </b>
 
                     </Card>
@@ -78,7 +61,7 @@ export default function TotalIncidents(props) {
                         className="mb-2"
                     >
                         <b>
-                            MOST REPORTED INCIDENT : {(maxIncident.total > 0 ? `${maxIncident.tag} (${maxIncident.total})` : 'No incidents').toUpperCase()}
+                            {loading ? "Cargando datos" : `MOST REPORTED INCIDENT : ${dataWidgets.mostReported || "NO DATA"}`}
                         </b>
 
                     </Card>

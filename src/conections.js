@@ -120,16 +120,16 @@ export default {
   // Incidents endpoints
 
   getTagList: () => {
-    const ngrok = "https://aacb-2803-d100-e9e0-adf-95ad-61e9-7eb6-98f0.ngrok-free.app";
+    const ngrok = "https://e984-2803-d100-e9e0-adf-88f0-6164-d01e-3d43.ngrok-free.app";
     return connectedSails.get(`${ngrok}/tag/list`)
     // return connectedSails.get(`${constants.sails_url}/tag/list`);
   },
   
   getIncidentsMap: (filter) => {
-    const ngrok = "https://aacb-2803-d100-e9e0-adf-95ad-61e9-7eb6-98f0.ngrok-free.app";
+    const ngrok = "https://e984-2803-d100-e9e0-adf-88f0-6164-d01e-3d43.ngrok-free.app";
     if(filter){
       return connectedSails.get(`${ngrok}/incident/map?tag=${filter}`);
-      // return connectedSails.get(`${constants.sails_url}/incident/map/${filter}`);
+      // return connectedSails.get(`${constants.sails_url}/incident/map?tag={filter}`);
     } else {
       return connectedSails.get(`${ngrok}/incident/map`);
       // return connectedSails.get(`${constants.sails_url}/incident/map`);
@@ -137,15 +137,21 @@ export default {
   },
   
   getIncidentById: (id) => {
-    const ngrok = "https://aacb-2803-d100-e9e0-adf-95ad-61e9-7eb6-98f0.ngrok-free.app";
+    const ngrok = "https://e984-2803-d100-e9e0-adf-88f0-6164-d01e-3d43.ngrok-free.app";
     return connectedSails.get(`${ngrok}/incident/${id}`)
-    // return connectedSails.get(`${constants.sails_url}/incident/map/${id}`);
+    // return connectedSails.get(`${constants.sails_url}/incident/${id}`);
   },
 
   getTimeline: (current_page) => {
-    const ngrok = "https://aacb-2803-d100-e9e0-adf-95ad-61e9-7eb6-98f0.ngrok-free.app";
+    const ngrok = "https://e984-2803-d100-e9e0-adf-88f0-6164-d01e-3d43.ngrok-free.app";
     return connectedSails.get(`${ngrok}/incident/timeline?page=${current_page}`)
-    // return connectedSails.get(`${constants.sails_url}/incident/timeline/${current_page}`);
+    // return connectedSails.get(`${constants.sails_url}/incident/timeline?page=${current_page}`);
+  },
+  
+  getDataWidgets: () => {
+    const ngrok = "https://e984-2803-d100-e9e0-adf-88f0-6164-d01e-3d43.ngrok-free.app";
+    return connectedSails.get(`${ngrok}/incident/count`)
+    // return connectedSails.get(`${constants.sails_url}/incident/count`);
   },
 
 

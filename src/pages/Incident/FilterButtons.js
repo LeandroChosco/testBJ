@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { FaTimes } from 'react-icons/fa';
 import { arrayWarnings } from './arrayWarnings';
+import './style.css';
 
-const FilterButtons = ({handleSearch}) => {
+const FilterButtons = ({ handleSearch }) => {
 
     const [activeButton, setActiveButton] = useState(null);
 
@@ -13,27 +14,22 @@ const FilterButtons = ({handleSearch}) => {
 
     return (
         <>
-            <h3>FILTROS POR TAG {activeButton && `(${activeButton})`}</h3>
-            <div style={{ display: "flex" }}>
+            {/* <h3>FILTROS POR TAG {activeButton && `(${activeButton})`}</h3> */}
+            <div style={{ display: "flex", padding: "1.5rem 0" }}>
                 {arrayWarnings.map((value, index) => {
                     return (
-                        <button key={index} className='filterBtn' onClick={() => {
+                        <button key={index} className={value.short_name === activeButton ? "btn btn-primary btnFilter" : "btn btn-outline-primary btnFilter"} onClick={() => {
                             filterByTag(value.short_name);
                         }}>
-                            <p style={{ color: 'white', marginLeft: '2px' }}>
-                                #{value.short_name}
-                                {/* <FaTimes style={{ marginLeft: '5px' }} /> */}
-                            </p>
+                            #{value.short_name}
                         </button>
                     )
                 })
                 }
-                <button className='filterBtn' onClick={() => {
+                <button className='btn btn-outline-primary btnFilter' onClick={() => {
                     filterByTag(null);
                 }}>
-                    <p style={{ color: 'white', marginLeft: '2px' }}>
-                        <i className="fa fa-trash-o" aria-hidden="true"></i>
-                    </p>
+                    <i className="fa fa-trash-o" aria-hidden="true"></i>
                 </button>
             </div>
         </>
