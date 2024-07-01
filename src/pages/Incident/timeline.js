@@ -44,7 +44,7 @@ export default function TimeLine() {
     };
 
     return (
-        <div id="scrollableDiv" style={{ height: "85vh", minWidth: "6rem", overflow: "hidden auto", padding: "0.75rem", display: "grid", alignItems: "center" }}>
+        <div id="scrollableDiv" style={{ height: "80vh", minWidth: "6rem", overflow: "hidden auto", padding: "0.75rem", display: "grid", alignItems: "center" }}>
             <InfiniteScroll
                 pageStart={0}
                 loadMore={fetchMoreData}
@@ -118,17 +118,17 @@ export default function TimeLine() {
                                     <Image
                                         id="imagenTimeLine"
                                         src={value.image_url}
-                                        width={500}
+                                        width={450}
                                         height={240}
                                         style={{ margin: "1rem", borderRadius: "2rem 5rem 2rem 5rem" }}
                                     />
                                 }
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                    <div className='col-1'>
+                                    <div>
                                         <i className="fa fa-thumbs-o-up" style={{ color: "blue" }} aria-hidden="true"></i>
                                         <p>{value.like}</p>
                                     </div>
-                                    <div className='col-1'>
+                                    <div>
                                         <i className="fa fa-thumbs-o-down" style={{ color: "blue" }} aria-hidden="true"></i>
                                         <p>{value.dislike}</p>
                                     </div>

@@ -15,7 +15,7 @@ const FilterButtons = ({ handleSearch }) => {
     return (
         <>
             {/* <h3>FILTROS POR TAG {activeButton && `(${activeButton})`}</h3> */}
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", padding: "1.5rem 0" }}>
                 {arrayWarnings.map((value, index) => {
                     return (
                         <button key={index} className={value.short_name === activeButton ? "btn btn-primary btnFilter" : "btn btn-outline-primary btnFilter"} onClick={() => {

@@ -5,7 +5,7 @@ import { TagTopLikes } from '../../components/IncidentsGraphics/TagTopLikes';
 
 const GraphicIncidents = () => {
     return (
-        <div className="row">
+        <div className="row" style={{marginTop: "5rem"}}>
             <div className="col-6">
                 <TagTopLikes />
             </div>

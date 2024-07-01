@@ -75,7 +75,7 @@ export default function Incident(props) {
               }}
             >
               <Card.Header
-                style={{ textAlign: "center", fontWeight: "bold", backgroundColor: "white", border: "none" }}
+                style={{ textAlign: "center", fontWeight: "bold", backgroundColor: "white", border: "none", marginTop: "1.5rem" }}
               >
                 COMUNIDAD
               </Card.Header>
@@ -86,14 +86,8 @@ export default function Incident(props) {
           </Col>
           <Col lg={8} md={8}>
             <Col style={{ height: "100%" }}>
-              <Row style={{ marginTop: '5px' }}>
-                <Col lg={12} md={12} style={{ padding: "1.5rem 0" }}>
-                  {/* <SearchBar data={(dataMap && dataMap.length > 0) ? tagsFilter : null} handleSearch={handleSearch} handleReset={handleReset} /> */}
-                  <GraphicIncidents />
-                  <FilterButtons handleSearch={loadData} />
-                </Col>
-              </Row>
-              <Row style={{ height: "65%" }}>
+              <Row style={{ height: "58%" }}>
+                <FilterButtons handleSearch={loadData} />
                 <Card
                   bg={"white"}
                   text={"black"}
@@ -116,6 +110,12 @@ export default function Incident(props) {
                         )} */}
                   </Card.Body>
                 </Card>
+              </Row>
+              <Row style={{ marginTop: '5px' }}>
+                <Col lg={12} md={12} style={{ padding: "1.5rem 0" }}>
+                  {/* <SearchBar data={(dataMap && dataMap.length > 0) ? tagsFilter : null} handleSearch={handleSearch} handleReset={handleReset} /> */}
+                  <GraphicIncidents />
+                </Col>
               </Row>
               {/* <Row>
         <Col style={{ height: '230px' }}>
