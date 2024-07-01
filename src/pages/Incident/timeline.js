@@ -7,7 +7,7 @@ import {
 } from "react-bootstrap";
 import Spinner from 'react-bootstrap/Spinner';
 import profile from "../../assets/images/profile.jpg";
-import imagenPost from "../../assets/images/imagenPost.jpg";
+// import imagenPost from "../../assets/images/imagenPost.jpg";
 import * as moment from "moment";
 import conections from "../../conections";
 import InfiniteScroll from "react-infinite-scroller";
@@ -23,7 +23,15 @@ export default function TimeLine() {
         setLoading(true);
         conections.getTimeline(currentPage).then(response => {
             if (response.data.success) {
-                setDataTL(prevData => [...prevData, ...response.data.current_page]);
+                const newData = [];
+
+                response.data.current_page.forEach(data => {
+                    if (!dataTL.some(el => el._id === data._id)) {
+                        newData.push(data);
+                    };
+                });
+                setDataTL(prevData => [...prevData, ...newData]);
+
                 if (response.data.total_pages > currentPage) {
                     setCurrentPage(currentPage + 1);
                 } else {
@@ -105,18 +113,16 @@ export default function TimeLine() {
                                         )}{" "}
                                     </p>
                                 </h3>
-
-                                <Image
-                                    id="imagenTimeLine"
-                                    src={
-                                        value.image_url
-                                            ? value.image_url
-                                            : imagenPost
-                                    }
-                                    width={500}
-                                    height={240}
-                                    style={{ margin: "1rem", borderRadius: "2rem 5rem 2rem 5rem" }}
-                                />
+                                {
+                                    value.image_url &&
+                                    <Image
+                                        id="imagenTimeLine"
+                                        src={value.image_url}
+                                        width={500}
+                                        height={240}
+                                        style={{ margin: "1rem", borderRadius: "2rem 5rem 2rem 5rem" }}
+                                    />
+                                }
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                                     <div className='col-1'>
                                         <i className="fa fa-thumbs-o-up" style={{ color: "blue" }} aria-hidden="true"></i>

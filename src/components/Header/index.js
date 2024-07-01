@@ -181,7 +181,7 @@ class Header extends Component {
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
-    this.props.history.push("/Incident");
+    this.props.history.push("/incidentes");
   }
 
 

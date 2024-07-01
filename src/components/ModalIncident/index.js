@@ -33,7 +33,7 @@ const ModalIncident = ({ marker, hideModal }) => {
                 <Modal.Header style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#0c304e" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }} closeButton>
                     <h3>{localStorage.getItem(LANG) === "english" ? `Incident details` : `Detalles del incidente`}</h3>
                 </Modal.Header>
-                <Modal.Body style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "36rem", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#0c304e" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
+                <Modal.Body style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "18rem", maxHeight: "36rem", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#0c304e" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                     {(Object.keys(marker).length === 0) ?
                         loading &&
                         <div>
@@ -106,17 +106,16 @@ const ModalIncident = ({ marker, hideModal }) => {
 
                                 </div>
 
-                                <Image
-                                    id="imagenTimeLine"
-                                    src={
-                                        marker.image_url
-                                            ? marker.image_url
-                                            : imagenPost
-                                    }
-                                    width={500}
-                                    height={240}
-                                    style={{ margin: "1rem", borderRadius: "2rem 5rem 2rem 5rem" }}
-                                />
+                                {
+                                    marker.image_url &&
+                                    <Image
+                                        id="imagenTimeLine"
+                                        src={marker.image_url}
+                                        width={500}
+                                        height={240}
+                                        style={{ margin: "1rem", borderRadius: "2rem 5rem 2rem 5rem" }}
+                                    />
+                                }
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                                     <div className='col-1'>
                                         <i className="fa fa-thumbs-o-up" style={{ color: "blue" }} aria-hidden="true"></i>

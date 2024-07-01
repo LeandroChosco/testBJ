@@ -1824,7 +1824,7 @@ class Main extends Component {
           />
 
           <Route
-            path="/Incident"
+            path="/incidentes"
             exact
             render={(props) => (
               <Incident {...props} dataMap={this.state.dataMap} />

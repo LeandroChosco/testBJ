@@ -2,23 +2,24 @@ import React, { useState, useEffect } from "react";
 import {
   Container,
   Card,
-  Image,
+  // Image,
   Row,
   Col
 } from "react-bootstrap";
-import SearchBar from './searchBar'
+// import SearchBar from './searchBar'
 import MapaGoogle from "./map"
 import TimeLine from "./timeline"
-import TotalIncidents from "./totalIncidents";
-import GenderDetected from "../../components/Dashboard/genderDetected";
-import PeoplePerDay from "../../components/Dashboard/persons";
-import * as moment from "moment";
+// import TotalIncidents from "./totalIncidents";
+// import GenderDetected from "../../components/Dashboard/genderDetected";
+// import PeoplePerDay from "../../components/Dashboard/persons";
+// import * as moment from "moment";
 // import dataMap from './dataMapById.json';
-import './style.css'
 import FilterButtons from "./FilterButtons";
 import LoadingLogo from "../../components/LoadingLogo";
 import conections from "../../conections";
+import GraphicIncidents from "./GraphicIncidents";
 
+import './style.css'
 
 
 export default function Incident(props) {
@@ -88,11 +89,11 @@ export default function Incident(props) {
               <Row style={{ marginTop: '5px' }}>
                 <Col lg={12} md={12} style={{ padding: "1.5rem 0" }}>
                   {/* <SearchBar data={(dataMap && dataMap.length > 0) ? tagsFilter : null} handleSearch={handleSearch} handleReset={handleReset} /> */}
-                  <TotalIncidents />
+                  <GraphicIncidents />
                   <FilterButtons handleSearch={loadData} />
                 </Col>
               </Row>
-              <Row style={{ height: "75%" }}>
+              <Row style={{ height: "65%" }}>
                 <Card
                   bg={"white"}
                   text={"black"}

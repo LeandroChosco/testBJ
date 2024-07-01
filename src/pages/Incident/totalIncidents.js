@@ -43,7 +43,7 @@ export default function TotalIncidents() {
                         className="mb-2"
                     >
                         <b>
-                            {loading ? "Cargando datos" : `TOTAL INCIDENTS : ${dataWidgets.totalCount || "NO DATA"}`}
+                            {loading ? "Cargando datos" : `TOTAL DE INCIDENTES : ${dataWidgets.totalCount || "NO DATA"}`}
                         </b>
 
                     </Card>
@@ -61,7 +61,7 @@ export default function TotalIncidents() {
                         className="mb-2"
                     >
                         <b>
-                            {loading ? "Cargando datos" : `MOST REPORTED INCIDENT : ${dataWidgets.mostReported || "NO DATA"}`}
+                            {loading ? "Cargando datos" : `INCIDENTE MÁS REPORTADO : ${dataWidgets.mostReported || "NO DATA"}`}
                         </b>
 
                     </Card>

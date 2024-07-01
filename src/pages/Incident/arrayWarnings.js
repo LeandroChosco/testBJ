@@ -1,3 +1,4 @@
+import warning from "../../assets/images/warnings/warning.svg";
 import warning1 from "../../assets/images/warnings/warning1.svg";
 import warning2 from "../../assets/images/warnings/warning2.svg";
 import warning3 from "../../assets/images/warnings/warning3.svg";
@@ -35,5 +36,10 @@ export const arrayWarnings = [
         "icon": warning6,
         "short_name": "Alumbrado",
         "color": "#F1C40F"
-    }
+    },
+    {
+        "icon": warning,
+        "short_name": "Otros",
+        "color": "#F1C40F"
+    },
 ]
