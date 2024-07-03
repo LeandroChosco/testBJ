@@ -120,13 +120,13 @@ export default {
   // Incidents endpoints
 
   getTagList: () => {
-    const ngrok = "https://4c80-2803-d100-e9e0-adf-6f8b-1344-f881-9afc.ngrok-free.app";
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
     return connectedSails.get(`${ngrok}/tag/list`)
     // return connectedSails.get(`${constants.sails_url}/tag/list`);
   },
   
   getIncidentsMap: (filter) => {
-    const ngrok = "https://4c80-2803-d100-e9e0-adf-6f8b-1344-f881-9afc.ngrok-free.app";
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
     if(filter){
       return connectedSails.get(`${ngrok}/incident/map?tag=${filter}`);
       // return connectedSails.get(`${constants.sails_url}/incident/map?tag={filter}`);
@@ -137,21 +137,26 @@ export default {
   },
   
   getIncidentById: (id) => {
-    const ngrok = "https://4c80-2803-d100-e9e0-adf-6f8b-1344-f881-9afc.ngrok-free.app";
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
     return connectedSails.get(`${ngrok}/incident/${id}`)
     // return connectedSails.get(`${constants.sails_url}/incident/${id}`);
   },
 
   getTimeline: (current_page) => {
-    const ngrok = "https://4c80-2803-d100-e9e0-adf-6f8b-1344-f881-9afc.ngrok-free.app";
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
     return connectedSails.get(`${ngrok}/incident/timeline?page=${current_page}`)
     // return connectedSails.get(`${constants.sails_url}/incident/timeline?page=${current_page}`);
   },
   
-  getDataWidgets: () => {
-    const ngrok = "https://4c80-2803-d100-e9e0-adf-6f8b-1344-f881-9afc.ngrok-free.app";
-    return connectedSails.get(`${ngrok}/incident/count`)
-    // return connectedSails.get(`${constants.sails_url}/incident/count`);
+  getTopLikes: () => {
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
+    return connectedSails.get(`${ngrok}/reaction/like/count`)
+    // return connectedSails.get(`${constants.sails_url}/reaction/like/count`);
+  },
+  getDataTags: () => {
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
+    return connectedSails.get(`${ngrok}/incident/tags`)
+    // return connectedSails.get(`${constants.sails_url}/incident/tags`);
   },
 
 

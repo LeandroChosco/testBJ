@@ -13,18 +13,18 @@ export default function TotalIncidents() {
 
     useEffect(() => {
         setLoading(true);
-        conections.getDataWidgets().then(response => {
-            if (response.data.success) {
-                const newDataWidgets = {
-                    totalCount: response.data.total_items,
-                    mostReported: `${response.data.most_used_tag._id.toUpperCase()} (${response.data.most_used_tag.count})`
-                };
-                setDataWidgets(newDataWidgets);
-                setTimeout(() => {
-                    setLoading(false);
-                }, 1000);
-            }
-        })
+        // conections.getDataWidgets().then(response => {
+        //     if (response.data.success) {
+        //         const newDataWidgets = {
+        //             totalCount: response.data.total_items,
+        //             mostReported: `${response.data.most_used_tag._id.toUpperCase()} (${response.data.most_used_tag.count})`
+        //         };
+        //         setDataWidgets(newDataWidgets);
+        //         setTimeout(() => {
+        //             setLoading(false);
+        //         }, 1000);
+        //     }
+        // })
     }, [])
 
     return (

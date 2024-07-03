@@ -10,7 +10,6 @@ import Spinner from 'react-bootstrap/Spinner';
 // import { Accordion, AccordionBody, AccordionHeader, AccordionItem } from 'reactstrap';
 import { LANG, MODE, /*MODE, SAILS_ACCESS_TOKEN */ } from '../../constants/token';
 import profile from "../../assets/images/profile.jpg";
-import imagenPost from "../../assets/images/imagenPost.jpg";
 import * as moment from "moment";
 
 import "./style.css";
@@ -117,11 +116,11 @@ const ModalIncident = ({ marker, hideModal }) => {
                                     />
                                 }
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                    <div className='col-1'>
+                                    <div>
                                         <i className="fa fa-thumbs-o-up" style={{ color: "blue" }} aria-hidden="true"></i>
                                         <p>{marker.like}</p>
                                     </div>
-                                    <div className='col-1'>
+                                    <div>
                                         <i className="fa fa-thumbs-o-down" style={{ color: "blue" }} aria-hidden="true"></i>
                                         <p>{marker.dislike}</p>
                                     </div>
