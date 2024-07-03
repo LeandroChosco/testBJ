@@ -5,8 +5,8 @@ const radar_backend = "https://api-radar.radarapp.click/graphql";
 const express_url = "http://3.15.181.186";
 
 //ligas de dashboard embebed
-const dashboard="http://95.216.37.253:6868/dashboard/iframes?user_id=1";
-const detialDashboard="http://95.216.37.253:6868/dashboard/iframes/"
+const dashboard = "http://95.216.37.253:6868/dashboard/iframes?user_id=1";
+const detialDashboard = "http://95.216.37.253:6868/dashboard/iframes/"
 
 //Dev
 //sails_url genera token de autenticacion 
@@ -18,7 +18,7 @@ const apiPort = "3000";
 const sailsPort = "1337";
 const ptzPort = "3001";
 const client = 'Benito Juárez';
-const clientFirebase="Benito Juárez";
+const clientFirebase = "Benito Juárez";
 const urlSoftGuard = "http://softguard.radarapptechnologies.com:8080/";
 const urlPath = favicon;
 const socket_url = "https://service-io-general-socket.radarapptechnologies.com/";

@@ -25,7 +25,7 @@ import MediaContainer from '../MediaContainer';
 // import constants from '../../constants/constants';
 import ModalMoreInformation from '../../components/ModalMoreInformation';
 import PaginationList from '../GridCameraDisplay/pagination';
-import { HiMicrophone } from 'react-icons/hi';
+// import { HiMicrophone } from 'react-icons/hi';
 
 import * as QvrFileStationActions from '../../store/reducers/QvrFileStation/actions';
 import * as QvrFunctions from '../../functions/getQvrFunctions';
@@ -144,7 +144,7 @@ class CameraStream extends Component {
 
   render() {
 
-    let { activeIndex, display, num_cam, cameraID, cameraName, showData, photos, data, qnapServer, qnapChannel, servidorMultimedia, photosLoading, videosLoading, videos, historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, loadingSnap, isLoading, isRecording, restarting, loadingFiles, modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription, showPTZ, inputCkecked, portContainer, dnsContainer, copyButton, typeMBOX } = this.state;
+    let { activeIndex, display, num_cam, cameraID, cameraName, showData, /*photos,*/ data, qnapServer, qnapChannel, /*servidorMultimedia, photosLoading, videosLoading, videos,*/ historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, /*loadingSnap, isLoading, isRecording, restarting, loadingFiles,*/ modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription, showPTZ, inputCkecked, /*portContainer, dnsContainer,*/ copyButton, /*typeMBOX*/ } = this.state;
 
     return (
       <Card className={(this.props.showButtons && (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)))) ? "reinvert-modal" : ""} style={{ display: display, padding: "0.75rem", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>
@@ -368,7 +368,7 @@ class CameraStream extends Component {
                 }
                 <div id={`cameraInfo-${this.props.marker.extraData.num_cam}`} style={{ marginBottom: "1rem" }}>
 
-                  {cameraName && !this.props.hideInfo ? <p style={{color: localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)) ? "white" : "#666666"}}>
+                  {cameraName && !this.props.hideInfo ? <p style={{ color: localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)) ? "white" : "#666666" }}>
                     {localStorage.getItem(LANG) === "english" ? `Address: ${cameraName}` : `Dirección: ${cameraName}`}
                     {this.props.marker.extraData.dataCamValue.entrecalles ?
                       <b>
@@ -1139,7 +1139,7 @@ class CameraStream extends Component {
             const password = historicalPassword;
             const user = historicalUser;
 
-            if (dnsPort == 80 || dnsPort == 443) {
+            if (parseInt(dnsPort) === 80 || parseInt(dnsPort) === 443) {
               url = `${historyServerProtocol}://${historyServerDns}/export/${id}/file?name=${file_path}`;
             } else {
               url = `${historyServerProtocol}://${historyServerDns}:${dnsPort}/export/${id}/file?name=${file_path}`;
@@ -1159,7 +1159,7 @@ class CameraStream extends Component {
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
             xhr.onerror = (e) => {
-              if (xhr.status == 401) {
+              if (parseInt(xhr.status) === 401) {
                 console.log("onerror:", xhr.status)
               }
             };
@@ -1176,7 +1176,7 @@ class CameraStream extends Component {
               }
               conections.finalizExportProcess(info);
 
-              if (xhr.status == 401) {
+              if (parseInt(xhr.status) === 401) {
                 console.log("onload:", xhr.status)
               }
 
@@ -1478,7 +1478,7 @@ class CameraStream extends Component {
           xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
           xhr.onerror = () => {
-            if (xhr.status == 401) { console.log("onerror:", xhr.status) }
+            if (parseInt(xhr.status) === 401) { console.log("onerror:", xhr.status) }
             this.setState({ loadingSnap: false });
             // this.addNotification({ message, level, title });
             window.location.pathname !== "/map" ? this.addNotification({ message, level, title }) : this.props.mapNotification({ message, level, title })
@@ -1486,7 +1486,7 @@ class CameraStream extends Component {
 
           xhr.onload = (e) => {
             let blob = xhr.response;
-            if (blob && xhr.status === 200) {
+            if (blob && parseInt(xhr.status) === 200) {
               const fileName = `CAM${camera.id}.jpeg`;
               this.saveFile(blob, fileName);
               this.setState({ loadingSnap: false });

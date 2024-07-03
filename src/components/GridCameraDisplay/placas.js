@@ -9,9 +9,9 @@ import { getIo } from '../../constants/socketplate';
 
 export default function Placas(props) {
 
-    const [plates, setPlates] = useState("");
-    const [refresh, setRefresh] = useState(false);
-    const [loading, setLoading] = useState(false);
+    // const [plates, setPlates] = useState("");
+    // const [refresh, setRefresh] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const arrayDetections = [];
     const io = getIo();
     const [selectedCamera, setSelectedCamera] = useState(`CAM${props.selectedCamera.dataCamValue.id}_${props.selectedCamera.dataCamValue.dns}`);
@@ -25,7 +25,7 @@ export default function Placas(props) {
         } if (connection === true) {
             if (props.selectedCamera.id !== selectedCamera.split("CAM")[1].split("_")[0]) {
                 io.removeAllListeners();
-                setPlates("")
+                // setPlates("")
                 io.disconnect();
                 io.on('disconnect', () => { console.log("Socket disconnected true") })
             }
@@ -33,10 +33,10 @@ export default function Placas(props) {
             io.on('connect', () => { console.log("Socket connected") })
             io.on("bj-create-plate-detection", (data) => {
                 if (data.camera_ip === selectedCamera) {
-                    setRefresh(true);
-                    setPlates("");
+                    // setRefresh(true);
+                    // setPlates("");
                     let results = getPlates(data).slice(0, 100);
-                    setPlates(results);
+                    // setPlates(results);
                 }
             })
         }
@@ -90,7 +90,8 @@ export default function Placas(props) {
     return (
         <>
             {
-                loading ?
+                // loading ?
+                false ?
                     <>
                         <br />
                         <Spinner animation="border" variant="info" role="status" size="xl" />

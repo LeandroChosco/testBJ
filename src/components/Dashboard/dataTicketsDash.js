@@ -31,9 +31,7 @@ const DataTicketsDash = (props) => {
     const getTotal = () => {
         if (totalTickets !== 0) {
             let total = 0
-            dataTickets.map((el) => {
-                total = total + el.value
-            })
+            dataTickets.map((el) => { total = total + el.value })
             return total
         }
     }
@@ -138,7 +136,7 @@ const DataTicketsDash = (props) => {
 
             {
                 options && series ?
-                    <Row style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
+                    <Row style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                         <Col>
                             <Chart options={options} series={series} type="donut" height={320} />
                         </Col>
@@ -146,7 +144,7 @@ const DataTicketsDash = (props) => {
                             <Row>
                                 <Col className='col-4'><FaLayerGroup style={{ color: "#02004c", border: "none", width: "70%", height: "50%" }} /></Col>
                                 <Col className='col-8'>
-                                    <Row style={{marginTop: "0.75rem"}}>
+                                    <Row style={{ marginTop: "0.75rem" }}>
                                         <p>
                                             <b style={{ color: "#02004c" }}>{totalTickets} tickets</b> en total
                                         </p>
@@ -156,7 +154,7 @@ const DataTicketsDash = (props) => {
                             <Row>
                                 <Col className='col-4'><BsEnvelopeOpenFill style={{ color: "#098f62", border: "none", width: "70%", height: "50%" }} /></Col>
                                 <Col className='col-8'>
-                                    <Row style={{marginTop: "0.75rem"}}>
+                                    <Row style={{ marginTop: "0.75rem" }}>
                                         <p>
                                             <b style={{ color: "#098f62" }}>{dataTickets.filter((el) => el.name === "Abiertos")[0].value} tickets</b> abiertos
                                         </p>
@@ -166,7 +164,7 @@ const DataTicketsDash = (props) => {
                             <Row>
                                 <Col className='col-4'><BsFillFileEarmarkCheckFill style={{ color: "#008ffb", border: "none", width: "70%", height: "50%" }} /></Col>
                                 <Col className='col-8'>
-                                    <Row style={{marginTop: "0.75rem"}}>
+                                    <Row style={{ marginTop: "0.75rem" }}>
                                         <p>
                                             <b style={{ color: "#008ffb" }}>{dataTickets.filter((el) => el.name === "Cerrados")[0].value} tickets</b> cerrados
                                         </p>
@@ -176,7 +174,7 @@ const DataTicketsDash = (props) => {
                             <Row>
                                 <Col className='col-4'><MdAccessTimeFilled style={{ color: "#f2833e", border: "none", width: "70%", height: "50%" }} /></Col>
                                 <Col className='col-8'>
-                                    <Row style={{marginTop: "0.75rem"}}>
+                                    <Row style={{ marginTop: "0.75rem" }}>
                                         <p>
                                             <b style={{ color: "#f2833e" }}>{dataTickets.filter((el) => el.name === "En proceso")[0].value} tickets</b> en proceso
                                         </p>

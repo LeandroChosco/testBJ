@@ -124,10 +124,10 @@ export default {
     return connectedSails.get(`${ngrok}/tag/list`)
     // return connectedSails.get(`${constants.sails_url}/tag/list`);
   },
-  
+
   getIncidentsMap: (filter) => {
     const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
-    if(filter){
+    if (filter) {
       return connectedSails.get(`${ngrok}/incident/map?tag=${filter}`);
       // return connectedSails.get(`${constants.sails_url}/incident/map?tag={filter}`);
     } else {
@@ -135,7 +135,7 @@ export default {
       // return connectedSails.get(`${constants.sails_url}/incident/map`);
     }
   },
-  
+
   getIncidentById: (id) => {
     const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
     return connectedSails.get(`${ngrok}/incident/${id}`)
@@ -147,7 +147,7 @@ export default {
     return connectedSails.get(`${ngrok}/incident/timeline?page=${current_page}`)
     // return connectedSails.get(`${constants.sails_url}/incident/timeline?page=${current_page}`);
   },
-  
+
   getTopLikes: () => {
     const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
     return connectedSails.get(`${ngrok}/reaction/like/count`)
@@ -502,7 +502,7 @@ export default {
     return connectedSails.post(constants.sails_url + '/status/support/', data);
   },
   postSupportToProcess: (data) => {
-    https://customer-aob-api-dev.radarapptechnologies.com/supervisor/camera-status?cam_id=49&page=91
+    // https://customer-aob-api-dev.radarapptechnologies.com/supervisor/camera-status?cam_id=49&page=91
     data.user_id = getUserID();
     return connectedSails.post(constants.sails_url + '/postsupport/toprocess/', data);
   },

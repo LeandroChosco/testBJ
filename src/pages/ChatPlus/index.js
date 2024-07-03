@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Icon, Input, Tab, Radio } from "semantic-ui-react";
+import { Card, /*Icon,*/ Input, Tab, Radio } from "semantic-ui-react";
 import FadeLoader from "react-spinners/FadeLoader";
 import Spinner from 'react-bootstrap/Spinner';
 import { Button } from "react-bootstrap";
@@ -17,11 +17,11 @@ import noCamera from "../../assets/images/noCamera.png"
 
 
 import firebaseC5Benito from "../../constants/configC5CJ";
-import firebaseSos from "../../constants/configSOS";
+// import firebaseSos from "../../constants/configSOS";
 import "./style.css";
 import conections from "../../conections";
 import { LANG, MODE } from "../../constants/token";
-import { MESSAGES_COLLECTION } from "../../Api/sos";
+// import { MESSAGES_COLLECTION } from "../../Api/sos";
 import chatGeneral from '../../historial/BJ_Chat-General.json';
 
 const refSOS = firebaseC5Benito
@@ -161,7 +161,7 @@ class Chat extends Component {
       target: { value },
     } = event;
     const { activeIndex } = this.state;
-    const { chats: chatsProps, setChats, getChats } = this.props;
+    const { chats: chatsProps, /*setChats, getChats*/ } = this.props;
     const { optionSelected, searching } = this.state;
     this.setState({ searching: value.trim() }, () => {
       let filterData = chatsProps;
@@ -218,7 +218,7 @@ class Chat extends Component {
 
   renderListChats = (type) => {
     const { index } = this.state;
-    const { chats, setSOS, getChats } = this.props
+    const { chats, /*setSOS,*/ getChats } = this.props
 
     if (chats.length === 0) {
       getChats();
@@ -251,10 +251,10 @@ class Chat extends Component {
           }}
         >
           {chats.map((chat, i) => {
-            const date =
-              chat && chat.create_at
-                ? moment(chat.create_at).format("DD-MM-YYYY, HH:mm:ss")
-                : moment(chat.lastModification).format("DD-MM-YYYY, HH:mm:ss");
+            // const date =
+            //   chat && chat.create_at
+            //     ? moment(chat.create_at).format("DD-MM-YYYY, HH:mm:ss")
+            //     : moment(chat.lastModification).format("DD-MM-YYYY, HH:mm:ss");
 
             // let badgeNumber = 0;
             // if (this.state.chatId) {
@@ -572,7 +572,7 @@ class Chat extends Component {
             }
 
           </div>
-          <div className="col-8" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear"}}>
+          <div className="col-8" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear" }}>
             {
               loadingChat ?
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
@@ -1326,9 +1326,9 @@ class Chat extends Component {
 
   };
 
-  getMessages = (chatId, historial) => {
-    const { chatFirebase, chats } = this.props
-    const indexChat = chats.findIndex(e => e.id === chatId)
+  getMessages = (chatId, /*historial*/) => {
+    const { /*chatFirebase,*/ chats } = this.props
+    // const indexChat = chats.findIndex(e => e.id === chatId)
     // console.log(indexChat)
     // console.log("chat", chatId)
     // console.log("statechat", this.state.chatId)
@@ -1543,7 +1543,7 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    const { alarmIndex, chatId } = this.props.match.params;
+    const { /*alarmIndex,*/ chatId } = this.props.match.params;
 
 
     // this.props.history.location.pathname.split("/").length > 2 && this.setState({ showHistorial: !this.state.showHistorial })

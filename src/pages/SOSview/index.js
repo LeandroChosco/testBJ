@@ -430,8 +430,8 @@ class Chat extends Component {
                           className={'Chat C5'}
                           style={{
                             textAlign: 'center',
-                            backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" : 
-                            COLORS[chats[index].trackingType],
+                            backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" :
+                              COLORS[chats[index].trackingType],
                             height: '30px'
                           }}
                         >
@@ -495,7 +495,7 @@ class Chat extends Component {
                         </div>
 
                         <div className='row' style={{ height: '20%', width: '100%', margin: 0, marginTop: '5px' }}>
-                        <Card style={{ width: "100%", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-bar)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear", zIndex: 1 }}>
+                          <Card style={{ width: "100%", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-bar)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear", zIndex: 1 }}>
                             <Card.Content>
                               <div className='row'>
                                 <div className='col-9'>
@@ -648,8 +648,8 @@ class Chat extends Component {
                                 'policia'
                               ) : value.from === 'Sistema' ? (
                                 (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? 'sistema-dark'
-                                :
-                                'sistema'
+                                  :
+                                  'sistema'
                               ) : (
                                 'support'
                               )
@@ -774,7 +774,7 @@ class Chat extends Component {
   };
 
   renderListChats = (type) => {
-    const { index, chats, optionSelected } = this.state;
+    const { index, chats, /*optionSelected*/ } = this.state;
     let critical_levels = [];
     if (type.includes('Seguimiento')) {
       if (!SEARCHOPTIONS.find((item) => item.key === 'critical')) {
@@ -853,7 +853,7 @@ class Chat extends Component {
                 <Card.Content>
                   <div style={{ position: 'relative' }}>
                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <h4>{chat.user_name}</h4> <p style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear"}}>{date}</p>
+                      <h4>{chat.user_name}</h4> <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>{date}</p>
                     </div>
                     {chat.active !== undefined && chat.active ? (
                       <p>

@@ -356,7 +356,7 @@ class LoopCamerasDisplay extends Component {
         let url = null;
 
         if (historyServerProtocol && historyServerDns) {
-          if (dnsPort == 80 || dnsPort == 443) {
+          if (parseInt(dnsPort) === 80 || parseInt(dnsPort) === 443) {
             url = `${historyServerProtocol}://${historyServerDns}/live/media/snapshot/${videoSourceId}`;
           } else {
             url = `${historyServerProtocol}://${historyServerDns}:${dnsPort}/live/media/snapshot/${videoSourceId}`;
@@ -372,7 +372,7 @@ class LoopCamerasDisplay extends Component {
           xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
           xhr.onerror = () => {
-            if (xhr.status == 401) { console.log("onerror:", xhr.status) }
+            if (parseInt(xhr.status) === 401) { console.log("onerror:", xhr.status) }
             this.setState({ loadingSnap: false });
             this.addNotification({ message, level, title });
           };
@@ -685,11 +685,11 @@ class LoopCamerasDisplay extends Component {
   };
 
   _loadFiles = async (cam, destroyFiles = false, onlyCurrent = false, onlyHistory = false, onlyPhotos = false) => {
+    let { selectedCamera } = this.state;
     let camera = cam && cam.id ? cam : selectedCamera;
     let tipoMBOX = camera.dataCamValue.tipombox
 
     if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos), null, tipoMBOX);
-    let { selectedCamera } = this.state;
     let dnsMbox = camera.dataCamValue.urlhistory;
     const dns_portMbox = camera.dataCamValue.urlhistoryport
     const protocol = camera.dataCamValue.protocolhistory

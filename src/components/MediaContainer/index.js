@@ -17,7 +17,7 @@ class MediaContainer extends Component {
 
   render() {
     let { modal, loading } = this.state;
-    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value, port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo, coverImage, historyServerDns, historyServerPort, historyServerProtocol, exists_image_historic, servidorMultimedia } = this.props;
+    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value, port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo, coverImage, historyServerDns, historyServerPort, historyServerProtocol, exists_image_historic, /*servidorMultimedia*/ } = this.props;
     let dnsIp = ""
     let portCam = ""
 
@@ -97,7 +97,7 @@ class MediaContainer extends Component {
                 <Button style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }} basic onClick={this._saveFile}><i className="fa fa-download" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }} /> <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>Descargar</p></Button>
                 {(!covid && !dns_ip && !isQnap) &&
                   ((localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ?
-                    <Button negative onClick={this._deleteFile}><i className="fa fa-trash" /> <p style={{color: "white"}}>Eliminar</p></Button>
+                    <Button negative onClick={this._deleteFile}><i className="fa fa-trash" /> <p style={{ color: "white" }}>Eliminar</p></Button>
                     :
                     <Button basic negative onClick={this._deleteFile}><i className="fa fa-trash" /> <p style={{ color: "red" }}>Eliminar</p></Button>
                   )}

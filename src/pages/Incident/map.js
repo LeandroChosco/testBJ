@@ -5,7 +5,6 @@ import {
   withScriptjs,
   withGoogleMap,
   Marker,
-  InfoWindow,
 } from "react-google-maps";
 import warning from "../../assets/images/warnings/warning.svg";
 import { arrayWarnings } from './arrayWarnings';
@@ -99,14 +98,14 @@ export default function MapaGoogle(props) {
       averageLng += parseFloat(el.coordinates.longitude);
     });
 
-    if(!isNaN(averageLat) && !isNaN(averageLng)){
+    if (!isNaN(averageLat) && !isNaN(averageLng)) {
       let newCenter = {
         lat: averageLat / dataMap.length,
         lng: averageLng / dataMap.length,
-      }; 
+      };
       setCenter(newCenter);
     };
-    
+
   }, [dataMap]);
 
   return (

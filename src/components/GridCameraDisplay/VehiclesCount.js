@@ -15,16 +15,16 @@ export const VehiclesCount = (props) => {
 
         const vehiclesCount = await conections.getVehiclesCount();
 
-        if(vehiclesCount.data.data && vehiclesCount.data.msg === 'ok' && vehiclesCount.data.success) {
+        if (vehiclesCount.data.data && vehiclesCount.data.msg === 'ok' && vehiclesCount.data.success) {
             const sortVehiclesCount = await vehiclesCount.data.data.sort((a, b) => {
-                if(a.date > b.date) return 1
-                if(a.date < b.date) return -1
+                if (a.date > b.date) return 1
+                if (a.date < b.date) return -1
             })
             sortVehiclesCount.forEach(element => {
 
                 const inCount = element.data.find(el => el.type === "inCountVehicle")
                 const graphicDate = element.date.split("-")[1] + "/" + element.date.split("-")[2]
-                
+
                 dataArraySeriesGrid.push(inCount.total_detections)
                 dataArrayCategoriesGrid.push(graphicDate)
             });

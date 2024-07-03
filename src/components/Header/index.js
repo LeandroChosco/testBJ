@@ -3,7 +3,7 @@ import { Navbar, NavDropdown, Button, Nav } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import { FaShoePrints } from 'react-icons/fa';
 import { ToastsContainer, ToastsStore } from "react-toasts";
-import { Radio } from "semantic-ui-react";
+// import { Radio } from "semantic-ui-react";
 import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
@@ -11,10 +11,10 @@ import "../../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 import "./style.css";
 import ModalChangePassword from "./ModalChangePassword";
 import ModalVersions from "./ModalVersions";
-import { LANG, MODE } from "../../constants/token";
+import { LANG, /*MODE*/ } from "../../constants/token";
 // import { Dropdown } from "semantic-ui-react";
 import versions from "./versionInfo";
-import { BsMoon, BsMoonFill, BsSun, BsSunFill } from "react-icons/bs";
+// import { BsMoon, BsMoonFill, BsSun, BsSunFill } from "react-icons/bs";
 
 class Header extends Component {
 
