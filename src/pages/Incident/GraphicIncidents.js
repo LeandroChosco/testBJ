@@ -29,7 +29,7 @@ const GraphicIncidents = () => {
     }, []);
 
     return (
-        <div className="row" style={{ marginTop: "5rem" }}>
+        <div className="row" style={{ marginTop: "5rem", height: "100%" }}>
             <div className="col-6">
                 <TagTopLikes data={dataLikes} />
             </div>

@@ -99,7 +99,7 @@ export default function MapaGoogle(props) {
       averageLng += parseFloat(el.coordinates.longitude);
     });
 
-    if(!isNaN(averageLat) && !isNaN(averageLng)){
+    if(!isNaN(averageLat) && !isNaN(averageLng) && dataMap.length > 0){
       let newCenter = {
         lat: averageLat / dataMap.length,
         lng: averageLng / dataMap.length,

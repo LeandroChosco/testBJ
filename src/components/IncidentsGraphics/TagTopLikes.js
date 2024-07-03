@@ -60,7 +60,21 @@ export class TagTopLikes extends React.Component {
     return (
       <div id="chart">
         <h3>Top 5 con más likes</h3>
-        <ReactApexChart options={options} series={series} type="pie" width={520} />
+        {
+          data.length > 0 ? 
+          <ReactApexChart options={options} series={series} type="pie" width={350} />
+          :
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            right: 0,
+            left: 0,
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: "flex"
+          }}>No hay datos disponibles</div>
+        }
       </div>
     );
   }
