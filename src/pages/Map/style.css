@@ -14,7 +14,7 @@
 
 .btn-filter__item {
   display: flex;
-  border-bottom: 0.5px dotted #268fff52;
+  /* border-bottom: 0.5px dotted #268fff52; */
   border-radius: 100px;
 }
 

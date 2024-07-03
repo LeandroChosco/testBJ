@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import conections from '../../conections';
 import './style.css';
+import { MODE } from '../../constants/token';
 
 export class MapContainer extends Component {
   constructor(props) {
@@ -16,8 +17,9 @@ export class MapContainer extends Component {
       s.type = 'text/javascript';
       let key = 'AIzaSyCHiHNfeGxYKOZRj-57F957Xe08f64fLHo';
       if (process.env.NODE_ENV === 'production') {
-        key = 'AIzaSyCWBcQ5HVHcDQyqyaunFzE8LtOxBTpj0Dc';
+        key = 'AIzaSyBz_MJT1pf14hIqVQ-Sy43pKby3hrhmmEo';
       }
+      // let key = 'AIzaSyBz_MJT1pf14hIqVQ-Sy43pKby3hrhmmEo'; // Prod para pruebas en dev
       s.src = `https://maps.google.com/maps/api/js?key=${key}`;
       var x = document.getElementsByTagName('script')[0];
       x.parentNode.insertBefore(s, x);
@@ -61,7 +63,7 @@ export class MapContainer extends Component {
   }
 
   render() {
-    return <div style={{ width: '100%', height: '100%' }} ref='mapDiv' />;
+    return <div style={{ width: '100%', height: '100%', transition: "all 0.2s linear", filter: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "invert(1)" }} ref='mapDiv' />;
   }
 
   onScriptLoad = () => {

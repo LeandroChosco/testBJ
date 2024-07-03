@@ -20,6 +20,7 @@ import './style.css';
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
+import { MODE } from '../../constants/token';
 
 const TAB = {
 	ONLINE: 0,
@@ -62,7 +63,7 @@ class CamarasInternas extends Component {
 		moduleActions: {},
 		id_cam: 0,
 		panes: [
-			{ menuItem: 'Cámaras', render: () => <Tab.Pane attached={false}>{this._renderOnlineTab()}</Tab.Pane> }
+			{ menuItem: 'Cámaras', render: () => <Tab.Pane attached={false} style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)" , transition: "all 0.2s linear"}}>{this._renderOnlineTab()}</Tab.Pane> }
 		],
 		offlineCamaras: [],
 		disconnectedCameras: [],
@@ -110,7 +111,7 @@ class CamarasInternas extends Component {
 					</div>
 				) : (
 					<div id="analisis_holder" className={!this.props.showMatches ? 'hide-matches' : 'show-matches'}>
-						<Tab menu={{ secondary: true, pointing: true }} panes={panes} onTabChange={this.handleChangeTab} defaultActiveIndex={activeIndex} />
+						<Tab menu={{ secondary: true, pointing: true, inverted: localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)) }} panes={panes} onTabChange={this.handleChangeTab} defaultActiveIndex={activeIndex} />
 						{this._renderModals()}
 						{this._searchModal()}
 					</div>

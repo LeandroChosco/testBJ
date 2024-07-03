@@ -27,11 +27,13 @@ import './style.css';
 import constants from "../../constants/constants";
 import SearchCamera from '../../components/SearchCamera';
 import Strings from '../../constants/strings';
+import { MODE } from '../../constants/token';
 
 const MARKERS = {
   police_available: police_blue,
   police_unavailable: police_yellow
 };
+
 const MAP_OPTIONS = {
   center: { lat: 19.3805297, lng: -99.1821412 },
   zoom: 14,
@@ -94,6 +96,12 @@ class Map extends Component {
     const { limits: limitsPrev } = prevProps;
     const { map, unsub } = this.state;
     const { limits } = this.props;
+
+    // REVISAR MANERA DE RENDERIZAR OTROS MAPS
+    // if (prevProps.darkMode !== this.props.darkMode){
+    //   this._resetLoader();
+    // }
+
     try {
       const { data: { id } } = limits;
       if (map && id && (limitsPrev !== limits || !unsub)) this._loadPolices();
@@ -137,10 +145,14 @@ class Map extends Component {
         <MapContainer options={MAP_OPTIONS} places={this.state.places} onMapLoad={this._onMapLoad} />
         <div className='btn-filter'>
           <Dropdown>
-            <Dropdown.Toggle variant="primary" id="dropdown-basic">
+            <Dropdown.Toggle variant={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "primary"} id="dropdown-basic">
               <img src={funnel} alt='funnel' />
             </Dropdown.Toggle>
-            <Dropdown.Menu className='btn-filter__menu'>
+            <Dropdown.Menu className='btn-filter__menu'
+              style={{
+                border: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "solid 0.1rem white",
+                filter: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "invert(1)" 
+              }}>
               <Dropdown.Item
                 className='btn-filter__item'
                 onClick={() => this._loadCams('http://maps.google.com/mapfiles/ms/icons/red-dot.png')}
@@ -620,6 +632,14 @@ class Map extends Component {
   _setLoading = () => {
     this.setState({ loadingFilter: true, showSearch: false });
   }
+
+  // _resetLoader = () => {
+  //   this.setState({ loadingFilter: true });
+
+  //   setTimeout(() => {
+  //     this.setState({ loadingFilter: false });
+  //   }, 3000);
+  // }
 
   _filterCameras = (data, offData, params) => {
     if (params) {

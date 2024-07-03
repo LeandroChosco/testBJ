@@ -12,6 +12,7 @@ import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 import conections from "../../../conections";
 
 import MapaGoogle from "./map";
+import { MODE } from "../../../constants/token";
 
 const Placas = () => {
   const date = new Date()
@@ -42,31 +43,31 @@ const Placas = () => {
 
 
 
-  const init =async ()=>{
-     const buble = await conections.getLPRBubble();
+  const init = async () => {
+    const buble = await conections.getLPRBubble();
     if (
       buble.data &&
       buble.data.msg === "ok" &&
       buble.data.success
     ) {
-      
-        setBubbleMap(buble.data.data)
-    }else{
+
+      setBubbleMap(buble.data.data)
+    } else {
 
     }
   }
-  const initCameras = async ()=>{
+  const initCameras = async () => {
     const camarasLPR = await conections.getLPRCameras();
-    if(
+    if (
       camarasLPR.data &&
       camarasLPR.data.success
-    ){
+    ) {
       setCameras(camarasLPR.data.data)
-    }else{
+    } else {
 
     }
   }
- 
+
   useEffect(() => {
     updateMonth();
     init()
@@ -74,7 +75,7 @@ const Placas = () => {
   }, []);
   return (
     <div className="container-fluid py-4 ">
-    
+
       <SummaryCount />
       <Row className="py-4">
         <Col xl={9} lg={12} md={12}>
@@ -82,23 +83,23 @@ const Placas = () => {
             <CardBody
               style={{ padding: "0px", width: "100%", height: "400px" }}
             >
-            {
-              bubbleMap &&
-              <MapaGoogle dataMap={bubbleMap}  />
-            }
-              
+              {
+                bubbleMap &&
+                <MapaGoogle dataMap={bubbleMap} />
+              }
+
             </CardBody>
           </Card>
         </Col>
       </Row>
       <br />
-      <div className="bg-gray">
-        <div className="py-4 px-5">
+      <div style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "#f5f5f5" }}>
+        <div className="py-4 px-5" style={{ background: "transparent" }}>
           <h6>Periodo</h6>
           <Row>
-            <div class="form-check px-4 mt-3 mr-1">
+            <div className="form-check px-4 mt-3 mr-1" style={{ background: "transparent" }}>
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="exampleRadios"
                 id="exampleRadios1"
@@ -108,13 +109,13 @@ const Placas = () => {
                   setIsWeek(true);
                 }}
               />
-              <label class="form-check-label" for="exampleRadios1">
+              <label className="form-check-label" for="exampleRadios1">
                 Semana
               </label>
             </div>
-            <div class="form-check mt-3">
+            <div className="form-check mt-3" style={{ background: "transparent" }}>
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="exampleRadios"
                 id="exampleRadios2"
@@ -124,27 +125,27 @@ const Placas = () => {
                   setIsWeek(false);
                 }}
               />
-              <label class="form-check-label" for="exampleRadios2">
+              <label className="form-check-label" for="exampleRadios2">
                 Mes
               </label>
             </div>
           </Row>
           <span className="text-xxs">Mes de {actuallMonth}</span>
           <Row>
-            <div className="px-4 mt-3 mr-1">
+            <div className="px-4 mt-3 mr-1" style={{ background: "transparent" }}>
               <label for="inputState">Camara</label>
-              <select id="inputState" class="form-control" onChangeCapture={(value)=>{
+              <select id="inputState" className="form-control" onChangeCapture={(value) => {
                 setCam(value.target.value)
               }}>
-                { 
+                {
                   cameras ?
-                    cameras.sort((a,b)=>b.num_cam-a.num_cam).map((camera)=>(
+                    cameras.sort((a, b) => b.num_cam - a.num_cam).map((camera) => (
                       <option value={camera.id} >{camera.num_cam}</option>
-                    )):
-                  null
+                    )) :
+                    null
                 }
-               
-             
+
+
               </select>
             </div>
           </Row>
@@ -152,7 +153,7 @@ const Placas = () => {
 
         <Row className="py-4 px-5">
           <Col xl={6} lg={12} md={12}>
-            <Card>
+            <Card style={{ background: "transparent" }}>
               <CardHeader>Conteo de placas por semana</CardHeader>
               <CardBody>
                 {isWeek ? (
@@ -164,8 +165,8 @@ const Placas = () => {
             </Card>
           </Col>
           <Col className="" xl={6} lg={12} md={12}>
-            <div className="hfull card ">
-              <div class="card-header">Conteo de placas por día</div>
+            <div className="hfull card " style={{ background: "transparent" }}>
+              <div className="card-header">Conteo de placas por día</div>
               <div className="w-100 center">
                 <CurveDash camId={cam} />
               </div>
@@ -174,10 +175,10 @@ const Placas = () => {
         </Row>
         <Row className="py-4 px-5">
           <Col xl={12} lg={12} md={12}>
-            <Card>
-              <CardHeader>Conteo de placas por semana</CardHeader>
+            <Card style={{ background: "transparent" }}>
+              <CardHeader>Mapa de calor semanal</CardHeader>
               <CardBody>
-                <HeatMapChart  camId={cam}/>
+                <HeatMapChart camId={cam} />
               </CardBody>
             </Card>
           </Col>

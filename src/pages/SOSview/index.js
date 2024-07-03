@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Icon, Button, Input, Tab } from 'semantic-ui-react';
+import { Card, Icon, Button, Input, Tab, Radio } from 'semantic-ui-react';
 import FadeLoader from 'react-spinners/FadeLoader';
 import firebase from 'firebase';
 import moment from 'moment';
@@ -22,7 +22,18 @@ import shoes_green from '../../assets/images/icons/maps/shoes_green.png';
 import shoes_yellow from '../../assets/images/icons/maps/shoes_yellow.png';
 import shoes_red from '../../assets/images/icons/maps/shoes_red.png';
 import destination from '../../assets/images/icons/maps/destination.png';
-import { LANG } from '../../constants/token';
+import { LANG, MODE } from '../../constants/token';
+import { Spinner } from 'react-bootstrap';
+
+import chatSeguridad from '../../historial/chats_Seguridad_Benito-Juárez.json';
+import chatProteccion from '../../historial/chats_Protección-Civil_Benito-Juárez.json';
+import chatEmergencia from '../../historial/chats_Emergencia-Médica_Benito-Juárez.json';
+import seguimientoPorHora from '../../historial/chats_Seguimiento-Por-Hora_Benito-Juárez.json';
+import seguimientoPorDestino from '../../historial/chats_Seguimiento-Por-Destino_Benito-Juárez.json';
+import { GET_CAMERA_INFO, GET_USER_INFO } from '../../graphql/queries';
+import { apolloClient } from '../../App';
+import conections from '../../conections';
+import constants from '../../constants/constants';
 
 const refSOS = firebaseSos.app('sos').firestore().collection(MESSAGES_COLLECTION);
 const refTracking = firebaseSos.app('sos').firestore().collection(SOS_COLLECTION);
@@ -76,6 +87,7 @@ class Chat extends Component {
       fisrt: {},
       searching: '',
       tracking: {},
+      infoCurrentCamera: {},
       camData: undefined,
       loading: false,
       hashUsed: false,
@@ -93,41 +105,82 @@ class Chat extends Component {
       open_snack: false,
       snack_message: {},
       mapPolice: { show: false, incident: null, tracking: null },
-      // showReport: false
+      // showReport: false,
+      showHistorial: false,
+      loadingHistorial: false,
+      idClient: null,
+      currentHistorial: {},
     };
   }
   panes = this.props.history.location.pathname.includes('sos')
     ? [
       {
         menuItem: 'Seguridad',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguridad')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Seguridad')}</Tab.Pane>
       },
       {
         menuItem: 'Protección Civil',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Protección Civil')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Protección Civil')}</Tab.Pane>
       },
       {
         menuItem: 'Emergencia Médica',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Emergencia Médica')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Emergencia Médica')}</Tab.Pane>
       }
     ]
     : [
       {
         menuItem: 'Por Hora',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Hora')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Seguimiento Por Hora')}</Tab.Pane>
       },
       {
         menuItem: 'Por Seguimiento',
-        render: () => <Tab.Pane attached={false} style={styles.tab}>{this.renderListChats('Seguimiento Por Destino')}</Tab.Pane>
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Seguimiento Por Destino')}</Tab.Pane>
       }
     ];
+
+  panesHistorial = this.props.history.location.pathname.includes('sos')
+    ? [
+      {
+        menuItem: 'Seguridad',
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Seguridad')}</Tab.Pane>
+      },
+      {
+        menuItem: 'Protección Civil',
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Protección Civil')}</Tab.Pane>
+      },
+      {
+        menuItem: 'Emergencia Médica',
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Emergencia Médica')}</Tab.Pane>
+      }
+    ]
+    : [
+      {
+        menuItem: 'Por Hora',
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Seguimiento Por Hora')}</Tab.Pane>
+      },
+      {
+        menuItem: 'Por Seguimiento',
+        render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Seguimiento Por Destino')}</Tab.Pane>
+      }
+    ];
+
   FILTERSOPTIONS = this.props.history.location.pathname.includes('sos')
     ? ['Seguridad', 'Protección Civil', 'Emergencia Médica']
     : ['Seguimiento Por Hora', 'Seguimiento Por Destino'];
 
+  _getClient = () => {
+    conections.getClients().then(res => {
+      if (this.state.idClient !== res.data.data.getClients.filter(el => el.name === constants.client)[0].id) {
+        this.setState({ idClient: res.data.data.getClients.filter(el => el.name === constants.client)[0].id })
+      }
+    });
+  };
+
+
+
   // LIFECYCLES
   componentDidMount() {
-    const { tabIndex } = this.props.match.params;
+    const { tabIndex, chatId } = this.props.match.params;
     let { activeIndex } = this.state;
     let { chats } = this.props;
     let filtered = [];
@@ -137,8 +190,24 @@ class Chat extends Component {
       else filtered = chats.filter((item) => item.trackingType === this.FILTERSOPTIONS[activeIndex]);
       this.setState({ chats: filtered, activeIndex: tabIndex ? tabIndex : activeIndex });
     }
-    let messageBody = document.querySelector('#messagesContainer');
-    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
+    if (chatId) {
+      setTimeout(() => {
+
+        const chatToOpen = this.props.chats.find(el => el.id === chatId);
+        const indexChat = this.props.chats.findIndex(el => el.id === chatId);
+
+        this.changeChat(chatToOpen, indexChat);
+      }, 3000);
+    }
+
+    let messageBody;
+
+    if (document.querySelector('#messagesContainer')) {
+
+      messageBody = document.querySelector('#messagesContainer');
+      messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+    }
   }
   componentDidUpdate(prevProps) {
     const { /*flagUpdate,*/ activeIndex } = this.state;
@@ -154,17 +223,24 @@ class Chat extends Component {
       this.setState({ chats: filteredChats, flagUpdate: 1 });
       if (chatId) {
         const idxChat = filteredChats.findIndex((e) => e.id === chatId);
-        this.changeChat(filteredChats[idxChat], idxChat, false);
+        if (!window.location.pathname.includes(chatId)) {
+          this.changeChat(filteredChats[idxChat], idxChat, false);
+        }
       }
     }
     // }
-    let messageBody = document.querySelector('#messagesContainer');
-    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
+    let messageBody;
+
+    if (document.querySelector('#messagesContainer')) {
+      messageBody = document.querySelector('#messagesContainer');
+      messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+    }
   }
 
   render() {
     const { tabIndex } = this.props.match.params;
-    const { chats, chatId, index, from, loading, tracking, mapPolice, policeMarker, policePolyline, destinationMarker, /*, showReport*/ } = this.state;
+    const { chats, chatId, index, from, loading, tracking, infoCurrentCamera, mapPolice, policeMarker, policePolyline, destinationMarker, /*, showReport,*/ showHistorial, loadingHistorial, currentHistorial } = this.state;
     if (index !== undefined && chatId === '' && chats.length > 0) this.setState({ chatId: null });
 
     const chatSelected = chats.find((item) => item.id === chatId);
@@ -176,183 +252,349 @@ class Chat extends Component {
         else textareaDisabled = false;
       }
     }
+
+    if (!this.state.idClient) {
+      this._getClient();
+    };
+
     return (
       <div className={!this.props.showMatches ? 'hide-matches app-container' : 'show-matches app-container'}>
-        <div className='row fullHeight'>
-          <div className='col-4 userList'>
-            <Tab
-              menu={{ pointing: true }}
-              panes={this.panes}
-              defaultActiveIndex={Number(tabIndex) || 0}
-              onTabChange={(t, i) => {
-                const { chats } = this.props;
-                const { index } = this.state;
-                let newChats = chats.filter((c) => c.trackingType === this.FILTERSOPTIONS[i.activeIndex]);
-                let selected = null;
-                if (index !== undefined) {
-                  if (newChats.length !== 0 && newChats[index]) {
-                    selected = newChats[index].trackingType;
-                    if (typeof newChats[index].panic_button_uuid === 'string' && selected === 'Seguridad') {
-                      selected += ' botón físico';
-                    } else {
-                      if (selected === 'Seguridad') {
-                        selected += ' botón virtual';
+        <div className="row fullHeight" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#0c304e", transition: "all 0.2s linear" }}>
+          <div className="col-4 userList" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#2e597d", transition: "all 0.2s linear" }}>
+            <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem" }}>
+              <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>Chats</p>
+              <Radio
+                toggle
+                // onClick={this._changeView}
+                id="toggle24"
+                checked={this.state.showHistorial}
+                style={{ margin: "0 1rem" }}
+              />
+              <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>Historial</p>
+            </div>
+            <hr />
+
+            {loadingHistorial ?
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
+                <Spinner animation="border" variant="info" role="status" size="xl">
+                  <span className="sr-only">Loading...</span>
+                </Spinner>
+              </div>
+              :
+              showHistorial ?
+                <Tab
+                  menu={{ pointing: true }}
+                  panes={this.panesHistorial}
+                  defaultActiveIndex={Number(tabIndex) || 0}
+                  onTabChange={(t, i) => {
+                    const { chats } = this.props;
+                    const { index } = this.state;
+                    let newChats = chats.filter((c) => c.trackingType === this.FILTERSOPTIONS[i.activeIndex]);
+                    let selected = null;
+                    if (index !== undefined) {
+                      if (newChats.length !== 0 && newChats[index]) {
+                        selected = newChats[index].trackingType;
+                        if (typeof newChats[index].panic_button_uuid === 'string' && selected === 'Seguridad') {
+                          selected += ' botón físico';
+                        } else {
+                          if (selected === 'Seguridad') {
+                            selected += ' botón virtual';
+                          }
+                        }
+                      } else {
+                        selected = newChats.length > 0 ? newChats[0].trackingType : null;
                       }
+                      // let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
+                      this.setState({ from: selected ? selected : 'Error getting data' });
                     }
-                  } else {
-                    selected = newChats.length > 0 ? newChats[0].trackingType : null;
-                  }
-                  // let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
-                  this.setState({ from: selected ? selected : 'Error getting data' });
-                }
-                this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null });
-              }}
-            />
+                    this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null });
+                  }}
+                />
+                :
+                <Tab
+                  menu={{ pointing: true }}
+                  panes={this.panes}
+                  defaultActiveIndex={Number(tabIndex) || 0}
+                  onTabChange={(t, i) => {
+                    const { chats } = this.props;
+                    const { index } = this.state;
+                    let newChats = chats.filter((c) => c.trackingType === this.FILTERSOPTIONS[i.activeIndex]);
+                    let selected = null;
+                    if (index !== undefined) {
+                      if (newChats.length !== 0 && newChats[index]) {
+                        selected = newChats[index].trackingType;
+                        if (typeof newChats[index].panic_button_uuid === 'string' && selected === 'Seguridad') {
+                          selected += ' botón físico';
+                        } else {
+                          if (selected === 'Seguridad') {
+                            selected += ' botón virtual';
+                          }
+                        }
+                      } else {
+                        selected = newChats.length > 0 ? newChats[0].trackingType : null;
+                      }
+                      // let selected = newChats.length !== 0 && newChats[index] ? newChats[index].trackingType : newChats[0].trackingType;
+                      this.setState({ from: selected ? selected : 'Error getting data' });
+                    }
+                    this.setState({ chats: newChats, activeIndex: i.activeIndex, index: null });
+                  }}
+                />
+            }
           </div>
-          <div className='col-8'>
-            <div className='messages' style={{ height: '88%' }}>
-              {!loading && chatId !== '' && chats[index] ? (
-                <div className='cameraView'>
-                  <h2
-                    className={'Chat C5'}
-                    style={{
-                      textAlign: 'center',
-                      backgroundColor: COLORS[chats[index].trackingType],
-                      height: '30px'
-                    }}
-                  >
-                    {from}
-                  </h2>
-                  <div className='row' style={{ height: '70%', margin: 0 }}>
-                    <div className='col' style={{ height: '100%' }}>
-                      {Object.keys(tracking).length !== 0 &&
-                        tracking.pointCoords && (
-                          <MapContainer
-                            options={{
-                              center: {
-                                lat: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].latitude),
-                                lng: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].longitude)
-                              },
-                              zoom: 15,
-                              mapTypeId: 'roadmap',
-                              zoomControl: false,
-                              mapTypeControl: false,
-                              streetViewControl: false,
-                              fullscreenControl: false,
-                              openConfirm: false,
-                              typeConfirm: false,
-                              openSelection: false,
-                              checked: ''
-                            }}
-                            coordsPath={tracking.pointCoords}
-                            onMapLoad={this._onMapLoad}
-                            markersUnmount={{ policeMarker, policePolyline, destinationMarker }}
-                          />
-                        )}
+          <div className='col-8' style={{ padding: showHistorial && "2rem", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear" }}>
+            {loading ?
+              <>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
+                  <Spinner animation="border" variant="info" role="status" size="xl">
+                    <span className="sr-only">Loading...</span>
+                  </Spinner>
+                </div>
+                {/* <p style={{ position: 'fixed', top: '56%', left: '62%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>Cargando chat</p> */}
+              </>
+              :
+              showHistorial ? Object.keys(currentHistorial).length === 0 ?
+                <>
+                  <p style={{ position: 'fixed', top: '50%', left: '60%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>No se ha seleccionado ningún chat</p>
+                </>
+                :
+                <>
+                  <div className='messages' style={{ height: '88%' }}>
+                    <div className='historialView' style={{ height: '100% !important' }}>
+                      <h2
+                        className={'Chat C5'}
+                        style={{
+                          textAlign: 'center',
+                          backgroundColor: COLORS[currentHistorial.trackingType],
+                          height: '30px'
+                        }}
+                      >
+                        {currentHistorial.from}
+                      </h2>
+                      <div className='row' style={{ height: '100%', width: '100%', margin: 0, marginTop: '5px' }}>
+                        <Card style={{ width: '100%' }}>
+                          <Card.Content>
+                            <div className='row'>
+                              <div className='col-9'>
+                                <div className='row'>
+                                  <div className='col-6' style={styles.text}>
+                                    <b>Nombre: </b>
+                                    {currentHistorial.user_name}
+                                  </div>
+                                  <div className='col' style={styles.text}>
+                                    <b>Fecha: </b>
+                                    {currentHistorial.lastModification}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className='messagesHistorialContainer' id='messagesContainer' style={{ top: "20% !important", height: "100%", padding: "0.5rem !important" }}>
+                              {this.state.messages.map((value, ref) => {
+                                return (
+                                  <div
+                                    key={ref}
+                                    className={value.from === "user" ? "user" : "support"}
+                                    ref={"message" + ref
+                                    }
+                                    id={"message" + ref}
+                                  >
+                                    <p>{value.msg}</p>
+                                    <small>
+                                      {value.dateTime.toDate
+                                        ?
+                                        value.userName || value.userEmail
+                                          ?
+                                          moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                                          :
+                                          moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
+                                        : null}
+                                    </small>
+                                  </div>
+                                )
+                              }
+                              )}
+                            </div>
+                          </Card.Content>
+                        </Card>
+                      </div>
                     </div>
                   </div>
 
-                  <div className='row' style={{ height: '20%', width: '100%', margin: 0, marginTop: '5px' }}>
-                    <Card style={{ width: '100%' }}>
-                      <Card.Content>
-                        <div className='row'>
-                          <div className='col-9'>
-                            <div className='row'>
-                              <div className='col-6' style={styles.text}>
-                                <b>Nombre: </b>
-                                {chats[index].user_name}
-                              </div>
-                              <div className='col' style={styles.text}>
-                                <b>Celular: </b>
-                                {this.state.personalInformation.Contact.phone}
-                              </div>
-                            </div>
-                            {tracking && tracking.place && (
-                              <div className='row'>
-                                <div className='col-6' style={styles.text}>
-                                  <b>Destino: </b>
-                                  {tracking.place.address}
-                                </div>
-                                <div className='col' style={styles.text}>
-                                  <b>Lugar: </b>
-                                  {tracking.place.name}
-                                </div>
-                                <div className='col' style={styles.text}>
-                                  <b>Modo: </b>
-                                  {tracking.place.mode}
-                                </div>
-                              </div>
-                            )}
-                            {tracking && tracking.time && (
-                              <div className='row'>
-                                {tracking.time.date && (
-                                  <div className='col' style={styles.text}>
-                                    <b>Fecha: </b>
-                                    {tracking.time.date}
-                                  </div>
-                                )}
-                                {tracking.time.dateStart && (
-                                  <div className='col' style={styles.text}>
-                                    <b>Fecha Inicio: </b>
-                                    {tracking.time.dateStart}
-                                  </div>
-                                )}
-                                <div className='col' style={styles.text}>
-                                  <b>Hora Inicio: </b>
-                                  {tracking.time.hourStart}
-                                </div>
-                                {tracking.time.dateEnd && (
-                                  <div className='col' style={styles.text}>
-                                    <b>Fecha Fin: </b>
-                                    {tracking.time.dateEnd}
-                                  </div>
-                                )}
-                                <div className='col' style={styles.text}>
-                                  <b>Hora Fin: </b>
-                                  {tracking.time.hourEnd}
-                                </div>
-                                <div className='col' style={styles.text}>
-                                  <b>Tiempo Total: </b>
-                                  {tracking.time.total}
-                                </div>
-                              </div>
-                            )}
-                            <div className='row'>
-                              {chats[index].police_name && (
-                                <div className='col' style={styles.text}>
-                                  <b>Policia: </b>
-                                  {chats[index].police_name}
-                                </div>
-                              )}
-                              {this.state.timePolice && (
-                                <div className='col' style={styles.text}>
-                                  <b>Tiempo estimado de llegada de policia: </b>
-                                  {this.state.timePolice}
-                                </div>
-                              )}
-                            </div>
+                </>
+                :
+
+                <>
+                  <div className='messages' style={{ height: '88%' }}>
+                    {!loading && chatId !== '' && chats[index] ? (
+                      <div className='cameraView'>
+                        <h2
+                          className={'Chat C5'}
+                          style={{
+                            textAlign: 'center',
+                            backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" : 
+                            COLORS[chats[index].trackingType],
+                            height: '30px'
+                          }}
+                        >
+                          {from}
+                        </h2>
+                        <div className='row' style={{ height: '70%', margin: 0 }}>
+                          <div className='col' style={{ height: '100%' }}>
+                            {Object.keys(tracking).length !== 0 ?
+                              tracking.pointCoords && (
+                                <MapContainer
+                                  options={{
+                                    center: {
+                                      lat: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].latitude),
+                                      lng: parseFloat(tracking.pointCoords[tracking.pointCoords.length - 1].longitude)
+                                    },
+                                    zoom: 15,
+                                    mapTypeId: 'roadmap',
+                                    zoomControl: false,
+                                    mapTypeControl: false,
+                                    streetViewControl: false,
+                                    fullscreenControl: false,
+                                    openConfirm: false,
+                                    typeConfirm: false,
+                                    openSelection: false,
+                                    checked: ''
+                                  }}
+                                  coordsPath={tracking.pointCoords}
+                                  onMapLoad={this._onMapLoad}
+                                  markersUnmount={{ policeMarker, policePolyline, destinationMarker }}
+                                />
+                              )
+
+                              :
+                              Object.keys(infoCurrentCamera).length !== 0 &&
+                              infoCurrentCamera.pointCoords && (
+                                <MapContainer
+                                  options={{
+                                    center: {
+                                      lat: parseFloat(infoCurrentCamera.pointCoords[infoCurrentCamera.pointCoords.length - 1].latitude),
+                                      lng: parseFloat(infoCurrentCamera.pointCoords[infoCurrentCamera.pointCoords.length - 1].longitude)
+                                    },
+                                    zoom: 15,
+                                    mapTypeId: 'roadmap',
+                                    zoomControl: false,
+                                    mapTypeControl: false,
+                                    streetViewControl: false,
+                                    fullscreenControl: false,
+                                    openConfirm: false,
+                                    typeConfirm: false,
+                                    openSelection: false,
+                                    checked: ''
+                                  }}
+                                  coordsPath={infoCurrentCamera.pointCoords}
+                                  onMapLoad={this._onMapLoad}
+                                  markersUnmount={{ policeMarker, policePolyline, destinationMarker }}
+                                />
+                              )
+
+                            }
                           </div>
-                          {chats[index].active ? (
-                            <div className='col'>
+                        </div>
+
+                        <div className='row' style={{ height: '20%', width: '100%', margin: 0, marginTop: '5px' }}>
+                        <Card style={{ width: "100%", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-bar)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear", zIndex: 1 }}>
+                            <Card.Content>
                               <div className='row'>
-                                <Button
-                                  icon
-                                  size='small'
-                                  color='red'
-                                  labelPosition='left'
-                                  style={styles.buttonMargin}
-                                  disabled={chats[index].policeId}
-                                  onClick={() => this._handlePoliceState(true, chats[index], tracking)}
-                                >
-                                  <Icon inverted name='taxi' />
-                                  Mandar unidad
-                                </Button>
-                              </div>
-                              {/* <div className='row' style={styles.text}>
+                                <div className='col-9'>
+                                  <div className='row'>
+                                    <div className='col-6' style={styles.text}>
+                                      <b>Nombre: </b>
+                                      {chats[index].user_name}
+                                    </div>
+                                    <div className='col' style={styles.text}>
+                                      <b>Celular: </b>
+                                      {this.state.personalInformation.Contact.phone}
+                                    </div>
+                                  </div>
+                                  {tracking && tracking.place && (
+                                    <div className='row'>
+                                      <div className='col-6' style={styles.text}>
+                                        <b>Destino: </b>
+                                        {tracking.place.address}
+                                      </div>
+                                      <div className='col' style={styles.text}>
+                                        <b>Lugar: </b>
+                                        {tracking.place.name}
+                                      </div>
+                                      <div className='col' style={styles.text}>
+                                        <b>Modo: </b>
+                                        {tracking.place.mode}
+                                      </div>
+                                    </div>
+                                  )}
+                                  {tracking && tracking.time && (
+                                    <div className='row'>
+                                      {tracking.time.date && (
+                                        <div className='col' style={styles.text}>
+                                          <b>Fecha: </b>
+                                          {tracking.time.date}
+                                        </div>
+                                      )}
+                                      {tracking.time.dateStart && (
+                                        <div className='col' style={styles.text}>
+                                          <b>Fecha Inicio: </b>
+                                          {tracking.time.dateStart}
+                                        </div>
+                                      )}
+                                      <div className='col' style={styles.text}>
+                                        <b>Hora Inicio: </b>
+                                        {tracking.time.hourStart}
+                                      </div>
+                                      {tracking.time.dateEnd && (
+                                        <div className='col' style={styles.text}>
+                                          <b>Fecha Fin: </b>
+                                          {tracking.time.dateEnd}
+                                        </div>
+                                      )}
+                                      <div className='col' style={styles.text}>
+                                        <b>Hora Fin: </b>
+                                        {tracking.time.hourEnd}
+                                      </div>
+                                      <div className='col' style={styles.text}>
+                                        <b>Tiempo Total: </b>
+                                        {tracking.time.total}
+                                      </div>
+                                    </div>
+                                  )}
+                                  <div className='row'>
+                                    {chats[index].police_name && (
+                                      <div className='col' style={styles.text}>
+                                        <b>Policia: </b>
+                                        {chats[index].police_name}
+                                      </div>
+                                    )}
+                                    {this.state.timePolice && (
+                                      <div className='col' style={styles.text}>
+                                        <b>Tiempo estimado de llegada de policia: </b>
+                                        {this.state.timePolice}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                                {chats[index].active ? (
+                                  <div className='col'>
+                                    <div className='row'>
+                                      <Button
+                                        icon
+                                        size='small'
+                                        color='red'
+                                        labelPosition='left'
+                                        style={styles.buttonMargin}
+                                        disabled={chats[index].policeId}
+                                        onClick={() => this._handlePoliceState(true, chats[index], tracking)}
+                                      >
+                                        <Icon inverted name='taxi' />
+                                        Mandar unidad
+                                      </Button>
+                                    </div>
+                                    {/* <div className='row' style={styles.text}>
                                 Desactivar:
                               </div> */}
-                              <div className='row'>
-                                {/* <Button.Group>
+                                    <div className='row'>
+                                      {/* <Button.Group>
                                   <Button
                                     icon
                                     size='small'
@@ -365,103 +607,108 @@ class Chat extends Component {
                                     Con Rep
                                   </Button>
                                   <Button.Or /> */}
-                                <Button
-                                  icon
-                                  size='small'
-                                  color='yellow'
-                                  labelPosition='left'
-                                  style={styles.buttonMargin}
-                                  onClick={() =>
-                                    this.deactivateTracking(
-                                      chats[index].id,
-                                      chats[index].trackingId,
-                                      chats[index].trackingType.includes('Seguimiento')
-                                    )}
-                                >
-                                  {/* <Icon inverted name='file excel' /> */}
-                                  <Icon inverted name='close' />
-                                  Desactivar{/* Sin Rep */}
-                                </Button>
-                                {/* </Button.Group> */}
+                                      <Button
+                                        icon
+                                        size='small'
+                                        color='yellow'
+                                        labelPosition='left'
+                                        style={styles.buttonMargin}
+                                        onClick={() =>
+                                          this.deactivateTracking(
+                                            chats[index].id,
+                                            chats[index].trackingId,
+                                            chats[index].trackingType.includes('Seguimiento')
+                                          )}
+                                      >
+                                        {/* <Icon inverted name='file excel' /> */}
+                                        <Icon inverted name='close' />
+                                        Desactivar{/* Sin Rep */}
+                                      </Button>
+                                      {/* </Button.Group> */}
+                                    </div>
+                                  </div>
+                                ) : null}
                               </div>
-                            </div>
-                          ) : null}
+                            </Card.Content>
+                          </Card>
                         </div>
-                      </Card.Content>
-                    </Card>
+                      </div>
+                    ) : null}
                   </div>
-                </div>
-              ) : null}
-            </div>
-            <div className='messagesContainer' id='messagesContainer'>
-              {!loading && chatId !== '' && chats[index] ? chats[index].messages ? (
-                this.state.messages.map((value, ref) => (
-                  <div
-                    key={ref}
-                    className={
-                      value.from === 'user' ? (
-                        'user'
-                      ) : value.from === 'Policia' ? (
-                        'policia'
-                      ) : value.from === 'Sistema' ? (
-                        'sistema'
+                  <div className='messagesContainer' id='messagesContainer'>
+                    {
+                      !loading && chatId !== '' && chats[index] ? chats[index].messages ? (
+                        this.state.messages.map((value, ref) => (
+                          <div
+                            key={ref}
+                            className={
+                              value.from === 'user' ? (
+                                'user'
+                              ) : value.from === 'Policia' ? (
+                                'policia'
+                              ) : value.from === 'Sistema' ? (
+                                (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? 'sistema-dark'
+                                :
+                                'sistema'
+                              ) : (
+                                'support'
+                              )
+                            }
+                            ref={ref === chats[index].messages.length - 1 ? 'message' : 'message' + ref}
+                            id={ref === chats[index].messages.length - 1 ? 'lastMessage' : 'message' + ref}
+                          >
+                            <p>
+                              {this.renderNameChat(chats[index], value)}
+                              {value.msg}
+                              <br />
+                              <small style={{ display: 'flex', justifyContent: 'right' }}>
+                                {value.dateTime.toDate ? moment(value.dateTime.toDate()).format('DD-MM-YYYY, HH:mm:ss') : null}
+                              </small>
+                            </p>
+                          </div>
+                        ))
+                      ) : loading === true ? (
+                        <>
+                          <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
+                          {/* <p style={{ position: 'fixed', top: '56%', left: '62%' }}>Cargando chat</p> */}
+                        </>
                       ) : (
-                        'support'
-                      )
-                    }
-                    ref={ref === chats[index].messages.length - 1 ? 'message' : 'message' + ref}
-                    id={ref === chats[index].messages.length - 1 ? 'lastMessage' : 'message' + ref}
-                  >
-                    <p>
-                      {this.renderNameChat(chats[index], value)}
-                      {value.msg}
-                      <br />
-                      <small style={{ display: 'flex', justifyContent: 'right' }}>
-                        {value.dateTime.toDate ? moment(value.dateTime.toDate()).format('DD-MM-YYYY, HH:mm:ss') : null}
-                      </small>
-                    </p>
+                        <p style={{ position: 'fixed', top: '50%', left: '60%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>No se ha seleccionado ningún chat</p>
+                      ) : loading === true ? (
+                        <>
+                          <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
+                          {/* <p style={{ position: 'fixed', top: '56%', left: '62%' }}>Cargando chat</p> */}
+                        </>
+                      ) : (
+                        <p style={{ position: 'fixed', top: '50%', left: '60%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>No se ha seleccionado ningún chat</p>
+                      )}
                   </div>
-                ))
-              ) : loading === true ? (
-                <>
-                  <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
-                  <p style={{ position: 'fixed', top: '56%', left: '62%' }}>Cargando chat</p>
+                  {chatId !== '' && chats[index] ? (
+                    <div className='messages_send_box'>
+                      {!textareaDisabled ? (
+                        <div style={{ position: 'relative' }}>
+                          <textarea
+                            disabled={textareaDisabled}
+                            placeholder='Escriba su mensaje'
+                            name='text'
+                            autoComplete='on'
+                            autoCorrect='on'
+                            id='messsageTextarea'
+                            value={this.state.text}
+                            onKeyPress={this.checkKey}
+                            onChange={(event) => {
+                              this.setState({ text: event.target.value });
+                            }}
+                          />
+                          <Icon name='send' id='sendbutton' onClick={this.sendMessage} />
+                        </div>
+                      ) : (
+                        <div className='closed-ticked'>El ticket ya se encuentra cerrado</div>
+                      )}
+                    </div>
+                  ) : null}
                 </>
-              ) : (
-                <p style={{ position: 'fixed', top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p>
-              ) : loading === true ? (
-                <>
-                  <FadeLoader height={20} width={7} radius={20} margin={5} loading={loading} css={styles.centered} />
-                  <p style={{ position: 'fixed', top: '56%', left: '62%' }}>Cargando chat</p>
-                </>
-              ) : (
-                <p style={{ position: 'fixed', top: '50%', left: '60%' }}>No se ha seleccionado ningun chat</p>
-              )}
-            </div>
-            {chatId !== '' && chats[index] ? (
-              <div className='messages_send_box'>
-                {!textareaDisabled ? (
-                  <div style={{ position: 'relative' }}>
-                    <textarea
-                      disabled={textareaDisabled}
-                      placeholder='Escriba su mensaje'
-                      name='text'
-                      autoComplete='on'
-                      autoCorrect='on'
-                      id='messsageTextarea'
-                      value={this.state.text}
-                      onKeyPress={this.checkKey}
-                      onChange={(event) => {
-                        this.setState({ text: event.target.value });
-                      }}
-                    />
-                    <Icon name='send' id='sendbutton' onClick={this.sendMessage} />
-                  </div>
-                ) : (
-                  <div className='closed-ticked'>El ticket ya se encuentra cerrado</div>
-                )}
-              </div>
-            ) : null}
+            }
           </div>
         </div>
         {this.state.open_snack && (
@@ -488,6 +735,23 @@ class Chat extends Component {
         )} */}
       </div>
     );
+  };
+
+  _changeView = () => {
+    let { showHistorial } = this.state;
+
+    if (window.location.pathname.includes("sos")) {
+      this.props.history.push(`/sos`)
+    } else {
+      this.props.history.push(`/seguimiento`)
+    }
+
+    this.setState({ showHistorial: !showHistorial, loadingHistorial: true, currentHistorial: {}, index: "" });
+
+    setTimeout(() => {
+      this.setState({ loadingHistorial: false });
+    }, 2000);
+
   }
 
   renderNameChat = (chat, value) => {
@@ -558,12 +822,12 @@ class Chat extends Component {
             style={{ flex: 1 }}
           /> */}
           <Input
-          placeholder={localStorage.getItem(LANG) === "english" ? "Search user" : "Buscar usuario"}
-          style={{ flex: 2 }}
-          onChange={this.filterAction}
-        ></Input>
+            placeholder={localStorage.getItem(LANG) === "english" ? "Search user" : "Buscar usuario"}
+            style={{ flex: 2 }}
+            onChange={this.filterAction}
+          ></Input>
         </div>
-        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: '#dadada', padding: '20px' }}>
+        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada", transition: "all 0.2s linear", padding: '20px' }}>
           {chats.map((chat, i) => {
             const critical_color =
               chat && chat.critical_state && chat.critical_state !== 0 ? CRITICAL_COLORS[chat.critical_state] : null;
@@ -578,9 +842,9 @@ class Chat extends Component {
                 className={i === index ? 'activeChat' : ''}
                 style={
                   critical_color !== null && type.includes('Seguimiento ') ? (
-                    { width: '100%', boxShadow: critical_color.boxShadow }
+                    { width: '100%', boxShadow: critical_color.boxShadow, color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear" }
                   ) : (
-                    { width: '100%' }
+                    { width: '100%', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear" }
                   )
                 }
                 key={i}
@@ -589,7 +853,7 @@ class Chat extends Component {
                 <Card.Content>
                   <div style={{ position: 'relative' }}>
                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <h4>{chat.user_name}</h4> <p>{date}</p>
+                      <h4>{chat.user_name}</h4> <p style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear"}}>{date}</p>
                     </div>
                     {chat.active !== undefined && chat.active ? (
                       <p>
@@ -600,9 +864,9 @@ class Chat extends Component {
                           ': ' +
                           chat.messages[chat.messages.length - 1].msg //msg
                         ) : (
-                          'No hay mensajes que mostart'
+                          'No hay mensajes que mostar'
                         ) : (
-                          'No hay mensajes que mostart'
+                          'No hay mensajes que mostar'
                         )}
                       </p>
                     ) : (
@@ -645,6 +909,142 @@ class Chat extends Component {
       </div>
     );
   };
+
+  renderListHistorial = (type) => {
+    const { index } = this.state;
+    let critical_levels = [];
+    if (type.includes('Seguimiento')) {
+      if (!SEARCHOPTIONS.find((item) => item.key === 'critical')) {
+        SEARCHOPTIONS.push({
+          key: 'critical',
+          text: 'Criticidad',
+          value: 'critical'
+        });
+      }
+      Object.keys(CRITICAL_COLORS).forEach((key) => {
+        critical_levels.push({ key, text: CRITICAL_COLORS[key].name, value: key });
+      });
+    } else {
+      const index = SEARCHOPTIONS.findIndex((item) => item.key === 'critical');
+      if (index > -1) {
+        SEARCHOPTIONS.splice(index, 1);
+        critical_levels = [];
+      }
+    }
+
+    let chats;
+
+    switch (type) {
+      case "Seguridad":
+        chats = chatSeguridad;
+        break;
+      case "Protección Civil":
+        chats = chatProteccion;
+        break;
+      case "Emergencia Médica":
+        chats = chatEmergencia;
+        break;
+      case "Seguimiento Por Hora":
+        chats = seguimientoPorHora;
+        break;
+      case "Seguimiento Por Destino":
+        chats = seguimientoPorDestino;
+        break;
+      default:
+        break;
+    }
+
+    return (
+      <div>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <Input
+            placeholder={localStorage.getItem(LANG) === "english" ? "Search user" : "Buscar usuario"}
+            style={{ flex: 2 }}
+            onChange={this.filterAction}
+          ></Input>
+        </div>
+        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada", transition: "all 0.2s linear", padding: '20px' }}>
+          {chats.map((chat, i) => {
+            const critical_color =
+              chat && chat.critical_state && chat.critical_state !== 0 ? CRITICAL_COLORS[chat.critical_state] : null;
+            const date =
+              chat && chat.create_at
+                ? moment(chat.create_at).format('DD-MM-YYYY, HH:mm:ss')
+                : typeof chat.lastModification === 'string'
+                  ? moment(chat.lastModification).format('DD-MM-YYYY, HH:mm:ss')
+                  : moment(chat.lastModification.toDate()).format('DD-MM-YYYY, HH:mm:ss');
+            return (
+              <Card
+                className={i === index ? 'activeChat' : ''}
+                style={
+                  critical_color !== null && type.includes('Seguimiento ') ? (
+                    { width: '100%', boxShadow: critical_color.boxShadow }
+                  ) : (
+                    { width: '100%' }
+                  )
+                }
+                key={i}
+                onClick={() => this.changeHistorial(chat, i)}
+              >
+                <Card.Content>
+                  <div style={{ position: 'relative' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <h4>{chat.user_name}</h4> <p>{date}</p>
+                    </div>
+                    {chat.active !== undefined && chat.active ? (
+                      <p>
+                        {chat.messages ? chat.messages.length > 0 ? (
+                          (chat.messages[chat.messages.length - 1].from === 'user'
+                            ? chat.user_name.split(' ')[0]
+                            : 'C5') +
+                          ': ' +
+                          chat.messages[chat.messages.length - 1].msg //msg
+                        ) : (
+                          'No hay mensajes que mostar'
+                        ) : (
+                          'No hay mensajes que mostar'
+                        )}
+                      </p>
+                    ) : (
+                      <p />
+                    )}
+
+                    {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
+                      <div className='notificationNumber' style={{ marginTop: 15 }}>
+                        <p>{chat.c5Unread}</p>
+                      </div>
+                    ) : null}
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: critical_color !== null ? 'space-between' : 'flex-end',
+                        alignItems: 'center'
+                      }}
+                    >
+                      {critical_color !== null &&
+                        type.includes('Seguimiento') && (
+                          <small style={{ ...styles.badge, backgroundColor: critical_color.color }}>
+                            <strong>{critical_color.name}</strong>
+                          </small>
+                        )}
+                      <div>
+                        {' '}
+                        <small style={{ ...styles.badge, marginLeft: 3, alignSelf: 'flex-end', display: 'flex' }}>
+                          {' '}
+                          <Icon name={chat.active ? 'clock' : 'checkmark'} />{' '}
+                          <strong>{chat.active ? 'Proceso' : 'Cerrado'}</strong>{' '}
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </Card.Content>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   filterAction = (event) => {
     const { target: { value } } = event;
@@ -800,6 +1200,158 @@ class Chat extends Component {
         refSOS.doc(chat.id).update({ c5Unread: 0 }).then(() => {
           this.setState({ text: '' });
         });
+      });
+    }
+  };
+
+  changeHistorial = (chat, i) => {
+
+    this.setState({ messages: chat.messages, currentHistorial: chat })
+
+    this.getInfoC5Radar(chat.user_creation).then(response => {
+      if (response.success) {
+        this.setState({ statusCurrentChat: true })
+      } else {
+        this.setState({ statusCurrentChat: false })
+      }
+      if (response.responseuserc5[0].user_login) {
+        this.getInfoCameraUpdate(response.responseuserc5[0].user_login).then(res => {
+          let cameraData = res.data.updateInformationFirebaseCamera.response[0]
+          // console.log("CAM NUM", cameraData.num_cam)
+          this.setState({ infoCurrentCamera: cameraData })
+          this._changeUserCam(cameraData)
+        })
+          .catch(err => {
+            this.setState({ infoCurrentCamera: {} })
+            console.log(err)
+          })
+      }
+    })
+      .catch(err => {
+        this.setState({ infoCurrentCamera: {} })
+        console.log(err)
+      })
+
+    if (this.props.history.location.pathname.includes("sos")) {
+      this.props.history.push(`/sos/${this.state.activeIndex}/${chat.id}`);
+      this.setState({ from: "SOS" });
+    } else {
+      this.props.history.push(`/seguimiento/${this.state.activeIndex}/${chat.id}`);
+      this.setState({ from: "Seguimiento" });
+    }
+
+    this.getMessages(chat.id);
+    // this.messageListener = refSOS.doc(chat.id).onSnapshot((snapShot) => {
+    //   this.setState({ messages: snapShot.get("messages"), chatId: chat.id });
+    // });
+    this.setState({ loading: true, camData: undefined }, () => {
+
+      if (chat.UrlStreamMediaServer) {
+        this.setState({
+          camData: {
+            extraData: {
+              num_cam: chat.num_cam,
+              cameraID: chat.num_cam,
+              isHls: true,
+              url: `${chat.UrlStreamMediaServer.protocol}://${chat.UrlStreamMediaServer.ip_url_ms}${chat.UrlStreamMediaServer.name}${chat.channel}`,
+              dataCamValue: chat,
+            },
+          },
+        });
+      } else {
+        this.setState({
+          camData: undefined,
+        });
+      }
+
+      this.setState({
+        // chatId: chat.id,
+        // messages: chat.messages,
+        index: i,
+        from: chat.from,
+        loading: false,
+        alarmType: chat.alarmType,
+        alarm: chat.alarm,
+      });
+    });
+
+
+  }
+
+  getInfoC5Radar = async (id) => {
+    const token = localStorage.getItem("accessToken")
+    let responseData;
+    await apolloClient.query({
+      query: GET_USER_INFO,
+      variables: {
+        userIdC5: id,
+        clientId: this.state.idClient,
+      },
+      context: {
+        headers: {
+          "Authorization": token ? token : "",
+        }
+      }
+    }).then(response => {
+      responseData = response.data.searchInformationUserDataAdminC5
+    })
+      .catch(err => {
+        this.setState({ infoCurrentCamera: {} })
+        console.log(err)
+      })
+
+    // if (!loading && data) {
+    return responseData
+    // } else {
+    // console.log("ERROR")
+    // }
+  }
+
+  getInfoCameraUpdate = async (email) => {
+    const token = localStorage.getItem("accessToken")
+    let responseData;
+    await apolloClient.query({
+      query: GET_CAMERA_INFO,
+      variables: {
+        email: email,
+        clientId: this.state.idClient,
+      },
+      context: {
+        headers: {
+          "Authorization": token ? token : "",
+        }
+      }
+    }).then(response => {
+      responseData = response
+    })
+      .catch(err => {
+        this.setState({ infoCurrentCamera: {} })
+        console.log(err)
+      })
+
+    // if (!loading && data) {
+    return responseData
+    // } else {
+    // console.log("ERROR")
+    // }
+  }
+
+  _changeUserCam = (cameraData) => {
+    if (cameraData.UrlStreamMediaServer) {
+      this.setState({
+        camData: {
+          extraData: {
+            num_cam: cameraData.num_cam,
+            cameraID: cameraData.num_cam,
+            isHls: true,
+            url: `${cameraData.UrlStreamMediaServer.protocol}://${cameraData.UrlStreamMediaServer.ip_url_ms}${cameraData.UrlStreamMediaServer.name}${cameraData.channel}`,
+            dataCamValue: cameraData,
+          },
+        },
+      });
+    } else {
+      this.setState({
+        camData: undefined,
       });
     }
   };

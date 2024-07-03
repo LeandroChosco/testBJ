@@ -9,6 +9,7 @@ import {
 } from "react-google-maps";
 import circle from "../../../assets/images/circle.svg";
 import { Row, Col } from "reactstrap";
+import { MODE } from "../../../constants/token";
 export default function MapaGoogle({ setMarket, dataMap }) {
   function Map() {
     const [market, setSelectMarker] = useState(null);
@@ -54,9 +55,11 @@ export default function MapaGoogle({ setMarket, dataMap }) {
       return parseInt(dm);
     };
     useEffect(() => {
-      dataMap.sort(function (a, b) {
-        return b.totalCount - a.totalCount;
-      });
+      if(dataMap.length > 0){
+        dataMap.sort(function (a, b) {
+          return b.totalCount - a.totalCount;
+        });
+      }
     }, [center]);
     // useEffect(() => {}, [startDate,endDate]);
     return (
@@ -102,7 +105,7 @@ export default function MapaGoogle({ setMarket, dataMap }) {
               sm={3}
               style={{ position: "absolute", marginLeft: "50%", bottom: "60%" }}
             >
-              {dataMap && (
+              {dataMap && dataMap.length > 0 && (
                 <Row className="infoMap">
                   {/* <h1>Detecciones por Cámara</h1> */}
                   {dataMap
@@ -134,7 +137,7 @@ export default function MapaGoogle({ setMarket, dataMap }) {
               {market ? (
                 <div className="infoMap" style={{ position: "absolute" }}>
                   {/* <h1>Detalles por Cámara</h1> */}
-                  <Row>
+                  <Row style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black"}}>
                     <Col className="py-4" xl={12}>
                       <h3 className="nameCol">{market.address}</h3>
                     </Col>
@@ -170,9 +173,9 @@ export default function MapaGoogle({ setMarket, dataMap }) {
                     </Col>
                   </Row>
                 </div>
-              ) : (
+              ) : dataMap.length > 0 && (
                 <div className="infoMap" style={{ position: "absolute" }}>
-                  <Row>
+                  <Row style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black"}}>
                     <Col className="py-4" xl={12}>
                       <h3 className="nameCol">{dataMap[0].address}</h3>
                     </Col>
@@ -189,14 +192,14 @@ export default function MapaGoogle({ setMarket, dataMap }) {
                         <b>Ranking Placas</b>
                       </h5>
 
-                      <thead className="tableMap">
+                      <thead className="tableMap" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black"}}>
                         <tr className="tr">
                           <th className="th">Placa</th>
                           <th className="px-5 th">Coincidencia</th>
                           <th className="th">Vehículo</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black"}}>
                         {dataMap[0].plates.map((placa) => (
                           <tr className="tr">
                             <td className="th">{placa.plate}</td>

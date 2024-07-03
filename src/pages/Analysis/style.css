@@ -17,7 +17,7 @@
   left: 0;
   z-index: 1;
   transition: right 500ms;
-  opacity: 0.95;
+  /* opacity: 0.95; */
 }
 
 .toggleViewButton:hover {

@@ -5,6 +5,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { ImMan, ImWoman } from 'react-icons/im'
+import { MODE } from '../../constants/token';
 // import { Icon } from "semantic-ui-react";
 
 const styles = {
@@ -21,9 +22,25 @@ const styles = {
 }
 
 const GenderDetected = (props) => {
-  const { genderDetected } = props;
+  // const { genderDetected } = props;
   const [options, setOptions] = useState();
   const [series, setSeries] = useState();
+
+
+  const genderDetected = [
+    {
+      name: "Hombre",
+      value: 416,
+      rangeAge: ["-18", "18-30", "31-50", "+50"],
+      detectedArray: [120, 55, 201, 40]
+    },
+    {
+      name: "Mujer",
+      value: 337,
+      rangeAge: ["-18", "18-30", "31-50", "+50"],
+      detectedArray: [54, 207, 48, 28]
+    },
+  ]
 
   useEffect(() => {
     let xAxis = [], yAxis = [];
@@ -64,8 +81,18 @@ const GenderDetected = (props) => {
             },
           },
         },
+        theme: {
+          mode: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? 'dark' : "light",
+          palette: 'palette1',
+          monochrome: {
+            enabled: false,
+            color: '#255aee',
+            shadeTo: 'light',
+            shadeIntensity: 0.65
+          },
+        },
 
-        colors: ['#098f62', '#008ffb'],
+        // colors: ['#098f62', '#008ffb'],
         legend: {
           show: true,
           showForSingleSeries: false,
@@ -117,6 +144,9 @@ const GenderDetected = (props) => {
     }
   }, [])
 
+
+
+
   return (
     <ResponsiveContainer >
 
@@ -133,7 +163,7 @@ const GenderDetected = (props) => {
                   <h1>
                     {genderDetected.find(el => el.name === "Hombre").value}
                   </h1>
-                  <p>
+                  <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                     Hombres
                   </p>
                 </Col>
@@ -153,7 +183,7 @@ const GenderDetected = (props) => {
                   <h1>
                     {genderDetected.find(el => el.name === "Mujer").value}
                   </h1>
-                  <p>
+                  <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                     Mujeres
                   </p>
                 </Col>
@@ -170,11 +200,11 @@ const GenderDetected = (props) => {
                 {/* </Col> */}
               </Row>
               <br />
-              <Row>
+              <Row style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                 <Col className='col-4'><ImMan style={{ color: "#008ffb", border: "none", width: "100%", height: "50%" }} /></Col>
                 <Col className='col-8'>
                   <Row>
-                    <p>
+                    <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                       De los <b style={{ color: "#008ffb" }}>{genderDetected.find(el => el.name === "Hombre").value}</b> hombres:
                     </p>
                   </Row>
@@ -183,7 +213,7 @@ const GenderDetected = (props) => {
                       return (
 
                         <Row>
-                          <p>
+                          <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                             <b>{Math.round((el / genderDetected[1].value) * 100)} %</b> tienen {genderDetected[1].rangeAge[idx]} años
                           </p>
                         </Row>
@@ -203,11 +233,11 @@ const GenderDetected = (props) => {
                 </Col>
               </Row>
               <br />
-              <Row>
+              <Row style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                 <Col className='col-4'><ImWoman style={{ color: "#098f62", border: "none", width: "100%", height: "50%" }} /></Col>
                 <Col className='col-8'>
                   <Row>
-                    <p>
+                    <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                       De las <b style={{ color: "#098f62" }}>{genderDetected.find(el => el.name === "Mujer").value}</b> mujeres:
                     </p>
                   </Row>
@@ -216,7 +246,7 @@ const GenderDetected = (props) => {
                       return (
 
                         <Row>
-                          <p>
+                          <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
                             <b>{Math.round((el / genderDetected[0].value) * 100)} %</b> tienen {genderDetected[0].rangeAge[idx]} años
                           </p>
                         </Row>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Divider } from 'semantic-ui-react';
 import moment from 'moment';
+import { MODE } from '../../constants/token';
 
 export default class ComplaimentItem extends React.Component {
 	state = {
@@ -23,7 +24,7 @@ export default class ComplaimentItem extends React.Component {
 		const { info } = this.props;
 		let { description } = this.state;
 		return (
-			<Card style={{ marginTop: '10px', padding: 0, width: '100%' }} onClick={this._godetails}>
+			<Card style={{ marginTop: '10px', padding: 0, width: '100%', background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#598fbd" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }} onClick={this._godetails}>
 				<Card.Content style={{ paddingBottom: 0 }}>
 					<Card.Description>
 						<div className="row" style={{ fontSize: '.8rem', position: 'relative' }}>

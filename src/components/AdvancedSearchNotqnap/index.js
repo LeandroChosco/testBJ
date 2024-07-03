@@ -5,7 +5,7 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import NumberFormat from 'react-number-format';
-import { LANG } from '../../constants/token';
+import { LANG, MODE } from '../../constants/token';
 
 import './style.css'
 
@@ -65,24 +65,25 @@ class AdvancedSearchNotqnap extends Component {
 		return (
 			<div>
 				{navButton ?
-					<Button className='btn-custom-style' variant="info" disabled={loading} onClick={() => this._openModal()} basic circular >
-						<i className="fa fa-search-plus" />
+					<Button className='btn-custom-style actions-btn-grid' variant="info" disabled={loading} onClick={() => this._openModal()} basic circular >
+						<i className="fa fa-search-plus" style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear"}} />
+						<p style={{ marginTop: "0.2rem", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }}>Búsqueda avanzada</p>
 					</Button>
 					:
-					<button className="btn btn-outline-primary ml-auto mr-auto mb-2" onClick={() => this._openModal()} >{localStorage.getItem(LANG) === "english" ? "Advanced Search" : 'Búsqueda Avanzada'}</button>
+					<button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-auto mr-auto mb-2`} onClick={() => this._openModal()} >{localStorage.getItem(LANG) === "english" ? "Advanced Search" : 'Búsqueda Avanzada'}</button>
 				}
 
 				{/* Modal */}
 				<Modal show={showModal} onHide={this._onHide}>
 					<Form onSubmit={(e) => this._onSubmit(e)}>
-						<Modal.Header closeButton>{localStorage.getItem(LANG) === "english" ? "Advanced Search" : "Búsqueda Avanzada"}</Modal.Header>
-						<Modal.Body>
+						<Modal.Header style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "Advanced search" : "Búsqueda avanzada"}</Modal.Header>
+						<Modal.Body style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
 							{!_.isEmpty(error) && <Alert variant="danger">{error}</Alert>}
 							<>
 								{
 									!isAxxon ?
 										<Form.Group as={Row} controlId="startDate">
-											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Start Date" : "Fecha Inicio:"}</Form.Label>
+											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Start date" : "Fecha de inicio:"}</Form.Label>
 											<Col sm="9">
 												<Form.Control
 													required
@@ -94,7 +95,7 @@ class AdvancedSearchNotqnap extends Component {
 										</Form.Group>
 										:
 										<Form.Group as={Row} controlId="startDate">
-											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Start Date" : "Fecha Inicio:"}</Form.Label>
+											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Start date" : "Fecha de inicio:"}</Form.Label>
 											<Col sm="9">
 												<Form.Control
 													required
@@ -109,7 +110,7 @@ class AdvancedSearchNotqnap extends Component {
 								{
 									!isAxxon ?
 										<Form.Group as={Row} controlId="startHour">
-											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Start Hour" : "Hora Inicio:"}</Form.Label>
+											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Start hour" : "Hora de inicio:"}</Form.Label>
 											<Col sm="9">
 												<NumberFormat
 													mask="_"
@@ -123,7 +124,7 @@ class AdvancedSearchNotqnap extends Component {
 										:
 										<>
 											<Form.Group as={Row} controlId="startHour" >
-												<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Start Hour" : "Hora Inicio:"}</Form.Label>
+												<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Start hour" : "Hora de inicio:"}</Form.Label>
 												<Col sm="6">
 													<NumberFormat
 														format="##"
@@ -143,7 +144,7 @@ class AdvancedSearchNotqnap extends Component {
 												</Col>
 											</Form.Group>
 											<Form.Group as={Row} controlId="startMinutes">
-												<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Start Minutes" : "Minutos Iniciales:"}</Form.Label>
+												<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Start minutes" : "Minutos iniciales:"}</Form.Label>
 												<Col sm="3">
 													<Form.Control as='select' onChange={(e) => this._onChange(e)}>
 														<option value="00">00</option>
@@ -156,7 +157,7 @@ class AdvancedSearchNotqnap extends Component {
 								{
 									!isAxxon ?
 										<Form.Group as={Row} controlId="endDate">
-											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "End Date" : "Fecha Fin:"}</Form.Label>
+											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "End date" : "Fecha de fin:"}</Form.Label>
 											<Col sm="9">
 												<Form.Control
 													required
@@ -167,7 +168,7 @@ class AdvancedSearchNotqnap extends Component {
 										</Form.Group>
 										:
 										<Form.Group as={Row} controlId='endDate'>
-											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "End Date" : "Fecha Fin:"}</Form.Label>
+											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "End date" : "Fecha de fin:"}</Form.Label>
 											<Col sm="9">
 												<Form.Control
 													required
@@ -181,7 +182,7 @@ class AdvancedSearchNotqnap extends Component {
 								{
 									!isAxxon ?
 										<Form.Group as={Row} controlId="endHour">
-											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "End Hour" : "Hora Fin:"}</Form.Label>
+											<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "End hour" : "Hora de fin:"}</Form.Label>
 											<Col sm="9">
 												<NumberFormat
 													mask="_"
@@ -195,7 +196,7 @@ class AdvancedSearchNotqnap extends Component {
 										:
 										<>
 											<Form.Group as={Row} controlId="endHour" >
-												<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "End Hour" : "Hora Fin:"}</Form.Label>
+												<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "End hour" : "Hora de fin:"}</Form.Label>
 												<Col sm="9">
 													<NumberFormat
 														value={endHour}
@@ -207,7 +208,7 @@ class AdvancedSearchNotqnap extends Component {
 												</Col>
 											</Form.Group>
 											<Form.Group as={Row} controlId="endMinutes">
-												<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Final Minutes:" : "Minutos Finales:"}</Form.Label>
+												<Form.Label column sm="3">{localStorage.getItem(LANG) === "english" ? "Final minutes:" : "Minutos finales:"}</Form.Label>
 												<Col sm="3">
 													<Form.Control as="select" onChange={(e) => this._onChange(e)}>
 														{
@@ -237,7 +238,7 @@ class AdvancedSearchNotqnap extends Component {
 								}
 							</>
 						</Modal.Body>
-						<Modal.Footer>
+						<Modal.Footer style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
 							<Button type="submit">{localStorage.getItem(LANG) === "english" ? "Search" : "Buscar"}</Button>
 						</Modal.Footer>
 					</Form>

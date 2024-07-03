@@ -1,0 +1,1700 @@
+[
+    {
+        "messages": [
+            {
+                "dateTime": {
+                    "seconds": 1698329938,
+                    "nanoseconds": 318000000
+                },
+                "from": "support",
+                "msg": "Hola, ¿En qué podemos asistir?"
+            },
+            {
+                "msg": "Hace días que no carga la imagen ni el video. Solo aparece el letrero de loading video parpadeando. \nGracias",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1698329938,
+                    "nanoseconds": 152000000
+                }
+            }
+        ],
+        "user_cam": {
+            "sniffer_fail_count": 1,
+            "port_output_streaming": 82127,
+            "comment": null,
+            "personal_name": null,
+            "qnap_server_id": null,
+            "township": "Benito juarez ",
+            "street": "San Lorenzo",
+            "google_cordenate": "19.3737289,-99.1694751",
+            "UrlStreamMediaServer": {
+                "protocol": "https",
+                "secretKey": null,
+                "id": 46,
+                "ip_url_ms": "customer-bj-mbox-46.nginxradarinstances.click",
+                "name": "/hls/",
+                "__typename": "UrlStreamMediaServer",
+                "autenticacion": 0,
+                "activo": true,
+                "output_port": 80
+            },
+            "id": 4062,
+            "UrlStreamToCameras": [
+                {
+                    "date_creation": "2022-06-17T19:58:26.000Z",
+                    "user_update": false,
+                    "activate": 1,
+                    "id": 2553,
+                    "__typename": "UrlStreamToCameras",
+                    "date_update": "0000-00-00 00:00:00",
+                    "url_id": 1,
+                    "cam_id": 4062,
+                    "user_creation": 5076
+                }
+            ],
+            "entrecalles": null,
+            "password": "",
+            "keep_video_days": 1,
+            "order": 2668,
+            "num_cam": 2668,
+            "termic_type": null,
+            "amazon_region": null,
+            "date_creation": "2022-01-06T00:56:00.000Z",
+            "cat_carrier_id": 2,
+            "flag_record_movie": 1,
+            "channel": "cam2668.m3u8",
+            "__typename": "Camera",
+            "dns": "10.33.226.15",
+            "number": 614,
+            "path_photo": null,
+            "type_camare_id": 2,
+            "rel_msid": 46,
+            "tipo_camara": null,
+            "camera_ip": "10.33.226.15",
+            "flag_color": "https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png",
+            "flag_streaming": 1,
+            "is_amazon_stream": null,
+            "state": "Ciudad de México",
+            "amazon_arn_channel": null,
+            "qnap_channel": null,
+            "cell_phone": null,
+            "date_update": null,
+            "UrlAPIStorage": {
+                "port": null,
+                "ip_url": null,
+                "dns_bold": null,
+                "bucket_bold": null,
+                "secretkey": null,
+                "id": null,
+                "client_bucket_bold": null,
+                "region_bold": null,
+                "__typename": "UrlAPIStorage",
+                "activo": null,
+                "is_bold_storage": null
+            },
+            "user_creation": 5076,
+            "phone": "123456789",
+            "active": true,
+            "UrlHistorical": {
+                "__typename": "UrlHistorical",
+                "tipombox": "light",
+                "active": "1",
+                "protocol": "https",
+                "port": "80",
+                "type": "VIDEO_HISTORY",
+                "secretkey": null,
+                "id": 51,
+                "dns_ip": "customer-bj-mbox-46.apiradarinstances.click",
+                "name_instance": "customer-bj-mbox-46.apiradarinstances.click"
+            },
+            "ssid_name": null,
+            "town": "Colonia del Valle Sur"
+        },
+        "policeUnread": 0,
+        "location": {
+            "longitude": "-99.1694751",
+            "latitude": "19.3737289",
+            "__typename": "Location"
+        },
+        "from_id": 1,
+        "clientId": 1,
+        "from": "Chat Soporte",
+        "user_creation": 5076,
+        "lastModification": "Thu Oct 26 2023 11:18:58 GMT-0600 (hora estándar de México)",
+        "c5Unread": 0,
+        "instance": "Benito Juarez",
+        "user_name": "Rosalinda",
+        "userUnread": 1,
+        "id": "kYQ5M1hEgoc2cSHNTj74"
+    },
+    {
+        "lastModification": "Thu Oct 26 2023 11:17:36 GMT-0600 (hora estándar de México)",
+        "user_cam": {
+            "cat_carrier_id": 2,
+            "town": "Colonia del Valle Sur",
+            "channel": "cam2668.m3u8",
+            "type_camare_id": 2,
+            "qnap_channel": null,
+            "UrlHistorical": {
+                "id": 51,
+                "port": "80",
+                "secretkey": null,
+                "__typename": "UrlHistorical",
+                "type": "VIDEO_HISTORY",
+                "tipombox": "light",
+                "active": "1",
+                "dns_ip": "customer-bj-mbox-46.apiradarinstances.click",
+                "name_instance": "customer-bj-mbox-46.apiradarinstances.click",
+                "protocol": "https"
+            },
+            "camera_ip": "10.33.226.15",
+            "entrecalles": null,
+            "path_photo": null,
+            "qnap_server_id": null,
+            "port_output_streaming": 82127,
+            "state": "Ciudad de México",
+            "comment": null,
+            "dns": "10.33.226.15",
+            "UrlStreamMediaServer": {
+                "id": 46,
+                "name": "/hls/",
+                "output_port": 80,
+                "secretKey": null,
+                "__typename": "UrlStreamMediaServer",
+                "activo": true,
+                "protocol": "https",
+                "autenticacion": 0,
+                "ip_url_ms": "customer-bj-mbox-46.nginxradarinstances.click"
+            },
+            "amazon_arn_channel": null,
+            "street": "San Lorenzo",
+            "personal_name": null,
+            "active": true,
+            "keep_video_days": 1,
+            "rel_msid": 46,
+            "__typename": "Camera",
+            "cell_phone": null,
+            "township": "Benito juarez ",
+            "google_cordenate": "19.3737289,-99.1694751",
+            "date_update": null,
+            "phone": "123456789",
+            "password": "",
+            "termic_type": null,
+            "UrlStreamToCameras": [
+                {
+                    "cam_id": 4062,
+                    "date_creation": "2022-06-17T19:58:26.000Z",
+                    "user_update": false,
+                    "id": 2553,
+                    "date_update": "0000-00-00 00:00:00",
+                    "__typename": "UrlStreamToCameras",
+                    "user_creation": 5076,
+                    "url_id": 1,
+                    "activate": 1
+                }
+            ],
+            "is_amazon_stream": null,
+            "amazon_region": null,
+            "UrlAPIStorage": {
+                "activo": null,
+                "ip_url": null,
+                "dns_bold": null,
+                "secretkey": null,
+                "is_bold_storage": null,
+                "id": null,
+                "region_bold": null,
+                "port": null,
+                "client_bucket_bold": null,
+                "__typename": "UrlAPIStorage",
+                "bucket_bold": null
+            },
+            "flag_streaming": 1,
+            "number": 614,
+            "tipo_camara": null,
+            "flag_record_movie": 1,
+            "ssid_name": null,
+            "date_creation": "2022-01-06T00:56:00.000Z",
+            "id": 4062,
+            "flag_color": "https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png",
+            "user_creation": 5076,
+            "order": 2668,
+            "num_cam": 2668,
+            "sniffer_fail_count": 1
+        },
+        "from": "Chat Soporte",
+        "messages": [
+            {
+                "msg": "Hola, ¿En qué podemos asistir?",
+                "dateTime": {
+                    "seconds": 1698329856,
+                    "nanoseconds": 873000000
+                },
+                "from": "support"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1698329856,
+                    "nanoseconds": 706000000
+                },
+                "from": "user",
+                "msg": "Hola buen día. Hace varios días no carga la imagen. Solo aparece  loading video. \nGracias"
+            }
+        ],
+        "from_id": 1,
+        "clientId": 1,
+        "user_creation": 5076,
+        "location": {
+            "latitude": "19.3737289",
+            "__typename": "Location",
+            "longitude": "-99.1694751"
+        },
+        "userUnread": 1,
+        "c5Unread": 0,
+        "policeUnread": 0,
+        "instance": "Benito Juarez",
+        "user_name": "Rosalinda",
+        "id": "RCLyqkmbqI2Yt9J9BMgl"
+    },
+    {
+        "c5Unread": 0,
+        "clientId": 1,
+        "user_cam": {
+            "path_photo": null,
+            "entrecalles": null,
+            "UrlStreamMediaServer": {
+                "id": 41,
+                "protocol": "https",
+                "output_port": 80,
+                "ip_url_ms": "customer-bj-mbox-41.nginxradarinstances.click",
+                "activo": true,
+                "name": "/hls/",
+                "secretKey": null,
+                "autenticacion": 0,
+                "__typename": "UrlStreamMediaServer"
+            },
+            "UrlHistorical": {
+                "port": "80",
+                "id": 46,
+                "__typename": "UrlHistorical",
+                "name_instance": "customer-bj-mbox-41.apiradarinstances.click",
+                "protocol": "https",
+                "active": "1",
+                "tipombox": "light",
+                "dns_ip": "customer-bj-mbox-41.apiradarinstances.click",
+                "type": "VIDEO_HISTORY",
+                "secretkey": null
+            },
+            "town": "Atenor Salas",
+            "cell_phone": null,
+            "user_creation": 4799,
+            "sniffer_fail_count": 1,
+            "port_output_streaming": 82126,
+            "id": 3806,
+            "phone": "5538781930",
+            "flag_record_movie": 1,
+            "num_cam": 2419,
+            "date_update": null,
+            "amazon_arn_channel": null,
+            "flag_color": "https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png",
+            "password": "",
+            "comment": null,
+            "__typename": "Camera",
+            "flag_streaming": 1,
+            "rel_msid": 41,
+            "type_camare_id": 2,
+            "is_amazon_stream": null,
+            "qnap_channel": null,
+            "date_creation": "2021-12-30T18:27:45.000Z",
+            "active": true,
+            "camera_ip": null,
+            "keep_video_days": 1,
+            "amazon_region": null,
+            "number": 35,
+            "township": "Benito Juárez",
+            "state": "Ciudad de México",
+            "google_cordenate": "19.4028794,-99.1465254",
+            "UrlAPIStorage": {
+                "id": null,
+                "dns_bold": null,
+                "activo": null,
+                "client_bucket_bold": null,
+                "port": null,
+                "bucket_bold": null,
+                "ip_url": null,
+                "secretkey": null,
+                "region_bold": null,
+                "is_bold_storage": null,
+                "__typename": "UrlAPIStorage"
+            },
+            "termic_type": null,
+            "channel": "cam2419.m3u8",
+            "personal_name": null,
+            "UrlStreamToCameras": [
+                {
+                    "id": 2303,
+                    "__typename": "UrlStreamToCameras",
+                    "user_creation": 4799,
+                    "user_update": false,
+                    "cam_id": 3806,
+                    "activate": 1,
+                    "date_update": "0000-00-00 00:00:00",
+                    "date_creation": "2022-06-17T20:02:22.000Z",
+                    "url_id": 1
+                }
+            ],
+            "ssid_name": null,
+            "qnap_server_id": null,
+            "order": 2419,
+            "dns": "10.17.106.15",
+            "cat_carrier_id": 2,
+            "street": "Antenor Sala",
+            "tipo_camara": null
+        },
+        "policeUnread": 17,
+        "userUnread": 18,
+        "lastModification": "Thu Oct 26 2023 01:30:35 GMT-0600 (hora estándar de México)",
+        "instance": "Benito Juarez",
+        "from": "Chat C5",
+        "messages": [
+            {
+                "msg": "Hola, ¿En que podemos asistir?",
+                "from": "support",
+                "dateTime": {
+                    "seconds": 1640896546,
+                    "nanoseconds": 263000000
+                }
+            },
+            {
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1640896545,
+                    "nanoseconds": 836000000
+                },
+                "msg": "hola, mi cámara no funciona, las instalaron hace un rato y se mostraba imagen, ahora solo se queda la pantalla en negro con la frase “loading video”"
+            },
+            {
+                "msg": "Se canaliza su petición al área de soporte técnico.",
+                "from": "support",
+                "dateTime": {
+                    "seconds": 1640896688,
+                    "nanoseconds": 976000000
+                }
+            },
+            {
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1640896721,
+                    "nanoseconds": 915000000
+                },
+                "msg": "gracias"
+            },
+            {
+                "msg": "Hola, ¿A donde puedo mandar un correo para restablecer mi contraseña?",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1664812725,
+                    "nanoseconds": 857000000
+                }
+            },
+            {
+                "dateTime": {
+                    "seconds": 1664812780,
+                    "nanoseconds": 265000000
+                },
+                "msg": "Alcaldía BJ, le proporcionamos el contacto de la línea de atención y soporte técnico; 5588975027 WhatsApp 5632875602 Horario de Atención: lunes a viernes de 09:00a 19:00hrs",
+                "from": "support"
+            },
+            {
+                "msg": "Hola. Desde la semana pasada no funciona la cámara. ¿Qué hacemos?",
+                "dateTime": {
+                    "seconds": 1668452826,
+                    "nanoseconds": 356000000
+                },
+                "from": "user"
+            },
+            {
+                "msg": "Alcaldía BJ, le proporcionamos el contacto de la Línea de atención y soporte técnico; Llamadas 5588975027  WhatsApp 5632875602  Horario de Atención: Lunes a Viernes de 09:00 a 19:00 hrs.",
+                "dateTime": {
+                    "seconds": 1668452921,
+                    "nanoseconds": 269000000
+                },
+                "from": "support"
+            },
+            {
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1687796755,
+                    "nanoseconds": 382000000
+                },
+                "msg": "Hola. Nuevamente el problema de que no funciona la cámara"
+            },
+            {
+                "msg": "Soporte//Le contactaremos para atender su solicitud,\nfavor de responder la llamada.",
+                "dateTime": {
+                    "seconds": 1687796812,
+                    "nanoseconds": 279000000
+                },
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "from": 1
+            },
+            {
+                "userName": "Soporte",
+                "msg": "Soporte// Se genera visita técnica cámara WDBJ2606232419",
+                "from": 1,
+                "dateTime": {
+                    "seconds": 1687798009,
+                    "nanoseconds": 916000000
+                },
+                "userEmail": "soporte_bj@radarappsecurity.com"
+            },
+            {
+                "msg": "Soporte// Folio de atención brindado mediante WhatsApp",
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "from": 1,
+                "dateTime": {
+                    "seconds": 1687798118,
+                    "nanoseconds": 38000000
+                },
+                "userName": "Soporte"
+            },
+            {
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1690303400,
+                    "nanoseconds": 581000000
+                },
+                "msg": "A quien corresponda\nDesde hace un mes se reportó la falla de la cámara y aún no han podido pasar a revisarla"
+            },
+            {
+                "msg": "Han pasado a revisar las cámaras de los vecinos de enfrente, pero nuestro reporte ni siquiera lo tienen los técnicos",
+                "dateTime": {
+                    "seconds": 1690303513,
+                    "nanoseconds": 729000000
+                },
+                "from": "user"
+            },
+            {
+                "from": 1,
+                "dateTime": {
+                    "seconds": 1690303680,
+                    "nanoseconds": 887000000
+                },
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "msg": "Soporte// Se le comparte el numero 5640005919 únicamente via whatsapp para seguimiento a su folio WDBJ2606232419 generado el dia  26 junio 23. En donde le brindaran informacion de visita tecnica."
+            },
+            {
+                "msg": "¿Para cuando está programada la visita?",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1690661507,
+                    "nanoseconds": 547000000
+                }
+            },
+            {
+                "userEmail": "MonitoristasBJ@alcaldiabj.com",
+                "userName": "MonitoristasBJ",
+                "from": 1,
+                "dateTime": {
+                    "seconds": 1690662613,
+                    "nanoseconds": 944000000
+                },
+                "msg": "Alcaldía BJ, le proporcionamos el contacto de la Línea de atención y soporte técnico; Llamadas 5588975027  WhatsApp 5632875602  Horario de Atención: Lunes a Viernes de 09:00 a 18:00 hrs.\n"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1690812140,
+                    "nanoseconds": 603000000
+                },
+                "msg": "Soporte//Le contactaremos para atender su solicitud, favor de responder la llamada.",
+                "from": 1,
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "userName": "Soporte"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1690817334,
+                    "nanoseconds": 172000000
+                },
+                "msg": "Soporte// Nos comparte un contacto actualizado para atenderle.",
+                "from": 1,
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1690859972,
+                    "nanoseconds": 886000000
+                },
+                "msg": "Por favor, por medio de WhatsApp",
+                "from": "user"
+            },
+            {
+                "msg": "El número es 5538781930",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1690860003,
+                    "nanoseconds": 438000000
+                }
+            },
+            {
+                "dateTime": {
+                    "seconds": 1690860041,
+                    "nanoseconds": 93000000
+                },
+                "from": "user",
+                "msg": "Ya está funcionando la cámara"
+            },
+            {
+                "userName": "Soporte",
+                "msg": "Soporte//Le contactaremos para atender su solicitud, favor de responder la llamada.",
+                "from": 1,
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "dateTime": {
+                    "seconds": 1690899595,
+                    "nanoseconds": 730000000
+                }
+            },
+            {
+                "msg": "Soporte// Cámara rehabilitada.",
+                "dateTime": {
+                    "seconds": 1690899636,
+                    "nanoseconds": 225000000
+                },
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "from": 1,
+                "userName": "Soporte"
+            },
+            {
+                "msg": "\n\n\n",
+                "userName": "Soporte",
+                "dateTime": {
+                    "seconds": 1690901231,
+                    "nanoseconds": 311000000
+                },
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "from": 1
+            },
+            {
+                "from": "user",
+                "msg": "Hola. No funciona la cámara. ¿Nos pueden auxiliar?",
+                "dateTime": {
+                    "seconds": 1698170012,
+                    "nanoseconds": 621000000
+                }
+            },
+            {
+                "userName": "Soporte",
+                "dateTime": {
+                    "seconds": 1698172979,
+                    "nanoseconds": 480000000
+                },
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "msg": "Soporte// Para atender su solicitud le contactaremos, favor de responder la llamada\n",
+                "from": 1
+            },
+            {
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "dateTime": {
+                    "seconds": 1698174632,
+                    "nanoseconds": 83000000
+                },
+                "from": 1,
+                "userName": "Soporte",
+                "msg": "Soporte Técnico Radar le informa: Su seguridad y bienestar es lo primero, estamos trabajando en una actualización en nuestros servidores dentro de nuestra plataforma de monitoreo sin embargo este trabajo de mantenimiento nos indica una falla en la transmisión de algunas cámaras en el cual estamos trabajando todas las áreas para su pronta solución."
+            },
+            {
+                "msg": "Supervisor // A nombre de soporte técnico una disculpa por los inconvenientes.",
+                "userName": "Soporte",
+                "from": 1,
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "dateTime": {
+                    "seconds": 1698174835,
+                    "nanoseconds": 972000000
+                }
+            },
+            {
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "userName": "Soporte",
+                "dateTime": {
+                    "seconds": 1698174855,
+                    "nanoseconds": 833000000
+                },
+                "from": 1,
+                "msg": "Supervisor// Solicitud en proceso "
+            },
+            {
+                "msg": "Hola. Mi teléfono solo recibe llamadas vía WhatsApp.",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1698294635,
+                    "nanoseconds": 742000000
+                }
+            }
+        ],
+        "from_id": 1,
+        "user_name": "Jose",
+        "location": {
+            "__typename": "Location",
+            "latitude": "19.4029687",
+            "longitude": "-99.1465647"
+        },
+        "user_creation": 4799,
+        "id": "cl28hgMMx0s43Kh13WNJ"
+    },
+    {
+        "from": "Chat C5",
+        "user_cam": {
+            "channel": "cam691.m3u8",
+            "type_camare_id": 2,
+            "amazon_arn_channel": null,
+            "qnap_channel": null,
+            "street": "Casas Grandes",
+            "state": "Ciudad de México",
+            "township": "Benito Juárez",
+            "rel_msid": 4,
+            "user_creation": 2311,
+            "tipo_camara": null,
+            "flag_color": null,
+            "town": "Narvarte Poniente",
+            "keep_video_days": 1,
+            "qnap_server_id": null,
+            "ssid_name": null,
+            "UrlStreamMediaServer": {
+                "autenticacion": 0,
+                "secretKey": null,
+                "id": 4,
+                "name": "/hls/",
+                "__typename": "UrlStreamMediaServer",
+                "activo": true,
+                "output_port": 80,
+                "ip_url_ms": "customer-bj-mbox-04-nginx.radarapptechnologies.com",
+                "protocol": "https"
+            },
+            "termic_type": null,
+            "order": 691,
+            "path_photo": null,
+            "id": 700,
+            "cat_carrier_id": 3,
+            "phone": "5529217297",
+            "password": "",
+            "is_amazon_stream": null,
+            "number": 21,
+            "date_update": null,
+            "google_cordenate": "19.4007617,-99.146342",
+            "entrecalles": "Barragán y Casas Grandes",
+            "comment": null,
+            "active": true,
+            "camera_ip": null,
+            "cell_phone": null,
+            "dns": "10.6.12.15",
+            "date_creation": "2021-04-08T17:17:07.000Z",
+            "flag_record_movie": 1,
+            "sniffer_fail_count": 1,
+            "__typename": "Camera",
+            "num_cam": 691,
+            "personal_name": null,
+            "flag_streaming": 1,
+            "amazon_region": null,
+            "port_output_streaming": 2691,
+            "UrlHistorical": {
+                "name_instance": "customer-bj-mbox-04-api.radarapptechnologies.com",
+                "type": "VIDEO_HISTORY",
+                "__typename": "UrlHistorical",
+                "tipombox": "light",
+                "protocol": "https",
+                "port": "80",
+                "active": "1",
+                "secretkey": null,
+                "id": 5,
+                "dns_ip": "customer-bj-mbox-04-api.radarapptechnologies.com"
+            },
+            "UrlStreamToCameras": [
+                {
+                    "__typename": "UrlStreamToCameras",
+                    "id": 475,
+                    "user_update": false,
+                    "cam_id": 700,
+                    "user_creation": 2311,
+                    "date_creation": "2022-03-09T00:52:27.000Z",
+                    "activate": 1,
+                    "url_id": 1,
+                    "date_update": "0000-00-00 00:00:00"
+                }
+            ],
+            "UrlAPIStorage": {
+                "bucket_bold": null,
+                "activo": null,
+                "ip_url": null,
+                "secretkey": null,
+                "region_bold": null,
+                "__typename": "UrlAPIStorage",
+                "dns_bold": null,
+                "client_bucket_bold": null,
+                "id": null,
+                "is_bold_storage": null,
+                "port": null
+            }
+        },
+        "user_name": "Hilda",
+        "lastModification": "Wed Oct 25 2023 21:21:22 GMT-0600 (hora estándar de México)",
+        "policeUnread": 5,
+        "userUnread": 5,
+        "from_id": 1,
+        "c5Unread": 0,
+        "clientId": 1,
+        "messages": [
+            {
+                "dateTime": {
+                    "seconds": 1632964053,
+                    "nanoseconds": 324000000
+                },
+                "from": "support",
+                "msg": "Hola, ¿En que podemos asistir?"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1632964053,
+                    "nanoseconds": 324000000
+                },
+                "msg": "La configuración de la cámara de mi domicilio dice 2011",
+                "from": "user"
+            },
+            {
+                "from": "support",
+                "dateTime": {
+                    "seconds": 1632964083,
+                    "nanoseconds": 896000000
+                },
+                "msg": "Se canaliza su petición al área de soporte técnico.\n"
+            },
+            {
+                "msg": "Gracias",
+                "dateTime": {
+                    "seconds": 1632964102,
+                    "nanoseconds": 280000000
+                },
+                "from": "user"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1632964113,
+                    "nanoseconds": 837000000
+                },
+                "msg": "Eso sería todo, muy amable",
+                "from": "user"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1632964131,
+                    "nanoseconds": 860000000
+                },
+                "from": "support",
+                "msg": "Enterados continuamos pendientes.\n"
+            },
+            {
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1632964138,
+                    "nanoseconds": 198000000
+                },
+                "msg": "Gracias"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1633959015,
+                    "nanoseconds": 747000000
+                },
+                "msg": "Buenos días, la cámara instalada en casas grandes 21 sigue teniendo mal la configuración de fecha y hora",
+                "from": "user"
+            },
+            {
+                "msg": "Alcaldía BJ, Buenos días. Se canaliza su petición al área de soporte técnico",
+                "dateTime": {
+                    "seconds": 1633959176,
+                    "nanoseconds": 144000000
+                },
+                "from": "support"
+            },
+            {
+                "msg": "Gracias",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1633959247,
+                    "nanoseconds": 400000000
+                }
+            },
+            {
+                "dateTime": {
+                    "seconds": 1633959281,
+                    "nanoseconds": 479000000
+                },
+                "msg": "O tendrá el dato para reportarlo directo, ya en varias ocasiones he reportado esto y no lo corrigen",
+                "from": "user"
+            },
+            {
+                "from": "user",
+                "msg": "Buenas noches,\n\nEn Casas Grandes 26 están haciendo escándalo desde las 7 de la noche",
+                "dateTime": {
+                    "seconds": 1687068828,
+                    "nanoseconds": 206000000
+                }
+            },
+            {
+                "msg": "Pueden hacer algo al respecto?",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1687068842,
+                    "nanoseconds": 105000000
+                }
+            },
+            {
+                "from": 1,
+                "dateTime": {
+                    "seconds": 1687068869,
+                    "nanoseconds": 991000000
+                },
+                "userName": "MonitoristasBJ",
+                "userEmail": "MonitoristasBJ@alcaldiabj.com",
+                "msg": "   Se canaliza la unidad"
+            },
+            {
+                "msg": "Gracias",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1687068893,
+                    "nanoseconds": 229000000
+                }
+            },
+            {
+                "userName": "MonitoristasBJ",
+                "msg": "En camino la unidad ",
+                "dateTime": {
+                    "seconds": 1687068975,
+                    "nanoseconds": 494000000
+                },
+                "userEmail": "MonitoristasBJ@alcaldiabj.com",
+                "from": 1
+            },
+            {
+                "msg": "Gracias",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1687069524,
+                    "nanoseconds": 763000000
+                }
+            },
+            {
+                "dateTime": {
+                    "seconds": 1695445781,
+                    "nanoseconds": 273000000
+                },
+                "msg": "Buenas noches, disculpen pero nuevamente escándalo en el edificio de casas grandes 26 entre quebrada y caleta, el sonido excesivamente alto, podrán apoyarnos",
+                "from": "user"
+            },
+            {
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1698279682,
+                    "nanoseconds": 24000000
+                },
+                "msg": "Buenas tardes,\nNo sirve la cámara, a dónde debe solicitarse el arreglo?"
+            }
+        ],
+        "user_creation": 2311,
+        "id": "uPcoaRT1XNoY989K5rwv"
+    },
+    {
+        "from": "Chat C5",
+        "lastModification": "Wed Oct 25 2023 15:29:08 GMT-0600 (hora estándar de México)",
+        "user_name": "Ricardo",
+        "user_cam": {
+            "UrlHistorical": {
+                "protocol": "https",
+                "type": "VIDEO_HISTORY",
+                "active": "1",
+                "secretkey": null,
+                "dns_ip": "customer-bj-mbox-86.apiradarinstances.click",
+                "id": 93,
+                "__typename": "UrlHistorical",
+                "name_instance": "customer-bj-mbox-86.apiradarinstances.click",
+                "port": "80",
+                "tipombox": "light"
+            },
+            "cell_phone": "5527024946",
+            "is_amazon_stream": null,
+            "keep_video_days": 1,
+            "active": true,
+            "town": "Narvarte",
+            "UrlStreamMediaServer": {
+                "name": "/hls/",
+                "output_port": 80,
+                "secretKey": null,
+                "id": 86,
+                "ip_url_ms": "customer-bj-mbox-86.nginxradarinstances.click",
+                "__typename": "UrlStreamMediaServer",
+                "autenticacion": 0,
+                "protocol": "https",
+                "activo": true
+            },
+            "UrlAPIStorage": {
+                "dns_bold": null,
+                "port": null,
+                "__typename": "UrlAPIStorage",
+                "secretkey": null,
+                "region_bold": null,
+                "activo": null,
+                "id": null,
+                "bucket_bold": null,
+                "client_bucket_bold": null,
+                "is_bold_storage": null,
+                "ip_url": null
+            },
+            "order": 3869,
+            "path_photo": null,
+            "date_creation": "2022-11-28T10:43:44.000Z",
+            "state": "CDMX",
+            "UrlStreamToCameras": [
+                {
+                    "__typename": "UrlStreamToCameras",
+                    "activate": 1,
+                    "cam_id": 5404,
+                    "date_update": "0000-00-00 00:00:00",
+                    "date_creation": "2022-11-29T16:54:19.000Z",
+                    "url_id": 1,
+                    "user_update": false,
+                    "user_creation": 0,
+                    "id": 3947
+                }
+            ],
+            "flag_color": "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+            "type_camare_id": 2,
+            "port_output_streaming": 6081,
+            "termic_type": null,
+            "__typename": "Camera",
+            "ssid_name": null,
+            "dns": "10.30.168.15",
+            "personal_name": null,
+            "password": "",
+            "date_update": null,
+            "user_creation": 6808,
+            "number": 30,
+            "id": 5404,
+            "sniffer_fail_count": 1,
+            "amazon_region": null,
+            "flag_streaming": 1,
+            "cat_carrier_id": 1,
+            "num_cam": 3869,
+            "google_cordenate": "19.4026446,-99.1524878",
+            "street": "Tajin",
+            "phone": "5527024946",
+            "township": "Benito Juarez",
+            "qnap_channel": null,
+            "channel": "cam3869.m3u8",
+            "entrecalles": null,
+            "qnap_server_id": null,
+            "amazon_arn_channel": null,
+            "camera_ip": "10.30.168.15",
+            "tipo_camara": 2,
+            "comment": null,
+            "rel_msid": 86,
+            "flag_record_movie": 1
+        },
+        "policeUnread": 4,
+        "c5Unread": 0,
+        "from_id": 1,
+        "messages": [
+            {
+                "from": "support",
+                "dateTime": {
+                    "seconds": 1698180874,
+                    "nanoseconds": 131000000
+                },
+                "msg": "Hola, ¿En qué podemos asistir?"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1698180873,
+                    "nanoseconds": 902000000
+                },
+                "msg": "Hola muy buena tarde",
+                "from": "user"
+            },
+            {
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1698180920,
+                    "nanoseconds": 15000000
+                },
+                "msg": "Estaba revisando en historial los vídeos de el lunes 23 de octubre"
+            },
+            {
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1698180945,
+                    "nanoseconds": 887000000
+                },
+                "msg": "Vienen en grupo de 2 videos por hora de registro"
+            },
+            {
+                "from": "user",
+                "msg": "Y en el grupo de las 10 am del 23 de octubre, el vídeo que corresponde de 10:30 am no corresponde a la fecha en su lugar está el clip del 24 de octubre a las 10:30 am",
+                "dateTime": {
+                    "seconds": 1698181033,
+                    "nanoseconds": 30000000
+                }
+            },
+            {
+                "from": "user",
+                "msg": "Donde puedo checar el vídeo que realmente corresponde al de las 10:30 am del 23 de octubre",
+                "dateTime": {
+                    "seconds": 1698181067,
+                    "nanoseconds": 831000000
+                }
+            },
+            {
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1698181072,
+                    "nanoseconds": 406000000
+                },
+                "msg": "?"
+            },
+            {
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "dateTime": {
+                    "seconds": 1698186751,
+                    "nanoseconds": 751000000
+                },
+                "from": 1,
+                "msg": "Soporte// Se atiende solicitud mediante WhatsApp Web.\n"
+            },
+            {
+                "msg": "Hay un desfase de fecha y hora en el histórico",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1698192285,
+                    "nanoseconds": 378000000
+                }
+            },
+            {
+                "msg": "El dispositivo está asociado a Tajín 30",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1698192360,
+                    "nanoseconds": 427000000
+                }
+            },
+            {
+                "from": 1,
+                "msg": "Alcaldia BJ, le proporcionamos el contacto de la Linea de atencion y soprte técnico; Llamadas 5588975027 Whatsapp 5632875602, Horario de Atencion: Lunes a Viernes de 09:00 a 19:00 hrs\n",
+                "userEmail": "MonitoristasBJ@alcaldiabj.com",
+                "userName": "MonitoristasBJ",
+                "dateTime": {
+                    "seconds": 1698196030,
+                    "nanoseconds": 721000000
+                }
+            },
+            {
+                "userName": "Soporte",
+                "from": 1,
+                "dateTime": {
+                    "seconds": 1698245582,
+                    "nanoseconds": 882000000
+                },
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "msg": "Soporte// Para atender su solicitud le contactaremos, favor de responder la llamada\n"
+            },
+            {
+                "from": 1,
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "msg": "Soporte// Se atiende solicitud mediante WhatsApp Web.\n",
+                "userName": "Soporte",
+                "dateTime": {
+                    "seconds": 1698247910,
+                    "nanoseconds": 897000000
+                }
+            },
+            {
+                "dateTime": {
+                    "seconds": 1698245378,
+                    "nanoseconds": 636000000
+                },
+                "from": "user",
+                "msg": "Gracias"
+            },
+            {
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1698258548,
+                    "nanoseconds": 447000000
+                },
+                "msg": "Sigo atento a l respuesta"
+            }
+        ],
+        "user_creation": 6811,
+        "instance": "Benito Juarez",
+        "location": {
+            "longitude": "-99.0914753",
+            "latitude": "19.4966495",
+            "__typename": "Location"
+        },
+        "userUnread": 5,
+        "clientId": 1,
+        "id": "P2iqp7xBlfFOMdUA1AxK"
+    },
+    {
+        "location": {
+            "longitude": "-99.1753492",
+            "latitude": "19.3740699",
+            "__typename": "Location"
+        },
+        "messages": [
+            {
+                "dateTime": {
+                    "seconds": 1641632602,
+                    "nanoseconds": 697000000
+                },
+                "msg": "Hola, ¿En que podemos asistir?",
+                "from": "support"
+            },
+            {
+                "msg": "No baja el vídeo. Lo he intentado varias veces y no lo logro.",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1641632602,
+                    "nanoseconds": 337000000
+                }
+            },
+            {
+                "dateTime": {
+                    "seconds": 1641632659,
+                    "nanoseconds": 857000000
+                },
+                "msg": "Ya desinstalé y volví a bajar la aplicación y, nada.",
+                "from": "user"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1641632697,
+                    "nanoseconds": 926000000
+                },
+                "from": "support",
+                "msg": "Se canaliza su petición al área de soporte técnico,"
+            },
+            {
+                "msg": "Gracias.",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1641632689,
+                    "nanoseconds": 276000000
+                }
+            },
+            {
+                "from": "user",
+                "msg": "Buenas tardes.\nCambiaron el horario erróneamente.\nGracias.",
+                "dateTime": {
+                    "seconds": 1680567219,
+                    "nanoseconds": 622000000
+                }
+            },
+            {
+                "dateTime": {
+                    "seconds": 1680567393,
+                    "nanoseconds": 216000000
+                },
+                "from": 1,
+                "msg": "Soporte//Le contactaremos para atender su solicitud,\nfavor de responder la llamada.",
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1680621263,
+                    "nanoseconds": 42000000
+                },
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "from": 1,
+                "msg": "Soporte// Cámara rehabilitada."
+            },
+            {
+                "msg": "Buenas tardes.\nDesde ayer está otra vez mal. El problema está en ustedes.\n¿Lo pueden checar, por favor?\nGracias.",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1681775232,
+                    "nanoseconds": 790000000
+                }
+            },
+            {
+                "from": 1,
+                "msg": "Soporte//Le contactaremos para atender su solicitud, favor de responder la llamada.",
+                "dateTime": {
+                    "seconds": 1681771749,
+                    "nanoseconds": 802000000
+                },
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com"
+            },
+            {
+                "userName": "Soporte",
+                "msg": "Soporte// Cámara rehabilitada",
+                "from": 1,
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "dateTime": {
+                    "seconds": 1681772066,
+                    "nanoseconds": 226000000
+                }
+            },
+            {
+                "msg": "Buenos días.\nOtra vez no baja el vídeo.\n¿Lo pueden checar, por favor?",
+                "dateTime": {
+                    "seconds": 1698239518,
+                    "nanoseconds": 707000000
+                },
+                "from": "user"
+            },
+            {
+                "from": 1,
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "dateTime": {
+                    "seconds": 1698245758,
+                    "nanoseconds": 661000000
+                },
+                "msg": "Soporte// Para atender su solicitud le contactaremos, favor de responder la llamada\n"
+            },
+            {
+                "from": "user",
+                "msg": "Buenos días.\nNo baja el vídeo.\n¿Lo pueden checar, por favor?",
+                "dateTime": {
+                    "seconds": 1698251442,
+                    "nanoseconds": 488000000
+                }
+            },
+            {
+                "msg": "Estimados Ciudadanos de Kit Blindar Soporte Técnico Radar le informa: Su seguridad y bienestar es lo primero, estamos trabajando en una actualización en nuestros servidores dentro de nuestra plataforma de monitoreo sin embargo este trabajo de mantenimiento nos indica una falla en la transmisión de algunas cámaras de videovigilancia en el cual estamos trabajando todas las áreas para su pronta solución. No es necesario que lo reporte A nombre de Soporte Técnico de Kits de Seguridad una disculpa por los inconvenientes.",
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "dateTime": {
+                    "seconds": 1698252453,
+                    "nanoseconds": 135000000
+                },
+                "from": 1
+            }
+        ],
+        "user_name": "Alicia",
+        "from": "Chat C5",
+        "from_id": 1,
+        "user_cam": {
+            "active": true,
+            "is_amazon_stream": null,
+            "number": 1523,
+            "personal_name": null,
+            "UrlAPIStorage": {
+                "dns_bold": null,
+                "port": null,
+                "id": null,
+                "is_bold_storage": null,
+                "__typename": "UrlAPIStorage",
+                "activo": null,
+                "client_bucket_bold": null,
+                "bucket_bold": null,
+                "region_bold": null,
+                "secretkey": null,
+                "ip_url": null
+            },
+            "UrlStreamToCameras": [
+                {
+                    "date_creation": "2022-06-17T20:02:11.000Z",
+                    "date_update": "0000-00-00 00:00:00",
+                    "activate": 1,
+                    "user_update": false,
+                    "url_id": 1,
+                    "cam_id": 3887,
+                    "__typename": "UrlStreamToCameras",
+                    "id": 2383,
+                    "user_creation": 4890
+                }
+            ],
+            "qnap_channel": null,
+            "channel": "cam2496.m3u8",
+            "UrlStreamMediaServer": {
+                "ip_url_ms": "customer-bj-mbox-42.nginxradarinstances.click",
+                "id": 42,
+                "activo": true,
+                "name": "/hls/",
+                "autenticacion": 0,
+                "protocol": "https",
+                "output_port": 80,
+                "__typename": "UrlStreamMediaServer",
+                "secretKey": null
+            },
+            "__typename": "Camera",
+            "keep_video_days": 1,
+            "num_cam": 2496,
+            "state": "Ciudad de México",
+            "cat_carrier_id": 1,
+            "termic_type": null,
+            "camera_ip": null,
+            "path_photo": null,
+            "street": "San Francisco",
+            "dns": "10.12.63.15",
+            "id": 3887,
+            "UrlHistorical": {
+                "__typename": "UrlHistorical",
+                "type": "VIDEO_HISTORY",
+                "id": 47,
+                "name_instance": "customer-bj-mbox-42.apiradarinstances.click",
+                "active": "1",
+                "protocol": "https",
+                "dns_ip": "customer-bj-mbox-42.apiradarinstances.click",
+                "tipombox": "light",
+                "port": "80",
+                "secretkey": null
+            },
+            "date_update": null,
+            "comment": "Ninguno",
+            "phone": "5554194829",
+            "type_camare_id": 2,
+            "ssid_name": "Infinitum1523",
+            "port_output_streaming": 82127,
+            "town": "Tlacoquemecatl del Valle",
+            "google_cordenate": "19.3740884,-99.1753521",
+            "cell_phone": null,
+            "flag_streaming": 1,
+            "sniffer_fail_count": 1,
+            "amazon_region": null,
+            "entrecalles": null,
+            "qnap_server_id": null,
+            "order": 2496,
+            "amazon_arn_channel": null,
+            "tipo_camara": null,
+            "township": "Benito Juárez ",
+            "date_creation": "2022-01-03T18:54:39.000Z",
+            "user_creation": 4890,
+            "password": "",
+            "rel_msid": 42,
+            "flag_color": "https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png",
+            "flag_record_movie": 1
+        },
+        "c5Unread": 0,
+        "policeUnread": 7,
+        "user_creation": 4890,
+        "instance": "Benito Juarez",
+        "userUnread": 8,
+        "clientId": 1,
+        "lastModification": "Wed Oct 25 2023 13:30:42 GMT-0600 (hora estándar de México)",
+        "id": "GwvJgsy7Zh5otYrFIsta"
+    },
+    {
+        "c5Unread": 0,
+        "policeUnread": 14,
+        "user_creation": 2668,
+        "userUnread": 14,
+        "user_name": "María Magdalena ",
+        "user_cam": {
+            "date_update": null,
+            "town": "San Pedro de los Pinos",
+            "UrlAPIStorage": {
+                "bucket_bold": null,
+                "port": null,
+                "is_bold_storage": null,
+                "client_bucket_bold": null,
+                "id": null,
+                "__typename": "UrlAPIStorage",
+                "secretkey": null,
+                "region_bold": null,
+                "activo": null,
+                "ip_url": null,
+                "dns_bold": null
+            },
+            "user_creation": 2668,
+            "flag_streaming": 1,
+            "township": "Benito Juárez",
+            "termic_type": null,
+            "path_photo": null,
+            "keep_video_days": 1,
+            "id": 868,
+            "personal_name": null,
+            "password": "",
+            "cell_phone": null,
+            "qnap_channel": null,
+            "order": 856,
+            "is_amazon_stream": null,
+            "port_output_streaming": 2856,
+            "camera_ip": null,
+            "date_creation": "2021-06-02T16:48:20.000Z",
+            "tipo_camara": null,
+            "sniffer_fail_count": 1,
+            "ssid_name": null,
+            "entrecalles": "Av. Los pinos y Av. Primero De Mayo",
+            "street": "Calle 20",
+            "flag_record_movie": 1,
+            "UrlHistorical": {
+                "id": 14,
+                "protocol": "https",
+                "port": "80",
+                "dns_ip": "customer-bj-mbox-11-api.radarapptechnologies.com",
+                "tipombox": "light",
+                "name_instance": "customer-bj-mbox-11-api.radarapptechnologies.com",
+                "type": "VIDEO_HISTORY",
+                "__typename": "UrlHistorical",
+                "secretkey": null,
+                "active": "1"
+            },
+            "type_camare_id": 2,
+            "__typename": "Camera",
+            "UrlStreamMediaServer": {
+                "activo": true,
+                "secretKey": null,
+                "ip_url_ms": "customer-bj-mbox-11-nginx.radarapptechnologies.com",
+                "autenticacion": 0,
+                "id": 11,
+                "name": "/hls/",
+                "__typename": "UrlStreamMediaServer",
+                "output_port": 80,
+                "protocol": "https"
+            },
+            "dns": "10.7.186.15",
+            "state": "CDMX",
+            "comment": null,
+            "cat_carrier_id": 1,
+            "flag_color": null,
+            "number": 40,
+            "num_cam": 856,
+            "UrlStreamToCameras": [
+                {
+                    "activate": 1,
+                    "user_creation": 2668,
+                    "date_creation": "2022-06-17T20:19:22.000Z",
+                    "id": 674,
+                    "cam_id": 868,
+                    "__typename": "UrlStreamToCameras",
+                    "url_id": 1,
+                    "date_update": "0000-00-00 00:00:00",
+                    "user_update": false
+                }
+            ],
+            "amazon_region": null,
+            "active": true,
+            "amazon_arn_channel": null,
+            "google_cordenate": "19.386571116211787,-99.18780017469024",
+            "phone": "5527568741",
+            "rel_msid": 11,
+            "qnap_server_id": null,
+            "channel": "cam856.m3u8"
+        },
+        "messages": [
+            {
+                "msg": "Hola, ¿En que podemos asistir?",
+                "dateTime": {
+                    "seconds": 1622652742,
+                    "nanoseconds": 185000000
+                },
+                "from": "support"
+            },
+            {
+                "from": "user",
+                "msg": "Probando",
+                "dateTime": {
+                    "seconds": 1622652742,
+                    "nanoseconds": 185000000
+                }
+            },
+            {
+                "from": "support",
+                "dateTime": {
+                    "seconds": 1622652768,
+                    "nanoseconds": 30000000
+                },
+                "msg": "Alcaldía BJ, ¿Cuál es su emergencia?\n"
+            },
+            {
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1674790007,
+                    "nanoseconds": 480000000
+                },
+                "msg": "La pantalla se ve oscura"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1674790229,
+                    "nanoseconds": 959000000
+                },
+                "from": 1,
+                "msg": "*Alcaldía BJ, le proporcionamos el contacto de la línea de atención y soporte técnico; 5588975027 WhatsApp 5632875602 Horario de Atención: lunes a viernes de 09:00a 19:00hrs   \n",
+                "userName": "MonitoristasBJ",
+                "userEmail": "MonitoristasBJ@alcaldiabj.com"
+            },
+            {
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "from": 1,
+                "msg": "Soporte//Le contactaremos para atender su solicitud,\nfavor de responder la llamada.",
+                "dateTime": {
+                    "seconds": 1674832468,
+                    "nanoseconds": 311000000
+                }
+            },
+            {
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "msg": "Soporte// Cámara rehabilitada.",
+                "userName": "Soporte",
+                "from": 1,
+                "dateTime": {
+                    "seconds": 1674835540,
+                    "nanoseconds": 991000000
+                }
+            },
+            {
+                "from": "user",
+                "msg": "Otra vez la pantalla está oscura.",
+                "dateTime": {
+                    "seconds": 1675048143,
+                    "nanoseconds": 111000000
+                }
+            },
+            {
+                "from": 1,
+                "msg": "Alcaldía BJ, le proporcionamos el contacto de la línea de atención y soporte técnico; 5588975027 WhatsApp 5632875602 Horario de Atención: lunes a viernes de 09:00a 19:00hrs",
+                "dateTime": {
+                    "seconds": 1675048428,
+                    "nanoseconds": 323000000
+                },
+                "userName": "MonitoristasBJ",
+                "userEmail": "MonitoristasBJ@alcaldiabj.com"
+            },
+            {
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "msg": "Soporte//Le contactaremos para atender su solicitud,\nfavor de responder la llamada.",
+                "from": 1,
+                "dateTime": {
+                    "seconds": 1675091000,
+                    "nanoseconds": 742000000
+                },
+                "userName": "Soporte"
+            },
+            {
+                "from": 1,
+                "msg": "Soporte// Cámara rehabilitada.",
+                "dateTime": {
+                    "seconds": 1675093003,
+                    "nanoseconds": 302000000
+                },
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1675129157,
+                    "nanoseconds": 965000000
+                },
+                "msg": "No vuelvo a tener imagen???",
+                "from": "user"
+            },
+            {
+                "userName": "Soporte",
+                "from": 1,
+                "dateTime": {
+                    "seconds": 1675177708,
+                    "nanoseconds": 834000000
+                },
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "msg": "Soporte// Cámara rehabilitada."
+            },
+            {
+                "msg": "No tengo imagen, se ve oscuro?",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1687489574,
+                    "nanoseconds": 99000000
+                }
+            },
+            {
+                "msg": "En mi IPad también, ahí sí ha tenido movimiento y camina la hora, en mi celular está congelada la imagen, claro ahorita no veo nada con ninguno de los dos aparatos.",
+                "dateTime": {
+                    "seconds": 1687489697,
+                    "nanoseconds": 820000000
+                },
+                "from": "user"
+            },
+            {
+                "dateTime": {
+                    "seconds": 1687491206,
+                    "nanoseconds": 192000000
+                },
+                "from": 1,
+                "userEmail": "MonitoristasBJ@alcaldiabj.com",
+                "userName": "MonitoristasBJ",
+                "msg": "Alcaldía BJ, le proporcionamos el contacto de la línea de atención y soporte técnico : Llamadas 5588975027 Whatsapp 5632875602. Horarios de atención: Lunes a Viernes de 09:00 a 18:00 hrs. \n"
+            },
+            {
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "from": 1,
+                "dateTime": {
+                    "seconds": 1687529004,
+                    "nanoseconds": 673000000
+                },
+                "msg": "Soporte//Le contactaremos para atender su solicitud, favor de responder la llamada."
+            },
+            {
+                "msg": "Soporte // Soporte Técnico Radar le informa, derivado a la actualización de su app Blindar BJ Radar el 19 de Junio del presente año. Se ha detectado una falla general en la reproducción del video en tiempo real por tal razón no le permite visualizar la imagen, sin embargo ya se trabaja de manera interna con las áreas correspondientes para la pronta solución. A nombre de soporte técnico una disculpa por el inconveniente.",
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "dateTime": {
+                    "seconds": 1687540277,
+                    "nanoseconds": 868000000
+                },
+                "from": 1
+            },
+            {
+                "msg": "NO SE PUEDE VER NADA, ESTÁ NEGRA LA IMAGEN!!!",
+                "from": "user",
+                "dateTime": {
+                    "seconds": 1698203416,
+                    "nanoseconds": 339000000
+                }
+            },
+            {
+                "userName": "MonitoristasBJ",
+                "msg": "\nAlcaldia BJ, le proporcionamos el contacto de la Linea de atencion y soprte técnico; Llamadas 5588975027 Whatsapp 5632875602, Horario de Atencion: Lunes a Viernes de 09:00 a 19:00 hrs\n",
+                "userEmail": "MonitoristasBJ@alcaldiabj.com",
+                "from": 1,
+                "dateTime": {
+                    "seconds": 1698203470,
+                    "nanoseconds": 113000000
+                }
+            },
+            {
+                "from": 1,
+                "userName": "Soporte",
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "dateTime": {
+                    "seconds": 1698245725,
+                    "nanoseconds": 430000000
+                },
+                "msg": "Soporte// Para atender su solicitud le contactaremos, favor de responder la llamada\n"
+            },
+            {
+                "userEmail": "soporte_bj@radarappsecurity.com",
+                "from": 1,
+                "userName": "Soporte",
+                "msg": "Estimados Ciudadanos de Kit Blindar Soporte Técnico Radar le informa: Su seguridad y bienestar es lo primero, estamos trabajando en una actualización en nuestros servidores dentro de nuestra plataforma de monitoreo sin embargo este trabajo de mantenimiento nos indica una falla en la transmisión de algunas cámaras de videovigilancia en el cual estamos trabajando todas las áreas para su pronta solución. No es necesario que lo reporte A nombre de Soporte Técnico de Kits de Seguridad una disculpa por los inconvenientes.",
+                "dateTime": {
+                    "seconds": 1698252478,
+                    "nanoseconds": 474000000
+                }
+            }
+        ],
+        "from_id": 1,
+        "from": "Chat C5",
+        "lastModification": "Wed Oct 25 2023 00:10:16 GMT-0600 (hora estándar de México)",
+        "clientId": 1,
+        "id": "ggIXMXy6znnfUcD7cfpb"
+    }
+]

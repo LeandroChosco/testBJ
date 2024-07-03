@@ -25,7 +25,7 @@ import './style.css';
 import '../../assets/styles/util.css';
 import '../../assets/styles/main.css';
 import '../../assets/fonts/iconic/css/material-design-iconic-font.min.css';
-import { LANG } from '../../constants/token';
+import { LANG, MODE } from '../../constants/token';
 
 class Cuadrantes extends Component {
   notificationSystem = React.createRef();
@@ -125,58 +125,58 @@ class Cuadrantes extends Component {
   render() {
     const { camsCuadrante, is_quadrant_filter, showAllQuadrants } = this.state;
     return (
-      <div style={{ background: "white" }}>
+      <div style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white" }}>
         <NotificationSystem ref={this.notificationSystem} />
         {showAllQuadrants ?
           <>
-        <div className="containerCuadrantes">
-          {this.state.cuadrantes.length > 0 && this.state.cuadrantes.map((value) =>
+            <div className="containerCuadrantes">
+              {this.state.cuadrantes.length > 0 && this.state.cuadrantes.map((value) =>
 
-            <Button key={value.id} className="buttonCuadrantes" as='div' labelPosition='left'>
+                <Button key={value.id} className="buttonCuadrantes" as='div' labelPosition='left'>
+                  {
+                    this.state.flagDelete
+                      ? <Button style={{ borderRadius: '.28571429rem' }} color='red' icon='minus' onClick={() => this._deleteCuadrante(value)} />
+                      : null
+                  }
+                  <Label as='a' basic pointing='right' className={this.state.cuadranteActual === value.id ? 'colorSelected' : (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "colorNormalDark" : 'colorNormal'} onClick={() => this._camsCuadrante(value.id)}>
+                    {value.name}
+                  </Label>
+                  <Button icon onClick={() => this._addCams(value)}>
+                    <Icon name='add' />
+                  </Button>
+                </Button>
+
+              )
+              }
               {
                 this.state.flagDelete
-                  ? <Button style={{ borderRadius: '.28571429rem' }} color='red' icon='minus' onClick={() => this._deleteCuadrante(value)} />
-                  : null
+                  ? <Button className="buttonCuadrantes" onClick={() => this.setState({ flagDelete: false, cuadranteActual: 1 })}>{localStorage.getItem(LANG) === "english" ? "Cancel" : "Cancelar"}</Button>
+                  :
+                  this.state.cuadrantes.length !== 0
+                    ? <Button style={{ width: '50px', margin: '0px' }} className="buttonCuadrantes delete" color="red" onClick={() => this.setState({ flagDelete: true, cuadranteActual: '' })}>
+                      <Icon name='trash alternate' />
+                    </Button>
+                    : null
               }
-              <Label as='a' basic pointing='right' className={this.state.cuadranteActual === value.id ? 'colorSelected' : 'colorNormal'} onClick={() => this._camsCuadrante(value.id)}>
-                {value.name}
-              </Label>
-              <Button icon onClick={() => this._addCams(value)}>
-                <Icon name='add' />
-              </Button>
-            </Button>
-
-          )
-          }
-          {
-            this.state.flagDelete
-              ? <Button className="buttonCuadrantes" onClick={() => this.setState({ flagDelete: false, cuadranteActual: 1 })}>{localStorage.getItem(LANG) === "english" ? "Cancel" : "Cancelar"}</Button>
-              :
-              this.state.cuadrantes.length !== 0
-                ? <Button style={{ width: '50px', margin: '0px' }} className="buttonCuadrantes delete" color="red" onClick={() => this.setState({ flagDelete: true, cuadranteActual: '' })}>
-                  <Icon name='trash alternate' />
-                </Button>
-                : null
-          }
-          <Button className="buttonCuadrantes" onClick={() => this._newCuadrante(true)}>{localStorage.getItem(LANG) === "english" ? "New Quadrant" : "Crear Cuadrante"}</Button>
-          {this.state.showInput ?
-            <div className="ui action input">
-              <Button style={{ marginRight: '3px' }} onClick={() => this.setState({ showInput: false, valueNew: '' })} icon='close' />
-              {
-                this.state.flagOtroName
-                  ? <Input focus className="formatInput" onChange={(e, { value }) => this.setState({ valueNew: value })} value={this.state.valueNew} placeholder='Nombre Cuadrante' />
-                  : <Dropdown className="formatInput" onChange={(e, { value }) => this._changeName(value)} placeholder={localStorage.getItem(LANG) === "english" ? "Cancel" : 'Nombre Cuadrante'} selection options={this.state.optionsCuadrantes} />
-              }
-              <Button style={{ marginLeft: '4px' }} onClick={() => this._newCuadrante(false)} disabled={this.state.valueNew === ''}>Agregar</Button>
+              <Button className="buttonCuadrantes" onClick={() => this._newCuadrante(true)}>{localStorage.getItem(LANG) === "english" ? "New Quadrant" : "Crear Cuadrante"}</Button>
+              {this.state.showInput ?
+                <div className="ui action input">
+                  <Button style={{ marginRight: '3px' }} onClick={() => this.setState({ showInput: false, valueNew: '' })} icon='close' />
+                  {
+                    this.state.flagOtroName
+                      ? <Input focus className="formatInput" onChange={(e, { value }) => this.setState({ valueNew: value })} value={this.state.valueNew} placeholder='Nombre Cuadrante' />
+                      : <Dropdown className="formatInput" onChange={(e, { value }) => this._changeName(value)} placeholder={localStorage.getItem(LANG) === "english" ? "Cancel" : 'Nombre Cuadrante'} selection options={this.state.optionsCuadrantes} />
+                  }
+                  <Button style={{ marginLeft: '4px' }} onClick={() => this._newCuadrante(false)} disabled={this.state.valueNew === ''}>Agregar</Button>
+                </div>
+                : null}
+              {this.state.showModal ?
+                <ModalAddCams modal={this.state.showModal} hide={(flag) => this._hideModal(flag)} name_cuadrante={this.state.cuadranteSelection} />
+                : null}
             </div>
-            : null}
-          {this.state.showModal ?
-            <ModalAddCams modal={this.state.showModal} hide={(flag) => this._hideModal(flag)} name_cuadrante={this.state.cuadranteSelection} />
-            : null}
-        </div>
-        {
+            {
               this.state.cuadrantes.length > 25 &&
-              <Button onClick={this._hideAndShowQuadrants} style={{ height: "4rem", width: "100%", marginTop: "1rem", position: "absolute", zIndex: "2" }}>{localStorage.getItem(LANG) === "english" ? "Hide quadrants" : "Ocultar cuadrantes"}</Button>
+              <Button onClick={this._hideAndShowQuadrants} style={{ height: "4rem", marginTop: "1rem", width: "100%", position: "absolute", zIndex: "2" }}>{localStorage.getItem(LANG) === "english" ? "Hide quadrants" : "Ocultar cuadrantes"}</Button>
             }
           </>
           :
@@ -190,7 +190,7 @@ class Cuadrantes extends Component {
                       ? <Button style={{ borderRadius: '.28571429rem' }} color='red' icon='minus' onClick={() => this._deleteCuadrante(value)} />
                       : null
                   }
-                  <Label as='a' basic pointing='right' className={this.state.cuadranteActual === value.id ? 'colorSelected' : 'colorNormal'} onClick={() => this._camsCuadrante(value.id)}>
+                  <Label as='a' basic pointing='right' className={this.state.cuadranteActual === value.id ? 'colorSelected' : (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "colorNormalDark" : 'colorNormal'} onClick={() => this._camsCuadrante(value.id)}>
                     {value.name}
                   </Label>
                   <Button icon onClick={() => this._addCams(value)}>
@@ -227,7 +227,7 @@ class Cuadrantes extends Component {
             </div>
             {
               this.state.cuadrantes.length > 25 &&
-              <Button onClick={this._hideAndShowQuadrants} style={{ height: "4rem", width: "100%", marginTop: "1rem", position: "absolute", zIndex: "2" }}>{localStorage.getItem(LANG) === "english" ? "Show more quadrants" : "Mostrar más cuadrantes"}</Button>
+              <Button onClick={this._hideAndShowQuadrants} style={{ height: "4rem", marginTop: "1rem", width: "100%", position: "absolute", zIndex: "2" }}>{localStorage.getItem(LANG) === "english" ? "Show more quadrants" : "Mostrar más cuadrantes"}</Button>
             }
           </>
         }
@@ -255,23 +255,23 @@ class Cuadrantes extends Component {
               //     snapShot={this._snapShot}
               //     changeStatus={this._chageCamStatus}/>
               <Fragment>
-                {this.state.displayTipe !== 3 && !this.state.loading ? <div className="toggleViewButton row">
-                <div className='col-12' style={{ marginTop: "1rem" }}>
-                    {this.state.is_quadrant_filter && <Button onClick={() => this._loadCuadrantes()} className='btn clear pull-right' basic>{localStorage.getItem(LANG) === "english" ? "Delete filter" : "Limpiar filtro"}</Button>}
-                    <Button onClick={() => this.setState({ showSearch: true })} className='btn clear pull-right' basic>{localStorage.getItem(LANG) === "english" ? "Filter" : "Filtrar"}</Button>
-                    <Button onClick={() => this.setState({ update: true })}  className='btn clear pull-right' basic>{localStorage.getItem(LANG) === "english" ? "Update" : "Actualizar"}</Button>
+                {this.state.displayTipe !== 3 && !this.state.loading ? <div className="toggleViewButton row" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", transition: "all 0.2s linear" }}>
+                  <div className='col-12' style={{ marginTop: "1rem" }}>
+                    {this.state.is_quadrant_filter && <Button onClick={() => this._loadCuadrantes()} className={`pull-right btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-trash" aria-hidden="true"></i></Button>}
+                    <button onClick={() => this.setState({ showSearch: true })} className={`pull-right btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-filter" aria-hidden="true"></i></button>
+                    <button onClick={() => this.setState({ update: true })} className={`pull-right btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"}`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-refresh" aria-hidden="true"></i></button>
                   </div>
-                  {camsCuadrante.length !== 0 &&
+                  {/* {camsCuadrante.length !== 0 &&
                     <ToggleButtonGroup className='col-12' type="radio" name="options" defaultValue={2} onChange={this._changeDisplay} value={this.state.displayTipe} style={{ marginTop: '1%' }}>
                       <ToggleButton value={1} variant='outline-dark' ><Icon name="grid layout" /></ToggleButton>
                       <ToggleButton value={2} variant='outline-dark' ><Icon name="clone" /></ToggleButton>
                       {this.state.cameraID ? <ToggleButton value={3} variant='outline-dark' ><Icon name="square" /></ToggleButton> : null}
                     </ToggleButtonGroup>
 
-                  }
+                  } */}
                   {
                     camsCuadrante.length === 0 && is_quadrant_filter &&
-                    <div align="center" className='col-12'><br />
+                    <div align="center" className='col-12' style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}><br />
                       {Strings.noResults}
                     </div>
 
@@ -354,8 +354,8 @@ class Cuadrantes extends Component {
           update={this.state.update}
           changeUpdate={this.changeUpdate}
           quadrantNotification={this._quadrantNotification}
-          />
-          )
+        />
+        )
       case 2:
         return (<LoopCamerasDisplay
           ref='myChild'
@@ -378,10 +378,10 @@ class Cuadrantes extends Component {
           changeStatus={this._chageCamStatus}
           showMatches={this.props.showMatches}
           setCountError={this._setCountError}
-          propsIniciales={this.props} 
+          propsIniciales={this.props}
           update={this.state.update}
           changeUpdate={this.changeUpdate}
-          />)
+        />)
       case 3:
         return (<div className="camUniqueHolder"><CameraStream marker={this.state.actualCamera} showButtons height={450} hideFileButton showFilesBelow moduleActions={this.state.moduleActions} setCountError={this._setCountError} arrayCamsNoStream={this.state.arrayCamsNoStream} /></div>)
       default:

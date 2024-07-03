@@ -6,6 +6,7 @@ import angryEmoji from '../../assets/images/emojis/enojado.png'
 import surpriseEmoji from '../../assets/images/emojis/sorprendido.png'
 // import { Icon } from "semantic-ui-react";
 import { Col, Row } from 'reactstrap';
+import { MODE } from '../../constants/token';
 
 // import { fakeData } from './personsMoodFakeData';
 
@@ -17,24 +18,47 @@ const MOODS_EMOJIS = {
   Enojado: angryEmoji
 }
 
+const fakeMood = [
+  {
+    mood: "Neutral",
+    total: 3714
+  },
+  {
+    mood: "Sorprendido",
+    total: 3393
+  },
+  {
+    mood: "Triste",
+    total: 3122
+  },
+  {
+    mood: "Feliz",
+    total: 3193
+  },
+  {
+    mood: "Enojado",
+    total: 3122
+  },
+]
+
 const PersonsMood = (props) => {
-  const { personsMood } = props;
+  // const { personsMood } = props;
 
   return (
     <ul className="cardlist">
       {
-        personsMood.length > 0 ?
-          personsMood.map((item, index) => item.mood !== "" && (
+        fakeMood.length > 0 ?
+          fakeMood.map((item, index) => item.mood !== "" && (
             <li style={{ padding: "1.5rem", marginRight: "1rem" }} key={index}>
               <Row>
                 <Col>
                   <img alt={item.mood} src={MOODS_EMOJIS[item.mood]} width='75%'></img>
                 </Col>
                 <Col>
-                  <h1>
+                  <h1 style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
                     {item.total}
                   </h1>
-                  <p>
+                  <p style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}>
                     {item.mood.toUpperCase()}
                   </p>
                 </Col>

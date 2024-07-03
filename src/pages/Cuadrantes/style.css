@@ -28,6 +28,10 @@
     background-color: white !important;
     color: black !important;
 }
+.colorNormalDark{
+    background-color: var(--dark-mode-bar) !important;
+    color: white !important;
+}
 
 .colorSelected{
     background-color: var(--main-bg-color) !important;

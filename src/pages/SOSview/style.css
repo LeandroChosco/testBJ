@@ -38,8 +38,24 @@
   margin: 0;
 }
 
+.messagesHistorialContainer {
+  height: 100%;
+  width: 91%;
+  position: absolute;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  padding: 3rem 0.5rem 0 0.5rem;
+  max-height: 48rem;
+}
+
 .cameraView {
   height: 57%;
+  width: 100%;
+}
+
+.historialView {
+  height: 100%;
   width: 100%;
 }
 
@@ -157,9 +173,24 @@
   padding: 5px;
   color: white;
   margin-top: 10px;
+  transition: all 0.2s linear;
 }
 
 .sistema > p {
+  color: white;
+}
+.sistema-dark {
+  position: relative;
+  background: var(--dark-mode-bar);
+  border-radius: .4em;
+  width: 85%;
+  padding: 5px;
+  color: white;
+  margin-top: 10px;
+  transition: all 0.2s linear;
+}
+
+.sistema-dark > p {
   color: white;
 }
 

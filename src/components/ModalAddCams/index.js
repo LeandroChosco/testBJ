@@ -11,6 +11,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
+import { MODE } from '../../constants/token';
 class ModalAddCams extends Component {
     state = {
         auxCams: [],
@@ -24,15 +25,15 @@ class ModalAddCams extends Component {
     render() {
         const columns = [{
             dataField: "camara",
-            text: 'Camara',
+            text: 'Cámara',
             filter: textFilter({
-                placeholder: 'Buscar Número'
+                placeholder: 'Buscar por número'
             })
         }, {
             dataField: "direccion",
             text: 'Dirección',
             filter: textFilter({
-                placeholder: 'Buscar Dirección'
+                placeholder: 'Buscar por dirección'
             })
         }, {
             dataField: 'ver',
@@ -50,20 +51,21 @@ class ModalAddCams extends Component {
             selected: this.state.checkboxSelect
             // onSelectAll: (isSelect, rows, e) => this._selectionAll(isSelect, rows, e)
         }
+
         return (
-            <Modal style={{ display: this.state.showModalView ? 'none' : 'block' }} size="xl" backdrop={'static'} show={this.props.modal} onHide={this.props.hide}>
-                <Modal.Header closeButton>
-                    <p>Agregar Cámaras <b style={{ color: 'black' }}>{this.props.name_cuadrante.name}</b></p>
+            <Modal style={{ display: this.state.showModalView ? 'none' : 'block', color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white" }} size="xl" backdrop={'static'} show={this.props.modal} onHide={this.props.hide}>
+                <Modal.Header style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }} closeButton>
+                    <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>Agregar cámaras a cuadrante: <b style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black" }}>{this.props.name_cuadrante.name}</b></p>
                 </Modal.Header>
-                <Modal.Body className="camsGroup">
+                <Modal.Body style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }} className="camsGroup">
                     {this.state.loading ?
-                        <Segment style={{ height: '100%' }}>
+                        <Segment style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", height: "100%" }}>
 
                             <Image src={img} />
                         </Segment>
                         :
-                        <Fragment>
-                            <BootstrapTable keyField='id' data={this.state.auxCams} columns={columns} pagination={paginationFactory()} filter={filterFactory()} selectRow={selectRow} />
+                        <Fragment style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
+                            <BootstrapTable bootstrap4 keyField='id' data={this.state.auxCams} columns={columns} pagination={paginationFactory()} filter={filterFactory()} selectRow={selectRow} rowClasses={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-row" : "light-row"} headerClasses={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-header" : "light-header"} />
                             <div style={{ textAlign: 'center', padding: "0 0 0.3rem 0", marginTop: 10 }} className="col">
                                 <Button style={{ width: '360px', marginLeft: '30px', marginBottom: "1rem" }} onClick={this._addCam} disabled={this.state.selection.length === 0}>Actualizar<Icon style={{ marginLeft: '3px' }} name='add' /></Button>
                                 {/* <Button style={{fontSize:'16px'}} onClick={this._addCam} disabled={this.state.selection.length === 0} circular icon='add' /> */}
@@ -247,7 +249,7 @@ class ModalAddCams extends Component {
 
     _buttonVer = (cell, row) => {
         return (
-            <Button onClick={() => this._viewCam(row)} style={{ fontSize: '14px', margin: 'auto', textAlign: 'center', padding: '0px', height: '30px', width: '150px' }}>Ver</Button>
+            <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark" : "secondary"}`} onClick={() => this._viewCam(row)} style={{ fontSize: '14px', margin: 'auto', textAlign: 'center', padding: '0px', height: '30px', width: '150px' }}><i className="fa fa-eye" aria-hidden="true"></i></button>
         )
     }
 

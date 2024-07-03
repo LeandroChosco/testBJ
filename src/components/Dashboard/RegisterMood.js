@@ -1,5 +1,6 @@
 import React from 'react';
 import Chart from 'react-apexcharts'
+import { MODE } from '../../constants/token';
 
 class RegisterMood extends React.Component {
     constructor(props) {
@@ -9,23 +10,23 @@ class RegisterMood extends React.Component {
             series: [
                 {
                     name: "Neutral",
-                    data: [21104, 22414, 23354, 22514, 23494, 23624, 22694, 24914, 37148]
+                    data: [2110, 2241, 2335, 2251, 2349, 2362, 2269, 2491, 3714]
                 },
                 {
                     name: "Sorprendido",
-                    data: [21204, 22044, 22354, 26254, 24364, 25324, 26234, 24414, 33939]
+                    data: [2120, 2204, 2235, 2625, 2436, 2532, 2623, 2441, 3393]
                 },
                 {
                     name: "Triste",
-                    data: [21414, 22514, 23654, 22614, 23594, 23684, 22894, 24894, 31221]
+                    data: [2141, 2251, 2365, 2261, 2359, 2368, 2289, 2489, 3122]
                 },
                 {
                     name: "Feliz",
-                    data: [21204, 24924, 20954, 31254, 35364, 35324, 36234, 34414, 31939]
+                    data: [2120, 2492, 2095, 3125, 3536, 3532, 3623, 3441, 3193]
                 },
                 {
                     name: "Enojado",
-                    data: [28914, 24114, 23654, 22614, 20599, 24684, 29894, 34884, 31221]
+                    data: [2891, 2411, 2365, 2261, 2059, 2468, 2989, 3488, 3122]
                 },
 
             ],
@@ -43,22 +44,30 @@ class RegisterMood extends React.Component {
                 stroke: {
                     curve: 'straight'
                 },
+                theme: {
+                    mode: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? 'dark' : "light", 
+                    palette: 'palette6', 
+                    monochrome: {
+                        enabled: false,
+                        color: '#255aee',
+                        shadeTo: 'light',
+                        shadeIntensity: 0.65
+                    },
+                },
                 // title: {
                 //     text: 'Emociones registradas',
                 //     align: 'left'
                 // },
                 grid: {
                     row: {
-                        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                        // colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
                         opacity: 0.5
                     },
                 },
                 xaxis: {
-                    categories: ['03/10', '06/10', '09/10', '12/10', '15/10', '18/10', '21/10', '24/10', '27/10'],
+                    categories: ['12/11', '15/11', '18/11', '21/11', '24/11', '27/11', '30/11', '03/12', '06/12'],
                 }
             },
-
-
         };
     }
 

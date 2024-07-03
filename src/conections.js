@@ -89,6 +89,14 @@ export default {
     return connectedSails.post(constants.sails_url + '/tickets/create/', data);
   },
 
+  closeTicket: (ticketId, data) => {
+    return connectedSails.put(`${constants.sails_url}/alert/ticket/${ticketId}/close`, data);
+  },
+
+  scoreTicket: (ticketId) => {
+    return connectedSails.get(`${constants.sails_url}/alert/ticket/score/${ticketId}`);
+  },
+
   // Count vehicles
 
   getVehiclesCount: (start, end) => {
@@ -108,6 +116,50 @@ export default {
   getHistorialToDownload: (data) => {
     return connectedSails.post(`${constants.sails_url}/supervisor/filter/camera`, data);
   },
+
+  // Incidents endpoints
+
+  getTagList: () => {
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
+    return connectedSails.get(`${ngrok}/tag/list`)
+    // return connectedSails.get(`${constants.sails_url}/tag/list`);
+  },
+  
+  getIncidentsMap: (filter) => {
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
+    if(filter){
+      return connectedSails.get(`${ngrok}/incident/map?tag=${filter}`);
+      // return connectedSails.get(`${constants.sails_url}/incident/map?tag={filter}`);
+    } else {
+      return connectedSails.get(`${ngrok}/incident/map`);
+      // return connectedSails.get(`${constants.sails_url}/incident/map`);
+    }
+  },
+  
+  getIncidentById: (id) => {
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
+    return connectedSails.get(`${ngrok}/incident/${id}`)
+    // return connectedSails.get(`${constants.sails_url}/incident/${id}`);
+  },
+
+  getTimeline: (current_page) => {
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
+    return connectedSails.get(`${ngrok}/incident/timeline?page=${current_page}`)
+    // return connectedSails.get(`${constants.sails_url}/incident/timeline?page=${current_page}`);
+  },
+  
+  getTopLikes: () => {
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
+    return connectedSails.get(`${ngrok}/reaction/like/count`)
+    // return connectedSails.get(`${constants.sails_url}/reaction/like/count`);
+  },
+  getDataTags: () => {
+    const ngrok = "https://dda2-2803-d100-e9e0-adf-c6b7-5ffc-cf0-d70a.ngrok-free.app";
+    return connectedSails.get(`${ngrok}/incident/tags`)
+    // return connectedSails.get(`${constants.sails_url}/incident/tags`);
+  },
+
+
 
   // Dashboard LPR
 
@@ -212,6 +264,10 @@ export default {
   getCamsOffline: () => {
     const user_id = getUserID();
     return connectedSails.get(constants.sails_url + '/control-cams/cams-offline/?user_id=' + user_id);
+  },
+
+  getStreamingStatus: (endpoint) => {
+    return Axios.get(endpoint);
   },
 
   getTokenApiStreamsCams: (protocol, dnsMbox, dns_port, secretKeyBody) => {
@@ -338,7 +394,14 @@ export default {
     return connectedSails.get(`${constants.sails_url}/dashboard/numberofpeoplepercamera`);
   },
   dashboardPersons: () => {
-    return connectedSails.get(`${constants.sails_url}/dashboard/person`)
+    return connectedSails.get(`${constants.sails_url}/dashboard/person`);
+  },
+  dashboardTicketing: (agentId, date) => {
+    const dateToEndpoint = date || ""
+    return connectedSails.get(`${constants.sails_url}/alert/dashboard/ticket?agentId=${agentId}&date=${dateToEndpoint}`);
+  },
+  dashboardMonitorist: () => {
+    return connectedSails.get(`${constants.sails_url}/admin/monitors`);
   },
   loadCams: () => {
     return connectedSails.get(constants.sails_url + '/cams?sort=num_cam asc&active=1&limit=3000&populate=false');

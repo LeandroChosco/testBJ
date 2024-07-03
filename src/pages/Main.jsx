@@ -33,6 +33,7 @@ import Sospechosos from "./Sospechosos";
 import Settings from "./Settings";
 import AlarmChat from "./AlarmChat/index";
 import Complaint from "./Complaint";
+import Incident from "./Incident";
 import ChatTracking from "./ChatTracking";
 import constants from '../constants/constants';
 import Sound from 'react-sound';
@@ -54,6 +55,7 @@ import Chat from './ChatPlus/index'
 import Policia from './Policia';
 import { remove } from '../helpers/remove';
 import ResetPassword from './ResetPassword';
+import { MODE } from '../constants/token';
 // import { ContentSort } from 'material-ui/svg-icons';
 
 var io = sailsIOClient(socketIOClient);
@@ -105,7 +107,7 @@ class Main extends Component {
     callIsGoing: false,
     fisrtTimeCall: true,
     reproducirSonido: false,
-    showMatches: true,
+    showMatches: false,
     alertaCovid: [],
     alertaCovidd: [],
     alertaCovidState: false,
@@ -120,7 +122,9 @@ class Main extends Component {
     datosAlcaldia: {},
     chatFirebase: undefined,
     indexSos: undefined,
-    complaints: []
+    complaints: [],
+    loadChats: false,
+    darkMode: false,
   }
 
 
@@ -133,26 +137,53 @@ class Main extends Component {
           constants.urlPath = data[0].photo_path :
           constants.urlPath
     })
+      .catch(err => console.error(err));
 
-    firebaseC5Benito
-      .app('c5benito')
+    if (localStorage.getItem(MODE)) {
+      this.setState({ darkMode: JSON.parse(localStorage.getItem(MODE)) });
+    };
+
+    firebaseSos
+      .app("sos")
       .firestore()
-      .collection('messages')
-      .orderBy('lastModification', 'desc')
+      .collection(MESSAGES_COLLECTION)
+      // .where("c5_admin_clave", "==", clave_municipal)
+      .orderBy("lastModification", "desc")
       .get()
-      .then((docs) => {
-        if (docs.docs.length > 0) {
-          const chats = docs.docs.map((v) => {
-            let value = v.data();
-            value.lastModification = new Date(
-              value.lastModification.toDate()
-            ).toString();
-            value.id = v.id;
-            return value;
-          });
-          this.setState({ chats });
-        }
+      .then(docs => {
+        const chatSOS = docs.docs.map((i) => {
+          let data = i.data();
+          data.lastModification = new Date(
+            data.lastModification.toDate()
+          ).toString();
+          data.id = i.id;
+          return data;
+        });
+        this.setState({ stateSos: chatSOS })
+        this.loadData()
       });
+
+    // firebaseC5Benito
+    //   .app('c5benito')
+    //   .firestore()
+    //   .collection('messages')
+    //   .orderBy('updateDate', 'desc')
+    //   .limit(30)
+    //   .get()
+    //   .then((docs) => {
+    //     if (docs.docs.length > 0) {
+    //       const chats = docs.docs.map((v) => {
+    //         let value = v.data();
+    //         // value.lastModification = new Date(
+    //         //   value.lastModification.toDate()
+    //         // ).toString();
+    //         value.lastModification = new Date(value.lastModification).toString();
+    //         value.id = v.id;
+    //         return value;
+    //       });
+    //       this.setState({ chats });
+    //     }
+    //   });
     io.sails.url = `${constants.sails_url}`;
     io.socket.get('/termicfiles', (data) => {
       let covidTmp = [];
@@ -224,26 +255,62 @@ class Main extends Component {
         this.setState({
           datosAlcaldia: limits.data
         })
+
+        if (this.state.isAuthenticated) {
+          this.loadData();  //Enlista todas las notificaciones
+          this.loadFirebaseSnapshot(); //Socket en tiempo real, avisa notificaciones nuevas
+        }
+
         // const { clave_municipal } = limits.data;
-        firebaseSos
-          .app("sos")
-          .firestore()
-          .collection(MESSAGES_COLLECTION)
-          // .where("c5_admin_clave", "==", clave_municipal)
-          .orderBy("lastModification", "desc")
-          .get()
-          .then(docs => {
-            const chatSOS = docs.docs.map((i) => {
-              let data = i.data();
-              data.lastModification = new Date(
-                data.lastModification.toDate()
-              ).toString();
-              data.id = i.id;
-              return data;
-            });
-            this.setState({ stateSos: chatSOS })
-            this.loadData()
-          });
+
+
+        // firebaseC5Benito
+        //     .app('c5benito')
+        //     .firestore()
+        //     .collection('messages')
+        //     // .where('clientId', '==', client.id)
+        //     .orderBy('lastModification', 'desc')
+        //     .get()
+        //     .then((docs) => {
+        //       if (docs.docs.length > 0) {
+        //         const chats = docs.docs.map((v) => {
+        //           let value = v.data();
+
+        //           value.lastModification = (typeof value.lastModification === 'string')
+        //             ? new Date(
+        //               value.lastModification
+        //             ).toString()
+        //             :
+        //             new Date(
+        //               value.lastModification.toDate()
+        //             ).toString();
+        //           value.id = v.id;
+        //           return value;
+        //         });
+        //         chats.sort((a, b) => (new Date(b.lastModification) - new Date(a.lastModification)));
+        //         this.setState({ chats });
+        //       }
+        //     });
+
+        // firebaseSos
+        //   .app("sos")
+        //   .firestore()
+        //   .collection(MESSAGES_COLLECTION)
+        //   // .where("c5_admin_clave", "==", clave_municipal)
+        //   .orderBy("lastModification", "desc")
+        //   .get()
+        //   .then(docs => {
+        //     const chatSOS = docs.docs.map((i) => {
+        //       let data = i.data();
+        //       data.lastModification = new Date(
+        //         data.lastModification.toDate()
+        //       ).toString();
+        //       data.id = i.id;
+        //       return data;
+        //     });
+        //     this.setState({ stateSos: chatSOS })
+        //     this.loadData()
+        //   });
       }
     }
   }
@@ -362,7 +429,6 @@ class Main extends Component {
     io.socket.on('/matchApi', this.matchesApiHandler)
  
     */
-  //  console.log(this.state.datosAlcaldia);
     if (this.state.datosAlcaldia && this.state.datosAlcaldia.clave_municipal) {
       firebaseSos
         .app('sos')
@@ -418,145 +484,145 @@ class Main extends Component {
           }
         });
 
-      firebaseSos
-        .app("sos")
-        .firestore()
-        .collection(MESSAGES_COLLECTION)
-        // .where("c5_admin_clave", "==", this.state.datosAlcaldia.clave_municipal)
-        .orderBy("lastModification", "desc")
-        .onSnapshot((docs) => {
-          if (this.state.stateSos.length > 0) {
-            let changes = docs.docChanges();
-            if (changes.length > 0 && changes.length < 5) {
-              const changed_data = changes[0].doc.data();
-              const changed_id = changes[0].doc.id;
-              if (changes[0].type === "added") {
+      // firebaseSos
+      //   .app("sos")
+      //   .firestore()
+      //   .collection(MESSAGES_COLLECTION)
+      //   // .where("c5_admin_clave", "==", this.state.datosAlcaldia.clave_municipal)
+      //   .orderBy("lastModification", "desc")
+      //   .onSnapshot((docs) => {
+      //     if (this.state.stateSos.length > 0) {
+      //       let changes = docs.docChanges();
+      //       if (changes.length > 0 && changes.length < 5) {
+      //         const changed_data = changes[0].doc.data();
+      //         const changed_id = changes[0].doc.id;
+      //         if (changes[0].type === "added") {
 
-                let founded = this.state.stateSos.find(item => item.id === changed_id);
-                if (!founded) {
-                  if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
-                  changed_data['id'] = changed_id;
-                  let aux_chat_sos = [...this.state.stateSos];
-                  aux_chat_sos.unshift(changed_data)
-                  this.setState({
-                    stateSos: aux_chat_sos
-                  });
-                  if (
-                    this.state.showNotification &&
-                    !this.state.fisrtTimeChat &&
-                    !this.state.callIsGoing
-                  ) {
-                    this.setState({ reproducirSonido: true });
-                    switch (changed_data.trackingType) {
-                      case 'Seguridad':
-                        this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
-                        break;
-                      case 'Protección Civil':
-                        this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
-                        break;
-                      case 'Emergencia Médica':
-                        this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
-                        break;
-                      case 'Seguimiento Por Hora':
-                        this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
-                        break;
-                      case 'Seguimiento Por Destino':
-                        this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
-                        break;
-                      default:
-                        break;
-                    }
-                  }
-                }
-              } else {
-                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
-                const find_conv_index = this.state.stateSos.findIndex(item => item.id === changed_id);
-                let aux_sos_chat = [...this.state.stateSos];
-                let aux_obj = Object.assign(changed_data, {});
-                if (find_conv_index >= 0) {
-                  if (this.state.stateSos[find_conv_index].messages.length !== changed_data.messages.length) {
-                    const aux_array = [...changed_data.messages];
-                    const current_message = aux_array.pop();
-                    aux_obj = {
-                      ...aux_obj,
-                      lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
-                      id: changed_id
-                    }
-                    aux_sos_chat[find_conv_index] = aux_obj;
-                    this.setState({
-                      stateSos: aux_sos_chat
-                    }, () => {
-                      if (
-                        this.state.showNotification &&
-                        !this.state.fisrtTimeChat &&
-                        !this.state.callIsGoing
-                      ) {
-                        if (current_message && current_message.from.includes("user")) {
-                          this.setState({ reproducirSonido: true });
-                          switch (changed_data.trackingType) {
-                            case 'Seguridad':
-                              this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
-                              break;
-                            case 'Protección Civil':
-                              this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
-                              break;
-                            case 'Emergencia Médica':
-                              this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
-                              break;
-                            case 'Seguimiento Por Hora':
-                              this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
-                              break;
-                            case 'Seguimiento Por Destino':
-                              this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
-                              break;
-                            default:
-                              break;
-                          }
-                        }
-                      }
-                    });
-                  } else {
-                    if (this.state.stateSos[find_conv_index].critical_state !== changed_data.critical_state) {
-                      aux_obj = {
-                        ...aux_obj,
-                        lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
-                        id: changed_id
-                      }
-                      aux_sos_chat[find_conv_index] = aux_obj;
-                      this.setState({
-                        stateSos: aux_sos_chat
-                      }, () => {
-                        this.setState({ reproducirSonido: true });
-                        switch (changed_data.trackingType) {
-                          case 'Seguimiento Por Hora':
-                            this.showTrackingNot("Seguimiento - Por Hora", "Cambio en el nivel de criticidad", "error", "Ver detalles", 0, changed_id);
-                            break;
-                          case 'Seguimiento Por Destino':
-                            this.showTrackingNot("Seguimiento - Por Destino", "Cambio en el nivel de criticidad", "error", "Ver detalles", 1, changed_id);
-                            break;
-                          default:
-                            break;
-                        }
-                      })
-                    } else if (this.state.stateSos[find_conv_index].c5Unread !== changed_data.c5Unread) {
-                      aux_obj = {
-                        ...aux_obj,
-                        lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
-                        id: changed_id
-                      }
-                      aux_sos_chat[find_conv_index] = aux_obj;
-                      this.setState({
-                        stateSos: aux_sos_chat
-                      })
-                    } else {
+      //           let founded = this.state.stateSos.find(item => item.id === changed_id);
+      //           if (!founded) {
+      //             if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+      //             changed_data['id'] = changed_id;
+      //             let aux_chat_sos = [...this.state.stateSos];
+      //             aux_chat_sos.unshift(changed_data)
+      //             this.setState({
+      //               stateSos: aux_chat_sos
+      //             });
+      //             if (
+      //               this.state.showNotification &&
+      //               !this.state.fisrtTimeChat &&
+      //               !this.state.callIsGoing
+      //             ) {
+      //               this.setState({ reproducirSonido: true });
+      //               switch (changed_data.trackingType) {
+      //                 case 'Seguridad':
+      //                   this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+      //                   break;
+      //                 case 'Protección Civil':
+      //                   this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+      //                   break;
+      //                 case 'Emergencia Médica':
+      //                   this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
+      //                   break;
+      //                 case 'Seguimiento Por Hora':
+      //                   this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+      //                   break;
+      //                 case 'Seguimiento Por Destino':
+      //                   this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+      //                   break;
+      //                 default:
+      //                   break;
+      //               }
+      //             }
+      //           }
+      //         } else {
+      //           if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+      //           const find_conv_index = this.state.stateSos.findIndex(item => item.id === changed_id);
+      //           let aux_sos_chat = [...this.state.stateSos];
+      //           let aux_obj = Object.assign(changed_data, {});
+      //           if (find_conv_index >= 0) {
+      //             if (this.state.stateSos[find_conv_index].messages.length !== changed_data.messages.length) {
+      //               const aux_array = [...changed_data.messages];
+      //               const current_message = aux_array.pop();
+      //               aux_obj = {
+      //                 ...aux_obj,
+      //                 lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+      //                 id: changed_id
+      //               }
+      //               aux_sos_chat[find_conv_index] = aux_obj;
+      //               this.setState({
+      //                 stateSos: aux_sos_chat
+      //               }, () => {
+      //                 if (
+      //                   this.state.showNotification &&
+      //                   !this.state.fisrtTimeChat &&
+      //                   !this.state.callIsGoing
+      //                 ) {
+      //                   if (current_message && current_message.from.includes("user")) {
+      //                     this.setState({ reproducirSonido: true });
+      //                     switch (changed_data.trackingType) {
+      //                       case 'Seguridad':
+      //                         this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+      //                         break;
+      //                       case 'Protección Civil':
+      //                         this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+      //                         break;
+      //                       case 'Emergencia Médica':
+      //                         this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
+      //                         break;
+      //                       case 'Seguimiento Por Hora':
+      //                         this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+      //                         break;
+      //                       case 'Seguimiento Por Destino':
+      //                         this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+      //                         break;
+      //                       default:
+      //                         break;
+      //                     }
+      //                   }
+      //                 }
+      //               });
+      //             } else {
+      //               if (this.state.stateSos[find_conv_index].critical_state !== changed_data.critical_state) {
+      //                 aux_obj = {
+      //                   ...aux_obj,
+      //                   lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+      //                   id: changed_id
+      //                 }
+      //                 aux_sos_chat[find_conv_index] = aux_obj;
+      //                 this.setState({
+      //                   stateSos: aux_sos_chat
+      //                 }, () => {
+      //                   this.setState({ reproducirSonido: true });
+      //                   switch (changed_data.trackingType) {
+      //                     case 'Seguimiento Por Hora':
+      //                       this.showTrackingNot("Seguimiento - Por Hora", "Cambio en el nivel de criticidad", "error", "Ver detalles", 0, changed_id);
+      //                       break;
+      //                     case 'Seguimiento Por Destino':
+      //                       this.showTrackingNot("Seguimiento - Por Destino", "Cambio en el nivel de criticidad", "error", "Ver detalles", 1, changed_id);
+      //                       break;
+      //                     default:
+      //                       break;
+      //                   }
+      //                 })
+      //               } else if (this.state.stateSos[find_conv_index].c5Unread !== changed_data.c5Unread) {
+      //                 aux_obj = {
+      //                   ...aux_obj,
+      //                   lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+      //                   id: changed_id
+      //                 }
+      //                 aux_sos_chat[find_conv_index] = aux_obj;
+      //                 this.setState({
+      //                   stateSos: aux_sos_chat
+      //                 })
+      //               } else {
 
-                    }
-                  }
-                }
-              }
-            }
-          }
-        });
+      //               }
+      //             }
+      //           }
+      //         }
+      //       }
+      //     }
+      //   });
     }
 
     firebaseSos
@@ -592,232 +658,233 @@ class Main extends Component {
         this.setState({ complaints: newComplaints });
       });
 
-    firebaseC5Benito
-      .app('c5benito')
-      .firestore()
-      .collection('messages')
-      .orderBy('lastModification', 'desc')
-      .onSnapshot(docs => {
-        let changes = docs.docChanges();
-        if (changes.length > 0) {
-          const index = changes[0].oldIndex;
-          const data = changes[0].doc.data();
-          const changed_id = changes[0].doc.id;
-          if (this.state.chats[index]) {
-            if (this.state.chats[index].messages.length === data.messages.length) {
-              this.setState({ stopNotification: true });
-            } else {
-              if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
-              const chats = docs.docs.map(v => {
-                let value = v.data()
-                value.lastModification = new Date(
-                  value.lastModification.toDate()
-                ).toString()
-                value.id = v.id
-                return value
-              });
+    // firebaseC5Benito
+    //   .app('c5benito')
+    //   .firestore()
+    //   .collection('messages')
+    //   .orderBy('lastModification', 'desc')
+    //   .onSnapshot(docs => {
+    //     let changes = docs.docChanges();
+    //     if (changes.length > 0) {
+    //       const index = changes[0].oldIndex;
+    //       const data = changes[0].doc.data();
+    //       const changed_id = changes[0].doc.id;
+    //       if (this.state.chats[index]) {
+    //         if (this.state.chats[index].messages.length === data.messages.length) {
+    //           this.setState({ stopNotification: true });
+    //         } else {
+    //           if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
+    //           const chats = docs.docs.map(v => {
+    //             let value = v.data()
+    //             value.lastModification = new Date(
+    //               value.lastModification
+    //             ).toString()
+    //             value.id = v.id
+    //             return value
+    //           });
 
-              if (
-                this.state.showNotification &&
-                !this.state.fisrtTimeChat &&
-                !this.state.callIsGoing
-              ) {
-                this.setState({ reproducirSonido: true, chats, stopNotification: false });
-                if (typeof data.alarmType === 'string') {
-                  switch (data.alarmType) {
-                    case 'Policia':
-                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Policia', 'success', 'Ir a chat', 0, changes[0].doc.id)
-                      break;
-                    case 'Fuego':
-                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Fuego', 'success', 'Ir a chat', 1, changes[0].doc.id)
-                      break;
-                    case 'Médico':
-                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Médico', 'success', 'Ir a chat', 2, changes[0].doc.id)
-                      break;
-                    default:
-                      break;
-                  }
-                } else {
-                  this.showNot(
-                    'Mensaje de usuario',
-                    'Nuevo mensaje de usuario',
-                    'success',
-                    'Ver detalles',
-                    0,
-                    changes[0].doc.id
-                  );
-                }
-              }
-            }
-          } else {
-            const { chats } = this.state;
-            if (changes[0].type === "added" && chats.length > 0) {
-              let founded = this.state.chats.find(item => item.id === changed_id);
+    //           if (
+    //             this.state.showNotification &&
+    //             !this.state.fisrtTimeChat &&
+    //             !this.state.callIsGoing
+    //           ) {
+    //             this.setState({ reproducirSonido: true, chats, stopNotification: false });
+    //             if (typeof data.alarmType === 'string') {
+    //               switch (data.alarmType) {
+    //                 case 'Policia':
+    //                   this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Policia', 'success', 'Ir a chat', 0, changes[0].doc.id)
+    //                   break;
+    //                 case 'Fuego':
+    //                   this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Fuego', 'success', 'Ir a chat', 1, changes[0].doc.id)
+    //                   break;
+    //                 case 'Médico':
+    //                   this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Médico', 'success', 'Ir a chat', 2, changes[0].doc.id)
+    //                   break;
+    //                 default:
+    //                   break;
+    //               }
+    //             } else {
+    //               this.showNot(
+    //                 'Mensaje de usuario',
+    //                 'Nuevo mensaje de usuario',
+    //                 'success',
+    //                 'Ver detalles',
+    //                 0,
+    //                 changes[0].doc.id
+    //               );
+    //             }
+    //           }
+    //         }
+    //       } else {
+    //         const { chats } = this.state;
+    //         if (changes[0].type === "added" && chats.length > 0) {
+    //           let founded = this.state.chats.find(item => item.id === changed_id);
 
-              if (!founded) {
-                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
-                const chats = docs.docs.map(v => {
-                  let value = v.data()
-                  value.lastModification = new Date(
-                    value.lastModification.toDate()
-                  ).toString()
-                  value.id = v.id
-                  return value
-                });
-                this.setState({ reproducirSonido: true, chats, stopNotification: false });
-                if (
-                  this.state.showNotification &&
-                  !this.state.fisrtTimeChat &&
-                  !this.state.callIsGoing
-                ) {
-                  this.showNot(
-                    'Mensaje de usuario',
-                    'Nuevo mensaje de usuario',
-                    'success',
-                    'Ver detalles',
-                    0,
-                    changes[0].doc.id
-                  );
-                }
-              }
-            }
-          }
-          //   let index = changes[0].oldIndex;
-          //   let data = changes[0].doc.data();
-          //   if (this.state.chats[index]) {
-          //     if (
-          //       this.state.chats[index].messages.length === data.messages.length
-          //     ) {
-          //       this.setState({ stopNotification: true });
-          //     }
-          //   }
-          // if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
-          // const chats = docs.docs.map(v => {
-          //     let value = v.data()
-          //     value.lastModification = new Date(
-          //         value.lastModification.toDate()
-          //     ).toString()
-          //     value.id = v.id
-          //     return value
-          // })
+    //           if (!founded) {
+    //             if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+    //             const chats = docs.docs.map(v => {
+    //               let value = v.data()
+    //               // value.lastModification = new Date(
+    //               //   value.lastModification.toDate()
+    //               // ).toString()
+    //               value.lastModification = new Date(value.lastModification).toString();
+    //               value.id = v.id
+    //               return value
+    //             });
+    //             this.setState({ reproducirSonido: true, chats, stopNotification: false });
+    //             if (
+    //               this.state.showNotification &&
+    //               !this.state.fisrtTimeChat &&
+    //               !this.state.callIsGoing
+    //             ) {
+    //               this.showNot(
+    //                 'Mensaje de usuario',
+    //                 'Nuevo mensaje de usuario',
+    //                 'success',
+    //                 'Ver detalles',
+    //                 0,
+    //                 changes[0].doc.id
+    //               );
+    //             }
+    //           }
+    //         }
+    //       }
+    //       //   let index = changes[0].oldIndex;
+    //       //   let data = changes[0].doc.data();
+    //       //   if (this.state.chats[index]) {
+    //       //     if (
+    //       //       this.state.chats[index].messages.length === data.messages.length
+    //       //     ) {
+    //       //       this.setState({ stopNotification: true });
+    //       //     }
+    //       //   }
+    //       // if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
+    //       // const chats = docs.docs.map(v => {
+    //       //     let value = v.data()
+    //       //     value.lastModification = new Date(
+    //       //         value.lastModification.toDate()
+    //       //     ).toString()
+    //       //     value.id = v.id
+    //       //     return value
+    //       // })
 
-          // this.setState({ chats })
-        }
-      })
-
-
-
-    firebaseC5Benito.app('c5benito').firestore().collection('help').orderBy('dateTime', 'desc').onSnapshot(docs => {
-      if (this.state.sos.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeHelp) {
-        this.showNot('SOS', 'Nueva alerta de ayuda generada', 'error', 'Ver detalles', 5, docs.docs[docs.docs.length - 1].id)
-        this.setState({ reproducirSonido: true })
-      }
-      if (this.state.fisrtTimeHelp)
-        this.setState({ fisrtTimeHelp: false })
-      this.setState({
-        sos: docs.docs.map(v => {
-          let value = v.data();
-          if (value.dateTime.toDate)
-            value.dateTime = new Date(value.dateTime.toDate()).toString()
-          else
-            value.dateTime = value.date
-          value.id = v.id
-          return value
-        })
-      })
-    })
-
-    firebaseC5Benito.app('c5benito').firestore().collection('support').orderBy('dateTime', 'desc').onSnapshot(docs => {
-      if (this.state.support.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeSupport) {
-        this.showNot('Solicitud de soporte', 'Nueva solicitud de soporte generada', 'info', 'Ver detalles', 4, docs.docs[0].id)
-      }
-      if (this.state.fisrtTimeSupport)
-        this.setState({ fisrtTimeSupport: false })
-      this.setState({
-        support: docs.docs.map(v => {
-          let value = v.data()
-          if (value.dateTime.toDate)
-            value.dateTime = new Date(value.dateTime.toDate()).toString()
-          else
-            value.dateTime = value.date
-          value.id = v.id
-          return value
-        })
-      })
-    })
-
-    firebaseC5Benito.app('c5benito').firestore().collection('complaints').orderBy('dateTime', 'desc').onSnapshot(docs => {
-      if (this.state.complaiments.length !== docs.size && this.state.showNotification && !this.state.fisrtTimecomplaiments) {
-        this.showNot('Nueva denuncia', 'Se ha recibido una nueva denuncia', 'info', 'Ver detalles', 2, docs.docs[0].id)
-        this.setState({ reproducirSonido: true })
-      }
-      if (this.state.fisrtTimecomplaiments)
-        this.setState({ fisrtTimecomplaiments: false })
-      this.setState({
-        complaiments: docs.docs.map(v => {
-          let value = v.data()
-          value.id = v.id
-          return value
-        })
-      })
-    })
-
-    firebaseC5Benito.app('c5benito').firestore().collection('calls').orderBy('dateTime', 'desc').onSnapshot(docs => {
-      if (this.state.showNotification && !this.state.fisrtTimeCall && !this.state.callIsGoing) {
-        // const notification = this.refs.notificationSystem;
-        this.setState({ stopNotification: false })
-        this.setState({ callIsGoing: false })
-        this.setState({ reproducirSonido: false })
-        if (call) {
-          call = false
-          this.setState({ callIsGoing: false })
-          return
-        }
-        call = false
-        //firebaseC5.app('c5cuajimalpa').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
-        /* notification.addNotification({
-          title: 'Llama entrante de ' + docs && docs.docs.length > 0 && docs.docs[0].data().user_nicename,
-          message: 'Se registro una llamada entrante',
-          level: 'error',
-          action: {
-            label: 'Ver detalles',
-            callback: () => {
-              let userFound = false;
-
-              this.state.chats.forEach((chat) => {
-                if (chat.user_creation === docs.docs[0].data().user_id && this.state.chats.length > 0) {
-                  userFound = true;
-                  // window.location.href = window.location.href.replace(window.location.pathname, '/chat#'+chat.user_creation)
-                  // this.props.history.push('/chat?f=2&u='+chat.user_creation);
-                  if (userFound) {
-                    this.setState({
-                      roberyNotification: {
-                        display: true,
-                        data: chat
-                      },
-                      callIsGoing: false
-                    })
-                  }
-
-                }
-              })
-            }
+    //       // this.setState({ chats })
+    //     }
+    //   })
 
 
-          }
-        }); */
-        this.setState({ callIsGoing: false })
-      }
-      if (this.state.fisrtTimeCall)
-        this.setState({ fisrtTimeCall: false })
-      this.setState({
-        calls: docs.docs.map(doc => {
-          let value = doc.data()
-          return value
-        })
-      })
-      this.setState({ callIsGoing: false })
-    })
+
+    // firebaseC5Benito.app('c5benito').firestore().collection('help').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    //   if (this.state.sos.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeHelp) {
+    //     this.showNot('SOS', 'Nueva alerta de ayuda generada', 'error', 'Ver detalles', 5, docs.docs[docs.docs.length - 1].id)
+    //     this.setState({ reproducirSonido: true })
+    //   }
+    //   if (this.state.fisrtTimeHelp)
+    //     this.setState({ fisrtTimeHelp: false })
+    //   this.setState({
+    //     sos: docs.docs.map(v => {
+    //       let value = v.data();
+    //       if (value.dateTime.toDate)
+    //         value.dateTime = new Date(value.dateTime.toDate()).toString()
+    //       else
+    //         value.dateTime = value.date
+    //       value.id = v.id
+    //       return value
+    //     })
+    //   })
+    // })
+
+    // firebaseC5Benito.app('c5benito').firestore().collection('support').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    //   if (this.state.support.length !== docs.size && this.state.showNotification && !this.state.fisrtTimeSupport) {
+    //     this.showNot('Solicitud de soporte', 'Nueva solicitud de soporte generada', 'info', 'Ver detalles', 4, docs.docs[0].id)
+    //   }
+    //   if (this.state.fisrtTimeSupport)
+    //     this.setState({ fisrtTimeSupport: false })
+    //   this.setState({
+    //     support: docs.docs.map(v => {
+    //       let value = v.data()
+    //       if (value.dateTime.toDate)
+    //         value.dateTime = new Date(value.dateTime.toDate()).toString()
+    //       else
+    //         value.dateTime = value.date
+    //       value.id = v.id
+    //       return value
+    //     })
+    //   })
+    // })
+
+    // firebaseC5Benito.app('c5benito').firestore().collection('complaints').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    //   if (this.state.complaiments.length !== docs.size && this.state.showNotification && !this.state.fisrtTimecomplaiments) {
+    //     this.showNot('Nueva denuncia', 'Se ha recibido una nueva denuncia', 'info', 'Ver detalles', 2, docs.docs[0].id)
+    //     this.setState({ reproducirSonido: true })
+    //   }
+    //   if (this.state.fisrtTimecomplaiments)
+    //     this.setState({ fisrtTimecomplaiments: false })
+    //   this.setState({
+    //     complaiments: docs.docs.map(v => {
+    //       let value = v.data()
+    //       value.id = v.id
+    //       return value
+    //     })
+    //   })
+    // })
+
+    // firebaseC5Benito.app('c5benito').firestore().collection('calls').orderBy('dateTime', 'desc').onSnapshot(docs => {
+    //   if (this.state.showNotification && !this.state.fisrtTimeCall && !this.state.callIsGoing) {
+    //     // const notification = this.refs.notificationSystem;
+    //     this.setState({ stopNotification: false })
+    //     this.setState({ callIsGoing: false })
+    //     this.setState({ reproducirSonido: false })
+    //     if (call) {
+    //       call = false
+    //       this.setState({ callIsGoing: false })
+    //       return
+    //     }
+    //     call = false
+    //     //firebaseC5.app('c5cuajimalpa').firestore().collection('calls').add({...data,status:1,dateTime:new Date()}).then(doc=>{                      
+    //     /* notification.addNotification({
+    //       title: 'Llama entrante de ' + docs && docs.docs.length > 0 && docs.docs[0].data().user_nicename,
+    //       message: 'Se registro una llamada entrante',
+    //       level: 'error',
+    //       action: {
+    //         label: 'Ver detalles',
+    //         callback: () => {
+    //           let userFound = false;
+
+    //           this.state.chats.forEach((chat) => {
+    //             if (chat.user_creation === docs.docs[0].data().user_id && this.state.chats.length > 0) {
+    //               userFound = true;
+    //               // window.location.href = window.location.href.replace(window.location.pathname, '/chat#'+chat.user_creation)
+    //               // this.props.history.push('/chat?f=2&u='+chat.user_creation);
+    //               if (userFound) {
+    //                 this.setState({
+    //                   roberyNotification: {
+    //                     display: true,
+    //                     data: chat
+    //                   },
+    //                   callIsGoing: false
+    //                 })
+    //               }
+
+    //             }
+    //           })
+    //         }
+
+
+    //       }
+    //     }); */
+    //     this.setState({ callIsGoing: false })
+    //   }
+    //   if (this.state.fisrtTimeCall)
+    //     this.setState({ fisrtTimeCall: false })
+    //   this.setState({
+    //     calls: docs.docs.map(doc => {
+    //       let value = doc.data()
+    //       return value
+    //     })
+    //   })
+    //   this.setState({ callIsGoing: false })
+    // })
 
 
     // Socket desarollo conectado a alarma
@@ -852,7 +919,7 @@ class Main extends Component {
 
         }
       });
-      firebaseSos
+    firebaseSos
       .app("sos")
       .firestore()
       .collection('event')
@@ -883,24 +950,24 @@ class Main extends Component {
         let countShoot = 0
         let countBrokenGlass = 0
         let fechas = []
-        let today =  moment().format('L'),
-            fechaActual = [],
-            fecha1 = [],
-            fecha2 = [],
-            fecha3 = [],
-            fecha4 = [],
-            fecha5 = [],
-            fecha6 = [],
-            infoDay = null;
+        let today = moment().format('L'),
+          fechaActual = [],
+          fecha1 = [],
+          fecha2 = [],
+          fecha3 = [],
+          fecha4 = [],
+          fecha5 = [],
+          fecha6 = [],
+          infoDay = null;
         docs.docs.map(doc => {
           //let DateEvent = doc.data().eventDate.split(" ", 1)
           //let formatDate = moment(DateEvent, 'YYYY/MM/DD').format('L')
           fechas.push(doc.data())
-          if(doc.data().nameEvent === 'Detección de disparo de arma'){
-            countShoot +=1
+          if (doc.data().nameEvent === 'Detección de disparo de arma') {
+            countShoot += 1
           }
-          if(doc.data().nameEvent === 'Rotura de vidrio'){
-            countBrokenGlass +=1
+          if (doc.data().nameEvent === 'Rotura de vidrio') {
+            countBrokenGlass += 1
           }
         })
         /* fechas.map((day) =>{
@@ -922,20 +989,364 @@ class Main extends Component {
           })  
         } */
         let newEvents = docs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        this.setState({ eventMic: newEvents, countEvent: [countShoot, countBrokenGlass], fechasEventos:[fechaActual, fecha1, fecha2, fecha3, fecha4, fecha5, fecha6] });
+        this.setState({ eventMic: newEvents, countEvent: [countShoot, countBrokenGlass], fechasEventos: [fechaActual, fecha1, fecha2, fecha3, fecha4, fecha5, fecha6] });
       });
 
+  }
 
+  loadFirebaseSnapshot = () => {
+    firebaseC5Benito
+      .app('c5benito')
+      .firestore()
+      .collection('messages')
+      .orderBy('updateDate', 'desc')
+      .onSnapshot(docs => {
+        let changes = docs.docChanges();
+        if (changes.length > 0) {
+          const index = changes[0].oldIndex;
+          const data = changes[0].doc.data();
+          const id_change = changes[0].doc.id;
 
+          if (this.state.chats.length > 0) {
+            const auxChats = [...this.state.chats];
+            const findIndex = auxChats.findIndex(el => el.id === id_change);
+            if (auxChats[findIndex]) {
+              auxChats[findIndex].c5Unread = data.c5Unread;
+              this._setChats(auxChats);
+            }
+          }
 
+          const changed_id = changes[0].doc.id;
+          if (this.state.chats[index]) {
+            if (this.state.chats[index].messages.length === data.messages.length) {
+              this.setState({ stopNotification: true });
+            } else {
+              if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
+              const chats = docs.docs.map(v => {
+                let value = v.data()
+                value.lastModification = new Date(
+                  value.lastModification
+                ).toString()
+                value.id = v.id
+                return value
+              });
 
+              if (
+                this.state.showNotification &&
+                !this.state.fisrtTimeChat &&
+                !this.state.callIsGoing &&
+                data.messages[data.messages.length - 1].from === "user" &&
+                JSON.parse(sessionStorage.getItem("isAuthenticated"))
+              ) {
+                this.setState({ reproducirSonido: true, chats, stopNotification: false });
+                if (typeof data.alarmType === 'string') {
+                  switch (data.alarmType) {
+                    case 'Policia':
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Policia', 'success', 'Ir a chat', 0, changes[0].doc.id)
+                      break;
+                    case 'Fuego':
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Fuego', 'success', 'Ir a chat', 1, changes[0].doc.id)
+                      break;
+                    case 'Médico':
+                      this.showAlarmNot('Mensaje de usuario', 'Nuevo mensaje - Médico', 'success', 'Ir a chat', 2, changes[0].doc.id)
+                      break;
+                    default:
+                      break;
+                  }
+                } else {
+                  this.showNot(
+                    'Mensaje de usuario',
+                    'Nuevo mensaje de usuario',
+                    'success',
+                    'Ver detalles',
+                    0,
+                    changes[0].doc.id
+                  );
+                }
+              }
+            }
+          } else {
+            const { chats } = this.state;
+            if (changes[0].type === "added" && chats.length > 0) {
+              let founded = this.state.chats.find(item => item.id === changed_id);
 
+              let data = changes[0].doc.data();
 
+              if (!founded) {
+                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+                const chats = docs.docs.map(v => {
+                  let value = v.data()
+                  // value.lastModification = new Date(
+                  //   value.lastModification.toDate()
+                  // ).toString()
+                  value.lastModification = new Date(value.lastModification).toString();
+                  value.id = v.id
+                  return value
+                });
+                // this.setState({ reproducirSonido: true, chats, stopNotification: false });
+                if (
+                  this.state.showNotification &&
+                  !this.state.fisrtTimeChat &&
+                  !this.state.callIsGoing &&
+                  data.messages[data.messages.length - 1].from === "user" &&
+                  JSON.parse(sessionStorage.getItem("isAuthenticated"))
+                ) {
+                  this.setState({ reproducirSonido: true, chats, stopNotification: false });
+                  this.showNot(
+                    'Mensaje de usuario',
+                    'Nuevo mensaje de usuario',
+                    'success',
+                    'Ver detalles',
+                    0,
+                    changes[0].doc.id
+                  );
+                }
+              }
+            }
+          }
+          //   let index = changes[0].oldIndex;
+          //   let data = changes[0].doc.data();
+          //   if (this.state.chats[index]) {
+          //     if (
+          //       this.state.chats[index].messages.length === data.messages.length
+          //     ) {
+          //       this.setState({ stopNotification: true });
+          //     }
+          //   }
+          // if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false })
+          // const chats = docs.docs.map(v => {
+          //     let value = v.data()
+          //     value.lastModification = new Date(
+          //         value.lastModification.toDate()
+          //     ).toString()
+          //     value.id = v.id
+          //     return value
+          // })
+
+          // this.setState({ chats })
+          if (changes.length === 1 && this.state.chats.length === 0) {
+            let data = changes[0].doc.data();
+            if (data.messages[data.messages.length - 1].from === "user" && JSON.parse(sessionStorage.getItem("isAuthenticated"))) {
+              this.setState({ reproducirSonido: true, stopNotification: false });
+              this.showNot(
+                'Mensaje de usuario',
+                'Nuevo mensaje de usuario',
+                'success',
+                'Ver detalles',
+                0,
+                changes[0].doc.id
+              );
+            }
+          }
+        }
+      })
+
+    firebaseSos
+      .app("sos")
+      .firestore()
+      .collection(MESSAGES_COLLECTION)
+      // .where("c5_admin_clave", "==", this.state.datosAlcaldia.clave_municipal)
+      .orderBy("lastModification", "desc")
+      .onSnapshot((docs) => {
+        if (this.state.stateSos.length > 0) {
+          let changes = docs.docChanges();
+          if (changes.length > 0 && changes.length < 5) {
+            const changed_data = changes[0].doc.data();
+            const changed_id = changes[0].doc.id;
+            if (changes[0].type === "added") {
+
+              let founded = this.state.stateSos.find(item => item.id === changed_id);
+              if (!founded) {
+                if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+                changed_data['id'] = changed_id;
+                let aux_chat_sos = [...this.state.stateSos];
+                aux_chat_sos.unshift(changed_data)
+                this.setState({
+                  stateSos: aux_chat_sos
+                });
+                if (
+                  this.state.showNotification &&
+                  !this.state.fisrtTimeChat &&
+                  !this.state.callIsGoing &&
+                  JSON.parse(sessionStorage.getItem("isAuthenticated"))
+                ) {
+                  this.setState({ reproducirSonido: true });
+                  switch (changed_data.trackingType) {
+                    case 'Seguridad':
+                      this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                      break;
+                    case 'Protección Civil':
+                      this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+                      break;
+                    case 'Emergencia Médica':
+                      this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
+                      break;
+                    case 'Seguimiento Por Hora':
+                      this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                      break;
+                    case 'Seguimiento Por Destino':
+                      this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+                      break;
+                    default:
+                      break;
+                  }
+                }
+              }
+            } else {
+              if (this.state.fisrtTimeChat) this.setState({ fisrtTimeChat: false });
+              const find_conv_index = this.state.stateSos.findIndex(item => item.id === changed_id);
+              let aux_sos_chat = [...this.state.stateSos];
+              let aux_obj = Object.assign(changed_data, {});
+              if (find_conv_index >= 0) {
+                if (this.state.stateSos[find_conv_index].messages.length !== changed_data.messages.length) {
+                  const aux_array = [...changed_data.messages];
+                  const current_message = aux_array.pop();
+                  aux_obj = {
+                    ...aux_obj,
+                    lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+                    id: changed_id
+                  }
+                  aux_sos_chat[find_conv_index] = aux_obj;
+                  this.setState({
+                    stateSos: aux_sos_chat
+                  }, () => {
+                    if (
+                      this.state.showNotification &&
+                      !this.state.fisrtTimeChat &&
+                      !this.state.callIsGoing &&
+                      JSON.parse(sessionStorage.getItem("isAuthenticated"))
+                    ) {
+                      if (current_message && current_message.from.includes("user")) {
+                        this.setState({ reproducirSonido: true });
+                        switch (changed_data.trackingType) {
+                          case 'Seguridad':
+                            this.showSOSNot("SOS - Seguridad", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                            break;
+                          case 'Protección Civil':
+                            this.showSOSNot("SOS - Proteccion Civil", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+                            break;
+                          case 'Emergencia Médica':
+                            this.showSOSNot("SOS - Emergencia Medica", "Nuevo mensaje de usuario", "error", "Ver detalles", 2, changed_id);
+                            break;
+                          case 'Seguimiento Por Hora':
+                            this.showTrackingNot("Seguimiento - Por Hora", "Nuevo mensaje de usuario", "error", "Ver detalles", 0, changed_id);
+                            break;
+                          case 'Seguimiento Por Destino':
+                            this.showTrackingNot("Seguimiento - Por Destino", "Nuevo mensaje de usuario", "error", "Ver detalles", 1, changed_id);
+                            break;
+                          default:
+                            break;
+                        }
+                      }
+                    }
+                  });
+                } else {
+                  if (this.state.stateSos[find_conv_index].critical_state !== changed_data.critical_state && JSON.parse(sessionStorage.getItem("isAuthenticated"))) {
+                    aux_obj = {
+                      ...aux_obj,
+                      lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+                      id: changed_id
+                    }
+                    aux_sos_chat[find_conv_index] = aux_obj;
+                    this.setState({
+                      stateSos: aux_sos_chat
+                    }, () => {
+                      this.setState({ reproducirSonido: true });
+                      switch (changed_data.trackingType) {
+                        case 'Seguimiento Por Hora':
+                          this.showTrackingNot("Seguimiento - Por Hora", "Cambio en el nivel de criticidad", "error", "Ver detalles", 0, changed_id);
+                          break;
+                        case 'Seguimiento Por Destino':
+                          this.showTrackingNot("Seguimiento - Por Destino", "Cambio en el nivel de criticidad", "error", "Ver detalles", 1, changed_id);
+                          break;
+                        default:
+                          break;
+                      }
+                    })
+                  } else if (this.state.stateSos[find_conv_index].c5Unread !== changed_data.c5Unread) {
+                    aux_obj = {
+                      ...aux_obj,
+                      lastModification: new Date(aux_obj.lastModification.toDate()).toString(),
+                      id: changed_id
+                    }
+                    aux_sos_chat[find_conv_index] = aux_obj;
+                    this.setState({
+                      stateSos: aux_sos_chat
+                    })
+                  } else {
+
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+  }
+
+  _getChats = () => {
+    firebaseC5Benito
+      .app('c5benito')
+      .firestore()
+      .collection('messages')
+      .orderBy('updateDate', 'desc')
+      .limit(20)
+      .get()
+      .then((docs) => {
+        if (docs.docs.length > 0) {
+          const chats = docs.docs.map((v) => {
+            let value = v.data();
+            value.lastModification = new Date(
+              value.lastModification
+            ).toString();
+            value.id = v.id;
+            return value;
+          });
+          // console.log(chats)
+          chats.sort((a, b) => {
+            let first = new Date(a.updateDate)
+            let second = new Date(b.updateDate)
+            if (first < second) {
+              return 1
+            } else {
+              return -1
+            }
+          })
+          this._setChats(chats);
+        }
+      });
+  }
+
+  _getSOS = () => {
+    firebaseSos
+      .app("sos")
+      .firestore()
+      .collection(MESSAGES_COLLECTION)
+      // .where('clientId', '==', client.id)
+      .orderBy("lastModification", "desc")
+      .get()
+      .then(docs => {
+        const chatSOS = docs.docs.map((i) => {
+          let data = i.data();
+          data.lastModification = (typeof data.lastModification === 'string')
+            ? new Date(
+              data.lastModification
+            ).toString()
+            : new Date(
+              data.lastModification.toDate()
+            ).toString();
+          data.id = i.id;
+          return data;
+        });
+        chatSOS.sort((a, b) => (new Date(b.lastModification) - new Date(a.lastModification)));
+        // console.log(chatSOS)
+        this.setState({ stateSos: chatSOS })
+      });
   }
 
 
 
-  
+
 
   notificationRoute = () => {
     this.setState({
@@ -1202,6 +1613,14 @@ class Main extends Component {
 
   }
 
+  _setChats = (chats) => {
+    this.setState({ chats })
+  }
+
+  _setSOS = (stateSos) => {
+    this.setState({ stateSos })
+  }
+
   canAccess = (module_id) => {
     let isValid = false
     const isAuth = JSON.parse(sessionStorage.getItem('isAuthenticated'))
@@ -1223,10 +1642,17 @@ class Main extends Component {
       showMatches: value
     })
   }
+
+  setDarkMode = () => {
+    const darkMode = !this.state.darkMode;
+    this.setState({ darkMode });
+    localStorage.setItem(MODE, JSON.stringify(darkMode));
+  };
+
   render() {
     return (
       <Router>
-        
+
         {
           this.state.roberyNotification.display &&
           <RoberyNotification notificationRoute={this.notificationRoute} userId={this.state.roberyNotification.data} />
@@ -1243,7 +1669,7 @@ class Main extends Component {
           : null
         }
         {this.state.modalCall ? <ModalCall data={this.state.callInfo} modal={this.state.modalCall} hideModal={() => this.setState({ modalCall: false, callInfo: {} })} /> : null}
-        <div className="fullcontainer">
+        <div className="fullcontainer" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", transition: "all 0.2s linear" }}>
           {this.state.isAuthenticated && this.state.showHeader ?
             <Header
               sideMenu={this.state.sideMenu}
@@ -1254,12 +1680,14 @@ class Main extends Component {
               isSidemenuShow={this.state.sideMenu}
               cameraSideInfo={this._cameraSideInfo}
               userInfo={this.state.userInfo}
-              _reloadCams={this._reloadCams} />
+              _reloadCams={this._reloadCams}
+              darkMode={this.state.darkMode}
+              setDarkMode={this.setDarkMode} />
             : null
           }
           {this.state.isAuthenticated && this.state.showHeader ?
             (<React.Fragment>
-              <ArrowToggle ocultarMatches={this.ocultarMatches} />
+              {/* <ArrowToggle ocultarMatches={this.ocultarMatches} /> */}
               {/* {this.state.showMatches ?
                 <Matches
                   toggleSideMenu={this._cameraSideInfo}
@@ -1312,7 +1740,7 @@ class Main extends Component {
               />
             )}
           ></Route>
-          <Route path="/map" exact render={(props) => <Map showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} chats={this.state.chats} />} />
+          <Route path="/map" exact render={(props) => <Map showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} chats={this.state.chats} darkMode={this.state.darkMode} />} />
           <Route path="/welcome" exact render={(props) => <Welcome {...props} />} />
           <Route path="/login" exact render={(props) => <Login {...props} makeAuth={this._makeAuth} isAuthenticated={this.state.isAuthenticated} />} />
           <Route path="/resetpassword" exact render={() => <ResetPassword />} />
@@ -1332,6 +1760,8 @@ class Main extends Component {
               <Chat
                 chats={this.state.chats.filter(item => (typeof item.alarmType !== 'string'))}
                 {...props}
+                getChats={this._getChats}
+                setChats={this._setChats}
                 userInfo={this.state.userInfo}
                 chatFirebase={this.state.chatFirebase}
                 stopNotification={() =>
@@ -1341,7 +1771,7 @@ class Main extends Component {
             )}
           />
           <Route path="/tickets" exact render={(props) => <Tickets canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
-          <Route path="/dashboard" exact render={(props) => <Dashboard showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} totalEvents={this.state.countEvent}  fechasEventos={this.state.fechasEventos} />} />
+          <Route path="/dashboard" exact render={(props) => <Dashboard showMatches={this.state.showMatches} canAccess={this.canAccess}  {...props} userInfo={this.state.userInfo} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} totalEvents={this.state.countEvent} fechasEventos={this.state.fechasEventos} darkMode={this.state.darkMode} />} />
           <Route path="/cuadrantes" exact render={(props) => <Cuadrantes showMatches={this.state.showMatches} matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path="/cuadrantes/:id" exact render={(props) => <Cuadrantes matches={this.state.matches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this._toggleControls} />} />
           <Route path='/personas' exact render={(props) => <Sospechosos showMatches={this.state.showMatches} chats={this.state.chats} canAccess={this.canAccess} {...props} toggleSideMenu={this._cameraSideInfo} toggleControls={this - this._toggleControls} />} />
@@ -1390,6 +1820,14 @@ class Main extends Component {
                 userInfo={this.state.userInfo}
                 countEvent={this.state.countEvent}
               />
+            )}
+          />
+
+          <Route
+            path="/incidentes"
+            exact
+            render={(props) => (
+              <Incident {...props} dataMap={this.state.dataMap} />
             )}
           />
 

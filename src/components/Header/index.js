@@ -3,6 +3,7 @@ import { Navbar, NavDropdown, Button, Nav } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import { FaShoePrints } from 'react-icons/fa';
 import { ToastsContainer, ToastsStore } from "react-toasts";
+import { Radio } from "semantic-ui-react";
 import "../../assets/styles/util.css";
 import "../../assets/styles/main.css";
 import "../../assets/fonts/iconic/css/material-design-iconic-font.min.css";
@@ -13,6 +14,7 @@ import ModalVersions from "./ModalVersions";
 import { LANG, MODE } from "../../constants/token";
 // import { Dropdown } from "semantic-ui-react";
 import versions from "./versionInfo";
+import { BsMoon, BsMoonFill, BsSun, BsSunFill } from "react-icons/bs";
 
 class Header extends Component {
 
@@ -20,7 +22,6 @@ class Header extends Component {
     showModal: false,
     showVersions: false,
     language: "spanish",
-    mode: "light",
   }
 
 
@@ -180,7 +181,7 @@ class Header extends Component {
     document
       .getElementsByClassName("navbar-collapse")[0]
       .classList.remove("show");
-    this.props.history.push("/Incident");
+    this.props.history.push("/incidentes");
   }
 
 
@@ -276,12 +277,8 @@ class Header extends Component {
       this.setState({ language: localStorage.getItem(LANG) });
     };
 
-    if (localStorage.getItem(MODE) && this.state.mode !== localStorage.getItem(MODE)) {
-      this.setState({ mode: localStorage.getItem(MODE) });
-    };
-
     return (
-      <Navbar sticky="top" expand="lg" variant="dark" bg="mh">
+      <Navbar style={{ transition: "all .2s linear" }} sticky="top" expand="lg" variant="dark" bg={this.props.darkMode ? "darkmode" : "mh"}>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse className="justify-content-end">
           <Nav className="mr-auto">
@@ -393,6 +390,29 @@ class Header extends Component {
               ))
               : null}
           </Nav>
+          {/* <div style={{
+            display: "flex",
+            marginRight: "1.5rem",
+            padding: "0.67rem",
+            alignItems: "center",
+          }}>
+            {!(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ?
+              <BsSunFill style={{ color: "white", marginRight: "1.5rem" }} />
+              :
+              <BsSun style={{ color: "white", marginRight: "1.5rem" }} />
+            }
+            <Radio
+              slider
+              onChange={() => this.props.setDarkMode()}
+              checked={this.props.darkMode}
+              style={{ marginRight: "1.5rem" }}
+            />
+            {(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ?
+              <BsMoonFill style={{ color: "white", marginRight: "1.5rem" }} />
+              :
+              <BsMoon style={{ color: "white", marginRight: "1.5rem" }} />
+            }
+          </div> */}
           <Nav style={{ paddingRight: "3.5rem" }}>
             {/*this.props.userInfo.role_id === 1?<Button variant="outline-light"  onClick={this.props._reloadCams}>
                         <i className={this.props.loadingRestart?'fa fa-repeat fa-spin':"fa fa-repeat"}></i>
@@ -430,7 +450,7 @@ class Header extends Component {
                 {this.props.lang === "english" ? "Log out" : "Cerrar sesión"}
               </NavDropdown.Item>
               <NavDropdown.Item onClick={this._showVersions}>
-                <p style={{display: "flex", justifyContent: "center", marginTop: "0.2rem"}}>Versión {versions[0].version}</p>
+                <p style={{ display: "flex", justifyContent: "center", marginTop: "0.2rem" }}>Versión {versions[0].version}</p>
               </NavDropdown.Item>
               {
                 showVersions && <ModalVersions currentVersion={versions[0].version} modal={showVersions} hideModal={this._showVersions} />
@@ -445,6 +465,7 @@ class Header extends Component {
             <Button variant="outline-light">
               <i className="arrow_forward"></i>
             </Button>
+
           </Nav>
         </Navbar.Collapse>
       </Navbar>

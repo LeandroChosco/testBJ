@@ -20,7 +20,7 @@ const TableD = () =>{
  
 
     const dataTable = await conections.getLPRTableList()
-    if(dataTable.data && dataTable.data.msg ==='ok' && dataTable.data.success && dataTable.data.data){
+    if(dataTable.data && dataTable.data.msg ==='ok' && dataTable.data.success && Object.keys(dataTable.data.data).length > 0){
       dataTable.data.data.forEach(element => {
       if(!element.data[0]){
       }else{
@@ -67,7 +67,7 @@ const TableD = () =>{
       // {
       //   dataField: "follow",
       //   text: "",
-      //   formatter: ()=>( <button type="button" class="btn btn-primary" style={{marginLeft: "43%"}}>Ver</button>),
+      //   formatter: ()=>( <button type="button" className="btn btn-primary" style={{marginLeft: "43%"}}>Ver</button>),
       //   sort: true
       // }
       ]
@@ -75,6 +75,7 @@ const TableD = () =>{
 
 
     return(
+      (dataQuery && dataQuery.length > 0) &&
         <>
             <BootstrapTable keyField='id' data={ dataQuery } columns={ columns } pagination={paginationFactory()} filter={filterFactory()} />
         </>
