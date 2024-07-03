@@ -10,8 +10,8 @@ const detialDashboard = "http://95.216.37.253:6868/dashboard/iframes/"
 
 //Dev
 //sails_url genera token de autenticacion 
-const sails_url = "https://adminc5-bj.radarapp.click";
-const radar_backend = "https://api-radar.radarapp.click/graphql";
+const sails_url = "https://bj-api-dev.radarapptechnologies.com";
+const radar_backend = "https://api-radar-dev.radarapptechnologies.com";
 
 const webSocketPort = '20';
 const apiPort = "3000";
