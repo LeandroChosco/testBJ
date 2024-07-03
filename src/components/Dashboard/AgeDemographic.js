@@ -2,6 +2,19 @@ import React from 'react';
 import Chart from 'react-apexcharts'
 import { MODE } from '../../constants/token';
 
+const styles = {
+    noData: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        display: "flex"
+    }
+}
+
 class AgeDemographic extends React.Component {
     constructor(props) {
         super(props);
@@ -78,6 +91,7 @@ class AgeDemographic extends React.Component {
 
         };
     }
+
 
     render() {
         return (

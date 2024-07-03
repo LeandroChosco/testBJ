@@ -629,7 +629,7 @@ class Dashboard extends Component {
       lastAges: data.date_update
     })
 
-    if (Object.keys(data).length > 0) {
+    if (data && Object.keys(data).length > 0) {
 
       this.setState({
         agesDetected: [
@@ -690,7 +690,7 @@ class Dashboard extends Component {
       lastMood: data[data.length - 1] ? data[data.length - 1].date_update : "XX NN"
     })
 
-    if (Object.keys(data).length > 0) {
+    if (data && Object.keys(data).length > 0) {
 
       let dataNeutral = []
       let dataSorprendido = []
