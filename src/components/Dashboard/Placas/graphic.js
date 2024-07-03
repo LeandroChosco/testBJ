@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import conections from "../../../conections";
 import "./styles.css";
 
-export const CurveDash = ({camId}) => {
-  let curveData ={
-    "cam_id":camId,
-    "start_time":"00",
-    "end_time":"23"
+export const CurveDash = ({ camId }) => {
+  let curveData = {
+    "cam_id": camId,
+    "start_time": "00",
+    "end_time": "23"
   }
   let dataArraySeries = [];
   let dataArrayCategories = [];
@@ -21,17 +21,14 @@ export const CurveDash = ({camId}) => {
       alertPerHour.data.success &&
       Object.keys(alertPerHour.data.data).length > 0
     ) {
-      const sortAlertPerHour = await alertPerHour.data.data.sort((a, b) => {
-        if (a.hour > b.hour) return 1;
-        if (a.hour < b.hour) return -1;
+      const sortAlertPerHour = await alertPerHour.data.data.sort((a, b) => a.hour > b.hour ? 1 : -1);
+
+      sortAlertPerHour.forEach((element) => {
+        dataArraySeries.push(element.total);
+        dataArrayCategories.push(`${element.hour}:00`);
       });
-     
-        sortAlertPerHour.forEach((element) => {
-          dataArraySeries.push(element.total);
-          dataArrayCategories.push(`${element.hour}:00`);
-        });
-      
-     
+
+
       setSeries(dataArraySeries);
       setCategories(dataArrayCategories);
     }
@@ -110,7 +107,7 @@ export const DonoutDash = () => {
   );
 };
 
-export const HeatMapChart = ({camId}) => {
+export const HeatMapChart = ({ camId }) => {
   const [heatMapSeries, setHeatMapSeries] = useState([]);
 
   let Sunday = [];
@@ -160,10 +157,10 @@ export const HeatMapChart = ({camId}) => {
     const dataWeek = await conections.getLPRAlertWeek();
     if (dataWeek.data && dataWeek.data.msg === "ok" && dataWeek.data.success && Object.keys(dataWeek.data.data).length > 0) {
 
-      if(camId){
-        let dataArrayFilter=[]
-        dataArrayFilter= dataWeek.data.data.filter((element)=>{
-          return element.cam_id=== camId
+      if (camId) {
+        let dataArrayFilter = []
+        dataArrayFilter = dataWeek.data.data.filter((element) => {
+          return element.cam_id === camId
         })
         dataArrayFilter.forEach((element) => {
 
@@ -175,7 +172,7 @@ export const HeatMapChart = ({camId}) => {
                   Sunday[index] = { x: `${hora}:00`, y: element.total };
                 }
               }
-  
+
               break;
             case "Monday":
               for (let index = 0; index < hours.length; index++) {
@@ -229,7 +226,7 @@ export const HeatMapChart = ({camId}) => {
               break;
           }
         });
-      }else{
+      } else {
         dataWeek.data.data.forEach((element) => {
 
           switch (element.day) {
@@ -240,7 +237,7 @@ export const HeatMapChart = ({camId}) => {
                   Sunday[index] = { x: `${hora}:00`, y: element.total };
                 }
               }
-  
+
               break;
             case "Monday":
               for (let index = 0; index < hours.length; index++) {
@@ -295,7 +292,7 @@ export const HeatMapChart = ({camId}) => {
           }
         });
       }
-    
+
       setHeatMapSeries([
         { name: "Lunes", data: Monday },
         { name: "martes", data: Tuesday },
@@ -337,21 +334,21 @@ export const HeatMapChart = ({camId}) => {
   );
 };
 
-export const ColumnChart = ({month,cam}) => {
-  const actualDate=new Date();
-  const year= actualDate.getFullYear()
+export const ColumnChart = ({ month, cam }) => {
+  const actualDate = new Date();
+  // const year= actualDate.getFullYear()
   let lastDay = actualDate.getDate()
   const [series, setSeries] = useState([]);
   const [categories, setCategories] = useState([]);
-  let firstDay =actualDate.getDate() -actualDate.getDay()
-  if(firstDay<10){
-    firstDay=`0${firstDay}`
+  let firstDay = actualDate.getDate() - actualDate.getDay()
+  if (firstDay < 10) {
+    firstDay = `0${firstDay}`
   }
-  if(lastDay<10){
-    lastDay=`0${lastDay}`
+  if (lastDay < 10) {
+    lastDay = `0${lastDay}`
   }
-  if(month<10){
-    month=`0${month}`
+  if (month < 10) {
+    month = `0${month}`
   }
 
   let Sunday = 0;
@@ -368,14 +365,14 @@ export const ColumnChart = ({month,cam}) => {
     //   "cam_id":cam
     // };
     let dataReq = {
-      start_date:`2022-11-27`,
-      end_date:`2022-12-04` ,
-      "cam_id":cam
+      start_date: `2022-11-27`,
+      end_date: `2022-12-04`,
+      "cam_id": cam
     };
-    let dataReqMes = {
-      start_date: "2022-11-01",
-      end_date: "2022-11-30",
-    };
+    // let dataReqMes = {
+    //   start_date: "2022-11-01",
+    //   end_date: "2022-11-30",
+    // };
     let alertPerWeek = "";
     alertPerWeek = await conections.getLPRFilterWeek(dataReq);
     // }else{
@@ -482,7 +479,7 @@ export const ColumnChart = ({month,cam}) => {
   );
 };
 
-export const ColumnMonthChart = ({ month,cam }) => {
+export const ColumnMonthChart = ({ month, cam }) => {
   const [series, setSeries] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -495,7 +492,7 @@ export const ColumnMonthChart = ({ month,cam }) => {
     let dataReqMes = {
       start_date: "2022-11-01",
       end_date: "2022-11-30",
-      "cam_id":cam
+      "cam_id": cam
     };
     // let dataReqMes = {
     //   start_date: `2022-${month + 1}-01`,

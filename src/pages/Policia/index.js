@@ -16,7 +16,7 @@ import dataFake from './dataFake.json';
 const Policia = ({ showMatches }) => {
   // const [binnacles, setBinnacles] = useState([])
   const [showModal, actualizarShowModal] = useState(false);
-  const [detail, setDetail] = useState(null)
+  // const [detail, setDetail] = useState(null)
 
   // const getData = async () => {
   //   const { docs } = await firebaseSos.app('sos').firestore().collection(POLICE_BINNACLE_COLLECTION).get();
@@ -147,12 +147,12 @@ const Policia = ({ showMatches }) => {
   //   }
   // }];
 
-  const tableRowEvents = {
-    onClick: (e, row, rowIndex) => {
-      setDetail(row)
-      actualizarShowModal(true)
-    }
-  }
+  // const tableRowEvents = {
+  //   onClick: (e, row, rowIndex) => {
+  //     setDetail(row)
+  //     actualizarShowModal(true)
+  //   }
+  // }
 
   // const showImgs = (cell, row) => {
   //   return (
@@ -193,7 +193,7 @@ const Policia = ({ showMatches }) => {
         <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
 
         {showModal ?
-          <ModalViewBinnacle modal={showModal} hide={(accion) => hideModal(accion)} row={detail} ></ModalViewBinnacle>
+          <ModalViewBinnacle modal={showModal} hide={(accion) => hideModal(accion)} /*row={detail}*/ ></ModalViewBinnacle>
           : null
         }
       </div>

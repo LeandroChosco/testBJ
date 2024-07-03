@@ -1462,7 +1462,7 @@ class CameraStream extends Component {
         let url = null;
 
         if (historyServerProtocol && historyServerDns) {
-          if (dnsPort == 80 || dnsPort == 443) {
+          if (parseInt(dnsPort) === 80 || parseInt(dnsPort) === 443) {
             url = `${historyServerProtocol}://${historyServerDns}/live/media/snapshot/${videoSourceId}`;
           } else {
             url = `${historyServerProtocol}://${historyServerDns}:${dnsPort}/live/media/snapshot/${videoSourceId}`;

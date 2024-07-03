@@ -12,7 +12,7 @@ export default function Placas(props) {
     // const [plates, setPlates] = useState("");
     // const [refresh, setRefresh] = useState(false);
     // const [loading, setLoading] = useState(false);
-    const arrayDetections = [];
+    // const arrayDetections = [];
     const io = getIo();
     const [selectedCamera, setSelectedCamera] = useState(`CAM${props.selectedCamera.dataCamValue.id}_${props.selectedCamera.dataCamValue.dns}`);
     const connection = props.reset;
@@ -35,7 +35,7 @@ export default function Placas(props) {
                 if (data.camera_ip === selectedCamera) {
                     // setRefresh(true);
                     // setPlates("");
-                    let results = getPlates(data).slice(0, 100);
+                    // let results = getPlates(data).slice(0, 100);
                     // setPlates(results);
                 }
             })
@@ -50,19 +50,19 @@ export default function Placas(props) {
 
     }, []);
 
-    const getPlates = (data) => {
+    // const getPlates = (data) => {
 
-        let timeStringToDate = `${data.timestamp.split(".")[0].split("T")[0].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3')} ${data.timestamp.split(".")[0].split("T")[1].replace(/(\d{2})(\d{2})(\d{2})/g, '$1:$2:$3')} GMT-0000`;
-        let parseDate = new Date(timeStringToDate).toLocaleString();
+    //     let timeStringToDate = `${data.timestamp.split(".")[0].split("T")[0].replace(/(\d{4})(\d{2})(\d{2})/g, '$1/$2/$3')} ${data.timestamp.split(".")[0].split("T")[1].replace(/(\d{2})(\d{2})(\d{2})/g, '$1:$2:$3')} GMT-0000`;
+    //     let parseDate = new Date(timeStringToDate).toLocaleString();
 
-        let objDetection = {
-            plate: data.plate_full,
-            date: parseDate.replace(",", " -"),
-            event_type: data.event_type
-        }
-        arrayDetections.unshift(objDetection);
-        return arrayDetections;
-    }
+    //     let objDetection = {
+    //         plate: data.plate_full,
+    //         date: parseDate.replace(",", " -"),
+    //         event_type: data.event_type
+    //     }
+    //     arrayDetections.unshift(objDetection);
+    //     return arrayDetections;
+    // }
 
     const fakePlates = [
         {

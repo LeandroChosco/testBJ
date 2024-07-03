@@ -14,10 +14,7 @@ export const CurveGridCamera = (props) => {
     const init = async () => {
         const alertPerHour = await conections.getLPRPerHour(props.camera.id);
         if (alertPerHour.data && alertPerHour.data.msg === 'ok' && alertPerHour.data.success) {
-            const sortAlertPerHour = await alertPerHour.data.data.sort((a, b) => {
-                if (a.hour > b.hour) return 1
-                if (a.hour < b.hour) return -1
-            })
+            const sortAlertPerHour = await alertPerHour.data.data.sort((a, b) => a.hour > b.hour ? 1 : -1)
 
             sortAlertPerHour.forEach(element => {
                 dataArraySeriesGrid.push(element.total)

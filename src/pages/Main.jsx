@@ -12,7 +12,7 @@ import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 import Notifications from '../components/Notifications';
 import CameraControls from '../components/CameraControls';
-import * as moment from 'moment'
+// import * as moment from 'moment'
 // import '../App.css';
 import Details from './Details';
 import MobileHelp from './CamaraForMobile';
@@ -949,7 +949,7 @@ class Main extends Component {
         }
         let countShoot = 0
         let countBrokenGlass = 0
-        let fechas = []
+        // let fechas = []
         // let today = moment().format('L'),
         //   fechaActual = [],
         //   fecha1 = [],

@@ -31,7 +31,7 @@ const DataTicketsDash = (props) => {
     const getTotal = () => {
         if (totalTickets !== 0) {
             let total = 0
-            dataTickets.map((el) => { total = total + el.value })
+            dataTickets.map((el) => total = total + el.value)
             return total
         }
     }

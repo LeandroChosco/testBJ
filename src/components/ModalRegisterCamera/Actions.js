@@ -137,7 +137,7 @@ export default function Actions(props) {
                 }
                 setShowModal(false)
                 setTypeModal(0)
-            }}>✔️</Button>
+            }}><i className="fa fa-check" aria-hidden="true"></i></Button>
         </div>
     )
 }

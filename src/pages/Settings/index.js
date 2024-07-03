@@ -26,7 +26,7 @@ import RenderCamaras from './RenderCamaras';
 import RenderUsuarios from './RenderUsuarios';
 
 import "./styleTables.css"
-import ActionsCuadrantes from './ActionsCuadrantes';
+// import ActionsCuadrantes from './ActionsCuadrantes';
 // import RenderCuadrantes from './RenderCuadrantes';
 import ModalManagmentCuadrantes from '../../components/ModalManagmentCuadrantes';
 
@@ -88,11 +88,11 @@ const Settings = (props, { showMatches }) => {
     )
   }
 
-  const actionsCuadrantes = (cell, row, rowIndex, formatExtraData) => {
-    return (
-      <ActionsCuadrantes data={[row, setCurrentData, setShowModalManagmentCuadrantes]} />
-    )
-  }
+  // const actionsCuadrantes = (cell, row, rowIndex, formatExtraData) => {
+  //   return (
+  //     <ActionsCuadrantes data={[row, setCurrentData, setShowModalManagmentCuadrantes]} />
+  //   )
+  // }
 
   const columnsUsers = [{
     dataField: "user_nicename",

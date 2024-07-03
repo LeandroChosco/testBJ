@@ -9,7 +9,7 @@ export default function PaginationList(props) {
     const { awsApiStreamsCams, videoList, reloadData, download, isDownloadSearch, dnsArray, protocolDownload, hasDns, dnsContainer, portContainer, servidorMultimedia, noButtons, isRecord, typeMBOX, selectedCamera, historyServerDns, historyServerPort, historyServerProtocol, numberVideos, renderLoading, isQnap, isAxxonSearch, withAccordion, getHistoricsByHour, historicCurrentDay } = props;
     // const [videos, setVideos] = useState(videoList)
     // const [currentPage, setCurrentPage] = useState(1)
-    const [loading, setLoading] = useState(false)
+    // const [loading, setLoading] = useState(false)
     const totalVideos = numberVideos
     // if(videoList.length !== videos.length){
     //     setVideos(videoList)
