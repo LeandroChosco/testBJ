@@ -122,15 +122,15 @@ export default {
   getTagList: () => {
     return connectedSails.get(`${constants.sails_url}/tag/list`);
   },
-  
+
   getIncidentsMap: (filter) => {
-    if(filter){
+    if (filter) {
       return connectedSails.get(`${constants.sails_url}/incident/map?tag=${filter}`);
     } else {
       return connectedSails.get(`${constants.sails_url}/incident/map`);
     }
   },
-  
+
   getIncidentById: (id) => {
     return connectedSails.get(`${constants.sails_url}/incident/${id}`);
   },
@@ -138,7 +138,7 @@ export default {
   getTimeline: (current_page) => {
     return connectedSails.get(`${constants.sails_url}/incident/timeline?page=${current_page}`);
   },
-  
+
   getTopLikes: () => {
     return connectedSails.get(`${constants.sails_url}/reaction/like/count`);
   },
