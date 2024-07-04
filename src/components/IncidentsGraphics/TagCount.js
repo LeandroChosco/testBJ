@@ -67,7 +67,7 @@ export class TagCount extends React.Component {
 
         return (
             <div id="chart">
-                <h3>Conteo por tag</h3>
+                <h3>Trending Topics</h3>
                 {
                     data.length > 0 ?
                         <ReactApexChart options={options} series={series} type="bar" height={200} />
