@@ -23,6 +23,7 @@ import conections from "../../conections";
 import { LANG, MODE } from "../../constants/token";
 import { MESSAGES_COLLECTION } from "../../Api/sos";
 import chatGeneral from '../../historial/BJ_Chat-General.json';
+import { fakeChats } from "./fakeData";
 
 const refSOS = firebaseC5Benito
   .app("c5benito")
@@ -218,20 +219,28 @@ class Chat extends Component {
 
   renderListChats = (type) => {
     const { index } = this.state;
-    const { chats, setSOS, getChats } = this.props
+    // const { /*chats,*/ setSOS, getChats } = this.props
 
-    if (chats.length === 0) {
-      getChats();
-    }
+    // if (chats.length === 0) {
+    //   getChats();
+    // }
+
+    let chats = fakeChats;
 
     return (
-      <div>
+      <div style={{padding: "1rem"}}>
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <Input
-            placeholder={localStorage.getItem(LANG) === "english" ? "Search user" : "Buscar usuario"}
-            style={{ flex: 2 }}
+          {/* <Input
+            placeholder={localStorage.getItem(LANG) === "english" ? "🔎 Search" : "🔎 Buscar"}
+            style={{ flex: 2, height: "5rem", borderRadius: "0.75rem !important" }}
             onChange={this.filterAction}
-          ></Input>
+          ></Input> */}
+          <div className="ui input"
+            style={{ flex: 2, height: "5rem" }}
+            onChange={this.filterAction}>
+            <input className="input" style={{ borderRadius: "1rem" }} placeholder={localStorage.getItem(LANG) === "english" ? "🔎   Search" : "🔎   Buscar"} />
+          </div>
+
           {/* <Dropdown
             placeholder={localStorage.getItem(LANG) === "english" ? "Search by" : "Buscar por"}
             fluid
@@ -242,12 +251,12 @@ class Chat extends Component {
             style={{ flex: 1 }}
           /> */}
         </div>
+        <h1>Chat</h1>
         <div
           style={{
             height: "81vh",
             overflow: "scroll",
             backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada",
-            padding: "20px",
           }}
         >
           {chats.map((chat, i) => {
@@ -492,8 +501,8 @@ class Chat extends Component {
         }
       >
         <div className="row fullHeight" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#0c304e", transition: "all 0.2s linear" }}>
-          <div className="col-4 userList" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#2e597d", transition: "all 0.2s linear" }}>
-            <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem" }}>
+          <div className="col-3 userList" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#2e597d", transition: "all 0.2s linear" }}>
+            {/* <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem" }}>
               <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>Chats</p>
               <Radio
                 toggle
@@ -504,7 +513,7 @@ class Chat extends Component {
               />
               <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>Historial</p>
             </div>
-            <hr />
+            <hr /> */}
 
             {loadingHistorial ?
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
@@ -572,7 +581,7 @@ class Chat extends Component {
             }
 
           </div>
-          <div className="col-8" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear"}}>
+          <div className="col-8" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear" }}>
             {
               loadingChat ?
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
@@ -1170,7 +1179,7 @@ class Chat extends Component {
 
     // console.log(chat)
 
-    const auxChats = [...chats];
+    const auxChats = [...fakeChats];
     const findIndex = auxChats.findIndex(el => el.id === chat.id);
     if (auxChats[findIndex]) {
       auxChats[findIndex].c5Unread = 0;
