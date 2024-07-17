@@ -226,7 +226,7 @@ const HlsPlayer = (props) => {
 	};
 
 	return (
-		<div>
+		<div className={props.isChat ? "container-chat-streaming" : "col"}>
 			<div
 				className={loading ? 'd-none' : null}
 				id={`player${props.num_cam}`}

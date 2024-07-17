@@ -271,3 +271,18 @@
     justify-content: right;
     align-items: center;
 }
+
+.container-chat-streaming{
+    width: 100%;
+    height: 100%;
+}
+
+.container-personal-information{
+    padding: 0.5rem 1rem;
+}
+
+.cam-info-map{
+    height: 100%;
+    width: 100%;
+    padding-top: 1rem;
+}
