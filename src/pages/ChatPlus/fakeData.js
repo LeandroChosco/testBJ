@@ -1,7 +1,7 @@
 export const fakeChats = [
     {
         "lastModification": "Invalid Date",
-        "c5Unread": 0,
+        "c5Unread": 3,
         "messages": [
             {
                 "from": "support",
@@ -416,7 +416,7 @@ export const fakeChats = [
         "updateDate": "2024-07-09 12:17:22",
         "user_creation": 6689,
         "policeUnread": 18,
-        "c5Unread": 0,
+        "c5Unread": 1,
         "userUnread": 19,
         "instance": "Benito Juarez",
         "user_name": "César ",
@@ -1292,7 +1292,7 @@ export const fakeChats = [
             "longitude": "-99.1574218"
         },
         "userUnread": 12,
-        "c5Unread": 0,
+        "c5Unread": 2,
         "from_id": 1,
         "from": "Chat C2",
         "user_cam": {
@@ -2126,7 +2126,7 @@ export const fakeChats = [
             "number": 514
         },
         "instance": "Benito Juarez",
-        "c5Unread": 0,
+        "c5Unread": 5,
         "id": "C23tbbqiHQZY6fzCjAHs",
         "clientId": 1,
         "location": {

@@ -276,7 +276,14 @@ class Chat extends Component {
                     <p>{chat.messages[chat.messages.length - 1].msg.length < 28 ? chat.messages[chat.messages.length - 1].msg : `${chat.messages[chat.messages.length - 1].msg.slice(0, 26)}...`}</p>
                   </div>
                 </div>
-                <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>{date}</p>
+                <div style={{ display: "grid", alignItems: "center", justifyContent: "flex-end" }}>
+                  <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>{date}</p>
+                  {chat.c5Unread > 0 &&
+                    <div className="notificationNumber">
+                      <p>{chat.c5Unread}</p>
+                    </div>
+                  }
+                </div>
                 {/* {chat.active !== undefined && chat.active ? (
                   <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>
                     {chat.messages
@@ -294,14 +301,6 @@ class Chat extends Component {
                   <p></p>
                 )} */}
 
-                {chat.c5Unread > 0 &&
-                  <div
-                    className="notificationNumber"
-                    style={{ marginTop: 15 }}
-                  >
-                    <p>{chat.c5Unread}</p>
-                  </div>
-                }
               </div>
             );
           })}
@@ -605,7 +604,7 @@ class Chat extends Component {
                   this.state.statusCurrentChat ?
 
                     <div className="container-chat">
-                      <div className='col-9'>
+                      <div className='col-8'>
                         <div className="messages">
 
                           {
@@ -754,7 +753,7 @@ class Chat extends Component {
                           }
                         </div>
                       </div>
-                      <div className='col-3'>
+                      <div className='col-4'>
                         {!loading && chatId !== "" && chats[index] ? (
                           <div className="cam-info-map">
                             <div>
@@ -774,7 +773,7 @@ class Chat extends Component {
                               }
                             </div>
                             <div
-                              className="row" style={{ padding: "0 1rem", margin: "0.5rem 0" }}
+                              className="row" style={{ padding: "0 1rem", margin: "1.5rem 0" }}
                             // style={{
                             //   height: "20%",
                             //   width: "100%",

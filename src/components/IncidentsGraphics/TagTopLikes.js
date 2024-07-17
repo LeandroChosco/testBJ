@@ -9,7 +9,7 @@ export class TagTopLikes extends React.Component {
   render() {
 
     const colors = ["#21B6A8", "#007DE9", "#B4BC00", "#283747", "#145A32", "#F1C40F", "#B4045F"];
-    
+
     const { data } = this.props;
 
     const arraySeries = [];
@@ -17,13 +17,17 @@ export class TagTopLikes extends React.Component {
 
     data.forEach(el => {
       arraySeries.push(el.total);
-      if (el.tags.length > 2) {
-        const diff = el.tags.length - 2;
-        const arraySlice = el.tags.slice(0, 2);
-        arraySlice.push(`+${diff}`);
-        arrayOptions.push(arraySlice);
+      if (el.tags) {
+        if (el.tags.length > 2) {
+          const diff = el.tags.length - 2;
+          const arraySlice = el.tags.slice(0, 2);
+          arraySlice.push(`+${diff}`);
+          arrayOptions.push(arraySlice);
+        } else {
+          arrayOptions.push(el.tags);
+        }
       } else {
-        arrayOptions.push(el.tags);
+        arrayOptions.push("N/R")
       }
     });
 
@@ -61,19 +65,19 @@ export class TagTopLikes extends React.Component {
       <div id="chart">
         <h3>Tendencias</h3>
         {
-          data.length > 0 ? 
-          <ReactApexChart options={options} series={series} type="pie" width={350} />
-          :
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            right: 0,
-            left: 0,
-            justifyContent: 'center',
-            alignItems: 'center',
-            display: "flex"
-          }}>No hay datos disponibles</div>
+          data.length > 0 ?
+            <ReactApexChart options={options} series={series} type="pie" width={350} />
+            :
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              right: 0,
+              left: 0,
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: "flex"
+            }}>No hay datos disponibles</div>
         }
       </div>
     );

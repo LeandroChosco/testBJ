@@ -189,14 +189,13 @@
     color: white;
 }
 
-.notificationNumber{
+.notificationNumber {
     height: 20px;
     width: 20px;
-    position: absolute;
     right: 10px;
     top: 10px;
     margin: auto;
-    background: red;    
+    background: red;
     border-radius: 15px;
 }
 
