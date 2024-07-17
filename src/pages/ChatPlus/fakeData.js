@@ -980,7 +980,7 @@ export const fakeChats = [
         "instance": "Benito Juarez",
         "lastModification": "Invalid Date",
         "clientId": 1,
-        "updateDate": "2024-07-09 11:43:30",
+        "updateDate": "2024-07-08 11:43:30",
         "messages": [
             {
                 "msg": "Hola, ¿En qué podemos asistir?",
@@ -1936,7 +1936,7 @@ export const fakeChats = [
             "longitude": "-99.1497543"
         },
         "lastModification": "Invalid Date",
-        "updateDate": "2024-07-09 11:42:51"
+        "updateDate": "2024-07-08 11:42:51"
     },
     {
         "messages": [
@@ -2138,7 +2138,7 @@ export const fakeChats = [
         "from_id": 1,
         "from": "Chat C2",
         "userUnread": 5,
-        "updateDate": "2024-07-09 11:36:46",
+        "updateDate": "2024-07-08 11:36:46",
         "policeUnread": 4,
         "user_creation": 7130,
         "lastModification": "Invalid Date"
@@ -2324,7 +2324,7 @@ export const fakeChats = [
         },
         "lastModification": "Invalid Date",
         "c5Unread": 0,
-        "updateDate": "2024-07-09 09:50:35",
+        "updateDate": "2024-07-08 09:50:35",
         "policeUnread": 4,
         "id": "x9SoYmWFsETcqfKaN4j8"
     },
@@ -2334,7 +2334,7 @@ export const fakeChats = [
             "longitude": "-99.15987907655763",
             "__typename": "Location"
         },
-        "updateDate": "2024-07-09 09:47:59",
+        "updateDate": "2024-07-08 09:47:59",
         "user_name": "Renato ",
         "from_id": 1,
         "c5Unread": 0,
@@ -4272,7 +4272,7 @@ export const fakeChats = [
     },
     {
         "clientId": 1,
-        "updateDate": "2024-07-08 10:48:15",
+        "updateDate": "2024-07-07 10:48:15",
         "user_name": "Claudia",
         "instance": "Benito Juarez",
         "user_cam": {
@@ -4440,7 +4440,7 @@ export const fakeChats = [
     {
         "c5Unread": 0,
         "instance": "Benito Juarez",
-        "updateDate": "2024-07-08 10:29:55",
+        "updateDate": "2024-07-07 10:29:55",
         "lastModification": "Invalid Date",
         "clientId": 1,
         "from_id": 1,
@@ -4673,7 +4673,7 @@ export const fakeChats = [
         "from_id": 1,
         "from": "Chat C2",
         "policeUnread": 16,
-        "updateDate": "2024-07-08 10:19:25",
+        "updateDate": "2024-07-06 10:19:25",
         "lastModification": "Invalid Date",
         "messages": [
             {
@@ -5399,7 +5399,7 @@ export const fakeChats = [
         "clientId": 1,
         "user_creation": 5292,
         "policeUnread": 11,
-        "updateDate": "2024-07-08 10:19:06",
+        "updateDate": "2024-07-06 10:19:06",
         "location": {
             "longitude": "-99.1636597",
             "latitude": "19.3913412",

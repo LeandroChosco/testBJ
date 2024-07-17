@@ -3,13 +3,13 @@
   background-color: #dadada;
   padding: 25px;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
-.userList > .card {
+.userList>.card {
   width: 100%;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .fullHeight {
@@ -22,20 +22,25 @@
 
 .messages {
   margin-top: 15px;
-  width: 93%;
+  width: 100%;
   height: 88%;
   /* border-style: dotted; */
   /* border-color: red; */
 }
 
 .messagesContainer {
-  height: 34%;
+  /* height: 34%;
   width: 91%;
   position: absolute;
-  top: 55%;
+  top: 55%; */
   overflow-x: hidden;
   overflow-y: auto;
   margin: 0;
+  height: 45rem;
+}
+
+.messagesContainer::-webkit-scrollbar {
+  width: 5px;
 }
 
 .messagesHistorialContainer {
@@ -59,17 +64,18 @@
   width: 100%;
 }
 
-.cameraView > .row > .col > .card {
+.cameraView>.row>.col>.card {
   height: 100% !important;
 }
 
-.cameraView > .row > .col > .card > .card-body {
+.cameraView>.row>.col>.card>.card-body {
   height: 100% !important;
 }
 
-.cameraView > .row > .card > .card-body > .dataHolder {
+.cameraView>.row>.card>.card-body>.dataHolder {
   height: 100% !important;
 }
+
 .app-container {
   position: absolute;
   bottom: 0;
@@ -80,45 +86,46 @@
 
 .user {
   position: relative;
-  background: #afafaf;
-  border-radius: .4em;
+  background: #e9f1fc;
+  border-radius: 2rem 2rem 2rem 0;
   width: 85%;
-  padding: 5px;
-  color: white;
-  margin-top: 10px;
+  padding: 1rem;
+  color: #535353;
+  margin-top:10px;
 }
 
-.user > p {
-  color: white;
+.user >p {
+  color: #535353;
 }
 
-/* .user:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 0;
-    height: 0;
-    border: 20px solid transparent;
-    border-right-color: #8a2908;
-    border-left: 0;
-    border-bottom: 0;
-    margin-top: -10px;
-    margin-left: -20px;
-} */
+/*.user:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border: 20px solid transparent;
+  border-right-color: #8A2908;
+  border-left: 0;
+  border-bottom: 0;
+  margin-top: -10px;
+  margin-left: -20px;
+}*/
 
 .support {
   position: relative;
-  background: var(--main-bg-color);
-  border-radius: .4em;
+  background: #F7F7F7;
+  border-radius: 2rem 2rem 0 2rem;
+  padding: 1rem;
+  margin-top:10px;
   width: 85%;
-  padding: 5px;
-  color: white;
   margin-left: 15%;
+  color: #535353;
 }
 
-.support > p {
-  color: white;
+.support > p{
+  color: #535353;
 }
 
 /* .support:after {
@@ -146,7 +153,7 @@
   margin-top: 10px;
 }
 
-.policia > p {
+.policia>p {
   color: white;
 }
 
@@ -176,9 +183,10 @@
   transition: all 0.2s linear;
 }
 
-.sistema > p {
+.sistema>p {
   color: white;
 }
+
 .sistema-dark {
   position: relative;
   background: var(--dark-mode-bar);
@@ -190,7 +198,7 @@
   transition: all 0.2s linear;
 }
 
-.sistema-dark > p {
+.sistema-dark>p {
   color: white;
 }
 
@@ -210,8 +218,10 @@
 } */
 
 .messages_send_box {
-  position: absolute;
-  width: 92%;
+  display: flex;
+  position: fixed;
+  bottom: 0px;
+  width: 66%;
   height: 10vh;
   background-color: #c0c0c0;
   padding: 5px;
@@ -219,11 +229,15 @@
 
 #messsageTextarea {
   background-color: white;
-  border: 1px solid black;
+  border: 1px solid #efeff0;
   border-radius: 5px;
   width: 100%;
   height: 8vh;
   resize: none;
+}
+
+#messsageTextarea::-webkit-scrollbar {
+  width: 5px;
 }
 
 #sendbutton {
@@ -268,12 +282,12 @@
   border-radius: 15px;
 }
 
-.notificationNumber > p {
+.notificationNumber>p {
   color: #fafafa;
   text-align: center;
 }
 
-.camContainerChatDiv > .card > .card-body > .camHolder {
+.camContainerChatDiv>.card>.card-body>.camHolder {
   height: 100% !important;
 }
 
@@ -287,4 +301,13 @@
 .messageDate {
   text-align: right;
   color: 'white';
+}
+
+.textarea-container {
+  display: flex;
+  position: relative;
+  width: 100%;
+  margin-top: 1.5rem;
+  justify-content: right;
+  align-items: center;
 }

@@ -3,13 +3,13 @@
     background-color: #dadada;
     padding: 25px;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .userList>.card {
     width: 100%;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .fullHeight {
@@ -22,7 +22,7 @@
 
 .messages {
     margin-top: 15px;
-    width: 93%;
+    width: 100%;
     height: 95%;
     /* border-style: dotted;
     border-color: red; */
@@ -30,13 +30,18 @@
 
 
 .messagesContainer {
-    height: 27%;
+    /* height: 34%;
     width: 91%;
     position: absolute;
-    top: 61%;
+    top: 55%; */
     overflow-x: hidden;
     overflow-y: auto;
     margin: 0;
+    height: 45rem;
+}
+
+.messagesContainer::-webkit-scrollbar {
+    width: 5px;
 }
 
 .messagesHistorialContainer {
@@ -78,16 +83,16 @@
 
 .user {
     position: relative;
-    background: #afafaf;
-    border-radius: .4em;
+    background: #e9f1fc;
+    border-radius: 2rem 2rem 2rem 0;
     width: 85%;
-    padding: 5px;
-    color: white;
-    margin-top: 10px;
+    padding: 1rem;
+    color: #535353;
+    margin-top:10px;
 }
 
-.user>p {
-    color: white;
+.user >p {
+    color: #535353;
 }
 
 /*.user:after {
@@ -107,16 +112,17 @@
 
 .support {
     position: relative;
-    background: var(--main-bg-color);
-    border-radius: .4em;
-    padding: 5px;
-    margin-top: 10px;
+    background: #F7F7F7;
+    border-radius: 2rem 2rem 0 2rem;
+    padding: 1rem;
+    margin-top:10px;
     width: 85%;
     margin-left: 15%;
+    color: #535353;
 }
 
-.support>p {
-    color: white;
+.support > p{
+    color: #535353;
 }
 
 /*.support:after {
@@ -135,9 +141,10 @@
 }*/
 
 .messages_send_box {
+    display: flex;
     position: fixed;
     bottom: 0px;
-    width: 92%;
+    width: 66%;
     height: 10vh;
     background-color: #c0c0c0;
     padding: 5px;
@@ -145,11 +152,15 @@
 
 #messsageTextarea {
     background-color: white;
-    border: 1px solid black;
+    border: 1px solid #efeff0;
     border-radius: 5px;
     width: 100%;
     height: 8vh;
     resize: none;
+}
+
+#messsageTextarea::-webkit-scrollbar {
+    width: 5px;
 }
 
 #sendbutton {
@@ -212,4 +223,13 @@
     font-weight: bold;
     position: fixed;
     bottom: 0px;
+}
+
+.textarea-container {
+    display: flex;
+    position: relative;
+    width: 100%;
+    margin-top: 1.5rem;
+    justify-content: right;
+    align-items: center;
 }

@@ -228,7 +228,7 @@ class Chat extends Component {
     let chats = fakeChats;
 
     return (
-      <div style={{padding: "1rem"}}>
+      <div style={{ padding: "1rem" }}>
         <div style={{ display: "flex", flexDirection: "row" }}>
           {/* <Input
             placeholder={localStorage.getItem(LANG) === "english" ? "🔎 Search" : "🔎 Buscar"}
@@ -236,94 +236,73 @@ class Chat extends Component {
             onChange={this.filterAction}
           ></Input> */}
           <div className="ui input"
-            style={{ flex: 2, height: "5rem" }}
+            style={{ flex: 2, height: "4rem" }}
             onChange={this.filterAction}>
             <input className="input" style={{ borderRadius: "1rem" }} placeholder={localStorage.getItem(LANG) === "english" ? "🔎   Search" : "🔎   Buscar"} />
           </div>
-
-          {/* <Dropdown
-            placeholder={localStorage.getItem(LANG) === "english" ? "Search by" : "Buscar por"}
-            fluid
-            selection
-            options={localStorage.getItem(LANG) === "english" ? SEARCHENGLISHOPTIONS : SEARCHOPTIONS}
-            defaultValue="name"
-            onChange={this.handleChangeOption}
-            style={{ flex: 1 }}
-          /> */}
         </div>
         <h1>Chat</h1>
         <div
+          className="container-chats"
           style={{
-            height: "81vh",
-            overflow: "scroll",
+            height: "47rem",
+            overflowY: "scroll",
             backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada",
+            border: "solid 1px #f2f3f4"
           }}
         >
           {chats.map((chat, i) => {
-            const date =
-              chat && chat.create_at
-                ? moment(chat.create_at).format("DD-MM-YYYY, HH:mm:ss")
-                : moment(chat.lastModification).format("DD-MM-YYYY, HH:mm:ss");
 
+            const date = this.validateChat(chat);
             // let badgeNumber = 0;
             // if (this.state.chatId) {
             //   badgeNumber = this.state.chatId === chat.id ? 0 : chat.c5Unread;
             // }
             return (
-              <Card
-                className={i === index ? "activeChat" : ""}
-                style={{ width: "100%", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}
+              <div
+                className={i === index ? "card-chat activeChat" : "card-chat"}
+                style={{ width: "100%", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear", margin: "0 !important", }}
                 key={i}
                 onClick={() => this.changeChat(chat, i)}
               >
-                <Card.Content>
-                  <div style={{ position: "relative" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <h4 style={{ marginRight: "0.3rem" }}>{chat.user_name}</h4> <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>{chat.updateDate}</p>
-                    </div>
-                    {chat.active !== undefined && chat.active ? (
-                      <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>
-                        {chat.messages
-                          ? chat.messages.length > 0
-                            ? (chat.messages[chat.messages.length - 1].from ===
-                              "user"
-                              ? chat.user_name.split(" ")[0]
-                              : "C5") +
-                            ": " +
-                            chat.messages[chat.messages.length - 1].msg //msg
-                            : localStorage.getItem(LANG) === "english" ? "No messages to show" : "No hay mensajes que mostrar"
-                          : localStorage.getItem(LANG) === "english" ? "No messages to show" : "No hay mensajes que mostrar"}
-                      </p>
-                    ) : (
-                      <p></p>
-                    )}
-
-                    {chat.c5Unread > 0 &&
-                      <div
-                        className="notificationNumber"
-                        style={{ marginTop: 15 }}
-                      >
-                        <p>{chat.c5Unread}</p>
-                      </div>
-                    }
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                      }}
-                    >
-                      {/* <div > <small style={{ ...styles.badge, marginLeft: 3, alignSelf: "flex-end", display: "flex" }}> <Icon name={chat.active ? "clock" : "checkmark"}></Icon> <strong>{chat.active ? "Proceso" : null}</strong> </small></div> */}
-                    </div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <div className="avatar-img">
+                    <b>
+                      {(chat.user_name.split(" ").length > 1 && chat.user_name.split(" ")[1] !== "") ? `${chat.user_name.split(" ")[0][0].toUpperCase()}${chat.user_name.split(" ")[1][0].toUpperCase()}` : chat.user_name[0].toUpperCase()}
+                    </b>
                   </div>
-                </Card.Content>
-              </Card>
+                  <div className='col'>
+                    <h3 style={{ marginRight: "0.3rem" }}>{chat.user_name}</h3>
+                    <p>{chat.messages[chat.messages.length - 1].msg.length < 28 ? chat.messages[chat.messages.length - 1].msg : `${chat.messages[chat.messages.length - 1].msg.slice(0, 26)}...`}</p>
+                  </div>
+                </div>
+                <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>{date}</p>
+                {/* {chat.active !== undefined && chat.active ? (
+                  <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>
+                    {chat.messages
+                      ? chat.messages.length > 0
+                        ? (chat.messages[chat.messages.length - 1].from ===
+                          "user"
+                          ? chat.user_name.split(" ")[0]
+                          : "C5") +
+                        ": " +
+                        chat.messages[chat.messages.length - 1].msg //msg
+                        : localStorage.getItem(LANG) === "english" ? "No messages to show" : "No hay mensajes que mostrar"
+                      : localStorage.getItem(LANG) === "english" ? "No messages to show" : "No hay mensajes que mostrar"}
+                  </p>
+                ) : (
+                  <p></p>
+                )} */}
+
+                {chat.c5Unread > 0 &&
+                  <div
+                    className="notificationNumber"
+                    style={{ marginTop: 15 }}
+                  >
+                    <p>{chat.c5Unread}</p>
+                  </div>
+                }
+              </div>
             );
           })}
         </div>
@@ -380,7 +359,7 @@ class Chat extends Component {
             return (
               <Card
                 className={i === index ? "activeChat" : ""}
-                style={{ width: "100%" }}
+                style={{ width: "100%", margin: "0 !important" }}
                 key={i}
                 onClick={() => this.changeHistorial(chat, i)}
               >
@@ -437,6 +416,24 @@ class Chat extends Component {
         </div>
       </div>
     );
+  }
+
+  formatChat = (date) => moment(date).format("DD-MM-YYYY");
+
+  validateChat = (chat) => {
+
+    // const nowDate = new Date();  // DEscomentar esta línea cuando ya funcione todo
+    const nowDate = new Date("2024-07-10");
+    const formatNow = moment(nowDate).format("DD-MM-YYYY");
+
+    const date =
+      chat && chat.updateDate ?
+        this.formatChat(chat.updateDate) === formatNow ? moment(chat.updateDate).format("HH:mm") : moment(chat.updateDate).format("DD/MM/YYYY")
+        : chat.create_at
+          ? this.formatChat(chat.create_at) === formatNow ? moment(chat.create_at).format("HH:mm") : moment(chat.create_at).format("DD/MM/YYYY")
+          : this.formatChat(chat.lastModification) === formatNow ? moment(chat.lastModification).format("HH:mm") : moment(chat.lastModification).format("DD/MM/YYYY");
+
+    return date;
   }
 
   _changeView = () => {
@@ -502,86 +499,9 @@ class Chat extends Component {
       >
         <div className="row fullHeight" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#0c304e", transition: "all 0.2s linear" }}>
           <div className="col-3 userList" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "#2e597d", transition: "all 0.2s linear" }}>
-            {/* <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem" }}>
-              <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>Chats</p>
-              <Radio
-                toggle
-                // onClick={this._changeView}
-                id="toggle24"
-                checked={!this.state.showHistorial}
-                style={{ margin: "0 1rem" }}
-              />
-              <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>Historial</p>
-            </div>
-            <hr /> */}
-
-            {loadingHistorial ?
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
-                <Spinner animation="border" variant="info" role="status" size="xl">
-                  <span className="sr-only">Loading...</span>
-                </Spinner>
-              </div>
-              :
-              !showHistorial ?
-                <Tab
-                  menu={{ pointing: true }}
-                  panes={this.panesHistorial}
-                  defaultActiveIndex={alarmIndex ? alarmIndex : 0}
-                  onTabChange={(t, i) => {
-                    const { chats } = this.props;
-                    const { index } = this.state;
-                    let newChats = chats.filter(
-                      (e) => e.alarmType === this.FILTERSOPTIONS[i.activeIndex]
-                    );
-                    if (index) {
-                      let selected =
-                        newChats.length !== 0 && newChats[index]
-                          ? newChats[index].alarmType
-                          : newChats[0].alarmType;
-                      this.setState({
-                        from: selected ? selected : "Error getting data",
-                      });
-                    }
-                    this.setState({
-                      chats: newChats,
-                      activeIndex: i.activeIndex,
-                      index: null,
-                      tabIndex: i.activeIndex,
-                    });
-                  }}
-                />
-                :
-                <Tab
-                  menu={{ pointing: true }}
-                  panes={this.panes}
-                  defaultActiveIndex={alarmIndex ? alarmIndex : 0}
-                  onTabChange={(t, i) => {
-                    const { chats } = this.props;
-                    const { index } = this.state;
-                    let newChats = chats.filter(
-                      (e) => e.alarmType === this.FILTERSOPTIONS[i.activeIndex]
-                    );
-                    if (index) {
-                      let selected =
-                        newChats.length !== 0 && newChats[index]
-                          ? newChats[index].alarmType
-                          : newChats[0].alarmType;
-                      this.setState({
-                        from: selected ? selected : "Error getting data",
-                      });
-                    }
-                    this.setState({
-                      chats: newChats,
-                      activeIndex: i.activeIndex,
-                      index: null,
-                      tabIndex: i.activeIndex,
-                    });
-                  }}
-                />
-            }
-
+            {this.renderListChats("C5")}
           </div>
-          <div className="col-8" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear" }}>
+          <div className="col-9" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", transition: "all 0.2s linear" }}>
             {
               loadingChat ?
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
@@ -627,29 +547,47 @@ class Chat extends Component {
                                 {this.state.messages.map((value, ref) => {
                                   const formatDate = new Date(value.dateTime.seconds * 1000);
                                   return (
-                                    <div
-                                      key={ref}
-                                      className={value.from === "user" ? "user" : "support"}
-                                      ref={"message" + ref
+                                    <div style={{ display: "flex", margin: value.from === "user" ? "0 0 0 1.5rem" : "0 1.5rem 0 0" }}>
+                                      {value.from === "user" &&
+                                        <div className="avatar-img">
+                                          <b>
+                                            TS
+                                            {/* {(chats[index].user_name.split(" ").length > 1 && chats[index].user_name.split(" ")[1] !== "") ? `${chats[index].user_name.split(" ")[0][0].toUpperCase()}${chats[index].user_name.split(" ")[1][0].toUpperCase()}` : chats[index].user_name[0].toUpperCase()} */}
+                                          </b>
+                                        </div>
                                       }
-                                      id={"message" + ref}
-                                    >
-                                      <p>{value.msg}</p>
-                                      <small>
-                                        {value.dateTime.toDate
-                                          ?
-                                          value.userName || value.userEmail
+                                      <div
+                                        key={ref}
+                                        className={value.from === "user" ? "user" : "support"}
+                                        ref={"message" + ref
+                                        }
+                                        id={"message" + ref}
+                                      >
+                                        <p>{value.msg}</p>
+                                        <small>
+                                          {value.dateTime.toDate
                                             ?
-                                            moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                                            value.userName || value.userEmail
+                                              ?
+                                              moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                                              :
+                                              moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
                                             :
-                                            moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
-                                          :
-                                          value.userName || value.userEmail
-                                            ?
-                                            moment(formatDate).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
-                                            :
-                                            moment(formatDate).format("DD-MM-YYYY, HH:mm:ss")}
-                                      </small>
+                                            value.userName || value.userEmail
+                                              ?
+                                              moment(formatDate).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                                              :
+                                              moment(formatDate).format("DD-MM-YYYY, HH:mm:ss")}
+                                        </small>
+                                      </div>
+                                      {value.from !== "user" &&
+                                        <div className="avatar-img">
+                                          <b>
+                                            TS
+                                            {/* {(chats[index].user_name.split(" ").length > 1 && chats[index].user_name.split(" ")[1] !== "") ? `${chats[index].user_name.split(" ")[0][0].toUpperCase()}${chats[index].user_name.split(" ")[1][0].toUpperCase()}` : chats[index].user_name[0].toUpperCase()} */}
+                                          </b>
+                                        </div>
+                                      }
                                     </div>
                                   )
                                 }
@@ -666,355 +604,531 @@ class Chat extends Component {
 
                   this.state.statusCurrentChat ?
 
-                    <div className="messages">
-                      {!loading && chatId !== "" && chats[index] ? (
-                        <div className="cameraView">
-                          <h2
-                            className={"Chat C5"}
-                            style={{
-                              textAlign: "center",
-                              backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" :
-                                COLORS[
-                                chats[index].alarmType ? chats[index].alarmType : "c5"
-                                ],
-                              height: "30px",
-                            }}
-                          >
-                            {chats[index].alarmType
-                              ? chats[index].alarmType
-                              : "Chat C2"}
-                          </h2>
-                          <div className="row" style={{ height: "70%", margin: 0 }}>
-                            <div className="col" style={{ height: "100%" }}>
-                              {infoCurrentCamera.google_cordenate ? (
-                                <MapContainer
-                                  options={{
-                                    center: {
-                                      lat: parseFloat(
-                                        infoCurrentCamera.google_cordenate.split(
-                                          ","
-                                        )[0]
-                                      ),
-                                      lng: parseFloat(
-                                        infoCurrentCamera.google_cordenate.split(
-                                          ","
-                                        )[1]
-                                      ),
-                                    },
-                                    zoom: 15,
-                                    mapTypeId: "roadmap",
-                                    zoomControl: false,
-                                    mapTypeControl: false,
-                                    streetViewControl: false,
-                                    fullscreenControl: false,
-                                    openConfirm: false,
-                                    typeConfirm: false,
-                                    openSelection: false,
-                                    checked: "",
-                                  }}
-                                  onMapLoad={this._onMapLoad}
-                                />
-                              ) : infoCurrentCamera.location ? (
-                                <MapContainer
-                                  options={{
-                                    center: {
-                                      lat: parseFloat(infoCurrentCamera.location.latitude),
-                                      lng: parseFloat(infoCurrentCamera.location.longitude),
-                                    },
-                                    zoom: 15,
-                                    mapTypeId: "roadmap",
-                                    zoomControl: false,
-                                    mapTypeControl: false,
-                                    streetViewControl: false,
-                                    fullscreenControl: false,
-                                    openConfirm: false,
-                                    typeConfirm: false,
-                                    openSelection: false,
-                                    checked: "",
-                                  }}
-                                  onMapLoad={this._onMapLoad}
-                                />
-                              )
-                                :
-                                <div className="row-6" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem" }}>
-                                  <img style={{ height: "22rem", marginTop: "-18rem" }} src={noCamera} alt="Imagen-No-Disponible" />
+                    <div className="container-chat">
+                      <div className='col-9'>
+                        <div className="messages">
+
+                          {
+                            !loading && chatId !== "" && chats[index] ?
+                              <div style={{ display: "grid" }}>
+                                <div style={{ display: "flex", alignItems: "center" }}>
+                                  <div className="avatar-img">
+                                    <b>
+                                      {(chats[index].user_name.split(" ").length > 1 && chats[index].user_name.split(" ")[1] !== "") ? `${chats[index].user_name.split(" ")[0][0].toUpperCase()}${chats[index].user_name.split(" ")[1][0].toUpperCase()}` : chats[index].user_name[0].toUpperCase()}
+                                    </b>
+                                  </div>
+                                  <div className='col'>
+                                    <h3 style={{ marginRight: "0.3rem" }}>{chats[index].user_name}</h3>
+                                  </div>
                                 </div>
-                              }
-                            </div>
-                            <div
-                              className="col camContainerChatDiv"
-                              style={{ height: "100%" }}
-                            >
-                              {camData && !loadingChat ? (
-                                <CameraStream
-                                  hideTitle
-                                  height="250px"
-                                  hideButton
-                                  hideInfo
-                                  propsIniciales={this.props}
-                                  marker={(camData)}
-                                />
+                                <hr />
+                              </div>
+                              : null
+                          }
+
+                          <div className="messagesContainer" id="messagesContainer">
+                            {/* {console.log(chats[index])} */}
+                            {!loading && chatId !== "" && chats[index] ? (
+                              chats[index].messages ? (
+                                this.state.messages !== undefined &&
+                                this.state.messages.map((value, ref) => {
+                                  const formatDate = new Date(value.dateTime.seconds * 1000);
+                                  return (
+                                    <div style={{ display: "grid" }}>
+                                      <div style={{ display: "flex", margin: value.from === "user" ? "0 0 0 1.5rem" : "0 1.5rem 0 0", alignItems: "center" }}>
+                                        {value.from === "user" &&
+                                          <div className="avatar-img" style={{ marginRight: "1rem", alignSelf: "flex-end" }}>
+                                            <b>
+                                              {(chats[index].user_name.split(" ").length > 1 && chats[index].user_name.split(" ")[1] !== "") ? `${chats[index].user_name.split(" ")[0][0].toUpperCase()}${chats[index].user_name.split(" ")[1][0].toUpperCase()}` : chats[index].user_name[0].toUpperCase()}
+                                            </b>
+                                          </div>
+                                        }
+                                        <div
+                                          key={ref}
+                                          className={value.from === "user" ? "user" : "support"}
+                                          ref={
+                                            ref === chats[index].messages.length - 1
+                                              ? "message"
+                                              : "message" + ref
+                                          }
+                                          id={
+                                            ref === chats[index].messages.length - 1
+                                              ? "lastMessage"
+                                              : "message" + ref
+                                          }
+                                        // style={
+                                        //   {
+                                        //     backgroundColor: (value.from === 1 || value.from === 2) && ((localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#5ab86d")
+                                        //   }
+                                        // }
+                                        >
+                                          <p>{value.msg}</p>
+                                          {/* <small>
+                                          {value.dateTime.toDate
+                                            ?
+                                            value.userName || value.userEmail
+                                              ?
+                                              moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                                              :
+                                              moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
+                                            :
+                                            value.userName || value.userEmail
+                                              ?
+                                              moment(formatDate).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                                              :
+                                              moment(formatDate).format("DD-MM-YYYY, HH:mm:ss")
+                                          }
+                                        </small> */}
+                                        </div>
+                                        {value.from !== "user" &&
+                                          <div className="avatar-img" style={{ marginLeft: "1rem", alignSelf: "flex-end" }}>
+                                            <b>
+                                              {(constants.client.split(" ").length > 1 && constants.client.split(" ")[1] !== "") ? `${constants.client.split(" ")[0][0].toUpperCase()}${constants.client.split(" ")[1][0].toUpperCase()}` : constants.client[0].toUpperCase()}
+                                            </b>
+                                          </div>
+                                        }
+                                      </div>
+                                      <p style={{ justifySelf: value.from === "user" ? "flex-start" : "flex-end", margin: "0.5rem 4.5rem" }}>
+                                        <small>
+                                          {moment(formatDate).format("DD-MM-YYYY - HH:mm")}
+                                        </small>
+                                      </p>
+                                    </div>
+                                  )
+                                }
+                                )
+                              ) : loading === true ? (
+                                <>
+                                  <FadeLoader
+                                    height={20}
+                                    width={7}
+                                    radius={20}
+                                    margin={5}
+                                    loading={loading}
+                                    css={styles.centered}
+                                  />
+                                  <p style={{ position: "fixed", top: "56%", left: "62%" }}>
+                                    {localStorage.getItem(LANG) === "english" ? "Loading chat" : "Cargando chat"}
+                                  </p>
+                                </>
                               ) : (
-                                <p>{localStorage.getItem(LANG) === "english" ? "No camera assigned" : "Sin camara asignada..."}</p>
+                                <p style={{ position: "fixed", top: "50%", left: "60%", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>
+                                  {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
+                                </p>
                               )
-                              }
-                            </div>
-                          </div>
-
-                          <div
-                            className="row"
-                            style={{
-                              height: "20%",
-                              width: "100%",
-                              margin: 0,
-                              marginTop: "5px",
-                            }}
-                          >
-                            <Card style={{ width: "100%", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-bar)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear", zIndex: 1 }}>
-                              <Card.Content>
-                                <div className="row">
-                                  <div className="col-8">
-                                    <div className="row" style={{ padding: "5px" }}>
-                                      <div
-                                        className="col-6"
-                                        style={{ fontSize: 13, paddingRight: 0 }}
-                                      >
-                                        <b>{localStorage.getItem(LANG) === "english" ? "Name: " : "Nombre: "}</b> {chats[index].user_name}
-                                      </div>
-                                      <div
-                                        className="col-3"
-                                        style={{
-                                          fontSize: 13,
-                                          paddingLeft: 0,
-                                          paddingRight: 0,
-                                        }}
-                                      >
-                                        <b>{localStorage.getItem(LANG) === "english" ? "Phone " : "Celular: "}</b> {chats[index].user_cam.phone}
-                                      </div>
-                                    </div>
-                                    <div className="row" style={{ padding: "5px" }}>
-                                      <div
-                                        className="col-6"
-                                        style={{ fontSize: 13, paddingRight: 0 }}
-                                      >
-                                        <b>{localStorage.getItem(LANG) === "english" ? "Address " : "Dirección: "}</b>
-                                        {infoCurrentCamera.street ? infoCurrentCamera.street : chats[index].street}{" "}
-                                        {infoCurrentCamera.number ? infoCurrentCamera.number : chats[index].number},{" "}
-                                        {infoCurrentCamera.town ? infoCurrentCamera.town : chats[index].town},{" "}
-                                        {infoCurrentCamera.township ? infoCurrentCamera.township : chats[index].township}
-                                      </div>
-                                      {
-                                        camData !== undefined &&
-                                        <div
-                                          className="col-3"
-                                          style={{
-                                            fontSize: 13,
-                                            paddingLeft: 0,
-                                            paddingRight: 0,
-                                          }}
-                                        >
-                                          <b>{localStorage.getItem(LANG) === "english" ? "Camera: " : "Cámara: "}</b> #cam{camData && camData.extraData.num_cam}
-                                        </div>
-
-                                      }
-
-                                    </div>
-                                    <div className="row" style={{ padding: "5px" }}>
-                                      <div
-                                        className="col-12"
-                                        style={{ fontSize: 13, paddingRight: 0 }}
-                                      >
-                                        {infoCurrentCamera.entrecalles ? (
-                                          <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
-                                            <b>{localStorage.getItem(LANG) === "english" ? "Between streets: " : "Entre Calles: "}</b>
-                                            {infoCurrentCamera.entrecalles}
-                                            {/* {console.log("chats ", chats[index])} */}
-                                          </p>
-                                        ) : null}
-                                      </div>
-                                    </div>
-                                    {personalInformation.alarmType ? (
-                                      <div className="row" style={{ padding: "5px" }}>
-                                        <div
-                                          className="col-6"
-                                          style={{ fontSize: 13, paddingRight: 0 }}
-                                        >
-                                          <b>{localStorage.getItem(LANG) === "english" ? "Description: " : "Descripción: "}</b>
-                                          {personalInformation.description
-                                            ? personalInformation.description
-                                            : ""}
-                                        </div>
-                                        <div
-                                          className="col-3"
-                                          style={{
-                                            fontSize: 13,
-                                            paddingLeft: 0,
-                                            paddingRight: 0,
-                                          }}
-                                        >
-                                          <b>{localStorage.getItem(LANG) === "english" ? "Alarm" : "Alarma: "}</b>{" "}
-                                          {personalInformation.alarmType
-                                            ? personalInformation.alarmType
-                                            : ""}
-                                        </div>
-                                        <div
-                                          className="col-3"
-                                          style={{
-                                            fontSize: 13,
-                                            paddingLeft: 0,
-                                            paddingRight: 0,
-                                          }}
-                                        >
-                                          <b>{localStorage.getItem(LANG) === "english" ? "NS Alarm" : "Alarma NS: "}</b>{" "}
-                                          {personalInformation.alarmSN
-                                            ? personalInformation.alarmSN
-                                            : ""}
-                                        </div>
-                                      </div>
-                                    ) : null}
-                                  </div>
-                                  <div
-                                    className="col-4"
-                                    style={{ margin: "auto" }}
-                                  >
-                                    {
-                                      (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ?
-                                        <Button className="btn btn-secondary" onClick={this.refreshButton}>{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}</Button>
-                                        :
-                                        <Button onClick={this.refreshButton}>{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}</Button>
-                                    }
-                                  </div>
-                                </div>
-                              </Card.Content>
-                            </Card>
-                          </div>
-                        </div>
-                      ) : null}
-                      <div className="messagesContainer" id="messagesContainer">
-                        {/* {console.log(chats[index])} */}
-                        {!loading && chatId !== "" && chats[index] ? (
-                          chats[index].messages ? (
-                            this.state.messages !== undefined &&
-                            this.state.messages.map((value, ref) => {
-                              const formatDate = new Date(value.dateTime.seconds * 1000);
-                              return (
-                                <div
-                                  key={ref}
-                                  className={value.from === "user" ? "user" : "support"}
-                                  ref={
-                                    ref === chats[index].messages.length - 1
-                                      ? "message"
-                                      : "message" + ref
-                                  }
-                                  id={
-                                    ref === chats[index].messages.length - 1
-                                      ? "lastMessage"
-                                      : "message" + ref
-                                  }
-                                  style={
-                                    {
-                                      backgroundColor: (value.from === 1 || value.from === 2) && ((localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#5ab86d")
-                                    }
-                                  }
-                                >
-                                  <p>{value.msg}</p>
-                                  <small>
-                                    {value.dateTime.toDate
-                                      ?
-                                      value.userName || value.userEmail
-                                        ?
-                                        moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
-                                        :
-                                        moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
-                                      :
-                                      value.userName || value.userEmail
-                                        ?
-                                        moment(formatDate).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
-                                        :
-                                        moment(formatDate).format("DD-MM-YYYY, HH:mm:ss")
-                                    }
-                                  </small>
-                                </div>
-                              )
-                            }
-                            )
-                          ) : loading === true ? (
-                            <>
-                              <FadeLoader
-                                height={20}
-                                width={7}
-                                radius={20}
-                                margin={5}
-                                loading={loading}
-                                css={styles.centered}
-                              />
-                              <p style={{ position: "fixed", top: "56%", left: "62%" }}>
-                                {localStorage.getItem(LANG) === "english" ? "Loading chat" : "Cargando chat"}
+                            ) : loading === true ? (
+                              <>
+                                <FadeLoader
+                                  height={20}
+                                  width={7}
+                                  radius={20}
+                                  margin={5}
+                                  loading={loading}
+                                  css={styles.centered}
+                                />
+                                <p style={{ position: "fixed", top: "56%", left: "62%" }}>
+                                  {localStorage.getItem(LANG) === "english" ? "Loading chat" : "Cargando chat"}
+                                </p>
+                              </>
+                            ) : (
+                              <p style={{ position: "fixed", top: "50%", left: "60%", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>
+                                {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
                               </p>
-                            </>
-                          ) : (
-                            <p style={{ position: "fixed", top: "50%", left: "60%", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>
-                              {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
-                            </p>
-                          )
-                        ) : loading === true ? (
-                          <>
-                            <FadeLoader
-                              height={20}
-                              width={7}
-                              radius={20}
-                              margin={5}
-                              loading={loading}
-                              css={styles.centered}
-                            />
-                            <p style={{ position: "fixed", top: "56%", left: "62%" }}>
-                              {localStorage.getItem(LANG) === "english" ? "Loading chat" : "Cargando chat"}
-                            </p>
-                          </>
-                        ) : (
-                          <p style={{ position: "fixed", top: "50%", left: "60%", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>
-                            {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
-                          </p>
-                        )}
-                      </div>
+                            )}
+                          </div>
 
-                      {
-                        chatId !== "" && chats[index] ? (
-                          <div className="messages_send_box" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" : "#c0c0c0", transition: "all 0.2s linear" }}>
-                            {!textareaDisabled ? (
-                              <div style={{ position: "relative", width: "100%", display: "flex" }}>
-                                <textarea
-                                  disabled={textareaDisabled}
-                                  placeholder={localStorage.getItem(LANG) === "english" ? "Text your message" : "Escriba su mensaje"}
-                                  name="text"
-                                  autoComplete="on"
-                                  autoCorrect="on"
-                                  id="messsageTextarea"
-                                  value={this.state.text}
-                                  onKeyPress={this.checkKey}
-                                  onChange={(event) => {
-                                    this.setState({ text: event.target.value });
-                                  }}
-                                  style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "transparent" : "white", width: "95%" }}
-                                ></textarea>
-                                <button style={{ width: "5%", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }} onClick={this.sendMessage}>
-                                  <i className="fa fa-envelope" aria-hidden="true"></i>
-                                </button>
-                                {/* <Icon
+                          {
+                            chatId !== "" && chats[index] ? (
+                              <div style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" : "transparent", transition: "all 0.2s linear" }}>
+                                {!textareaDisabled ? (
+                                  <div className="textarea-container">
+                                    <textarea
+                                      disabled={textareaDisabled}
+                                      placeholder={localStorage.getItem(LANG) === "english" ? "Text your message" : "Escriba su mensaje"}
+                                      name="text"
+                                      autoComplete="on"
+                                      autoCorrect="on"
+                                      id="messsageTextarea"
+                                      value={this.state.text}
+                                      onKeyPress={this.checkKey}
+                                      onChange={(event) => {
+                                        this.setState({ text: event.target.value });
+                                      }}
+                                      style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "transparent" : "white", width: "100%", padding: "1rem 8rem 1rem 1rem" }}
+                                    ></textarea>
+                                    <button className="btn btn-primary" style={{ transition: "all 0.2s linear", position: "absolute", marginRight: "1.5rem" }} onClick={this.sendMessage}>
+                                      Enviar
+                                      <i className="fa fa-paper-plane-o" style={{ marginLeft: "0.5rem" }} aria-hidden="true"></i>
+                                    </button>
+                                    {/* <Icon
                                   name="send"
                                   id="sendbutton"
                                   onClick={this.sendMessage}
                                 /> */}
+                                  </div>
+                                ) : (
+                                  <div className="closed-ticked">
+                                    {localStorage.getItem(LANG) === "english" ? "The ticket is already closed" : "El ticket ya se encuentra cerrado"}
+                                  </div>
+                                )}
                               </div>
-                            ) : (
-                              <div className="closed-ticked">
-                                {localStorage.getItem(LANG) === "english" ? "The ticket is already closed" : "El ticket ya se encuentra cerrado"}
-                              </div>
-                            )}
-                          </div>
-                        ) : null
-                      }
+                            ) : null
+                          }
+                        </div>
+                      </div>
+                      <div className='col-3'>
+                        Acá va info cam
+                      </div>
                     </div>
+                    // <div className="messages">
+                    //   {!loading && chatId !== "" && chats[index] ? (
+                    //     <div className="cameraView">
+                    //       <h2
+                    //         className={"Chat C5"}
+                    //         style={{
+                    //           textAlign: "center",
+                    //           backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" :
+                    //             COLORS[
+                    //             chats[index].alarmType ? chats[index].alarmType : "c5"
+                    //             ],
+                    //           height: "30px",
+                    //         }}
+                    //       >
+                    //         {chats[index].alarmType
+                    //           ? chats[index].alarmType
+                    //           : "Chat C2"}
+                    //       </h2>
+                    //       <div className="row" style={{ height: "70%", margin: 0 }}>
+                    //         <div className="col" style={{ height: "100%" }}>
+                    //           {infoCurrentCamera.google_cordenate ? (
+                    //             <MapContainer
+                    //               options={{
+                    //                 center: {
+                    //                   lat: parseFloat(
+                    //                     infoCurrentCamera.google_cordenate.split(
+                    //                       ","
+                    //                     )[0]
+                    //                   ),
+                    //                   lng: parseFloat(
+                    //                     infoCurrentCamera.google_cordenate.split(
+                    //                       ","
+                    //                     )[1]
+                    //                   ),
+                    //                 },
+                    //                 zoom: 15,
+                    //                 mapTypeId: "roadmap",
+                    //                 zoomControl: false,
+                    //                 mapTypeControl: false,
+                    //                 streetViewControl: false,
+                    //                 fullscreenControl: false,
+                    //                 openConfirm: false,
+                    //                 typeConfirm: false,
+                    //                 openSelection: false,
+                    //                 checked: "",
+                    //               }}
+                    //               onMapLoad={this._onMapLoad}
+                    //             />
+                    //           ) : infoCurrentCamera.location ? (
+                    //             <MapContainer
+                    //               options={{
+                    //                 center: {
+                    //                   lat: parseFloat(infoCurrentCamera.location.latitude),
+                    //                   lng: parseFloat(infoCurrentCamera.location.longitude),
+                    //                 },
+                    //                 zoom: 15,
+                    //                 mapTypeId: "roadmap",
+                    //                 zoomControl: false,
+                    //                 mapTypeControl: false,
+                    //                 streetViewControl: false,
+                    //                 fullscreenControl: false,
+                    //                 openConfirm: false,
+                    //                 typeConfirm: false,
+                    //                 openSelection: false,
+                    //                 checked: "",
+                    //               }}
+                    //               onMapLoad={this._onMapLoad}
+                    //             />
+                    //           )
+                    //             :
+                    //             <div className="row-6" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem" }}>
+                    //               <img style={{ height: "22rem", marginTop: "-18rem" }} src={noCamera} alt="Imagen-No-Disponible" />
+                    //             </div>
+                    //           }
+                    //         </div>
+                    //         <div
+                    //           className="col camContainerChatDiv"
+                    //           style={{ height: "100%" }}
+                    //         >
+                    //           {camData && !loadingChat ? (
+                    //             <CameraStream
+                    //               hideTitle
+                    //               height="250px"
+                    //               hideButton
+                    //               hideInfo
+                    //               propsIniciales={this.props}
+                    //               marker={(camData)}
+                    //             />
+                    //           ) : (
+                    //             <p>{localStorage.getItem(LANG) === "english" ? "No camera assigned" : "Sin camara asignada..."}</p>
+                    //           )
+                    //           }
+                    //         </div>
+                    //       </div>
+
+                    //       <div
+                    //         className="row"
+                    //         style={{
+                    //           height: "20%",
+                    //           width: "100%",
+                    //           margin: 0,
+                    //           marginTop: "5px",
+                    //         }}
+                    //       >
+                    //         <Card style={{ width: "100%", backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-bar)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear", zIndex: 1 }}>
+                    //           <Card.Content>
+                    //             <div className="row">
+                    //               <div className="col-8">
+                    //                 <div className="row" style={{ padding: "5px" }}>
+                    //                   <div
+                    //                     className="col-6"
+                    //                     style={{ fontSize: 13, paddingRight: 0 }}
+                    //                   >
+                    //                     <b>{localStorage.getItem(LANG) === "english" ? "Name: " : "Nombre: "}</b> {chats[index].user_name}
+                    //                   </div>
+                    //                   <div
+                    //                     className="col-3"
+                    //                     style={{
+                    //                       fontSize: 13,
+                    //                       paddingLeft: 0,
+                    //                       paddingRight: 0,
+                    //                     }}
+                    //                   >
+                    //                     <b>{localStorage.getItem(LANG) === "english" ? "Phone " : "Celular: "}</b> {chats[index].user_cam.phone}
+                    //                   </div>
+                    //                 </div>
+                    //                 <div className="row" style={{ padding: "5px" }}>
+                    //                   <div
+                    //                     className="col-6"
+                    //                     style={{ fontSize: 13, paddingRight: 0 }}
+                    //                   >
+                    //                     <b>{localStorage.getItem(LANG) === "english" ? "Address " : "Dirección: "}</b>
+                    //                     {infoCurrentCamera.street ? infoCurrentCamera.street : chats[index].street}{" "}
+                    //                     {infoCurrentCamera.number ? infoCurrentCamera.number : chats[index].number},{" "}
+                    //                     {infoCurrentCamera.town ? infoCurrentCamera.town : chats[index].town},{" "}
+                    //                     {infoCurrentCamera.township ? infoCurrentCamera.township : chats[index].township}
+                    //                   </div>
+                    //                   {
+                    //                     camData !== undefined &&
+                    //                     <div
+                    //                       className="col-3"
+                    //                       style={{
+                    //                         fontSize: 13,
+                    //                         paddingLeft: 0,
+                    //                         paddingRight: 0,
+                    //                       }}
+                    //                     >
+                    //                       <b>{localStorage.getItem(LANG) === "english" ? "Camera: " : "Cámara: "}</b> #cam{camData && camData.extraData.num_cam}
+                    //                     </div>
+
+                    //                   }
+
+                    //                 </div>
+                    //                 <div className="row" style={{ padding: "5px" }}>
+                    //                   <div
+                    //                     className="col-12"
+                    //                     style={{ fontSize: 13, paddingRight: 0 }}
+                    //                   >
+                    //                     {infoCurrentCamera.entrecalles ? (
+                    //                       <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
+                    //                         <b>{localStorage.getItem(LANG) === "english" ? "Between streets: " : "Entre Calles: "}</b>
+                    //                         {infoCurrentCamera.entrecalles}
+                    //                         {/* {console.log("chats ", chats[index])} */}
+                    //                       </p>
+                    //                     ) : null}
+                    //                   </div>
+                    //                 </div>
+                    //                 {personalInformation.alarmType ? (
+                    //                   <div className="row" style={{ padding: "5px" }}>
+                    //                     <div
+                    //                       className="col-6"
+                    //                       style={{ fontSize: 13, paddingRight: 0 }}
+                    //                     >
+                    //                       <b>{localStorage.getItem(LANG) === "english" ? "Description: " : "Descripción: "}</b>
+                    //                       {personalInformation.description
+                    //                         ? personalInformation.description
+                    //                         : ""}
+                    //                     </div>
+                    //                     <div
+                    //                       className="col-3"
+                    //                       style={{
+                    //                         fontSize: 13,
+                    //                         paddingLeft: 0,
+                    //                         paddingRight: 0,
+                    //                       }}
+                    //                     >
+                    //                       <b>{localStorage.getItem(LANG) === "english" ? "Alarm" : "Alarma: "}</b>{" "}
+                    //                       {personalInformation.alarmType
+                    //                         ? personalInformation.alarmType
+                    //                         : ""}
+                    //                     </div>
+                    //                     <div
+                    //                       className="col-3"
+                    //                       style={{
+                    //                         fontSize: 13,
+                    //                         paddingLeft: 0,
+                    //                         paddingRight: 0,
+                    //                       }}
+                    //                     >
+                    //                       <b>{localStorage.getItem(LANG) === "english" ? "NS Alarm" : "Alarma NS: "}</b>{" "}
+                    //                       {personalInformation.alarmSN
+                    //                         ? personalInformation.alarmSN
+                    //                         : ""}
+                    //                     </div>
+                    //                   </div>
+                    //                 ) : null}
+                    //               </div>
+                    //               <div
+                    //                 className="col-4"
+                    //                 style={{ margin: "auto" }}
+                    //               >
+                    //                 {
+                    //                   (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ?
+                    //                     <Button className="btn btn-secondary" onClick={this.refreshButton}>{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}</Button>
+                    //                     :
+                    //                     <Button onClick={this.refreshButton}>{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}</Button>
+                    //                 }
+                    //               </div>
+                    //             </div>
+                    //           </Card.Content>
+                    //         </Card>
+                    //       </div>
+                    //     </div>
+                    //   ) : null}
+                    //   <div className="messagesContainer" id="messagesContainer">
+                    //     {/* {console.log(chats[index])} */}
+                    //     {!loading && chatId !== "" && chats[index] ? (
+                    //       chats[index].messages ? (
+                    //         this.state.messages !== undefined &&
+                    //         this.state.messages.map((value, ref) => {
+                    //           const formatDate = new Date(value.dateTime.seconds * 1000);
+                    //           return (
+                    //             <div
+                    //               key={ref}
+                    //               className={value.from === "user" ? "user" : "support"}
+                    //               ref={
+                    //                 ref === chats[index].messages.length - 1
+                    //                   ? "message"
+                    //                   : "message" + ref
+                    //               }
+                    //               id={
+                    //                 ref === chats[index].messages.length - 1
+                    //                   ? "lastMessage"
+                    //                   : "message" + ref
+                    //               }
+                    //               style={
+                    //                 {
+                    //                   backgroundColor: (value.from === 1 || value.from === 2) && ((localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#5ab86d")
+                    //                 }
+                    //               }
+                    //             >
+                    //               <p>{value.msg}</p>
+                    //               <small>
+                    //                 {value.dateTime.toDate
+                    //                   ?
+                    //                   value.userName || value.userEmail
+                    //                     ?
+                    //                     moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                    //                     :
+                    //                     moment(value.dateTime.toDate()).format("DD-MM-YYYY, HH:mm:ss")
+                    //                   :
+                    //                   value.userName || value.userEmail
+                    //                     ?
+                    //                     moment(formatDate).format("DD-MM-YYYY, HH:mm:ss") + " - " + (value.userName ? value.userName : value.userEmail)
+                    //                     :
+                    //                     moment(formatDate).format("DD-MM-YYYY, HH:mm:ss")
+                    //                 }
+                    //               </small>
+                    //             </div>
+                    //           )
+                    //         }
+                    //         )
+                    //       ) : loading === true ? (
+                    //         <>
+                    //           <FadeLoader
+                    //             height={20}
+                    //             width={7}
+                    //             radius={20}
+                    //             margin={5}
+                    //             loading={loading}
+                    //             css={styles.centered}
+                    //           />
+                    //           <p style={{ position: "fixed", top: "56%", left: "62%" }}>
+                    //             {localStorage.getItem(LANG) === "english" ? "Loading chat" : "Cargando chat"}
+                    //           </p>
+                    //         </>
+                    //       ) : (
+                    //         <p style={{ position: "fixed", top: "50%", left: "60%", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>
+                    //           {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
+                    //         </p>
+                    //       )
+                    //     ) : loading === true ? (
+                    //       <>
+                    //         <FadeLoader
+                    //           height={20}
+                    //           width={7}
+                    //           radius={20}
+                    //           margin={5}
+                    //           loading={loading}
+                    //           css={styles.centered}
+                    //         />
+                    //         <p style={{ position: "fixed", top: "56%", left: "62%" }}>
+                    //           {localStorage.getItem(LANG) === "english" ? "Loading chat" : "Cargando chat"}
+                    //         </p>
+                    //       </>
+                    //     ) : (
+                    //       <p style={{ position: "fixed", top: "50%", left: "60%", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>
+                    //         {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
+                    //       </p>
+                    //     )}
+                    //   </div>
+
+                    //   {
+                    //     chatId !== "" && chats[index] ? (
+                    //       <div className="messages_send_box" style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-bar)" : "#c0c0c0", transition: "all 0.2s linear" }}>
+                    //         {!textareaDisabled ? (
+                    //           <div style={{ position: "relative", width: "100%", display: "flex" }}>
+                    //             <textarea
+                    //               disabled={textareaDisabled}
+                    //               placeholder={localStorage.getItem(LANG) === "english" ? "Text your message" : "Escriba su mensaje"}
+                    //               name="text"
+                    //               autoComplete="on"
+                    //               autoCorrect="on"
+                    //               id="messsageTextarea"
+                    //               value={this.state.text}
+                    //               onKeyPress={this.checkKey}
+                    //               onChange={(event) => {
+                    //                 this.setState({ text: event.target.value });
+                    //               }}
+                    //               style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "transparent" : "white", width: "95%" }}
+                    //             ></textarea>
+                    //             <button style={{ width: "5%", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }} onClick={this.sendMessage}>
+                    //               <i className="fa fa-envelope" aria-hidden="true"></i>
+                    //             </button>
+                    //             {/* <Icon
+                    //               name="send"
+                    //               id="sendbutton"
+                    //               onClick={this.sendMessage}
+                    //             /> */}
+                    //           </div>
+                    //         ) : (
+                    //           <div className="closed-ticked">
+                    //             {localStorage.getItem(LANG) === "english" ? "The ticket is already closed" : "El ticket ya se encuentra cerrado"}
+                    //           </div>
+                    //         )}
+                    //       </div>
+                    //     ) : null
+                    //   }
+                    // </div>
                     :
                     <>
                       <div className="row-6" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem" }}>
@@ -1175,9 +1289,9 @@ class Chat extends Component {
 
   changeChat = async (chat, i, flag = true, newMsg) => {
 
-    const { chats, setChats } = this.props
+    const { chats, setChats } = this.props;
 
-    // console.log(chat)
+    console.log(chat)
 
     const auxChats = [...fakeChats];
     const findIndex = auxChats.findIndex(el => el.id === chat.id);
@@ -1186,12 +1300,12 @@ class Chat extends Component {
       setChats(auxChats)
     }
 
-    // this.setState({ infoCurrentCamera: {}})
+    // this.setState({infoCurrentCamera: { }})
 
     this.getUserInfo(chat);
 
     // if(this.state.infoCurrentCamera){
-    //   this.setState({ infoCurrentCamera: {}})
+    //   this.setState({infoCurrentCamera: { }})
     // }
 
     if (chat && newMsg !== "NO") {
@@ -1236,7 +1350,7 @@ class Chat extends Component {
       }
       // refSOS
       //   .doc(chat.id)
-      //   .update({ c5Unread: 0 })
+      //   .update({c5Unread: 0 })
       //   .then(() => {
       //     this.setState({ from: "Chat C5" });
       //   });
@@ -1248,7 +1362,8 @@ class Chat extends Component {
         this.props.history.push("/alarm");
       }
     } else {
-      this.getMessages(chat.id);
+      this.setState({ messages: chat.messages }); // Borrar esta línea y descomentar la de abajo cuando se termine de trabajar
+      // this.getMessages(chat.id);
       this.setState({ loading: true, camData: undefined }, () => {
         this._changeUserCam(chat);
         this.props.stopNotification();
@@ -1341,7 +1456,7 @@ class Chat extends Component {
     // console.log(indexChat)
     // console.log("chat", chatId)
     // console.log("statechat", this.state.chatId)
-    // this.setState({ messages: chats[indexChat].messages, chatId })
+    // this.setState({messages: chats[indexChat].messages, chatId })
     this.messageListener = refSOS.doc(chatId).onSnapshot((snapShot) => {
       if (chatId === this.state.chatId) {
         this.setState({ messages: snapShot.get("messages"), chatId });
@@ -1555,16 +1670,16 @@ class Chat extends Component {
     const { alarmIndex, chatId } = this.props.match.params;
 
 
-    // this.props.history.location.pathname.split("/").length > 2 && this.setState({ showHistorial: !this.state.showHistorial })
+    // this.props.history.location.pathname.split("/").length > 2 && this.setState({showHistorial: !this.state.showHistorial })
 
     // if (this.props.chats) {
     //   if (alarmIndex) {
-    //     this.setState({ chats: this.props.chats, activeIndex: alarmIndex });
+    //     this.setState({chats: this.props.chats, activeIndex: alarmIndex });
     //   } else {
     //     const filtered_chats = this.props.chats.filter(
     //       (item) => item.alarmType === this.FILTERSOPTIONS[this.state.tabIndex]
     //     );
-    //     this.setState({ chats: filtered_chats });
+    //     this.setState({chats: filtered_chats });
     //   }
     // }
 
