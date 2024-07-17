@@ -279,8 +279,10 @@ class Chat extends Component {
                 <div style={{ display: "grid", alignItems: "center", justifyContent: "flex-end" }}>
                   <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>{date}</p>
                   {chat.c5Unread > 0 &&
-                    <div className="notificationNumber">
-                      <p>{chat.c5Unread}</p>
+                    <div style={{ display: "grid", width: "100%", justifyContent: "flex-end" }}>
+                      <div className="notificationNumber">
+                        <p>{chat.c5Unread}</p>
+                      </div>
                     </div>
                   }
                 </div>
