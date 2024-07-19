@@ -23,7 +23,7 @@ import conections from "../../conections";
 import { LANG, MODE } from "../../constants/token";
 import { MESSAGES_COLLECTION } from "../../Api/sos";
 import chatGeneral from '../../historial/BJ_Chat-General.json';
-import { fakeChats } from "./fakeData";
+// import { fakeChats } from "./fakeData";
 
 const refSOS = firebaseC5Benito
   .app("c5benito")
@@ -219,13 +219,13 @@ class Chat extends Component {
 
   renderListChats = (type) => {
     const { index } = this.state;
-    // const { /*chats,*/ setSOS, getChats } = this.props
+    const { chats, setSOS, getChats } = this.props
 
-    // if (chats.length === 0) {
-    //   getChats();
-    // }
+    if (chats.length === 0) {
+      getChats();
+    }
 
-    let chats = fakeChats;
+    // let chats = fakeChats;
 
     return (
       <div style={{ padding: "1rem" }}>
@@ -247,46 +247,47 @@ class Chat extends Component {
           style={{
             height: "47rem",
             overflowY: "scroll",
-            backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada",
+            backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "transparent",
             border: "solid 1px #f2f3f4"
           }}
         >
-          {chats.map((chat, i) => {
+          {chats && chats.length > 0 ?
+            chats.map((chat, i) => {
 
-            const date = this.validateChat(chat);
-            // let badgeNumber = 0;
-            // if (this.state.chatId) {
-            //   badgeNumber = this.state.chatId === chat.id ? 0 : chat.c5Unread;
-            // }
-            return (
-              <div
-                className={i === index ? "card-chat activeChat" : "card-chat"}
-                style={{ width: "100%", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear", margin: "0 !important", }}
-                key={i}
-                onClick={() => this.changeChat(chat, i)}
-              >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <div className="avatar-img">
-                    <b>
-                      {(chat.user_name.split(" ").length > 1 && chat.user_name.split(" ")[1] !== "") ? `${chat.user_name.split(" ")[0][0].toUpperCase()}${chat.user_name.split(" ")[1][0].toUpperCase()}` : chat.user_name[0].toUpperCase()}
-                    </b>
-                  </div>
-                  <div className='col'>
-                    <h3 style={{ marginRight: "0.3rem" }}>{chat.user_name}</h3>
-                    <p>{chat.messages[chat.messages.length - 1].msg.length < 28 ? chat.messages[chat.messages.length - 1].msg : `${chat.messages[chat.messages.length - 1].msg.slice(0, 26)}...`}</p>
-                  </div>
-                </div>
-                <div style={{ display: "grid", alignItems: "center", justifyContent: "flex-end" }}>
-                  <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>{date}</p>
-                  {chat.c5Unread > 0 &&
-                    <div style={{ display: "grid", width: "100%", justifyContent: "flex-end" }}>
-                      <div className="notificationNumber">
-                        <p>{chat.c5Unread}</p>
-                      </div>
+              const date = this.validateChat(chat);
+              // let badgeNumber = 0;
+              // if (this.state.chatId) {
+              //   badgeNumber = this.state.chatId === chat.id ? 0 : chat.c5Unread;
+              // }
+              return (
+                <div
+                  className={i === index ? "card-chat activeChat" : "card-chat"}
+                  style={{ width: "100%", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "var(--dark-mode-color)", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear", margin: "0 !important", }}
+                  key={i}
+                  onClick={() => this.changeChat(chat, i)}
+                >
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <div className="avatar-img">
+                      <b>
+                        {(chat.user_name.split(" ").length > 1 && chat.user_name.split(" ")[1] !== "") ? `${chat.user_name.split(" ")[0][0].toUpperCase()}${chat.user_name.split(" ")[1][0].toUpperCase()}` : chat.user_name[0].toUpperCase()}
+                      </b>
                     </div>
-                  }
-                </div>
-                {/* {chat.active !== undefined && chat.active ? (
+                    <div className='col'>
+                      <h3 style={{ marginRight: "0.3rem" }}>{chat.user_name}</h3>
+                      <p>{chat.messages[chat.messages.length - 1].msg.length < 28 ? chat.messages[chat.messages.length - 1].msg : `${chat.messages[chat.messages.length - 1].msg.slice(0, 26)}...`}</p>
+                    </div>
+                  </div>
+                  <div style={{ display: "grid", alignItems: "center", justifyContent: "flex-end" }}>
+                    <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>{date}</p>
+                    {chat.c5Unread > 0 &&
+                      <div style={{ display: "grid", width: "100%", justifyContent: "flex-end" }}>
+                        <div className="notificationNumber">
+                          <p>{chat.c5Unread}</p>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                  {/* {chat.active !== undefined && chat.active ? (
                   <p style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666", transition: "all 0.2s linear" }}>
                     {chat.messages
                       ? chat.messages.length > 0
@@ -303,9 +304,13 @@ class Chat extends Component {
                   <p></p>
                 )} */}
 
-              </div>
-            );
-          })}
+                </div>
+              );
+            })
+            : <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+              <Spinner animation="border" variant="info" role="status" size="xl" />
+            </div>
+          }
         </div>
       </div>
     );
@@ -423,8 +428,7 @@ class Chat extends Component {
 
   validateChat = (chat) => {
 
-    // const nowDate = new Date();  // DEscomentar esta línea cuando ya funcione todo
-    const nowDate = new Date("2024-07-10");
+    const nowDate = new Date();
     const formatNow = moment(nowDate).format("DD-MM-YYYY");
 
     const date =
@@ -711,7 +715,7 @@ class Chat extends Component {
                               </>
                             ) : (
                               <p style={{ position: "fixed", top: "50%", left: "60%", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white", transition: "all 0.2s linear" }}>
-                                {localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat"}
+                                {chats && chats.length > 0 ? localStorage.getItem(LANG) === "english" ? "No chat has been selected" : "No se ha seleccionado ningún chat" : localStorage.getItem(LANG) === "english" ? "Loading chats" : "Cargando chats"}
                               </p>
                             )}
                           </div>
@@ -1062,9 +1066,7 @@ class Chat extends Component {
 
     const { chats, setChats } = this.props;
 
-    console.log(chat)
-
-    const auxChats = [...fakeChats];
+    const auxChats = [...chats];
     const findIndex = auxChats.findIndex(el => el.id === chat.id);
     if (auxChats[findIndex]) {
       auxChats[findIndex].c5Unread = 0;
