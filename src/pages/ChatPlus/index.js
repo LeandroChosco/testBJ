@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, /*Icon,*/ Input, Tab, Radio } from "semantic-ui-react";
+import { Card, /*Icon,*/ Input, Tab, /*Radio*/ } from "semantic-ui-react";
 import FadeLoader from "react-spinners/FadeLoader";
 import Spinner from 'react-bootstrap/Spinner';
 import { Button } from "react-bootstrap";
@@ -157,54 +157,54 @@ class Chat extends Component {
     ? [undefined]
     : ["Policia", "Fuego", "Médico"];
 
-  filterAction = (event) => {
-    const {
-      target: { value },
-    } = event;
-    const { activeIndex } = this.state;
-    const { chats: chatsProps, /*setChats, getChats*/ } = this.props;
-    const { optionSelected, searching } = this.state;
-    this.setState({ searching: value.trim() }, () => {
-      let filterData = chatsProps;
-      if (this.props.history.location.pathname.includes("alarm")) {
-        filterData = chatsProps.filter(
-          (c) => c.alarmType === this.FILTERSOPTIONS[activeIndex]
-        );
-      }
-      let expresion = new RegExp(`${searching}.*`, "i");
-      if (searching.trim().length !== 0) {
-        let newFilterSearch;
-        if (optionSelected === "alertType") {
-          newFilterSearch = filterData.filter(
-            (c) => c.trackingType && expresion.test(c.trackingType)
-          );
-        } else if (optionSelected === "date") {
-          newFilterSearch = filterData.filter((c) =>
-            expresion.test(
-              moment(moment(c.create_at)).format("DD-MM-YYYY, HH:mm:ss")
-            )
-          );
-        } else if (optionSelected === "name") {
-          newFilterSearch = filterData.filter((c) =>
-            expresion.test(c.user_name)
-          );
-        }
-        // console.log(newFilterSearch)
-        // setChats(newFilterSearch);
-        // this.setState({ chats: newFilterSearch });
-      }
-      if (value.trim().length === 0) {
-        let newChats = chatsProps;
-        if (this.props.history.location.pathname.includes("alarm")) {
-          newChats = chatsProps.filter(
-            (c) => c.alarmType === this.FILTERSOPTIONS[activeIndex]
-          );
-        }
-        // setChats(newChats);
-        // this.setState({ chats: newChats });
-      }
-    });
-  };
+  // filterAction = (event) => {
+  //   const {
+  //     target: { value },
+  //   } = event;
+  //   const { activeIndex } = this.state;
+  //   const { chats: chatsProps, /*setChats, getChats*/ } = this.props;
+  //   const { optionSelected, searching } = this.state;
+  //   this.setState({ searching: value.trim() }, () => {
+  //     let filterData = chatsProps;
+  //     if (this.props.history.location.pathname.includes("alarm")) {
+  //       filterData = chatsProps.filter(
+  //         (c) => c.alarmType === this.FILTERSOPTIONS[activeIndex]
+  //       );
+  //     }
+  //     let expresion = new RegExp(`${searching}.*`, "i");
+  //     if (searching.trim().length !== 0) {
+  //       let newFilterSearch;
+  //       if (optionSelected === "alertType") {
+  //         newFilterSearch = filterData.filter(
+  //           (c) => c.trackingType && expresion.test(c.trackingType)
+  //         );
+  //       } else if (optionSelected === "date") {
+  //         newFilterSearch = filterData.filter((c) =>
+  //           expresion.test(
+  //             moment(moment(c.create_at)).format("DD-MM-YYYY, HH:mm:ss")
+  //           )
+  //         );
+  //       } else if (optionSelected === "name") {
+  //         newFilterSearch = filterData.filter((c) =>
+  //           expresion.test(c.user_name)
+  //         );
+  //       }
+  //       // console.log(newFilterSearch)
+  //       // setChats(newFilterSearch);
+  //       // this.setState({ chats: newFilterSearch });
+  //     }
+  //     // if (value.trim().length === 0) {
+  //     //   let newChats = chatsProps;
+  //     //   if (this.props.history.location.pathname.includes("alarm")) {
+  //     //     newChats = chatsProps.filter(
+  //     //       (c) => c.alarmType === this.FILTERSOPTIONS[activeIndex]
+  //     //     );
+  //     //   }
+  //     //   // setChats(newChats);
+  //     //   // this.setState({ chats: newChats });
+  //     // }
+  //   });
+  // };
 
   _getClient = () => {
     conections.getClients().then(res => {
@@ -237,7 +237,8 @@ class Chat extends Component {
           ></Input> */}
           <div className="ui input"
             style={{ flex: 2, height: "4rem" }}
-            onChange={this.filterAction}>
+          // onChange={this.filterAction}
+          >
             <input className="input" style={{ borderRadius: "1rem" }} placeholder={localStorage.getItem(LANG) === "english" ? "🔎   Search" : "🔎   Buscar"} />
           </div>
         </div>
@@ -332,7 +333,7 @@ class Chat extends Component {
           <Input
             placeholder={localStorage.getItem(LANG) === "english" ? "Search user" : "Buscar usuario"}
             style={{ flex: 2 }}
-            onChange={this.filterAction}
+            // onChange={this.filterAction}
           ></Input>
           {/* <Dropdown
               placeholder={localStorage.getItem(LANG) === "english" ? "Search by" : "Buscar por"}
@@ -457,16 +458,16 @@ class Chat extends Component {
   }
 
   render() {
-    const { alarmIndex } = this.props.match.params;
+    // const { alarmIndex } = this.props.match.params;
     const {
       chatId,
       index,
       loading,
       camData,
-      personalInformation,
+      // personalInformation,
       loadingChat,
       infoCurrentCamera,
-      loadingHistorial,
+      // loadingHistorial,
       showHistorial,
       currentHistorial,
     } = this.state;
@@ -1223,7 +1224,7 @@ class Chat extends Component {
   };
 
   getMessages = (chatId, /*historial*/) => {
-    const { /*chatFirebase,*/ chats } = this.props
+    // const { /*chatFirebase,*/ chats } = this.props
     // const indexChat = chats.findIndex(e => e.id === chatId)
     // console.log(indexChat)
     // console.log("chat", chatId)
