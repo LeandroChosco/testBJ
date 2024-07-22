@@ -21,6 +21,7 @@ export class TagCount extends React.Component {
         })
 
         const series = [{
+            name: "Conteo",
             data: arraySeries
         }]
 
@@ -43,7 +44,7 @@ export class TagCount extends React.Component {
                 }
             },
             dataLabels: {
-                enabled: false
+                enabled: true
             },
             legend: {
                 show: false
@@ -56,13 +57,27 @@ export class TagCount extends React.Component {
                         fontSize: '12px'
                     }
                 }
-            }
+            },
         }
 
         return (
             <div id="chart">
-                <h3>Conteo por tag</h3>
-                <ReactApexChart options={options} series={series} type="bar" height={200} />
+                <h3>Trending Topics</h3>
+                {
+                    data.length > 0 ?
+                        <ReactApexChart options={options} series={series} type="bar" height={200} />
+                        :
+                        <div style={{
+                            position: 'absolute',
+                            top: 0,
+                            bottom: 0,
+                            right: 0,
+                            left: 0,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            display: "flex"
+                        }}>No hay datos disponibles</div>
+                }
             </div>
         );
     }

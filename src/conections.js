@@ -124,7 +124,7 @@ export default {
   },
 
   getIncidentsMap: (filter) => {
-    if (filter) {
+    if(filter){
       return connectedSails.get(`${constants.sails_url}/incident/map?tag=${filter}`);
     } else {
       return connectedSails.get(`${constants.sails_url}/incident/map`);

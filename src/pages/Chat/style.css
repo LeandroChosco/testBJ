@@ -60,16 +60,16 @@
 
 .user {
     position: relative;
-    background: #afafaf;
-    border-radius: .4em;
+    background: #e9f1fc;
+    border-radius: 2rem 2rem 2rem 0;
     width: 85%;
-    padding: 5px;
-    color: white;
+    padding: 1rem;
+    color: #535353;
     margin-top:10px;
 }
 
 .user >p {
-    color: white;
+    color: #535353;
 }
 
 /*.user:after {
@@ -89,16 +89,17 @@
 
 .support {
     position: relative;
-    background: var(--main-bg-color);
-    border-radius: .4em;
-    padding: 5px;
+    background: #F7F7F7;
+    border-radius: 2rem 2rem 0 2rem;
+    padding: 1rem;
     margin-top:10px;
     width: 85%;
     margin-left: 15%;
+    color: #535353;
 }
 
 .support > p{
-    color: white;
+    color: #535353;
 }
 
 /*.support:after {
@@ -116,14 +117,14 @@
     margin-right: -20px;
 }*/
 
-.messages_send_box{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    left: 0;
+.messages_send_box {
+    display: flex;
+    position: fixed;
+    bottom: 0px;
+    width: 66%;
     height: 10vh;
-    background-color: #c0c0c0;   
-    padding:5px;     
+    background-color: #c0c0c0;
+    padding: 5px;
 }
 
 #messsageTextarea{
@@ -188,14 +189,13 @@
     color: white;
 }
 
-.notificationNumber{
+.notificationNumber {
     height: 20px;
     width: 20px;
-    position: absolute;
     right: 10px;
     top: 10px;
     margin: auto;
-    background: red;    
+    background: red;
     border-radius: 15px;
 }
 

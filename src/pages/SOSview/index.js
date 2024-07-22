@@ -635,7 +635,7 @@ class Chat extends Component {
                       </div>
                     ) : null}
                   </div>
-                  <div className='messagesContainer' id='messagesContainer'>
+                  <div className='messagesContainerSOS' id='messagesContainer'>
                     {
                       !loading && chatId !== '' && chats[index] ? chats[index].messages ? (
                         this.state.messages.map((value, ref) => (
@@ -684,7 +684,7 @@ class Chat extends Component {
                       )}
                   </div>
                   {chatId !== '' && chats[index] ? (
-                    <div className='messages_send_box_sos'>
+                    <div className='.messages_send_box_sos'>
                       {!textareaDisabled ? (
                         <div style={{ position: 'relative' }}>
                           <textarea
@@ -703,7 +703,7 @@ class Chat extends Component {
                           <Icon name='send' id='sendbutton' onClick={this.sendMessage} />
                         </div>
                       ) : (
-                        <div className='closed-ticked'>El ticket ya se encuentra cerrado</div>
+                        <div className='closed-ticked-sos'>El ticket ya se encuentra cerrado</div>
                       )}
                     </div>
                   ) : null}
@@ -827,7 +827,7 @@ class Chat extends Component {
             onChange={this.filterAction}
           ></Input>
         </div>
-        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada", transition: "all 0.2s linear", padding: '20px' }}>
+        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "transparent", transition: "all 0.2s linear", padding: '20px' }}>
           {chats.map((chat, i) => {
             const critical_color =
               chat && chat.critical_state && chat.critical_state !== 0 ? CRITICAL_COLORS[chat.critical_state] : null;

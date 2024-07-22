@@ -46,7 +46,15 @@ export default function Incident(props) {
         };
       }, 3000);
     })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err)
+        setDataMapState([]);
+        setTimeout(() => {
+          if (!rendered) {
+            setRendered(true);
+          };
+        }, 3000);
+      });
   };
 
   useEffect(() => {

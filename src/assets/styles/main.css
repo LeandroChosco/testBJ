@@ -160,29 +160,29 @@ textarea:focus:-ms-input-placeholder {
 }
 
 input::-webkit-input-placeholder {
-  color: #fff;
+  color: #c8c7c5;
 }
 input:-moz-placeholder {
-  color: #fff;
+  color: #c8c7c5;
 }
 input::-moz-placeholder {
-  color: #fff;
+  color: #c8c7c5;
 }
 input:-ms-input-placeholder {
-  color: #fff;
+  color: #c8c7c5;
 }
 
 textarea::-webkit-input-placeholder {
-  color: #fff;
+  color: #c8c7c5;
 }
 textarea:-moz-placeholder {
-  color: #fff;
+  color: #c8c7c5;
 }
 textarea::-moz-placeholder {
-  color: #fff;
+  color: #c8c7c5;
 }
 textarea:-ms-input-placeholder {
-  color: #fff;
+  color: #c8c7c5;
 }
 
 label {

@@ -44,7 +44,7 @@ export default function TimeLine() {
     };
 
     return (
-        <div id="scrollableDiv" style={{ height: "80vh", minWidth: "6rem", overflow: "hidden auto", padding: "0.75rem", display: "grid", alignItems: "center" }}>
+        <div id="scrollableDiv" style={{ height: "80vh", minWidth: "6rem", overflow: "hidden auto", padding: "0.75rem", display: "grid" }}>
             <InfiniteScroll
                 pageStart={0}
                 loadMore={fetchMoreData}
@@ -83,7 +83,7 @@ export default function TimeLine() {
                                                 </b>
                                                 :
                                                 <b>
-                                                    Unregistered user
+                                                    Usuario anónimo
                                                 </b>
                                             }
                                         </h6>
@@ -141,9 +141,16 @@ export default function TimeLine() {
                         {!loading &&
                             <>
                                 <br />
-                                <h2 className="noDataFound">
-                                    No data found
-                                </h2>
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    bottom: 0,
+                                    right: 0,
+                                    left: 0,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    display: "flex"
+                                }}>No hay datos disponibles</div>
                             </>
                         }
                     </div>

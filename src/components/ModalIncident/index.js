@@ -70,7 +70,7 @@ const ModalIncident = ({ marker, hideModal }) => {
                                                 </b>
                                                 :
                                                 <b>
-                                                    Unregistered user
+                                                    Usuario anónimo
                                                 </b>
                                             }
                                         </h6>

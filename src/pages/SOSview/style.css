@@ -28,8 +28,8 @@
   /* border-color: red; */
 }
 
-.messagesContainer {
-  height: 34%;
+.messagesContainerSOS {
+  height: 20rem;
   width: 91%;
   position: absolute;
   top: 55%;
@@ -277,11 +277,12 @@
   height: 100% !important;
 }
 
-.closed-ticked {
+.closed-ticked-sos {
   margin: auto;
   text-align: center;
-  padding: 2%;
+  padding: 2rem;
   font-weight: bold;
+  background-color: #dadada;
 }
 
 .messageDate {

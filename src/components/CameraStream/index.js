@@ -147,70 +147,111 @@ class CameraStream extends Component {
     let { activeIndex, display, num_cam, cameraID, cameraName, showData, /*photos,*/ data, qnapServer, qnapChannel, /*servidorMultimedia, photosLoading, videosLoading, videos,*/ historyLoading, video_history, searchLoading, isNewSearch, video_search, tryReconect, showModalMoreInformation, /*loadingSnap, isLoading, isRecording, restarting, loadingFiles,*/ modal, recordMessage, modalProblem, typeReport, phones, mails, problemDescription, showPTZ, inputCkecked, /*portContainer, dnsContainer,*/ copyButton, /*typeMBOX*/ } = this.state;
 
     return (
-      <Card className={(this.props.showButtons && (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)))) ? "reinvert-modal" : ""} style={{ display: display, padding: "0.75rem", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>
-        <NotificationSystem ref={this.notificationSystem} />
-        {this.props.horizontal ? (
-          <Card.Body>
-            <Card.Title>{localStorage.getItem(LANG) === "english" ? `Camera ${num_cam}` : `Cámara ${num_cam}`}</Card.Title>
-            <Card.Text>
-              <Row>
-                <Col lg={6}>
-                  <div className="camHolder">
-                    {this.props.marker.extraData.isRtmp ? (
-                      <RtmpPlayer
-                        height={this.props.height}
-                        src={this.props.marker.extraData.url}
-                        num_cam={this.props.marker.extraData.num_cam}
-                      />
-                    ) : !this.props.marker.extraData.dataCamValue.is_amazon_stream && this.props.marker.extraData.dataCamValue.amazon_arn_channel ? (
-                      <WssPlayer
-                        channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
-                        region={this.props.marker.extraData.dataCamValue.amazon_region}
-                        height={this.props.height}
-                        width={this.props.width}
-                        num_cam={this.props.marker.extraData.num_cam}
-                      />
-                    ) : this.props.marker.extraData.isHls ? (
-                      <HlsPlayer
-                        dataCamValue={this.props.marker.extraData.dataCamValue}
-                        setCountError={this.props.setCountError}
-                        channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
-                        region={this.props.marker.extraData.dataCamValue.amazon_region}
-                        height={this.props.height}
-                        width={this.props.width}
-                        src={this.props.marker.extraData.url}
-                        num_cam={this.props.marker.extraData.num_cam}
-                        infoServer={this.props.marker.extraData.dataCamValue.UrlStreamMediaServer}
-                      />
-                    ) : (
-                      <canvas
-                        id={'camcanvasstreamer' + cameraID}
-                        ref="camRef"
-                        style={{
-                          width: '100%',
-                          height: this.props.height ? this.props.height : '100%'
-                        }}
-                      />
-                    )}
-                  </div>
-                </Col>
-                <Col lg={6}>{cameraName}</Col>
-              </Row>
-            </Card.Text>
-            {this.props.showButtons ? (
-              <Card.Footer>
-                <Button variant="outline-secondary"><i className="fa fa-camera" /></Button>
-                <Button variant="outline-secondary"><i className="fa fa-pause" /></Button>
-                <Button variant="outline-secondary"><i className="fa fa-square" /></Button>
-                <Button variant="outline-secondary"><i className="fa fa-repeat" /></Button>
-              </Card.Footer>
-            ) : null}
-          </Card.Body>
-        ) : (
-          <Card.Body>
-            {showData ? (
-              <div className="row dataHolder p10">
-                {/* {typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
+      this.props.inChat ?
+        <div className="camHolder">
+          {this.props.marker.extraData.isRtmp ? (
+            <RtmpPlayer
+              height={this.props.height}
+              src={this.props.marker.extraData.url}
+              num_cam={this.props.marker.extraData.num_cam}
+            />
+          ) : !this.props.marker.extraData.dataCamValue.is_amazon_stream && this.props.marker.extraData.dataCamValue.amazon_arn_channel ? (
+            <WssPlayer
+              channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
+              region={this.props.marker.extraData.dataCamValue.amazon_region}
+              height={this.props.height}
+              width={this.props.width}
+              num_cam={this.props.marker.extraData.num_cam}
+            />
+          ) : this.props.marker.extraData.isHls ? (
+            <HlsPlayer
+              dataCamValue={this.props.marker.extraData.dataCamValue}
+              setCountError={this.props.setCountError}
+              channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
+              region={this.props.marker.extraData.dataCamValue.amazon_region}
+              height={this.props.height}
+              width={this.props.width}
+              src={this.props.marker.extraData.url}
+              num_cam={this.props.marker.extraData.num_cam}
+              infoServer={this.props.marker.extraData.dataCamValue.UrlStreamMediaServer}
+              isChat={this.props.isChat}
+            />
+          ) : (
+            <canvas
+              id={'camcanvasstreamer' + cameraID}
+              ref="camRef"
+              style={{
+                width: '100%',
+                height: this.props.height ? this.props.height : '100%'
+              }}
+            />
+          )}
+        </div>
+        :
+        <Card className={(this.props.showButtons && (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)))) ? "reinvert-modal" : ""} style={{ display: display, padding: "0.75rem", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "black", transition: "all 0.2s linear" }}>
+          <NotificationSystem ref={this.notificationSystem} />
+          {this.props.horizontal ? (
+            <Card.Body>
+              <Card.Title>{localStorage.getItem(LANG) === "english" ? `Camera ${num_cam}` : `Cámara ${num_cam}`}</Card.Title>
+              <Card.Text>
+                <Row>
+                  <Col lg={6}>
+                    <div className="camHolder">
+                      {this.props.marker.extraData.isRtmp ? (
+                        <RtmpPlayer
+                          height={this.props.height}
+                          src={this.props.marker.extraData.url}
+                          num_cam={this.props.marker.extraData.num_cam}
+                        />
+                      ) : !this.props.marker.extraData.dataCamValue.is_amazon_stream && this.props.marker.extraData.dataCamValue.amazon_arn_channel ? (
+                        <WssPlayer
+                          channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
+                          region={this.props.marker.extraData.dataCamValue.amazon_region}
+                          height={this.props.height}
+                          width={this.props.width}
+                          num_cam={this.props.marker.extraData.num_cam}
+                        />
+                      ) : this.props.marker.extraData.isHls ? (
+                        <HlsPlayer
+                          dataCamValue={this.props.marker.extraData.dataCamValue}
+                          setCountError={this.props.setCountError}
+                          channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
+                          region={this.props.marker.extraData.dataCamValue.amazon_region}
+                          height={this.props.height}
+                          width={this.props.width}
+                          src={this.props.marker.extraData.url}
+                          num_cam={this.props.marker.extraData.num_cam}
+                          infoServer={this.props.marker.extraData.dataCamValue.UrlStreamMediaServer}
+                        />
+                      ) : (
+                        <canvas
+                          id={'camcanvasstreamer' + cameraID}
+                          ref="camRef"
+                          style={{
+                            width: '100%',
+                            height: this.props.height ? this.props.height : '100%'
+                          }}
+                        />
+                      )}
+                    </div>
+                  </Col>
+                  <Col lg={6}>{cameraName}</Col>
+                </Row>
+              </Card.Text>
+              {this.props.showButtons ? (
+                <Card.Footer>
+                  <Button variant="outline-secondary"><i className="fa fa-camera" /></Button>
+                  <Button variant="outline-secondary"><i className="fa fa-pause" /></Button>
+                  <Button variant="outline-secondary"><i className="fa fa-square" /></Button>
+                  <Button variant="outline-secondary"><i className="fa fa-repeat" /></Button>
+                </Card.Footer>
+              ) : null}
+            </Card.Body>
+          ) : (
+            <Card.Body>
+              {showData ? (
+                <div className="row dataHolder p10">
+                  {/* {typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
                   <div className="col snapshots">
                     {localStorage.getItem(LANG) === "english" ? "Photos" : "Fotos"}
                     <div>
@@ -243,198 +284,198 @@ class CameraStream extends Component {
                     </div>
                   </div>
                 } */}
-                <div id={`scrollVideo#${data.id}`} className="col videos">
-                  {localStorage.getItem(LANG) === "english" ? `Videos` : `Videos`}
-                  <Tab
-                    align="center"
-                    activeIndex={activeIndex}
-                    onTabChange={(e, { activeIndex }) => this.tabHandler(activeIndex)}
-                    menu={{ secondary: true, pointing: true }}
-                    panes={[
-                      // typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && {
-                      //   menuItem: localStorage.getItem(LANG) === "english" ? `Recordings` : 'Grabaciones',
-                      //   render: () => (
-                      //     <Tab.Pane attached={false}>
-                      //       {this._renderVideoListSearch(videosLoading, videos)}
-                      //     </Tab.Pane>
-                      //   )
-                      // },
-                      this.props.moduleActions && this.props.moduleActions.viewHistorial && {
-                        menuItem: localStorage.getItem(LANG) === "english" ? `Historics` : 'Históricos',
-                        render: () => (
-                          <>
-                            <div>
-                              <button className={`btn btn-outline-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
-                                {localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}
-                              </button>
-                            </div>
-                            <br />
-                            {this._renderButtonsByHour()}
-                            <Tab.Pane attached={false}>
-                              {this._renderVideoListSearch(
-                                historyLoading,
-                                video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
-                                true,
-                                video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
-                                true, inputCkecked, false, true
-                              )}
-                            </Tab.Pane>
-                          </>
-                        )
-                      },
-                      // qnapServer && qnapChannel && {
-                      //   menuItem: localStorage.getItem(LANG) === "english" ? `Advanced Search` : 'Búsqueda Avanzada',
-                      //   render: () => (
-                      //     <Tab.Pane attached={false}>
-                      //       <AdvancedSearch
-                      //         loading={searchLoading}
-                      //         _searchFileVideos={this._searchFileVideos}
-                      //       />
-                      //       {(isNewSearch || searchLoading) && <hr />}
-                      //       {this._renderVideoListSearch(searchLoading, video_search, isNewSearch)}
-                      //     </Tab.Pane>
-                      //   )
-                      // }
-                    ]}
-                  />
-                </div>
-              </div>
-            ) : null}
-            <div className={showData ? 'camHolder hideCamHolder' : 'camHolder'} style={{ width: '100%', height: (showPTZ && window.location.pathname.split("/").length < 3) && "28rem", alignItems: showPTZ && "flex-start" }} align={!showPTZ ? "center" : "none"}>
-              <div ref="camHolder" style={{ width: '100%', height: this.props.height ? this.props.height : '100%' }}>
-                {this.props.marker.extraData.isRtmp ? (
-                  <RtmpPlayer
-                    height={this.props.height}
-                    src={this.props.marker.extraData.url}
-                    num_cam={this.props.marker.extraData.num_cam}
-                  />
-                ) : !this.props.marker.extraData.dataCamValue.is_amazon_stream && this.props.marker.extraData.dataCamValue.amazon_arn_channel ? (
-                  <WssPlayer
-                    channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
-                    region={this.props.marker.extraData.dataCamValue.amazon_region}
-                    height={this.props.height}
-                    width={this.props.width}
-                    num_cam={this.props.marker.extraData.num_cam}
-                  />
-                ) : this.props.marker.extraData.isHls ? (
-                  <>
-                    <Row>
-                      <Col md={!showPTZ ? 12 : 6} lg={!showPTZ ? 12 : 6}>
-                        <HlsPlayer
-                          dataCamValue={this.props.marker.extraData.dataCamValue}
-                          setCountError={this.props.setCountError}
-                          channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
-                          region={this.props.marker.extraData.dataCamValue.amazon_region}
-                          height={this.props.height}
-                          width={this.props.width}
-                          src={this.props.marker.extraData.url}
-                          num_cam={this.props.marker.extraData.num_cam}
-                          infoServer={this.props.marker.extraData.dataCamValue.UrlStreamMediaServer}
-                        />
-                      </Col>
-                      {
-                        showPTZ &&
-                        <Col md={6} lg={6}>
-                          <div className="col ptzInMap">
-                            {localStorage.getItem(LANG) === "english" ? "Controls" : "Controles"}
-                            <ControlPTZ
-                              camera={data}
-                              isInMap={true}
-                              hasMatch={false}
-                            />
-                          </div>
-                        </Col>
-                      }
-                    </Row>
-                  </>
-                ) : (
-                  <canvas
-                    ref="camRef"
-                    id={'canvasCamaraStream' + data.id}
-                    style={{ width: '100%', height: '100%' }}
-                  />
-                )}
-                {tryReconect ? localStorage.getItem(LANG) === "english" ? `Reconnecting` : 'Reconectando...' : null}
-              </div>
-            </div>
-            {this.props.hideText ? null : (
-              <div align="left" style={{ padding: "1rem 0.5rem" }}>
-                {
-                  (window.location.pathname.includes("analisis") || window.location.pathname.includes("map") || window.location.pathname.includes("cuadrantes")) &&
-                  <h3>{localStorage.getItem(LANG) === "english" ? `Camera ${num_cam}   ` : `Cámara ${num_cam}   `}{this.props.marker.extraData.dataCamValue === undefined || this.props.marker.extraData.tipo_camara === undefined ? null :
-                    this.props.marker.extraData.dataCamValue.tipo_camara === 2 || this.props.marker.extraData.tipo_camara === 2 ? (
-                      <i>{localStorage.getItem(LANG) === "english" ? `, Type: PTZ` : `, Tipo: PTZ`}</i>
-                    ) : null}</h3>
-                }
-                <div id={`cameraInfo-${this.props.marker.extraData.num_cam}`} style={{ marginBottom: "1rem" }}>
-
-                  {cameraName && !this.props.hideInfo ? <p style={{ color: localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)) ? "white" : "#666666" }}>
-                    {localStorage.getItem(LANG) === "english" ? `Address: ${cameraName}` : `Dirección: ${cameraName}`}
-                    {this.props.marker.extraData.dataCamValue.entrecalles ?
-                      <b>
-                        {localStorage.getItem(LANG) === "english" ? ` (Between streets ${this.props.marker.extraData.dataCamValue.entrecalles})` : ` (Entre calles ${this.props.marker.extraData.dataCamValue.entrecalles})`}
-                      </b> : null}
-                  </p> : null}
-                </div>
-                {data.rel_cuadrante ? data.rel_cuadrante.length !== 0 ? (
-                  data.rel_cuadrante.map(
-                    (item) =>
-                      item.Cuadrante && item.Cuadrante.activo ? (
-                        <button key={item.id} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-secondary"} styleTag`} as="a" tag onClick={() => this._goToCuadrante(item.id_cuadrante)}>{item.Cuadrante.name}</button>
-                      ) : null
-                  )
-                ) : null : null}
-                {this.props.hideButton ? null : (
-                  <div style={{ paddingTop: "1rem" }}>
-                    {
-                      window.location.pathname !== "/camarasInternas" &&
-                      <button onClick={() => this.setState({ showModalMoreInformation: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary border-0"} mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-info" aria-hidden="true"></i></button>
-                    }
-                    {
-                      !copyButton ?
-                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary border-0"} ml-2 mt-1`} onClick={() => { this._handleCopy(); this.setState({ copyText: document.getElementById(`cameraInfo-${this.props.marker.extraData.num_cam}`).textContent }) }} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>
-                          <i data-content="Hello. This is an inverted popup" data-variation="inverted">
-                            <FaClipboard />
-                          </i>
-                        </button>
-                        :
-                        <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary border-0"} ml-2 mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }} disabled><FaClipboardCheck /></button>
-                    }
+                  <div id={`scrollVideo#${data.id}`} className="col videos">
+                    {localStorage.getItem(LANG) === "english" ? `Videos` : `Videos`}
+                    <Tab
+                      align="center"
+                      activeIndex={activeIndex}
+                      onTabChange={(e, { activeIndex }) => this.tabHandler(activeIndex)}
+                      menu={{ secondary: true, pointing: true }}
+                      panes={[
+                        // typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && {
+                        //   menuItem: localStorage.getItem(LANG) === "english" ? `Recordings` : 'Grabaciones',
+                        //   render: () => (
+                        //     <Tab.Pane attached={false}>
+                        //       {this._renderVideoListSearch(videosLoading, videos)}
+                        //     </Tab.Pane>
+                        //   )
+                        // },
+                        this.props.moduleActions && this.props.moduleActions.viewHistorial && {
+                          menuItem: localStorage.getItem(LANG) === "english" ? `Historics` : 'Históricos',
+                          render: () => (
+                            <>
+                              <div>
+                                <button className={`btn btn-outline-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
+                                  {localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}
+                                </button>
+                              </div>
+                              <br />
+                              {this._renderButtonsByHour()}
+                              <Tab.Pane attached={false}>
+                                {this._renderVideoListSearch(
+                                  historyLoading,
+                                  video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
+                                  true,
+                                  video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
+                                  true, inputCkecked, false, true
+                                )}
+                              </Tab.Pane>
+                            </>
+                          )
+                        },
+                        // qnapServer && qnapChannel && {
+                        //   menuItem: localStorage.getItem(LANG) === "english" ? `Advanced Search` : 'Búsqueda Avanzada',
+                        //   render: () => (
+                        //     <Tab.Pane attached={false}>
+                        //       <AdvancedSearch
+                        //         loading={searchLoading}
+                        //         _searchFileVideos={this._searchFileVideos}
+                        //       />
+                        //       {(isNewSearch || searchLoading) && <hr />}
+                        //       {this._renderVideoListSearch(searchLoading, video_search, isNewSearch)}
+                        //     </Tab.Pane>
+                        //   )
+                        // }
+                      ]}
+                    />
                   </div>
-                )}
-
-                {showModalMoreInformation ? (
-                  <ModalMoreInformation
-                    dataCamValue={this.props.marker.extraData.dataCamValue}
-                    propsIniciales={this.props.propsIniciales}
-                    modal={showModalMoreInformation}
-                    hide={() => this.setState({ showModalMoreInformation: false })}
-                    cam_id={cameraID}
-                    data_cam={cameraName}
-                  />
-                ) : null}
+                </div>
+              ) : null}
+              <div className={showData ? 'camHolder hideCamHolder' : 'camHolder'} style={{ width: '100%', height: (showPTZ && window.location.pathname.split("/").length < 3) && "28rem", alignItems: showPTZ && "flex-start" }} align={!showPTZ ? "center" : "none"}>
+                <div ref="camHolder" style={{ width: '100%', height: this.props.height ? this.props.height : '100%' }}>
+                  {this.props.marker.extraData.isRtmp ? (
+                    <RtmpPlayer
+                      height={this.props.height}
+                      src={this.props.marker.extraData.url}
+                      num_cam={this.props.marker.extraData.num_cam}
+                    />
+                  ) : !this.props.marker.extraData.dataCamValue.is_amazon_stream && this.props.marker.extraData.dataCamValue.amazon_arn_channel ? (
+                    <WssPlayer
+                      channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
+                      region={this.props.marker.extraData.dataCamValue.amazon_region}
+                      height={this.props.height}
+                      width={this.props.width}
+                      num_cam={this.props.marker.extraData.num_cam}
+                    />
+                  ) : this.props.marker.extraData.isHls ? (
+                    <>
+                      <Row>
+                        <Col md={!showPTZ ? 12 : 6} lg={!showPTZ ? 12 : 6}>
+                          <HlsPlayer
+                            dataCamValue={this.props.marker.extraData.dataCamValue}
+                            setCountError={this.props.setCountError}
+                            channelARN={this.props.marker.extraData.dataCamValue.amazon_arn_channel}
+                            region={this.props.marker.extraData.dataCamValue.amazon_region}
+                            height={this.props.height}
+                            width={this.props.width}
+                            src={this.props.marker.extraData.url}
+                            num_cam={this.props.marker.extraData.num_cam}
+                            infoServer={this.props.marker.extraData.dataCamValue.UrlStreamMediaServer}
+                          />
+                        </Col>
+                        {
+                          showPTZ &&
+                          <Col md={6} lg={6}>
+                            <div className="col ptzInMap">
+                              {localStorage.getItem(LANG) === "english" ? "Controls" : "Controles"}
+                              <ControlPTZ
+                                camera={data}
+                                isInMap={true}
+                                hasMatch={false}
+                              />
+                            </div>
+                          </Col>
+                        }
+                      </Row>
+                    </>
+                  ) : (
+                    <canvas
+                      ref="camRef"
+                      id={'canvasCamaraStream' + data.id}
+                      style={{ width: '100%', height: '100%' }}
+                    />
+                  )}
+                  {tryReconect ? localStorage.getItem(LANG) === "english" ? `Reconnecting` : 'Reconectando...' : null}
+                </div>
               </div>
-            )}
-            {this.props.showButtons ? (
-              <Card.Footer>
-                {/* {this.props.moduleActions ? this.props.moduleActions.btnsnap ? <Button basic disabled={photos.length >= 5 || loadingSnap || isLoading || isRecording || restarting || loadingFiles} loading={loadingSnap} onClick={() => this._snapShot(this.props.marker.extraData)}><i className='fa fa-camera' /></Button> : null : null} */}
-                {/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._togglePlayPause}><i className={isPlay?'fa fa-pause':'fa fa-play'}/></Button>*/}
-                {/* {this.props.moduleActions ? this.props.moduleActions.btnrecord && (typeMBOX && removeSpaces(typeMBOX) !== 'axxon') ? <Button basic disabled={videos.length >= 5 || loadingSnap || isLoading || restarting || loadingFiles} loading={isLoading} onClick={() => this.recordignToggle()}><i className={isRecording ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button> : null : null} */}
-                {/* <Button basic disabled={loadingFiles || loadingSnap || isLoading || restarting || videosLoading || photosLoading || (photos.length <= 0 && videos.length <= 0)} loading={loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download' /></Button> */}
-                {this.props.hideFileButton ? null : <Button className="pull-right" variant="outline-secondary" onClick={() => { this.setState({ showData: !showData }) }}><i className={showData ? 'fa fa-video-camera' : 'fa fa-list'} /></Button>}
-                {/* {this.props.showExternal ? <Button basic disabled={loadingSnap || isLoading || isRecording || restarting || loadingFiles} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + data.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link" /></Button> : null} */}
-                {/* <Button basic disabled={loadingSnap || isLoading || isRecording || restarting || loadingFiles} onClick={() => this.setState({ modalProblem: true })}><i className="fa fa-warning" /></Button> */}
-                {/* <Button basic onClick={this._chageCamStatus}><i className="fa fa-exchange" /></Button> */}
-                {/* {this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <Button basic onClick={() => this.Clicked(this.props.marker.extraData.dataCamValue.dns)}><i className="fa fa-sliders" /></Button> : null} */}
-                {this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.camera_ip != null ? <Button basic onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows" /></Button> : null}
-                {/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/></Button>*/}
-              </Card.Footer>
-            ) : null}
-          </Card.Body>
-        )}
-        {this.props.showFilesBelow ? (
-          <div className="row dataHolder p10">
-            {/* {typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
+              {this.props.hideText ? null : (
+                <div align="left" style={{ padding: "1rem 0.5rem" }}>
+                  {
+                    (window.location.pathname.includes("analisis") || window.location.pathname.includes("map") || window.location.pathname.includes("cuadrantes")) &&
+                    <h3>{localStorage.getItem(LANG) === "english" ? `Camera ${num_cam}   ` : `Cámara ${num_cam}   `}{this.props.marker.extraData.dataCamValue === undefined || this.props.marker.extraData.tipo_camara === undefined ? null :
+                      this.props.marker.extraData.dataCamValue.tipo_camara === 2 || this.props.marker.extraData.tipo_camara === 2 ? (
+                        <i>{localStorage.getItem(LANG) === "english" ? `, Type: PTZ` : `, Tipo: PTZ`}</i>
+                      ) : null}</h3>
+                  }
+                  <div id={`cameraInfo-${this.props.marker.extraData.num_cam}`} style={{ marginBottom: "1rem" }}>
+
+                    {cameraName && !this.props.hideInfo ? <p style={{ color: localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE)) ? "white" : "#666666" }}>
+                      {localStorage.getItem(LANG) === "english" ? `Address: ${cameraName}` : `Dirección: ${cameraName}`}
+                      {this.props.marker.extraData.dataCamValue.entrecalles ?
+                        <b>
+                          {localStorage.getItem(LANG) === "english" ? ` (Between streets ${this.props.marker.extraData.dataCamValue.entrecalles})` : ` (Entre calles ${this.props.marker.extraData.dataCamValue.entrecalles})`}
+                        </b> : null}
+                    </p> : null}
+                  </div>
+                  {data.rel_cuadrante ? data.rel_cuadrante.length !== 0 ? (
+                    data.rel_cuadrante.map(
+                      (item) =>
+                        item.Cuadrante && item.Cuadrante.activo ? (
+                          <button key={item.id} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-secondary"} styleTag`} as="a" tag onClick={() => this._goToCuadrante(item.id_cuadrante)}>{item.Cuadrante.name}</button>
+                        ) : null
+                    )
+                  ) : null : null}
+                  {this.props.hideButton ? null : (
+                    <div style={{ paddingTop: "1rem" }}>
+                      {
+                        window.location.pathname !== "/camarasInternas" &&
+                        <button onClick={() => this.setState({ showModalMoreInformation: true })} className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary border-0"} mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}><i className="fa fa-info" aria-hidden="true"></i></button>
+                      }
+                      {
+                        !copyButton ?
+                          <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary border-0"} ml-2 mt-1`} onClick={() => { this._handleCopy(); this.setState({ copyText: document.getElementById(`cameraInfo-${this.props.marker.extraData.num_cam}`).textContent }) }} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }}>
+                            <i data-content="Hello. This is an inverted popup" data-variation="inverted">
+                              <FaClipboard />
+                            </i>
+                          </button>
+                          :
+                          <button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary border-0"} ml-2 mt-1`} style={{ margin: "0.5rem", height: "3rem", width: "3rem" }} disabled><FaClipboardCheck /></button>
+                      }
+                    </div>
+                  )}
+
+                  {showModalMoreInformation ? (
+                    <ModalMoreInformation
+                      dataCamValue={this.props.marker.extraData.dataCamValue}
+                      propsIniciales={this.props.propsIniciales}
+                      modal={showModalMoreInformation}
+                      hide={() => this.setState({ showModalMoreInformation: false })}
+                      cam_id={cameraID}
+                      data_cam={cameraName}
+                    />
+                  ) : null}
+                </div>
+              )}
+              {this.props.showButtons ? (
+                <Card.Footer>
+                  {/* {this.props.moduleActions ? this.props.moduleActions.btnsnap ? <Button basic disabled={photos.length >= 5 || loadingSnap || isLoading || isRecording || restarting || loadingFiles} loading={loadingSnap} onClick={() => this._snapShot(this.props.marker.extraData)}><i className='fa fa-camera' /></Button> : null : null} */}
+                  {/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._togglePlayPause}><i className={isPlay?'fa fa-pause':'fa fa-play'}/></Button>*/}
+                  {/* {this.props.moduleActions ? this.props.moduleActions.btnrecord && (typeMBOX && removeSpaces(typeMBOX) !== 'axxon') ? <Button basic disabled={videos.length >= 5 || loadingSnap || isLoading || restarting || loadingFiles} loading={isLoading} onClick={() => this.recordignToggle()}><i className={isRecording ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} /></Button> : null : null} */}
+                  {/* <Button basic disabled={loadingFiles || loadingSnap || isLoading || restarting || videosLoading || photosLoading || (photos.length <= 0 && videos.length <= 0)} loading={loadingFiles} onClick={() => this._downloadFiles()}><i className='fa fa-download' /></Button> */}
+                  {this.props.hideFileButton ? null : <Button className="pull-right" variant="outline-secondary" onClick={() => { this.setState({ showData: !showData }) }}><i className={showData ? 'fa fa-video-camera' : 'fa fa-list'} /></Button>}
+                  {/* {this.props.showExternal ? <Button basic disabled={loadingSnap || isLoading || isRecording || restarting || loadingFiles} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + data.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link" /></Button> : null} */}
+                  {/* <Button basic disabled={loadingSnap || isLoading || isRecording || restarting || loadingFiles} onClick={() => this.setState({ modalProblem: true })}><i className="fa fa-warning" /></Button> */}
+                  {/* <Button basic onClick={this._chageCamStatus}><i className="fa fa-exchange" /></Button> */}
+                  {/* {this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.dns != null ? <Button basic onClick={() => this.Clicked(this.props.marker.extraData.dataCamValue.dns)}><i className="fa fa-sliders" /></Button> : null} */}
+                  {this.props.marker.extraData.dataCamValue && this.props.marker.extraData.dataCamValue.tipo_camara === 2 && this.props.marker.extraData.dataCamValue.camera_ip != null ? <Button basic onClick={() => this.setState({ showPTZ: !showPTZ })}><i className="fa fa-arrows" /></Button> : null}
+                  {/*<Button basic disabled={loadingSnap||isLoading||isRecording||restarting||loadingFiles} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/></Button>*/}
+                </Card.Footer>
+              ) : null}
+            </Card.Body>
+          )}
+          {this.props.showFilesBelow ? (
+            <div className="row dataHolder p10">
+              {/* {typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
               <div className="col snapshots">
                 {localStorage.getItem(LANG) === "english" ? "Photos" : "Fotos"}
                 <div>
@@ -467,155 +508,155 @@ class CameraStream extends Component {
                 </div>
               </div>
             } */}
-            <div id={`scrollVideo#${data.id}`} className="col videos">
-              {localStorage.getItem(LANG) === "english" ? `Videos` : `Videos`}
-              <Tab
-                align="center"
-                activeIndex={activeIndex}
-                onTabChange={(e, { activeIndex }) => { this.tabHandler(activeIndex) }}
-                menu={{ secondary: true, pointing: true }}
-                panes={[
-                  // typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && {
-                  //   menuItem: localStorage.getItem(LANG) === "english" ? `Recordings` : 'Grabaciones',
-                  //   render: () => (
-                  //     <Tab.Pane attached={false}>
-                  //       {this._renderVideoListSearch(videosLoading, videos)}
-                  //     </Tab.Pane>
-                  //   )
-                  // },
-                  this.props.moduleActions && this.props.moduleActions.viewHistorial && {
-                    menuItem: localStorage.getItem(LANG) === "english" ? `Historics` : 'Históricos',
-                    render: () => (
-                      <Tab.Pane attached={false}>
-                        {this._renderVideoListSearch(
-                          historyLoading,
-                          video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
-                          true,
-                          video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
-                          true, inputCkecked, false, true
-                        )}
-                      </Tab.Pane>
-                    )
-                  },
-                  qnapServer && qnapChannel && {
-                    menuItem: localStorage.getItem(LANG) === "english" ? `Advanced Search` : 'Búsqueda Avanzada',
-                    render: () => (
-                      <Tab.Pane attached={false}>
-                        <AdvancedSearch
-                          loading={searchLoading}
-                          _searchFileVideos={this._searchFileVideos}
-                        />
-                        {(isNewSearch || searchLoading) && <hr />}
-                        {this._renderVideoListSearch(searchLoading, video_search, isNewSearch)}
-                      </Tab.Pane>
-                    )
-                  }
-                ]}
-              />
-            </div>
-          </div>
-        ) : null}
-        <Modal size="lg" show={modal} onHide={() => this.setState({ modal: false })}>
-          <Modal.Header closeButton />
-          <Modal.Body>{recordMessage}</Modal.Body>
-        </Modal>
-
-        <Modal
-          size="lg"
-          show={modalProblem}
-          onHide={() => this.setState({ modalProblem: false, problemDescription: '', phones: [], mails: [] })}
-          style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white" }}
-        >
-          <Modal.Header className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "darkTheme"} closeButton>Reportar problema en camara {data.num_cam}</Modal.Header>
-          <Modal.Body className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "darkTheme"}>
-            <Form>
-              <Form.Field>
-                <Form.Field>
-                  <Radio
-                    label={localStorage.getItem(LANG) === "english" ? "Report emergency" : "Reportar emergencia"}
-                    name="typeReport"
-                    value={1}
-                    checked={typeReport === 1}
-                    onChange={this.handleChange}
-                  />
-                </Form.Field>
-                <Form.Field>
-                  <Radio
-                    label={localStorage.getItem(LANG) === "english" ? "Camera maintenance" : "Mantenimiento de camara"}
-                    name="typeReport"
-                    value={2}
-                    checked={typeReport === 2}
-                    onChange={this.handleChange}
-                  />
-                </Form.Field>
-              </Form.Field>
-              {typeReport === 2 ? null : (
-                <Form.Field>
-                  <Label>
-                    {localStorage.getItem(LANG) === "english" ?
-                      "Registered emergency numbers will be notified. If you want to add an extra phone, enter it here indicating its LADA (Example: +525512345678)."
-                      :
-                      "Se notificará a los números de emergencia registrados. Si se desea agregar un teléfono extra, ingréselo aquí indicando la LADA del mismo (Ejemplo: +525512345678)."
+              <div id={`scrollVideo#${data.id}`} className="col videos">
+                {localStorage.getItem(LANG) === "english" ? `Videos` : `Videos`}
+                <Tab
+                  align="center"
+                  activeIndex={activeIndex}
+                  onTabChange={(e, { activeIndex }) => { this.tabHandler(activeIndex) }}
+                  menu={{ secondary: true, pointing: true }}
+                  panes={[
+                    // typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && {
+                    //   menuItem: localStorage.getItem(LANG) === "english" ? `Recordings` : 'Grabaciones',
+                    //   render: () => (
+                    //     <Tab.Pane attached={false}>
+                    //       {this._renderVideoListSearch(videosLoading, videos)}
+                    //     </Tab.Pane>
+                    //   )
+                    // },
+                    this.props.moduleActions && this.props.moduleActions.viewHistorial && {
+                      menuItem: localStorage.getItem(LANG) === "english" ? `Historics` : 'Históricos',
+                      render: () => (
+                        <Tab.Pane attached={false}>
+                          {this._renderVideoListSearch(
+                            historyLoading,
+                            video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[1] : video_history,
+                            true,
+                            video_history.length > 0 && video_history[1] && video_history[1].length > 0 ? video_history[0] : null,
+                            true, inputCkecked, false, true
+                          )}
+                        </Tab.Pane>
+                      )
+                    },
+                    qnapServer && qnapChannel && {
+                      menuItem: localStorage.getItem(LANG) === "english" ? `Advanced Search` : 'Búsqueda Avanzada',
+                      render: () => (
+                        <Tab.Pane attached={false}>
+                          <AdvancedSearch
+                            loading={searchLoading}
+                            _searchFileVideos={this._searchFileVideos}
+                          />
+                          {(isNewSearch || searchLoading) && <hr />}
+                          {this._renderVideoListSearch(searchLoading, video_search, isNewSearch)}
+                        </Tab.Pane>
+                      )
                     }
-                  </Label>
-                  <Chips
-                    value={phones}
-                    onChange={this.onChange}
-                    fromSuggestionsOnly={false}
-                    createChipKeys={[' ', 13, 32]}
-                  />
-                </Form.Field>
-              )}
-              {typeReport === 2 ? null : (
-                <Form.Field>
-                  <Label>
-                    {localStorage.getItem(LANG) === "english" ?
-                      "Registered emergency emails will be notified. If you want to add an extra email, enter it here."
-                      :
-                      "Se notificará a los emails de emergencia registrados. Si se desea agregar un email extra, ingréselo aquí."
-                    }
-                  </Label>
-                  <Chips
-                    value={mails}
-                    onChange={this.onChangeMail}
-                    fromSuggestionsOnly={false}
-                    createChipKeys={[' ', 13, 32]}
-                  />
-                </Form.Field>
-              )}
-              <Form.Field>
-                {typeReport === 2 ? (
-                  <Label>
-                    {localStorage.getItem(LANG) === "english" ?
-                      "Please be as clear as possible and indicate if you have taken any action to try to resolve the issue."
-                      :
-                      "Por favor sea lo más claro posible e indique si ha realizado alguna acción para intentar resolver el problema."
-                    }
-                  </Label>
-                ) : (
-                  <Label>
-                    {localStorage.getItem(LANG) === "english" ?
-                      "Please indicate the emergency that arose in the camera."
-                      :
-                      "Por favor indique la emergencia que se presentó en la cámara."
-                    }
-                  </Label>
-                )}
-                <TextArea
-                  value={problemDescription}
-                  onChange={this.handleChange}
-                  rows={10}
-                  name="problemDescription"
-                  placeholder={localStorage.getItem(LANG) === "english" ? "Write your problem here" : "Redacte su problema aquí"}
+                  ]}
                 />
-              </Form.Field>
-            </Form>
-            <Button className="pull-right" primary onClick={this._sendReport}>
-              {localStorage.getItem(LANG) === "english" ? "Send" : "Enviar"}
-            </Button>
-          </Modal.Body>
-        </Modal>
-      </Card>
+              </div>
+            </div>
+          ) : null}
+          <Modal size="lg" show={modal} onHide={() => this.setState({ modal: false })}>
+            <Modal.Header closeButton />
+            <Modal.Body>{recordMessage}</Modal.Body>
+          </Modal>
+
+          <Modal
+            size="lg"
+            show={modalProblem}
+            onHide={() => this.setState({ modalProblem: false, problemDescription: '', phones: [], mails: [] })}
+            style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "white" }}
+          >
+            <Modal.Header className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "darkTheme"} closeButton>Reportar problema en camara {data.num_cam}</Modal.Header>
+            <Modal.Body className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) && "darkTheme"}>
+              <Form>
+                <Form.Field>
+                  <Form.Field>
+                    <Radio
+                      label={localStorage.getItem(LANG) === "english" ? "Report emergency" : "Reportar emergencia"}
+                      name="typeReport"
+                      value={1}
+                      checked={typeReport === 1}
+                      onChange={this.handleChange}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <Radio
+                      label={localStorage.getItem(LANG) === "english" ? "Camera maintenance" : "Mantenimiento de camara"}
+                      name="typeReport"
+                      value={2}
+                      checked={typeReport === 2}
+                      onChange={this.handleChange}
+                    />
+                  </Form.Field>
+                </Form.Field>
+                {typeReport === 2 ? null : (
+                  <Form.Field>
+                    <Label>
+                      {localStorage.getItem(LANG) === "english" ?
+                        "Registered emergency numbers will be notified. If you want to add an extra phone, enter it here indicating its LADA (Example: +525512345678)."
+                        :
+                        "Se notificará a los números de emergencia registrados. Si se desea agregar un teléfono extra, ingréselo aquí indicando la LADA del mismo (Ejemplo: +525512345678)."
+                      }
+                    </Label>
+                    <Chips
+                      value={phones}
+                      onChange={this.onChange}
+                      fromSuggestionsOnly={false}
+                      createChipKeys={[' ', 13, 32]}
+                    />
+                  </Form.Field>
+                )}
+                {typeReport === 2 ? null : (
+                  <Form.Field>
+                    <Label>
+                      {localStorage.getItem(LANG) === "english" ?
+                        "Registered emergency emails will be notified. If you want to add an extra email, enter it here."
+                        :
+                        "Se notificará a los emails de emergencia registrados. Si se desea agregar un email extra, ingréselo aquí."
+                      }
+                    </Label>
+                    <Chips
+                      value={mails}
+                      onChange={this.onChangeMail}
+                      fromSuggestionsOnly={false}
+                      createChipKeys={[' ', 13, 32]}
+                    />
+                  </Form.Field>
+                )}
+                <Form.Field>
+                  {typeReport === 2 ? (
+                    <Label>
+                      {localStorage.getItem(LANG) === "english" ?
+                        "Please be as clear as possible and indicate if you have taken any action to try to resolve the issue."
+                        :
+                        "Por favor sea lo más claro posible e indique si ha realizado alguna acción para intentar resolver el problema."
+                      }
+                    </Label>
+                  ) : (
+                    <Label>
+                      {localStorage.getItem(LANG) === "english" ?
+                        "Please indicate the emergency that arose in the camera."
+                        :
+                        "Por favor indique la emergencia que se presentó en la cámara."
+                      }
+                    </Label>
+                  )}
+                  <TextArea
+                    value={problemDescription}
+                    onChange={this.handleChange}
+                    rows={10}
+                    name="problemDescription"
+                    placeholder={localStorage.getItem(LANG) === "english" ? "Write your problem here" : "Redacte su problema aquí"}
+                  />
+                </Form.Field>
+              </Form>
+              <Button className="pull-right" primary onClick={this._sendReport}>
+                {localStorage.getItem(LANG) === "english" ? "Send" : "Enviar"}
+              </Button>
+            </Modal.Body>
+          </Modal>
+        </Card>
     );
   }
 
