@@ -122,7 +122,7 @@ class GridCameraDisplay extends Component {
 	};
 
 	render() {
-		let { activeIndex, historialIndex, historialConections, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRecord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, isNewSearch, video_search, showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays, filterCount, typeMBOX, isAxxonSearch, axxonList, loadingUpdate, gridActive } = this.state;
+		let { activeIndex, historialIndex, historialConections, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRecord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, /*isNewSearch, video_search,*/ showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays, filterCount, typeMBOX, isAxxonSearch, axxonList, loadingUpdate, gridActive } = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, is_filter } = this.props;
 
 
@@ -584,7 +584,7 @@ class GridCameraDisplay extends Component {
 	download = async (params, dns) => {
 		let { apiStorageKey, dnsPort, typeMBOX, historyServerProtocol, historicalPassword, historicalUser, historyServerDns, isAxxonSearch } = this.state;
 		if (typeMBOX === 'light') {
-			const URI = apiStorageKey ? `${params.relative_path_video}${apiStorageKey}` : dnsPort === 80 ? `${historyServerProtocol}://${dns}/${params.relative_path_video}` : `${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`;
+			const URI = apiStorageKey ? `${params.relative_path_video}${apiStorageKey}` : parseInt(dnsPort) === 80 ? `${historyServerProtocol}://${dns}/${params.relative_path_video}` : `${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`;
 			axios({
 				url: URI,
 				method: "GET",
@@ -625,7 +625,7 @@ class GridCameraDisplay extends Component {
 						const password = historicalPassword;
 						const user = historicalUser;
 
-						if (dnsPort == 80 || dnsPort == 443) {
+						if (parseInt(dnsPort) === 80 || parseInt(dnsPort) === 443) {
 							url = `${historyServerProtocol}://${historyServerDns}/export/${id}/file?name=${file_path}`;
 						} else {
 							url = `${historyServerProtocol}://${historyServerDns}:${dnsPort}/export/${id}/file?name=${file_path}`;
@@ -645,7 +645,7 @@ class GridCameraDisplay extends Component {
 						xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
 						xhr.onerror = (e) => {
-							if (xhr.status == 401) {
+							if (parseInt(xhr.status) === 401) {
 								console.log("onerror:", xhr.status)
 							}
 						};
@@ -662,7 +662,7 @@ class GridCameraDisplay extends Component {
 							}
 							conections.finalizExportProcess(info);
 
-							if (xhr.status == 401) {
+							if (parseInt(xhr.status) === 401) {
 								console.log("onload:", xhr.status)
 							}
 
@@ -891,7 +891,7 @@ class GridCameraDisplay extends Component {
 				let url = null;
 
 				if (historyServerProtocol && historyServerDns) {
-					if (dnsPort == 80 || dnsPort == 443) {
+					if (parseInt(dnsPort) === 80 || parseInt(dnsPort) === 443) {
 						url = `${historyServerProtocol}://${historyServerDns}/live/media/snapshot/${videoSourceId}`;
 					} else {
 						url = `${historyServerProtocol}://${historyServerDns}:${dnsPort}/live/media/snapshot/${videoSourceId}`;
@@ -907,7 +907,7 @@ class GridCameraDisplay extends Component {
 					xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
 					xhr.onerror = () => {
-						if (xhr.status == 401) { console.log("onerror:", xhr.status) }
+						if (parseInt(xhr.status) === 401) { console.log("onerror:", xhr.status) }
 						this.setState({ loadingSnap: false });
 						// this.addNotification({ message, level, title });
 						window.location.pathname !== "/cuadrantes" ? this.addNotification({ message, level, title }) : this.props.quadrantNotification({ message, level, title });
@@ -915,7 +915,7 @@ class GridCameraDisplay extends Component {
 
 					xhr.onload = (e) => {
 						let blob = xhr.response;
-						if (blob && xhr.status === 200) {
+						if (blob && parseInt(xhr.status) === 200) {
 							const fileName = `CAM${camera.id}.jpeg`;
 							this.saveFile(blob, fileName);
 							this.setState({ loadingSnap: false });

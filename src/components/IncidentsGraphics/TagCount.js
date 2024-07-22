@@ -3,11 +3,6 @@ import ReactApexChart from 'react-apexcharts';
 
 export class TagCount extends React.Component {
 
-
-    constructor(props) {
-        super(props);
-    }
-
     render() {
 
         const colors = ["#21B6A8", "#007DE9", "#B4BC00", "#283747", "#145A32", "#F1C40F", "#B4045F"];

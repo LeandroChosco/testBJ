@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import conections from "../../../conections";
 import "./styles.css";
-import { Icon } from "semantic-ui-react";
+// import { Icon } from "semantic-ui-react";
 import { MODE } from "../../../constants/token";
 const SummaryCount = () => {
   // Variables Auxiliares

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Input, Icon, TextArea, Form, Label, Button, Radio, Dropdown } from 'semantic-ui-react';
-import { ToggleButton, ToggleButtonGroup, Modal } from 'react-bootstrap';
+import { /*ToggleButton, ToggleButtonGroup,*/ Modal } from 'react-bootstrap';
 // import { JellyfishSpinner } from 'react-spinners-kit';
 
 import JSZipUtils from 'jszip-utils';
@@ -271,7 +271,7 @@ class Cuadrantes extends Component {
                   } */}
                   {
                     camsCuadrante.length === 0 && is_quadrant_filter &&
-                    <div align="center" className='col-12' style={{color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666"}}><br />
+                    <div align="center" className='col-12' style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}><br />
                       {Strings.noResults}
                     </div>
 

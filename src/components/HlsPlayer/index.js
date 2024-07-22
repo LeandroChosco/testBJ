@@ -167,13 +167,13 @@ const HlsPlayer = (props) => {
 								xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 								xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 								xhr.onload = function (e) {
-									if (xhr.status == 401) {
+									if (parseInt(xhr.status) === 401) {
 										console.log("onload:", xhr.status)
 									}
 								};
 
 								xhr.onerror = (e) => {
-									if (xhr.status == 401) {
+									if (parseInt(xhr.status) === 401) {
 										console.log("onerror:", xhr.status)
 									}
 								};
@@ -188,14 +188,14 @@ const HlsPlayer = (props) => {
 							xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 							xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 							xhr.onload = function (e) {
-								if (xhr.status == 401 || xhr.status == 404) {
+								if (parseInt(xhr.status) === 401 || parseInt(xhr.status) === 404) {
 									console.log("onload:", xhr)
 									console.log("onload:", xhr.status)
 								}
 							};
 
 							xhr.onerror = (e) => {
-								if (xhr.status == 401) {
+								if (parseInt(xhr.status) === 401) {
 									console.log("onerror:", xhr.status)
 								}
 							};

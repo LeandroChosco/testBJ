@@ -2,9 +2,6 @@ import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 export class TagTopLikes extends React.Component {
-  constructor(props) {
-    super(props);
-  };
 
   render() {
 

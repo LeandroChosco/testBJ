@@ -12,7 +12,7 @@ import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 import Notifications from '../components/Notifications';
 import CameraControls from '../components/CameraControls';
-import * as moment from 'moment'
+// import * as moment from 'moment'
 // import '../App.css';
 import Details from './Details';
 import MobileHelp from './CamaraForMobile';
@@ -21,7 +21,7 @@ import Welcome from './Welcome';
 import firebaseC5Benito from '../constants/configC5CJ'
 // import firebase from '../constants/config';
 // import firebaseC5 from '../constants/configC5';
-import Matches from '../components/Matches';
+// import Matches from '../components/Matches';
 import DetailsEmergency from './DetailsEmergency';
 import ModalCall from '../components/ModalCall';
 import DetailsComplaiment from './DetailsComplaiment';
@@ -39,7 +39,7 @@ import constants from '../constants/constants';
 import Sound from 'react-sound';
 import sonido from '../assets/tonos/notificacion.mp3';
 import soundManager from 'soundmanager2';
-import ArrowToggle from '../components/ArrowTogle';
+// import ArrowToggle from '../components/ArrowTogle';
 import CovidItemDetail from '../components/CovidItemDetail';
 // import CovidTree from "./CovidTree";
 import Covid from './Covid';
@@ -67,7 +67,7 @@ var io = sailsIOClient(socketIOClient);
 
 
 
-let call = false
+// let call = false
 
 class Main extends Component {
 
@@ -949,27 +949,27 @@ class Main extends Component {
         }
         let countShoot = 0
         let countBrokenGlass = 0
-        let fechas = []
-        let today = moment().format('L'),
-          fechaActual = [],
-          fecha1 = [],
-          fecha2 = [],
-          fecha3 = [],
-          fecha4 = [],
-          fecha5 = [],
-          fecha6 = [],
-          infoDay = null;
-        docs.docs.map(doc => {
-          //let DateEvent = doc.data().eventDate.split(" ", 1)
-          //let formatDate = moment(DateEvent, 'YYYY/MM/DD').format('L')
-          fechas.push(doc.data())
-          if (doc.data().nameEvent === 'Detección de disparo de arma') {
-            countShoot += 1
-          }
-          if (doc.data().nameEvent === 'Rotura de vidrio') {
-            countBrokenGlass += 1
-          }
-        })
+        // let fechas = []
+        // let today = moment().format('L'),
+        //   fechaActual = [],
+        //   fecha1 = [],
+        //   fecha2 = [],
+        //   fecha3 = [],
+        //   fecha4 = [],
+        //   fecha5 = [],
+        //   fecha6 = [],
+        //   infoDay = null;
+        // docs.docs.map(doc => {
+        //   //let DateEvent = doc.data().eventDate.split(" ", 1)
+        //   //let formatDate = moment(DateEvent, 'YYYY/MM/DD').format('L')
+        //   fechas.push(doc.data())
+        //   if (doc.data().nameEvent === 'Detección de disparo de arma') {
+        //     countShoot += 1
+        //   }
+        //   if (doc.data().nameEvent === 'Rotura de vidrio') {
+        //     countBrokenGlass += 1
+        //   }
+        // })
         /* fechas.map((day) =>{
           let fechaDay = day.eventDate.split(" ", 1)
           if( moment(fechaDay, 'YYYY/MM/DD').format('L') === today){
@@ -989,7 +989,7 @@ class Main extends Component {
           })  
         } */
         let newEvents = docs.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        this.setState({ eventMic: newEvents, countEvent: [countShoot, countBrokenGlass], fechasEventos: [fechaActual, fecha1, fecha2, fecha3, fecha4, fecha5, fecha6] });
+        this.setState({ eventMic: newEvents, countEvent: [countShoot, countBrokenGlass], /*fechasEventos: [fechaActual, fecha1, fecha2, fecha3, fecha4, fecha5, fecha6]*/ });
       });
 
   }

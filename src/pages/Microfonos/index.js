@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Icon, Button, Input, Dropdown, Tab } from 'semantic-ui-react';
-import ReactPlayer from 'react-player';
+// import ReactPlayer from 'react-player';
 import moment from 'moment';
 
 import './style.css';
@@ -80,11 +80,11 @@ class Microfonos extends Component {
                     </Tab.Pane>
                   )
                 }
-                
+
               ]}
               defaultActiveIndex={0}
               onTabChange={() => { }}
-              onClick={()=>this._validatorAnalisis}
+              onClick={() => this._validatorAnalisis}
             />
           </div>
           <div className="col-8">
@@ -93,15 +93,15 @@ class Microfonos extends Component {
                 <div className="mapContainer">
                   <h2 className="titleContainer" style={styles.headerContent}>
                     Micrófono
-									</h2>
+                  </h2>
                   <div className='row justify-content-center'>
                     <div className='col-3 shoot'>
-                        <p className='textTitle'>Disparo</p>
-                        <p className='textEvent'>Total de eventos: {this.props.countEvent[0]} </p>
+                      <p className='textTitle'>Disparo</p>
+                      <p className='textEvent'>Total de eventos: {this.props.countEvent[0]} </p>
                     </div>
                     <div className='col-3 brokenGlass'>
-                        <p className='textTitle'>Rotura de Vidrio</p>
-                        <p className='textEvent'>Total de eventos:  {this.props.countEvent[1]} </p>
+                      <p className='textTitle'>Rotura de Vidrio</p>
+                      <p className='textEvent'>Total de eventos:  {this.props.countEvent[1]} </p>
                     </div>
                   </div>
                   <div className="row" style={styles.mapContent}>
@@ -183,7 +183,7 @@ class Microfonos extends Component {
                                 </div>
                                 <div className="col" style={styles.text}>
                                   &nbsp;
-																</div>
+                                </div>
                               </div>
                               <br />
                             </div>
@@ -241,7 +241,7 @@ class Microfonos extends Component {
                 <div style={styles.relative}>
                   <div style={styles.list}>
                     <h4>
-                      {complaint.user_cam?  "Cámara " + complaint.user_cam.num_cam: "ID CÁMARA NO DISPONIBLE"}
+                      {complaint.user_cam ? "Cámara " + complaint.user_cam.num_cam : "ID CÁMARA NO DISPONIBLE"}
                     </h4>
                     <p>{moment(moment(complaint.fecha_creacion)).format('DD-MM-YYYY, HH:mm:ss')}</p>
                   </div>
@@ -257,7 +257,7 @@ class Microfonos extends Component {
                 </div>
               </Card.Content>
             </Card>
-          )): null}
+          )) : null}
         </div>
       </div>
     );
@@ -337,13 +337,13 @@ class Microfonos extends Component {
       this.props.history.push('/Microfonos');
     } else {
       this.setState({ loading: true }, async () => {
-       
+
         if (!complaint.read) {
           await this._updateComplaint(complaint.id, { read: true });
         }
-        
+
         this.setState({ actIdx, loading: false });
-        if(complaint){
+        if (complaint) {
           this._changeUserCam(complaint)
         }
       });

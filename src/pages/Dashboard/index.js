@@ -11,7 +11,7 @@ import CardBody from "../../components/Card/CardBody";
 import { Tab } from "semantic-ui-react";
 // import socketIOClient from 'socket.io-client';
 // import sailsIOClient from 'sails.io.js';
-import constants from '../../constants/constants';
+// import constants from '../../constants/constants';
 import * as moment from "moment";
 // import CameraPerPerson from "../../components/Dashboard/cameraPerPerson";
 // import PeoplePerDay from "../../components/Dashboard/persons";
@@ -30,7 +30,7 @@ import Placas from "../../components/Dashboard/Placas"
 import DataTicketsPerUserRedesign from "../../components/Dashboard/dataTicketsPerUserRedesign";
 import AgeDemographic from "../../components/Dashboard/AgeDemographic";
 import RegisterMood from "../../components/Dashboard/RegisterMood";
-import { IS_DEMOGRAPHIC, IS_LPR, MODE } from '../../constants/token';
+import { IS_DEMOGRAPHIC, /*IS_LPR,*/ MODE } from '../../constants/token';
 import AttendedVSclosed from "../../components/Dashboard/attendedVScloded";
 import LastCreadedCams from "../../components/Dashboard/lastCreatedCams";
 import {
@@ -38,7 +38,7 @@ import {
   // RiCloseCircleFill,
   RiEye2Fill
 } from "react-icons/ri";
-let isLPR = localStorage.getItem(IS_LPR)
+// let isLPR = localStorage.getItem(IS_LPR)
 let isDemographic = localStorage.getItem(IS_DEMOGRAPHIC)
 
 const MOODS = {
@@ -49,21 +49,21 @@ const MOODS = {
   anger: "Enojado"
 }
 
-const style = {
-  height: {
-    height: "100%",
-    backgroundColor: "#f5f5f5"
-  },
-  adjustX: {
-    height: "100%",
-    overflowX: "auto",
-    position: "relative",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#424242" : "transparent"
-  },
-};
+// const style = {
+//   height: {
+//     height: "100%",
+//     backgroundColor: "#f5f5f5"
+//   },
+//   adjustX: {
+//     height: "100%",
+//     overflowX: "auto",
+//     position: "relative",
+//     display: "flex",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#424242" : "transparent"
+//   },
+// };
 
 class Dashboard extends Component {
   state = {

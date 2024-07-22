@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { ToggleButton, ToggleButtonGroup, Modal, CloseButton } from 'react-bootstrap';
-import { Icon, TextArea, Form, Label, Button, Radio, Tab } from 'semantic-ui-react';
+import { /*ToggleButton, ToggleButtonGroup,*/ Modal, CloseButton } from 'react-bootstrap';
+import { /*Icon,*/ TextArea, Form, Label, Button, Radio, Tab } from 'semantic-ui-react';
 // import { JellyfishSpinner } from 'react-spinners-kit';
 
 import JSZipUtils from 'jszip-utils';
@@ -110,7 +110,7 @@ class Analysis extends Component {
     return (
       <div style={{ transition: "all 0.2s linear", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white" }}>
         {loading ? (
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: 'absolute', transition: "all 0.2s linear", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "transparent", width: '100%', height: "100%", transition: "all 0.25s linear" }} align="center">
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: 'absolute', transition: "all 0.2s linear", background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "transparent", width: '100%', height: "100%" }} align="center">
             <img
               className="spinner"
               src={constants.urlPath}
@@ -188,7 +188,7 @@ class Analysis extends Component {
     );
   };
   _renderOnlineTab = () => {
-    let { displayTipe, loading, cameraID, places, filterOnLine } = this.state;
+    let { displayTipe, loading, /*cameraID,*/ places, filterOnLine } = this.state;
     return (
       <div>
         {displayTipe !== 3 && !loading ? (

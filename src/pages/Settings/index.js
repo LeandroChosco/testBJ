@@ -26,8 +26,8 @@ import RenderCamaras from './RenderCamaras';
 import RenderUsuarios from './RenderUsuarios';
 
 import "./styleTables.css"
-import ActionsCuadrantes from './ActionsCuadrantes';
-import RenderCuadrantes from './RenderCuadrantes';
+// import ActionsCuadrantes from './ActionsCuadrantes';
+// import RenderCuadrantes from './RenderCuadrantes';
 import ModalManagmentCuadrantes from '../../components/ModalManagmentCuadrantes';
 
 const Settings = (props, { showMatches }) => {
@@ -56,7 +56,7 @@ const Settings = (props, { showMatches }) => {
 
   const [cameras, setCameras] = useState("")
   const [users, setUsers] = useState("")
-  const [cuadrantes, setCuadrantes] = useState("")
+  // const [cuadrantes, setCuadrantes] = useState("")
 
   const [clientId, setClientId] = useState("")
 
@@ -88,11 +88,11 @@ const Settings = (props, { showMatches }) => {
     )
   }
 
-  const actionsCuadrantes = (cell, row, rowIndex, formatExtraData) => {
-    return (
-      <ActionsCuadrantes data={[row, setCurrentData, setShowModalManagmentCuadrantes]} />
-    )
-  }
+  // const actionsCuadrantes = (cell, row, rowIndex, formatExtraData) => {
+  //   return (
+  //     <ActionsCuadrantes data={[row, setCurrentData, setShowModalManagmentCuadrantes]} />
+  //   )
+  // }
 
   const columnsUsers = [{
     dataField: "user_nicename",
@@ -156,23 +156,23 @@ const Settings = (props, { showMatches }) => {
     })
   }];
 
-  const columnsCuadrantes = [{
-    dataField: "id",
-    text: 'ID',
-    filter: textFilter({
-      placeholder: 'Buscar por id'
-    })
-  }, {
-    dataField: "name",
-    text: 'NOMBRE DEL CUADRANTE',
-    filter: textFilter({
-      placeholder: 'Buscar por nombre'
-    })
-  }, {
-    dataField: "actions",
-    text: '',
-    formatter: actionsCuadrantes,
-  }];
+  // const columnsCuadrantes = [{
+  //   dataField: "id",
+  //   text: 'ID',
+  //   filter: textFilter({
+  //     placeholder: 'Buscar por id'
+  //   })
+  // }, {
+  //   dataField: "name",
+  //   text: 'NOMBRE DEL CUADRANTE',
+  //   filter: textFilter({
+  //     placeholder: 'Buscar por nombre'
+  //   })
+  // }, {
+  //   dataField: "actions",
+  //   text: '',
+  //   formatter: actionsCuadrantes,
+  // }];
 
   const columnsUsersCuadrante = [{
     dataField: "user_nicename",
