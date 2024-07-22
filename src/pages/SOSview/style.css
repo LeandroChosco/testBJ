@@ -257,9 +257,12 @@
   color: white;
 }
 
-.notificationNumber {
+.notificationNumberSOS {
+  display: flex;
+  justify-content: center;
   height: 20px;
   width: 20px;
+  position: absolute;
   right: 10px;
   top: 10px;
   margin: auto;
@@ -267,7 +270,7 @@
   border-radius: 15px;
 }
 
-.notificationNumber > p {
+.notificationNumberSOS > p {
   color: #fafafa;
   text-align: center;
 }

@@ -874,7 +874,7 @@ class Chat extends Component {
                     )}
 
                     {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                      <div className='notificationNumber' style={{ marginTop: 15 }}>
+                      <div className='notificationNumberSOS' style={{ marginTop: 15 }}>
                         <p>{chat.c5Unread}</p>
                       </div>
                     ) : null}
@@ -1010,7 +1010,7 @@ class Chat extends Component {
                     )}
 
                     {chat.c5Unread !== undefined && chat.c5Unread !== 0 ? (
-                      <div className='notificationNumber' style={{ marginTop: 15 }}>
+                      <div className='notificationNumberSOS' style={{ marginTop: 15 }}>
                         <p>{chat.c5Unread}</p>
                       </div>
                     ) : null}
