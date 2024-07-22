@@ -1135,8 +1135,7 @@ class Chat extends Component {
         this.props.history.push("/alarm");
       }
     } else {
-      this.setState({ messages: chat.messages }); // Borrar esta línea y descomentar la de abajo cuando se termine de trabajar
-      // this.getMessages(chat.id);
+      this.getMessages(chat.id);
       this.setState({ loading: true, camData: undefined }, () => {
         this._changeUserCam(chat);
         this.props.stopNotification();

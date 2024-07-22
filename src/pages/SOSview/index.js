@@ -827,7 +827,7 @@ class Chat extends Component {
             onChange={this.filterAction}
           ></Input>
         </div>
-        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada", transition: "all 0.2s linear", padding: '20px' }}>
+        <div style={{ height: '81vh', overflow: 'scroll', backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "transparent", transition: "all 0.2s linear", padding: '20px' }}>
           {chats.map((chat, i) => {
             const critical_color =
               chat && chat.critical_state && chat.critical_state !== 0 ? CRITICAL_COLORS[chat.critical_state] : null;
