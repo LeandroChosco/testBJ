@@ -684,7 +684,7 @@ class Chat extends Component {
                       )}
                   </div>
                   {chatId !== '' && chats[index] ? (
-                    <div className='messages_send_box'>
+                    <div className='messages_send_box_sos'>
                       {!textareaDisabled ? (
                         <div style={{ position: 'relative' }}>
                           <textarea
