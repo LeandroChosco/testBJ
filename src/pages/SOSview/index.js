@@ -635,7 +635,7 @@ class Chat extends Component {
                       </div>
                     ) : null}
                   </div>
-                  <div className='messagesContainer' id='messagesContainer'>
+                  <div className='messagesContainerSOS' id='messagesContainer'>
                     {
                       !loading && chatId !== '' && chats[index] ? chats[index].messages ? (
                         this.state.messages.map((value, ref) => (
@@ -684,7 +684,7 @@ class Chat extends Component {
                       )}
                   </div>
                   {chatId !== '' && chats[index] ? (
-                    <div className='messages_send_box'>
+                    <div className='.messages_send_box_sos'>
                       {!textareaDisabled ? (
                         <div style={{ position: 'relative' }}>
                           <textarea
@@ -703,7 +703,7 @@ class Chat extends Component {
                           <Icon name='send' id='sendbutton' onClick={this.sendMessage} />
                         </div>
                       ) : (
-                        <div className='closed-ticked'>El ticket ya se encuentra cerrado</div>
+                        <div className='closed-ticked-sos'>El ticket ya se encuentra cerrado</div>
                       )}
                     </div>
                   ) : null}
