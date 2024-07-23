@@ -227,6 +227,8 @@ class Chat extends Component {
 
     // let chats = fakeChats;
 
+    const currentHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
     return (
       <div style={{ padding: "1rem" }}>
         <div style={{ display: "flex", flexDirection: "row" }}>
@@ -246,7 +248,7 @@ class Chat extends Component {
         <div
           className="container-chats"
           style={{
-            height: "47rem",
+            height: currentHeight > 1300 ? "80rem" : "47rem",
             overflowY: "scroll",
             backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "transparent",
             border: "solid 1px #f2f3f4"
@@ -333,7 +335,7 @@ class Chat extends Component {
           <Input
             placeholder={localStorage.getItem(LANG) === "english" ? "Search user" : "Buscar usuario"}
             style={{ flex: 2 }}
-            // onChange={this.filterAction}
+          // onChange={this.filterAction}
           ></Input>
           {/* <Dropdown
               placeholder={localStorage.getItem(LANG) === "english" ? "Search by" : "Buscar por"}
@@ -495,6 +497,8 @@ class Chat extends Component {
       this._getClient();
     };
 
+    const currentHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
     return (
       <div
         className={
@@ -611,7 +615,7 @@ class Chat extends Component {
                   this.state.statusCurrentChat ?
 
                     <div className="container-chat">
-                      <div className='col-8'>
+                      <div className='col-7'>
                         <div className="messages">
 
                           {
@@ -632,7 +636,7 @@ class Chat extends Component {
                               : null
                           }
 
-                          <div className="messagesContainer" id="messagesContainer">
+                          <div className="messagesContainer" id="messagesContainer" style={{ height: currentHeight > 1300 ? "72rem" : "45rem" }}>
                             {!loading && chatId !== "" && chats[index] ? (
                               chats[index].messages ? (
                                 this.state.messages !== undefined &&
@@ -760,14 +764,14 @@ class Chat extends Component {
                           }
                         </div>
                       </div>
-                      <div className='col-4'>
+                      <div className='col-5'>
                         {!loading && chatId !== "" && chats[index] ? (
                           <div className="cam-info-map">
                             <div>
                               {camData && !loadingChat ? (
                                 <CameraStream
                                   hideTitle
-                                  height="250px"
+                                  height={currentHeight > 1300 ? "450px" : "300px"}
                                   hideButton
                                   hideInfo
                                   propsIniciales={this.props}
@@ -780,7 +784,7 @@ class Chat extends Component {
                               }
                             </div>
                             <div
-                              className="row" style={{ padding: "0 1rem", margin: "1.5rem 0" }}
+                              className="row" style={{ padding: "0 1rem", margin: "1.5rem 0", height: "30%", maxHeight: "17rem" }}
                             // style={{
                             //   height: "20%",
                             //   width: "100%",
@@ -844,7 +848,7 @@ class Chat extends Component {
                                 </Card.Content>
                               </Card>
                             </div>
-                            <div className="col" style={{ marginTop: "0.5rem", height: "20rem" }}>
+                            <div className="col" style={{ marginTop: "0.5rem", height: currentHeight > 1200 ? "35%" : "25%" }}>
                               {infoCurrentCamera.google_cordenate ? (
                                 <MapContainer
                                   options={{
