@@ -34,7 +34,7 @@ class SideBar extends Component {
           return;
         }
         
-        camaras && camaras.length > 0 &&
+        (camaras && camaras.length > 0) &&
         camaras.map(value => {
           if (value.active === 1 && value.flag_streaming === 1 && value.UrlStreamMediaServer) {
 
