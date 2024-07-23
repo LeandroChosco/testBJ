@@ -72,7 +72,9 @@ const user_data = {
   from: session_user ? session_user.userInfo.role_id : "",
 }
 
-const token = localStorage.getItem("accessToken")
+const token = localStorage.getItem("accessToken");
+
+const initialHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 class Chat extends Component {
   state = {
@@ -101,6 +103,7 @@ class Chat extends Component {
     showHistorial: true,
     loadingHistorial: false,
     currentHistorial: {},
+    currentHeight: initialHeight,
   };
   panes = this.props.history.location.pathname.includes("chat")
     ? [
@@ -218,7 +221,7 @@ class Chat extends Component {
     this.setState({ optionSelected: value });
 
   renderListChats = (type) => {
-    const { index } = this.state;
+    const { index, currentHeight } = this.state;
     const { chats, /*setSOS,*/ getChats } = this.props
 
     if (chats.length === 0) {
@@ -226,8 +229,6 @@ class Chat extends Component {
     }
 
     // let chats = fakeChats;
-
-    const currentHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
     return (
       <div style={{ padding: "1rem" }}>
@@ -248,7 +249,7 @@ class Chat extends Component {
         <div
           className="container-chats"
           style={{
-            height: currentHeight > 1300 ? "80rem" : "47rem",
+            height: currentHeight < 930 ? "47rem" : currentHeight > 930 && currentHeight < 1000 ? "53rem" : currentHeight > 1000 && currentHeight < 1100 ? "58rem" : currentHeight > 1100 && currentHeight < 1200 ? "64rem" : currentHeight > 1200 && currentHeight < 1300 ? "71rem" : currentHeight > 1300 && currentHeight < 1430 ? "75rem" : "87rem",
             overflowY: "scroll",
             backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "transparent",
             border: "solid 1px #f2f3f4"
@@ -472,6 +473,7 @@ class Chat extends Component {
       // loadingHistorial,
       showHistorial,
       currentHistorial,
+      currentHeight,
     } = this.state;
     const { chats } = this.props
     if (index !== undefined && chatId === "" && chats.length > 0) {
@@ -496,8 +498,6 @@ class Chat extends Component {
     if (!this.state.idClient) {
       this._getClient();
     };
-
-    const currentHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
     return (
       <div
@@ -636,7 +636,11 @@ class Chat extends Component {
                               : null
                           }
 
-                          <div className="messagesContainer" id="messagesContainer" style={{ height: currentHeight > 1300 ? "72rem" : "45rem" }}>
+                          <div
+                            className="messagesContainer"
+                            id="messagesContainer"
+                            style={{ height: currentHeight < 930 ? "46rem" : currentHeight > 930 && currentHeight < 1000 ? "51rem" : currentHeight > 1000 && currentHeight < 1100 ? "57rem" : currentHeight > 1100 && currentHeight < 1200 ? "64rem" : currentHeight > 1200 && currentHeight < 1300 ? "69rem" : currentHeight > 1300 && currentHeight < 1430 ? "74rem" : "80rem", }}
+                          >
                             {!loading && chatId !== "" && chats[index] ? (
                               chats[index].messages ? (
                                 this.state.messages !== undefined &&
@@ -767,7 +771,7 @@ class Chat extends Component {
                       <div className='col-5'>
                         {!loading && chatId !== "" && chats[index] ? (
                           <div className="cam-info-map">
-                            <div>
+                            <div style={{ display: "flex", justifyContent: "center", padding: "3rem 0 0.5rem 0" }}>
                               {camData && !loadingChat ? (
                                 <CameraStream
                                   hideTitle
@@ -778,13 +782,13 @@ class Chat extends Component {
                                   marker={(camData)}
                                   inChat={true}
                                 />
-                              ) : (
-                                <p>{localStorage.getItem(LANG) === "english" ? "No camera assigned" : "Sin camara asignada..."}</p>
                               )
+                                :
+                                <img style={{ height: currentHeight > 1300 ? "450px" : "300px" }} src={noCamera} alt="NOCAM" />
                               }
                             </div>
                             <div
-                              className="row" style={{ padding: "0 1rem", margin: "1.5rem 0", height: "30%", maxHeight: "17rem" }}
+                              className="row" style={{ padding: "0 1rem", margin: "1.5rem 0", height: "25%", maxHeight: "17rem" }}
                             // style={{
                             //   height: "20%",
                             //   width: "100%",
@@ -848,7 +852,7 @@ class Chat extends Component {
                                 </Card.Content>
                               </Card>
                             </div>
-                            <div className="col" style={{ marginTop: "0.5rem", height: currentHeight > 1200 ? "35%" : "25%" }}>
+                            <div className="col" style={{ marginTop: "0.5rem", height: currentHeight > 1300 ? "35%" : currentHeight > 1200 ? "40%" : "25%" }}>
                               {infoCurrentCamera.google_cordenate ? (
                                 <MapContainer
                                   options={{
@@ -899,9 +903,7 @@ class Chat extends Component {
                                 />
                               )
                                 :
-                                <div className="row-6" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "15%", width: "75rem", marginTop: "5rem", marginLeft: "3%", padding: "15rem" }}>
-                                  <img style={{ height: "22rem", marginTop: "-18rem" }} src={noCamera} alt="Imagen-No-Disponible" />
-                                </div>
+                                null
                               }
                             </div>
                           </div>
@@ -1355,6 +1357,11 @@ class Chat extends Component {
     this.changeChat(this.props.chats[chatIndex], chatIndex, true)
   }
 
+  setNewHeight = () => {
+    const currentHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    this.setState({ currentHeight });
+  };
+
   updateChats = (prevProps) => {
     const { alarmIndex, chatId } = this.props.match.params;
     const { chats: chatsPrev } = prevProps;
@@ -1445,6 +1452,8 @@ class Chat extends Component {
 
   componentDidMount() {
     const { /*alarmIndex,*/ chatId } = this.props.match.params;
+
+    window.addEventListener("resize", () => this.setNewHeight())
 
 
     // this.props.history.location.pathname.split("/").length > 2 && this.setState({showHistorial: !this.state.showHistorial })
