@@ -249,7 +249,7 @@ class Chat extends Component {
         <div
           className="container-chats"
           style={{
-            height: currentHeight < 930 ? "47rem" : currentHeight > 930 && currentHeight < 1000 ? "53rem" : currentHeight > 1000 && currentHeight < 1100 ? "58rem" : currentHeight > 1100 && currentHeight < 1200 ? "64rem" : currentHeight > 1200 && currentHeight < 1300 ? "71rem" : currentHeight > 1300 && currentHeight < 1430 ? "75rem" : "87rem",
+            height: currentHeight < 930 ? "47rem" : currentHeight > 930 && currentHeight < 1000 ? "53rem" : currentHeight > 1000 && currentHeight < 1090 ? "58rem" : currentHeight > 1090 && currentHeight < 1190 ? "64rem" : currentHeight > 1190 && currentHeight < 1260 ? "71rem" : currentHeight > 1260 && currentHeight < 1300 ? "75rem" : currentHeight > 1300 && currentHeight < 1350 ? "79rem" : currentHeight > 1350 && currentHeight < 1440 ? "82rem" : "87rem",
             overflowY: "scroll",
             backgroundColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "transparent",
             border: "solid 1px #f2f3f4"
@@ -639,7 +639,7 @@ class Chat extends Component {
                           <div
                             className="messagesContainer"
                             id="messagesContainer"
-                            style={{ height: currentHeight < 930 ? "46rem" : currentHeight > 930 && currentHeight < 1000 ? "51rem" : currentHeight > 1000 && currentHeight < 1100 ? "57rem" : currentHeight > 1100 && currentHeight < 1200 ? "64rem" : currentHeight > 1200 && currentHeight < 1300 ? "69rem" : currentHeight > 1300 && currentHeight < 1430 ? "74rem" : "80rem", }}
+                            style={{ height: currentHeight < 930 ? "46rem" : currentHeight > 930 && currentHeight < 1000 ? "48rem" : currentHeight > 1000 && currentHeight < 1090 ? "51rem" : currentHeight > 1090 && currentHeight < 1190 ? "57rem" : currentHeight > 1190 && currentHeight < 1260 ? "64rem" : currentHeight > 1260 && currentHeight < 1300 ? "69rem" : currentHeight > 1300 && currentHeight < 1350 ? "71rem" : currentHeight > 1350 && currentHeight < 1440 ? "74rem" : "80rem", }}
                           >
                             {!loading && chatId !== "" && chats[index] ? (
                               chats[index].messages ? (
