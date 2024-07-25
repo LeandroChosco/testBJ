@@ -1,6 +1,33 @@
 const versions =
     [
         {
+            version: "1.1.3",
+            date: "25/07/2024",
+            changes: [
+                "Rediseño de vista de cámaras en los módulos de Mapa, Análisis y Cuadrantes, como así también en Chat.",
+                "Reestructuración visual de módulo de chat y mejoras visuales en SOS y Follow Me",
+                "Rediseño de vista de más información de cámaras, quitando botones obsoletos y agregando funcionalidades más intuitivas",
+                "Incorporación de componente de detección de placas (LPR) con data dinámica y con conexión a bases de datos para obtener resultados y gráficos.",
+                "Reestructuración de pestaña de LPR en Dashboard.",
+            ],
+            bugs: [
+                "Actualización de credenciales para vistas de mapas en la plataforma.",
+                "Modificación en el diseño para evitar superposiciones de fondos blancos sobre cámaras.",
+                "Validaciones para evitar colisiones por faltante de datos en pestañas de Dashboard.",
+                "Validaciones por tipo de cámara para mostrar información más certera.",
+            ],
+            // changesEnglish: [
+            //     "Agregado de menú desplegable para históricos en módulo de Mapas, .",
+            //     "Agregado de botones por día .",
+            //     "Descarga .",
+            //     "Optimización en el reproductor de streaming .",
+            //     "Medidas de .",
+            //     "Rediseño estético en colores de gráficos del módulo de .",
+            //     "Agregado de filtro por tipo de cámaras en el módulo de Dashboard.",
+            //     "Rediseño visual en pop-ups de .",
+            // ]
+        },
+        {
             version: "1.1.2",
             date: "02/10/2023",
             changes: [
