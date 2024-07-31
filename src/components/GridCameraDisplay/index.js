@@ -28,12 +28,12 @@ import * as QvrFunctions from '../../functions/getQvrFunctions';
 import './style.css';
 import Placas from './placas';
 import { CurveGridCamera } from '../Dashboard/Placas/CurveGridCamera';
-import { VehiclesCount } from './VehiclesCount';
-import VehiclesSelector from './VehiclesSelector';
+// import { VehiclesCount } from './VehiclesCount';
+// import VehiclesSelector from './VehiclesSelector';
 import { removeSpaces } from '../../functions/removeSpaces';
 import { LANG, MODE } from '../../constants/token';
 import LoadingLogo from '../LoadingLogo';
-import MockupConection from './MockupConection';
+// import MockupConection from './MockupConection';
 
 const SHOW_HISTORY = 3;
 const countryOptions = [
@@ -119,10 +119,11 @@ class GridCameraDisplay extends Component {
 		isAxxonSearch: false,
 		axxonList: [],
 		gridActive: false,
+		showLPR: false,
 	};
 
 	render() {
-		let { activeIndex, historialIndex, historialConections, markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRecord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, /*isNewSearch, video_search,*/ showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays, filterCount, typeMBOX, isAxxonSearch, axxonList, loadingUpdate, gridActive } = this.state;
+		let { activeIndex, historialIndex, /*historialConections,*/ markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRecord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, /*isNewSearch, video_search,*/ showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays, /*filterCount,*/ typeMBOX, isAxxonSearch, axxonList, loadingUpdate, gridActive, showLPR } = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, is_filter } = this.props;
 
 
@@ -233,6 +234,7 @@ class GridCameraDisplay extends Component {
 							{moduleActions && moduleActions.btnrecord && typeMBOX && removeSpaces(typeMBOX) !== 'axxon' && (<Button basic circular className="actions-btn-grid" disabled={videos.length >= 5 || loadingSnap || loadingRecord || loadingFiles || restarting} loading={loadingRecord} onClick={() => this._recordignToggle(selectedCamera)}><i className={recordingCams.indexOf(selectedCamera) > -1 ? 'fa fa-stop-circle recording' : 'fa fa-stop-circle'} style={{ color: 'red' }} />{!loadingRecord && <p style={{ marginTop: "0.2rem", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>Toma de video</p>}</Button>)}
 							{/* {!(loadingSnap || loadingRecord || loadingFiles || restarting) && <Button basic circular className="actions-btn-grid" disabled={recordingCams.indexOf(selectedCamera) > -1} onClick={() => window.open(window.location.href.replace(window.location.pathname, '/') + 'analisis/' + selectedCamera.id, '_blank', 'toolbar=0,location=0,directories=0,status=1,menubar=0,titlebar=0,scrollbars=1,resizable=1')}><i className="fa fa-external-link" /><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button>} */}
 							{<Button basic circular className="actions-btn-grid" disabled={(photos.length <= 0 && videos.length <= 0) || loadingSnap || loadingRecord || loadingFiles || restarting || videosLoading || photosLoading || recordingCams.indexOf(selectedCamera) > -1} onClick={() => this.props.downloadFiles(selectedCamera, { videos, photos, servidorMultimedia })} loading={loadingFiles}><i className="fa fa-download" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }} /><p style={{ marginTop: "0.2rem", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>Descargar</p></Button>}
+							{(selectedCamera && /*selectedCamera.id === 2*/ selectedCamera.dataCamValue && selectedCamera.dataCamValue.is_lpr) && (<Button basic circular className="actions-btn-grid" onClick={() => this._changeShowLPR()} loading={loadingFiles}><i className={showLPR ? "fa fa-picture-o" : "fa fa-area-chart"} style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }} /><p style={{ marginTop: "0.2rem", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{showLPR ? "Ver multimedia" : "Ver gráficos"}</p></Button>)}
 							{/* {!(loadingSnap || loadingRecord || loadingFiles || restarting) && <Button basic circular className="actions-btn-grid" disabled={recordingCams.indexOf(selectedCamera) > -1} onClick={() => this.props.makeReport(selectedCamera)}><i className="fa fa-warning" /><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button>} */}
 							{/* <Button basic circular className="actions-btn-grid" disabled={loadingSnap||loadingRecord||loadingFiles||restarting||recordingCams.indexOf(selectedCamera)>-1} onClick={this._restartCamStream}><i className={!restarting?"fa fa-repeat":"fa fa-repeat fa-spin"}/><p style={{marginTop: "0.2rem"}}>Texteditable</p></Button> */}
 							<Button basic circular className="actions-btn-grid" onClick={() => this.props.changeStatus(selectedCamera)}><i className="fa fa-exchange" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }} /><p style={{ marginTop: "0.2rem", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666", transition: "all 0.2s linear" }}>Cambiar estado</p></Button>
@@ -266,257 +268,319 @@ class GridCameraDisplay extends Component {
 							</div>
 						}
 						{
-							selectedCamera.id > 513 && selectedCamera.id < 547 ?
-								// selectedCamera.id === 1 || selectedCamera.id === 2 ?
-								<>
-									<div className="col-1 platesgrid" align="center">
-										<VehiclesSelector filterCount={filterCount} setFilterCount={this._setFilterCount} />
-									</div>
-									<div className="col-11 platesgrid" align="center">
-										{/* <CurveGridCamera camera={selectedCamera.dataCamValue} stateHeight="200" dataGraphic={true} /> */}
-										{/* Aquí va el gráfico de PIQUITOS */}
-										<VehiclesCount camera={selectedCamera.dataCamValue.id} filterCount={filterCount} />
-									</div>
-								</>
-								:
+							// selectedCamera.id > 513 && selectedCamera.id < 547 ?
+							// 	// selectedCamera.id === 1 || selectedCamera.id === 2 ?
+							// 	<>
+							// 		<div className="col-1 platesgrid" align="center">
+							// 			<VehiclesSelector filterCount={filterCount} setFilterCount={this._setFilterCount} />
+							// 		</div>
+							// 		<div className="col-11 platesgrid" align="center">
+							// 			{/* <CurveGridCamera camera={selectedCamera.dataCamValue} stateHeight="200" dataGraphic={true} /> */}
+							// 			{/* Aquí va el gráfico de PIQUITOS */}
+							// 			<VehiclesCount camera={selectedCamera.dataCamValue.id} filterCount={filterCount} />
+							// 		</div>
+							// 	</>
+							// 	:
 
-								selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ?
-									<>
-										{typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
-											<div className="col-3 snapshotsgrid">
-												{/* {localStorage.getItem(LANG) === "english" ? "Photos" : "Fotos"} */}
-												<Tab
-													align="center"
-													menu={{ secondary: true, pointing: true, inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) }}
-													// activeIndex={historialIndex}
-													// onTabChange={(e, { activeIndex }) => { this.setState({ historialIndex: activeIndex }) }}
-													panes={[
-														{
-															menuItem: localStorage.getItem(LANG) === "english" ? "Photos" : 'Fotos',
-															render: () => (
-																<Tab.Pane style={{ background: "transparent" }} attached={false}>
-																	{photosLoading ? (
-																		this._renderLoading()
-																	) : photos.length > 0 ? (
-																		<div className="row">
-																			{photos.map((value, index) => (
-																				<MediaContainer
-																					key={index}
-																					value={value}
-																					isQnap={false}
-																					exists_image={true}
-																					cam={selectedCamera}
-																					src={value.relative_url}
-																					reloadData={this._loadFiles}
-																					servidorMultimedia={servidorMultimedia}
-																					port={portContainer}
-																					dnsContainer={dnsContainer}
-																					userIdContainer={this.getUserID()}
-																				/>
-																			))}
-																		</div>
-																	) : (
-																		// <div align="center" className='no-data-show' style={{ marginLeft: "1rem" }}>
-																		<div align="center" style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
-																			<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
-																			<i className="fa fa-image fa-5x" />
-																		</div>
-																	)}
-																</Tab.Pane>
-															)
-														},
-													]}
-												/>
-											</div>
-										}
-										<div id="scrollVideo" className="col videosgrid">
-											{/* {localStorage.getItem(LANG) === "english" ? "Videos" : "Videos"} */}
+							// selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ?
+							selectedCamera.dataCamValue ? !showLPR ?
+								<>
+									{typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
+										<div className="col-3 snapshotsgrid">
+											{/* {localStorage.getItem(LANG) === "english" ? "Photos" : "Fotos"} */}
 											<Tab
 												align="center"
-												activeIndex={activeIndex}
-												onTabChange={(e, { activeIndex }) => this.setState({ activeIndex })}
 												menu={{ secondary: true, pointing: true, inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) }}
+												// activeIndex={historialIndex}
+												// onTabChange={(e, { activeIndex }) => { this.setState({ historialIndex: activeIndex }) }}
 												panes={[
-													typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
 													{
-														menuItem: localStorage.getItem(LANG) === "english" ? "Recordings" : 'Grabaciones',
+														menuItem: localStorage.getItem(LANG) === "english" ? "Photos" : 'Fotos',
 														render: () => (
 															<Tab.Pane style={{ background: "transparent" }} attached={false}>
-																{this._renderVideoList(videosLoading, videos, true, null, false, false, true)}
+																{photosLoading ? (
+																	this._renderLoading()
+																) : photos.length > 0 ? (
+																	<div className="row">
+																		{photos.map((value, index) => (
+																			<MediaContainer
+																				key={index}
+																				value={value}
+																				isQnap={false}
+																				exists_image={true}
+																				cam={selectedCamera}
+																				src={value.relative_url}
+																				reloadData={this._loadFiles}
+																				servidorMultimedia={servidorMultimedia}
+																				port={portContainer}
+																				dnsContainer={dnsContainer}
+																				userIdContainer={this.getUserID()}
+																			/>
+																		))}
+																	</div>
+																) : (
+																	// <div align="center" className='no-data-show' style={{ marginLeft: "1rem" }}>
+																	<div align="center" style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
+																		<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No files to show" : "No hay archivos que mostrar"}</p>
+																		<i className="fa fa-image fa-5x" />
+																	</div>
+																)}
 															</Tab.Pane>
 														)
 													},
-													moduleActions && moduleActions.viewHistorial && !moduleSearch ? {
-														menuItem: localStorage.getItem(LANG) === "english" ? "Historics" : 'Históricos',
+												]}
+											/>
+										</div>
+									}
+									<div id="scrollVideo" className="col videosgrid">
+										{/* {localStorage.getItem(LANG) === "english" ? "Videos" : "Videos"} */}
+										<Tab
+											align="center"
+											activeIndex={activeIndex}
+											onTabChange={(e, { activeIndex }) => this.setState({ activeIndex })}
+											menu={{ secondary: true, pointing: true, inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) }}
+											panes={[
+												typeMBOX && removeSpaces(typeMBOX) !== 'axxon' &&
+												{
+													menuItem: localStorage.getItem(LANG) === "english" ? "Recordings" : 'Grabaciones',
+													render: () => (
+														<Tab.Pane style={{ background: "transparent" }} attached={false}>
+															{this._renderVideoList(videosLoading, videos, true, null, false, false, true)}
+														</Tab.Pane>
+													)
+												},
+												moduleActions && moduleActions.viewHistorial && !moduleSearch ? {
+													menuItem: localStorage.getItem(LANG) === "english" ? "Historics" : 'Históricos',
+													render: () => (
+														<>
+															{
+																historyLoading ?
+																	this._renderLoading()
+																	:
+																	<>
+																		<div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0.3rem", alignItems: "center" }}>
+																			{
+																				typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
+																					<div>
+																						<p>{localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}</p>
+																					</div>
+																					:
+																					<Radio
+																						slider
+																						onClick={this._statusChange}
+																						id="toggle24"
+																						// label={localStorage.getItem(LANG) === "english" ? "Download videos (links)" : "Descarga de videos (links)"}
+																						label={<label className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-toggle" : "light-toggle"}>Descarga de videos (links)</label>}
+																						checked={this.state.inputCkecked}
+																					// className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-toggle" : "light-toggle"}
+																					/>
+																			}
+																			<AdvancedSearchNotqnap loading={searchLoading} _searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus} countDays={countDays} navButton={false} isAxxon={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : false} _searchFilesAxxon={this._searchFilesAxxon} />
+																			<div>
+																				<button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
+																					{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}
+																				</button>
+																			</div>
+																		</div>
+
+																		<hr />
+																		{this._renderButtonsByHour()}
+
+																		{!inputCkecked ? (<Tab.Pane style={{ background: "transparent" }} attached={false}>
+																			{this._renderVideoListSearch(
+																				historyLoading,
+																				arrPares.length > 0 ? arrPares : video_history,
+																				true,
+																				arrPares.length > 0 ? arrPares[0] : null,
+																				true, inputCkecked, false, true
+																			)}
+																		</Tab.Pane>) : (<Tab.Pane style={{ background: "transparent" }} attached={false}>
+																			{this._renderVideoListSearch(
+																				historyLoading,
+																				arrPares.length > 0 ? arrPares : video_history,
+																				true,
+																				arrPares.length > 0 ? arrPares[0] : null,
+																				true, inputCkecked, false, true
+																			)}
+																		</Tab.Pane>)}
+																	</>
+															}
+														</>
+													)
+												}
+													:
+													{
+														menuItem: localStorage.getItem(LANG) === "english" ? "Search results" : 'Resultados de búsqueda',
 														render: () => (
 															<>
-																{
-																	historyLoading ?
-																		this._renderLoading()
+																<div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0.3rem", alignItems: "center" }}>
+																	{typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
+																		<div>
+																			<p>{localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}</p>
+																		</div>
 																		:
-																		<>
-																			<div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0.3rem" }}>
-																				{
-																					typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
-																						<p>{localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}</p>
-																						:
-																						<Radio
-																							slider
-																							onClick={this._statusChange}
-																							id="toggle24"
-																							// label={localStorage.getItem(LANG) === "english" ? "Download videos (links)" : "Descarga de videos (links)"}
-																							label={<label className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-toggle" : "light-toggle"}>Descarga de videos (links)</label>}
-																							checked={this.state.inputCkecked}
-																						// className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-toggle" : "light-toggle"}
-																						/>
-																				}
-																				<AdvancedSearchNotqnap loading={searchLoading} _searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus} countDays={countDays} navButton={false} isAxxon={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : false} _searchFilesAxxon={this._searchFilesAxxon} />
-																				<div>
-																					<button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
-																						{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}
-																					</button>
-																				</div>
-																			</div>
+																		<Radio
+																			slider
+																			onClick={this._statusChange}
+																			id="toggle24"
+																			label={localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}
+																			checked={this.state.inputCkecked}
+																			className="full-toggle"
+																		/>
+																	}
+																	<div>
+																		<button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-auto mr-auto mb-2`} onClick={() => this._backToHistorics()} >
+																			{localStorage.getItem(LANG) === "english" ? "Back to historics" : "Volver a históricos"}
+																		</button>
+																	</div>
+																</div>
+																<hr />
+																{ }
 
-																			<hr />
-																			{this._renderButtonsByHour()}
-
-																			{!inputCkecked ? (<Tab.Pane style={{ background: "transparent" }} attached={false}>
-																				{this._renderVideoListSearch(
-																					historyLoading,
-																					arrPares.length > 0 ? arrPares : video_history,
-																					true,
-																					arrPares.length > 0 ? arrPares[0] : null,
-																					true, inputCkecked, false, true
-																				)}
-																			</Tab.Pane>) : (<Tab.Pane style={{ background: "transparent" }} attached={false}>
-																				{this._renderVideoListSearch(
-																					historyLoading,
-																					arrPares.length > 0 ? arrPares : video_history,
-																					true,
-																					arrPares.length > 0 ? arrPares[0] : null,
-																					true, inputCkecked, false, true
-																				)}
-																			</Tab.Pane>)}
-																		</>
-																}
-															</>
-														)
-													}
-														:
-														{
-															menuItem: localStorage.getItem(LANG) === "english" ? "Search results" : 'Resultados de búsqueda',
-															render: () => (
-																<>
-																	<div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0.3rem" }}>
-																		{typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
-																			<p>{localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}</p> :
+																{!inputCkecked ? (<Tab.Pane style={{ background: "transparent" }} attached={false}>
+																	{this._renderVideoListSearch(
+																		historyLoading,
+																		isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares : video_history,
+																		true,
+																		isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares[0] : null,
+																		true, inputCkecked, false, true
+																	)}
+																</Tab.Pane>) : (<Tab.Pane style={{ background: "transparent" }} attached={false}>
+																	{this._renderVideoListSearch(
+																		historyLoading,
+																		isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares : video_history,
+																		true,
+																		isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares[0] : null,
+																		true, inputCkecked, false, true
+																	)}
+																</Tab.Pane>)}
+																<div style={{ display: "flex", justifyContent: "center", paddingTop: "0.3rem" }}>
+																	{
+																		typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
+																			null
+																			:
 																			<Radio
 																				slider
 																				onClick={this._statusChange}
 																				id="toggle24"
-																				label={localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}
+																				label={<label className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-toggle" : "light-toggle"}>Descarga de videos (links)</label>}
 																				checked={this.state.inputCkecked}
 																				className="full-toggle"
 																			/>
-																		}
-																		<div>
-																			<button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-auto mr-auto mb-2`} onClick={() => this._backToHistorics()} >
-																				{localStorage.getItem(LANG) === "english" ? "Back to historics" : "Volver a históricos"}
-																			</button>
-																		</div>
-																	</div>
-																	<hr />
-																	{ }
+																	}
+																</div>
+															</>
+														)
+													},
+												// {
+												// 	menuItem: 'Vault Storage',
+												// 	render: () => (
+												// 		<>
+												// 			{
+												// 				historyLoading ?
+												// 					this._renderLoading()
+												// 					:
+												// 					<>
+												// 						<div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0.3rem" }}>
+												// 							{
+												// 								typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
+												// 									<p>{localStorage.getItem(LANG) === "english" ? "Download videos" : "Descarga de videos"}</p>
+												// 									:
+												// 									<Radio
+												// 										slider
+												// 										onClick={this._statusChange}
+												// 										id="toggle24"
+												// 										// label={localStorage.getItem(LANG) === "english" ? "Download videos (links)" : "Descarga de videos (links)"}
+												// 										label={<label className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-toggle" : "light-toggle"}>Descarga de videos (links)</label>}
+												// 										checked={this.state.inputCkecked}
+												// 										style={{display: "flex", alignItems: "center"}}
+												// 									// className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-toggle" : "light-toggle"}
+												// 									/>
+												// 							}
+												// 							{/* <AdvancedSearchNotqnap loading={searchLoading} _searchFileVideos={this._searchFileVideosNotqnap} moduleSearch={this._changeStatus} countDays={countDays} navButton={false} isAxxon={typeMBOX && removeSpaces(typeMBOX) === 'axxon' ? true : false} _searchFilesAxxon={this._searchFilesAxxon} /> */}
+												// 							<div>
+												// 								<button className={`btn btn-${(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "secondary" : "outline-primary"} ml-auto mr-auto mb-2`} onClick={() => this._getHistoricsByHour(this.state.historicCurrentDay)} >
+												// 									{localStorage.getItem(LANG) === "english" ? "Refresh" : "Actualizar"}
+												// 								</button>
+												// 							</div>
+												// 						</div>
 
-																	{!inputCkecked ? (<Tab.Pane style={{ background: "transparent" }} attached={false}>
-																		{this._renderVideoListSearch(
-																			historyLoading,
-																			isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares : video_history,
-																			true,
-																			isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares[0] : null,
-																			true, inputCkecked, false, true
-																		)}
-																	</Tab.Pane>) : (<Tab.Pane style={{ background: "transparent" }} attached={false}>
-																		{this._renderVideoListSearch(
-																			historyLoading,
-																			isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares : video_history,
-																			true,
-																			isAxxonSearch ? axxonList : arrPares.length > 0 ? arrPares[0] : null,
-																			true, inputCkecked, false, true
-																		)}
-																	</Tab.Pane>)}
-																	<div style={{ display: "flex", justifyContent: "center", paddingTop: "0.3rem" }}>
-																		{
-																			typeMBOX && removeSpaces(typeMBOX) === 'axxon' ?
-																				null
-																				:
-																				<Radio
-																					slider
-																					onClick={this._statusChange}
-																					id="toggle24"
-																					label={<label className={(localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "dark-toggle" : "light-toggle"}>Descarga de videos (links)</label>}
-																					checked={this.state.inputCkecked}
-																					className="full-toggle"
-																				/>
-																		}
-																	</div>
-																</>
-															)
-														},
-													// qnapServer && qnapChannel && {
-													// 	menuItem: 'Resultados de busqueda',
-													// 	render: () => (
-													// 		<Tab.Pane style={{ background: "transparent"}} attached={false}>
-													// 			{(isNewSearch || searchLoading) && <hr />}
-													// 			{ this._renderVideoList(searchLoading, video_search, isNewSearch, null, false, false, true)}
-													// 		</Tab.Pane>
-													// 	)
-													// }
-												]}
-											/>
-										</div>
-									</>
-									:
-									<div className="col-7 platesgrid" align="center">
-										<CurveGridCamera camera={selectedCamera.dataCamValue} stateHeight="200" dataGraphic={true} />
+												// 						<hr />
+												// 						{/* {this._renderButtonsByHour()} */}
+
+												// 						{!inputCkecked ? (<Tab.Pane style={{ background: "transparent" }} attached={false}>
+												// 							{this._renderVideoListSearch(
+												// 								historyLoading,
+												// 								arrPares.length > 0 ? arrPares : video_history,
+												// 								true,
+												// 								arrPares.length > 0 ? arrPares[0] : null,
+												// 								true, inputCkecked, false, true
+												// 							)}
+												// 						</Tab.Pane>) : (<Tab.Pane style={{ background: "transparent" }} attached={false}>
+												// 							{this._renderVideoListSearch(
+												// 								historyLoading,
+												// 								arrPares.length > 0 ? arrPares : video_history,
+												// 								true,
+												// 								arrPares.length > 0 ? arrPares[0] : null,
+												// 								true, inputCkecked, false, true
+												// 							)}
+												// 						</Tab.Pane>)}
+												// 					</>
+												// 			}
+												// 		</>
+												// 	)
+												// }
+
+												// qnapServer && qnapChannel && {
+												// 	menuItem: 'Resultados de busqueda',
+												// 	render: () => (
+												// 		<Tab.Pane style={{ background: "transparent"}} attached={false}>
+												// 			{(isNewSearch || searchLoading) && <hr />}
+												// 			{ this._renderVideoList(searchLoading, video_search, isNewSearch, null, false, false, true)}
+												// 		</Tab.Pane>
+												// 	)
+												// }
+											]}
+										/>
 									</div>
-									:
-									null
+								</>
+								:
+								<div className="col-7 platesgrid" align="center">
+									<CurveGridCamera camera={selectedCamera.dataCamValue} />
+								</div>
+								:
+								null
 						}
 						{
-							selectedCamera.id < 513 || selectedCamera.id > 547 ?
-								// selectedCamera.id !== 1 && selectedCamera.id !== 2 ?
+							// selectedCamera.id < 513 || selectedCamera.id > 547 ?
+							// 	// selectedCamera.id !== 1 && selectedCamera.id !== 2 ?
 
-								<div className={`${(typeMBOX && removeSpaces(typeMBOX) !== 'axxon') ? "col-4" : "col-5"} matchesgrid`} align="center">
-									{/* {localStorage.getItem(LANG) === "english" ? "History" : "Historial"} */}
-									{(selectedCamera.dataCamValue.type_camare_id === 2 && !selectedCamera.dataCamValue.is_lpr) &&
-										<Tab
-											align="center"
-											menu={{ secondary: true, pointing: true, inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) }}
-											activeIndex={historialIndex}
-											onTabChange={(e, { activeIndex }) => { this.setState({ historialIndex: activeIndex }) }}
-											panes={[
-												{
-													menuItem: localStorage.getItem(LANG) === "english" ? "Detections" : 'Detecciones',
-													render: () => (
-														<Tab.Pane style={{ background: "transparent" }} attached={false}>
-															{photosLoading ?
+							<div className={`${((typeMBOX && removeSpaces(typeMBOX) !== 'axxon') && (selectedCamera.dataCamValue && selectedCamera.dataCamValue.is_lpr) && !showLPR) ? "col-4" : "col-5"} matchesgrid`} align="center">
+								{/* {(selectedCamera.dataCamValue.type_camare_id === 2 && !selectedCamera.dataCamValue.is_lpr) && */}
+								<Tab
+									align="center"
+									menu={{ secondary: true, pointing: true, inverted: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) }}
+									activeIndex={historialIndex}
+									onTabChange={(e, { activeIndex }) => { this.setState({ historialIndex: activeIndex }) }}
+									panes={[
+										{
+											menuItem: localStorage.getItem(LANG) === "english" ? "Detections" : 'Detecciones',
+											render: () => (
+												<Tab.Pane style={{ background: "transparent" }} attached={false}>
+													<div style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
+														{(selectedCamera.dataCamValue && selectedCamera.dataCamValue.is_lpr) ? this._showPlates(true, selectedCamera)
+															:
+															photosLoading ?
 																this._renderLoading()
 																:
-																<div align="center" style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
+																<div align="center">
 																	<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No detections to show" : "No hay detecciones que mostrar"}</p>
 																	<i className="fa fa-image fa-5x" />
-																</div>}
-														</Tab.Pane>
-													)
-												},
-												{
-													menuItem: localStorage.getItem(LANG) === "english" ? "Conection" : 'Conexión',
-													render: () => (
-														<Tab.Pane style={{ background: "transparent" }} attached={false}>
-															<div style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
-																{
+																</div>
+														}
+
+														{/* {selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ? this._showPlates(false, selectedCamera) : null : null} */}
+														{/* {
 																	photosLoading ?
 																		this._renderLoading()
 																		:
@@ -527,37 +591,35 @@ class GridCameraDisplay extends Component {
 																				<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No logs to show" : "No hay registros que mostrar"}</p>
 																				<i className="fa fa-image fa-5x" />
 																			</div>
-																}
-															</div>
-														</Tab.Pane>
-													)
-												},
-											]}
-										/>
-									}
+																} */}
+													</div>
+												</Tab.Pane>
+											)
+										},
+										// {
+										// 	menuItem: localStorage.getItem(LANG) === "english" ? "Conection" : 'Conexión',
+										// 	render: () => (
+										// 		<Tab.Pane style={{ background: "transparent" }} attached={false}>
+										// 			{photosLoading ?
+										// 				this._renderLoading()
+										// 				:
+										// 				<div align="center" style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
+										// 					<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No detections to show" : "No hay detecciones que mostrar"}</p>
+										// 					<i className="fa fa-image fa-5x" />
+										// 				</div>}
+										// 		</Tab.Pane>
+										// 	)
+										// },
+									]}
+								/>
+								{/* } */}
 
-									{selectedCamera.dataCamValue ? selectedCamera.dataCamValue.is_lpr ? this._showPlates(true, selectedCamera) : null : null}
+								{/* {selectedCamera.dataCamValue ? selectedCamera.dataCamValue.is_lpr ? this._showPlates(true, selectedCamera) : null : null} */}
 
-									{/* {selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ? this._showPlates(false, selectedCamera) : null : null} */}
-
-									{/*  ---matches reales---
-								{
-										matches.length > 0 ? 
-										(matches.map((value, index) => {
-										return <Match key={index} info={value} toggleControls={this._closeControl} />;
-										})) : (<h4>Sin historial de matches</h4>);
-								} */
-									}
-									{/* ---matches planchados */}
-									{/* {matches ? (
-										matches.map((value, index) => {
-											if (index % selectedCamera.num_cam !== 0) return null;
-											return <Match key={index} info={value} toggleControls={this._closeControl} />;
-										})
-									) : null} */}
-								</div>
-								:
-								null
+								{/* {selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ? this._showPlates(false, selectedCamera) : null : null} */}
+							</div>
+							// 	:
+							// 	null
 						}
 					</div>
 				</div>
@@ -584,7 +646,7 @@ class GridCameraDisplay extends Component {
 	download = async (params, dns) => {
 		let { apiStorageKey, dnsPort, typeMBOX, historyServerProtocol, historicalPassword, historicalUser, historyServerDns, isAxxonSearch } = this.state;
 		if (typeMBOX === 'light') {
-			const URI = apiStorageKey ? `${params.relative_path_video}${apiStorageKey}` : parseInt(dnsPort) === 80 ? `${historyServerProtocol}://${dns}/${params.relative_path_video}` : `${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`;
+			const URI = apiStorageKey ? `${params.relative_path_video}${apiStorageKey}` : dnsPort === 80 ? `${historyServerProtocol}://${dns}/${params.relative_path_video}` : `${historyServerProtocol}://${dns}:${dnsPort}/${params.relative_path_video}`;
 			axios({
 				url: URI,
 				method: "GET",
@@ -614,7 +676,7 @@ class GridCameraDisplay extends Component {
 
 				const responseArchive = await conections.exportArchive(body);
 				let level = null, message = null, title = null;
-				if (responseArchive && responseArchive.data && responseArchive.data.success) {
+				if (responseArchive && responseArchive.data && responseArchive.data.success && Object.keys(responseArchive.data.archive).length > 0) {
 					const { file_path, id, route } = responseArchive.data && responseArchive.data.archive;
 					if (file_path) {
 						message = localStorage.getItem(LANG) === "english" ? Strings.downloadEnglishStarted : Strings.downloadStarted;
@@ -753,7 +815,6 @@ class GridCameraDisplay extends Component {
 	_renderVideoList = (loading, videoList, showNoFiles = true, hasDns = null, isHistory = false, isDownload = false, isRecord = false, noButtons = false) => {
 		let { servidorMultimedia, dnsArray, camURL, apiStorageKey, portContainer, dnsContainer, typeMBOX, historyServerDns, historyServerPort, historyServerProtocol, selectedCamera, protocolDownload, historicCurrentDay } = this.state;
 		// const userIdContainer = this.getUserID()
-
 		return loading ? (
 			this._renderLoading()
 		) : videoList && videoList.length > 0 ? (
@@ -825,10 +886,9 @@ class GridCameraDisplay extends Component {
 				} else {
 					let idx = newArray.findIndex(e => e.hour === el.hour)
 					newArray[idx].videos.push(el)
-				}
-			})
-
-		}
+				};
+			});
+		};
 
 		return loadingHistorics ? (
 			this._renderLoading()
@@ -885,7 +945,7 @@ class GridCameraDisplay extends Component {
 			const getVideoStream = await conections.getVideoStreams(payload);
 			if (getVideoStream.data && getVideoStream.data.success) {
 				const { data: { data } } = getVideoStream;
-				const videoSourceId = data[0].accessPoint;
+				const videoSourceId = data[1].accessPoint;
 				const password = historicalPassword;
 				const user = historicalUser;
 				let url = null;
@@ -915,10 +975,13 @@ class GridCameraDisplay extends Component {
 
 					xhr.onload = (e) => {
 						let blob = xhr.response;
-						if (blob && parseInt(xhr.status) === 200) {
-							const fileName = `CAM${camera.id}.jpeg`;
+						if (blob && xhr.status === 200) {
+							const downloadDate = new Date();
+							const dateToFileName = moment(downloadDate).format("YYYY-MM-DD HH:mm:ss").split(" ");
+							const fileName = `CAM${camera.id}_${dateToFileName[0]}_${dateToFileName[1]}.jpeg`;
 							this.saveFile(blob, fileName);
 							this.setState({ loadingSnap: false });
+							this.addNotification({ message: "Fotografía descargada correctamente", level: "success", title: "Descarga exitosa" })
 						} else {
 							// this.addNotification({ message, level, title });
 							window.location.pathname !== "/cuadrantes" ? this.addNotification({ message, level, title }) : this.props.quadrantNotification({ message, level, title });
@@ -1007,7 +1070,6 @@ class GridCameraDisplay extends Component {
 				search_auto: true,
 				dnsArray: dnsArray,
 			}
-
 			this._searchFilesAxxon(body);
 		};
 
@@ -1026,7 +1088,7 @@ class GridCameraDisplay extends Component {
 
 		if (auxArray.length > 0) {
 			newArray.push(auxArray)
-		}
+		};
 
 		if (!isAxxonSearch) {
 			return (
@@ -1090,15 +1152,17 @@ class GridCameraDisplay extends Component {
 
 	_getHistoricsByHour = (daysBack) => {
 
-		this.setState({ loadingHistorics: true })
+		if (!this.state.isAxxonSearch) {
+			this.setState({ loadingHistorics: true })
 
-		let newMoment = [moment().subtract(daysBack, 'days').startOf('date').format('YYYY-MM-DD')];
-		this._searchFileVideosNotqnap(newMoment, "00", "24");
-		this.setState({ historicCurrentDay: daysBack })
+			let newMoment = [moment().subtract(daysBack, 'days').startOf('date').format('YYYY-MM-DD')];
+			this._searchFileVideosNotqnap(newMoment, "00", "24");
+			this.setState({ historicCurrentDay: daysBack })
 
-		setTimeout(() => {
-			this.setState({ loadingHistorics: false })
-		}, 1000);
+			setTimeout(() => {
+				this.setState({ loadingHistorics: false })
+			}, 1000);
+		};
 	}
 
 	_backToHistorics = () => {
@@ -1113,13 +1177,13 @@ class GridCameraDisplay extends Component {
 		this._searchFileVideosNotqnap(momentToMount, "00", "24");
 		this._changeStatus(false);
 		this.setState({ isAxxonSearch: false, axxonList: [], historicCurrentDay: index });
-	}
+	};
 
 	_renderButtonsByHour = () => {
-		let { historicCurrentDay } = this.state
+		let { historicCurrentDay } = this.state;
 		moment.locale('es');
 
-		let totalWeekArray = [0, 1, 2, 3, 4, 5, 6]
+		let totalWeekArray = [0, 1, 2, 3, 4, 5, 6];
 
 		return (
 			<div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -1187,6 +1251,10 @@ class GridCameraDisplay extends Component {
 
 	handlePageClick = (data) => {
 		this.setState({ start: data.selected * this.state.limit });
+	};
+
+	_changeShowLPR = () => {
+		this.setState({ showLPR: !this.state.showLPR });
 	};
 
 	_searchHistorialConections = (cam_id, page) => {
@@ -1261,9 +1329,8 @@ class GridCameraDisplay extends Component {
 	}
 
 	_searchFilesAxxon = async (params) => {
-		const { selectedCamera } = this.state;
+		const { selectedCamera, /*historicCurrentDay*/ } = this.state;
 		this.setState({ isAxxonSearch: true, loadingHistorics: true });
-
 		let notificationFirstAlert = {
 			message: "Aguarde unos segundos mientras se realiza la búsqueda de históricos.",
 			level: "info",
@@ -1283,11 +1350,13 @@ class GridCameraDisplay extends Component {
 
 		if (getArchives.data.data) {
 			let listAvailablefiles = getArchives.data.data;
+			const filesIndex = listAvailablefiles.findIndex(el => el.accessPoint.includes("0:1"));
+
 			let search = {
 				cam_id: selectedCamera.id,
 				begin: params.startDateTime,
 				end: params.dateTimeEnd,
-				archives: listAvailablefiles
+				archives: filesIndex > -1 ? [listAvailablefiles[filesIndex]] : listAvailablefiles,
 			};
 
 			const recordingsAvailable = await conections.searchArchive(search);
@@ -1313,7 +1382,9 @@ class GridCameraDisplay extends Component {
 				let level = 'warning';
 				let title = 'Búsqueda de histórico';
 				this.addNotification({ message, level, title });
-				this.setState({ isAxxonSearch: false });
+				if (!this.state.moduleSearch) {
+					this.setState({ isAxxonSearch: false });
+				}
 			}
 			this.setState({ loadingHistorics: false });
 		}
@@ -1479,12 +1550,15 @@ class GridCameraDisplay extends Component {
 		let camera = cam && cam.id ? cam : selectedCamera;
 		let tipoMBOX = camera.dataCamValue.tipombox;
 
+		// if (selectedCamera.id === 2) {
+
 		let gridCameraControl = document.getElementById("gridCameraControl");
 		gridCameraControl.style.height = "200px"
 
 		if (destroyFiles) await this._destroyFileVideos(true, (onlyCurrent && onlyHistory && onlyPhotos), null, tipoMBOX);
 
 		let dnsMbox = camera.dataCamValue.urlhistory;
+		let isLPRCam = camera.dataCamValue.is_lpr;
 		const dns_portMbox = camera.dataCamValue.urlhistoryport
 		const protocol = camera.dataCamValue.protocolhistory
 		const portApiStorage = camera.dataCamValue.UrlAPIStorage.port
@@ -1500,6 +1574,13 @@ class GridCameraDisplay extends Component {
 		};
 
 		this.setState({ apiStorageKey: camera.dataCamValue.UrlAPIStorage.secretkey, camURL: camera.dataCamValue, portContainer: camera.dataCamValue.urlhistoryport, dnsContainer: camera.dataCamValue.urlhistory, completeCamera: cam, typeMBOX: tipoMBOX, gridActive: true, })
+
+		if (!isLPRCam) {
+			this.setState({ showLPR: false });
+		} else {
+			this.setState({ showLPR: true });
+		};
+
 		// History
 		if (camera.dataCamValue && camera.dataCamValue.qnap_server_id && camera.dataCamValue.qnap_channel) {
 			if (onlyHistory) this._loadMoreHistory(true);
@@ -1570,10 +1651,10 @@ class GridCameraDisplay extends Component {
 						}
 					} else {
 						let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
-						if (response.data.data.items.length > 0) {
+						if ((response.data.data.items.length > 0) || tipoMBOX === 'axxon') {
 							let resHistory = response.data.data;
 							this.setState({ resHistorySearch: resHistory, historicalPassword: resHistory.historicalPassword, historicalUser: resHistory.historicalUser, historyServerPort: resHistory.dns_port, historyServerDns: resHistory.dns_ip, historyServerProtocol: resHistory.protocol });
-							if (resHistory.items.length > 0) {
+							if ((resHistory.items.length > 0) || tipoMBOX === 'axxon') {
 								let dns_ip = dnsMbox
 								let dns_port = dns_portMbox
 								this.setState({ dns_portdnsPort: dns_port, dnsPort: dns_port });
