@@ -116,7 +116,7 @@ export default {
   getHistorialToDownload: (data) => {
     return connectedSails.post(`${constants.sails_url}/supervisor/filter/camera`, data);
   },
-
+  
   // Incidents endpoints
 
   getTagList: () => {
@@ -146,7 +146,7 @@ export default {
     return connectedSails.get(`${constants.sails_url}/incident/tags`);
   },
 
-
+  
 
   // Dashboard LPR
 
@@ -180,20 +180,66 @@ export default {
   getLPRFilterHour: (data) => {
     return connectedSails.post(`${constants.sails_url}/lpr/filter/hour`, data)
   },
-  getLPRPerHour: (id) => {
-
+  getLPRPerHour: (cam_id) => {
     let data = {
-      cam_id: id
-    }
+      cam_id
+    };
 
-    return connectedSails.post(`${constants.sails_url}/lpr/filter/hour`, data)
+
+    return connectedSails.post(`${constants.sails_url}/lpr/filter/hour`, data);
   },
+
+  getLPRPerDay: (cam_id, start_date, end_date) => {
+    let data;
+    if (cam_id !== 0) {
+      data = {
+        cam_id,
+        start_date,
+        end_date,
+      };
+    } else {
+      data = {
+        start_date,
+        end_date,
+      };
+    };
+    return connectedSails.post(`${constants.sails_url}/lpr/filter/month`, data);
+  },
+
   getLPRAlertWeek: () => {
     return connectedSails.get(`${constants.sails_url}/lpr/perWeekHour`)
   },
   getLPRBubble: (data) => {
     return connectedSails.post(`${constants.sails_url}/lpr/filter/bubblemap`, data)
   },
+
+  /////////////////////////////// LICENCIAS /////////////////////////////////////
+
+  getLicenses: (id) => {
+    return Axios.get(`${constants.ngrok_license}/licenses/${id}/client`);
+  },
+
+  assignLicense: (body) => {
+    return Axios.post(`${constants.ngrok_license}/licenses`, body)
+  },
+
+  // resetLicense: (id) => {
+  //   return Axios.post(`${constants.ngrok_license}/licenses/${id}`)
+  // },
+
+  reassignLicense: (body, id) => {
+    return Axios.put(`${constants.ngrok_license}/licenses/${id}/reset`, body)
+  },
+
+  getClientLicense: (id) => {
+    return Axios.get(`${constants.ngrok_license}/licensemass/${id}/`);
+  },
+
+  assignClientLicense: (body, id) => {
+    return Axios.put(`${constants.ngrok_license}/licensemass/${id}/`, body);
+  },
+
+
 
   ////////////////////////////////////////////////////////////////////
 
@@ -489,7 +535,7 @@ export default {
     return connectedSails.post(constants.sails_url + '/status/support/', data);
   },
   postSupportToProcess: (data) => {
-    // https://customer-aob-api-dev.radarapptechnologies.com/supervisor/camera-status?cam_id=49&page=91
+    https://customer-aob-api-dev.radarapptechnologies.com/supervisor/camera-status?cam_id=49&page=91
     data.user_id = getUserID();
     return connectedSails.post(constants.sails_url + '/postsupport/toprocess/', data);
   },
