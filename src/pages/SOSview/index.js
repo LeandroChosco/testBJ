@@ -133,7 +133,7 @@ class Chat extends Component {
         render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Seguimiento Por Hora')}</Tab.Pane>
       },
       {
-        menuItem: 'Por Seguimiento',
+        menuItem: 'Por Destino',
         render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListChats('Seguimiento Por Destino')}</Tab.Pane>
       }
     ];
@@ -159,7 +159,7 @@ class Chat extends Component {
         render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Seguimiento Por Hora')}</Tab.Pane>
       },
       {
-        menuItem: 'Por Seguimiento',
+        menuItem: 'Por Destino',
         render: () => <Tab.Pane attached={false} style={{ backgroundColor: "transparent", borderWidth: 0, borderColor: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#2e597d" : "#dadada" }} >{this.renderListHistorial('Seguimiento Por Destino')}</Tab.Pane>
       }
     ];
@@ -501,7 +501,7 @@ class Chat extends Component {
                                 <div className='col-9'>
                                   <div className='row'>
                                     <div className='col-6' style={styles.text}>
-                                      <b>Nombre: </b>
+                                      <b>Nombress: </b>
                                       {chats[index].user_name}
                                     </div>
                                     <div className='col' style={styles.text}>
