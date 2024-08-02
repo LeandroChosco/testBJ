@@ -535,7 +535,7 @@ export default {
     return connectedSails.post(constants.sails_url + '/status/support/', data);
   },
   postSupportToProcess: (data) => {
-    https://customer-aob-api-dev.radarapptechnologies.com/supervisor/camera-status?cam_id=49&page=91
+    // https://customer-aob-api-dev.radarapptechnologies.com/supervisor/camera-status?cam_id=49&page=91
     data.user_id = getUserID();
     return connectedSails.post(constants.sails_url + '/postsupport/toprocess/', data);
   },
