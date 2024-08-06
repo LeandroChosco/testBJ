@@ -23,7 +23,7 @@ class MediaContainer extends Component {
     let poster;
 
     if (isVault) {
-      poster = !exists_video ? noHistoric : !exists_image_historic ? noDisponible : coverImage;
+      poster = src === "images/no_video.jpg" ? noHistoric : !exists_image_historic ? noDisponible : coverImage;
     } else {
       poster = !exists_image_historic && src === "images/no_video.jpg" ? noHistoric : coverImage !== "images/no_imagen.jpg" ? coverImage ? urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol) : noDisponible : noDisponible;
       // let poster = value.relative_path_image === "images/no_imagen.jpg" ? noDisponible : value.relative_path_image === "images/no_video.jpg" ? noHistoric : (servidorMultimedia + "/" + value.relative_path_image);
@@ -53,7 +53,7 @@ class MediaContainer extends Component {
 
     return (
       <div className={!covid ? 'mediaContainer col-6 p10' : 'col-3 p-3'}>
-        <Card onClick={() => this._playVideo(src, isVault)}>
+        <Card onClick={() => src !== "images/no_video.jpg" && this.setState({ modal: true })}>
           {exists_video && (
             <ReactPlayer
               url={
@@ -144,17 +144,7 @@ class MediaContainer extends Component {
       </div>
     );
   };
-
-  _playVideo = (src, isVault) => {
-
-    if (isVault) {
-      this.setState({ modal: true });
-    } else {
-      if (src !== 'images/no_video.jpg') {
-        this.setState({ modal: true });
-      };
-    };
-  };
+  
 
   _saveFile = async () => {
     this.setState({ loading: true });
