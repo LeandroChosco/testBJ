@@ -11,18 +11,23 @@ import noDisponible from '../../assets/images/noDisponible.png';
 import noHistoric from '../../assets/images/noHistoric.png';
 
 
-
 class MediaContainer extends Component {
   state = { modal: false, loading: false };
 
   render() {
     let { modal, loading } = this.state;
-    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value, port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo, coverImage, historyServerDns, historyServerPort, historyServerProtocol, exists_image_historic, /*servidorMultimedia*/ } = this.props;
+    let { isQnap, dns_ip, src, exists_image, exists_video, real_hour, covid, value, port, dnsContainer, isRecord, noButtons, typeMBOX, cam, lightTwo, coverImage, historyServerDns, historyServerPort, historyServerProtocol, exists_image_historic, /*servidorMultimedia,*/ isVault } = this.props;
     let dnsIp = ""
     let portCam = ""
 
-    let poster = !exists_image_historic && src === "images/no_video.jpg" ? noHistoric : coverImage !== "images/no_imagen.jpg" ? coverImage ? urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol) : noDisponible : noDisponible;
-    // let poster = value.relative_path_image === "images/no_imagen.jpg" ? noDisponible : value.relative_path_image === "images/no_video.jpg" ? noHistoric : (servidorMultimedia + "/" + value.relative_path_image);
+    let poster;
+
+    if (isVault) {
+      poster = !exists_video ? noHistoric : !exists_image_historic ? noDisponible : coverImage;
+    } else {
+      poster = !exists_image_historic && src === "images/no_video.jpg" ? noHistoric : coverImage !== "images/no_imagen.jpg" ? coverImage ? urlHttpOrHttpsMultimedia(historyServerDns, historyServerPort, coverImage, historyServerProtocol) : noDisponible : noDisponible;
+      // let poster = value.relative_path_image === "images/no_imagen.jpg" ? noDisponible : value.relative_path_image === "images/no_video.jpg" ? noHistoric : (servidorMultimedia + "/" + value.relative_path_image);
+    }
 
 
     let protocol = null;
@@ -48,14 +53,15 @@ class MediaContainer extends Component {
 
     return (
       <div className={!covid ? 'mediaContainer col-6 p10' : 'col-3 p-3'}>
-        <Card onClick={src !== 'images/no_video.jpg' ? () => this.setState({ modal: true }) : null}>
+        <Card onClick={() => this._playVideo(src, isVault)}>
           {exists_video && (
             <ReactPlayer
               url={
-                isQnap ? (`${src}&open=normal`)
-                  : typeMBOX === 'light' && isRecord === false && lightTwo ? (`${protocol}://${dnsIp}/${src}`)
-                    : typeMBOX === 'light' && isRecord === false && lightTwo === false ? (`${src}`)
-                      : typeMBOX === 'light' && isRecord === true ? urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol) : urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
+                isVault ? src :
+                  isQnap ? (`${src}&open=normal`)
+                    : typeMBOX === 'light' && isRecord === false && lightTwo ? (`${protocol}://${dnsIp}/${src}`)
+                      : typeMBOX === 'light' && isRecord === false && lightTwo === false ? (`${src}`)
+                        : typeMBOX === 'light' && isRecord === true ? urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol) : urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
               }
               style={{ backgroundColor: '#000' }}
               width="100%"
@@ -108,10 +114,11 @@ class MediaContainer extends Component {
             {exists_video && (
               <ReactPlayer
                 url={
-                  isQnap ? (`${src}&open=normal`)
-                    : typeMBOX === 'light' && isRecord === false && lightTwo ? (`${protocol}://${dnsIp}/${src}`)
-                      : typeMBOX === 'light' && isRecord === false && lightTwo === false ? (`${src}`)
-                        : typeMBOX === 'light' && isRecord === true ? urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol) : urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
+                  isVault ? src :
+                    isQnap ? (`${src}&open=normal`)
+                      : typeMBOX === 'light' && isRecord === false && lightTwo ? (`${protocol}://${dnsIp}/${src}`)
+                        : typeMBOX === 'light' && isRecord === false && lightTwo === false ? (`${src}`)
+                          : typeMBOX === 'light' && isRecord === true ? urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol) : urlHttpOrHttpsMultimedia(dnsIp, portCam, src, protocol)
                 }
                 playing={true}
                 controls={true}
@@ -136,7 +143,18 @@ class MediaContainer extends Component {
         </Modal>
       </div>
     );
-  }
+  };
+
+  _playVideo = (src, isVault) => {
+
+    if (isVault) {
+      this.setState({ modal: true });
+    } else {
+      if (src !== 'images/no_video.jpg') {
+        this.setState({ modal: true });
+      };
+    };
+  };
 
   _saveFile = async () => {
     this.setState({ loading: true });
