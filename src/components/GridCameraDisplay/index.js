@@ -79,6 +79,7 @@ class GridCameraDisplay extends Component {
 		camURL: null,
 		portContainer: null,
 		resHistorySearch: null,
+		resHistoryVault: [],
 		dnsPort: 0,
 		dnsContainer: null,
 		countArray: 1,
@@ -125,7 +126,7 @@ class GridCameraDisplay extends Component {
 	};
 
 	render() {
-		let { activeIndex, historialIndex, /*historialConections,*/ markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRecord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, /*isNewSearch, video_search,*/ showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays, /*filterCount,*/ typeMBOX, isAxxonSearch, axxonList, loadingUpdate, gridActive, showLPR, resHistorySearch, hasVault } = this.state;
+		let { activeIndex, historialIndex, /*historialConections,*/ markers, start, limit, selectedCamera, qnapServer, qnapChannel, pageCount, autoplay, photos, loadingSnap, loadingRecord, restarting, recordingCams, videos, servidorMultimedia, photosLoading, videosLoading, historyLoading, video_history, searchLoading, /*isNewSearch, video_search,*/ showPTZ, arrPares, inputCkecked, moduleSearch, portContainer, dnsContainer, countDays, /*filterCount,*/ typeMBOX, isAxxonSearch, axxonList, loadingUpdate, gridActive, showLPR, resHistoryVault, hasVault } = this.state;
 		let { propsIniciales, loading, showMatches, error, moduleActions, loadingFiles, is_filter } = this.props;
 
 
@@ -357,7 +358,9 @@ class GridCameraDisplay extends Component {
 														<>
 															{
 																historyLoading ?
-																	this._renderLoading()
+																	<Tab.Pane style={{ background: "transparent" }} attached={false}>
+																		{this._renderLoading()}
+																	</Tab.Pane>
 																	:
 																	<>
 																		<div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0.3rem", alignItems: "center" }}>
@@ -480,8 +483,10 @@ class GridCameraDisplay extends Component {
 													render: () => (
 														<>
 															{
-																historyLoading ?
-																	this._renderLoading()
+																resHistoryVault.length === 0 ?
+																	<Tab.Pane style={{ background: "transparent" }} attached={false}>
+																		{this._renderLoading()}
+																	</Tab.Pane>
 																	:
 																	<>
 																		<div style={{ display: "flex", justifyContent: "space-around", paddingTop: "0.3rem" }}>
@@ -514,17 +519,17 @@ class GridCameraDisplay extends Component {
 																		{!inputCkecked ? (<Tab.Pane style={{ background: "transparent" }} attached={false}>
 																			{this._renderVaultStorage(
 																				historyLoading,
-																				resHistorySearch.vault.length > 0 ? resHistorySearch.vault : video_history,
+																				resHistoryVault.length > 0 ? resHistoryVault : video_history,
 																				true,
-																				resHistorySearch.vault.length > 0 ? resHistorySearch.vault[0] : null,
+																				resHistoryVault.length > 0 ? resHistoryVault[0] : null,
 																				true, inputCkecked, false, true
 																			)}
 																		</Tab.Pane>) : (<Tab.Pane style={{ background: "transparent" }} attached={false}>
 																			{this._renderVaultStorage(
 																				historyLoading,
-																				resHistorySearch.vault.length > 0 ? resHistorySearch.vault : video_history,
+																				resHistoryVault.length > 0 ? resHistoryVault : video_history,
 																				true,
-																				resHistorySearch.vault.length > 0 ? resHistorySearch.vault[0] : null,
+																				resHistoryVault.length > 0 ? resHistoryVault[0] : null,
 																				true, inputCkecked, false, true
 																			)}
 																		</Tab.Pane>)}
@@ -570,20 +575,22 @@ class GridCameraDisplay extends Component {
 											menuItem: localStorage.getItem(LANG) === "english" ? "Detections" : 'Detecciones',
 											render: () => (
 												<Tab.Pane style={{ background: "transparent" }} attached={false}>
-													<div style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
-														{(selectedCamera.dataCamValue && selectedCamera.dataCamValue.is_lpr) ? this._showPlates(true, selectedCamera)
-															:
-															photosLoading ?
-																this._renderLoading()
-																:
-																<div align="center">
-																	<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No detections to show" : "No hay detecciones que mostrar"}</p>
-																	<i className="fa fa-image fa-5x" />
-																</div>
-														}
+													{
+														photosLoading ? this._renderLoading() :
+															<div style={{ paddingBottom: "3rem", paddingRight: "1rem" }}>
+																{(selectedCamera.dataCamValue && selectedCamera.dataCamValue.is_lpr) ? this._showPlates(true, selectedCamera)
+																	:
+																	photosLoading ?
+																		this._renderLoading()
+																		:
+																		<div align="center">
+																			<p className="big-letter" style={{ color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "#b3b3b3" : "#666666" }}>{localStorage.getItem(LANG) === "english" ? "No detections to show" : "No hay detecciones que mostrar"}</p>
+																			<i className="fa fa-image fa-5x" />
+																		</div>
+																}
 
-														{/* {selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ? this._showPlates(false, selectedCamera) : null : null} */}
-														{/* {
+																{/* {selectedCamera.dataCamValue ? !selectedCamera.dataCamValue.is_lpr ? this._showPlates(false, selectedCamera) : null : null} */}
+																{/* {
 																	photosLoading ?
 																		this._renderLoading()
 																		:
@@ -595,7 +602,8 @@ class GridCameraDisplay extends Component {
 																				<i className="fa fa-image fa-5x" />
 																			</div>
 																} */}
-													</div>
+															</div>
+													}
 												</Tab.Pane>
 											)
 										},
@@ -1570,7 +1578,6 @@ class GridCameraDisplay extends Component {
 			} else {
 				this.setState({ activeIndex: 0, historialIndex: 0 });
 			}
-
 			this.setState({
 				videos: [], video_history: [], photos: [], video_search: [], video_ssid: [],
 				videosLoading: loading, historyLoading: loading, photosLoading: loading, searchLoading: false, isNewSearch: false,
@@ -1637,7 +1644,13 @@ class GridCameraDisplay extends Component {
 		let camera = cam && cam.id ? cam : selectedCamera;
 		let tipoMBOX = camera.dataCamValue.tipombox;
 
-		this.setState({ hasVault: false });
+		this.setState({ hasVault: false, resHistoryVault: [] });
+
+		if (camera.dataCamValue.UrlAPIStorage && camera.dataCamValue.UrlAPIStorage.is_bold_storage === 1 && camera.dataCamValue.UrlAPIStorage.type_vault_storage === "minio") {
+			this.setState({ hasVault: true });
+		} else {
+			this.setState({ hasVault: false });
+		};
 
 		// if (selectedCamera.id === 2) {
 
@@ -1700,9 +1713,10 @@ class GridCameraDisplay extends Component {
 					if (tipoMBOX === 'pro') {
 						let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
 						let resHistory = response.data.data;
-						this.setState({ resHistorySearch: resHistory, hasVault: resHistory.vault.length > 0 });
+						this.setState({ resHistorySearch: resHistory, historyLoading: false });
 
 						if (resHistory.items.length > 0) {
+
 							let dns_ip = dnsMbox
 							let dns_port = dns_portMbox
 							this.setState({ dnsPort: dns_port })
@@ -1735,12 +1749,15 @@ class GridCameraDisplay extends Component {
 								this.setState({ video_history: [], historyLoading: false });
 								this.spinnerif();
 							}
+							this.setState({ historyLoading: false })
 						} else {
 							this.setState({ video_history: [], historyLoading: false });
 							this.spinnerif();
-						}
+						};
+						this.setState({ historyLoading: false });
 					} else {
 						let response = await conections.getCamDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam, tipoMBOX);
+
 						if ((response.data.data.items.length > 0) || tipoMBOX === 'axxon') {
 							let resHistory = response.data.data;
 							this.setState({ resHistorySearch: resHistory, historicalPassword: resHistory.historicalPassword, historicalUser: resHistory.historicalUser, historyServerPort: resHistory.dns_port, historyServerDns: resHistory.dns_ip, historyServerProtocol: resHistory.protocol });
@@ -1844,7 +1861,6 @@ class GridCameraDisplay extends Component {
 
 							}
 						}
-
 					}
 
 
@@ -1882,11 +1898,24 @@ class GridCameraDisplay extends Component {
 			} catch (err) {
 				if (camera.id === this.state.selectedCamera.id) {
 					this.setState({ videosLoading: false, photosLoading: false });
-				}
-			}
+				};
+			};
 		} else {
 			this.setState({ videosLoading: false, photosLoading: false });
-		}
+		};
+
+		if (camera.dataCamValue.UrlAPIStorage && camera.dataCamValue.UrlAPIStorage.is_bold_storage === 1 && camera.dataCamValue.UrlAPIStorage.type_vault_storage === "minio") {
+			let responseVault = await conections.getVaultDataHistory(camera.dataCamValue.id, camera.dataCamValue.num_cam);
+			if (responseVault.data.success) {
+				if (responseVault.data.data.vault.length > 0) {
+					this.setState({ resHistoryVault: responseVault.data.data.vault });
+				} else {
+					this.setState({ hasVault: false });
+				};
+			};
+		} else {
+			this.setState({ hasVault: false });
+		};
 	};
 
 

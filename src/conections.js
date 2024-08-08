@@ -116,37 +116,37 @@ export default {
   getHistorialToDownload: (data) => {
     return connectedSails.post(`${constants.sails_url}/supervisor/filter/camera`, data);
   },
+
+    // Incidents endpoints
+
+    getTagList: () => {
+      return connectedSails.get(`${constants.sails_url}/tag/list`);
+    },
   
-  // Incidents endpoints
-
-  getTagList: () => {
-    return connectedSails.get(`${constants.sails_url}/tag/list`);
-  },
-
-  getIncidentsMap: (filter) => {
-    if(filter){
-      return connectedSails.get(`${constants.sails_url}/incident/map?tag=${filter}`);
-    } else {
-      return connectedSails.get(`${constants.sails_url}/incident/map`);
-    }
-  },
-
-  getIncidentById: (id) => {
-    return connectedSails.get(`${constants.sails_url}/incident/${id}`);
-  },
-
-  getTimeline: (current_page) => {
-    return connectedSails.get(`${constants.sails_url}/incident/timeline?page=${current_page}`);
-  },
-
-  getTopLikes: () => {
-    return connectedSails.get(`${constants.sails_url}/reaction/like/count`);
-  },
-  getDataTags: () => {
-    return connectedSails.get(`${constants.sails_url}/incident/tags`);
-  },
-
+    getIncidentsMap: (filter) => {
+      if(filter){
+        return connectedSails.get(`${constants.sails_url}/incident/map?tag=${filter}`);
+      } else {
+        return connectedSails.get(`${constants.sails_url}/incident/map`);
+      }
+    },
   
+    getIncidentById: (id) => {
+      return connectedSails.get(`${constants.sails_url}/incident/${id}`);
+    },
+  
+    getTimeline: (current_page) => {
+      return connectedSails.get(`${constants.sails_url}/incident/timeline?page=${current_page}`);
+    },
+  
+    getTopLikes: () => {
+      return connectedSails.get(`${constants.sails_url}/reaction/like/count`);
+    },
+    getDataTags: () => {
+      return connectedSails.get(`${constants.sails_url}/incident/tags`);
+    },
+
+
 
   // Dashboard LPR
 
@@ -203,6 +203,7 @@ export default {
         end_date,
       };
     };
+
     return connectedSails.post(`${constants.sails_url}/lpr/filter/month`, data);
   },
 
@@ -371,6 +372,11 @@ export default {
   getCamDataHistory: (camera_id, num_cam, typeMBOX) => {
     const user_id = getUserID();
     return connectedSails.get(constants.sails_url + '/control-cams/' + camera_id + '/' + num_cam + '/video-history/?user_id=' + user_id + '&type_mbox=' + typeMBOX);
+  },
+
+  getVaultDataHistory: (camera_id, num_cam) => {
+    const user_id = getUserID();
+    return connectedSails.get(constants.sails_url + '/control-cams/' + camera_id + '/' + num_cam + '/history-vault/?user_id=' + user_id);
   },
 
   getTickets: () => {
