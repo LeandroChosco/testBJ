@@ -1,6 +1,29 @@
 const versions =
     [
         {
+            version: "1.1.4",
+            date: "15/08/2024",
+            changes: [
+                "Incorporación de históricos Vault Storage a modo de backup de los históricos locales.",
+                "Agregado de reproducción especial a cámaras de tipo Axxon, permitiendo dinamizar streaming.",
+                "Modificación visual de header, incorporando degradé de la paleta de colores empleada.",
+            ],
+            bugs: [
+                "Modificación en petición de históricos para agilizar el tiempo de respuesta.",
+                "Ajuste en las notificaciones de nuevos mensajes para brindar una experiencia más realista.",
+            ],
+            // changesEnglish: [
+            //     "Agregado de menú desplegable para históricos en módulo de Mapas, .",
+            //     "Agregado de botones por día .",
+            //     "Descarga .",
+            //     "Optimización en el reproductor de streaming .",
+            //     "Medidas de .",
+            //     "Rediseño estético en colores de gráficos del módulo de .",
+            //     "Agregado de filtro por tipo de cámaras en el módulo de Dashboard.",
+            //     "Rediseño visual en pop-ups de .",
+            // ]
+        },
+        {
             version: "1.1.3",
             date: "25/07/2024",
             changes: [
