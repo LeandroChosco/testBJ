@@ -800,9 +800,19 @@ class Chat extends Component {
                                 <Card.Content>
                                   <div className="row container-personal-information">
                                     <p style={{ width: "100%" }}><b>{localStorage.getItem(LANG) === "english" ? "Name: " : "Nombre: "}</b> {chats[index].user_name}</p>
-                                    <p style={{ width: "100%" }}><b>{localStorage.getItem(LANG) === "english" ? "Address " : "Dirección: "}</b>{`${infoCurrentCamera.street ? infoCurrentCamera.street : chats[index].street} ${infoCurrentCamera.number ? infoCurrentCamera.number : chats[index].number} ${infoCurrentCamera.town ? infoCurrentCamera.town : chats[index].town} ${infoCurrentCamera.township ? infoCurrentCamera.township : chats[index].township} (Entre Calles: ${infoCurrentCamera.entrecalles})`}</p>
-                                    <p style={{ width: "100%" }}><b>{localStorage.getItem(LANG) === "english" ? "Phone " : "Celular: "}</b> {chats[index].user_cam.phone}</p>
-                                    <p style={{ width: "100%" }}><b>{localStorage.getItem(LANG) === "english" ? "Camera " : "Cámara "}</b> {camData && camData.extraData.num_cam}</p>
+                                    {
+                                      Object.keys(infoCurrentCamera).length > 0 ?
+                                        <p style={{ width: "100%" }}><b>{localStorage.getItem(LANG) === "english" ? "Address " : "Dirección: "}</b>{`${infoCurrentCamera.street ? infoCurrentCamera.street : (chats[index].street || "")} ${infoCurrentCamera.number ? infoCurrentCamera.number : (chats[index].number || "")} ${infoCurrentCamera.town ? infoCurrentCamera.town : (chats[index].town || "")} ${infoCurrentCamera.township ? infoCurrentCamera.township : (chats[index].township || "")} ${infoCurrentCamera.entrecalles && `(Entre Calles: ${infoCurrentCamera.entrecalles})`}`}</p>
+                                        :
+                                        <p style={{ width: "100%" }}><b>{localStorage.getItem(LANG) === "english" ? "Address " : "Dirección: "}</b>Sin dirección registrada</p>
+                                    }
+                                    <p style={{ width: "100%" }}><b>{localStorage.getItem(LANG) === "english" ? "Phone " : "Celular: "}</b> {chats[index].user_cam.phone || "Sin número de teléfono registrado"}</p>
+                                    {
+                                      camData && camData.extraData.num_cam ? 
+                                      <p style={{ width: "100%" }}><b>{localStorage.getItem(LANG) === "english" ? "Camera " : "Cámara "}</b> {camData && camData.extraData.num_cam}</p>
+                                      :
+                                      <p style={{ width: "100%" }}><b>{localStorage.getItem(LANG) === "english" ? "Camera " : "Cámara "}</b> Sin cámara registrada</p>
+                                    }
                                     {/* {personalInformation.alarmType ? (
                                       <div className="row" style={{ padding: "5px" }}>
                                         <div
