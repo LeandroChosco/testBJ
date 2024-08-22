@@ -1,0 +1,39 @@
+import React, { Component } from 'react';
+import { Modal } from 'react-bootstrap';
+import HlsPlayer from '../HlsPlayer';
+import WssPlayer from '../WssPlayer';
+import { urlHttpOrHttps } from '../../functions/urlHttpOrHttps';
+import './style.css';
+import { MODE } from '../../constants/token';
+
+class ModalViewCam extends Component {
+	state = {};
+	render() {
+		let { modal, hide, dataCam } = this.props;
+		return (
+			<Modal show={modal} onHide={hide}>
+				<Modal.Header style={{ background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white !important" : "#666666" }} closeButton>
+					<p>Camara {dataCam.num_cam}</p>
+				</Modal.Header>
+				<Modal.Body style={{ height: '400px', background: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "var(--dark-mode-color)" : "white", color: (localStorage.getItem(MODE) && JSON.parse(localStorage.getItem(MODE))) ? "white" : "#666666" }}>
+					{!dataCam.is_amazon_stream && dataCam.amazon_arn_channel ? (
+						<WssPlayer
+							channelARN={dataCam.amazon_arn_channel}
+							region={dataCam.amazon_region}
+							num_cam={dataCam.num_cam}
+						/>
+					) : (
+						<HlsPlayer
+							channelARN={dataCam.amazon_arn_channel}
+							region={dataCam.amazon_region}
+							src={urlHttpOrHttps(dataCam.UrlStreamMediaServer.ip_url_ms, dataCam.UrlStreamMediaServer.output_port, dataCam.UrlStreamMediaServer.name, dataCam.channel, dataCam.UrlStreamMediaServer.protocol)}		
+							num_cam={dataCam.num_cam}
+						/>
+					)}
+				</Modal.Body>
+			</Modal>
+		);
+	}
+}
+
+export default ModalViewCam;

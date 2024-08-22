@@ -1,0 +1,58 @@
+.containerCuadrantes{
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    padding-top:15px !important;
+    padding-bottom: 5px !important;
+}
+
+.buttonCuadrantes{
+    height: 50px;
+    margin-bottom: 10px !important;
+    margin-right: 10px !important;
+}
+
+.formatInput{
+    width: 150px;
+}
+
+.errorContainer{
+    position: absolute;
+    top:40%;
+    font-size: 1.5em;
+    color: black;
+    height: 100%;
+    margin: auto;
+}
+
+.colorNormal{
+    background-color: white !important;
+    color: black !important;
+}
+
+.colorSelected{
+    background-color: var(--main-bg-color) !important;
+    /* background-color: #676868 !important;  */
+    color: white !important;
+}
+
+a.colorNormal:hover{
+    color: #4183c4 !important;
+}
+
+.toggleViewButton{    
+    
+    top:10;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    /* transition: right 500ms; 
+    opacity: 0.95;        */
+}
+
+.toggleViewButton:hover{    
+    opacity: 1;  
+}
+
+#analisis_holder{
+    height: 100%;
+}

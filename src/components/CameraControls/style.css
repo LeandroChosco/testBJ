@@ -1,0 +1,40 @@
+.bottomMenu {
+  position: fixed;
+  bottom: 0;
+  height: 0;
+  background-color: #fff;
+  width: 100%;
+  border-top: solid black 1px;
+  -webkit-transition: height 200ms; /* Safari */
+  transition: height 200ms;
+  transition-timing-function: ease-in-out;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.p10 {
+  padding: 10px;
+}
+
+.active-bottom {
+  height: 60%;
+}
+
+.snapshots {
+  border-right: solid #afafaf 1px;
+}
+
+.videos {
+  border-right: solid #afafaf 1px;
+}
+
+.fullHeight {
+  height: 100%;
+}
+
+.headerBottomMenu {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 10;
+}

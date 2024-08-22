@@ -1,0 +1,11 @@
+.camHolder{
+    background-image: url(../../assets/images/giphy.gif);
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat, repeat;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: 5px;
+}

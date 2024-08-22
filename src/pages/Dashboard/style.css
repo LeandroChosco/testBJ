@@ -1,0 +1,154 @@
+.chart {
+  height: 350px;
+  margin-bottom: 70px;
+}
+
+.chart2x {
+  height: 500px;
+  margin-bottom: 70px;
+}
+
+.fullChart {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.tableRow {
+  padding: 5px;
+  border: 1px #afafaf solid;
+
+}
+
+.tableCel {
+  padding: 5px;
+}
+
+.state0 {
+  background-color: #f2833e;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.state1 {
+  background-color: #008ffb;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.state2 {
+  background-color: #098f62;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.holder {
+  margin-right: 70px;
+}
+
+.overflow {
+  overflow-y: scroll;
+}
+
+.cardlist {
+  display: flex;
+  align-content: center;
+}
+
+.openClose {
+  display: flex;
+  align-items: center;
+  height: 35px;
+  min-width: 100px;
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: space-between;
+  background-color: rgb(16, 151, 204);
+  box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
+  color: white;
+  border-radius: 8px;
+  padding: 5px 3px 5px 3px;
+}
+
+.openClose:hover {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 35px;
+  min-width: 100px;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: rgb(16, 151, 204);
+  box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
+  color: black;
+  border-radius: 8px;
+}
+
+.droplist {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 2px;
+  width: 200px;
+  height: 100px;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.droplist li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #000;
+  background-color: white;
+  border-radius: 8px;
+  width: auto;
+  height: 30px;
+  font-weight: bold;
+}
+
+.droplist li:hover {
+  background-color: #4682B4;
+  color: white;
+  font-weight: bold;
+}
+
+.droplist1 {
+  display: flex;
+  flex-direction: row;
+  margin: 3px 10px 3px 3px;
+  width: auto;
+}
+
+.droplist1 li {
+  height: 30px;
+  margin-right: 10px;
+}
+
+.xbutton {
+  color: red;
+  font-size: 20px;
+}
+
+.dropDownContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.selectFilter {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.selectFilter:hover {
+  cursor: pointer;
+}
+
+.optionsFilter:hover {
+  cursor: pointer;
+}

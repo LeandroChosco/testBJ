@@ -1,0 +1,306 @@
+.gridCameraContainer {
+	overflow-x: hidden;
+	margin: auto;
+	padding-bottom: 30px;
+	height: 100vh;
+	background-color: white;
+}
+
+.camGridControl {
+	position: fixed;
+	bottom: 0;
+	height: 0;
+	background-color: lightgray;
+	width: 100%;
+	display: none;
+	padding: 0 0 0 2rem !important;
+	min-height: 30%;
+	max-height: 80%;
+	right: 0;
+}
+
+.iconGrid {
+	position: relative;
+	z-index: -2;
+	margin-top: 0rem;
+	height: 1.5rem;
+	cursor: ns-resize;
+}
+
+@keyframes show-grid {
+	0% {
+		top: 100%;
+	}
+
+	100% {
+		top: 70%;
+	}
+}
+
+@keyframes hide-grid {
+	0% {
+		top: 70%;
+	}
+
+	100% {
+		top: 100%;
+	}
+}
+
+.showfiles {
+	height: 30%;
+	overflow-y: hidden;
+	display: block;
+	animation-name: show-grid;
+	animation-duration: 1s;
+}
+
+.hidefiles {
+	height: 0;
+	animation-name: hide-grid;
+	animation-duration: 1s;
+}
+
+.hiddenCameraNotshow {
+	display: none;
+}
+
+.ui.card {
+	height: auto !important;
+}
+
+.stiky-top {
+	position: sticky;
+	padding: 0.5rem 2rem 1rem 0;
+	width: 100%
+}
+
+.recording {
+	animation: opacityOnAndOff;
+	animation-duration: 1s;
+	animation-delay: 0s;
+	animation-fill-mode: forwards;
+	animation-iteration-count: infinite;
+}
+
+.ptzgrid,
+.snapshotsgrid,
+.videosgrid {
+	height: 100%;
+	border-right: 1px solid;
+}
+
+.showfilesinfocameragrid {
+	background-color: white;
+	height: 100%;
+	padding-left: 1rem;
+	margin-right: 1rem;
+}
+
+.showfilesdarkmodegrid {
+	background-color: var(--dark-mode-color);
+	height: 100%;
+	padding-left: 1rem;
+	margin-right: 1rem;
+}
+
+.ptzgrid,
+.snapshotsgrid,
+.videosgrid,
+.matchesgrid {
+	height: 100%;
+	overflow-y: auto;
+	padding-bottom: 6rem;
+	padding-top: 0.5rem;
+}
+
+.platesgrid {
+	height: 200px;
+	overflow-y: auto;
+}
+
+.videosgrid>div>div>video {
+	width: 100%;
+	height: 100%;
+}
+
+.errorContainer {
+	position: absolute;
+	top: 40%;
+	font-size: 1.5em;
+	color: red;
+	height: 100%;
+	margin: auto;
+}
+
+.big-letter {
+	font-size: 1.5rem;
+	font-weight: 100;
+}
+
+.fa-5x {
+	font-weight: 100 !important;
+}
+
+.activeselectedcameragrid {
+	border: 1px red solid !important;
+	border-radius: 2px;
+}
+
+@keyframes opacityOnAndOff {
+	0% {
+		opacity: 0;
+	}
+
+	50% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+.light-pagination>li {
+	background-color: transparent !important;
+	transition: all 0.2s linear
+}
+
+.dark-pagination>li {
+	background-color: transparent !important;
+	color: white !important;
+	transition: all 0.2s linear
+}
+
+.dark-pagination>li>a {
+	color: white !important;
+	transition: all 0.2s linear
+}
+
+.pagination {
+	justify-content: space-around;
+}
+
+.pagination>li {
+	border-radius: 5px;
+	width: 100%;
+}
+
+.pagination>li>a {
+	width: 100%;
+	display: block;
+	cursor: pointer;
+	color: black;
+}
+
+.pagination>.active {
+	background-color: #afafaf !important;
+	border: 1px solid #fbfbfb;
+	border-radius: 5px;
+	width: 100%;
+}
+
+.paginatorContainerOnGrid {
+	margin-top: 10px;
+	border-top: 2px solid;
+	position: fixed;
+	bottom: 0;
+	width: 95%;
+	background-color: #fbfbfb;
+	margin: 0;
+}
+
+.paginatorContainerOnGrid2 {
+	margin-top: 10px;
+	border-top: 2px solid;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	background-color: #fbfbfb;
+	margin: 0;
+}
+
+.camcolgridholder>.card {
+	height: 100%;
+	border: none !important;
+}
+
+/*
+.camcolgridholder>.card>.card-body{
+    min-height: 70%;
+}
+*/
+
+.camcolgridholder>.card>.card-body>.camHolder {
+	height: initial;
+}
+
+.accordionBorders {
+	border: solid 0.1rem darkgray;
+	border-radius: 0.5rem;
+}
+
+.navBarStyle {
+	background-color: var(--main-bg-color);
+	border: solid 1px #f5f5f5;
+	box-shadow: 2px 2px 10px;
+}
+
+.date-toggle {
+	padding: 0.5rem;
+	transition: 0.3s;
+	color: white;
+}
+
+.date-toggle:hover {
+	transition: 0.3s;
+	color: black;
+}
+
+.fake-btn {
+	width: 10rem !important;
+}
+
+.conection-card {
+	border-color: rgba(34, 36, 38, .15);
+	box-shadow: 0 1px 2px 0 rgba(34, 36, 38, .15);
+	background-color: #f5f5f5;
+	transition: 0.2s;
+}
+
+.conection-card:hover {
+	cursor: pointer;
+	transition: 0.2s;
+	background-color: #c7c7c7;
+}
+
+.no-data-show {
+	position: relative;
+	box-shadow: 0 1px 2px 0 rgba(34, 36, 38, .15);
+	margin: 1rem 0;
+	padding: 1em 1em;
+	border-radius: .28571429rem;
+	border: 1px solid rgba(34, 36, 38, .15);
+	padding-bottom: 3rem;
+}
+
+.actions-btn-grid {
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	box-shadow: none !important;
+}
+
+.dark-toggle {
+	color: white !important;
+	align-content: center;
+}
+
+.light-toggle {
+	color: black !important;
+	align-content: center;
+}
+
+.full-toggle{
+	align-content: center;
+}

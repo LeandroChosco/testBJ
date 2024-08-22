@@ -1,0 +1,70 @@
+.result {
+    border: darkgray solid 1px;
+    border-radius: 5px;
+    width: 330px;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    box-shadow: 2px 2px 2px 2px lightgray;
+}
+
+.newResult {
+    border: darkgray solid 1px;
+    border-radius: 5px;
+    width: 330px;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    box-shadow: 2px 2px 2px 2px lightgray;
+    animation-name: newPlate;
+    animation-duration: 2s;
+}
+
+.decoTop {
+    display: flex;
+    border: darkgray solid 0.5px;
+    border-radius: 5px;
+    height: 5px;
+    width: 15px;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.decoBottom {
+    display: flex;
+    border: darkgray solid 0.5px;
+    border-radius: 5px;
+    height: 5px;
+    width: 15px;
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.listDeco {
+    display: flex;
+    justify-content: space-around;
+}
+
+.number {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: xx-large;
+}
+
+@keyframes newPlate {
+    0% {
+        background-color: green;
+    }
+
+    55% {
+        background-color: lightgreen;
+    }
+
+    90% {
+        background-color: #f5f5f5;
+    }
+}

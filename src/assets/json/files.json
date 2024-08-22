@@ -1,0 +1,25 @@
+{
+    "images":[        
+        "cams/cam0002/photo/cam0002_1554744428835.jpg",                        
+        "cams/cam0005/photo/cam0005_1554744481120.jpg",        
+        "cams/cam0006/photo/cam0006_1554744491535.jpg",        
+        "cams/cam0011/photo/cam0011_1554744457866.jpg",        
+        "cams/cam0014/photo/cam0014_1554744471881.jpg",        
+        "cams/cam0015/photo/cam0015_1554744401924.jpg",        
+        "cams/cam0016/photo/cam0016_1554744485389.jpg"        
+    ],
+    "videos":[
+        "cams/cam0001/video/cam0011554404870141.mp4",
+        "cams/cam0002/video/cam0002_1554741967432.mp4",
+        "cams/cam0002/video/cam0002_1554739946833.mp4",
+        "cams/cam0002/video/cam0002_1554511231203.mp4",
+        "cams/cam0005/video/cam0005_1554742836320.mp4",
+        "cams/cam0006/video/cam0006_1554742850169.mp4",
+        "cams/cam0010/video/cam0010_1554742432926.mp4",
+        "cams/cam0011/video/cam0011_1554742717033.mp4",
+        "cams/cam0014/video/cam0014_1554742778452.mp4",
+        "cams/cam0015/video/cam0015_1554741817609.mp4",
+        "cams/cam0016/video/cam0016_1554742839184.mp4"
+    ]
+}
+

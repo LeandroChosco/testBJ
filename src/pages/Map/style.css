@@ -1,0 +1,40 @@
+.map {
+  height: 100%;
+}
+
+.btn-filter {
+  position: absolute;
+  top: 100px;
+  left: 30px;
+}
+
+.btn-filter__menu {
+  min-width: 6rem;
+}
+
+.btn-filter__item {
+  display: flex;
+  /* border-bottom: 0.5px dotted #268fff52; */
+  border-radius: 100px;
+}
+
+.btn-filter__item img {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+}
+
+.windowpopinfo {
+  width: 550px;
+  overflow-y: hidden;
+}
+
+.gm-style-iw-d {
+  overflow: hidden !important;
+  padding: 5px;
+}
+
+.gm-style-iw {
+  padding-right: 10px !important;
+  padding-bottom: 10px !important;
+}

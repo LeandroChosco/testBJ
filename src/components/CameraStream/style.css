@@ -1,0 +1,58 @@
+.camHolder {
+	/*background-image: url(../../assets/images/giphy.gif);*/
+	/*height: 100%;*/
+	width: 100%;
+	background-position: center;
+	background-repeat: no-repeat, repeat;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	padding: 5px;
+}
+
+.hideCamHolder {
+	display: none;
+}
+
+.dataHolder {
+	height: 400px;
+	overflow-y: scroll;
+}
+
+.recording {
+	animation: opacityOnAndOff;
+	animation-duration: 1s;
+	animation-delay: 0s;
+	animation-fill-mode: forwards;
+	animation-iteration-count: infinite;
+}
+
+.styleTag {
+	margin-right: 0.5rem !important;
+	margin-top: 0.5rem !important;
+	border-radius: 2rem;
+}
+
+.ptz,
+.snapshots,
+.videos {
+	height: 100%;
+	border-right: 1px solid;
+	overflow-y: auto;
+}
+
+@keyframes opacityOnAndOff {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+.reinvert-modal{
+	filter: invert(1)
+}

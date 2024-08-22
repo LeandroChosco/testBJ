@@ -1,0 +1,27 @@
+.containerTable{
+    height: 87%;
+    overflow: hidden !important;
+    padding-bottom: 2.5rem;
+}
+
+.btnAdd{
+    background-color: var(--main-bg-color) !important;
+    color: white;
+    width: 200px;
+    height: 45px;
+}
+
+.containerBtn{
+    text-align: right;
+    padding: 10px 0px;
+    border-bottom: 2px solid #dededf;
+}
+
+.containerTitle{
+    margin-bottom: 15px;
+}
+
+.styleImg{
+    height: 150px;
+    width: 120px;
+}

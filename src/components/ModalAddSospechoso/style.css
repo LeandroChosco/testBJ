@@ -1,0 +1,23 @@
+.styleContent{
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.styleInput{
+    width: 380px !important;
+    margin-left: 43px;
+    margin-top: 5px;
+}
+
+.styleFoto{
+    display: flex;
+    margin: 5px auto;
+    height: 150px;
+    width: 120px;
+}
+
+.styleBtnAdd{
+    width: 80%;
+    margin: auto !important;
+}

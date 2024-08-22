@@ -1,0 +1,1819 @@
+{  
+    "total":766,
+    "items":[  
+       {  
+          "id":1,
+          "legat_names":null,
+          "eyes":null,
+          "place_of_birth":null,
+          "reward_min":0,
+          "race":null,
+          "weight":null,
+          "nationality":null,
+          "age_range":null,
+          "publication":"2019-03-06T12:40:00",
+          "hair_raw":null,
+          "weight_min":null,
+          "status":"na",
+          "hair":null,
+          "eyes_raw":null,
+          "caution":null,
+          "warning_message":null,
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "norfolk"
+          ],
+          "images":[  
+             {  
+                "caption":null,
+                "large":"https://www.fbi.gov/wanted/seeking-info/abduction-investigation/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/abduction-investigation/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/abduction-investigation/@@images/image/thumb"
+             },
+             {  
+                "caption":"",
+                "large":"https://www.fbi.gov/wanted/seeking-info/abduction-investigation/carver_c-2.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/abduction-investigation/carver_c-2.jpg",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/abduction-investigation/carver_c-2.jpg/@@images/image/thumb"
+             }
+          ],
+          "aliases":null,
+          "path":"/wanted/seeking-info/abduction-investigation",
+          "subjects":[  
+ 
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/seeking-info/abduction-investigation",
+          "possible_countries":null,
+          "height_min":null,
+          "title":"DEATH INVESTIGATION",
+          "ncic":null,
+          "build":null,
+          "sex":null,
+          "remarks":null,
+          "details":"Cynthia Carver was reported missing on February 22, 2019, to the Southampton County Sheriff's Office. She was last seen on Thomaston Road in Newsoms, Virginia, at approximately 9:00 p.m., on February 21st. She was also seen running various errands in the Norfolk area earlier in the day. Evidence at her home on Everett Street in Newsoms suggested she may have been abducted, and her body was recovered on March 19, 2019, in the southern area of Suffolk, Virginia.\r\nThe case is being investigated jointly by the FBI and Southampton County Sheriff's Office.",
+          "age_min":null,
+          "possible_states":null,
+          "uid":"81983db801a34294993895d213b5b448",
+          "age_max":null,
+          "race_raw":null,
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":null,
+          "additional_information":null,
+          "modified":"2019-03-21T19:33:43+00:00",
+          "height_max":null,
+          "person_classification":"Main",
+          "dates_of_birth_used":null,
+          "description":"Cynthia Michelle Carver\r\nFebruary 21, 2019\r\nNewsoms, Virginia",
+          "reward_max":0,
+          "status_id": 2,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/seeking-info/abduction-investigation/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $5,000 for information leading to the person(s) responsible for Cynthia's death.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/81983db801a34294993895d213b5b448"
+       },
+       {  
+          "id":2,
+          "legat_names":null,
+          "eyes":"dark",
+          "place_of_birth":"Egypt",
+          "reward_min":1000000,
+          "race":null,
+          "weight":"Unknown",
+          "nationality":"Egyptian",
+          "age_range":null,
+          "publication":"2010-07-27T10:00:00",
+          "hair_raw":"Dark",
+          "weight_min":null,
+          "status":"na",
+          "hair":null,
+          "eyes_raw":"Dark",
+          "caution":"Abdullah Ahmed Abdullah has been indicted for his alleged involvement in the August 7, 1998, bombings of the United States Embassies in Dar es Salaam, Tanzania, and Nairobi, Kenya.",
+          "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "newyork"
+          ],
+          "images":[  
+             {  
+                "caption":null,
+                "large":"https://www.fbi.gov/wanted/wanted_terrorists/abdullah-ahmed-abdullah/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/wanted_terrorists/abdullah-ahmed-abdullah/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/wanted_terrorists/abdullah-ahmed-abdullah/@@images/image/thumb"
+             }
+          ],
+          "aliases":[  
+             "Abu Mohamed Al-Masri",
+             "Abu Muhammad al Masri",
+             "Saleh",
+             "Abu Mariam",
+             "Abdullah Ahmed Abdullah Ali",
+             "Abu Mohammed"
+          ],
+          "path":"/wanted/wanted_terrorists/abdullah-ahmed-abdullah",
+          "subjects":[  
+             "Most Wanted Terrorists"
+          ],
+          "complexion":"Olive",
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/wanted_terrorists/abdullah-ahmed-abdullah",
+          "possible_countries":null,
+          "height_min":68,
+          "title":"ABDULLAH AHMED ABDULLAH",
+          "ncic":null,
+          "build":"Medium",
+          "sex":"Male",
+          "remarks":"Abdullah fled Nairobi, Kenya, on August 6, 1998, and went to Karachi, Pakistan. He may wear a moustache.",
+          "details":null,
+          "age_min":null,
+          "possible_states":null,
+          "uid":"8442007afb7b8c32ea9d6201d29df340",
+          "age_max":null,
+          "race_raw":null,
+          "scars_and_marks":"Abdullah has a scar on the right side of his lower lip.",
+          "languages":[  
+             "Arabic"
+          ],
+          "weight_max":null,
+          "additional_information":null,
+          "modified":"2019-03-21T18:25:53+00:00",
+          "height_max":68,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "Approximately 1963"
+          ],
+          "description":"Murder of U.S. Nationals Outside the United States; Conspiracy to Murder U.S. Nationals Outside the United States; Attack on a Federal Facility Resulting in Death; Conspiracy to Kill U.S. Nationals, to Murder, to Destroy Buildings and Property of the United States, and to Destroy the National Defense Utilities of the United States",
+          "reward_max":4999999,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/wanted_terrorists/abdullah-ahmed-abdullah/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The Rewards For Justice Program, United States Department of State, is offering a reward of up to $10 million for information leading directly to the apprehension or conviction of Abdullah Ahmed Abdullah.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/8442007afb7b8c32ea9d6201d29df340"
+       },
+       {  
+          "id":3,
+          "legat_names":null,
+          "eyes":"brown",
+          "place_of_birth":"Compton, California",
+          "reward_min":0,
+          "race":"hispanic",
+          "weight":"245 to 260 pounds",
+          "nationality":"American",
+          "age_range":null,
+          "publication":"2019-01-31T10:29:00",
+          "hair_raw":"Black",
+          "weight_min":245,
+          "status":"na",
+          "hair":"black",
+          "eyes_raw":"Brown",
+          "caution":"Andres Zambrano, a known gang member and convicted felon, is wanted for his alleged involvement in the murder of the mother of his (then) two-year-old child.\r\n\u00a0\r\nOn March 16, 2017, Zambrano allegedly shot the woman in the street in front of their home in Los Angeles, California. Zambrano later stated that he would flee to Mexico or Chicago, Illinois, where he has ties.\r\n\u00a0\r\nZambrano was charged with one count of murder by the Superior Court of California, County of Los Angeles, and a state warrant was issued for his arrest on March 20, 2017. A federal arrest warrant was issued by the United States District Court, Central District of California, Los Angeles, California, on March 31, 2017, after Zambrano was charged federally with unlawful flight to avoid prosecution.",
+          "warning_message":"SHOULD BE CONSIDERED ARMED, DANGEROUS, AND SUICIDAL",
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "losangeles"
+          ],
+          "images":[  
+             {  
+                "caption":null,
+                "large":"https://www.fbi.gov/wanted/murders/andres-zambrano/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/murders/andres-zambrano/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/murders/andres-zambrano/@@images/image/thumb"
+             }
+          ],
+          "aliases":[  
+             "\"Andrew\"",
+             "\"Turtle\"",
+             "Andy Luna, Jr.",
+             "Andres Zabrano",
+             "Andrew Zambrano"
+          ],
+          "path":"/wanted/murders/andres-zambrano",
+          "subjects":[  
+             "Violent Crimes - Murders"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/murders/andres-zambrano",
+          "possible_countries":null,
+          "height_min":68,
+          "title":"ANDRES ZAMBRANO",
+          "ncic":"W610647029",
+          "build":null,
+          "sex":"Male",
+          "remarks":"Zambrano is known to wear glasses. He was known to regularly drive a silver, four-door, 1994 Toyota Camry with California license plates 6JBC731.\r\n\u00a0\r\nIt is believed that Zambrano is residing in Mexico.",
+          "details":null,
+          "age_min":null,
+          "possible_states":null,
+          "uid":"d1f52c9ba4e447a4bf1e1a076d2269c8",
+          "age_max":null,
+          "race_raw":"White (Hispanic)",
+          "scars_and_marks":"Zambrano has tattoos on his chest, abdomen, left and right arms, left hand, left wrist, and a shoulder. He has the word \"Stephanie\" tattooed on his right forearm, and \"Euna\" on his left forearm.",
+          "languages":null,
+          "weight_max":260,
+          "additional_information":null,
+          "modified":"2019-03-21T14:43:37+00:00",
+          "height_max":68,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "June 30, 1990"
+          ],
+          "description":"Unlawful Flight to Avoid Prosecution - Murder",
+          "reward_max":0,
+          "status_id": 2,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/murders/andres-zambrano/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $5,000 for information leading to the arrest of Andres Zambrano.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/d1f52c9ba4e447a4bf1e1a076d2269c8"
+       },
+       {  
+          "id":4,
+          "legat_names":null,
+          "eyes":"blue",
+          "place_of_birth":"Flushing, New York",
+          "reward_min":1000000,
+          "race":"white",
+          "weight":"104 kg (230 pounds) - at the time of his disappearance",
+          "nationality":"United States",
+          "age_range":null,
+          "publication":"2012-02-15T12:00:00",
+          "hair_raw":"Gray",
+          "weight_min":104,
+          "status":"na",
+          "hair":"gray",
+          "eyes_raw":"Blue",
+          "caution":null,
+          "warning_message":null,
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "washingtondc"
+          ],
+          "images":[  
+             {  
+                "caption":null,
+                "large":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/@@images/image/thumb"
+             },
+             {  
+                "caption":"",
+                "large":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/levinson_r3.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/levinson_r3.jpg",
+                "thumb":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/levinson_r3.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"",
+                "large":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/levinson_r1.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/levinson_r1.jpg",
+                "thumb":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/levinson_r1.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"",
+                "large":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/mist-photo.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/mist-photo.jpg",
+                "thumb":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/mist-photo.jpg/@@images/image/thumb"
+             }
+          ],
+          "aliases":null,
+          "path":"/wanted/kidnap/robert-a-levinson",
+          "subjects":[  
+             "Kidnappings and Missing Persons"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson",
+          "possible_countries":[  
+             "IRN"
+          ],
+          "height_min":2330,
+          "title":"ROBERT A. LEVINSON",
+          "ncic":null,
+          "build":null,
+          "sex":"Male",
+          "remarks":"Levinson wears eyeglasses. He is believed to have lost a significant amount of weight, possibly 50 to 60 pounds.",
+          "details":"Information is being sought regarding a United States citizen Robert A. Levinson, a retired FBI Special Agent, who went missing during a business trip to Kish Island, Iran, on March 9, 2007. Levinson retired from the FBI in 1998 and worked as a private investigator following his retirement. Levinson traveled to Kish Island, Iran, on March 8, 2007, working on behalf of several large corporations, and his whereabouts, well-being and the circumstances surrounding his disappearance have been unknown since that time.",
+          "age_min":null,
+          "possible_states":null,
+          "uid":"99ffed7830acba90db8a7198b9c53afd",
+          "age_max":null,
+          "race_raw":"White",
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":230,
+          "additional_information":null,
+          "modified":"2019-03-20T20:32:01+00:00",
+          "height_max":2330,
+          "person_classification":"Victim",
+          "dates_of_birth_used":[  
+             "March 10, 1948"
+          ],
+          "description":"Kish Island, Iran\r\nMarch 9, 2007",
+          "reward_max":4999999,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/levinson_kidnapping_updatedmar2015-5mil.pdf",
+                "name":"English"
+             },
+             {  
+                "url":"https://www.fbi.gov/wanted/kidnap/robert-a-levinson/levinsonfarsi.pdf/@@download/file/LevinsonFarsi.pdf",
+                "name":"\u0641\u0627\u0631\u0633\u06cc"
+             }
+          ],
+          "reward_text":"The United States Government is offering a reward of up to $5,000,000 for information leading directly to the safe location, recovery and return of Robert A. Levinson.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/99ffed7830acba90db8a7198b9c53afd"
+       },
+       {  
+          "id":5,
+          "legat_names":null,
+          "eyes":null,
+          "place_of_birth":null,
+          "reward_min":0,
+          "race":null,
+          "weight":null,
+          "nationality":null,
+          "age_range":null,
+          "publication":"2017-12-19T09:45:00",
+          "hair_raw":null,
+          "weight_min":null,
+          "status":"na",
+          "hair":null,
+          "eyes_raw":null,
+          "caution":null,
+          "warning_message":null,
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "richmond"
+          ],
+          "images":[  
+             {  
+                "caption":null,
+                "large":"https://www.fbi.gov/wanted/seeking-info/tahir-mahmud/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/tahir-mahmud/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/tahir-mahmud/@@images/image/thumb"
+             },
+             {  
+                "caption":"Joy Food Store",
+                "large":"https://www.fbi.gov/wanted/seeking-info/tahir-mahmud/joy_food_outside.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/tahir-mahmud/joy_food_outside.jpg",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/tahir-mahmud/joy_food_outside.jpg/@@images/image/thumb"
+             }
+          ],
+          "aliases":null,
+          "path":"/wanted/seeking-info/tahir-mahmud",
+          "subjects":[  
+             "Seeking Information",
+             "Case of the Week"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/seeking-info/tahir-mahmud",
+          "possible_countries":null,
+          "height_min":null,
+          "title":"TAHIR MAHMUD",
+          "ncic":null,
+          "build":null,
+          "sex":null,
+          "remarks":null,
+          "details":"Investigators assigned to the FBI Richmond Division\u2019s South Piedmont Violent Gang Task Force seek the public\u2019s assistance in identifying the person(s) responsible for an armed robbery which resulted in a homicide in Danville, Virginia, in 2017.\r\nOn September 12, 2017, officers of the Danville Police Department responded to a call for service at the Joy Food Store located in the 500 block of Riverside Drive, Danville, Virginia. Upon arrival officers located the victim, Mr. Tahir Mahmud, who was deceased, and the officers determined the store had been robbed.\r\nInformation provided to investigators indicates a male was seen running from the direction of the store around the time of the robbery and homicide. The unknown individual was described as a black male, slender, and wearing Unique jeans.",
+          "age_min":null,
+          "possible_states":null,
+          "uid":"c6ab669db87a476bbaa53e9c65dd6208",
+          "age_max":null,
+          "race_raw":null,
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":null,
+          "additional_information":null,
+          "modified":"2019-03-20T20:31:33+00:00",
+          "height_max":null,
+          "person_classification":"Victim",
+          "dates_of_birth_used":null,
+          "description":"Murder Victim\r\nDanville, Virginia\r\nSeptember 12, 2017",
+          "reward_max":0,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/seeking-info/tahir-mahmud/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $7,500 for information leading to the arrest and indictment of the person(s) responsible for the armed robbery and homicide of Mr. Tahir Mahmud.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/c6ab669db87a476bbaa53e9c65dd6208"
+       },
+       {  
+          "id":6,
+          "legat_names":null,
+          "eyes":"brown",
+          "place_of_birth":"Los Angeles, California",
+          "reward_min":0,
+          "race":"hispanic",
+          "weight":"218 to 220 pounds",
+          "nationality":"American",
+          "age_range":null,
+          "publication":"2019-02-12T10:30:00",
+          "hair_raw":"Brown",
+          "weight_min":218,
+          "status":"na",
+          "hair":"brown",
+          "eyes_raw":"Brown",
+          "caution":"The FBI's Los Angeles Field Office is assisting the Los Angeles Police Department in California with their search for Carlos Vasquez Serrano, a convicted felon.\r\n\u00a0\r\nOn February 1, 2006, Serrano allegedly murdered a man in a bar in Los Angeles, California. After the alleged murder, Serrano allegedly broke into the bar's office and stole the bar's video recording equipment. Then, Serrano allegedly kidnapped a woman and fled to Mexico with her against her will.\r\n\u00a0\r\nSerrano was charged with murder, kidnapping, assault with a firearm, and second degree commercial burglary by the Superior Court of California, County of Los Angeles, and a state warrant was issued for his arrest on October 10, 2012.",
+          "warning_message":null,
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "losangeles"
+          ],
+          "images":[  
+             {  
+                "caption":"Photograph taken in 2005",
+                "large":"https://www.fbi.gov/wanted/law-enforcement-assistance/carlos-vasquez-serrano/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/law-enforcement-assistance/carlos-vasquez-serrano/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/law-enforcement-assistance/carlos-vasquez-serrano/@@images/image/thumb"
+             }
+          ],
+          "aliases":[  
+             "\"Cuate\"",
+             "Carlos Serrano"
+          ],
+          "path":"/wanted/law-enforcement-assistance/carlos-vasquez-serrano",
+          "subjects":[  
+             "Law Enforcement Assistance"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/law-enforcement-assistance/carlos-vasquez-serrano",
+          "possible_countries":null,
+          "height_min":69,
+          "title":"CARLOS VASQUEZ SERRANO",
+          "ncic":null,
+          "build":null,
+          "sex":"Male",
+          "remarks":"Serrano may be residing in Mexico. He has previously resided in Bellflower, California.",
+          "details":null,
+          "age_min":null,
+          "possible_states":null,
+          "uid":"77522ef9f4884b64bef08e033d69d9e2",
+          "age_max":null,
+          "race_raw":"White (Hispanic)",
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":220,
+          "additional_information":null,
+          "modified":"2019-03-20T17:44:12+00:00",
+          "height_max":70,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "August 20, 1970"
+          ],
+          "description":"Murder; Kidnapping; Assault with a Firearm; Second Degree Commercial Burglary",
+          "reward_max":0,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/law-enforcement-assistance/carlos-vasquez-serrano/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $5,000 for information leading to the arrest of Carlos Vasquez Serrano.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/77522ef9f4884b64bef08e033d69d9e2"
+       },
+       {  
+          "id":7,
+          "legat_names":null,
+          "eyes":"brown",
+          "place_of_birth":"Los Angeles, California",
+          "reward_min":0,
+          "race":"hispanic",
+          "weight":"145 pounds",
+          "nationality":"American",
+          "age_range":null,
+          "publication":"2019-02-13T10:48:00",
+          "hair_raw":"Brown",
+          "weight_min":145,
+          "status":"na",
+          "hair":"brown",
+          "eyes_raw":"Brown",
+          "caution":"The FBI's Los Angeles Field Office is assisting the Los Angeles Police Department in California with their search for Xochitl Aurora Delatorre. Delatorre is wanted for her alleged involvement in the murder of a man on September 10, 2004, in Los Angeles, California.\r\n\u00a0\r\nOn November 16, 2004, Delatorre was charged with murder and robbery by the Superior Court of California, County of Los Angeles, and a state warrant was issued for her arrest.",
+          "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "losangeles"
+          ],
+          "images":[  
+             {  
+                "caption":"Photograph taken in 2003",
+                "large":"https://www.fbi.gov/wanted/law-enforcement-assistance/xochitl-aurora-delatorre/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/law-enforcement-assistance/xochitl-aurora-delatorre/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/law-enforcement-assistance/xochitl-aurora-delatorre/@@images/image/thumb"
+             }
+          ],
+          "aliases":[  
+             "Sochill Aurora De La Torre",
+             "Xochitl Aurora De La Torre",
+             "Sochill De La Torre",
+             "Xochiltl De La Torre",
+             "Xochiltl Aurora De La Torre"
+          ],
+          "path":"/wanted/law-enforcement-assistance/xochitl-aurora-delatorre",
+          "subjects":[  
+             "Law Enforcement Assistance"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/law-enforcement-assistance/xochitl-aurora-delatorre",
+          "possible_countries":null,
+          "height_min":62,
+          "title":"XOCHITL AURORA DELATORRE",
+          "ncic":null,
+          "build":null,
+          "sex":"Female",
+          "remarks":"Delatorre may be residing in, and has ties to, Mexico. She also has ties to Murrieta, California.",
+          "details":null,
+          "age_min":null,
+          "possible_states":null,
+          "uid":"c1ccc1e9141a419097f3561d9ff510b3",
+          "age_max":null,
+          "race_raw":"White (Hispanic)",
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":145,
+          "additional_information":null,
+          "modified":"2019-03-20T17:14:05+00:00",
+          "height_max":62,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "November 4, 1978"
+          ],
+          "description":"Murder, Robbery",
+          "reward_max":0,
+          "status_id": 2,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/law-enforcement-assistance/xochitl-aurora-delatorre/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $5,000 for information leading to the arrest of Xochitl Aurora Delatorre.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/c1ccc1e9141a419097f3561d9ff510b3"
+       },
+       {  
+          "id":8,
+          "legat_names":null,
+          "eyes":"brown",
+          "place_of_birth":"Michigan",
+          "reward_min":0,
+          "race":"black",
+          "weight":"205 pounds",
+          "nationality":"American",
+          "age_range":null,
+          "publication":"2015-06-15T07:00:00",
+          "hair_raw":"Black",
+          "weight_min":205,
+          "status":"captured",
+          "hair":"black",
+          "eyes_raw":"Brown",
+          "caution":"Arthur Berry Jr. is wanted for allegedly conspiring with others to conduct smash-and-grab robberies in the following locations: Jared the Galleria of Jewelry in Toledo, Ohio, September 2014; Fink\u2019s Jewelers in Sterling, Virginia, November 2014; and RF Moeller Jeweler in St. Paul, Minnesota, November 2014.\r\nOn May 7, 2015, a federal arrest warrant was issued, by the United States District Court for the Eastern District of Michigan, after Berry was charged with conspiracy to interfere with commerce by robbery.",
+          "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "detroit"
+          ],
+          "images":[  
+             {  
+                "caption":null,
+                "large":"https://www.fbi.gov/wanted/additional/arthur-berry-jr/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/additional/arthur-berry-jr/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/additional/arthur-berry-jr/@@images/image/thumb"
+             }
+          ],
+          "aliases":[  
+             "Arthur Berry",
+             "Aurthur Aurthur Berry",
+             "AJ",
+             "Jizzle",
+             "Juice"
+          ],
+          "path":"/wanted/additional/arthur-berry-jr",
+          "subjects":[  
+             "Additional Violent Crimes"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/additional/arthur-berry-jr",
+          "possible_countries":null,
+          "height_min":75,
+          "title":"ARTHUR BERRY JR.",
+          "ncic":"W453532238",
+          "build":null,
+          "sex":"Male",
+          "remarks":null,
+          "details":null,
+          "age_min":null,
+          "possible_states":null,
+          "uid":"c969cb1e-6749-4793-9066-8dc7a3acb7d7",
+          "age_max":null,
+          "race_raw":"Black",
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":205,
+          "additional_information":null,
+          "modified":"2019-03-20T17:08:37+00:00",
+          "height_max":75,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "August 4, 1986"
+          ],
+          "description":"Conspiracy to Interfere with Commerce by Robbery",
+          "reward_max":0,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/additional/arthur-berry-jr/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $15,000 for information leading to the location and arrest of Arthur Berry Jr.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/c969cb1e-6749-4793-9066-8dc7a3acb7d7"
+       },
+       {  
+          "id":9,
+          "legat_names":null,
+          "eyes":"brown",
+          "place_of_birth":"Los Angeles, California",
+          "reward_min":0,
+          "race":"hispanic",
+          "weight":"160 pounds",
+          "nationality":"American",
+          "age_range":null,
+          "publication":"2019-02-05T10:57:00",
+          "hair_raw":"Black",
+          "weight_min":160,
+          "status":"na",
+          "hair":"black",
+          "eyes_raw":"Brown",
+          "caution":"Cesar Soltero Herrera is wanted for his alleged involvement in a murder and attempted murder in 2007.\r\n\u00a0\r\nOn February 19, 2007, in North Hollywood, California, Herrera became involved in a physical altercation with a male victim when the victim struck Herrera and caused him to bleed from the nose. Herrera then allegedly left the scene but returned a short time later with a semi-automatic handgun and fired multiple shots at the male victim and others, killing the victim.\r\n\u00a0\r\nHerrera was charged with one count of murder and two counts of attempted murder by the Superior Court of California, County of Los Angeles, and a state warrant was issued for his arrest on February 21, 2007. A federal arrest warrant was issued by the United States District Court, Central District of California, Los Angeles, California, on April 26, 2007, after Herrera was charged federally with unlawful flight to avoid prosecution.",
+          "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "losangeles"
+          ],
+          "images":[  
+             {  
+                "caption":"Photograph taken in 2006",
+                "large":"https://www.fbi.gov/wanted/murders/cesar-soltero-herrera/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/murders/cesar-soltero-herrera/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/murders/cesar-soltero-herrera/@@images/image/thumb"
+             }
+          ],
+          "aliases":[  
+             "\"Jumps\"",
+             "Cesar Cortes",
+             "Cesar Herrera",
+             "Cesar Soltero",
+             "Cesar Soltero-Herrera",
+             "Cesar Hidalgo"
+          ],
+          "path":"/wanted/murders/cesar-soltero-herrera",
+          "subjects":[  
+             "Violent Crimes - Murders"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/murders/cesar-soltero-herrera",
+          "possible_countries":null,
+          "height_min":70,
+          "title":"CESAR SOLTERO HERRERA",
+          "ncic":"W252087737",
+          "build":null,
+          "sex":"Male",
+          "remarks":"Herrera may be residing in, and has ties to, Mexico. He has previously resided in North Hollywood, California.",
+          "details":null,
+          "age_min":null,
+          "possible_states":null,
+          "uid":"eeb83b8395a04966bd8ca9aa6023b7f8",
+          "age_max":null,
+          "race_raw":"White (Hispanic)",
+          "scars_and_marks":"Herrera has a tattoo of a cross on his left arm, a word on his left breast, and a tattoo on his right arm.",
+          "languages":null,
+          "weight_max":160,
+          "additional_information":null,
+          "modified":"2019-03-20T15:06:50+00:00",
+          "height_max":70,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "April 18, 1988"
+          ],
+          "description":"Unlawful Flight to Avoid Prosecution - Murder, Attempted Murder",
+          "reward_max":0,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/murders/cesar-soltero-herrera/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $5,000 for information leading to the arrest of Cesar Soltero Herrera.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/eeb83b8395a04966bd8ca9aa6023b7f8"
+       },
+       {  
+          "id":10,
+          "legat_names":null,
+          "eyes":null,
+          "place_of_birth":"Los Angeles, California",
+          "reward_min":0,
+          "race":"black",
+          "weight":"150 pounds",
+          "nationality":"American",
+          "age_range":null,
+          "publication":"2018-10-17T09:44:00",
+          "hair_raw":"Black",
+          "weight_min":150,
+          "status":"captured",
+          "hair":"black",
+          "eyes_raw":null,
+          "caution":"Robert Earl Brumfield III is wanted for his alleged involvement in an armored car robbery and murder of a Loomis employee at Chase Bank located at 2331 South Carrollton Avenue., on December 18, 2013, in New Orleans, Louisiana. On November 2, 2017, a warrant was issued for the arrest of Brumfield III after the United States District Court, Eastern District of Louisiana, charged Brumfield III with conspiracy to obstruct and obstruction of commerce by robbery, aiding and abetting to obstruct, delay and affect commerce by robbery; aiding and abetting to knowingly use firearms during and in relation to crimes of violence, murder.\r\n\u00a0",
+          "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
+          "coordinates":[  
+ 
+          ],
+          "locations":[  
+             "new-orleans"
+          ],
+          "field_offices":[  
+             "neworleans"
+          ],
+          "images":[  
+             {  
+                "caption":null,
+                "large":"https://www.fbi.gov/wanted/murders/robert-brumfield-iii/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/murders/robert-brumfield-iii/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/murders/robert-brumfield-iii/@@images/image/thumb"
+             }
+          ],
+          "aliases":[  
+             "Lil Rob",
+             "Robert E. Brumfield",
+             "Robert Earls Brumfield III"
+          ],
+          "path":"/wanted/murders/robert-brumfield-iii",
+          "subjects":[  
+             "Violent Crime - Murders"
+          ],
+          "complexion":"Light",
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/murders/robert-brumfield-iii",
+          "possible_countries":null,
+          "height_min":67,
+          "title":"ROBERT BRUMFIELD III",
+          "ncic":"W722352642",
+          "build":null,
+          "sex":"Male",
+          "remarks":"Brumfield III is known to abuse drugs and use alcohol in excess.",
+          "details":null,
+          "age_min":null,
+          "possible_states":null,
+          "uid":"a2ac3d4eccb34ab6a72d27e2ead1d074",
+          "age_max":null,
+          "race_raw":"Black",
+          "scars_and_marks":"Brumfield III has tattoos on his chest, left arm, left forearm, neck, right arm, right forearm, right leg, upper left arm, and upper right arm. Brumfield III has scars on his abdomen, and both arms.",
+          "languages":null,
+          "weight_max":150,
+          "additional_information":null,
+          "modified":"2019-03-20T11:04:41+00:00",
+          "height_max":67,
+          "person_classification":"Main",
+          "dates_of_birth_used":null,
+          "description":"Homicide - Willful Killing with a Gun\r\nHobbs Act",
+          "reward_max":0,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/murders/robert-brumfield-iii/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $5,000 for information leading directly to the arrest and conviction of Robert Brumfield III.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/a2ac3d4eccb34ab6a72d27e2ead1d074"
+       },
+       {  
+          "id":11,
+          "legat_names":null,
+          "eyes":"brown",
+          "place_of_birth":"Honduras",
+          "reward_min":10000,
+          "race":"hispanic",
+          "weight":"130 to 140 pounds",
+          "nationality":"Honduran",
+          "age_range":null,
+          "publication":"2010-07-20T12:25:00",
+          "hair_raw":"Black",
+          "weight_min":130,
+          "status":"na",
+          "hair":"black",
+          "eyes_raw":"Brown",
+          "caution":"Alexis Flores is wanted for his alleged involvement in the kidnapping and murder of a five-year-old girl in Philadelphia, Pennsylvania. The girl was reported missing in late July of 2000, and was later found strangled to death in a nearby apartment in early August of 2000.",
+          "warning_message":"SHOULD BE CONSIDERED ARMED AND EXTREMELY DANGEROUS",
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "philadelphia"
+          ],
+          "images":[  
+             {  
+                "caption":"Photograph taken in 2005",
+                "large":"https://www.fbi.gov/wanted/topten/alexis-flores/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/topten/alexis-flores/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/topten/alexis-flores/@@images/image/thumb"
+             },
+             {  
+                "caption":"Photograph taken in 2002",
+                "large":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_a2.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_a2.jpg",
+                "thumb":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_a2.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"Photograph taken in 2005",
+                "large":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto1.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto1.jpg",
+                "thumb":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto1.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"Photograph taken in 2005",
+                "large":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto2.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto2.jpg",
+                "thumb":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto2.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"Photograph taken in 2002",
+                "large":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto3.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto3.jpg",
+                "thumb":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto3.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"Photograph taken in 2002",
+                "large":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto4.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto4.jpg",
+                "thumb":"https://www.fbi.gov/wanted/topten/alexis-flores/flores_aphoto4.jpg/@@images/image/thumb"
+             }
+          ],
+          "aliases":[  
+             "Mario Flores",
+             "Mario Roberto Flores",
+             "Mario F. Roberto",
+             "Alex Contreras",
+             "Alesis Contreras"
+          ],
+          "path":"/wanted/topten/alexis-flores",
+          "subjects":[  
+             "Ten Most Wanted Fugitives"
+          ],
+          "complexion":"Light",
+          "occupations":[  
+             "Handyman"
+          ],
+          "url":"https://www.fbi.gov/wanted/topten/alexis-flores",
+          "possible_countries":[  
+             "HND",
+             "USA"
+          ],
+          "height_min":64,
+          "title":"ALEXIS FLORES",
+          "ncic":null,
+          "build":"Slim",
+          "sex":"Male",
+          "remarks":"Flores has ties to Honduras.",
+          "details":null,
+          "age_min":null,
+          "possible_states":[  
+             "US-PA"
+          ],
+          "uid":"e7f20911d79cbe33ed9ffbfad9f39669",
+          "age_max":null,
+          "race_raw":"White (Hispanic)",
+          "scars_and_marks":"Flores has scars on his forehead and right cheek.",
+          "languages":null,
+          "weight_max":140,
+          "additional_information":null,
+          "modified":"2019-03-14T14:26:57+00:00",
+          "height_max":64,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "July 18, 1975",
+             "July 18, 1982",
+             "September 15, 1980",
+             "July 17, 1982"
+          ],
+          "description":"Unlawful Flight to Avoid Prosecution - Kidnapping, Murder",
+          "reward_max":99999,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/topten/alexis-flores/download.pdf",
+                "name":"English"
+             },
+             {  
+                "url":"https://www.fbi.gov/wanted/topten/alexis-flores/alexis-flores-en-espanol.pdf/@@download/file/Alexis Flores EN ESPA\u00d1OL.pdf",
+                "name":"EN ESPA\u00d1OL"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $100,000 for information leading directly to the arrest of Alexis Flores.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/e7f20911d79cbe33ed9ffbfad9f39669"
+       },
+       {  
+          "id":12,
+          "legat_names":null,
+          "eyes":"green",
+          "place_of_birth":"California",
+          "reward_min":100000,
+          "race":"white",
+          "weight":"170 to 180 pounds",
+          "nationality":"American",
+          "age_range":null,
+          "publication":"2010-06-29T13:35:00",
+          "hair_raw":"Blond",
+          "weight_min":170,
+          "status":"na",
+          "hair":"blond",
+          "eyes_raw":"Green",
+          "caution":"Jason Derek Brown is wanted for murder and armed robbery in Phoenix, Arizona. During November of 2004, Brown allegedly shot and killed an armored car guard outside a movie theater and then fled with the money.",
+          "warning_message":"SHOULD BE CONSIDERED ARMED AND EXTREMELY DANGEROUS",
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "phoenix"
+          ],
+          "images":[  
+             {  
+                "caption":"Photograph taken in 2004",
+                "large":"https://www.fbi.gov/wanted/topten/jason-derek-brown/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/topten/jason-derek-brown/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/topten/jason-derek-brown/@@images/image/thumb"
+             },
+             {  
+                "caption":"Age-enhanced photograph",
+                "large":"https://www.fbi.gov/wanted/topten/jason-derek-brown/brown_jd02.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/topten/jason-derek-brown/brown_jd02.jpg",
+                "thumb":"https://www.fbi.gov/wanted/topten/jason-derek-brown/brown_jd02.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"Age-enhanced photograph",
+                "large":"https://www.fbi.gov/wanted/topten/jason-derek-brown/brown_jd3.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/topten/jason-derek-brown/brown_jd3.jpg",
+                "thumb":"https://www.fbi.gov/wanted/topten/jason-derek-brown/brown_jd3.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"Age-enhanced photograph",
+                "large":"https://www.fbi.gov/wanted/topten/jason-derek-brown/brown_jd4.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/topten/jason-derek-brown/brown_jd4.jpg",
+                "thumb":"https://www.fbi.gov/wanted/topten/jason-derek-brown/brown_jd4.jpg/@@images/image/thumb"
+             }
+          ],
+          "aliases":[  
+             "Jason D. Brown",
+             "Derek Brown",
+             "Greg Johnson",
+             "Harline Johnson",
+             "Greg Harline Johnson",
+             "John Brown",
+             "Jay Brown"
+          ],
+          "path":"/wanted/topten/jason-derek-brown",
+          "subjects":[  
+             "Ten Most Wanted Fugitives"
+          ],
+          "complexion":"Light",
+          "occupations":[  
+             "Golf Equipment Importer"
+          ],
+          "url":"https://www.fbi.gov/wanted/topten/jason-derek-brown",
+          "possible_countries":[  
+             "FRA",
+             "MEX",
+             "USA"
+          ],
+          "height_min":70,
+          "title":"JASON DEREK BROWN",
+          "ncic":null,
+          "build":"Medium",
+          "sex":"Male",
+          "remarks":"Brown speaks fluent French and has a master's degree in International Business. He is an avid golfer, snowboarder, skier, and dirt biker. Brown enjoys being the center of attention and has been known to frequent nightclubs where he enjoys showing off his high-priced vehicles, boats, and other toys. Brown was a member of The Church of Jesus Christ of Latter-Day Saints, and completed his Mormon mission near Paris, France.\r\n\u00a0\r\nBrown has ties to California, Arizona, and Utah. In the past, he has traveled to France and Mexico. Additionally, he may be in the possession of a Glock 9mm and a .45 caliber handgun.",
+          "details":null,
+          "age_min":null,
+          "possible_states":[  
+             "US-AZ",
+             "US-CA",
+             "US-UT"
+          ],
+          "uid":"1b66c6c275a87722a42e5c3c53b4c92e",
+          "age_max":null,
+          "race_raw":"White",
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":180,
+          "additional_information":null,
+          "modified":"2019-03-14T14:00:19+00:00",
+          "height_max":70,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "July 1, 1969",
+             "January 17, 1971"
+          ],
+          "description":"Unlawful Flight to Avoid Prosecution - First Degree Murder, Armed Robbery",
+          "reward_max":999999,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/topten/jason-derek-brown/download.pdf",
+                "name":"English"
+             },
+             {  
+                "url":"https://www.fbi.gov/wanted/topten/jason-derek-brown/jason-derek-brown-en-francais.pdf/@@download/file/Jason Derek Brown EN FRAN\u00c7AIS.pdf",
+                "name":"\tEN FRAN\u00c7AIS"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $200,000 for information leading directly to the arrest of Jason Derek Brown.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/1b66c6c275a87722a42e5c3c53b4c92e"
+       },
+       {  
+          "id":13,
+          "legat_names":null,
+          "eyes":"brown",
+          "place_of_birth":"Bel Ombre, Mahe Island, Seychelles",
+          "reward_min":0,
+          "race":"white",
+          "weight":"150 pounds",
+          "nationality":"Seychellois",
+          "age_range":null,
+          "publication":"2019-03-01T08:17:00",
+          "hair_raw":"Black",
+          "weight_min":150,
+          "status":"na",
+          "hair":"black",
+          "eyes_raw":"Brown",
+          "caution":"Jean Leonard Faure is wanted for failing to appear for trial on charges of rape, sodomy, and burglary.\u00a0 On January 5, 1998, Faure allegedly went to the residence of his ex-wife in Roseburg, Oregon, in violation of a restraining order, and, at gunpoint, allegedly raped and sodomized her.\u00a0\u00a0He also removed property from the residence.\u00a0 Faure was arrested and charged with the aforementioned crimes on January 6, 1998.\u00a0 He was then released on bail.\u00a0 When Faure did not appear for his trial on March 3, 1998, the Douglas County Circuit Court in Oregon, issued an arrest warrant for Faure and charged\u00a0him with failure to appear.\u00a0 On April 29, 1998, a federal arrest warrant was issued for Faure in the United States District Court, District of Oregon, Eugene, Oregon, after he was charged with unlawful flight to avoid prosecution.\r\n\u00a0",
+          "warning_message":null,
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "portland"
+          ],
+          "images":[  
+             {  
+                "caption":null,
+                "large":"https://www.fbi.gov/wanted/additional/jean-leonard-faure/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/additional/jean-leonard-faure/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/additional/jean-leonard-faure/@@images/image/thumb"
+             }
+          ],
+          "aliases":[  
+             "Jean Leonard Faure, III"
+          ],
+          "path":"/wanted/additional/jean-leonard-faure",
+          "subjects":[  
+             "Additional Violent Crimes"
+          ],
+          "complexion":null,
+          "occupations":[  
+             "Waiter or Food Service Worker"
+          ],
+          "url":"https://www.fbi.gov/wanted/additional/jean-leonard-faure",
+          "possible_countries":null,
+          "height_min":70,
+          "title":"JEAN LEONARD FAURE",
+          "ncic":null,
+          "build":null,
+          "sex":"Male",
+          "remarks":"Faure was born in the Seychelles Islands, off the coast of Africa in the Indian Ocean.\u00a0 While in the United States, he lived in Oregon and Hawaii.\u00a0 He has family throughout the United States, Canada, and the Seychelles.\u00a0 He may also travel to Singapore and the United Arab Emirates.\u00a0 Faure is known to enjoy soccer and gambling.",
+          "details":null,
+          "age_min":null,
+          "possible_states":null,
+          "uid":"08fffb803ba74bde9cabf3e1511834e3",
+          "age_max":null,
+          "race_raw":"White",
+          "scars_and_marks":"Faure has a scar near his left eye.",
+          "languages":null,
+          "weight_max":150,
+          "additional_information":null,
+          "modified":"2019-03-14T11:37:31+00:00",
+          "height_max":70,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "December 30, 1966"
+          ],
+          "description":"Unlawful Flight to Avoid Prosecution - Failure to Appear (Rape, Sodomy, Burglary)",
+          "reward_max":0,
+          "status_id": 2,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/additional/jean-leonard-faure/download.pdf",
+                "name":"English"
+             },
+             {  
+                "url":"https://www.fbi.gov/wanted/additional/jean-leonard-faure/faurefrench.pdf/@@download/file/faurefrench.pdf",
+                "name":"EN FRAN\u00c7AIS"
+             }
+          ],
+          "reward_text":null,
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/08fffb803ba74bde9cabf3e1511834e3"
+       },
+       {  
+          "id":14,
+          "legat_names":null,
+          "eyes":"blue",
+          "place_of_birth":null,
+          "reward_min":0,
+          "race":"white",
+          "weight":"180 pounds",
+          "nationality":null,
+          "age_range":null,
+          "publication":"2010-09-14T12:35:00",
+          "hair_raw":"Brown",
+          "weight_min":180,
+          "status":"na",
+          "hair":"brown",
+          "eyes_raw":"Blue",
+          "caution":null,
+          "warning_message":null,
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "newark"
+          ],
+          "images":[  
+             {  
+                "caption":null,
+                "large":"https://www.fbi.gov/wanted/seeking-info/john-t.-weisbecker/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/john-t.-weisbecker/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/john-t.-weisbecker/@@images/image/thumb"
+             },
+             {  
+                "caption":"",
+                "large":"https://www.fbi.gov/wanted/seeking-info/john-t.-weisbecker/weisbecker_jt2.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/john-t.-weisbecker/weisbecker_jt2.jpg",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/john-t.-weisbecker/weisbecker_jt2.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"",
+                "large":"https://www.fbi.gov/wanted/seeking-info/john-t.-weisbecker/weisbecker_jt3.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/john-t.-weisbecker/weisbecker_jt3.jpg",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/john-t.-weisbecker/weisbecker_jt3.jpg/@@images/image/thumb"
+             }
+          ],
+          "aliases":null,
+          "path":"/wanted/seeking-info/john-t.-weisbecker",
+          "subjects":[  
+             "Seeking Information"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/seeking-info/john-t.-weisbecker",
+          "possible_countries":null,
+          "height_min":74,
+          "title":"JOHN T. WEISBECKER",
+          "ncic":null,
+          "build":null,
+          "sex":"Male",
+          "remarks":null,
+          "details":"John T. Weisbecker was last seen on March 11, 2009, at his home in Ocean City, New Jersey. The circumstances of his disappearance have led law enforcement officials to believe that Weisbecker may not have left his home voluntarily. His whereabouts remain unknown.",
+          "age_min":null,
+          "possible_states":null,
+          "uid":"e4dae77caf838e784bc94fd87d9f3a3a",
+          "age_max":null,
+          "race_raw":"White",
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":180,
+          "additional_information":null,
+          "modified":"2019-03-12T13:00:24+00:00",
+          "height_max":74,
+          "person_classification":"Victim",
+          "dates_of_birth_used":[  
+             "December 30, 1987"
+          ],
+          "description":"Missing Person/Victim\r\nOcean City, New Jersey\r\nMarch 11, 2009",
+          "reward_max":0,
+          "status_id": 2,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/seeking-info/john-t.-weisbecker/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $50,000 for information leading to the whereabouts of John T. Weisbecker.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/e4dae77caf838e784bc94fd87d9f3a3a"
+       },
+       {  
+          "id":15,
+          "legat_names":null,
+          "eyes":"blue",
+          "place_of_birth":"Cleveland, Ohio",
+          "reward_min":0,
+          "race":"white",
+          "weight":"130 pounds",
+          "nationality":null,
+          "age_range":null,
+          "publication":"2010-09-10T13:20:00",
+          "hair_raw":"Brown",
+          "weight_min":130,
+          "status":"na",
+          "hair":"brown",
+          "eyes_raw":"Blue",
+          "caution":null,
+          "warning_message":null,
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "cleveland"
+          ],
+          "images":[  
+             {  
+                "caption":null,
+                "large":"https://www.fbi.gov/wanted/kidnap/ashley-summers/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/kidnap/ashley-summers/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/kidnap/ashley-summers/@@images/image/thumb"
+             },
+             {  
+                "caption":"",
+                "large":"https://www.fbi.gov/wanted/kidnap/ashley-summers/summers_a2.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/kidnap/ashley-summers/summers_a2.jpg",
+                "thumb":"https://www.fbi.gov/wanted/kidnap/ashley-summers/summers_a2.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"Photograph age-progressed to age 24",
+                "large":"https://www.fbi.gov/wanted/kidnap/ashley-summers/summers-age-progressed-1.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/kidnap/ashley-summers/summers-age-progressed-1.jpg",
+                "thumb":"https://www.fbi.gov/wanted/kidnap/ashley-summers/summers-age-progressed-1.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"Illustration of tattoo",
+                "large":"https://www.fbi.gov/wanted/kidnap/ashley-summers/summers-tattoo.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/kidnap/ashley-summers/summers-tattoo.jpg",
+                "thumb":"https://www.fbi.gov/wanted/kidnap/ashley-summers/summers-tattoo.jpg/@@images/image/thumb"
+             }
+          ],
+          "aliases":null,
+          "path":"/wanted/kidnap/ashley-summers",
+          "subjects":[  
+             "Kidnappings and Missing Persons"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/kidnap/ashley-summers",
+          "possible_countries":null,
+          "height_min":65,
+          "title":"ASHLEY SUMMERS",
+          "ncic":null,
+          "build":null,
+          "sex":"Female",
+          "remarks":null,
+          "details":"Ashley Summers was last seen near a family member's residence in Cleveland, Ohio, on July 7 or 8, 2007. She was 14 years old at the time of her disappearance.",
+          "age_min":null,
+          "possible_states":[  
+             "US-OH"
+          ],
+          "uid":"f42ff460937fe2b91d42c20c129deab7",
+          "age_max":null,
+          "race_raw":"White",
+          "scars_and_marks":"Summers has a tattoo with the name \"Gene\" in black ink over a red heart on her upper right arm, similar to the one shown above.",
+          "languages":null,
+          "weight_max":130,
+          "additional_information":null,
+          "modified":"2019-03-08T17:36:28+00:00",
+          "height_max":65,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "June 16, 1993"
+          ],
+          "description":"July 7 though 9, 2007\r\nCleveland, Ohio",
+          "reward_max":0,
+          "status_id": 2,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/kidnap/ashley-summers/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":null,
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/f42ff460937fe2b91d42c20c129deab7"
+       },
+       {  
+          "id":16,
+          "legat_names":null,
+          "eyes":"brown",
+          "place_of_birth":"New Jersey",
+          "reward_min":0,
+          "race":"black",
+          "weight":"220 pounds",
+          "nationality":"American",
+          "age_range":null,
+          "publication":"2017-09-18T10:29:00",
+          "hair_raw":"Black",
+          "weight_min":220,
+          "status":"captured",
+          "hair":"black",
+          "eyes_raw":"Brown",
+          "caution":"Lamont Stephenson is wanted for his alleged involvement in the\u00a0murder of a woman and her dog in their Newark, New Jersey, apartment, on October 17, 2014.\u00a0 On November 3, 2014, Stephenson was charged with homicide by the State of New Jersey in Essex County, New Jersey.\u00a0\u00a0On\u00a0September\u00a08, 2017, a\u00a0federal arrest warrant was issued for Stephenson in the United States District Court, District of New Jersey, Essex County, after he was charged with unlawful flight to avoid prosecution.\r\n\u00a0",
+          "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "newark"
+          ],
+          "images":[  
+             {  
+                "caption":null,
+                "large":"https://www.fbi.gov/wanted/topten/lamont-stephenson/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/topten/lamont-stephenson/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/topten/lamont-stephenson/@@images/image/thumb"
+             }
+          ],
+          "aliases":null,
+          "path":"/wanted/topten/lamont-stephenson",
+          "subjects":[  
+             "Ten Most Wanted Fugitives"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/topten/lamont-stephenson",
+          "possible_countries":null,
+          "height_min":66,
+          "title":"LAMONT STEPHENSON",
+          "ncic":null,
+          "build":null,
+          "sex":"Male",
+          "remarks":null,
+          "details":null,
+          "age_min":null,
+          "possible_states":null,
+          "uid":"e983cde2139b4c73a1e952dc6a33e281",
+          "age_max":null,
+          "race_raw":"Black",
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":220,
+          "additional_information":null,
+          "modified":"2019-03-07T22:00:25+00:00",
+          "height_max":67,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "April 3, 1975"
+          ],
+          "description":"Unlawful Flight to Avoid Prosecution - Homicide",
+          "reward_max":0,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/topten/lamont-stephenson/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $100,000 for information leading directly to the arrest of Lamont Stephenson.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/e983cde2139b4c73a1e952dc6a33e281"
+       },
+       {  
+          "id":17,
+          "legat_names":null,
+          "eyes":"green",
+          "place_of_birth":"California",
+          "reward_min":0,
+          "race":"hispanic",
+          "weight":"115 pounds",
+          "nationality":null,
+          "age_range":null,
+          "publication":"2019-02-25T14:11:00",
+          "hair_raw":"Brown",
+          "weight_min":115,
+          "status":"na",
+          "hair":"brown",
+          "eyes_raw":"Green",
+          "caution":"Marysol Pena is wanted for her alleged involvement in a drug trafficking organization that operated in the state of New Mexico, and elsewhere, from approximately January 1, 2019, to approximately January 24, 2019.\r\n\u00a0\r\nOn February 13, 2019, a federal arrest warrant was issued for Pena in the United States District Court for the District of New Mexico, Albuquerque, New Mexico, after she was charged with conspiracy, distribution of 50 grams and more of methamphetamine, aiding and abetting, distribution of 40 grams and more of a mixture or substance containing a detectable amount of Fentanyl, and aiding and abetting.",
+          "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "albuquerque"
+          ],
+          "images":[  
+             {  
+                "caption":"Photograph taken in 2018",
+                "large":"https://www.fbi.gov/wanted/cei/marysol-pena/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/cei/marysol-pena/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/cei/marysol-pena/@@images/image/thumb"
+             }
+          ],
+          "aliases":null,
+          "path":"/wanted/cei/marysol-pena",
+          "subjects":[  
+             "Criminal Enterprise Investigations"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/cei/marysol-pena",
+          "possible_countries":null,
+          "height_min":64,
+          "title":"MARYSOL PENA",
+          "ncic":"W785895550",
+          "build":null,
+          "sex":"Female",
+          "remarks":"Pena is known to frequent Phoenix, Arizona; Atlanta, Georgia; and Sonora, Mexico.",
+          "details":null,
+          "age_min":null,
+          "possible_states":null,
+          "uid":"117ad2192a934bc88a59a9d9483ee8d7",
+          "age_max":null,
+          "race_raw":"White (Hispanic)",
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":115,
+          "additional_information":null,
+          "modified":"2019-03-07T15:40:59+00:00",
+          "height_max":64,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "April 1, 1990"
+          ],
+          "description":"Conspiracy; Distribution of 50 Grams and More of Methamphetamine; Aiding and Abetting; Distribution of 40 Grams and More of a Mixture or Substance Containing a Detectable Amount of Fentanyl; Aiding and Abetting",
+          "reward_max":0,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/cei/marysol-pena/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":null,
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/117ad2192a934bc88a59a9d9483ee8d7"
+       },
+       {  
+          "id":18,
+          "legat_names":null,
+          "eyes":null,
+          "place_of_birth":null,
+          "reward_min":0,
+          "race":null,
+          "weight":null,
+          "nationality":null,
+          "age_range":null,
+          "publication":"2019-02-27T09:47:00",
+          "hair_raw":null,
+          "weight_min":null,
+          "status":"na",
+          "hair":null,
+          "eyes_raw":null,
+          "caution":null,
+          "warning_message":"SHOULD BE CONSIDERED ARMED AND DANGEROUS",
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "richmond"
+          ],
+          "images":[  
+             {  
+                "caption":"BP Gas Station",
+                "large":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/@@images/image/thumb"
+             },
+             {  
+                "caption":"Raceway Gas Station",
+                "large":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/raceway-gas-station.png/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/raceway-gas-station.png",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/raceway-gas-station.png/@@images/image/thumb"
+             },
+             {  
+                "caption":"Speedway Gas Station",
+                "large":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gas-station.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gas-station.jpg",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gas-station.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"BP Gas Station 1",
+                "large":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/bp-gas-station-1-1.png/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/bp-gas-station-1-1.png",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/bp-gas-station-1-1.png/@@images/image/thumb"
+             },
+             {  
+                "caption":"BP Gas Station 2",
+                "large":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/bp-gas-station-2.png/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/bp-gas-station-2.png",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/bp-gas-station-2.png/@@images/image/thumb"
+             },
+             {  
+                "caption":"BP Gas Station 3",
+                "large":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/bp-gas-station-3.png/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/bp-gas-station-3.png",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/bp-gas-station-3.png/@@images/image/thumb"
+             },
+             {  
+                "caption":"Speedway Gas Station 3",
+                "large":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gasstation-3.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gasstation-3.jpg",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gasstation-3.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"Speedway Gas Station 2",
+                "large":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gas-station-2.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gas-station-2.jpg",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gas-station-2.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"Speedway Gas Station 1",
+                "large":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gas-station-1.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gas-station-1.jpg",
+                "thumb":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/speedway-gas-station-1.jpg/@@images/image/thumb"
+             }
+          ],
+          "aliases":null,
+          "path":"/wanted/seeking-info/armed-commercial-robberies",
+          "subjects":[  
+ 
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies",
+          "possible_countries":null,
+          "height_min":null,
+          "title":"ARMED COMMERCIAL ROBBERIES",
+          "ncic":null,
+          "build":null,
+          "sex":null,
+          "remarks":null,
+          "details":"On January 19, 2019, an unknown subject entered the BP Gas Station located in the 600 block of East Laburnum Avenue in Henrico County, Virginia. This subject, armed with a semi-automatic handgun, approached the victim clerk, handed them a bag and demanded money. After the clerk complied with the demands, the subject exited the business. On January 24, 2019, investigators believe the same armed subject entered the Raceway Gas Station located in the 6300 block of Midlothian Turnpike in Richmond, Virginia, and robbed that business in the same manner. On February 12, 2019, again investigators believe this same armed subject entered the Speedway Gas Station located in the 6800 block of Hull Street Road in North Chesterfield, Virginia. The subject approached the victim clerk and demanded money, however was unsuccessful in his attempts and fled the business. The clerk followed the armed subject into the parking lot, at which time the subject fired a shot in the employee's direction.\r\nThe subject is described as a black male, approximately 5'7\", 160 to 180 pounds, and 20 to 30 years of age.\r\nIn all three robberies the subject wore a black sweatshirt, dark pants, blue latex-style gloves, and a \"scream\" mask.",
+          "age_min":null,
+          "possible_states":null,
+          "uid":"0a3795ab7b0046c68a758a49bc26b731",
+          "age_max":null,
+          "race_raw":null,
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":null,
+          "additional_information":null,
+          "modified":"2019-03-07T15:15:40+00:00",
+          "height_max":null,
+          "person_classification":"Main",
+          "dates_of_birth_used":null,
+          "description":"January 19, 2019; January 24, 2019; February 12, 2019\r\nHenrico County, Virginia; Richmond, Virginia; North Chesterfield, Virginia",
+          "reward_max":0,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/seeking-info/armed-commercial-robberies/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $10,000 for information leading to the arrest and conviction of the unknown subject.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/0a3795ab7b0046c68a758a49bc26b731"
+       },
+       {  
+          "id":19,
+          "legat_names":null,
+          "eyes":"black",
+          "place_of_birth":"Sichuan, China",
+          "reward_min":0,
+          "race":"asian",
+          "weight":"130 pounds",
+          "nationality":"Chinese",
+          "age_range":null,
+          "publication":"2018-08-08T10:04:00",
+          "hair_raw":"Black",
+          "weight_min":130,
+          "status":"na",
+          "hair":"black",
+          "eyes_raw":"Black",
+          "caution":null,
+          "warning_message":null,
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "losangeles"
+          ],
+          "images":[  
+             {  
+                "caption":"Photograph taken in 2018",
+                "large":"https://www.fbi.gov/wanted/kidnap/ruochen-liao-1/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/kidnap/ruochen-liao-1/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/kidnap/ruochen-liao-1/@@images/image/thumb"
+             },
+             {  
+                "caption":"Photograph taken in 2017",
+                "large":"https://www.fbi.gov/wanted/kidnap/ruochen-liao-1/liao2017.jpg/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/kidnap/ruochen-liao-1/liao2017.jpg",
+                "thumb":"https://www.fbi.gov/wanted/kidnap/ruochen-liao-1/liao2017.jpg/@@images/image/thumb"
+             },
+             {  
+                "caption":"Liao's shirt at time of kidnapping",
+                "large":"https://www.fbi.gov/wanted/kidnap/ruochen-liao-1/tshirt.png/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/kidnap/ruochen-liao-1/tshirt.png",
+                "thumb":"https://www.fbi.gov/wanted/kidnap/ruochen-liao-1/tshirt.png/@@images/image/thumb"
+             }
+          ],
+          "aliases":[  
+             "\"Tony\"",
+             "Liao Ruochen"
+          ],
+          "path":"/wanted/kidnap/ruochen-liao-1",
+          "subjects":[  
+             "Kidnappings and Missing Persons"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/kidnap/ruochen-liao-1",
+          "possible_countries":null,
+          "height_min":66,
+          "title":"RUOCHEN LIAO",
+          "ncic":null,
+          "build":null,
+          "sex":"Male",
+          "remarks":null,
+          "details":"On July 16, 2018, at approximately 7:30 p.m., Ruochen \"Tony\" Liao was kidnapped in San Gabriel, California, by three men. He was last seen entering a dark-colored minivan in San Gabriel.\r\n\u00a0\r\nLiao was last seen wearing a dark-colored t-shirt with two camouflage horizontal stripes and a camouflage star across the front (pictured above).\r\n\u00a0",
+          "age_min":null,
+          "possible_states":null,
+          "uid":"a74dc6bfbfa54ef78699b9e2846661eb",
+          "age_max":null,
+          "race_raw":"Asian",
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":130,
+          "additional_information":null,
+          "modified":"2019-03-07T15:14:45+00:00",
+          "height_max":66,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "March 16, 1990"
+          ],
+          "description":"July 16, 2018\r\nSan Gabriel, California",
+          "reward_max":0,
+          "status_id": 1,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/kidnap/ruochen-liao-1/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":"The FBI is offering a reward of up to $25,000 for information leading to the recovery, alive or deceased, of Ruochen Liao.",
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/a74dc6bfbfa54ef78699b9e2846661eb"
+       },
+       {  
+          "id":20,
+          "legat_names":null,
+          "eyes":"black",
+          "place_of_birth":null,
+          "reward_min":0,
+          "race":"asian",
+          "weight":"198 pounds",
+          "nationality":null,
+          "age_range":null,
+          "publication":"2019-02-26T12:51:00",
+          "hair_raw":"Black",
+          "weight_min":198,
+          "status":"na",
+          "hair":"black",
+          "eyes_raw":"Black",
+          "caution":"Guangyao Yang and his accomplice, <a href=\"https://www.fbi.gov/wanted/additional/peicheng-shen\" data-linktype=\"external\" data-val=\"https://www.fbi.gov/wanted/additional/peicheng-shen\" data-urltype=\"/view\">Peicheng Shen</a>, are wanted for their alleged involvement in the kidnapping of a man in San Gabriel, California, in July of 2018.\r\n\u00a0\r\nOn February 22, 2019, a federal arrest warrant was issued for Yang by the United States District Court, Central District of California, Los Angeles, California, charging him with conspiracy to kidnap, kidnapping, attempted Hobbs Act extortion, foreign communication with intent to extort, and aiding and abetting and causing and act to be done.",
+          "warning_message":null,
+          "coordinates":[  
+ 
+          ],
+          "locations":null,
+          "field_offices":[  
+             "losangeles"
+          ],
+          "images":[  
+             {  
+                "caption":"Photograph taken in 2017",
+                "large":"https://www.fbi.gov/wanted/additional/guangyao-yang/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/additional/guangyao-yang/@@images/image",
+                "thumb":"https://www.fbi.gov/wanted/additional/guangyao-yang/@@images/image/thumb"
+             },
+             {  
+                "caption":"Land Rover connected to kidnappers",
+                "large":"https://www.fbi.gov/wanted/additional/guangyao-yang/vehicle.png/@@images/image/large",
+                "original":"https://www.fbi.gov/wanted/additional/guangyao-yang/vehicle.png",
+                "thumb":"https://www.fbi.gov/wanted/additional/guangyao-yang/vehicle.png/@@images/image/thumb"
+             }
+          ],
+          "aliases":null,
+          "path":"/wanted/additional/guangyao-yang",
+          "subjects":[  
+             "Additional Violent Crimes"
+          ],
+          "complexion":null,
+          "occupations":null,
+          "url":"https://www.fbi.gov/wanted/additional/guangyao-yang",
+          "possible_countries":null,
+          "height_min":75,
+          "title":"GUANGYAO YANG",
+          "ncic":null,
+          "build":null,
+          "sex":"Male",
+          "remarks":"Yang has previously resided in Pomona, California.",
+          "details":null,
+          "age_min":null,
+          "possible_states":null,
+          "uid":"f91d2f67469a43ca9a9b71cebc143794",
+          "age_max":null,
+          "race_raw":"Asian",
+          "scars_and_marks":null,
+          "languages":null,
+          "weight_max":198,
+          "additional_information":null,
+          "modified":"2019-03-06T16:55:01+00:00",
+          "height_max":75,
+          "person_classification":"Main",
+          "dates_of_birth_used":[  
+             "November 29, 1993"
+          ],
+          "description":"Conspiracy to Kidnap; Kidnapping; Attempted Hobbs Act Extortion; Foreign Communication with Intent to Extort; Aiding and Abetting and Causing an Act to be Done",
+          "reward_max":0,
+          "status_id": 2,
+          "files":[  
+             {  
+                "url":"https://www.fbi.gov/wanted/additional/guangyao-yang/download.pdf",
+                "name":"English"
+             }
+          ],
+          "reward_text":null,
+          "suspects":null,
+          "@id":"https://api.fbi.gov/@wanted-person/f91d2f67469a43ca9a9b71cebc143794"
+       }
+    ],
+    "page":1
+ }
+ 
